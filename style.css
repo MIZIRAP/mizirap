@@ -31,6 +31,7 @@ html, body {
   -webkit-user-select: none;
   user-select: none;
   -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
 }
 
 body {
@@ -179,6 +180,9 @@ button, input, select, textarea {
   max-width: 1400px;
   margin: 0 auto;
   overflow: hidden;
+  padding-top: env(safe-area-inset-top);
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
 }
 
 /* Sidebar */
@@ -456,13 +460,13 @@ button, input, select, textarea {
   body { padding-bottom: 0; }
   .app-screen { grid-template-columns: 1fr; }
   
-  .page { padding: 24px 20px 110px; } /* Floating nav için alt boşluk */
+  .page { padding: 24px 20px calc(110px + env(safe-area-inset-bottom)); } /* Floating nav için alt boşluk */
   .summary-grid { grid-template-columns: 1fr; gap: 16px; }
   .dashboard-lists { grid-template-columns: 1fr; gap: 32px; }
   
   .tabbar {
     position: fixed;
-    bottom: 24px;
+    bottom: calc(24px + env(safe-area-inset-bottom));
     left: 50%;
     transform: translateX(-50%);
     width: calc(100% - 48px);

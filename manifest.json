@@ -1,0 +1,15 @@
+{
+  "name": "Hayat Defteri",
+  "short_name": "Hayat Defteri",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#E7ECE3",
+  "theme_color": "#2F4F3A",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "192x192 512x512",
+      "type": "image/svg+xml"
+    }
+  ]
+}
