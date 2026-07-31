@@ -1,178 +1,434 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Hayat Defteri</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>My Life Dashboard</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-surface-variant": "#414844", "inverse-on-surface": "#eff2eb", "on-secondary-container": "#53695d", "surface-container-high": "#e6e9e2", "secondary-fixed-dim": "#b3ccbd", "surface-tint": "#446554", "on-primary-container": "#163728", "error-container": "#ffdad6", "on-tertiary-fixed": "#2c1600", "on-secondary-fixed": "#0a2016", "secondary-fixed": "#cfe9d9", "tertiary-fixed-dim": "#f1bd89", "on-background": "#191d18", "outline": "#727973", "on-secondary": "#ffffff", "surface-container-lowest": "#ffffff", "outline-variant": "#c1c8c2", "surface-bright": "#f7faf3", "on-surface": "#191d18", "surface": "#f7faf3", "on-tertiary": "#ffffff", "on-tertiary-fixed-variant": "#623f16", "surface-dim": "#d8dbd4", "on-tertiary-container": "#492a03", "on-primary-fixed": "#002113", "primary": "#446554", "surface-container": "#ecefe8", "primary-fixed-dim": "#abcfb9", "on-primary": "#ffffff", "secondary-container": "#cfe9d9", "inverse-surface": "#2d312d", "on-primary-fixed-variant": "#2d4d3d", "tertiary-container": "#bf9060", "on-error-container": "#93000a", "surface-container-highest": "#e0e4dc", "inverse-primary": "#abcfb9", "primary-fixed": "#c6ebd5", "tertiary-fixed": "#ffdcbd", "surface-container-low": "#f1f5ed", "tertiary": "#7d562b", "error": "#ba1a1a", "secondary": "#4d6357", "on-error": "#ffffff", "primary-container": "#7ea18d", "background": "#f7faf3", "surface-variant": "#e0e4dc", "on-secondary-fixed-variant": "#354b40"
+                    },
+                    "borderRadius": { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px", "card": "24px" },
+                    "spacing": { "element-spacing": "12px", "unit": "4px", "section-margin": "32px", "container-padding": "20px", "card-gap": "16px" },
+                    "fontFamily": { "display-lg": ["Inter", "sans-serif"], "label-sm": ["Inter", "sans-serif"], "label-md": ["Inter", "sans-serif"], "headline-sm": ["Inter", "sans-serif"], "body-md": ["Inter", "sans-serif"], "body-lg": ["Inter", "sans-serif"], "headline-md": ["Inter", "sans-serif"] },
+                    "fontSize": {
+                        "display-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "label-sm": ["11px", { "lineHeight": "14px", "fontWeight": "500" }],
+                        "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                        "headline-sm": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+                        "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" }]
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .view.hidden { display: none !important; }
+    </style>
 </head>
-<body>
+<body class="bg-background text-on-background font-body-lg antialiased min-h-screen">
 
 <!-- GİRİŞ / KAYIT EKRANI -->
-<div id="auth-screen" class="auth-screen">
-  <div class="auth-card">
-    <div class="auth-brand">
-      <span class="auth-brand-mark">§</span>
-      <h1>Hayat Defteri</h1>
-      <p class="auth-tagline">Görevler, notlar ve hesaplar — tek defterde.</p>
+<div id="auth-screen" class="min-h-screen flex items-center justify-center bg-surface-container-low p-6 z-50 relative">
+    <div class="w-full max-w-md bg-surface-container-lowest rounded-card p-8 shadow-[0_8px_32px_rgba(0,0,0,0.08)]">
+        <div class="text-center mb-8">
+            <h1 class="font-display-lg text-primary tracking-tight mb-2">My Life</h1>
+            <p class="text-on-surface-variant font-body-md">Hayatını yönetmek hiç bu kadar huzurlu olmamıştı.</p>
+        </div>
+
+        <div class="flex bg-surface-container rounded-full p-1 mb-8">
+            <button class="auth-tab flex-1 py-2 px-4 rounded-full font-label-md transition-colors active" data-auth="login">Giriş Yap</button>
+            <button class="auth-tab flex-1 py-2 px-4 rounded-full font-label-md transition-colors text-on-surface-variant" data-auth="register">Kayıt Ol</button>
+        </div>
+
+        <form id="login-form" class="flex flex-col gap-4">
+            <div>
+                <label class="block font-label-md text-on-surface-variant mb-1">E-posta</label>
+                <input type="email" id="login-email" required class="w-full bg-surface border border-outline-variant focus:border-primary focus:ring-1 focus:ring-primary rounded-lg py-3 px-4 font-body-md text-on-surface">
+            </div>
+            <div>
+                <label class="block font-label-md text-on-surface-variant mb-1">Şifre</label>
+                <input type="password" id="login-password" required class="w-full bg-surface border border-outline-variant focus:border-primary focus:ring-1 focus:ring-primary rounded-lg py-3 px-4 font-body-md text-on-surface">
+            </div>
+            <p id="login-error" class="text-error font-label-sm min-h-[14px]"></p>
+            <button type="submit" class="w-full bg-primary text-on-primary rounded-lg py-3 font-label-md transition-transform active:scale-[0.98]">Giriş yap</button>
+        </form>
+
+        <form id="register-form" class="flex flex-col gap-4 hidden">
+            <div>
+                <label class="block font-label-md text-on-surface-variant mb-1">Ad</label>
+                <input type="text" id="register-name" required class="w-full bg-surface border border-outline-variant focus:border-primary focus:ring-1 focus:ring-primary rounded-lg py-3 px-4 font-body-md text-on-surface">
+            </div>
+            <div>
+                <label class="block font-label-md text-on-surface-variant mb-1">E-posta</label>
+                <input type="email" id="register-email" required class="w-full bg-surface border border-outline-variant focus:border-primary focus:ring-1 focus:ring-primary rounded-lg py-3 px-4 font-body-md text-on-surface">
+            </div>
+            <div>
+                <label class="block font-label-md text-on-surface-variant mb-1">Şifre <span class="font-normal">(en az 6 karakter)</span></label>
+                <input type="password" id="register-password" required minlength="6" class="w-full bg-surface border border-outline-variant focus:border-primary focus:ring-1 focus:ring-primary rounded-lg py-3 px-4 font-body-md text-on-surface">
+            </div>
+            <p id="register-error" class="text-error font-label-sm min-h-[14px]"></p>
+            <button type="submit" class="w-full bg-primary text-on-primary rounded-lg py-3 font-label-md transition-transform active:scale-[0.98]">Hesap oluştur</button>
+        </form>
     </div>
-
-    <div class="auth-tabs">
-      <button class="auth-tab active" data-auth="login">Giriş Yap</button>
-      <button class="auth-tab" data-auth="register">Kayıt Ol</button>
-    </div>
-
-    <form id="login-form" class="auth-form">
-      <label>E-posta
-        <input type="email" id="login-email" required autocomplete="email">
-      </label>
-      <label>Şifre
-        <input type="password" id="login-password" required autocomplete="current-password">
-      </label>
-      <p class="auth-error" id="login-error"></p>
-      <button type="submit" class="btn-primary">Giriş yap</button>
-    </form>
-
-    <form id="register-form" class="auth-form hidden">
-      <label>Ad
-        <input type="text" id="register-name" required autocomplete="name">
-      </label>
-      <label>E-posta
-        <input type="email" id="register-email" required autocomplete="email">
-      </label>
-      <label>Şifre <span class="hint">(en az 6 karakter)</span>
-        <input type="password" id="register-password" required minlength="6" autocomplete="new-password">
-      </label>
-      <p class="auth-error" id="register-error"></p>
-      <button type="submit" class="btn-primary">Hesap oluştur</button>
-    </form>
-  </div>
 </div>
 
 <!-- ANA UYGULAMA -->
-<div id="app-screen" class="app-screen hidden">
+<div id="app-screen" class="hidden min-h-screen">
 
-  <!-- NOT DEFTERİ SEKME ÇUBUĞU -->
-  <nav class="tabbar" aria-label="Bölümler">
-    <div class="tabbar-top">
-      <span class="brand-mark">§</span>
-      <span class="brand-name">Hayat Defteri</span>
-    </div>
-    <button class="tab active" data-view="dashboard">
-      <span class="tab-index">00</span> Özet
-    </button>
-    <button class="tab" data-view="tasks">
-      <span class="tab-index">01</span> Görevler
-    </button>
-    <button class="tab" data-view="notes">
-      <span class="tab-index">02</span> Notlar
-    </button>
-    <button class="tab" data-view="finance">
-      <span class="tab-index">03</span> Finans
-    </button>
-    <div class="tabbar-bottom">
-      <span id="user-name-display" class="user-name"></span>
-      <button id="logout-btn" class="btn-ghost">Çıkış yap</button>
-    </div>
-  </nav>
-
-  <main class="page">
-
-    <!-- ÖZET -->
+    <!-- ================= ÖZET (Dashboard) ================= -->
     <section id="view-dashboard" class="view active">
-      <header class="page-header">
-        <p class="eyebrow">Sayfa 00</p>
-        <h2>Hoş geldin, Antigravity!</h2>
-      </header>
-      <div class="summary-grid">
-        <div class="summary-card">
-          <p class="summary-label">Açık görev</p>
-          <p class="summary-value" id="stat-open-tasks">0</p>
-        </div>
-        <div class="summary-card">
-          <p class="summary-label">Not sayısı</p>
-          <p class="summary-value" id="stat-notes">0</p>
-        </div>
-        <div class="summary-card summary-card--accent" id="stat-balance-card">
-          <p class="summary-label">Bakiye</p>
-          <p class="summary-value" id="stat-balance">₺0,00</p>
-        </div>
-      </div>
-      <div class="dashboard-lists">
-        <div class="mini-list">
-          <h3>Yaklaşan görevler</h3>
-          <ul id="dashboard-tasks"></ul>
-        </div>
-        <div class="mini-list">
-          <h3>Son işlemler</h3>
-          <ul id="dashboard-transactions"></ul>
-        </div>
-      </div>
+        <!-- TopAppBar -->
+        <header class="flex justify-between items-center px-container-padding py-element-spacing w-full sticky top-0 z-40 bg-background dark:bg-background flat no shadows">
+            <div class="flex items-center gap-4">
+                <span class="material-symbols-outlined text-primary dark:text-primary-fixed-dim" style="font-variation-settings: 'FILL' 1;">menu</span>
+                <h1 class="font-display-lg text-display-lg text-primary dark:text-primary-fixed-dim tracking-tight">My Life</h1>
+            </div>
+            <div class="w-10 h-10 rounded-full overflow-hidden bg-surface-container-high border-2 border-outline-variant cursor-pointer logout-trigger">
+                <!-- User Profile Picture -->
+                <img alt="User Profile" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD6pbBf1WbDO9xMS_XZVPq3Hat-IK7RVbQRVC5-9p8PWsv7SHG_Yojo0BjpUQAjhbGfBVWyXpGohNDbHg-yOrIOtX0zvzHvWJ0XjCLkLb4jDyzHW1tUnhdG4g69-o5TjKC7k0rOwSaXpzWjKDRZIhOzP1obI9IDh1PtPTw3cqmnIhUiMtmYi4lnBR1JB31WEtk7J5y65lOTNGEai5pKftjSXWP6cklloZAmRN4fheHJAMy0AjKzxoBO">
+            </div>
+        </header>
+
+        <!-- Main Content Canvas -->
+        <main class="px-container-padding pt-6 pb-24 mx-auto max-w-2xl flex flex-col gap-section-margin">
+            <!-- Featured Section -->
+            <section class="bg-surface-container-lowest rounded-card p-5 ambient-shadow flex flex-col gap-2">
+                <h2 class="font-headline-md text-headline-md text-on-surface">Merhaba, <span id="dashboard-user-name">Selin</span>!</h2>
+                <p class="font-body-md text-body-md text-on-surface-variant">Bugün harika bir gün olacak. İşte senin için hazırladığımız özet.</p>
+                <p class="font-label-sm text-label-sm text-on-surface-variant uppercase mt-2" id="dashboard-date">14 Ekim 2023, Cumartesi</p>
+            </section>
+
+            <!-- 2x2 Grid Section -->
+            <section class="grid grid-cols-2 gap-card-gap">
+                <!-- Water Card -->
+                <div class="bg-surface-container-lowest rounded-card p-4 ambient-shadow interactive-card flex flex-col justify-between aspect-square">
+                    <div class="p-2 w-fit rounded-full bg-secondary-container text-primary">
+                        <span class="material-symbols-outlined text-[20px]">water_drop</span>
+                    </div>
+                    <div class="mt-4 flex flex-col gap-1">
+                        <span class="font-label-sm text-label-sm text-on-surface-variant uppercase">Su Tüketimi</span>
+                        <span class="font-headline-sm text-headline-sm text-on-surface">1250 <span class="text-sm font-normal text-on-surface-variant">/ 2000 ml</span></span>
+                        <div class="w-full h-1.5 bg-surface-variant rounded-full mt-2 overflow-hidden">
+                            <div class="h-full bg-primary rounded-full" style="width: 62.5%;"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Reading Card -->
+                <div class="bg-surface-container-lowest rounded-card p-4 ambient-shadow interactive-card flex flex-col justify-between aspect-square">
+                    <div class="flex justify-between items-start">
+                        <div class="p-2 rounded-full bg-secondary-container text-primary">
+                            <span class="material-symbols-outlined text-[20px]">menu_book</span>
+                        </div>
+                        <span class="font-label-sm text-label-sm bg-surface-container-low text-on-surface px-2 py-1 rounded-full"><span id="stat-notes">2</span>/5</span>
+                    </div>
+                    <div class="mt-4 flex flex-col gap-1">
+                        <span class="font-label-sm text-label-sm text-on-surface-variant uppercase">Okuma</span>
+                        <span class="font-headline-sm text-headline-sm text-on-surface">45 sayfa</span>
+                        <span class="font-body-md text-body-md text-on-surface-variant">bugün</span>
+                    </div>
+                </div>
+
+                <!-- Sport Card -->
+                <div class="bg-surface-container-lowest rounded-card p-4 ambient-shadow interactive-card flex flex-col justify-between aspect-square">
+                    <div class="flex justify-between items-start">
+                        <div class="p-2 rounded-full bg-secondary-container text-primary">
+                            <span class="material-symbols-outlined text-[20px]">fitness_center</span>
+                        </div>
+                        <button class="w-6 h-6 rounded-full border-2 border-outline-variant flex items-center justify-center"></button>
+                    </div>
+                    <div class="mt-4 flex flex-col gap-1">
+                        <span class="font-label-sm text-label-sm text-on-surface-variant uppercase">Spor</span>
+                        <span class="font-headline-sm text-headline-sm text-on-surface" id="stat-workout-count">Yapılmadı</span>
+                        <span class="font-body-md text-body-md text-on-surface-variant">Hedef: 4/hafta</span>
+                    </div>
+                </div>
+
+                <!-- Finance Card -->
+                <div class="bg-surface-container-lowest rounded-card p-4 ambient-shadow interactive-card flex flex-col justify-between aspect-square">
+                    <div class="p-2 w-fit rounded-full bg-secondary-container text-primary">
+                        <span class="material-symbols-outlined text-[20px]">account_balance_wallet</span>
+                    </div>
+                    <div class="mt-4 flex flex-col gap-1">
+                        <span class="font-label-sm text-label-sm text-on-surface-variant uppercase">Finans</span>
+                        <span class="font-headline-sm text-headline-sm text-primary" id="stat-balance">4,250 TL</span>
+                        <span class="font-body-md text-body-md text-on-surface-variant">Bakiye</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Bottom List Section -->
+            <section class="flex flex-col gap-4">
+                <div class="flex justify-between items-center">
+                    <h3 class="font-headline-sm text-headline-sm text-on-surface">Bekleyen Görevler</h3>
+                    <span class="text-primary font-label-md">Tümünü Gör</span>
+                </div>
+                <div class="bg-surface-container-lowest rounded-card p-4 ambient-shadow flex flex-col gap-4" id="dashboard-tasks-container">
+                    <div class="flex items-center gap-4">
+                        <div class="p-2 rounded-full bg-surface-container-low text-primary">
+                            <span class="material-symbols-outlined">check_circle</span>
+                        </div>
+                        <div class="flex-1">
+                            <p class="font-body-lg text-on-surface">Proje raporunu tamamla</p>
+                            <p class="font-label-sm text-on-surface-variant">Bugün, 17:00</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+        
+        <button class="fixed bottom-28 right-6 w-14 h-14 bg-primary text-on-primary rounded-2xl flex items-center justify-center shadow-lg hover:bg-surface-tint transition-all z-40 active:scale-95">
+            <span class="material-symbols-outlined text-[28px]">add</span>
+        </button>
+
+        <!-- BottomNavBar -->
+        <nav class="fixed bottom-0 left-0 right-0 z-50 flex justify-around items-center px-4 py-2 rounded-full mx-auto mb-8 w-[90%] max-w-md shadow-[0px_4px_20px_rgba(0,0,0,0.04)] bg-surface-container-lowest dark:bg-surface-container-lowest border-none md:hidden">
+            <button class="nav-tab flex flex-col items-center justify-center gap-1 bg-secondary-container text-primary rounded-xl px-3 py-2 transition-all" data-target="view-dashboard">
+                <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">home</span>
+                <span class="text-label-sm font-label-sm">Özet</span>
+            </button>
+            <button class="nav-tab flex flex-col items-center justify-center gap-1 text-on-surface-variant p-2 hover:text-primary transition-all" data-target="view-dashboard">
+                <span class="material-symbols-outlined">task_alt</span>
+                <span class="text-label-sm font-label-sm">Alışkanlık</span>
+            </button>
+            <button class="nav-tab flex flex-col items-center justify-center gap-1 text-on-surface-variant p-2 hover:text-primary transition-all" data-target="view-workout">
+                <span class="material-symbols-outlined">fitness_center</span>
+                <span class="text-label-sm font-label-sm">Spor</span>
+            </button>
+            <button class="nav-tab flex flex-col items-center justify-center gap-1 text-on-surface-variant p-2 hover:text-primary transition-all" data-target="view-finance">
+                <span class="material-symbols-outlined">account_balance_wallet</span>
+                <span class="text-label-sm font-label-sm">Finans</span>
+            </button>
+            <button class="nav-tab flex flex-col items-center justify-center gap-1 text-on-surface-variant p-2 hover:text-primary transition-all" data-target="view-shopping">
+                <span class="material-symbols-outlined">grid_view</span>
+                <span class="text-label-sm font-label-sm">Daha</span>
+            </button>
+        </nav>
     </section>
 
-    <!-- GÖREVLER -->
-    <section id="view-tasks" class="view">
-      <header class="page-header">
-        <p class="eyebrow">Sayfa 01</p>
-        <h2>Görevler</h2>
-      </header>
-      <form id="task-form" class="inline-form">
-        <input type="text" id="task-title" placeholder="Yeni görev ekle..." required>
-        <input type="date" id="task-due">
-        <select id="task-priority">
-          <option value="low">Düşük</option>
-          <option value="medium" selected>Orta</option>
-          <option value="high">Yüksek</option>
-        </select>
-        <button type="submit" class="btn-primary">Ekle</button>
-      </form>
-      <ul id="task-list" class="ledger-list"></ul>
-      <p class="empty-state hidden" id="tasks-empty">Henüz görev yok. Yukarıdan bir tane ekle.</p>
+    <!-- ================= ALIŞVERİŞ LİSTESİ (Shopping) ================= -->
+    <section id="view-shopping" class="view hidden">
+        <!-- TopAppBar -->
+        <header class="fixed top-0 w-full z-40 bg-background/80 backdrop-blur-md">
+            <div class="flex items-center justify-between px-container-padding h-16 w-full max-w-md mx-auto">
+                <button class="material-symbols-outlined text-primary p-2 hover:bg-surface-container-low transition-colors rounded-full transition-transform active:scale-90" data-icon="menu">menu</button>
+                <h1 class="font-headline-md text-headline-md font-bold text-primary">Alışveriş Listesi</h1>
+                <button class="flex items-center gap-1 text-error hover:bg-error-container/20 px-2 py-1 rounded-md transition-colors active:scale-95" id="clear-shopping-btn">
+                    <span class="material-symbols-outlined text-[18px]" data-icon="delete_sweep">delete_sweep</span>
+                    <span class="text-label-md font-label-md">Temizle</span>
+                </button>
+                <div class="w-10 h-10 rounded-full overflow-hidden border-2 border-primary-container cursor-pointer logout-trigger">
+                    <img class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD4SYppxZWTrQ134mNFWlgNeiSJ-XVyOiCMA4VJB_d-y7j1NQRYw8xlbsahB3AiYtKt-CsmqtPgrlgJodG10yK91CDzU0GrxB23sgSbSp95cQhw1Mc_gapepZNrd-sEUDU5fen15kCDBZq7kXl2IsXZAx4jtOid1eAHaJHP4f0CJUsG9ALsIoO-Q3YdTPR9VIWs7CKfrrzXmkiFHh0GlPRa2VuP8S_V6KioKJvmMmxRuWBgvr3WHYAE">
+                </div>
+            </div>
+        </header>
+        
+        <main class="pt-20 pb-32 px-container-padding max-w-md mx-auto min-h-screen">
+            <!-- Search/Input Area -->
+            <section class="mb-section-margin">
+                <form id="shopping-form" class="bg-surface-container-lowest rounded-[24px] p-4 card-shadow flex items-center gap-3 border border-outline-variant/20 focus-within:border-primary transition-colors">
+                    <input class="flex-grow bg-transparent border-none focus:ring-0 font-body-lg text-on-surface placeholder:text-outline text-body-lg" id="shopping-input" placeholder="Ürün adı girin..." type="text">
+                    <button type="submit" class="w-12 h-12 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center transition-transform hover:scale-105 active:scale-95 shadow-md">
+                        <span class="material-symbols-outlined" data-icon="add">add</span>
+                    </button>
+                </form>
+            </section>
+            
+            <!-- Active List Section -->
+            <section class="mb-section-margin">
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="font-headline-sm text-headline-sm text-primary">Alınacaklar</h2>
+                    <span class="bg-secondary-container text-on-secondary-container px-3 py-1 rounded-full text-label-md font-label-md" id="active-shopping-count">0 Ürün</span>
+                </div>
+                <p class="text-[10px] text-outline mb-2 px-1 flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">info</span> Silmek için çöpe tıkla</p>
+                <div class="space-y-card-gap overflow-hidden" id="active-shopping-list">
+                    <!-- Dinamik -->
+                </div>
+            </section>
+            
+            <!-- Completed List Section -->
+            <section>
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="font-headline-sm text-headline-sm text-outline">Tamamlananlar</h2>
+                </div>
+                <div class="space-y-card-gap" id="completed-shopping-list">
+                    <!-- Dinamik -->
+                </div>
+            </section>
+        </main>
+
+        <!-- BottomNavBar -->
+        <nav class="fixed bottom-6 left-0 right-0 z-50 flex justify-around items-center px-4 py-3 bg-surface-container-lowest/90 backdrop-blur-md rounded-full mx-auto w-[90%] max-w-md shadow-2xl">
+            <button class="nav-tab flex flex-col items-center justify-center text-on-surface-variant hover:scale-105 transition-transform active:scale-95" data-target="view-dashboard">
+                <span class="material-symbols-outlined" data-icon="home">home</span>
+                <span class="text-[10px] font-label-md">Özet</span>
+            </button>
+            <button class="nav-tab flex flex-col items-center justify-center text-on-surface-variant hover:scale-105 transition-transform active:scale-95" data-target="view-dashboard">
+                <span class="material-symbols-outlined" data-icon="check_circle">check_circle</span>
+                <span class="text-[10px] font-label-md">Alışkanlık</span>
+            </button>
+            <button class="nav-tab flex flex-col items-center justify-center text-on-surface-variant hover:scale-105 transition-transform active:scale-95" data-target="view-workout">
+                <span class="material-symbols-outlined" data-icon="fitness_center">fitness_center</span>
+                <span class="text-[10px] font-label-md">Spor</span>
+            </button>
+            <button class="nav-tab flex flex-col items-center justify-center text-on-surface-variant hover:scale-105 transition-transform active:scale-95" data-target="view-finance">
+                <span class="material-symbols-outlined" data-icon="account_balance_wallet">account_balance_wallet</span>
+                <span class="text-[10px] font-label-md">Finans</span>
+            </button>
+            <button class="nav-tab flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-full px-3 py-1 hover:scale-105 transition-transform active:scale-95 shadow-md" data-target="view-shopping">
+                <span class="material-symbols-outlined" data-icon="shopping_cart">shopping_cart</span>
+                <span class="text-[10px] font-label-md">Liste</span>
+            </button>
+        </nav>
     </section>
 
-    <!-- NOTLAR -->
-    <section id="view-notes" class="view">
-      <header class="page-header">
-        <p class="eyebrow">Sayfa 02</p>
-        <h2>Notlar</h2>
-      </header>
-      <form id="note-form" class="inline-form inline-form--note">
-        <input type="text" id="note-title" placeholder="Not başlığı" required>
-        <textarea id="note-body" placeholder="Not içeriği..." rows="3"></textarea>
-        <button type="submit" class="btn-primary">Kaydet</button>
-      </form>
-      <div id="note-list" class="note-grid"></div>
-      <p class="empty-state hidden" id="notes-empty">Henüz not yok. Yukarıdan bir tane ekle.</p>
+    <!-- ================= SPOR TAKİBİ (Workout) ================= -->
+    <section id="view-workout" class="view hidden">
+        <!-- TopAppBar -->
+        <header class="bg-background dark:bg-background flex justify-between items-center px-container-padding py-element-spacing w-full sticky top-0 z-40">
+            <button class="text-on-surface-variant hover:bg-surface-container-low transition-colors p-2 rounded-full active:scale-95 duration-150">
+                <span class="material-symbols-outlined">menu</span>
+            </button>
+            <h1 class="font-display-lg text-display-lg-mobile md:text-display-lg text-primary dark:text-primary-fixed-dim tracking-tight">My Life</h1>
+            <button class="hover:bg-surface-container-low transition-colors rounded-full active:scale-95 duration-150 overflow-hidden w-10 h-10 logout-trigger">
+                <img alt="User profile avatar" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCmCGaIAEyzjYMZfQzRE2fGjOHusRgZdsrUKIqf_DpSMri_cQ9hD1m4zzPk7xHQo23dDeMq1GMEjpoK-rhdNYUwpbvM_lMr9ccPB0Yoh_PBnKdEYtfeXIrcOL4jY-WjMClarykzv0YsxlEt0hWt8p6lbW5qVaAIc-Xt03qqcEQolNC0YHSo_54OeT1-hbeYreS2Wzsmw8c3h-rZUHB_dXnPB1p1FHD0A63blKb0L9dSVXuo_aZy4mZK">
+            </button>
+        </header>
+
+        <main class="max-w-md mx-auto px-container-padding space-y-section-margin pt-4">
+            <!-- Weekly Summary Widget -->
+            <section class="bg-surface-container-lowest rounded-xl p-6 card-shadow">
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="font-headline-sm text-headline-sm text-primary">This Week</h2>
+                    <span class="material-symbols-outlined text-primary-container">calendar_month</span>
+                </div>
+                <p class="font-body-md text-body-md text-on-surface-variant mb-4" id="weekly-workout-text">Bu hafta 0 gün antrenman yapıldı</p>
+                <div class="flex gap-2" id="workout-days-grid">
+                    <div class="flex-1 h-8 rounded-md bg-surface-container flex items-center justify-center text-on-surface-variant font-label-sm text-label-sm">M</div>
+                    <div class="flex-1 h-8 rounded-md bg-surface-container flex items-center justify-center text-on-surface-variant font-label-sm text-label-sm">T</div>
+                    <div class="flex-1 h-8 rounded-md bg-surface-container flex items-center justify-center text-on-surface-variant font-label-sm text-label-sm">W</div>
+                    <div class="flex-1 h-8 rounded-md bg-surface-container flex items-center justify-center text-on-surface-variant font-label-sm text-label-sm">T</div>
+                    <div class="flex-1 h-8 rounded-md bg-surface-container flex items-center justify-center text-on-surface-variant font-label-sm text-label-sm">F</div>
+                    <div class="flex-1 h-8 rounded-md bg-surface-container flex items-center justify-center text-on-surface-variant font-label-sm text-label-sm">S</div>
+                    <div class="flex-1 h-8 rounded-md bg-surface-container flex items-center justify-center text-on-surface-variant font-label-sm text-label-sm">S</div>
+                </div>
+            </section>
+            
+            <!-- Today's Workout -->
+            <section class="space-y-card-gap">
+                <div class="flex justify-between items-baseline">
+                    <h2 class="font-headline-md text-headline-md text-on-background">Geçmiş Egzersizler</h2>
+                </div>
+                <!-- Log List -->
+                <div class="space-y-3" id="workout-list">
+                    <!-- Dinamik -->
+                </div>
+            </section>
+
+            <!-- New Exercise Entry -->
+            <section class="bg-surface-container-lowest rounded-xl p-6 card-shadow border border-surface-variant">
+                <h3 class="font-headline-sm text-headline-sm text-on-background mb-4">Add Exercise</h3>
+                <form id="workout-form" class="space-y-4">
+                    <div>
+                        <label class="block font-label-md text-label-md text-on-surface-variant mb-1">Exercise Name</label>
+                        <input id="workout-name" class="w-full bg-surface-dim border-transparent focus:border-primary focus:ring-1 focus:ring-primary rounded-lg font-body-md text-body-md text-on-background py-3 px-4 transition-colors" placeholder="e.g. Deadlift" type="text" required>
+                    </div>
+                    <div class="grid grid-cols-3 gap-3">
+                        <div>
+                            <label class="block font-label-md text-label-md text-on-surface-variant mb-1">Sets</label>
+                            <input id="workout-sets" class="w-full bg-surface-dim border-transparent focus:border-primary focus:ring-1 focus:ring-primary rounded-lg font-body-md text-body-md text-on-background py-3 px-4 transition-colors" placeholder="3" type="number" required>
+                        </div>
+                        <div>
+                            <label class="block font-label-md text-label-md text-on-surface-variant mb-1">Reps</label>
+                            <input id="workout-reps" class="w-full bg-surface-dim border-transparent focus:border-primary focus:ring-1 focus:ring-primary rounded-lg font-body-md text-body-md text-on-background py-3 px-4 transition-colors" placeholder="10" type="number" required>
+                        </div>
+                        <div>
+                            <label class="block font-label-md text-label-md text-on-surface-variant mb-1">Weight (kg)</label>
+                            <input id="workout-weight" class="w-full bg-surface-dim border-transparent focus:border-primary focus:ring-1 focus:ring-primary rounded-lg font-body-md text-body-md text-on-background py-3 px-4 transition-colors" placeholder="0" step="0.5" type="number" required>
+                        </div>
+                    </div>
+                    <button type="submit" class="w-full bg-primary text-on-primary rounded-lg py-3 font-label-md text-label-md flex items-center justify-center gap-2 hover:bg-on-primary-fixed-variant transition-colors active:scale-[0.98]">
+                        <span class="material-symbols-outlined text-[18px]">add</span>
+                        Log Exercise
+                    </button>
+                </form>
+            </section>
+        </main>
+
+        <!-- BottomNavBar (Mobile Only) -->
+        <nav class="md:hidden fixed bottom-0 left-0 right-0 z-50 flex justify-around items-center px-4 py-2 bg-surface-container-lowest dark:bg-surface-container-lowest shadow-[0px_4px_20px_rgba(0,0,0,0.04)] rounded-full mx-auto mb-8 w-[90%] max-w-md">
+            <button class="nav-tab flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant p-2 hover:text-primary dark:hover:text-primary-fixed-dim transition-all active:scale-[0.98] duration-200" data-target="view-dashboard">
+                <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">dashboard</span>
+                <span class="text-label-sm font-label-sm mt-1">Summary</span>
+            </button>
+            <button class="nav-tab flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant p-2 hover:text-primary dark:hover:text-primary-fixed-dim transition-all active:scale-[0.98] duration-200" data-target="view-dashboard">
+                <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">event_repeat</span>
+                <span class="text-label-sm font-label-sm mt-1">Habits</span>
+            </button>
+            <button class="nav-tab flex flex-col items-center justify-center bg-secondary-container dark:bg-secondary-fixed text-primary dark:text-on-secondary-fixed rounded-xl px-4 py-2 active:scale-[0.98] transition-transform duration-200" data-target="view-workout">
+                <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">fitness_center</span>
+                <span class="text-label-sm font-label-sm mt-1">Sports</span>
+            </button>
+            <button class="nav-tab flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant p-2 hover:text-primary dark:hover:text-primary-fixed-dim transition-all active:scale-[0.98] duration-200" data-target="view-finance">
+                <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">payments</span>
+                <span class="text-label-sm font-label-sm mt-1">Finance</span>
+            </button>
+            <button class="nav-tab flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant p-2 hover:text-primary dark:hover:text-primary-fixed-dim transition-all active:scale-[0.98] duration-200" data-target="view-shopping">
+                <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">more_horiz</span>
+                <span class="text-label-sm font-label-sm mt-1">More</span>
+            </button>
+        </nav>
     </section>
 
-    <!-- FİNANS -->
-    <section id="view-finance" class="view">
-      <header class="page-header">
-        <p class="eyebrow">Sayfa 03</p>
-        <h2>Finans</h2>
-      </header>
-      <form id="tx-form" class="inline-form">
-        <input type="text" id="tx-desc" placeholder="Açıklama (örn. market)" required>
-        <input type="number" id="tx-amount" placeholder="Tutar" step="0.01" required>
-        <select id="tx-type">
-          <option value="expense">Gider</option>
-          <option value="income">Gelir</option>
-        </select>
-        <button type="submit" class="btn-primary">Ekle</button>
-      </form>
-      <div class="ledger-header-row">
-        <span>Açıklama</span>
-        <span>Tarih</span>
-        <span class="align-right">Tutar</span>
-      </div>
-      <ul id="tx-list" class="ledger-list ledger-list--finance"></ul>
-      <p class="empty-state hidden" id="tx-empty">Henüz işlem yok. Yukarıdan bir tane ekle.</p>
+    <!-- ================= FİNANS (Placeholder) ================= -->
+    <section id="view-finance" class="view hidden px-container-padding py-6">
+        <header class="flex justify-between items-center mb-8">
+            <h1 class="font-display-lg text-primary tracking-tight">Finans</h1>
+            <button class="material-symbols-outlined text-primary p-2 hover:bg-surface-container-low transition-colors rounded-full logout-trigger">logout</button>
+        </header>
+        <div class="bg-surface-container-lowest rounded-xl p-6 ambient-shadow mb-section-margin">
+            <form id="tx-form" class="space-y-4 mb-8">
+                <div>
+                    <input type="text" id="tx-desc" placeholder="Açıklama (örn. market)" required class="w-full bg-surface-dim border-transparent focus:border-primary rounded-lg py-3 px-4 text-on-background">
+                </div>
+                <div class="flex gap-4">
+                    <input type="number" id="tx-amount" placeholder="Tutar" step="0.01" required class="flex-1 bg-surface-dim border-transparent focus:border-primary rounded-lg py-3 px-4 text-on-background">
+                    <select id="tx-type" class="flex-1 bg-surface-dim border-transparent focus:border-primary rounded-lg py-3 px-4 text-on-background">
+                        <option value="expense">Gider</option>
+                        <option value="income">Gelir</option>
+                    </select>
+                </div>
+                <button type="submit" class="w-full bg-primary text-on-primary rounded-lg py-3 font-label-md flex items-center justify-center gap-2">Ekle</button>
+            </form>
+            <div id="tx-list" class="space-y-3"></div>
+        </div>
+        <!-- Simple bottom nav for finance -->
+        <nav class="fixed bottom-6 left-0 right-0 z-50 flex justify-around items-center px-4 py-3 bg-surface-container-lowest/90 backdrop-blur-md rounded-full mx-auto w-[90%] max-w-md shadow-2xl">
+            <button class="nav-tab flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-colors" data-target="view-dashboard">
+                <span class="material-symbols-outlined">home</span>
+            </button>
+            <button class="nav-tab flex flex-col items-center justify-center text-primary bg-secondary-container px-4 py-2 rounded-xl transition-colors" data-target="view-finance">
+                <span class="material-symbols-outlined">account_balance_wallet</span>
+            </button>
+            <button class="nav-tab flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-colors" data-target="view-workout">
+                <span class="material-symbols-outlined">fitness_center</span>
+            </button>
+            <button class="nav-tab flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-colors" data-target="view-shopping">
+                <span class="material-symbols-outlined">shopping_cart</span>
+            </button>
+        </nav>
     </section>
-
-  </main>
 </div>
 
 <script type="module" src="app.js"></script>
