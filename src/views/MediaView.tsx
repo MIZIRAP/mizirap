@@ -1,10 +1,10 @@
 import { motion } from 'framer-motion';
-import { Play, Plus, CheckCircle2, Film } from 'lucide-react';
+import { Plus, CheckCircle2, Film } from 'lucide-react';
 import { useStore } from '../store/useStore';
 import { useState } from 'react';
 
 export const MediaView = () => {
-  const { media, addMedia, updateMediaProgress } = useStore();
+  const { media, updateMediaProgress } = useStore();
   const [activeTab, setActiveTab] = useState('İzliyorum');
 
   const tabs = ['İzliyorum', 'İzlenecek', 'Tamamlandı'];

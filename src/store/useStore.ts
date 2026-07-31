@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { UserProfile, WaterLog, ReadingLog, ExerciseItem, Transaction, MealEntry, MediaItem } from '../types';
+import type { UserProfile, WaterLog, ReadingLog, ExerciseItem, Transaction, MealEntry, MediaItem } from '../types';
 
 interface AppState {
   profile: UserProfile;
