@@ -1,0 +1,61 @@
+@import "tailwindcss";
+
+@theme {
+  --color-background: #f7faf3;
+  --color-on-background: #191d18;
+  --color-surface: #ffffff;
+  --color-on-surface: #191d18;
+  --color-on-surface-variant: #414844;
+  --color-primary: #446554;
+  --color-on-primary: #ffffff;
+  --color-primary-container: #7ea18d;
+  --color-on-primary-container: #163728;
+  --color-primary-fixed-dim: #abcfb9;
+  --color-secondary: #4d6357;
+  --color-on-secondary: #ffffff;
+  --color-secondary-container: #cfe9d9;
+  --color-on-secondary-container: #53695d;
+  --color-tertiary: #7d562b;
+  --color-on-tertiary: #ffffff;
+  --color-tertiary-fixed: #ffdcbd;
+  --color-error: #ba1a1a;
+  --color-on-error: #ffffff;
+  --color-error-container: #ffdad6;
+  --color-outline: #727973;
+  --color-outline-variant: #c1c8c2;
+  --color-surface-container-lowest: #ffffff;
+  --color-surface-container-low: #f1f5ed;
+  --color-surface-container: #ecefe8;
+  --color-surface-container-high: #e6e9e2;
+  --color-surface-container-highest: #e0e4dc;
+
+  --font-sans: "Inter", sans-serif;
+  
+  --radius-xl: 0.75rem;
+  --radius-2xl: 1rem;
+  --radius-3xl: 1.5rem; /* 24px */
+  --radius-card: 24px;
+}
+
+@layer base {
+  body {
+    @apply bg-background text-on-background font-sans antialiased;
+    overscroll-behavior-y: none;
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
+
+  body::-webkit-scrollbar {
+    display: none; /* Chrome, Safari and Opera */
+  }
+}
+
+@layer utilities {
+  .card-shadow {
+    box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.04);
+  }
+  
+  .interactive-card {
+    @apply transition-transform duration-200 active:scale-[0.98];
+  }
+}
