@@ -96,6 +96,7 @@ onAuthStateChanged(auth, (user) => {
 
   if (user) {
     authScreen.classList.add("hidden");
+    authScreen.classList.remove("flex");
     appScreen.classList.remove("hidden");
     
     const name = user.displayName || user.email.split('@')[0];
@@ -111,6 +112,7 @@ onAuthStateChanged(auth, (user) => {
   } else {
     appScreen.classList.add("hidden");
     authScreen.classList.remove("hidden");
+    authScreen.classList.add("flex");
     loginForm.reset();
     registerForm.reset();
   }
