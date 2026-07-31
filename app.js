@@ -95,20 +95,25 @@ onAuthStateChanged(auth, (user) => {
   unsubscribers = [];
 
   if (user) {
-    authScreen.classList.add("hidden");
-    authScreen.classList.remove("flex");
-    appScreen.classList.remove("hidden");
-    
-    const name = user.displayName || user.email.split('@')[0];
-    const dsName = document.getElementById("dashboard-user-name");
-    if(dsName) dsName.textContent = name;
-    
-    const today = new Date();
-    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-    const dsDate = document.getElementById("dashboard-date");
-    if(dsDate) dsDate.textContent = today.toLocaleDateString('tr-TR', options);
-    
-    startListeners(user.uid);
+    try {
+        authScreen.classList.add("hidden");
+        authScreen.classList.remove("flex");
+        appScreen.classList.remove("hidden");
+        
+        const name = user.displayName || (user.email ? user.email.split('@')[0] : "Kullanıcı");
+        const dsName = document.getElementById("dashboard-user-name");
+        if(dsName) dsName.textContent = name;
+        
+        const today = new Date();
+        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        const dsDate = document.getElementById("dashboard-date");
+        if(dsDate) dsDate.textContent = today.toLocaleDateString('tr-TR', options);
+        
+        startListeners(user.uid);
+    } catch (err) {
+        console.error("Login transition error:", err);
+        alert("Giriş yapılırken bir hata oluştu: " + err.message);
+    }
   } else {
     appScreen.classList.add("hidden");
     authScreen.classList.remove("hidden");
