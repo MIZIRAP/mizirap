@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>My Life Dashboard</title>
@@ -373,7 +374,7 @@
                         <span class="material-symbols-outlined text-sm" style="font-size: 16px;">history</span>
                         <span class="font-body-md text-body-md" id="workout-last-session-date">Geçmiş antrenman aranıyor...</span>
                     </div>
-                    <button class="hover:bg-surface-variant p-2 rounded-full transition-colors flex items-center justify-center">
+                    <button class="hover:bg-surface-variant p-2 rounded-full transition-colors flex items-center justify-center" onclick="openEditTemplateView()">
                         <span class="material-symbols-outlined text-sm" style="font-size: 16px;">edit</span>
                     </button>
                 </div>
@@ -394,6 +395,67 @@
         </div>
     </section>
 
+    <!-- Edit Workout Template View -->
+    <section id="view-edit-workout-template" class="view hidden bg-background text-on-background antialiased min-h-screen flex flex-col items-center pb-[100px]">
+        <style>
+            .drag-handle {
+                cursor: grab;
+            }
+            .drag-handle:active {
+                cursor: grabbing;
+            }
+            .exercise-item {
+                transition: transform 0.2s ease, box-shadow 0.2s ease;
+            }
+            .exercise-item:active {
+                transform: scale(0.98);
+                box-shadow: 0px 2px 10px rgba(0,0,0,0.05);
+            }
+            .sortable-ghost {
+                opacity: 0.4;
+            }
+        </style>
+        
+        <!-- TopAppBar -->
+        <header class="w-full top-0 sticky bg-background dark:bg-background z-40">
+            <div class="flex items-center justify-between px-container-padding py-4 w-full flat no shadows">
+                <button class="flex items-center justify-center p-2 rounded-full hover:bg-surface-variant transition-colors duration-200" id="edit-template-back-btn">
+                    <span class="material-symbols-outlined text-on-surface-variant">arrow_back</span>
+                </button>
+                <h1 class="font-headline-sm text-headline-sm text-primary dark:text-primary-fixed-dim" id="edit-template-header-title">Şablonu Düzenle</h1>
+                <button class="flex items-center justify-center p-2 rounded-full hover:bg-surface-variant transition-colors duration-200" id="edit-template-save-btn">
+                    <span class="material-symbols-outlined text-primary">done</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- Main Canvas -->
+        <main class="flex-1 w-full max-w-md px-container-padding py-card-gap flex flex-col gap-card-gap pb-[100px]">
+            <!-- Header Section -->
+            <div class="mb-2">
+                <p class="font-label-md text-label-md text-primary uppercase tracking-wider mb-1" id="edit-template-split-name">Split Profili: İtiş / Çekiş / Bacak</p>
+                <p class="font-body-md text-body-md text-on-surface-variant mb-1">Şablonu Düzenle</p>
+                <h2 class="font-display-lg text-display-lg text-on-background" id="edit-template-day-name">İtiş Günü Şablonu</h2>
+                <p class="font-body-md text-body-md text-on-surface-variant mt-2 max-w-[280px]">Sürükleyerek sırayı değiştirin, silmek için çöp kutusu simgesini kullanın.</p>
+            </div>
+
+            <!-- Exercise List -->
+            <div class="flex flex-col gap-element-spacing" id="edit-template-exercise-list">
+                <!-- Exercises will be rendered here dynamically -->
+            </div>
+
+            <!-- Add Section -->
+            <div class="mt-section-margin bg-surface-container-low p-4 rounded-xl border border-outline-variant/30 flex flex-col gap-4 shadow-sm">
+                <p class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Yeni Hareket</p>
+                <div class="flex items-center gap-2">
+                    <input class="flex-1 bg-surface-container-lowest border border-outline-variant rounded-lg px-4 py-3 font-body-md text-body-md text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-shadow placeholder:text-outline" placeholder="Hareket ara veya yaz..." type="text" id="edit-template-new-ex-input"/>
+                    <button class="bg-primary text-on-primary w-12 h-12 rounded-lg flex items-center justify-center hover:bg-primary-container hover:text-on-primary-container transition-colors shadow-md" id="edit-template-add-ex-btn">
+                        <span class="material-symbols-outlined">add</span>
+                    </button>
+                </div>
+            </div>
+        </main>
+    </section>
     <section id="view-finance" class="view hidden px-container-padding py-6">
         <header class="flex justify-between items-center mb-8">
             <h1 class="font-display-lg text-primary tracking-tight">Finans</h1>

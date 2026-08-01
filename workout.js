@@ -577,3 +577,168 @@ window.closeHistoryModal = function() {
         }, 300);
     }
 };
+
+// ==========================================
+// EDIT TEMPLATE VIEW
+// ==========================================
+
+let editingExercises = [];
+
+window.openEditTemplateView = function() {
+    if (!activeSplitId || !activeDayId) return;
+    const split = splits.find(s => s.id === activeSplitId);
+    if (!split) return;
+    const day = split.days.find(d => d.id === activeDayId);
+    if (!day) return;
+
+    // Set Header Info
+    const splitNameEl = document.getElementById("edit-template-split-name");
+    const dayNameEl = document.getElementById("edit-template-day-name");
+    if (splitNameEl) splitNameEl.textContent = `Split Profili: ${split.name}`;
+    if (dayNameEl) dayNameEl.textContent = `${day.name} Günü Şablonu`;
+
+    // Copy current day's exercises to local editing array
+    editingExercises = JSON.parse(JSON.stringify(day.exercises));
+
+    renderEditTemplateList();
+
+    // Switch View
+    document.querySelectorAll(".view").forEach(v => v.classList.add("hidden"));
+    document.getElementById("view-edit-workout-template").classList.remove("hidden");
+    
+    // Hide BottomNavBar for this transactional screen
+    const navBar = document.getElementById("bottom-nav");
+    if(navBar) navBar.style.display = "none";
+};
+
+function renderEditTemplateList() {
+    const listEl = document.getElementById("edit-template-exercise-list");
+    if (!listEl) return;
+    
+    listEl.innerHTML = "";
+    
+    editingExercises.forEach((ex, index) => {
+        const item = document.createElement("div");
+        item.className = "exercise-item bg-surface-container-lowest rounded-xl p-4 shadow-[0px_4px_20px_rgba(0,0,0,0.04)] flex items-center gap-4 group";
+        item.dataset.index = index;
+        
+        item.innerHTML = `
+            <span class="material-symbols-outlined text-outline-variant drag-handle">drag_handle</span>
+            <div class="flex-1">
+                <h3 class="font-body-lg text-body-lg font-medium text-on-surface">${escapeHtml(ex.name)}</h3>
+                <p class="font-label-sm text-label-sm text-on-surface-variant">Genel • ${ex.defaultSets || 3} Set</p>
+            </div>
+            <button class="text-error opacity-70 hover:opacity-100 transition-opacity p-2 delete-btn">
+                <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">delete</span>
+            </button>
+        `;
+        
+        item.querySelector(".delete-btn").onclick = () => {
+            editingExercises.splice(index, 1);
+            renderEditTemplateList();
+        };
+        
+        listEl.appendChild(item);
+    });
+    
+    // Init SortableJS
+    if (window.Sortable && !listEl.sortableInstance) {
+        listEl.sortableInstance = new Sortable(listEl, {
+            handle: '.drag-handle',
+            animation: 150,
+            ghostClass: 'sortable-ghost',
+            onEnd: function (evt) {
+                const itemEl = editingExercises.splice(evt.oldIndex, 1)[0];
+                editingExercises.splice(evt.newIndex, 0, itemEl);
+            },
+        });
+    } else if (listEl.sortableInstance) {
+        // Just keep the existing instance, it automatically works with DOM updates as long as we re-render or sync.
+        // Wait, if we completely re-render, we might need to destroy and re-create.
+        listEl.sortableInstance.destroy();
+        listEl.sortableInstance = new Sortable(listEl, {
+            handle: '.drag-handle',
+            animation: 150,
+            ghostClass: 'sortable-ghost',
+            onEnd: function (evt) {
+                const itemEl = editingExercises.splice(evt.oldIndex, 1)[0];
+                editingExercises.splice(evt.newIndex, 0, itemEl);
+            },
+        });
+    }
+}
+
+// Add New Exercise
+document.addEventListener('DOMContentLoaded', () => {
+    setTimeout(() => {
+        const addBtn = document.getElementById("edit-template-add-ex-btn");
+        const addInput = document.getElementById("edit-template-new-ex-input");
+        if(addBtn && addInput) {
+            addBtn.onclick = () => {
+                const name = addInput.value.trim();
+                if(!name) return;
+                editingExercises.push({
+                    id: `e${Date.now()}`,
+                    name: name,
+                    defaultSets: 3
+                });
+                addInput.value = "";
+                renderEditTemplateList();
+            };
+            addInput.addEventListener('keypress', (e) => {
+                if(e.key === 'Enter') addBtn.click();
+            });
+        }
+        
+        // Back Btn
+        const backBtn = document.getElementById("edit-template-back-btn");
+        if(backBtn) {
+            backBtn.onclick = () => {
+                closeEditTemplateView();
+            };
+        }
+        
+        // Save Btn
+        const saveBtn = document.getElementById("edit-template-save-btn");
+        if(saveBtn) {
+            saveBtn.onclick = async () => {
+                if (!activeSplitId || !activeDayId) return;
+                const split = splits.find(s => s.id === activeSplitId);
+                if (!split) return;
+                
+                const dayIndex = split.days.findIndex(d => d.id === activeDayId);
+                if (dayIndex === -1) return;
+                
+                // Update local split object
+                const updatedSplit = JSON.parse(JSON.stringify(split));
+                updatedSplit.days[dayIndex].exercises = editingExercises;
+                
+                try {
+                    saveBtn.style.opacity = '0.5';
+                    saveBtn.disabled = true;
+                    
+                    await setDoc(doc(db, "users", currentUid, "splits", activeSplitId), updatedSplit);
+                    
+                    saveBtn.style.opacity = '1';
+                    saveBtn.disabled = false;
+                    closeEditTemplateView();
+                    
+                } catch(e) {
+                    console.error("Error updating template:", e);
+                    alert("Şablon kaydedilirken hata oluştu.");
+                    saveBtn.style.opacity = '1';
+                    saveBtn.disabled = false;
+                }
+            };
+        }
+    }, 1000); // Give time for DOM parsing just in case since this is appended
+});
+
+function closeEditTemplateView() {
+    document.querySelectorAll(".view").forEach(v => v.classList.add("hidden"));
+    document.getElementById("view-workout").classList.remove("hidden");
+    
+    // Show BottomNavBar again
+    const navBar = document.getElementById("bottom-nav");
+    if(navBar) navBar.style.display = "flex";
+}
