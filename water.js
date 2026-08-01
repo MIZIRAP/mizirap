@@ -203,8 +203,8 @@ function updateWaterUI() {
             logList.innerHTML = `<div class="p-4 text-center text-on-surface-variant text-sm">Bugün henüz su içilmedi.</div>`;
         } else {
             // Sort by time descending (newest first)
-            // Firebase returns desc ordered by default, and todaysLogs keeps that order
-            todaysLogs.forEach(log => {
+            // Sadece en yeni 3 log'u göster
+            todaysLogs.slice(0, 3).forEach(log => {
                 const timeStr = log.createdAt?.toDate ? log.createdAt.toDate().toLocaleTimeString("tr-TR", {hour: '2-digit', minute:'2-digit'}) : "";
                 const div = document.createElement("div");
                 div.className = "flex items-center justify-between p-4 border-b border-surface-container/50 last:border-0";
