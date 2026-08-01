@@ -17,6 +17,7 @@ const registerForm = document.getElementById("register-form");
 setupAuthUI();
 
 // ---------- Oturum durumu ----------
+/* Orijinal Auth Akışı Yorum Satırına Alındı (Test İçin)
 onAuthStateChanged(auth, (user) => {
     if (user) {
         try {
@@ -67,6 +68,37 @@ onAuthStateChanged(auth, (user) => {
         clearFinance();
         clearWater();
     }
+});
+*/
+
+// TEST AKIŞI: Otomatik giriş yapmış gibi davran
+const testUser = {
+    uid: "test-user-123",
+    displayName: "Test Kullanıcısı"
+};
+
+authScreen.classList.add("hidden");
+authScreen.classList.remove("flex");
+appScreen.classList.remove("hidden");
+
+const dsName = document.getElementById("dashboard-user-name");
+if(dsName) dsName.textContent = testUser.displayName;
+
+const today = new Date();
+const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+const dsDate = document.getElementById("dashboard-date");
+if(dsDate) dsDate.textContent = today.toLocaleDateString('tr-TR', options);
+
+initDashboard(testUser.uid);
+initShopping(testUser.uid);
+initWorkout(testUser.uid, (workouts) => {
+    updateDashboardWorkouts(workouts);
+});
+initFinance(testUser.uid, (txs) => {
+    updateDashboardFinance(txs);
+});
+initWater(testUser.uid, (waterStats) => {
+    updateDashboardWater(waterStats);
 });
 
 // ---------- Sekme (view) geçişleri (Uygulama İçi) ----------
