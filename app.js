@@ -1,5 +1,5 @@
 import { auth } from "./firebase-config.js";
-import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
+import { onAuthStateChanged, signInAnonymously } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
 import { setupAuthUI } from "./auth.js";
 import { initDashboard, clearDashboard, updateDashboardWorkouts, updateDashboardFinance, updateDashboardWater } from "./dashboard.js";
 import { initShopping, clearShopping } from "./shopping.js";
@@ -10,22 +10,20 @@ import { initWater, clearWater } from "./water.js";
 // ---------- DOM referansları ----------
 const authScreen = document.getElementById("auth-screen");
 const appScreen = document.getElementById("app-screen");
-const loginForm = document.getElementById("login-form");
-const registerForm = document.getElementById("register-form");
 
 // ---------- Başlangıç ----------
 setupAuthUI();
 
 // ---------- Oturum durumu ----------
-/* Orijinal Auth Akışı Yorum Satırına Alındı (Test İçin)
-onAuthStateChanged(auth, (user) => {
+onAuthStateChanged(auth, async (user) => {
     if (user) {
         try {
             authScreen.classList.add("hidden");
             authScreen.classList.remove("flex");
             appScreen.classList.remove("hidden");
             
-            const name = user.displayName || (user.email ? user.email.split('@')[0] : "Kullanıcı");
+            // Eğer isimsiz (anonim) girişse test kullanıcısı yaz, yoksa normal adı al
+            const name = user.isAnonymous ? "Test Kullanıcısı" : (user.displayName || (user.email ? user.email.split('@')[0] : "Kullanıcı"));
             const dsName = document.getElementById("dashboard-user-name");
             if(dsName) dsName.textContent = name;
             
@@ -55,50 +53,15 @@ onAuthStateChanged(auth, (user) => {
             alert("Giriş yapılırken bir hata oluştu: " + err.message);
         }
     } else {
-        appScreen.classList.add("hidden");
-        authScreen.classList.remove("hidden");
-        authScreen.classList.add("flex");
-        if(loginForm) loginForm.reset();
-        if(registerForm) registerForm.reset();
-        
-        // Modülleri temizle
-        clearDashboard();
-        clearShopping();
-        clearWorkout();
-        clearFinance();
-        clearWater();
+        // Test modunda direkt anonim olarak giriş yaptır (Kayıt ekranını atlamak için)
+        try {
+            await signInAnonymously(auth);
+            console.log("Anonim giriş başarılı (Test Modu)");
+        } catch (error) {
+            console.error("Anonim giriş hatası:", error);
+            alert("Test girişi sağlanamadı. Firebase Auth ayarlarından Anonymous/Misafir girişini açmanız gerekebilir.");
+        }
     }
-});
-*/
-
-// TEST AKIŞI: Otomatik giriş yapmış gibi davran
-const testUser = {
-    uid: "test-user-123",
-    displayName: "Test Kullanıcısı"
-};
-
-authScreen.classList.add("hidden");
-authScreen.classList.remove("flex");
-appScreen.classList.remove("hidden");
-
-const dsName = document.getElementById("dashboard-user-name");
-if(dsName) dsName.textContent = testUser.displayName;
-
-const today = new Date();
-const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-const dsDate = document.getElementById("dashboard-date");
-if(dsDate) dsDate.textContent = today.toLocaleDateString('tr-TR', options);
-
-initDashboard(testUser.uid);
-initShopping(testUser.uid);
-initWorkout(testUser.uid, (workouts) => {
-    updateDashboardWorkouts(workouts);
-});
-initFinance(testUser.uid, (txs) => {
-    updateDashboardFinance(txs);
-});
-initWater(testUser.uid, (waterStats) => {
-    updateDashboardWater(waterStats);
 });
 
 // ---------- Sekme (view) geçişleri (Uygulama İçi) ----------
