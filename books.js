@@ -25,6 +25,18 @@ const authorInput = document.getElementById("book-add-author");
 const pagesInput = document.getElementById("book-add-pages");
 const addStatusRadios = document.querySelectorAll(".book-add-status-radio");
 
+// View All Modal Elements
+const viewAllBtn = document.getElementById("books-view-all-btn");
+const viewAllModal = document.getElementById("books-all-modal");
+const viewAllClose = document.getElementById("books-all-close");
+const viewAllSearch = document.getElementById("books-all-search");
+const viewAllTabs = document.querySelectorAll(".books-all-tab");
+const viewAllList = document.getElementById("books-all-list");
+
+let viewAllFilter = "all";
+let viewAllQuery = "";
+let currentUid = null;
+
 // Edit Modal Elements
 const editModal = document.getElementById("book-edit-modal");
 const editModalContent = document.getElementById("book-edit-modal-content");
@@ -110,6 +122,7 @@ function closeEditModal() {
 }
 
 export function initBooks(uid, onChangeCallback) {
+    currentUid = uid;
     onChangeCb = onChangeCallback;
     
     if (addBookBtn) addBookBtn.onclick = openAddModal;
@@ -289,6 +302,47 @@ export function initBooks(uid, onChangeCallback) {
         };
     }
 
+    // View All Modal Events
+    if (viewAllBtn) {
+        viewAllBtn.onclick = () => {
+            if(!viewAllModal) return;
+            renderViewAllList();
+            viewAllModal.classList.remove("hidden");
+            void viewAllModal.offsetWidth;
+            viewAllModal.classList.remove("translate-y-full");
+        };
+    }
+
+    if (viewAllClose) {
+        viewAllClose.onclick = () => {
+            if(!viewAllModal) return;
+            viewAllModal.classList.add("translate-y-full");
+            setTimeout(() => {
+                viewAllModal.classList.add("hidden");
+            }, 300);
+        };
+    }
+
+    if (viewAllSearch) {
+        viewAllSearch.oninput = (e) => {
+            viewAllQuery = e.target.value;
+            renderViewAllList();
+        };
+    }
+
+    viewAllTabs.forEach(tab => {
+        tab.onclick = () => {
+            viewAllTabs.forEach(t => {
+                t.classList.remove("bg-primary-container", "text-on-primary-container");
+                t.classList.add("bg-surface-container-high", "text-on-surface-variant");
+            });
+            tab.classList.remove("bg-surface-container-high", "text-on-surface-variant");
+            tab.classList.add("bg-primary-container", "text-on-primary-container");
+            viewAllFilter = tab.dataset.filter;
+            renderViewAllList();
+        };
+    });
+
     const booksRef = collection(db, "users", uid, "books");
     
     booksUnsubscribe = onSnapshot(booksRef, async (snapshot) => {
@@ -301,6 +355,7 @@ export function initBooks(uid, onChangeCallback) {
 
         currentBooks = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
         renderBooks(uid);
+        renderViewAllList();
         
         if (onChangeCb) {
             onChangeCb(currentBooks);
@@ -481,6 +536,120 @@ function renderBooks(uid) {
             }
         };
     });
+}
+
+function renderViewAllList() {
+    if(!viewAllList) return;
+    
+    let filtered = currentBooks.filter(b => {
+        if(viewAllFilter !== "all" && b.status !== viewAllFilter) return false;
+        if(viewAllQuery) {
+            const q = viewAllQuery.toLowerCase();
+            const title = (b.title || "").toLowerCase();
+            const author = (b.author || "").toLowerCase();
+            if(!title.includes(q) && !author.includes(q)) return false;
+        }
+        return true;
+    });
+    
+    viewAllList.innerHTML = "";
+    if(filtered.length === 0) {
+        viewAllList.innerHTML = `<p class="text-on-surface-variant text-center mt-8">Sonuç bulunamadı.</p>`;
+        return;
+    }
+    
+    filtered.forEach(book => {
+        const safeTitle = escapeHtml(book.title || "İsimsiz");
+        const safeAuthor = escapeHtml(book.author || "Yazar Yok");
+        const safeCover = escapeHtml(book.coverUrl || "");
+        
+        let statusHtml = "";
+        if(book.status === "reading") {
+            const percent = Math.min(100, Math.round(((book.readPages || 0) / (book.totalPages || 1)) * 100));
+            statusHtml = `
+                <div class="flex flex-col gap-2">
+                    <div class="flex justify-between items-center">
+                        <span class="inline-flex items-center px-2 py-0.5 rounded text-label-sm font-label-sm bg-primary/10 text-primary">Okuyorum</span>
+                        <span class="font-label-sm text-label-sm text-on-surface-variant">%${percent}</span>
+                    </div>
+                    <div class="w-full h-1.5 bg-surface-container-high rounded-full overflow-hidden">
+                        <div class="h-full bg-primary rounded-full" style="width: ${percent}%;"></div>
+                    </div>
+                </div>
+            `;
+        } else if (book.status === "finished") {
+            statusHtml = `
+                <div>
+                    <span class="inline-flex items-center px-2 py-0.5 rounded text-label-sm font-label-sm bg-surface-container-highest text-on-surface-variant">
+                        <span class="material-symbols-outlined text-[14px] mr-1" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+                        Bitti
+                    </span>
+                </div>
+            `;
+        } else {
+            statusHtml = `
+                <div>
+                    <span class="inline-flex items-center px-2 py-0.5 rounded text-label-sm font-label-sm bg-tertiary/10 text-tertiary">Okunacak</span>
+                </div>
+            `;
+        }
+        
+        const card = document.createElement("div");
+        card.className = "bg-surface-container-lowest rounded-xl p-4 flex gap-4 soft-shadow items-center transition-transform active:scale-[0.98] relative cursor-pointer edit-book-trigger";
+        card.dataset.id = book.id;
+        card.innerHTML = `
+            <button class="absolute top-3 right-3 p-1.5 rounded-full text-on-surface-variant/40 hover:text-error hover:bg-error-container/20 transition-colors z-10 delete-book-btn" data-id="${book.id}">
+                <span class="material-symbols-outlined text-[18px]">delete</span>
+            </button>
+            <div class="w-16 h-24 shrink-0 rounded-lg overflow-hidden bg-surface-container-high relative">
+                <img class="w-full h-full object-cover" src="${safeCover}">
+            </div>
+            <div class="flex-1 min-w-0 flex flex-col justify-center">
+                <h3 class="font-body-lg text-body-lg font-semibold text-on-surface truncate mb-1">${safeTitle}</h3>
+                <p class="font-body-md text-body-md text-on-surface-variant truncate mb-3">${safeAuthor}</p>
+                ${statusHtml}
+            </div>
+        `;
+        viewAllList.appendChild(card);
+    });
+    
+    // Bind Edit Triggers inside modal
+    viewAllList.querySelectorAll(".edit-book-trigger").forEach(el => {
+        el.onclick = (e) => {
+            if(e.target.closest('.delete-book-btn')) return;
+            const id = el.dataset.id;
+            const book = currentBooks.find(b => b.id === id);
+            if(book) openEditModal(book);
+        };
+    });
+    
+    // Bind Delete inside modal
+    viewAllList.querySelectorAll(".delete-book-btn").forEach(el => {
+        el.onclick = async (e) => {
+            e.stopPropagation();
+            const id = el.dataset.id;
+            if(!confirm("Bu kitabı silmek istediğinize emin misiniz?")) return;
+            const originalHTML = el.innerHTML;
+            try {
+                el.innerHTML = "...";
+                const docRef = doc(db, "users", currentUid, "books", id);
+                await deleteDoc(docRef);
+            } catch(err) {
+                console.error("Kitap silerken hata (Test Modu olabilir):", err);
+                currentBooks = currentBooks.filter(b => b.id !== id);
+                renderBooks(currentUid);
+                renderViewAllList();
+                if(onChangeCb) onChangeCb(currentBooks);
+            } finally {
+                el.innerHTML = originalHTML;
+            }
+        };
+    });
+    
+    // End of list spacing
+    const spacing = document.createElement("div");
+    spacing.className = "h-8";
+    viewAllList.appendChild(spacing);
 }
 
 export function clearBooks() {

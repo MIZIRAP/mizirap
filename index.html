@@ -424,7 +424,7 @@
             <section class="flex flex-col gap-element-spacing">
                 <div class="flex justify-between items-end">
                     <h2 class="font-headline-sm text-headline-sm text-on-surface">Kitaplarım</h2>
-                    <button class="font-label-md text-label-md text-primary hover:text-surface-tint transition-colors">Tümünü Gör</button>
+                    <button id="books-view-all-btn" class="font-label-md text-label-md text-primary hover:text-surface-tint transition-colors">Tümünü Gör</button>
                 </div>
                 <div id="books-all-grid" class="grid grid-cols-2 gap-card-gap">
                     <!-- Dinamik -->
@@ -572,6 +572,44 @@
                 </div>
             </div>
         </div>
+
+        <!-- Tüm Kitaplarım Modal -->
+        <div class="hidden fixed inset-0 z-[110] bg-background flex flex-col h-full w-full max-w-md mx-auto sm:border-x sm:border-surface-variant shadow-2xl transition-transform duration-300 translate-y-full" id="books-all-modal">
+            <!-- Header -->
+            <header class="flex items-center justify-between px-container-padding py-4 shrink-0 bg-background/95 backdrop-blur-md sticky top-0 z-10">
+                <h1 class="font-headline-md text-headline-md text-on-surface">Tüm Kitaplarım</h1>
+                <button id="books-all-close" class="p-2 rounded-full hover:bg-surface-container-low transition-colors text-on-surface-variant flex items-center justify-center">
+                    <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">close</span>
+                </button>
+            </header>
+            <!-- Search Bar -->
+            <div class="px-container-padding pb-2 pt-1 shrink-0">
+                <div class="flex items-center bg-surface-container-low rounded-xl px-4 py-3 border border-transparent focus-within:border-primary transition-colors">
+                    <span class="material-symbols-outlined text-on-surface-variant mr-3" style="font-variation-settings: 'FILL' 0;">search</span>
+                    <input id="books-all-search" class="bg-transparent border-none outline-none w-full text-body-md font-body-md text-on-surface placeholder:text-on-surface-variant p-0 focus:ring-0" placeholder="Kitap veya yazar ara..." type="text">
+                </div>
+            </div>
+            <!-- Categories / Tabs -->
+            <div class="px-container-padding py-3 shrink-0 overflow-x-auto no-scrollbar flex gap-2 border-b border-surface-container-highest">
+                <button class="books-all-tab shrink-0 px-5 py-2 rounded-full bg-primary-container text-on-primary-container font-label-md text-label-md transition-transform active:scale-95" data-filter="all">
+                    Hepsi
+                </button>
+                <button class="books-all-tab shrink-0 px-5 py-2 rounded-full bg-surface-container-high text-on-surface-variant hover:bg-surface-container-highest font-label-md text-label-md transition-colors active:scale-95" data-filter="reading">
+                    Okuyorum
+                </button>
+                <button class="books-all-tab shrink-0 px-5 py-2 rounded-full bg-surface-container-high text-on-surface-variant hover:bg-surface-container-highest font-label-md text-label-md transition-colors active:scale-95" data-filter="to_read">
+                    Okunacak
+                </button>
+                <button class="books-all-tab shrink-0 px-5 py-2 rounded-full bg-surface-container-high text-on-surface-variant hover:bg-surface-container-highest font-label-md text-label-md transition-colors active:scale-95" data-filter="finished">
+                    Bitti
+                </button>
+            </div>
+            <!-- Content List -->
+            <div id="books-all-list" class="flex-1 overflow-y-auto px-container-padding py-4 space-y-4 pb-20 overscroll-y-contain">
+                <!-- Dinamik Listelenecek -->
+            </div>
+        </div>
+
     </section>
 
     <!-- ================= SU TAKİBİ (Water) ================= -->
@@ -802,6 +840,6 @@
 </div>
 <!-- Kapanış: #app-container -->
 
-<script type="module" src="app.js?v=16"></script>
+<script type="module" src="app.js?v=17"></script>
 </body>
 </html>
