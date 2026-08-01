@@ -553,9 +553,42 @@
     </section>
 </div>
 
+    <!-- ================= SU HEDEFİ MODALI ================= -->
+    <div class="hidden fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm" id="water-goal-modal">
+        <div class="bg-surface-container-lowest w-full max-w-sm rounded-[24px] shadow-lg overflow-hidden flex flex-col scale-95 opacity-0 transition-all duration-200" id="water-goal-modal-content">
+            <div class="p-6 flex flex-col gap-6">
+                <div class="flex flex-col gap-1">
+                    <h2 class="font-headline-sm text-headline-sm text-on-surface font-semibold">Günlük Hedefini Belirle</h2>
+                    <p class="font-body-md text-body-md text-on-surface-variant">Vücudunun ihtiyacı olan su miktarını ayarla.</p>
+                </div>
+                <div class="flex items-center justify-center gap-4 py-4">
+                    <button id="water-goal-minus" class="w-12 h-12 rounded-full bg-surface-container flex items-center justify-center text-primary hover:bg-primary-container/20 transition-colors active:scale-95">
+                        <span class="material-symbols-outlined">remove</span>
+                    </button>
+                    <div class="flex flex-col items-center min-w-[100px]">
+                        <span id="water-goal-amount-display" class="text-4xl font-bold text-primary">2000</span>
+                        <span class="text-label-md text-outline uppercase tracking-widest">ml</span>
+                    </div>
+                    <button id="water-goal-plus" class="w-12 h-12 rounded-full bg-surface-container flex items-center justify-center text-primary hover:bg-primary-container/20 transition-colors active:scale-95">
+                        <span class="material-symbols-outlined">add</span>
+                    </button>
+                </div>
+                <div class="flex flex-wrap gap-2 justify-center" id="water-goal-presets">
+                    <button class="water-goal-preset px-4 py-2 rounded-full bg-surface-container text-label-md text-on-surface-variant hover:bg-primary-container/30 transition-colors active:scale-95" data-amount="1500">1500ml</button>
+                    <button class="water-goal-preset px-4 py-2 rounded-full bg-primary-container text-label-md text-on-primary-container font-bold active:scale-95" data-amount="2000">2000ml</button>
+                    <button class="water-goal-preset px-4 py-2 rounded-full bg-surface-container text-label-md text-on-surface-variant hover:bg-primary-container/30 transition-colors active:scale-95" data-amount="2500">2500ml</button>
+                </div>
+            </div>
+            <div class="flex border-t border-outline-variant/30">
+                <button id="water-goal-cancel" class="flex-1 py-4 font-label-md text-label-md text-on-surface-variant uppercase tracking-wider hover:bg-surface-variant/20 transition-colors">İptal</button>
+                <div class="w-[1px] bg-outline-variant/30"></div>
+                <button id="water-goal-save" class="flex-1 py-4 font-label-md text-label-md text-primary font-bold uppercase tracking-wider hover:bg-primary-container/10 transition-colors">Güncelle</button>
+            </div>
+        </div>
+    </div>
 </div>
 <!-- Kapanış: #app-container -->
 
-<script type="module" src="app.js?v=5"></script>
+<script type="module" src="app.js?v=6"></script>
 </body>
 </html>

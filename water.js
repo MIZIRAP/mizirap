@@ -59,15 +59,86 @@ export function initWater(uid, onChangeCallback) {
         };
     }
 
-    // Event Listener for Daily Goal
+    // Event Listener for Daily Goal Modal
     const goalBtn = document.getElementById("water-goal-btn");
-    if(goalBtn) {
-        goalBtn.onclick = async () => {
-            const val = prompt("Yeni günlük hedefinizi (ml) girin:", dailyGoal.toString());
-            const newGoal = parseInt(val);
-            if(val && !isNaN(newGoal) && newGoal > 0) {
-                await setDoc(doc(db, "users", uid, "settings", "water"), { dailyGoal: newGoal }, { merge: true });
+    const modal = document.getElementById("water-goal-modal");
+    const modalContent = document.getElementById("water-goal-modal-content");
+    const minusBtn = document.getElementById("water-goal-minus");
+    const plusBtn = document.getElementById("water-goal-plus");
+    const cancelBtn = document.getElementById("water-goal-cancel");
+    const saveBtn = document.getElementById("water-goal-save");
+    const amountDisplay = document.getElementById("water-goal-amount-display");
+    const presetBtns = document.querySelectorAll(".water-goal-preset");
+    
+    let tempGoal = dailyGoal;
+
+    function updateModalUI() {
+        if(amountDisplay) amountDisplay.textContent = tempGoal;
+        presetBtns.forEach(btn => {
+            const amt = parseInt(btn.dataset.amount);
+            if(amt === tempGoal) {
+                btn.className = "water-goal-preset px-4 py-2 rounded-full bg-primary-container text-label-md text-on-primary-container font-bold active:scale-95";
+            } else {
+                btn.className = "water-goal-preset px-4 py-2 rounded-full bg-surface-container text-label-md text-on-surface-variant hover:bg-primary-container/30 transition-colors active:scale-95";
             }
+        });
+    }
+
+    function openModal() {
+        if(!modal) return;
+        tempGoal = dailyGoal;
+        updateModalUI();
+        modal.classList.remove("hidden");
+        // Trigger reflow
+        void modal.offsetWidth;
+        modalContent.classList.remove("opacity-0", "scale-95");
+        modalContent.classList.add("opacity-100", "scale-100");
+    }
+
+    function closeModal() {
+        if(!modal) return;
+        modalContent.classList.remove("opacity-100", "scale-100");
+        modalContent.classList.add("opacity-0", "scale-95");
+        setTimeout(() => {
+            modal.classList.add("hidden");
+        }, 200);
+    }
+
+    if(goalBtn) {
+        goalBtn.onclick = openModal;
+    }
+
+    if(minusBtn) {
+        minusBtn.onclick = () => {
+            if(tempGoal > 100) {
+                tempGoal -= 100;
+                updateModalUI();
+            }
+        };
+    }
+
+    if(plusBtn) {
+        plusBtn.onclick = () => {
+            tempGoal += 100;
+            updateModalUI();
+        };
+    }
+
+    presetBtns.forEach(btn => {
+        btn.onclick = () => {
+            tempGoal = parseInt(btn.dataset.amount);
+            updateModalUI();
+        };
+    });
+
+    if(cancelBtn) cancelBtn.onclick = closeModal;
+
+    if(saveBtn) {
+        saveBtn.onclick = async () => {
+            if(tempGoal > 0) {
+                await setDoc(doc(db, "users", uid, "settings", "water"), { dailyGoal: tempGoal }, { merge: true });
+            }
+            closeModal();
         };
     }
 }
