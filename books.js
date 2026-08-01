@@ -23,7 +23,7 @@ const coverText = document.getElementById("book-add-cover-text");
 const titleInput = document.getElementById("book-add-title");
 const authorInput = document.getElementById("book-add-author");
 const pagesInput = document.getElementById("book-add-pages");
-const statusBtns = document.querySelectorAll(".book-add-status-btn");
+const addStatusRadios = document.querySelectorAll(".book-add-status-radio");
 
 // Edit Modal Elements
 const editModal = document.getElementById("book-edit-modal");
@@ -56,7 +56,12 @@ function openAddModal() {
     coverPreview.classList.add("hidden");
     coverIcon.classList.remove("hidden");
     coverText.classList.remove("hidden");
-    updateStatusBtns();
+    
+    addStatusRadios.forEach(radio => {
+        if(radio.value === "to_read") {
+            radio.checked = true;
+        }
+    });
 
     addModal.classList.remove("hidden");
     void addModal.offsetWidth;
@@ -104,30 +109,12 @@ function closeEditModal() {
     }, 200);
 }
 
-function updateStatusBtns() {
-    statusBtns.forEach(btn => {
-        if(btn.dataset.status === tempStatus) {
-            btn.className = "book-add-status-btn flex-1 py-2 px-4 rounded-full font-label-md text-label-md transition-all bg-primary text-on-primary shadow-md";
-        } else {
-            btn.className = "book-add-status-btn flex-1 py-2 px-4 rounded-full font-label-md text-label-md transition-all bg-surface-dim text-on-surface-variant hover:bg-surface-container-high";
-        }
-    });
-}
-
 export function initBooks(uid, onChangeCallback) {
     onChangeCb = onChangeCallback;
     
     if (addBookBtn) addBookBtn.onclick = openAddModal;
     if (addCloseBtn) addCloseBtn.onclick = closeAddModal;
     if (addCancelBtn) addCancelBtn.onclick = closeAddModal;
-
-    // Status selection
-    statusBtns.forEach(btn => {
-        btn.onclick = () => {
-            tempStatus = btn.dataset.status;
-            updateStatusBtns();
-        };
-    });
 
     // Handle Image Selection (Resize on client to save space)
     if (coverInput) {
@@ -164,6 +151,8 @@ export function initBooks(uid, onChangeCallback) {
             const title = titleInput.value.trim();
             const author = authorInput.value.trim();
             const totalPages = parseInt(pagesInput.value) || 0;
+            let status = "to_read";
+            addStatusRadios.forEach(r => { if(r.checked) status = r.value; });
             
             if(!title || !author || totalPages <= 0) {
                 alert("Lütfen kitap adı, yazar ve geçerli bir sayfa sayısı girin.");
@@ -177,7 +166,7 @@ export function initBooks(uid, onChangeCallback) {
                 author,
                 totalPages,
                 readPages: 0,
-                status: tempStatus,
+                status: status,
                 coverUrl: tempCoverBase64 || defaultCover,
                 createdAt: serverTimestamp()
             };
@@ -304,10 +293,10 @@ export function initBooks(uid, onChangeCallback) {
     
     booksUnsubscribe = onSnapshot(booksRef, async (snapshot) => {
         if (snapshot.empty) {
-            // Veritabanı boşsa test için mock verileri ekleyelim
-            console.log("Kitap verisi yok, örnek kitaplar ekleniyor...");
-            await addMockBooks(uid);
-            return; // Ekleme işlemi bitince onSnapshot tekrar tetiklenecektir.
+            currentBooks = [];
+            renderBooks(uid);
+            if (onChangeCb) onChangeCb(currentBooks);
+            return;
         }
 
         currentBooks = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
@@ -502,69 +491,4 @@ export function clearBooks() {
     currentBooks = [];
     if(readingListEl) readingListEl.innerHTML = "";
     if(allGridEl) allGridEl.innerHTML = "";
-}
-
-async function addMockBooks(uid) {
-    try {
-        const batch = writeBatch(db);
-        const booksRef = collection(db, "users", uid, "books");
-        
-        const mocks = [
-            {
-                title: "Atomic Habits",
-                author: "James Clear",
-                coverUrl: "https://lh3.googleusercontent.com/aida-public/AB6AXuC1bZKu1qwvo2l2EXyx6q9LWqrXWsi__DediqeIvqkOKcD4CvBaI39C0ijIvl3AbkbbwhrR_cs_WU_fEd_JGsN06uRP2wEzlxJ54-OKAHx-uyJOe4RiQ9K5ub6ly4GYxMRgxu-gZYoRsx3oJXy3sxQHQNiQamGU01MBX_qMq4Bi-XPY6d2pyyi098NEOD0HZL_Kq9y-xs1BCVRUB4zKDPgvk3y1QcPssW5UwAWCBdiIHQk9mF9saQ9l",
-                status: "reading",
-                totalPages: 320,
-                readPages: 156,
-                createdAt: serverTimestamp()
-            },
-            {
-                title: "Deep Work",
-                author: "Cal Newport",
-                coverUrl: "https://lh3.googleusercontent.com/aida-public/AB6AXuDMEjVeorDK8S501P9IMtm_ISG2Hi4HzrPlgGpMA1ryI6opGOnDQ2qZKtDMCz9O_QL-7_wxewypJAPudsHOW4Rn_LiEq8-ki8oL5-RPV3CmljmMYiQWofNff3rdIxPTRXJl9justgl1DJeD2iDWifm2pulaOZmPx7DX4HYvFdUXBh6NPdI0O6BTcZ_JdhR8fI-1-UGeebBj76J9QhnD4IYwgOty0w6AXu4Slag8HcptrNmfa4Ri_LtR",
-                status: "finished",
-                totalPages: 300,
-                readPages: 300,
-                createdAt: serverTimestamp()
-            },
-            {
-                title: "Essentialism",
-                author: "Greg McKeown",
-                coverUrl: "https://lh3.googleusercontent.com/aida-public/AB6AXuB6h1dAGqleftlnXN-fbLQJUq5RotW7XiCCcBLDdxavUALSPKMVZsDo6HoLB7tU-G1V3SFx4de4JdflIEv2VAP7-Yrz7ZfOL5ZJveJB3FsEvFJeXHR83tST6ccMQBROGjcj04oS6jewuLenpuMAMM7TakIAoOC0ujrxfF2NdouzDeBU7BUF2WERNws82yVdqM0rLQgnvKFxH1b-1HXA-8zcutfVn86tTELNgnz-S9WEy4SUNF5VCZP0",
-                status: "to_read",
-                totalPages: 270,
-                readPages: 0,
-                createdAt: serverTimestamp()
-            },
-            {
-                title: "Dune",
-                author: "Frank Herbert",
-                coverUrl: "https://lh3.googleusercontent.com/aida-public/AB6AXuABEdTKl-e0YUrxnqN91ZMVDK9pFvhVZYPnnJ_l2WbGqkbOcH7HaD3w_wBXBV8tPLth46VL4be3q7T_TLs4PChRIKbpUATjIfDXVqRuOqhu_2eHmbqONcFb-KQ7oPT7WMVxBHje2vhc3PAnJFPYx0IKfQVjtKxYhkD5D7wthxGLGlt_Vpb50PlGUUV7TAaIvgzicUYO7QgVOsYnk_2GDhLhpBo8rmUxKmylxrdabsJc418mtF2fcuXt",
-                status: "to_read",
-                totalPages: 412,
-                readPages: 0,
-                createdAt: serverTimestamp()
-            },
-            {
-                title: "Meditations",
-                author: "Marcus Aurelius",
-                coverUrl: "https://lh3.googleusercontent.com/aida-public/AB6AXuBjQTH5Nxt1BRyE2bBXQsta34zgpdnapfSdxZXv53_JgKLIHuganq86FJWbibm9w9fNCfs6djq9EZtfNoD-aQ-6_9fCWJIpASzaFxTeqs2LY6MSEJqr5u8Ta5Rp2buh6g_U3KzPgD-t8F1dRQH1BANrvkkStUQqqnRieecN1b6twf527tinqEvYatLiWqnA9P-l3JpMpxbd9F99mExoZw2UL35M1vscz7vMZLRxoAswP4CGOMsJgyYy",
-                status: "finished",
-                totalPages: 200,
-                readPages: 200,
-                createdAt: serverTimestamp()
-            }
-        ];
-
-        mocks.forEach(m => {
-            const newDoc = doc(booksRef);
-            batch.set(newDoc, m);
-        });
-
-        await batch.commit();
-        console.log("Örnek kitaplar başarıyla eklendi.");
-    } catch(err) {
-        console.error("Mock kitap ekleme hatası:", err);
-    }
 }
