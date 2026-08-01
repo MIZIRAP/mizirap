@@ -1048,7 +1048,7 @@ window.openExerciseHistory = async function(triggerExId, exName) {
                 <div class="bg-surface-container-lowest rounded-xl shadow-[0px_4px_20px_rgba(0,0,0,0.04)] p-4 flex items-center justify-between interactive-card cursor-pointer ${opacityClass}">
                     <div class="flex items-center gap-4">
                         <div class="w-10 h-10 rounded-lg bg-surface-container flex items-center justify-center text-${idx===0 ? 'primary' : 'secondary'}">
-                            <span class="material-symbols-outlined" data-icon="calendar_today" ${idx===0 ? "style="font-variation-settings: 'FILL' 1;"" : ""}>calendar_today</span>
+                            <span class="material-symbols-outlined" data-icon="calendar_today" ${idx===0 ? "style=\"font-variation-settings: 'FILL' 1;\"" : ""}>calendar_today</span>
                         </div>
                         <div class="flex flex-col">
                             <span class="font-label-sm text-label-sm text-on-surface-variant">${dateFormatted}</span>
