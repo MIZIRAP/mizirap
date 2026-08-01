@@ -156,9 +156,9 @@
                     </div>
                     <div class="mt-4 flex flex-col gap-1">
                         <span class="font-label-sm text-label-sm text-on-surface-variant uppercase">Kalori Takibi</span>
-                        <span class="font-headline-sm text-headline-sm text-on-surface">0 <span class="text-sm font-normal text-on-surface-variant">/ 2000 kcal</span></span>
+                        <span class="font-headline-sm text-headline-sm text-on-surface" id="dashboard-calories-text">0 <span class="text-sm font-normal text-on-surface-variant">/ 2000 kcal</span></span>
                         <div class="w-full h-1.5 bg-surface-variant rounded-full mt-2 overflow-hidden">
-                            <div class="h-full bg-primary rounded-full" style="width: 0%;"></div>
+                            <div class="h-full bg-primary rounded-full transition-all duration-300" id="dashboard-calories-progress" style="width: 0%;"></div>
                         </div>
                         <span class="font-body-md text-body-md text-on-surface-variant mt-1">bugün</span>
                     </div>
@@ -1323,6 +1323,17 @@
             
             const yagBar = document.getElementById('ui-yag-bar');
             if (yagBar) yagBar.style.width = `${Math.min((yagConsumed / yagGoal) * 100, 100)}%`;
+            
+            // Update Dashboard
+            const dashCalText = document.getElementById('dashboard-calories-text');
+            if (dashCalText) {
+                dashCalText.innerHTML = `${totalCaloriesConsumed} <span class="text-sm font-normal text-on-surface-variant">/ ${dailyCalorieGoal} kcal</span>`;
+            }
+            const dashCalProg = document.getElementById('dashboard-calories-progress');
+            if (dashCalProg) {
+                let percentage = Math.min((totalCaloriesConsumed / dailyCalorieGoal) * 100, 100);
+                dashCalProg.style.width = `${percentage}%`;
+            }
         }
 
         // New Food (Library) Modal Logic
@@ -1465,6 +1476,7 @@
 
         // Attach listeners safely
         document.addEventListener('DOMContentLoaded', () => {
+            if (typeof updateUIState === 'function') updateUIState();
             const modal = document.getElementById('addPortionModal');
             if(modal) {
                 modal.addEventListener('click', (e) => {
