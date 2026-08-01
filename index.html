@@ -948,12 +948,12 @@
             <!-- SVG Circle -->
             <svg class="absolute inset-0 w-full h-full" viewBox="0 0 120 120">
             <circle class="text-surface-container stroke-current" cx="60" cy="60" fill="transparent" r="54" stroke-width="8"></circle>
-            <circle class="text-primary stroke-current progress-ring__circle" cx="60" cy="60" fill="transparent" r="54" stroke-dasharray="339.292" stroke-dashoffset="93.305" stroke-linecap="round" stroke-width="8"></circle> <!-- 72.5% filled (1450/2000) -->
+            <circle id="ui-calorie-circle" class="text-primary stroke-current progress-ring__circle transition-all duration-500 ease-out" cx="60" cy="60" fill="transparent" r="54" stroke-dasharray="339.292" stroke-dashoffset="339.292" stroke-linecap="round" stroke-width="8"></circle>
             </svg>
             <!-- Inner Content -->
             <div class="flex flex-col items-center justify-center z-10 text-center">
-            <h2 class="font-display-lg text-[42px] leading-[48px] text-on-surface font-bold tracking-tight">1450</h2>
-            <p class="font-body-md text-body-md text-on-surface-variant mt-1">/ 2000 kcal</p>
+            <h2 id="ui-calorie-consumed" class="font-display-lg text-[42px] leading-[48px] text-on-surface font-bold tracking-tight">0</h2>
+            <p class="font-body-md text-body-md text-on-surface-variant mt-1">/ <span id="ui-calorie-goal">2000</span> kcal</p>
             </div>
             </div>
             <button id="calories-goal-btn" class="mt-8 flex items-center gap-2 px-5 py-2.5 bg-surface-container hover:bg-surface-container-high rounded-full shadow-sm active:scale-95 transition-all duration-200">
@@ -961,7 +961,7 @@
             <span class="font-label-md text-label-md text-primary font-bold tracking-wider">DAİLY GOAL</span>
             </button>
             <div class="mt-4 flex items-center justify-center">
-            <span class="font-body-md text-body-md text-on-surface-variant bg-surface-container-lowest border border-outline-variant/30 px-5 py-2 rounded-full shadow-sm">Kalan: 550 kcal</span>
+            <span id="ui-calorie-remaining" class="font-body-md text-body-md text-on-surface-variant bg-surface-container-lowest border border-outline-variant/30 px-5 py-2 rounded-full shadow-sm">Kalan: 2000 kcal</span>
             </div>
             </section>
             <!-- Action Section -->
@@ -984,33 +984,33 @@
             <div class="flex justify-between items-center">
             <span class="font-label-md text-label-md text-on-surface-variant uppercase">Protein</span>
             </div>
-            <div class="font-headline-sm text-headline-sm text-on-surface">65<span class="font-body-sm text-[12px] text-on-surface-variant font-normal">g</span></div>
+            <div class="font-headline-sm text-headline-sm text-on-surface"><span id="ui-protein-consumed">0</span><span class="font-body-sm text-[12px] text-on-surface-variant font-normal">g</span></div>
             <div class="w-full h-1.5 bg-surface-container rounded-full overflow-hidden">
-            <div class="h-full bg-primary rounded-full" style="width: 60%"></div>
+            <div id="ui-protein-bar" class="h-full bg-primary rounded-full transition-all duration-500 ease-out" style="width: 0%"></div>
             </div>
-            <div class="font-label-sm text-label-sm text-on-surface-variant text-right">/ 110g</div>
+            <div class="font-label-sm text-label-sm text-on-surface-variant text-right">/ <span id="ui-protein-goal">110</span>g</div>
             </div>
             <!-- Karb -->
             <div class="flex flex-col gap-2">
             <div class="flex justify-between items-center">
             <span class="font-label-md text-label-md text-on-surface-variant uppercase">Karb</span>
             </div>
-            <div class="font-headline-sm text-headline-sm text-on-surface">180<span class="font-body-sm text-[12px] text-on-surface-variant font-normal">g</span></div>
+            <div class="font-headline-sm text-headline-sm text-on-surface"><span id="ui-karb-consumed">0</span><span class="font-body-sm text-[12px] text-on-surface-variant font-normal">g</span></div>
             <div class="w-full h-1.5 bg-surface-container rounded-full overflow-hidden">
-            <div class="h-full bg-primary rounded-full" style="width: 75%"></div>
+            <div id="ui-karb-bar" class="h-full bg-primary rounded-full transition-all duration-500 ease-out" style="width: 0%"></div>
             </div>
-            <div class="font-label-sm text-label-sm text-on-surface-variant text-right">/ 240g</div>
+            <div class="font-label-sm text-label-sm text-on-surface-variant text-right">/ <span id="ui-karb-goal">240</span>g</div>
             </div>
             <!-- Yağ -->
             <div class="flex flex-col gap-2">
             <div class="flex justify-between items-center">
             <span class="font-label-md text-label-md text-on-surface-variant uppercase">Yağ</span>
             </div>
-            <div class="font-headline-sm text-headline-sm text-on-surface">45<span class="font-body-sm text-[12px] text-on-surface-variant font-normal">g</span></div>
+            <div class="font-headline-sm text-headline-sm text-on-surface"><span id="ui-yag-consumed">0</span><span class="font-body-sm text-[12px] text-on-surface-variant font-normal">g</span></div>
             <div class="w-full h-1.5 bg-surface-container rounded-full overflow-hidden">
-            <div class="h-full bg-primary rounded-full" style="width: 68%"></div>
+            <div id="ui-yag-bar" class="h-full bg-primary rounded-full transition-all duration-500 ease-out" style="width: 0%"></div>
             </div>
-            <div class="font-label-sm text-label-sm text-on-surface-variant text-right">/ 66g</div>
+            <div class="font-label-sm text-label-sm text-on-surface-variant text-right">/ <span id="ui-yag-goal">66</span>g</div>
             </div>
             </div>
             </section>
@@ -1018,30 +1018,6 @@
             <section class="mt-4 bg-surface-container-lowest rounded-[24px] p-4 shadow-[0px_4px_20px_rgba(0,0,0,0.04)]">
             <h3 class="font-headline-sm text-[18px] font-semibold text-on-surface mb-3 px-2">Günün Kayıtları</h3>
             <div class="flex flex-col" id="daily-log-list">
-            <!-- Entry 1 (Newest) -->
-            <div class="flex justify-between items-center p-3 border-b border-surface-container-high last:border-0">
-            <div class="flex flex-col">
-            <span class="font-body-md text-body-md text-on-surface font-medium">Fırın Somon</span>
-            <span class="font-label-sm text-label-sm text-on-surface-variant">150g</span>
-            </div>
-            <span class="font-body-md text-body-md text-on-surface font-semibold text-primary">+310 kcal</span>
-            </div>
-            <!-- Entry 2 -->
-            <div class="flex justify-between items-center p-3 border-b border-surface-container-high last:border-0">
-            <div class="flex flex-col">
-            <span class="font-body-md text-body-md text-on-surface font-medium">Haşlanmış Brokoli</span>
-            <span class="font-label-sm text-label-sm text-on-surface-variant">1 Porsiyon</span>
-            </div>
-            <span class="font-body-md text-body-md text-on-surface font-semibold text-primary">+55 kcal</span>
-            </div>
-            <!-- Entry 3 -->
-            <div class="flex justify-between items-center p-3 border-b border-surface-container-high last:border-0">
-            <div class="flex flex-col">
-            <span class="font-body-md text-body-md text-on-surface font-medium">Izgara Tavuk Göğsü</span>
-            <span class="font-label-sm text-label-sm text-on-surface-variant">200g</span>
-            </div>
-            <span class="font-body-md text-body-md text-on-surface font-semibold text-primary">+330 kcal</span>
-            </div>
             </div>
             </section>
         </main>
@@ -1270,10 +1246,83 @@
 
         if (caloriesGoalSave) {
             caloriesGoalSave.addEventListener('click', () => {
-                // Here we would save the goal to Firebase
-                // For now, just close
+                const amountDisplay = document.getElementById('calories-goal-amount-display');
+                if (amountDisplay) dailyCalorieGoal = parseInt(amountDisplay.textContent) || 2000;
+                
+                const karbInput = document.getElementById('macro-goal-karb');
+                if (karbInput) karbGoal = parseInt(karbInput.value) || 240;
+                
+                const proteinInput = document.getElementById('macro-goal-protein');
+                if (proteinInput) proteinGoal = parseInt(proteinInput.value) || 110;
+                
+                const yagInput = document.getElementById('macro-goal-yag');
+                if (yagInput) yagGoal = parseInt(yagInput.value) || 66;
+                
+                if (typeof updateUIState === 'function') updateUIState();
                 closeCaloriesGoalModal();
             });
+        }
+
+        // Global State for Tracking
+        let totalCaloriesConsumed = 0;
+        let dailyCalorieGoal = 2000;
+        let proteinConsumed = 0;
+        let proteinGoal = 110;
+        let karbConsumed = 0;
+        let karbGoal = 240;
+        let yagConsumed = 0;
+        let yagGoal = 66;
+
+        function updateUIState() {
+            // Update Goals
+            const calGoalEl = document.getElementById('ui-calorie-goal');
+            if (calGoalEl) calGoalEl.textContent = dailyCalorieGoal;
+            
+            const proteinGoalEl = document.getElementById('ui-protein-goal');
+            if (proteinGoalEl) proteinGoalEl.textContent = proteinGoal;
+            
+            const karbGoalEl = document.getElementById('ui-karb-goal');
+            if (karbGoalEl) karbGoalEl.textContent = karbGoal;
+            
+            const yagGoalEl = document.getElementById('ui-yag-goal');
+            if (yagGoalEl) yagGoalEl.textContent = yagGoal;
+            
+            // Update Consumed
+            const calConsEl = document.getElementById('ui-calorie-consumed');
+            if (calConsEl) calConsEl.textContent = totalCaloriesConsumed;
+            
+            const calRemEl = document.getElementById('ui-calorie-remaining');
+            if (calRemEl) {
+                let remaining = dailyCalorieGoal - totalCaloriesConsumed;
+                calRemEl.textContent = `Kalan: ${remaining > 0 ? remaining : 0} kcal`;
+            }
+            
+            const proteinConsEl = document.getElementById('ui-protein-consumed');
+            if (proteinConsEl) proteinConsEl.textContent = proteinConsumed;
+            
+            const karbConsEl = document.getElementById('ui-karb-consumed');
+            if (karbConsEl) karbConsEl.textContent = karbConsumed;
+            
+            const yagConsEl = document.getElementById('ui-yag-consumed');
+            if (yagConsEl) yagConsEl.textContent = yagConsumed;
+            
+            // Update SVG Circle
+            const circle = document.getElementById('ui-calorie-circle');
+            if (circle) {
+                let percentage = Math.min(totalCaloriesConsumed / dailyCalorieGoal, 1);
+                let offset = 339.292 - (339.292 * percentage);
+                circle.style.strokeDashoffset = offset;
+            }
+            
+            // Update Macro Bars
+            const proteinBar = document.getElementById('ui-protein-bar');
+            if (proteinBar) proteinBar.style.width = `${Math.min((proteinConsumed / proteinGoal) * 100, 100)}%`;
+            
+            const karbBar = document.getElementById('ui-karb-bar');
+            if (karbBar) karbBar.style.width = `${Math.min((karbConsumed / karbGoal) * 100, 100)}%`;
+            
+            const yagBar = document.getElementById('ui-yag-bar');
+            if (yagBar) yagBar.style.width = `${Math.min((yagConsumed / yagGoal) * 100, 100)}%`;
         }
 
         // New Food (Library) Modal Logic
@@ -1373,6 +1422,20 @@
             let grams = 100;
             if(gramInput) grams = parseInt(gramInput.value) || 100;
             const total = Math.round((grams / 100) * currentKcalPer100g);
+            
+            // Update Global State
+            totalCaloriesConsumed += total;
+            // Approximate macros for demo
+            let p = 0, k = 0, y = 0;
+            if(currentFoodName.includes("Tavuk")) { p = Math.round(31 * grams/100); y = Math.round(3.6 * grams/100); }
+            else if(currentFoodName.includes("Yulaf")) { k = Math.round(66 * grams/100); p = Math.round(17 * grams/100); y = Math.round(7 * grams/100); }
+            else if(currentFoodName.includes("Elma")) { k = Math.round(14 * grams/100); }
+            else { p = Math.round(10 * grams/100); k = Math.round(20 * grams/100); y = Math.round(5 * grams/100); }
+            
+            proteinConsumed += p;
+            karbConsumed += k;
+            yagConsumed += y;
+            if (typeof updateUIState === 'function') updateUIState();
             
             const logList = document.getElementById('daily-log-list');
             if (logList) {
