@@ -355,12 +355,14 @@
             
             <!-- Header / Split Selector -->
             <div class="flex flex-col gap-element-spacing pt-4">
-                <div class="bg-surface-container-lowest rounded-xl p-4 shadow-[0px_4px_20px_rgba(0,0,0,0.04)] flex justify-between items-center cursor-pointer hover:bg-surface-container-low transition-colors" id="workout-split-selector">
-                    <div>
-                        <span class="font-label-md text-label-md text-on-surface-variant uppercase block mb-1">Mevcut Split</span>
-                        <h1 class="font-headline-md text-headline-md text-primary" id="workout-split-name">Yükleniyor...</h1>
+                <div class="flex justify-between items-center cursor-pointer group p-4 rounded-xl bg-surface-container-low hover:bg-surface-container-highest transition-all active:scale-98 border border-outline-variant/20" id="workout-split-selector">
+                    <div class="flex flex-col">
+                        <span class="font-label-sm text-label-sm text-outline uppercase tracking-wider mb-0.5">Mevcut Split</span>
+                        <div class="flex items-center gap-2">
+                            <h1 class="font-headline-sm text-headline-sm text-on-surface" id="workout-split-name">Yükleniyor...</h1>
+                        </div>
                     </div>
-                    <span class="material-symbols-outlined text-on-surface-variant">expand_more</span>
+                    <span class="material-symbols-outlined text-outline group-hover:text-primary transition-colors">chevron_right</span>
                 </div>
                 
                 <!-- Day Pills -->
