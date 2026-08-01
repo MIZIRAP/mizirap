@@ -1264,16 +1264,49 @@
         }
 
         // Global State for Tracking
-        let totalCaloriesConsumed = 0;
-        let dailyCalorieGoal = 2000;
-        let proteinConsumed = 0;
-        let proteinGoal = 110;
-        let karbConsumed = 0;
-        let karbGoal = 240;
-        let yagConsumed = 0;
-        let yagGoal = 66;
+        let totalCaloriesConsumed = parseInt(localStorage.getItem('miz_totalCal')) || 0;
+        let dailyCalorieGoal = parseInt(localStorage.getItem('miz_calGoal')) || 2000;
+        let proteinConsumed = parseInt(localStorage.getItem('miz_protCons')) || 0;
+        let proteinGoal = parseInt(localStorage.getItem('miz_protGoal')) || 110;
+        let karbConsumed = parseInt(localStorage.getItem('miz_karbCons')) || 0;
+        let karbGoal = parseInt(localStorage.getItem('miz_karbGoal')) || 240;
+        let yagConsumed = parseInt(localStorage.getItem('miz_yagCons')) || 0;
+        let yagGoal = parseInt(localStorage.getItem('miz_yagGoal')) || 66;
+        let dailyLogs = JSON.parse(localStorage.getItem('miz_logs')) || [];
+
+        function saveState() {
+            localStorage.setItem('miz_totalCal', totalCaloriesConsumed);
+            localStorage.setItem('miz_calGoal', dailyCalorieGoal);
+            localStorage.setItem('miz_protCons', proteinConsumed);
+            localStorage.setItem('miz_protGoal', proteinGoal);
+            localStorage.setItem('miz_karbCons', karbConsumed);
+            localStorage.setItem('miz_karbGoal', karbGoal);
+            localStorage.setItem('miz_yagCons', yagConsumed);
+            localStorage.setItem('miz_yagGoal', yagGoal);
+            localStorage.setItem('miz_logs', JSON.stringify(dailyLogs));
+        }
+
+        function renderLogs() {
+            const logList = document.getElementById('daily-log-list');
+            if (logList) {
+                logList.innerHTML = '';
+                dailyLogs.forEach(log => {
+                    const newEntry = document.createElement('div');
+                    newEntry.className = "flex justify-between items-center p-3 border-b border-surface-container-high last:border-0";
+                    newEntry.innerHTML = `
+                    <div class="flex flex-col">
+                    <span class="font-body-md text-body-md text-on-surface font-medium">${log.name}</span>
+                    <span class="font-label-sm text-label-sm text-on-surface-variant">${log.amount}g</span>
+                    </div>
+                    <span class="font-body-md text-body-md text-on-surface font-semibold text-primary">+${log.kcal} kcal</span>
+                    `;
+                    logList.appendChild(newEntry);
+                });
+            }
+        }
 
         function updateUIState() {
+            saveState();
             // Update Goals
             const calGoalEl = document.getElementById('ui-calorie-goal');
             if (calGoalEl) calGoalEl.textContent = dailyCalorieGoal;
@@ -1446,26 +1479,12 @@
             proteinConsumed += p;
             karbConsumed += k;
             yagConsumed += y;
-            if (typeof updateUIState === 'function') updateUIState();
             
-            const logList = document.getElementById('daily-log-list');
-            if (logList) {
-                const newEntry = document.createElement('div');
-                newEntry.className = "flex justify-between items-center p-3 border-b border-surface-container-high last:border-0";
-                newEntry.innerHTML = `
-                <div class="flex flex-col">
-                <span class="font-body-md text-body-md text-on-surface font-medium">${currentFoodName}</span>
-                <span class="font-label-sm text-label-sm text-on-surface-variant">${grams}g</span>
-                </div>
-                <span class="font-body-md text-body-md text-on-surface font-semibold text-primary">+${total} kcal</span>
-                `;
-                
-                logList.insertBefore(newEntry, logList.firstChild);
-                
-                while (logList.children.length > 3) {
-                    logList.removeChild(logList.lastChild);
-                }
-            }
+            dailyLogs.unshift({ name: currentFoodName, amount: grams, kcal: total });
+            if (dailyLogs.length > 3) dailyLogs.pop();
+            renderLogs();
+            
+            if (typeof updateUIState === 'function') updateUIState();
             
             closeAddPortionModal();
             
@@ -1476,6 +1495,7 @@
 
         // Attach listeners safely
         document.addEventListener('DOMContentLoaded', () => {
+            if (typeof renderLogs === 'function') renderLogs();
             if (typeof updateUIState === 'function') updateUIState();
             const modal = document.getElementById('addPortionModal');
             if(modal) {
