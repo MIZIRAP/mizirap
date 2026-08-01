@@ -902,6 +902,23 @@
                     <button class="calories-goal-preset px-4 py-2 rounded-full bg-primary-container text-label-md text-on-primary-container font-bold active:scale-95" data-amount="2000">2000kcal</button>
                     <button class="calories-goal-preset px-4 py-2 rounded-full bg-surface-container text-label-md text-on-surface-variant hover:bg-primary-container/30 transition-colors active:scale-95" data-amount="2500">2500kcal</button>
                 </div>
+                <div class="flex flex-col gap-3 mt-2 border-t border-outline-variant/30 pt-4">
+                    <h3 class="font-label-md text-label-md text-on-surface-variant uppercase text-center">Makro Hedefleri (g)</h3>
+                    <div class="grid grid-cols-3 gap-2">
+                        <div class="flex flex-col gap-1">
+                            <label class="font-label-sm text-label-sm text-on-surface-variant ml-1 text-center">Karb</label>
+                            <input class="bg-surface-container border border-transparent rounded-[12px] px-2 py-3 font-body-md text-body-md text-center text-on-surface focus:border-primary outline-none w-full transition-colors" placeholder="240" type="number" id="macro-goal-karb" value="240">
+                        </div>
+                        <div class="flex flex-col gap-1">
+                            <label class="font-label-sm text-label-sm text-on-surface-variant ml-1 text-center">Protein</label>
+                            <input class="bg-surface-container border border-transparent rounded-[12px] px-2 py-3 font-body-md text-body-md text-center text-on-surface focus:border-primary outline-none w-full transition-colors" placeholder="110" type="number" id="macro-goal-protein" value="110">
+                        </div>
+                        <div class="flex flex-col gap-1">
+                            <label class="font-label-sm text-label-sm text-on-surface-variant ml-1 text-center">Yağ</label>
+                            <input class="bg-surface-container border border-transparent rounded-[12px] px-2 py-3 font-body-md text-body-md text-center text-on-surface focus:border-primary outline-none w-full transition-colors" placeholder="66" type="number" id="macro-goal-yag" value="66">
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="flex border-t border-outline-variant/30">
                 <button id="calories-goal-cancel" class="flex-1 py-4 font-label-md text-label-md text-on-surface-variant uppercase tracking-wider hover:bg-surface-variant/20 transition-colors">İptal</button>
@@ -1288,75 +1305,73 @@
         }
 
         // Add Portion Modal Logic
-        const addPortionModal = document.getElementById('addPortionModal');
-        const addPortionModalContent = document.getElementById('addPortionModalContent');
-        const portionFoodName = document.getElementById('portion-food-name');
-        const portionFoodKcalText = document.getElementById('portion-food-kcal-text');
-        const gramInput = document.getElementById('gram-input');
-        const totalKcalEl = document.getElementById('total-kcal');
         let currentKcalPer100g = 0;
         let currentFoodName = "";
 
         window.openAddPortionModal = function(name, kcal100) {
             currentFoodName = name;
             currentKcalPer100g = kcal100;
-            portionFoodName.textContent = name;
-            portionFoodKcalText.textContent = `${kcal100} kcal / 100g`;
-            gramInput.value = 100;
+            document.getElementById('portion-food-name').textContent = name;
+            document.getElementById('portion-food-kcal-text').textContent = `${kcal100} kcal / 100g`;
+            const gramInput = document.getElementById('gram-input');
+            if(gramInput) gramInput.value = 100;
             window.updatePortionTotal();
             
-            addPortionModal.classList.remove('hidden');
-            setTimeout(() => {
-                addPortionModal.classList.remove('opacity-0');
-                addPortionModalContent.classList.remove('translate-y-full');
-            }, 10);
+            const modal = document.getElementById('addPortionModal');
+            const content = document.getElementById('addPortionModalContent');
+            if(modal && content) {
+                modal.classList.remove('hidden');
+                setTimeout(() => {
+                    modal.classList.remove('opacity-0');
+                    content.classList.remove('translate-y-full');
+                }, 10);
+            }
         };
 
         window.closeAddPortionModal = function() {
-            addPortionModal.classList.add('opacity-0');
-            addPortionModalContent.classList.add('translate-y-full');
-            setTimeout(() => {
-                addPortionModal.classList.add('hidden');
-            }, 300);
+            const modal = document.getElementById('addPortionModal');
+            const content = document.getElementById('addPortionModalContent');
+            if(modal && content) {
+                modal.classList.add('opacity-0');
+                content.classList.add('translate-y-full');
+                setTimeout(() => {
+                    modal.classList.add('hidden');
+                }, 300);
+            }
         };
 
-        if(addPortionModal) {
-            addPortionModal.addEventListener('click', (e) => {
-                if (e.target === addPortionModal) closeAddPortionModal();
-            });
-        }
-
         window.updatePortionTotal = function() {
-            let grams = parseInt(gramInput.value);
-            if (isNaN(grams) || grams < 0) grams = 0;
-            const total = Math.round((grams / 100) * currentKcalPer100g);
-            totalKcalEl.textContent = total;
+            const gramInput = document.getElementById('gram-input');
+            const totalKcalEl = document.getElementById('total-kcal');
+            if(gramInput && totalKcalEl) {
+                let grams = parseInt(gramInput.value);
+                if (isNaN(grams) || grams < 0) grams = 0;
+                const total = Math.round((grams / 100) * currentKcalPer100g);
+                totalKcalEl.textContent = total;
+            }
         };
 
         window.adjustAmount = function(amount) {
-            let current = parseInt(gramInput.value);
-            if (isNaN(current)) current = 0;
-            let newValue = current + amount;
-            if (newValue < 0) newValue = 0;
-            gramInput.value = newValue;
-            window.updatePortionTotal();
-            
-            gramInput.classList.add('scale-105');
-            setTimeout(() => {
-                gramInput.classList.remove('scale-105');
-            }, 150);
+            const gramInput = document.getElementById('gram-input');
+            if(gramInput) {
+                let current = parseInt(gramInput.value);
+                if (isNaN(current)) current = 0;
+                let newValue = current + amount;
+                if (newValue < 0) newValue = 0;
+                gramInput.value = newValue;
+                window.updatePortionTotal();
+                
+                gramInput.classList.add('scale-105');
+                setTimeout(() => {
+                    gramInput.classList.remove('scale-105');
+                }, 150);
+            }
         };
 
-        if(gramInput) {
-            gramInput.addEventListener('blur', function() {
-                let val = parseInt(this.value);
-                if (isNaN(val) || val <= 0) this.value = 100;
-                window.updatePortionTotal();
-            });
-        }
-
         window.addFoodToLog = function() {
-            const grams = parseInt(gramInput.value) || 100;
+            const gramInput = document.getElementById('gram-input');
+            let grams = 100;
+            if(gramInput) grams = parseInt(gramInput.value) || 100;
             const total = Math.round((grams / 100) * currentKcalPer100g);
             
             const logList = document.getElementById('daily-log-list');
@@ -1384,6 +1399,24 @@
             const target = document.getElementById("view-calories");
             if(target) target.classList.remove("hidden");
         };
+
+        // Attach listeners safely
+        document.addEventListener('DOMContentLoaded', () => {
+            const modal = document.getElementById('addPortionModal');
+            if(modal) {
+                modal.addEventListener('click', (e) => {
+                    if (e.target === modal) closeAddPortionModal();
+                });
+            }
+            const gramInput = document.getElementById('gram-input');
+            if(gramInput) {
+                gramInput.addEventListener('blur', function() {
+                    let val = parseInt(this.value);
+                    if (isNaN(val) || val <= 0) this.value = 100;
+                    window.updatePortionTotal();
+                });
+            }
+        });
     </script>
 </div>
 <!-- Kapanış: #app-screen -->
