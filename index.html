@@ -586,9 +586,42 @@
             </div>
         </div>
     </div>
+
+    <!-- ================= ÖZEL MİKTAR MODALI ================= -->
+    <div class="hidden fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm" id="water-custom-modal">
+        <div class="bg-surface-container-lowest w-full max-w-sm rounded-[24px] shadow-[0px_4px_20px_rgba(0,0,0,0.08)] flex flex-col scale-95 opacity-0 transition-all duration-200" id="water-custom-modal-content">
+            <div class="pt-8 px-6 pb-2 text-center flex flex-col gap-1">
+                <h2 class="font-headline-md text-headline-md text-on-surface font-semibold">Özel Miktar Ekle</h2>
+                <p class="font-body-md text-body-md text-on-surface-variant">İçtiğin su miktarını manuel olarak gir.</p>
+            </div>
+            <div class="flex flex-col items-center justify-center py-8 px-6">
+                <div class="flex items-center justify-center gap-6 w-full">
+                    <button id="water-custom-minus" class="w-12 h-12 rounded-full bg-surface-container-low hover:bg-surface-variant text-on-surface-variant flex items-center justify-center transition-colors active:scale-95 touch-manipulation">
+                        <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">remove</span>
+                    </button>
+                    <div class="flex flex-col items-center justify-center min-w-[100px]">
+                        <span class="font-display-lg text-[48px] leading-[48px] font-bold tracking-tight text-primary" id="water-custom-amount-display">250</span>
+                        <span class="font-label-md text-label-md text-on-surface-variant mt-1 uppercase">ML</span>
+                    </div>
+                    <button id="water-custom-plus" class="w-12 h-12 rounded-full bg-primary-container hover:bg-primary/20 text-on-primary-container flex items-center justify-center transition-colors active:scale-95 touch-manipulation">
+                        <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">add</span>
+                    </button>
+                </div>
+                <div class="flex items-center justify-center gap-3 mt-8 w-full">
+                    <button class="water-custom-preset flex-1 py-2 rounded-full border border-outline-variant text-on-surface-variant font-label-md text-label-md hover:bg-surface-container transition-colors active:scale-95" data-amount="100">100ml</button>
+                    <button class="water-custom-preset flex-1 py-2 rounded-full border border-outline-variant text-on-surface-variant font-label-md text-label-md hover:bg-surface-container transition-colors active:scale-95" data-amount="200">200ml</button>
+                    <button class="water-custom-preset flex-1 py-2 rounded-full border border-outline-variant text-on-surface-variant font-label-md text-label-md hover:bg-surface-container transition-colors active:scale-95" data-amount="300">300ml</button>
+                </div>
+            </div>
+            <div class="flex p-4 gap-3 border-t border-surface-container-highest">
+                <button id="water-custom-cancel" class="flex-1 py-3.5 rounded-xl font-label-md text-label-md text-primary bg-surface-container-lowest hover:bg-surface-container-low transition-colors active:scale-[0.98]">İPTAL</button>
+                <button id="water-custom-save" class="flex-1 py-3.5 rounded-xl font-label-md text-label-md text-on-primary bg-primary hover:opacity-90 shadow-[0px_2px_8px_rgba(68,101,84,0.3)] transition-all active:scale-[0.98] active:shadow-sm">EKLE</button>
+            </div>
+        </div>
+    </div>
 </div>
 <!-- Kapanış: #app-container -->
 
-<script type="module" src="app.js?v=10"></script>
+<script type="module" src="app.js?v=11"></script>
 </body>
 </html>

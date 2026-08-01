@@ -51,23 +51,105 @@ export function initWater(uid, onChangeCallback) {
         };
     });
 
-    // Event Listener for Custom Add
+    // Event Listeners for Custom Add Modal
     const customBtn = document.getElementById("water-custom-btn");
+    const customModal = document.getElementById("water-custom-modal");
+    const customModalContent = document.getElementById("water-custom-modal-content");
+    const customMinusBtn = document.getElementById("water-custom-minus");
+    const customPlusBtn = document.getElementById("water-custom-plus");
+    const customCancelBtn = document.getElementById("water-custom-cancel");
+    const customSaveBtn = document.getElementById("water-custom-save");
+    const customAmountDisplay = document.getElementById("water-custom-amount-display");
+    const customPresetBtns = document.querySelectorAll(".water-custom-preset");
+    
+    let tempCustomAmount = 250;
+
+    function updateCustomModalUI() {
+        if(customAmountDisplay) customAmountDisplay.textContent = tempCustomAmount;
+        // Optionally animate the display text pop
+        customAmountDisplay.classList.remove('scale-105');
+        void customAmountDisplay.offsetWidth; // Trigger reflow
+        customAmountDisplay.classList.add('scale-105', 'transition-transform', 'duration-150');
+        setTimeout(() => {
+            customAmountDisplay.classList.remove('scale-105');
+        }, 150);
+        
+        customPresetBtns.forEach(btn => {
+            const amt = parseInt(btn.dataset.amount);
+            if(amt === tempCustomAmount) {
+                btn.className = "water-custom-preset flex-1 py-2 rounded-full border-2 border-primary text-primary font-bold text-label-md bg-surface-container-low transition-colors active:scale-95";
+            } else {
+                btn.className = "water-custom-preset flex-1 py-2 rounded-full border border-outline-variant text-on-surface-variant font-label-md text-label-md hover:bg-surface-container transition-colors active:scale-95";
+            }
+        });
+    }
+
+    function openCustomModal() {
+        if(!customModal) return;
+        tempCustomAmount = 250;
+        updateCustomModalUI();
+        customModal.classList.remove("hidden");
+        // Trigger reflow
+        void customModal.offsetWidth;
+        customModalContent.classList.remove("opacity-0", "scale-95");
+        customModalContent.classList.add("opacity-100", "scale-100");
+    }
+
+    function closeCustomModal() {
+        if(!customModal) return;
+        customModalContent.classList.remove("opacity-100", "scale-100");
+        customModalContent.classList.add("opacity-0", "scale-95");
+        setTimeout(() => {
+            customModal.classList.add("hidden");
+        }, 200);
+    }
+
     if(customBtn) {
-        customBtn.onclick = async () => {
-            const val = prompt("Kaç ml su içtiniz?", "300");
-            const amount = parseInt(val);
-            if(val && !isNaN(amount) && amount > 0) {
+        customBtn.onclick = openCustomModal;
+    }
+
+    if(customMinusBtn) {
+        customMinusBtn.onclick = () => {
+            if(tempCustomAmount > 10) {
+                tempCustomAmount -= 10;
+                updateCustomModalUI();
+            } else {
+                tempCustomAmount = 0;
+                updateCustomModalUI();
+            }
+        };
+    }
+
+    if(customPlusBtn) {
+        customPlusBtn.onclick = () => {
+            tempCustomAmount += 10;
+            updateCustomModalUI();
+        };
+    }
+
+    customPresetBtns.forEach(btn => {
+        btn.onclick = () => {
+            tempCustomAmount = parseInt(btn.dataset.amount);
+            updateCustomModalUI();
+        };
+    });
+
+    if(customCancelBtn) customCancelBtn.onclick = closeCustomModal;
+
+    if(customSaveBtn) {
+        customSaveBtn.onclick = async () => {
+            if(tempCustomAmount > 0) {
                 try {
                     await addDoc(collection(db, "users", uid, "waterLogs"), {
-                        amount, type: "Custom", icon: "add", createdAt: serverTimestamp()
+                        amount: tempCustomAmount, type: "Custom", icon: "add", createdAt: serverTimestamp()
                     });
                 } catch(err) {
                     console.error("Firestore test hatası:", err);
-                    waterLogs.unshift({ amount, type: "Custom", icon: "add", createdAt: { toDate: () => new Date() } });
+                    waterLogs.unshift({ amount: tempCustomAmount, type: "Custom", icon: "add", createdAt: { toDate: () => new Date() } });
                     updateWaterUI();
                 }
             }
+            closeCustomModal();
         };
     }
 
