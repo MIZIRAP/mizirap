@@ -1041,7 +1041,7 @@
                     <div class="bg-surface-container-lowest rounded-[24px] p-4 shadow-[0px_4px_20px_rgba(0,0,0,0.04)] flex flex-col justify-between h-24">
                         <span class="font-label-sm text-label-sm text-on-surface-variant uppercase">Kayıtlı Besinler</span>
                         <div class="flex items-end justify-between">
-                            <span class="font-display-lg text-display-lg text-primary">24</span>
+                            <span class="font-display-lg text-display-lg text-primary" id="library-food-count">0</span>
                             <span class="material-symbols-outlined text-outline-variant mb-1">database</span>
                         </div>
                     </div>
@@ -1052,47 +1052,8 @@
                 </section>
                 
                 <!-- Food List -->
-                <section class="flex flex-col gap-card-gap">
-                    <!-- Food Item Card -->
-                    <div class="bg-surface-container-lowest rounded-[24px] p-4 shadow-[0px_4px_20px_rgba(0,0,0,0.04)] hover:scale-[0.99] transition-transform cursor-pointer" onclick="openAddPortionModal('Yulaf Ezmesi', 389)">
-                        <div class="flex justify-between items-start mb-2">
-                            <h3 class="font-headline-sm text-headline-sm text-on-surface">Yulaf Ezmesi</h3>
-                            <span class="font-label-md text-label-md text-on-surface-variant bg-surface-container px-2 py-1 rounded-full">100g</span>
-                        </div>
-                        <div class="flex items-center gap-2 mb-3">
-                            <span class="font-body-lg text-body-lg text-primary font-bold">389 kcal</span>
-                        </div>
-                        <div class="flex gap-2">
-                            <span class="font-label-sm text-label-sm bg-tertiary-container/20 text-tertiary rounded-md px-2 py-1">K: 66g</span>
-                            <span class="font-label-sm text-label-sm bg-secondary-container/30 text-secondary rounded-md px-2 py-1">P: 17g</span>
-                            <span class="font-label-sm text-label-sm bg-error-container/40 text-on-error-container rounded-md px-2 py-1">Y: 7g</span>
-                        </div>
-                    </div>
-                    <!-- Food Item Card -->
-                    <div class="bg-surface-container-lowest rounded-[24px] p-4 shadow-[0px_4px_20px_rgba(0,0,0,0.04)] hover:scale-[0.99] transition-transform cursor-pointer" onclick="openAddPortionModal('Izgara Tavuk Göğsü', 165)">
-                        <div class="flex justify-between items-start mb-2">
-                            <h3 class="font-headline-sm text-headline-sm text-on-surface">Izgara Tavuk Göğsü</h3>
-                            <span class="font-label-md text-label-md text-on-surface-variant bg-surface-container px-2 py-1 rounded-full">100g</span>
-                        </div>
-                        <div class="flex items-center gap-2 mb-3">
-                            <span class="font-body-lg text-body-lg text-primary font-bold">165 kcal</span>
-                        </div>
-                        <div class="flex gap-2">
-                            <span class="font-label-sm text-label-sm bg-tertiary-container/20 text-tertiary rounded-md px-2 py-1">K: 0g</span>
-                            <span class="font-label-sm text-label-sm bg-secondary-container/30 text-secondary rounded-md px-2 py-1">P: 31g</span>
-                            <span class="font-label-sm text-label-sm bg-error-container/40 text-on-error-container rounded-md px-2 py-1">Y: 3.6g</span>
-                        </div>
-                    </div>
-                    <!-- Food Item Card -->
-                    <div class="bg-surface-container-lowest rounded-[24px] p-4 shadow-[0px_4px_20px_rgba(0,0,0,0.04)] hover:scale-[0.99] transition-transform cursor-pointer" onclick="openAddPortionModal('Yeşil Elma', 52)">
-                        <div class="flex justify-between items-start mb-2">
-                            <h3 class="font-headline-sm text-headline-sm text-on-surface">Yeşil Elma</h3>
-                            <span class="font-label-md text-label-md text-on-surface-variant bg-surface-container px-2 py-1 rounded-full">100g</span>
-                        </div>
-                        <div class="flex items-center gap-2">
-                            <span class="font-body-lg text-body-lg text-primary font-bold">52 kcal</span>
-                        </div>
-                    </div>
+                <section class="flex flex-col gap-card-gap" id="library-food-list">
+                    <!-- Foods will be rendered here via JS -->
                 </section>
             </div>
         </main>
@@ -1273,6 +1234,7 @@
         let yagConsumed = parseInt(localStorage.getItem('miz_yagCons')) || 0;
         let yagGoal = parseInt(localStorage.getItem('miz_yagGoal')) || 66;
         let dailyLogs = JSON.parse(localStorage.getItem('miz_logs')) || [];
+        let libraryFoods = JSON.parse(localStorage.getItem('miz_library')) || [];
 
         function saveState() {
             localStorage.setItem('miz_totalCal', totalCaloriesConsumed);
@@ -1296,13 +1258,62 @@
                     newEntry.innerHTML = `
                     <div class="flex flex-col">
                     <span class="font-body-md text-body-md text-on-surface font-medium">${log.name}</span>
-                    <span class="font-label-sm text-label-sm text-on-surface-variant">${log.amount}g</span>
+                    <span class="font-label-sm text-label-sm text-on-surface-variant">${log.amount}</span>
                     </div>
                     <span class="font-body-md text-body-md text-on-surface font-semibold text-primary">+${log.kcal} kcal</span>
                     `;
                     logList.appendChild(newEntry);
                 });
             }
+        }
+
+        function renderLibraryFoods() {
+            const list = document.getElementById('library-food-list');
+            if (!list) return;
+            
+            list.innerHTML = '';
+            libraryFoods.forEach((food, index) => {
+                const item = document.createElement('div');
+                item.className = "bg-surface-container-lowest rounded-[24px] p-4 shadow-[0px_4px_20px_rgba(0,0,0,0.04)] hover:scale-[0.99] transition-transform relative group";
+                
+                let macrosHtml = '';
+                if(food.karb !== null || food.protein !== null || food.yag !== null) {
+                    macrosHtml = '<div class="flex gap-2">';
+                    if(food.karb !== null && !isNaN(food.karb)) macrosHtml += `<span class="font-label-sm text-label-sm bg-tertiary-container/20 text-tertiary rounded-md px-2 py-1">K: ${food.karb}g</span>`;
+                    if(food.protein !== null && !isNaN(food.protein)) macrosHtml += `<span class="font-label-sm text-label-sm bg-secondary-container/30 text-secondary rounded-md px-2 py-1">P: ${food.protein}g</span>`;
+                    if(food.yag !== null && !isNaN(food.yag)) macrosHtml += `<span class="font-label-sm text-label-sm bg-error-container/40 text-on-error-container rounded-md px-2 py-1">Y: ${food.yag}g</span>`;
+                    macrosHtml += '</div>';
+                }
+
+                item.innerHTML = `
+                    <div class="cursor-pointer" onclick="openAddPortionModal('${food.name}', ${food.kcal})">
+                        <div class="flex justify-between items-start mb-2 pr-8">
+                            <h3 class="font-headline-sm text-headline-sm text-on-surface">${food.name}</h3>
+                            <span class="font-label-md text-label-md text-on-surface-variant bg-surface-container px-2 py-1 rounded-full">100g</span>
+                        </div>
+                        <div class="flex items-center gap-2 mb-3">
+                            <span class="font-body-lg text-body-lg text-primary font-bold">${food.kcal} kcal</span>
+                        </div>
+                        ${macrosHtml}
+                    </div>
+                    <!-- Delete Button -->
+                    <button class="absolute top-4 right-4 w-8 h-8 rounded-full bg-error-container text-on-error-container flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity active:scale-95 z-10" onclick="deleteLibraryFood(${index}, event)">
+                        <span class="material-symbols-outlined text-[18px]">delete</span>
+                    </button>
+                `;
+                
+                list.appendChild(item);
+            });
+            
+            const countEl = document.getElementById('library-food-count');
+            if (countEl) countEl.textContent = libraryFoods.length;
+        }
+
+        window.deleteLibraryFood = function(index, event) {
+            event.stopPropagation();
+            libraryFoods.splice(index, 1);
+            localStorage.setItem('miz_library', JSON.stringify(libraryFoods));
+            renderLibraryFoods();
         }
 
         function updateUIState() {
@@ -1379,6 +1390,10 @@
                 newFoodModal.classList.remove('opacity-0');
                 newFoodModalContent.classList.remove('translate-y-full');
             }, 10);
+            setTimeout(() => {
+                const fn = document.getElementById('new-food-name');
+                if (fn) fn.focus();
+            }, 300);
         }
 
         window.closeNewFoodModal = function() {
@@ -1395,6 +1410,37 @@
                     closeNewFoodModal();
                 }
             });
+        }
+        
+        window.saveNewFood = function() {
+            const nameInput = document.getElementById('new-food-name');
+            const kcalInput = document.getElementById('new-food-kcal');
+            const karbInput = document.getElementById('new-food-karb');
+            const proteinInput = document.getElementById('new-food-protein');
+            const yagInput = document.getElementById('new-food-yag');
+            
+            if (!nameInput || !kcalInput || !nameInput.value || !kcalInput.value) return; // Basic validation
+            
+            const newFood = {
+                name: nameInput.value,
+                kcal: parseInt(kcalInput.value) || 0,
+                karb: karbInput.value ? parseInt(karbInput.value) : null,
+                protein: proteinInput.value ? parseInt(proteinInput.value) : null,
+                yag: yagInput.value ? parseInt(yagInput.value) : null
+            };
+            
+            libraryFoods.unshift(newFood);
+            localStorage.setItem('miz_library', JSON.stringify(libraryFoods));
+            renderLibraryFoods();
+            
+            // Clear inputs
+            nameInput.value = '';
+            kcalInput.value = '';
+            if(karbInput) karbInput.value = '';
+            if(proteinInput) proteinInput.value = '';
+            if(yagInput) yagInput.value = '';
+            
+            closeNewFoodModal();
         }
 
         // Add Portion Modal Logic
@@ -1496,6 +1542,7 @@
         // Attach listeners safely
         document.addEventListener('DOMContentLoaded', () => {
             if (typeof renderLogs === 'function') renderLogs();
+            if (typeof renderLibraryFoods === 'function') renderLibraryFoods();
             if (typeof updateUIState === 'function') updateUIState();
             const modal = document.getElementById('addPortionModal');
             if(modal) {
@@ -1570,41 +1617,95 @@
 
 <!-- Modal for Adding New Food to Library (Hidden by default) -->
 <div class="fixed inset-0 z-[100] flex items-end sm:items-center justify-center bg-black/40 backdrop-blur-sm hidden opacity-0 transition-opacity duration-300" id="newFoodModal">
-<div class="bg-surface rounded-t-[24px] sm:rounded-[24px] w-full max-w-md p-container-padding flex flex-col gap-6 shadow-2xl transform translate-y-full transition-transform duration-300 ease-out" id="newFoodModalContent">
-<div class="flex justify-between items-center">
-<h2 class="font-headline-md text-headline-md text-on-surface">Yeni Besin Ekle</h2>
-<button class="text-on-surface-variant p-2 rounded-full bg-surface-container-low hover:bg-surface-container" onclick="closeNewFoodModal()">
-<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">close</span>
+<div class="relative z-10 w-full max-w-md bg-surface sm:rounded-[24px] rounded-t-[32px] shadow-[0px_-8px_32px_rgba(0,0,0,0.06)] flex flex-col h-[751px] transform translate-y-full transition-transform duration-300 ease-out" id="newFoodModalContent">
+<!-- Drag Handle Indicator -->
+<div class="w-full flex justify-center pt-3 pb-1 cursor-grab active:cursor-grabbing sm:hidden">
+<div class="w-12 h-1.5 bg-outline-variant/50 rounded-full"></div>
+</div>
+<!-- Header -->
+<div class="flex justify-between items-center px-container-padding py-4 shrink-0">
+<h1 class="font-headline-sm text-headline-sm text-on-surface">Yeni Besin Ekle</h1>
+<button aria-label="Kapat" class="w-10 h-10 flex items-center justify-center bg-surface-container rounded-full text-on-surface-variant hover:bg-surface-container-high transition-colors active:scale-95" onclick="closeNewFoodModal()">
+<span class="material-symbols-outlined" style="font-variation-settings: 'wght' 400;">close</span>
 </button>
 </div>
-<form class="flex flex-col gap-4">
-<div class="flex flex-col gap-1">
-<label class="font-label-sm text-label-sm text-on-surface-variant ml-1">Besin Adı *</label>
-<input class="bg-surface-container-low border border-transparent rounded-[12px] px-4 py-3 font-body-md text-body-md text-on-surface focus:border-primary outline-none w-full placeholder-on-surface-variant/50 transition-colors" placeholder="Örn: Ev Yapımı Yoğurt" type="text">
+<!-- Scrollable Content -->
+<div class="flex-1 overflow-y-auto hide-scrollbar px-container-padding py-4 flex flex-col gap-section-margin">
+<!-- Food Name Section -->
+<div class="flex flex-col gap-2">
+<label class="font-label-md text-label-md text-on-surface-variant ml-1" for="new-food-name">Besin Adı</label>
+<div class="relative group">
+<div class="absolute inset-y-0 left-4 flex items-center pointer-events-none">
+<span class="material-symbols-outlined text-outline-variant group-focus-within:text-primary transition-colors">restaurant</span>
 </div>
-<div class="flex flex-col gap-1">
-<label class="font-label-sm text-label-sm text-on-surface-variant ml-1">Kalori (100g için) *</label>
-<input class="bg-surface-container-low border border-transparent rounded-[12px] px-4 py-3 font-body-md text-body-md text-on-surface focus:border-primary outline-none w-full placeholder-on-surface-variant/50 transition-colors" placeholder="kcal" type="number">
-</div>
-<div class="grid grid-cols-3 gap-3">
-<div class="flex flex-col gap-1">
-<label class="font-label-sm text-label-sm text-on-surface-variant ml-1">Karb (g)</label>
-<input class="bg-surface-container-low border border-transparent rounded-[12px] px-3 py-3 font-body-md text-body-md text-on-surface focus:border-primary outline-none w-full transition-colors" placeholder="0" type="number">
-</div>
-<div class="flex flex-col gap-1">
-<label class="font-label-sm text-label-sm text-on-surface-variant ml-1">Protein (g)</label>
-<input class="bg-surface-container-low border border-transparent rounded-[12px] px-3 py-3 font-body-md text-body-md text-on-surface focus:border-primary outline-none w-full transition-colors" placeholder="0" type="number">
-</div>
-<div class="flex flex-col gap-1">
-<label class="font-label-sm text-label-sm text-on-surface-variant ml-1">Yağ (g)</label>
-<input class="bg-surface-container-low border border-transparent rounded-[12px] px-3 py-3 font-body-md text-body-md text-on-surface focus:border-primary outline-none w-full transition-colors" placeholder="0" type="number">
+<input class="w-full bg-surface-container-low border-2 border-transparent focus:border-primary/30 focus:bg-surface outline-none rounded-2xl py-4 pl-12 pr-4 font-body-lg text-body-lg text-on-surface placeholder-outline-variant transition-all shadow-sm" id="new-food-name" placeholder="Örn: Yulaf Ezmesi" type="text"/>
 </div>
 </div>
-<button class="mt-4 bg-primary text-on-primary rounded-full py-4 font-label-md text-label-md hover:bg-surface-tint active:scale-95 transition-all w-full flex justify-center items-center gap-2 shadow-sm" type="button" onclick="closeNewFoodModal()">
-<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">check</span>
-                    Kaydet
-                </button>
-</form>
+<!-- Macros Section (Bento Grid Style) -->
+<div class="flex flex-col gap-4">
+<div class="flex items-center gap-2 mb-1 ml-1">
+<span class="material-symbols-outlined text-primary text-[20px]" style="font-variation-settings: 'FILL' 1;">scale</span>
+<h2 class="font-label-md text-label-md text-on-surface-variant">100g Porsiyon İçin Değerler</h2>
+</div>
+<div class="grid grid-cols-2 gap-card-gap">
+<!-- Calories Card (Prominent) -->
+<div class="col-span-2 bg-primary-fixed/20 border-2 border-transparent focus-within:border-primary/40 focus-within:bg-primary-fixed/30 rounded-[24px] p-5 flex items-center justify-between transition-all cursor-text">
+<div class="flex flex-col">
+<label class="font-label-sm text-label-sm text-on-primary-fixed-variant mb-1">Kalori</label>
+<div class="flex items-baseline gap-1">
+<input class="w-20 bg-transparent outline-none border-none p-0 font-headline-md text-headline-md text-on-primary-fixed focus:ring-0" placeholder="0" type="number" id="new-food-kcal"/>
+<span class="font-body-md text-body-md text-on-primary-fixed-variant/70 font-medium">kcal</span>
+</div>
+</div>
+<div class="w-12 h-12 rounded-full bg-primary-fixed/50 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">local_fire_department</span>
+</div>
+</div>
+<!-- Carbs Card -->
+<div class="bg-surface-container-low border-2 border-transparent focus-within:border-outline-variant focus-within:bg-surface rounded-3xl p-4 flex flex-col transition-all shadow-sm">
+<div class="flex justify-between items-start mb-2">
+<label class="font-label-sm text-label-sm text-on-surface-variant">Karbonhidrat</label>
+<div class="w-2 h-2 rounded-full bg-tertiary-fixed-dim"></div>
+</div>
+<div class="flex items-baseline gap-1 mt-auto">
+<input class="w-full bg-transparent outline-none border-none p-0 font-headline-sm text-headline-sm text-on-surface focus:ring-0" placeholder="0" type="number" id="new-food-karb"/>
+<span class="font-body-md text-body-md text-outline">g</span>
+</div>
+</div>
+<!-- Protein Card -->
+<div class="bg-surface-container-low border-2 border-transparent focus-within:border-outline-variant focus-within:bg-surface rounded-3xl p-4 flex flex-col transition-all shadow-sm">
+<div class="flex justify-between items-start mb-2">
+<label class="font-label-sm text-label-sm text-on-surface-variant">Protein</label>
+<div class="w-2 h-2 rounded-full bg-secondary-fixed-dim"></div>
+</div>
+<div class="flex items-baseline gap-1 mt-auto">
+<input class="w-full bg-transparent outline-none border-none p-0 font-headline-sm text-headline-sm text-on-surface focus:ring-0" placeholder="0" type="number" id="new-food-protein"/>
+<span class="font-body-md text-body-md text-outline">g</span>
+</div>
+</div>
+<!-- Fat Card -->
+<div class="bg-surface-container-low border-2 border-transparent focus-within:border-outline-variant focus-within:bg-surface rounded-3xl p-4 flex flex-col transition-all shadow-sm col-span-2 sm:col-span-1">
+<div class="flex justify-between items-start mb-2">
+<label class="font-label-sm text-label-sm text-on-surface-variant">Yağ</label>
+<div class="w-2 h-2 rounded-full bg-tertiary"></div>
+</div>
+<div class="flex items-baseline gap-1 mt-auto">
+<input class="w-full bg-transparent outline-none border-none p-0 font-headline-sm text-headline-sm text-on-surface focus:ring-0" placeholder="0" type="number" id="new-food-yag"/>
+<span class="font-body-md text-body-md text-outline">g</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Spacing for bottom fixed button -->
+<div class="h-24"></div>
+</div>
+<!-- Sticky Footer Action -->
+<div class="absolute bottom-0 left-0 w-full px-container-padding py-6 bg-gradient-to-t from-surface via-surface to-transparent pt-12 shrink-0">
+<button class="w-full h-[56px] bg-primary text-on-primary rounded-full flex items-center justify-center gap-2 hover:opacity-95 active:scale-[0.98] transition-all shadow-lg shadow-primary/20" onclick="saveNewFood()">
+<span class="font-label-md text-label-md text-[16px]">Besini Kaydet</span>
+<span class="material-symbols-outlined text-[20px]">check_circle</span>
+</button>
+</div>
 </div>
 </div>
 </div>
