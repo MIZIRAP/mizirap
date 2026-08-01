@@ -11,6 +11,7 @@ let unsubNotes = null;
 let currentWorkouts = [];
 let currentTxs = [];
 let currentWaterStats = { currentAmount: 0, dailyGoal: 2000 };
+let currentBooks = [];
 
 export function initDashboard(uid) {
     const tasksRef = query(collection(db, "users", uid, "tasks"), orderBy("createdAt", "desc"));
@@ -35,6 +36,7 @@ export function clearDashboard() {
     currentWorkouts = [];
     currentTxs = [];
     currentWaterStats = { currentAmount: 0, dailyGoal: 2000 };
+    currentBooks = [];
 }
 
 export function updateDashboardWorkouts(workouts) {
@@ -52,6 +54,11 @@ export function updateDashboardWater(stats) {
     renderDashboard();
 }
 
+export function updateDashboardBooks(books) {
+    currentBooks = books;
+    renderDashboard();
+}
+
 function renderDashboard() {
     // Su Tüketimi
     const waterText = document.getElementById("dashboard-water-text");
@@ -63,9 +70,14 @@ function renderDashboard() {
         waterProg.style.width = `${percent}%`;
     }
 
-    // Okuma/Notlar
-    const statNotes = document.getElementById("stat-notes");
-    if(statNotes) statNotes.textContent = allNotes.length;
+    // Okuma/Kitaplar
+    const dashBooksActive = document.getElementById("dashboard-books-active");
+    const dashBooksTotal = document.getElementById("dashboard-books-total");
+    if(dashBooksActive && dashBooksTotal) {
+        const readingCount = currentBooks.filter(b => b.status === "reading").length;
+        dashBooksActive.textContent = readingCount;
+        dashBooksTotal.textContent = `${currentBooks.length} kitap`;
+    }
     
     // Spor
     const oneWeekAgo = new Date();

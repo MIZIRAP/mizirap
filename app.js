@@ -1,11 +1,12 @@
 import { auth } from "./firebase-config.js";
 import { onAuthStateChanged, signInAnonymously } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
 import { setupAuthUI } from "./auth.js";
-import { initDashboard, clearDashboard, updateDashboardWorkouts, updateDashboardFinance, updateDashboardWater } from "./dashboard.js";
+import { initDashboard, clearDashboard, updateDashboardWorkouts, updateDashboardFinance, updateDashboardWater, updateDashboardBooks } from "./dashboard.js";
 import { initShopping, clearShopping } from "./shopping.js";
 import { initWorkout, clearWorkout } from "./workout.js";
 import { initFinance, clearFinance } from "./finance.js";
 import { initWater, clearWater } from "./water.js";
+import { initBooks, clearBooks } from "./books.js";
 
 // ---------- DOM referansları ----------
 const authScreen = document.getElementById("auth-screen");
@@ -46,6 +47,10 @@ onAuthStateChanged(auth, async (user) => {
 
             initWater(user.uid, (waterStats) => {
                 updateDashboardWater(waterStats);
+            });
+            
+            initBooks(user.uid, (books) => {
+                updateDashboardBooks(books);
             });
             
         } catch (err) {

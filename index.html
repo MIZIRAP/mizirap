@@ -129,17 +129,16 @@
                 </div>
 
                 <!-- Reading Card -->
-                <div class="bg-surface-container-lowest rounded-card p-4 ambient-shadow interactive-card flex flex-col justify-between aspect-square">
+                <div class="nav-tab bg-surface-container-lowest rounded-card p-4 ambient-shadow interactive-card flex flex-col justify-between aspect-square cursor-pointer" data-target="view-books">
                     <div class="flex justify-between items-start">
                         <div class="p-2 rounded-full bg-secondary-container text-primary">
                             <span class="material-symbols-outlined text-[20px]">menu_book</span>
                         </div>
-                        <span class="font-label-sm text-label-sm bg-surface-container-low text-on-surface px-2 py-1 rounded-full"><span id="stat-notes">2</span>/5</span>
+                        <span class="font-label-sm text-label-sm bg-surface-container-low text-on-surface px-2 py-1 rounded-full"><span id="dashboard-books-active">0</span></span>
                     </div>
                     <div class="mt-4 flex flex-col gap-1">
                         <span class="font-label-sm text-label-sm text-on-surface-variant uppercase">Okuma</span>
-                        <span class="font-headline-sm text-headline-sm text-on-surface">45 sayfa</span>
-                        <span class="font-body-md text-body-md text-on-surface-variant">bugün</span>
+                        <span class="font-headline-sm text-headline-sm text-on-surface" id="dashboard-books-total">0 kitap</span>
                     </div>
                 </div>
 
@@ -394,6 +393,46 @@
         </nav>
     </section>
 
+    <!-- ================= KİTAP TAKİBİ (Books) ================= -->
+    <section id="view-books" class="view hidden">
+        <!-- Top App Bar -->
+        <header class="w-full top-0 sticky bg-background dark:bg-background flat no shadows transition-opacity duration-200 z-40 max-w-md mx-auto">
+            <div class="flex items-center justify-between px-container-padding py-4 w-full">
+                <div class="flex items-center gap-3">
+                    <button class="nav-tab hover:opacity-80 p-2 -ml-2 rounded-full focus:outline-none focus:ring-2 focus:ring-primary" data-target="view-dashboard">
+                        <span class="material-symbols-outlined text-primary dark:text-primary-fixed-dim" data-icon="arrow_back" data-weight="regular">arrow_back</span>
+                    </button>
+                    <h1 class="font-headline-md text-headline-md text-primary dark:text-primary-fixed-dim font-bold tracking-tight">Kitap Takibi</h1>
+                </div>
+                <button class="hover:opacity-80 p-2 -mr-2 rounded-full focus:outline-none focus:ring-2 focus:ring-primary" id="add-book-btn">
+                    <span class="material-symbols-outlined text-primary dark:text-primary-fixed-dim" data-icon="add" data-weight="regular">add</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- Main Content Container -->
+        <main class="flex-1 w-full max-w-md mx-auto px-container-padding pb-32 flex flex-col gap-section-margin pt-4">
+            <!-- Section 1: Şu An Okuyorum -->
+            <section class="flex flex-col gap-element-spacing">
+                <h2 class="font-headline-sm text-headline-sm text-on-surface">Şu An Okuyorum</h2>
+                <div id="books-reading-list" class="flex flex-col gap-element-spacing">
+                    <!-- Dinamik -->
+                </div>
+            </section>
+
+            <!-- Section 2: Kitaplarım -->
+            <section class="flex flex-col gap-element-spacing">
+                <div class="flex justify-between items-end">
+                    <h2 class="font-headline-sm text-headline-sm text-on-surface">Kitaplarım</h2>
+                    <button class="font-label-md text-label-md text-primary hover:text-surface-tint transition-colors">Tümünü Gör</button>
+                </div>
+                <div id="books-all-grid" class="grid grid-cols-2 gap-card-gap">
+                    <!-- Dinamik -->
+                </div>
+            </section>
+        </main>
+    </section>
+
     <!-- ================= SU TAKİBİ (Water) ================= -->
     <section id="view-water" class="view hidden">
         <!-- Top App Bar -->
@@ -622,6 +661,6 @@
 </div>
 <!-- Kapanış: #app-container -->
 
-<script type="module" src="app.js?v=11"></script>
+<script type="module" src="app.js?v=12"></script>
 </body>
 </html>
