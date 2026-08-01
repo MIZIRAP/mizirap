@@ -1381,10 +1381,11 @@
         }
 
         // New Food (Library) Modal Logic
-        const newFoodModal = document.getElementById('newFoodModal');
-        const newFoodModalContent = document.getElementById('newFoodModalContent');
-
         window.openNewFoodModal = function() {
+            const newFoodModal = document.getElementById('newFoodModal');
+            const newFoodModalContent = document.getElementById('newFoodModalContent');
+            if (!newFoodModal || !newFoodModalContent) return;
+            
             newFoodModal.classList.remove('hidden');
             setTimeout(() => {
                 newFoodModal.classList.remove('opacity-0');
@@ -1397,19 +1398,15 @@
         }
 
         window.closeNewFoodModal = function() {
+            const newFoodModal = document.getElementById('newFoodModal');
+            const newFoodModalContent = document.getElementById('newFoodModalContent');
+            if (!newFoodModal || !newFoodModalContent) return;
+            
             newFoodModal.classList.add('opacity-0');
             newFoodModalContent.classList.add('translate-y-full');
             setTimeout(() => {
                 newFoodModal.classList.add('hidden');
             }, 300);
-        }
-
-        if (newFoodModal) {
-            newFoodModal.addEventListener('click', (e) => {
-                if (e.target === newFoodModal) {
-                    closeNewFoodModal();
-                }
-            });
         }
         
         window.saveNewFood = function() {
@@ -1544,12 +1541,25 @@
             if (typeof renderLogs === 'function') renderLogs();
             if (typeof renderLibraryFoods === 'function') renderLibraryFoods();
             if (typeof updateUIState === 'function') updateUIState();
-            const modal = document.getElementById('addPortionModal');
-            if(modal) {
-                modal.addEventListener('click', (e) => {
-                    if (e.target === modal) closeAddPortionModal();
+            
+            const portionModal = document.getElementById('addPortionModal');
+            if(portionModal) {
+                portionModal.addEventListener('click', (e) => {
+                    if (e.target === portionModal) {
+                        closeAddPortionModal();
+                    }
                 });
             }
+            
+            const newFoodModal = document.getElementById('newFoodModal');
+            if (newFoodModal) {
+                newFoodModal.addEventListener('click', (e) => {
+                    if (e.target === newFoodModal) {
+                        closeNewFoodModal();
+                    }
+                });
+            }
+
             const gramInput = document.getElementById('gram-input');
             if(gramInput) {
                 gramInput.addEventListener('blur', function() {
