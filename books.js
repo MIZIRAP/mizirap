@@ -10,13 +10,143 @@ const readingListEl = document.getElementById("books-reading-list");
 const allGridEl = document.getElementById("books-all-grid");
 const addBookBtn = document.getElementById("add-book-btn");
 
+// Modal Elements
+const addModal = document.getElementById("book-add-modal");
+const addModalContent = document.getElementById("book-add-modal-content");
+const addCloseBtn = document.getElementById("book-add-close");
+const addCancelBtn = document.getElementById("book-add-cancel");
+const addSaveBtn = document.getElementById("book-add-save");
+const coverInput = document.getElementById("book-add-cover-input");
+const coverPreview = document.getElementById("book-add-cover-preview");
+const coverIcon = document.getElementById("book-add-cover-icon");
+const coverText = document.getElementById("book-add-cover-text");
+const titleInput = document.getElementById("book-add-title");
+const authorInput = document.getElementById("book-add-author");
+const pagesInput = document.getElementById("book-add-pages");
+const statusBtns = document.querySelectorAll(".book-add-status-btn");
+
+let tempCoverBase64 = null;
+let tempStatus = "to_read";
+
+function openAddModal() {
+    if(!addModal) return;
+    // Reset form
+    tempCoverBase64 = null;
+    tempStatus = "to_read";
+    titleInput.value = "";
+    authorInput.value = "";
+    pagesInput.value = "";
+    coverInput.value = "";
+    coverPreview.classList.add("hidden");
+    coverIcon.classList.remove("hidden");
+    coverText.classList.remove("hidden");
+    updateStatusBtns();
+
+    addModal.classList.remove("hidden");
+    void addModal.offsetWidth;
+    addModalContent.classList.remove("opacity-0", "scale-95");
+    addModalContent.classList.add("opacity-100", "scale-100");
+}
+
+function closeAddModal() {
+    if(!addModal) return;
+    addModalContent.classList.remove("opacity-100", "scale-100");
+    addModalContent.classList.add("opacity-0", "scale-95");
+    setTimeout(() => {
+        addModal.classList.add("hidden");
+    }, 200);
+}
+
+function updateStatusBtns() {
+    statusBtns.forEach(btn => {
+        if(btn.dataset.status === tempStatus) {
+            btn.className = "book-add-status-btn flex-1 py-2 px-4 rounded-full font-label-md text-label-md transition-all bg-primary text-on-primary shadow-md";
+        } else {
+            btn.className = "book-add-status-btn flex-1 py-2 px-4 rounded-full font-label-md text-label-md transition-all bg-surface-dim text-on-surface-variant hover:bg-surface-container-high";
+        }
+    });
+}
+
 export function initBooks(uid, onChangeCallback) {
     onChangeCb = onChangeCallback;
     
-    // Add event listener for adding new book
-    if (addBookBtn) {
-        addBookBtn.onclick = () => {
-            alert("Yeni kitap ekleme ekranı (Tasarım bekleniyor...)");
+    if (addBookBtn) addBookBtn.onclick = openAddModal;
+    if (addCloseBtn) addCloseBtn.onclick = closeAddModal;
+    if (addCancelBtn) addCancelBtn.onclick = closeAddModal;
+
+    // Status selection
+    statusBtns.forEach(btn => {
+        btn.onclick = () => {
+            tempStatus = btn.dataset.status;
+            updateStatusBtns();
+        };
+    });
+
+    // Handle Image Selection (Resize on client to save space)
+    if (coverInput) {
+        coverInput.onchange = (e) => {
+            const file = e.target.files[0];
+            if(!file) return;
+            const reader = new FileReader();
+            reader.onload = (ev) => {
+                const img = new Image();
+                img.onload = () => {
+                    const canvas = document.createElement("canvas");
+                    const MAX_WIDTH = 300;
+                    const scaleSize = MAX_WIDTH / img.width;
+                    canvas.width = MAX_WIDTH;
+                    canvas.height = img.height * scaleSize;
+                    const ctx = canvas.getContext("2d");
+                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                    tempCoverBase64 = canvas.toDataURL("image/jpeg", 0.7);
+                    
+                    coverPreview.src = tempCoverBase64;
+                    coverPreview.classList.remove("hidden");
+                    coverIcon.classList.add("hidden");
+                    coverText.classList.add("hidden");
+                };
+                img.src = ev.target.result;
+            };
+            reader.readAsDataURL(file);
+        };
+    }
+
+    // Handle Save
+    if (addSaveBtn) {
+        addSaveBtn.onclick = async () => {
+            const title = titleInput.value.trim();
+            const author = authorInput.value.trim();
+            const totalPages = parseInt(pagesInput.value) || 0;
+            
+            if(!title || !author || totalPages <= 0) {
+                alert("Lütfen kitap adı, yazar ve geçerli bir sayfa sayısı girin.");
+                return;
+            }
+
+            const defaultCover = "https://lh3.googleusercontent.com/aida-public/AB6AXuB6h1dAGqleftlnXN-fbLQJUq5RotW7XiCCcBLDdxavUALSPKMVZsDo6HoLB7tU-G1V3SFx4de4JdflIEv2VAP7-Yrz7ZfOL5ZJveJB3FsEvFJeXHR83tST6ccMQBROGjcj04oS6jewuLenpuMAMM7TakIAoOC0ujrxfF2NdouzDeBU7BUF2WERNws82yVdqM0rLQgnvKFxH1b-1HXA-8zcutfVn86tTELNgnz-S9WEy4SUNF5VCZP0";
+            
+            const newBook = {
+                title,
+                author,
+                totalPages,
+                readPages: 0,
+                status: tempStatus,
+                coverUrl: tempCoverBase64 || defaultCover,
+                createdAt: serverTimestamp()
+            };
+
+            const originalText = addSaveBtn.textContent;
+            try {
+                addSaveBtn.textContent = "...";
+                const booksRef = collection(db, "users", uid, "books");
+                await addDoc(booksRef, newBook);
+                closeAddModal();
+            } catch(err) {
+                console.error("Kitap eklerken hata:", err);
+                alert("Hata oluştu, veritabanına bağlanılamadı.");
+            } finally {
+                addSaveBtn.textContent = originalText;
+            }
         };
     }
 

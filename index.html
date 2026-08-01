@@ -431,6 +431,81 @@
                 </div>
             </section>
         </main>
+        <!-- Add Book Modal -->
+        <div class="hidden fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm" id="book-add-modal">
+            <div class="bg-surface-container-lowest w-full max-w-md rounded-xl shadow-2xl flex flex-col p-6 gap-6 scale-95 opacity-0 transition-all duration-200 overflow-y-auto max-h-[90vh]" id="book-add-modal-content">
+                <!-- Header -->
+                <div class="flex items-center justify-between">
+                    <h2 class="font-headline-sm text-headline-sm text-on-surface" id="modal-title">Yeni Kitap Ekle</h2>
+                    <button id="book-add-close" class="text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high rounded-full p-1 transition-colors focus:outline-none focus:ring-2 focus:ring-primary">
+                        <span class="material-symbols-outlined text-[24px]">close</span>
+                    </button>
+                </div>
+                <!-- Form Fields -->
+                <div class="flex flex-col gap-4">
+                    <!-- Book Cover Upload Section -->
+                    <div class="flex flex-col gap-1">
+                        <label class="font-label-md text-label-md text-on-surface-variant">Kitap Kapağı Ekle</label>
+                        <div class="relative group cursor-pointer" id="book-add-cover-container">
+                            <div class="w-full h-32 bg-surface-dim border-2 border-dashed border-outline-variant rounded-xl flex flex-col items-center justify-center gap-2 transition-all hover:bg-surface-container-high hover:border-primary group-focus-within:ring-2 group-focus-within:ring-primary overflow-hidden" id="book-add-cover-preview-box">
+                                <span class="material-symbols-outlined text-outline text-[32px] group-hover:text-primary transition-colors" id="book-add-cover-icon">add_photo_alternate</span>
+                                <span class="font-label-md text-label-md text-outline-variant group-hover:text-on-surface-variant transition-colors" id="book-add-cover-text">Görsel Seç veya Sürükle</span>
+                                <img id="book-add-cover-preview" class="hidden object-cover w-full h-full absolute inset-0 z-10" />
+                            </div>
+                            <input id="book-add-cover-input" aria-label="Kitap kapağı yükle" class="absolute inset-0 opacity-0 cursor-pointer z-20" type="file" accept="image/*"/>
+                        </div>
+                    </div>
+                    <!-- Book Title -->
+                    <div class="flex flex-col gap-1">
+                        <label class="font-label-md text-label-md text-on-surface-variant" for="book-add-title">Kitap Adı</label>
+                        <div class="relative">
+                            <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-[20px]">book</span>
+                            <input id="book-add-title" class="w-full bg-surface-dim border-none rounded-lg py-3 pl-10 pr-4 font-body-md text-body-md text-on-surface placeholder:text-outline-variant focus:ring-2 focus:ring-primary focus:bg-surface-container-lowest transition-colors" placeholder="Kitap adını girin" type="text"/>
+                        </div>
+                    </div>
+                    <!-- Author -->
+                    <div class="flex flex-col gap-1">
+                        <label class="font-label-md text-label-md text-on-surface-variant" for="book-add-author">Yazar</label>
+                        <div class="relative">
+                            <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-[20px]">person</span>
+                            <input id="book-add-author" class="w-full bg-surface-dim border-none rounded-lg py-3 pl-10 pr-4 font-body-md text-body-md text-on-surface placeholder:text-outline-variant focus:ring-2 focus:ring-primary focus:bg-surface-container-lowest transition-colors" placeholder="Yazar adını girin" type="text"/>
+                        </div>
+                    </div>
+                    <!-- Total Pages -->
+                    <div class="flex flex-col gap-1">
+                        <label class="font-label-md text-label-md text-on-surface-variant" for="book-add-pages">Toplam Sayfa Sayısı</label>
+                        <div class="relative">
+                            <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-[20px]">format_list_numbered</span>
+                            <input id="book-add-pages" class="w-full bg-surface-dim border-none rounded-lg py-3 pl-10 pr-4 font-body-md text-body-md text-on-surface placeholder:text-outline-variant focus:ring-2 focus:ring-primary focus:bg-surface-container-lowest transition-colors" min="1" placeholder="Sayfa sayısı" type="number"/>
+                        </div>
+                    </div>
+                    <!-- Reading Status -->
+                    <div class="flex flex-col gap-2">
+                        <label class="font-label-md text-label-md text-on-surface-variant">Okuma Durumu</label>
+                        <div class="flex gap-2">
+                            <button class="book-add-status-btn flex-1 py-2 px-4 rounded-full font-label-md text-label-md transition-all bg-primary text-on-primary shadow-md" data-status="to_read" type="button">
+                                Okunacak
+                            </button>
+                            <button class="book-add-status-btn flex-1 py-2 px-4 rounded-full font-label-md text-label-md transition-all bg-surface-dim text-on-surface-variant hover:bg-surface-container-high" data-status="reading" type="button">
+                                Okuyorum
+                            </button>
+                            <button class="book-add-status-btn flex-1 py-2 px-4 rounded-full font-label-md text-label-md transition-all bg-surface-dim text-on-surface-variant hover:bg-surface-container-high" data-status="finished" type="button">
+                                Bitti
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <!-- Action Buttons -->
+                <div class="flex justify-end gap-3 mt-2">
+                    <button id="book-add-cancel" class="px-6 py-2.5 rounded-full font-label-md text-label-md text-primary bg-surface-container-low hover:bg-surface-container-high transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-surface-container-lowest" type="button">
+                        İptal
+                    </button>
+                    <button id="book-add-save" class="px-6 py-2.5 rounded-full font-label-md text-label-md text-on-primary bg-primary hover:bg-primary-container hover:text-on-primary-container transition-colors shadow-md focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-surface-container-lowest" type="button">
+                        Ekle
+                    </button>
+                </div>
+            </div>
+        </div>
     </section>
 
     <!-- ================= SU TAKİBİ (Water) ================= -->
@@ -661,6 +736,6 @@
 </div>
 <!-- Kapanış: #app-container -->
 
-<script type="module" src="app.js?v=12"></script>
+<script type="module" src="app.js?v=13"></script>
 </body>
 </html>
