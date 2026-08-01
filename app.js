@@ -70,19 +70,19 @@ onAuthStateChanged(auth, async (user) => {
 });
 
 // ---------- Sekme (view) geçişleri (Uygulama İçi) ----------
-document.querySelectorAll(".nav-tab").forEach(tab => {
-    tab.addEventListener("click", (e) => {
-        // Sadece görünümü (view) değiştir, aktif tab stilleri kendi içinde HTML'de zaten var.
-        const targetId = tab.dataset.target || tab.closest('.nav-tab').dataset.target;
-        if (!targetId) return;
-        
-        document.querySelectorAll(".view").forEach(v => {
-            v.classList.add("hidden");
-        });
-        
-        const target = document.getElementById(targetId);
-        if(target) {
-            target.classList.remove("hidden");
-        }
+document.addEventListener("click", (e) => {
+    const tab = e.target.closest(".nav-tab");
+    if (!tab) return;
+    
+    const targetId = tab.dataset.target;
+    if (!targetId) return;
+    
+    document.querySelectorAll(".view").forEach(v => {
+        v.classList.add("hidden");
     });
+    
+    const target = document.getElementById(targetId);
+    if(target) {
+        target.classList.remove("hidden");
+    }
 });
