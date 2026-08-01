@@ -135,25 +135,46 @@
                         <div class="w-full h-1.5 bg-surface-variant rounded-full mt-2 overflow-hidden">
                             <div id="dashboard-water-progress" class="h-full bg-primary rounded-full transition-all duration-300" style="width: 0%;"></div>
                         </div>
+                        <div class="flex gap-2 mt-2">
+                            <!-- We use e.stopPropagation() here to prevent navigating to view-water when clicking + buttons -->
+                            <button class="flex-1 py-1 px-2 rounded-full bg-secondary-container text-primary text-label-sm font-label-sm active:scale-95 transition-all dash-water-add" data-amount="250" onclick="event.stopPropagation()">+250ml</button>
+                            <button class="flex-1 py-1 px-2 rounded-full bg-secondary-container text-primary text-label-sm font-label-sm active:scale-95 transition-all dash-water-add" data-amount="500" onclick="event.stopPropagation()">+500ml</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Nutrition Card -->
+                <div class="bg-surface-container-lowest rounded-card p-4 ambient-shadow interactive-card flex flex-col justify-between aspect-square cursor-pointer">
+                    <div class="p-2 w-fit rounded-full bg-secondary-container text-primary">
+                        <span class="material-symbols-outlined text-[20px]">restaurant</span>
+                    </div>
+                    <div class="mt-4 flex flex-col gap-1">
+                        <span class="font-label-sm text-label-sm text-on-surface-variant uppercase">Besin Takibi</span>
+                        <span class="font-headline-sm text-headline-sm text-on-surface">0 <span class="text-sm font-normal text-on-surface-variant">/ 2000 kcal</span></span>
+                        <div class="w-full h-1.5 bg-surface-variant rounded-full mt-2 overflow-hidden">
+                            <div class="h-full bg-primary rounded-full" style="width: 0%;"></div>
+                        </div>
+                        <span class="font-body-md text-body-md text-on-surface-variant mt-1">bugün</span>
                     </div>
                 </div>
 
                 <!-- Reading Card -->
                 <div class="nav-tab bg-surface-container-lowest rounded-card p-4 ambient-shadow interactive-card flex flex-col justify-between aspect-square cursor-pointer" data-target="view-books">
-                    <div class="flex justify-between items-start">
-                        <div class="p-2 rounded-full bg-secondary-container text-primary">
-                            <span class="material-symbols-outlined text-[20px]">menu_book</span>
-                        </div>
-                        <span class="font-label-sm text-label-sm bg-surface-container-low text-on-surface px-2 py-1 rounded-full"><span id="dashboard-books-active">0</span></span>
+                    <div class="p-2 w-fit rounded-full bg-secondary-container text-primary">
+                        <span class="material-symbols-outlined text-[20px]">menu_book</span>
                     </div>
                     <div class="mt-4 flex flex-col gap-1">
-                        <span class="font-label-sm text-label-sm text-on-surface-variant uppercase">Okuma</span>
-                        <span class="font-headline-sm text-headline-sm text-on-surface" id="dashboard-books-total">0 kitap</span>
+                        <span class="font-label-sm text-label-sm text-on-surface-variant uppercase">Kitap Okuma</span>
+                        <span class="font-headline-sm text-headline-sm text-on-surface" id="dashboard-books-text">0 <span class="text-sm font-normal text-on-surface-variant">/ 0 sayfa</span></span>
+                        <div class="w-full h-1.5 bg-surface-variant rounded-full mt-2 overflow-hidden">
+                            <div class="h-full bg-primary rounded-full" id="dashboard-books-progress" style="width: 0%;"></div>
+                        </div>
+                        <span class="font-body-md text-body-md text-on-surface-variant mt-1 truncate" id="dashboard-books-title">-</span>
                     </div>
                 </div>
 
                 <!-- Sport Card -->
-                <div class="bg-surface-container-lowest rounded-card p-4 ambient-shadow interactive-card flex flex-col justify-between aspect-square">
+                <div class="nav-tab bg-surface-container-lowest rounded-card p-4 ambient-shadow interactive-card flex flex-col justify-between aspect-square cursor-pointer" data-target="view-workout">
                     <div class="flex justify-between items-start">
                         <div class="p-2 rounded-full bg-secondary-container text-primary">
                             <span class="material-symbols-outlined text-[20px]">fitness_center</span>
@@ -166,18 +187,20 @@
                         <span class="font-body-md text-body-md text-on-surface-variant">Hedef: 4/hafta</span>
                     </div>
                 </div>
+            </section>
 
-                <!-- Finance Card -->
-                <div class="bg-surface-container-lowest rounded-card p-4 ambient-shadow interactive-card flex flex-col justify-between aspect-square">
-                    <div class="p-2 w-fit rounded-full bg-secondary-container text-primary">
-                        <span class="material-symbols-outlined text-[20px]">account_balance_wallet</span>
+            <!-- Full-width Finance Card -->
+            <section class="nav-tab bg-surface-container-lowest rounded-card p-5 ambient-shadow interactive-card flex items-center justify-between cursor-pointer" data-target="view-finance">
+                <div class="flex items-center gap-4">
+                    <div class="p-3 rounded-full bg-secondary-container text-primary">
+                        <span class="material-symbols-outlined text-[24px]">account_balance_wallet</span>
                     </div>
-                    <div class="mt-4 flex flex-col gap-1">
+                    <div class="flex flex-col">
                         <span class="font-label-sm text-label-sm text-on-surface-variant uppercase">Finans</span>
-                        <span class="font-headline-sm text-headline-sm text-primary" id="stat-balance">4,250 TL</span>
                         <span class="font-body-md text-body-md text-on-surface-variant">Bakiye</span>
                     </div>
                 </div>
+                <span class="font-headline-md text-headline-md text-primary" id="stat-balance">0 TL</span>
             </section>
 
             <!-- Bottom List Section -->
@@ -850,6 +873,6 @@
 </div>
 <!-- Kapanış: #app-container -->
 
-<script type="module" src="app.js?v=18"></script>
+<script type="module" src="app.js?v=19"></script>
 </body>
 </html>

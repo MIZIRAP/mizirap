@@ -71,12 +71,26 @@ function renderDashboard() {
     }
 
     // Okuma/Kitaplar
-    const dashBooksActive = document.getElementById("dashboard-books-active");
-    const dashBooksTotal = document.getElementById("dashboard-books-total");
-    if(dashBooksActive && dashBooksTotal) {
-        const readingCount = currentBooks.filter(b => b.status === "reading").length;
-        dashBooksActive.textContent = readingCount;
-        dashBooksTotal.textContent = `${currentBooks.length} kitap`;
+    const dashBooksText = document.getElementById("dashboard-books-text");
+    const dashBooksProg = document.getElementById("dashboard-books-progress");
+    const dashBooksTitle = document.getElementById("dashboard-books-title");
+    
+    if(dashBooksText && dashBooksProg && dashBooksTitle) {
+        const readingBooks = currentBooks.filter(b => b.status === "reading");
+        if(readingBooks.length > 0) {
+            // Sort by most progress or latest created. Let's just pick the first one for now
+            const book = readingBooks[0];
+            const read = book.readPages || 0;
+            const total = book.totalPages || 1;
+            const percent = Math.min(100, Math.round((read / total) * 100));
+            dashBooksText.innerHTML = `${read} <span class="text-sm font-normal text-on-surface-variant">/ ${total} sayfa</span>`;
+            dashBooksProg.style.width = `${percent}%`;
+            dashBooksTitle.textContent = book.title || "İsimsiz";
+        } else {
+            dashBooksText.innerHTML = `0 <span class="text-sm font-normal text-on-surface-variant">/ 0 sayfa</span>`;
+            dashBooksProg.style.width = `0%`;
+            dashBooksTitle.textContent = "Okunan kitap yok";
+        }
     }
     
     // Spor
