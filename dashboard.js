@@ -10,6 +10,7 @@ let unsubNotes = null;
 
 let currentWorkouts = [];
 let currentTxs = [];
+let currentWaterStats = { currentAmount: 0, dailyGoal: 2000 };
 
 export function initDashboard(uid) {
     const tasksRef = query(collection(db, "users", uid, "tasks"), orderBy("createdAt", "desc"));
@@ -33,6 +34,7 @@ export function clearDashboard() {
     allNotes = [];
     currentWorkouts = [];
     currentTxs = [];
+    currentWaterStats = { currentAmount: 0, dailyGoal: 2000 };
 }
 
 export function updateDashboardWorkouts(workouts) {
@@ -45,7 +47,22 @@ export function updateDashboardFinance(txs) {
     renderDashboard();
 }
 
+export function updateDashboardWater(stats) {
+    currentWaterStats = stats;
+    renderDashboard();
+}
+
 function renderDashboard() {
+    // Su Tüketimi
+    const waterText = document.getElementById("dashboard-water-text");
+    const waterProg = document.getElementById("dashboard-water-progress");
+    if(waterText && waterProg) {
+        waterText.innerHTML = `${currentWaterStats.currentAmount} <span class="text-sm font-normal text-on-surface-variant">/ ${currentWaterStats.dailyGoal} ml</span>`;
+        let percent = currentWaterStats.currentAmount / currentWaterStats.dailyGoal * 100;
+        if (percent > 100) percent = 100;
+        waterProg.style.width = `${percent}%`;
+    }
+
     // Okuma/Notlar
     const statNotes = document.getElementById("stat-notes");
     if(statNotes) statNotes.textContent = allNotes.length;

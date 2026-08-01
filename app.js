@@ -1,10 +1,11 @@
 import { auth } from "./firebase-config.js";
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
 import { setupAuthUI } from "./auth.js";
-import { initDashboard, clearDashboard, updateDashboardWorkouts, updateDashboardFinance } from "./dashboard.js";
+import { initDashboard, clearDashboard, updateDashboardWorkouts, updateDashboardFinance, updateDashboardWater } from "./dashboard.js";
 import { initShopping, clearShopping } from "./shopping.js";
 import { initWorkout, clearWorkout } from "./workout.js";
 import { initFinance, clearFinance } from "./finance.js";
+import { initWater, clearWater } from "./water.js";
 
 // ---------- DOM referansları ----------
 const authScreen = document.getElementById("auth-screen");
@@ -43,6 +44,10 @@ onAuthStateChanged(auth, (user) => {
             initFinance(user.uid, (txs) => {
                 updateDashboardFinance(txs);
             });
+
+            initWater(user.uid, (waterStats) => {
+                updateDashboardWater(waterStats);
+            });
             
         } catch (err) {
             console.error("Login transition error:", err);
@@ -60,6 +65,7 @@ onAuthStateChanged(auth, (user) => {
         clearShopping();
         clearWorkout();
         clearFinance();
+        clearWater();
     }
 });
 
