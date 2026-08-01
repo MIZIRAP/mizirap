@@ -100,7 +100,7 @@ function renderSplitView() {
     
     if(splitSelector) {
         splitSelector.onclick = () => {
-            openSplitModal(); 
+            openSplitSelectionModal(); 
         };
     }
     
@@ -742,3 +742,84 @@ function closeEditTemplateView() {
     const navBar = document.getElementById("bottom-nav");
     if(navBar) navBar.style.display = "flex";
 }
+
+// ==========================================
+// SPLIT SELECTION MODAL
+// ==========================================
+
+window.openSplitSelectionModal = function() {
+    const modal = document.getElementById("splitSelectionModal");
+    const content = document.getElementById("splitSelectionModalContent");
+    const list = document.getElementById("split-selection-list");
+    
+    if(!modal || !content || !list) return;
+    
+    list.innerHTML = "";
+    
+    if (splits.length === 0) {
+        list.innerHTML = `<p class="text-on-surface-variant text-center mt-6">Kayıtlı split yok.</p>`;
+    } else {
+        splits.forEach(split => {
+            const isActive = split.id === activeSplitId;
+            const btn = document.createElement("button");
+            
+            if (isActive) {
+                btn.className = "w-full text-left bg-surface-container-low border-2 border-primary rounded-xl p-4 flex items-center justify-between group transition-transform active:scale-[0.98] relative overflow-hidden shadow-[0px_4px_20px_rgba(0,0,0,0.04)]";
+                btn.innerHTML = `
+                    <div class="flex flex-col gap-1 z-10">
+                        <span class="font-body-lg text-body-lg text-on-background font-medium">${escapeHtml(split.name)}</span>
+                        <span class="font-label-md text-label-md text-primary">Aktif Program</span>
+                    </div>
+                    <div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center z-10">
+                        <span class="material-symbols-outlined text-on-primary text-[20px] font-bold">check</span>
+                    </div>
+                    <div class="absolute inset-0 bg-primary/5 pointer-events-none"></div>
+                `;
+            } else {
+                btn.className = "w-full text-left bg-surface-container-lowest border border-outline-variant rounded-xl p-4 flex items-center justify-between hover:bg-surface-container-low transition-colors active:scale-[0.98] shadow-sm";
+                
+                // For subtitle, we could show creation date if available
+                let subTitle = "Kayıtlı Program";
+                if (split.createdAt && split.createdAt.toDate) {
+                    const d = split.createdAt.toDate();
+                    subTitle = `Eklenme: ${d.toLocaleDateString('tr-TR')}`;
+                }
+                
+                btn.innerHTML = `
+                    <div class="flex flex-col gap-1">
+                        <span class="font-body-lg text-body-lg text-on-background">${escapeHtml(split.name)}</span>
+                        <span class="font-label-md text-label-md text-on-surface-variant">${subTitle}</span>
+                    </div>
+                `;
+                
+                btn.onclick = () => {
+                    activeSplitId = split.id;
+                    localStorage.setItem(`miz_activeSplit_${currentUid}`, split.id);
+                    // activeDayId will be reset/fixed automatically in renderSplitView
+                    activeDayId = null; 
+                    renderSplitView();
+                    closeSplitSelectionModal();
+                };
+            }
+            list.appendChild(btn);
+        });
+    }
+    
+    modal.classList.remove('hidden');
+    setTimeout(() => {
+        modal.classList.remove('opacity-0');
+        content.classList.remove('translate-y-full');
+    }, 10);
+};
+
+window.closeSplitSelectionModal = function() {
+    const modal = document.getElementById("splitSelectionModal");
+    const content = document.getElementById("splitSelectionModalContent");
+    if(modal && content) {
+        modal.classList.add('opacity-0');
+        content.classList.add('translate-y-full');
+        setTimeout(() => {
+            modal.classList.add('hidden');
+        }, 300);
+    }
+};
