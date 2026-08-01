@@ -34,6 +34,16 @@
     <link rel="stylesheet" href="style.css">
     <style>
         .view.hidden { display: none !important; }
+
+        /* Number input up/down oklarını gizle */
+        input[type="number"]::-webkit-inner-spin-button,
+        input[type="number"]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        input[type="number"] {
+            -moz-appearance: textfield;
+        }
     </style>
 </head>
 <body class="bg-surface-variant text-on-background font-body-lg antialiased min-h-screen flex justify-center">
@@ -840,6 +850,6 @@
 </div>
 <!-- Kapanış: #app-container -->
 
-<script type="module" src="app.js?v=17"></script>
+<script type="module" src="app.js?v=18"></script>
 </body>
 </html>
