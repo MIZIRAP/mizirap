@@ -506,6 +506,70 @@
                 </div>
             </div>
         </div>
+
+        <!-- Edit Book Modal -->
+        <div class="hidden fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm" id="book-edit-modal">
+            <div class="bg-surface w-full max-w-md rounded-3xl shadow-sm p-6 flex flex-col gap-5 scale-95 opacity-0 transition-all duration-200 overflow-y-auto max-h-[90vh]" id="book-edit-modal-content">
+                <!-- Header -->
+                <div class="flex justify-between items-center mb-2">
+                    <h1 class="font-headline-sm text-headline-sm text-on-surface">Kitabı Düzenle</h1>
+                    <button id="book-edit-close" aria-label="Close" class="text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high rounded-full p-1 transition-colors">
+                        <span class="material-symbols-outlined text-[24px]">close</span>
+                    </button>
+                </div>
+                <!-- Cover & Name/Author Row -->
+                <div class="flex gap-4 items-start">
+                    <div class="w-20 h-[110px] bg-surface-container-high rounded-lg flex items-center justify-center overflow-hidden shrink-0 border border-dashed border-outline-variant relative cursor-pointer group">
+                        <img id="book-edit-cover-preview" class="w-full h-full object-cover absolute inset-0 z-10" src=""/>
+                        <div class="absolute inset-0 bg-black/30 z-20 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                            <span class="material-symbols-outlined text-white">edit</span>
+                        </div>
+                        <input id="book-edit-cover-input" class="absolute inset-0 opacity-0 cursor-pointer z-30" type="file" accept="image/*"/>
+                    </div>
+                    <div class="flex-1 flex flex-col gap-4">
+                        <div>
+                            <label class="font-label-md text-label-md text-on-surface-variant mb-1 block" for="book-edit-title">Kitap Adı</label>
+                            <input class="bg-surface-container-lowest border border-transparent rounded-lg py-2.5 px-3 font-body-md text-on-surface focus:outline-none focus:border-primary transition-colors w-full" id="book-edit-title" type="text" />
+                        </div>
+                        <div>
+                            <label class="font-label-md text-label-md text-on-surface-variant mb-1 block" for="book-edit-author">Yazar</label>
+                            <input class="bg-surface-container-lowest border border-transparent rounded-lg py-2.5 px-3 font-body-md text-on-surface focus:outline-none focus:border-primary transition-colors w-full" id="book-edit-author" type="text" />
+                        </div>
+                    </div>
+                </div>
+                <!-- Total Pages -->
+                <div>
+                    <label class="font-label-md text-label-md text-on-surface-variant mb-1 block" for="book-edit-pages">Toplam Sayfa</label>
+                    <input class="bg-surface-container-lowest border border-transparent rounded-lg py-2.5 px-3 font-body-md text-on-surface focus:outline-none focus:border-primary transition-colors w-32" id="book-edit-pages" type="number" />
+                </div>
+                <!-- Reading Status -->
+                <div>
+                    <label class="font-label-md text-label-md text-on-surface-variant mb-2 block">Okuma Durumu</label>
+                    <div class="flex gap-3 flex-wrap">
+                        <label class="flex items-center gap-2 font-body-md text-on-surface cursor-pointer">
+                            <input class="accent-primary w-[18px] h-[18px] cursor-pointer book-edit-status-radio" name="book-edit-status" value="to_read" type="radio"/>
+                            Okunacak
+                        </label>
+                        <label class="flex items-center gap-2 font-body-md text-on-surface cursor-pointer">
+                            <input class="accent-primary w-[18px] h-[18px] cursor-pointer book-edit-status-radio" name="book-edit-status" value="reading" type="radio"/>
+                            Okunuyor
+                        </label>
+                        <label class="flex items-center gap-2 font-body-md text-on-surface cursor-pointer">
+                            <input class="accent-primary w-[18px] h-[18px] cursor-pointer book-edit-status-radio" name="book-edit-status" value="finished" type="radio"/>
+                            Okundu
+                        </label>
+                    </div>
+                </div>
+                <!-- Actions -->
+                <div class="flex flex-col gap-3 mt-4">
+                    <button id="book-edit-save" class="bg-primary text-on-primary rounded-xl py-3.5 px-6 font-label-md font-semibold text-lg w-full hover:bg-surface-tint active:scale-[0.98] transition-all">Güncelle</button>
+                    <button id="book-edit-delete" class="bg-transparent text-error border border-error-container rounded-xl py-3.5 px-6 font-label-md font-semibold text-lg w-full hover:bg-error-container active:scale-[0.98] transition-all flex justify-center items-center gap-2">
+                        <span class="material-symbols-outlined text-lg">delete</span>
+                        Sil
+                    </button>
+                </div>
+            </div>
+        </div>
     </section>
 
     <!-- ================= SU TAKİBİ (Water) ================= -->
@@ -736,6 +800,6 @@
 </div>
 <!-- Kapanış: #app-container -->
 
-<script type="module" src="app.js?v=14"></script>
+<script type="module" src="app.js?v=15"></script>
 </body>
 </html>

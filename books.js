@@ -1,5 +1,5 @@
 import { db } from "./firebase-config.js";
-import { collection, onSnapshot, serverTimestamp, doc, updateDoc, writeBatch } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+import { collection, onSnapshot, serverTimestamp, doc, updateDoc, writeBatch, addDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
 import { escapeHtml } from "./utils.js";
 
 let booksUnsubscribe = null;
@@ -24,6 +24,22 @@ const titleInput = document.getElementById("book-add-title");
 const authorInput = document.getElementById("book-add-author");
 const pagesInput = document.getElementById("book-add-pages");
 const statusBtns = document.querySelectorAll(".book-add-status-btn");
+
+// Edit Modal Elements
+const editModal = document.getElementById("book-edit-modal");
+const editModalContent = document.getElementById("book-edit-modal-content");
+const editCloseBtn = document.getElementById("book-edit-close");
+const editSaveBtn = document.getElementById("book-edit-save");
+const editDeleteBtn = document.getElementById("book-edit-delete");
+const editCoverInput = document.getElementById("book-edit-cover-input");
+const editCoverPreview = document.getElementById("book-edit-cover-preview");
+const editTitleInput = document.getElementById("book-edit-title");
+const editAuthorInput = document.getElementById("book-edit-author");
+const editPagesInput = document.getElementById("book-edit-pages");
+const editStatusRadios = document.querySelectorAll(".book-edit-status-radio");
+
+let currentEditId = null;
+let editCoverBase64 = null;
 
 let tempCoverBase64 = null;
 let tempStatus = "to_read";
@@ -54,6 +70,37 @@ function closeAddModal() {
     addModalContent.classList.add("opacity-0", "scale-95");
     setTimeout(() => {
         addModal.classList.add("hidden");
+    }, 200);
+}
+
+function openEditModal(book) {
+    if(!editModal) return;
+    currentEditId = book.id;
+    editCoverBase64 = null;
+    
+    editTitleInput.value = book.title || "";
+    editAuthorInput.value = book.author || "";
+    editPagesInput.value = book.totalPages || "";
+    editCoverPreview.src = book.coverUrl || "";
+    
+    editStatusRadios.forEach(radio => {
+        if(radio.value === book.status) {
+            radio.checked = true;
+        }
+    });
+
+    editModal.classList.remove("hidden");
+    void editModal.offsetWidth;
+    editModalContent.classList.remove("opacity-0", "scale-95");
+    editModalContent.classList.add("opacity-100", "scale-100");
+}
+
+function closeEditModal() {
+    if(!editModal) return;
+    editModalContent.classList.remove("opacity-100", "scale-100");
+    editModalContent.classList.add("opacity-0", "scale-95");
+    setTimeout(() => {
+        editModal.classList.add("hidden");
     }, 200);
 }
 
@@ -152,6 +199,103 @@ export function initBooks(uid, onChangeCallback) {
                 closeAddModal();
             } finally {
                 addSaveBtn.textContent = originalText;
+            }
+        };
+    }
+
+    if (editCloseBtn) editCloseBtn.onclick = closeEditModal;
+
+    // Handle Edit Image Selection
+    if (editCoverInput) {
+        editCoverInput.onchange = (e) => {
+            const file = e.target.files[0];
+            if(!file) return;
+            const reader = new FileReader();
+            reader.onload = (ev) => {
+                const img = new Image();
+                img.onload = () => {
+                    const canvas = document.createElement("canvas");
+                    const MAX_WIDTH = 300;
+                    const scaleSize = MAX_WIDTH / img.width;
+                    canvas.width = MAX_WIDTH;
+                    canvas.height = img.height * scaleSize;
+                    const ctx = canvas.getContext("2d");
+                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                    editCoverBase64 = canvas.toDataURL("image/jpeg", 0.7);
+                    editCoverPreview.src = editCoverBase64;
+                };
+                img.src = ev.target.result;
+            };
+            reader.readAsDataURL(file);
+        };
+    }
+
+    // Handle Edit Save
+    if (editSaveBtn) {
+        editSaveBtn.onclick = async () => {
+            if(!currentEditId) return;
+            const title = editTitleInput.value.trim();
+            const author = editAuthorInput.value.trim();
+            const totalPages = parseInt(editPagesInput.value) || 0;
+            let status = "to_read";
+            editStatusRadios.forEach(r => { if(r.checked) status = r.value; });
+            
+            if(!title || !author || totalPages <= 0) {
+                alert("Lütfen kitap adı, yazar ve geçerli bir sayfa sayısı girin.");
+                return;
+            }
+
+            const updateData = {
+                title,
+                author,
+                totalPages,
+                status
+            };
+            if(editCoverBase64) updateData.coverUrl = editCoverBase64;
+
+            const originalText = editSaveBtn.textContent;
+            try {
+                editSaveBtn.textContent = "...";
+                const docRef = doc(db, "users", uid, "books", currentEditId);
+                await updateDoc(docRef, updateData);
+                closeEditModal();
+            } catch(err) {
+                console.error("Kitap güncellerken hata (Test Modu olabilir):", err);
+                // Test Modu Fallback
+                const bIndex = currentBooks.findIndex(b => b.id === currentEditId);
+                if(bIndex !== -1) {
+                    currentBooks[bIndex] = { ...currentBooks[bIndex], ...updateData };
+                }
+                renderBooks(uid);
+                if(onChangeCb) onChangeCb(currentBooks);
+                closeEditModal();
+            } finally {
+                editSaveBtn.textContent = originalText;
+            }
+        };
+    }
+
+    // Handle Edit Delete
+    if (editDeleteBtn) {
+        editDeleteBtn.onclick = async () => {
+            if(!currentEditId) return;
+            if(!confirm("Bu kitabı silmek istediğinize emin misiniz?")) return;
+            
+            const originalHTML = editDeleteBtn.innerHTML;
+            try {
+                editDeleteBtn.innerHTML = "...";
+                const docRef = doc(db, "users", uid, "books", currentEditId);
+                await deleteDoc(docRef);
+                closeEditModal();
+            } catch(err) {
+                console.error("Kitap silerken hata (Test Modu olabilir):", err);
+                // Test Modu Fallback
+                currentBooks = currentBooks.filter(b => b.id !== currentEditId);
+                renderBooks(uid);
+                if(onChangeCb) onChangeCb(currentBooks);
+                closeEditModal();
+            } finally {
+                editDeleteBtn.innerHTML = originalHTML;
             }
         };
     }
@@ -341,7 +485,11 @@ function renderBooks(uid) {
     // Edit book triggers
     document.querySelectorAll(".edit-book-trigger").forEach(el => {
         el.onclick = () => {
-            alert(`Kitap düzenleme ekranı açılacak (Tasarım bekleniyor...)`);
+            const id = el.dataset.id;
+            const book = currentBooks.find(b => b.id === id);
+            if(book) {
+                openEditModal(book);
+            }
         };
     });
 }
