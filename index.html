@@ -458,6 +458,58 @@
             </div>
         </main>
     </section>
+    
+    <!-- Exercise History View -->
+    <section id="view-exercise-history" class="view hidden bg-background text-on-background font-body-md min-h-screen pb-[100px] flex flex-col">
+        <!-- TopAppBar -->
+        <header class="w-full top-0 sticky bg-background dark:bg-background flat no shadows flex items-center justify-between px-container-padding py-4 z-40">
+            <div class="flex items-center gap-4">
+                <button class="hover:opacity-80 transition-opacity duration-200 text-on-surface-variant flex items-center justify-center p-2 -ml-2 rounded-full hover:bg-surface-variant" onclick="closeExerciseHistory()">
+                    <span class="material-symbols-outlined" data-icon="arrow_back">arrow_back</span>
+                </button>
+                <h1 class="font-headline-sm text-headline-sm text-primary dark:text-primary-fixed-dim" id="history-title">Hareket Geçmişi</h1>
+            </div>
+            <div class="flex items-center">
+                <button class="hover:opacity-80 transition-opacity duration-200 text-on-surface-variant flex items-center justify-center p-2 -mr-2 rounded-full hover:bg-surface-variant">
+                    <span class="material-symbols-outlined" data-icon="more_vert">more_vert</span>
+                </button>
+            </div>
+        </header>
+
+        <main class="flex flex-col items-center w-full px-container-padding pb-section-margin gap-card-gap">
+            <div class="w-full max-w-md flex flex-col gap-card-gap">
+                
+                <!-- Chart Section -->
+                <section class="bg-surface-container-lowest rounded-xl shadow-[0px_4px_20px_rgba(0,0,0,0.04)] p-5 flex flex-col gap-4">
+                    <div class="flex justify-between items-end">
+                        <div>
+                            <p class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Maksimum Ağırlık</p>
+                            <h2 class="font-headline-md text-headline-md text-primary mt-1" id="history-max-weight">0.0 kg</h2>
+                        </div>
+                        <div class="bg-primary-container bg-opacity-20 rounded-full px-3 py-1 flex items-center gap-1" id="history-trend-badge">
+                            <span class="material-symbols-outlined text-primary text-[14px]" data-icon="trending_flat">trending_flat</span>
+                            <span class="font-label-sm text-label-sm text-primary">0%</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Simple Line Chart Visualization -->
+                    <div class="w-full h-40 mt-4 relative flex items-end" id="history-chart-container">
+                        <!-- Chart will be injected here via JS -->
+                    </div>
+                </section>
+                
+                <!-- History List Section -->
+                <section class="flex flex-col gap-3 mt-2">
+                    <h3 class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider ml-1 mb-1">Geçmiş Kayıtlar</h3>
+                    <div id="history-list-container" class="flex flex-col gap-3">
+                        <!-- History items will be injected here via JS -->
+                    </div>
+                </section>
+
+            </div>
+        </main>
+    </section>
+
     <section id="view-finance" class="view hidden px-container-padding py-6">
         <header class="flex justify-between items-center mb-8">
             <h1 class="font-display-lg text-primary tracking-tight">Finans</h1>

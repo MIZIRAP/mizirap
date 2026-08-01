@@ -872,3 +872,266 @@ window.closeSplitSelectionModal = function() {
         }, 300);
     }
 };
+
+
+// ==========================================
+// EXERCISE HISTORY VIEW
+// ==========================================
+
+window.closeExerciseHistory = function() {
+    switchView('workout');
+    renderSplitView(); 
+};
+
+window.openExerciseHistory = async function(triggerExId, exName) {
+    if(!currentUid) return;
+    
+    // Switch view
+    switchView('exercise-history');
+    
+    // Setup UI loading state
+    const titleEl = document.getElementById("history-title");
+    const maxWeightEl = document.getElementById("history-max-weight");
+    const trendBadgeEl = document.getElementById("history-trend-badge");
+    const chartContainer = document.getElementById("history-chart-container");
+    const listContainer = document.getElementById("history-list-container");
+    
+    titleEl.textContent = `${exName} Geçmişi`;
+    maxWeightEl.textContent = "...";
+    trendBadgeEl.innerHTML = ``;
+    chartContainer.innerHTML = `<div class="absolute inset-0 flex items-center justify-center text-outline text-sm">Yükleniyor...</div>`;
+    listContainer.innerHTML = `<div class="text-center text-outline text-sm py-4">Veriler getiriliyor...</div>`;
+    
+    // 1. Gather all exercise IDs that match the target name (case-insensitive) across all splits
+    const targetNameLower = exName.toLowerCase().trim();
+    const targetIds = new Set();
+    
+    splits.forEach(s => {
+        s.days.forEach(d => {
+            d.exercises.forEach(e => {
+                if(e.name.toLowerCase().trim() === targetNameLower) {
+                    targetIds.add(e.id);
+                }
+            });
+        });
+    });
+    
+    // 2. Fetch all workout logs for this user, ordered by date descending
+    try {
+        const q = query(
+            collection(db, "users", currentUid, "workout_logs"),
+            orderBy("dateStr", "desc") // Fetching all and filtering in memory, limits could be applied if >1000 logs, but ok for now
+        );
+        const snap = await getDocs(q);
+        
+        let historyRecords = []; // Array to store matching logs
+        let overallMaxWeight = 0;
+        
+        snap.forEach(docSnap => {
+            const logData = docSnap.data();
+            const exData = logData.exercises || {};
+            
+            // Check if this log contains ANY of the target IDs
+            let matchedSets = null;
+            let matchedExId = null;
+            for(let id of targetIds) {
+                if(exData[id]) {
+                    matchedSets = exData[id];
+                    matchedExId = id;
+                    break;
+                }
+            }
+            
+            if(matchedSets && matchedSets.length > 0) {
+                // Calculate max weight and volume for this session
+                let sessionMaxW = 0;
+                let sessionTotalSets = matchedSets.length;
+                let sessionTotalReps = 0;
+                let bestSet = null;
+                
+                matchedSets.forEach(s => {
+                    const w = parseFloat(s.weight) || 0;
+                    const r = parseInt(s.reps) || 0;
+                    sessionTotalReps += r;
+                    if(w > sessionMaxW) sessionMaxW = w;
+                    
+                    if(!bestSet || w > parseFloat(bestSet.weight)) {
+                        bestSet = s;
+                    } else if (w === parseFloat(bestSet.weight) && r > parseInt(bestSet.reps)) {
+                        bestSet = s;
+                    }
+                });
+                
+                if(sessionMaxW > overallMaxWeight) overallMaxWeight = sessionMaxW;
+                
+                historyRecords.push({
+                    dateStr: logData.dateStr, // YYYY-MM-DD
+                    maxWeight: sessionMaxW,
+                    sets: matchedSets,
+                    bestSet: bestSet,
+                    totalSets: sessionTotalSets,
+                    totalReps: sessionTotalReps
+                });
+            }
+        });
+        
+        // 3. Process Data for UI
+        if(historyRecords.length === 0) {
+            maxWeightEl.textContent = "0.0 kg";
+            chartContainer.innerHTML = `<div class="absolute inset-0 flex items-center justify-center text-outline text-sm">Veri bulunamadı.</div>`;
+            listContainer.innerHTML = `<div class="text-center text-outline text-sm py-4">Henüz bu hareket için geçmiş kayıt yok.</div>`;
+            return;
+        }
+        
+        maxWeightEl.textContent = `${overallMaxWeight.toFixed(1)} kg`;
+        
+        // Trend calculation (compare most recent with the one before it, or oldest in this month)
+        // Let's just compare the latest record's max weight with the second latest
+        if(historyRecords.length >= 2) {
+            const diff = historyRecords[0].maxWeight - historyRecords[1].maxWeight;
+            if(diff > 0) {
+                trendBadgeEl.innerHTML = `
+                    <span class="material-symbols-outlined text-primary text-[14px]" data-icon="trending_up">trending_up</span>
+                    <span class="font-label-sm text-label-sm text-primary">+${diff.toFixed(1)}kg</span>
+                `;
+                trendBadgeEl.className = "bg-primary-container bg-opacity-20 rounded-full px-3 py-1 flex items-center gap-1";
+            } else if (diff < 0) {
+                trendBadgeEl.innerHTML = `
+                    <span class="material-symbols-outlined text-error text-[14px]" data-icon="trending_down">trending_down</span>
+                    <span class="font-label-sm text-label-sm text-error">${diff.toFixed(1)}kg</span>
+                `;
+                trendBadgeEl.className = "bg-error-container bg-opacity-20 rounded-full px-3 py-1 flex items-center gap-1";
+            } else {
+                trendBadgeEl.innerHTML = `
+                    <span class="material-symbols-outlined text-outline text-[14px]" data-icon="trending_flat">trending_flat</span>
+                    <span class="font-label-sm text-label-sm text-outline">Değişim Yok</span>
+                `;
+                trendBadgeEl.className = "bg-surface-variant bg-opacity-50 rounded-full px-3 py-1 flex items-center gap-1";
+            }
+        } else {
+             trendBadgeEl.innerHTML = `
+                <span class="material-symbols-outlined text-primary text-[14px]" data-icon="fiber_new">fiber_new</span>
+                <span class="font-label-sm text-label-sm text-primary">İlk Kayıt</span>
+            `;
+             trendBadgeEl.className = "bg-primary-container bg-opacity-20 rounded-full px-3 py-1 flex items-center gap-1";
+        }
+        
+        // Render List (Only last 3)
+        listContainer.innerHTML = "";
+        const recordsToDisplay = historyRecords.slice(0, 3);
+        
+        recordsToDisplay.forEach((rec, idx) => {
+            const dateObj = new Date(rec.dateStr);
+            const dateFormatted = dateObj.toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', year: 'numeric' });
+            
+            // Format best set like "4 x 8 x 85.0 kg" -> actually users want "Sets x Reps x Kg". 
+            // In the UI mockup it is "4 x 8 x 85.0 kg". Let's show "Total Sets x Best Reps x Best Kg" or just "Best Set"
+            // We'll show "Total Sets x BestReps x BestWeight kg"
+            const bestW = rec.bestSet ? parseFloat(rec.bestSet.weight).toFixed(1) : 0;
+            const bestR = rec.bestSet ? parseInt(rec.bestSet.reps) : 0;
+            
+            let diffBadge = `<div class="text-on-surface-variant font-label-md text-label-md px-2 py-1">-</div>`;
+            if (idx < historyRecords.length - 1) {
+                const prevRec = historyRecords[idx+1];
+                const diff = rec.maxWeight - prevRec.maxWeight;
+                if(diff > 0) {
+                    diffBadge = `<div class="bg-primary-container bg-opacity-10 text-primary font-label-md text-label-md px-2 py-1 rounded">+${diff.toFixed(1)}kg</div>`;
+                } else if(diff < 0) {
+                    diffBadge = `<div class="bg-error-container bg-opacity-10 text-error font-label-md text-label-md px-2 py-1 rounded">${diff.toFixed(1)}kg</div>`;
+                }
+            }
+            
+            // Opacity for older items
+            const opacityClass = idx === 0 ? "opacity-100" : (idx === 1 ? "opacity-90" : "opacity-80");
+            
+            listContainer.innerHTML += `
+                <div class="bg-surface-container-lowest rounded-xl shadow-[0px_4px_20px_rgba(0,0,0,0.04)] p-4 flex items-center justify-between interactive-card cursor-pointer ${opacityClass}">
+                    <div class="flex items-center gap-4">
+                        <div class="w-10 h-10 rounded-lg bg-surface-container flex items-center justify-center text-${idx===0 ? 'primary' : 'secondary'}">
+                            <span class="material-symbols-outlined" data-icon="calendar_today" ${idx===0 ? "style="font-variation-settings: 'FILL' 1;"" : ""}>calendar_today</span>
+                        </div>
+                        <div class="flex flex-col">
+                            <span class="font-label-sm text-label-sm text-on-surface-variant">${dateFormatted}</span>
+                            <span class="font-body-md text-body-md font-medium text-on-background">${rec.totalSets} set (Max: ${bestR} x ${bestW}kg)</span>
+                        </div>
+                    </div>
+                    ${diffBadge}
+                </div>
+            `;
+        });
+        
+        // Render Chart
+        // We take up to 5 points for the chart to make it look nice (ascending order for left-to-right)
+        const chartData = historyRecords.slice(0, 5).reverse();
+        if(chartData.length < 2) {
+             chartContainer.innerHTML = `<div class="absolute inset-0 flex items-center justify-center text-outline text-sm">Grafik için yeterli veri yok.</div>`;
+        } else {
+            // Find Min and Max
+            const weights = chartData.map(d => d.maxWeight);
+            const maxW = Math.max(...weights);
+            const minW = Math.max(0, Math.min(...weights) - 5); // padding below
+            const range = maxW - minW || 1; // avoid div by 0
+            
+            // Y Axis Labels
+            const yLabels = `
+                <div class="absolute left-0 top-0 h-full flex flex-col justify-between text-[10px] text-outline font-label-sm pb-6 pr-2">
+                    <span>${Math.round(maxW)}k</span>
+                    <span>${Math.round(maxW - range*0.33)}k</span>
+                    <span>${Math.round(maxW - range*0.66)}k</span>
+                    <span>${Math.round(minW)}k</span>
+                </div>
+            `;
+            
+            const gridLines = `
+                <div class="absolute inset-0 ml-6 mb-6 flex flex-col justify-between z-0">
+                    <div class="w-full border-t border-surface-variant"></div>
+                    <div class="w-full border-t border-surface-variant"></div>
+                    <div class="w-full border-t border-surface-variant"></div>
+                    <div class="w-full border-t border-surface-variant"></div>
+                </div>
+            `;
+            
+            let pathD = "";
+            let pointsHtml = "";
+            let xLabelsHtml = "";
+            
+            const width = 100; // SVG viewBox 0-100
+            const height = 100;
+            
+            chartData.forEach((d, i) => {
+                const x = 5 + (i * (90 / (chartData.length - 1))); // spread 5 to 95
+                const y = 100 - (((d.maxWeight - minW) / range) * 80 + 10); // 10 to 90
+                
+                if(i === 0) pathD += `M ${x},${y} `;
+                else pathD += `L ${x},${y} `;
+                
+                pointsHtml += `<div class="w-2 h-2 rounded-full bg-primary border-2 border-surface-container-lowest absolute bottom-[${100-y}%] left-[${x}%] transform -translate-x-1/2 translate-y-1/2"></div>`;
+                
+                const dObj = new Date(d.dateStr);
+                const shortDate = dObj.toLocaleDateString('tr-TR', { day: 'numeric', month: 'short' });
+                xLabelsHtml += `<span>${shortDate}</span>`;
+            });
+            
+            const chartHtml = `
+                ${yLabels}
+                ${gridLines}
+                <div class="relative w-full ml-6 mb-6 h-full z-10 flex items-end justify-between px-2">
+                    <svg class="absolute inset-0 w-full h-full overflow-visible" preserveAspectRatio="none" viewBox="0 0 100 100">
+                        <path d="${pathD}" fill="none" stroke="#446554" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+                    </svg>
+                    ${pointsHtml}
+                </div>
+                <div class="absolute bottom-0 left-6 right-0 flex justify-between text-[10px] text-outline font-label-sm px-2">
+                    ${xLabelsHtml}
+                </div>
+            `;
+            
+            chartContainer.innerHTML = chartHtml;
+        }
+
+    } catch (e) {
+        console.error("Error loading history:", e);
+        listContainer.innerHTML = `<div class="text-center text-error text-sm py-4">Veriler getirilirken bir hata oluştu.</div>`;
+    }
+};
+
