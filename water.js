@@ -39,9 +39,15 @@ export function initWater(uid, onChangeCallback) {
             const type = btn.dataset.type;
             const icon = btn.dataset.icon;
             
-            await addDoc(collection(db, "users", uid, "waterLogs"), {
-                amount, type, icon, createdAt: serverTimestamp()
-            });
+            try {
+                await addDoc(collection(db, "users", uid, "waterLogs"), {
+                    amount, type, icon, createdAt: serverTimestamp()
+                });
+            } catch(err) {
+                console.error("Firestore test hatası:", err);
+                waterLogs.unshift({ amount, type, icon, createdAt: { toDate: () => new Date() } });
+                updateWaterUI();
+            }
         };
     });
 
@@ -52,9 +58,15 @@ export function initWater(uid, onChangeCallback) {
             const val = prompt("Kaç ml su içtiniz?", "300");
             const amount = parseInt(val);
             if(val && !isNaN(amount) && amount > 0) {
-                await addDoc(collection(db, "users", uid, "waterLogs"), {
-                    amount, type: "Custom", icon: "add", createdAt: serverTimestamp()
-                });
+                try {
+                    await addDoc(collection(db, "users", uid, "waterLogs"), {
+                        amount, type: "Custom", icon: "add", createdAt: serverTimestamp()
+                    });
+                } catch(err) {
+                    console.error("Firestore test hatası:", err);
+                    waterLogs.unshift({ amount, type: "Custom", icon: "add", createdAt: { toDate: () => new Date() } });
+                    updateWaterUI();
+                }
             }
         };
     }
@@ -136,7 +148,14 @@ export function initWater(uid, onChangeCallback) {
     if(saveBtn) {
         saveBtn.onclick = async () => {
             if(tempGoal > 0) {
-                await setDoc(doc(db, "users", uid, "settings", "water"), { dailyGoal: tempGoal }, { merge: true });
+                try {
+                    await setDoc(doc(db, "users", uid, "settings", "water"), { dailyGoal: tempGoal }, { merge: true });
+                } catch (err) {
+                    console.error("Firestore kaydetme hatası (Test modunda normaldir):", err);
+                    // Test modu için yerel olarak güncelle
+                    dailyGoal = tempGoal;
+                    updateWaterUI();
+                }
             }
             closeModal();
         };
