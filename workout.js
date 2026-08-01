@@ -302,136 +302,185 @@ function renderExercises(day, lastLog, currentLog) {
             }
         }
         
+        // Find best set from last session for header
+        let bestLastSet = null;
+        if(lastSets.length > 0) {
+            bestLastSet = lastSets.reduce((prev, current) => {
+                const pVol = (parseFloat(prev.weight)||0) * (parseInt(prev.reps)||0);
+                const cVol = (parseFloat(current.weight)||0) * (parseInt(current.reps)||0);
+                return (pVol > cVol) ? prev : current;
+            });
+        }
+        
         const card = document.createElement("div");
-        card.className = "bg-surface-container-lowest rounded-xl p-5 shadow-[0px_4px_20px_rgba(0,0,0,0.04)] border-none exercise-card";
+        card.className = "bg-surface-container-lowest rounded-xl p-5 shadow-[0px_4px_20px_rgba(0,0,0,0.04)] border-none exercise-card mb-4";
         card.dataset.exerciseId = ex.id;
         
-        const header = document.createElement("div");
-        header.className = "flex flex-col gap-2 mb-4";
-        header.innerHTML = `
-            <div class="flex justify-between items-center w-full">
-                <div class="flex items-center gap-2">
-                    <h2 class="font-headline-sm text-headline-sm text-on-surface">${escapeHtml(ex.name)}</h2>
-                    <button class="flex items-center justify-center p-1 rounded-full hover:bg-surface-container transition-colors text-on-surface-variant active:scale-95" onclick="openExerciseHistory('${ex.id}', '${escapeHtml(ex.name)}')">
-                        <span class="material-symbols-outlined" style="font-size: 18px;">history</span>
-                    </button>
+        const targetText = bestLastSet && bestLastSet.weight && bestLastSet.reps 
+            ? `Hedef: ${bestLastSet.weight}kg x ${bestLastSet.reps}` 
+            : "Hedef: Belirlenmedi";
+            
+        // Calculate diff if current best set is available
+        let bestCurrSet = null;
+        if(currentSets.length > 0) {
+            bestCurrSet = currentSets.reduce((prev, current) => {
+                const pVol = (parseFloat(prev.weight)||0) * (parseInt(prev.reps)||0);
+                const cVol = (parseFloat(current.weight)||0) * (parseInt(current.reps)||0);
+                return (pVol > cVol) ? prev : current;
+            });
+        }
+        
+        let diffBadgeHTML = `<span class="bg-surface-container-high text-on-surface-variant font-label-sm text-label-sm px-2 py-1 rounded">--</span>`;
+        if (bestLastSet && bestCurrSet && bestLastSet.weight && bestCurrSet.weight) {
+            const diff = parseFloat(bestCurrSet.weight) - parseFloat(bestLastSet.weight);
+            if (diff > 0) {
+                diffBadgeHTML = `<span class="bg-primary-container text-on-primary-container font-label-sm text-label-sm px-2 py-1 rounded">+${diff}kg</span>`;
+            } else if (diff < 0) {
+                diffBadgeHTML = `<span class="bg-error-container text-on-error-container font-label-sm text-label-sm px-2 py-1 rounded">${diff}kg</span>`;
+            } else {
+                diffBadgeHTML = `<span class="bg-surface-container-high text-on-surface-variant font-label-sm text-label-sm px-2 py-1 rounded">0kg</span>`;
+            }
+        }
+        
+        const details = document.createElement("details");
+        details.className = "group";
+        // Do not open by default
+        
+        const summary = document.createElement("summary");
+        summary.className = "flex justify-between items-center cursor-pointer list-none";
+        summary.innerHTML = `
+            <div class="flex flex-col">
+                <h2 class="font-headline-sm text-headline-sm text-on-surface">${escapeHtml(ex.name)}</h2>
+                <div class="flex items-center gap-1 text-outline hover:text-primary transition-colors cursor-pointer" onclick="event.preventDefault(); openExerciseHistory('${ex.id}', '${escapeHtml(ex.name)}')">
+                    <span class="material-symbols-outlined" style="font-size: 14px;">history</span>
+                    <span class="text-label-sm">${targetText}</span>
                 </div>
-                <span class="diff-badge bg-surface-container-high text-on-surface-variant font-label-sm text-label-sm px-2 py-1 rounded">--</span>
+            </div>
+            <div class="flex items-center gap-2">
+                ${diffBadgeHTML}
+                <span class="material-symbols-outlined text-outline group-open:rotate-180 transition-transform">expand_more</span>
             </div>
         `;
         
-        const grid = document.createElement("div");
-        grid.className = "grid grid-cols-2 gap-4";
+        const setsContainer = document.createElement("div");
+        setsContainer.className = "flex flex-col gap-3 mt-4 transition-all duration-200 sets-container";
         
-        const prevCol = document.createElement("div");
-        prevCol.className = "flex flex-col gap-unit";
-        let lastDateLabel = "Kayıt Yok";
-        if(lastLog) {
-            const d = new Date(lastLog.dateStr);
-            lastDateLabel = `Geçen ${day.name} (${d.toLocaleDateString('tr-TR', {day:'numeric', month:'short'})})`;
-        }
-        prevCol.innerHTML = `<span class="font-label-md text-label-md text-outline">${lastDateLabel}</span>`;
-        
-        lastSets.forEach((set, i) => {
-            prevCol.innerHTML += `
-            <div class="bg-surface-container rounded-lg p-3 flex justify-between items-center opacity-80 h-[48px]">
-                <span class="font-body-md text-body-md text-on-surface-variant">Set ${i+1}</span>
-                <span class="font-body-md text-body-md text-on-surface-variant font-medium">${set.weight} kg x ${set.reps}</span>
-            </div>`;
-        });
-        
-        const currCol = document.createElement("div");
-        currCol.className = "flex flex-col gap-unit current-sets-container";
-        currCol.innerHTML = `<span class="font-label-md text-label-md text-primary">Bugün</span>`;
-        
-        currentSets.forEach((set) => {
-            currCol.appendChild(createSetInput(set.weight, set.reps, () => calculateDiff(card, lastSets)));
-        });
-        
-        grid.appendChild(prevCol);
-        grid.appendChild(currCol);
-        
-        const addSetBtn = document.createElement("button");
-        addSetBtn.className = "w-full mt-4 py-2 border border-dashed border-outline-variant text-outline rounded-lg flex items-center justify-center gap-2 hover:bg-surface-container-low transition-colors";
-        addSetBtn.innerHTML = `
-            <span class="material-symbols-outlined text-sm" style="font-size: 16px;">add</span>
-            <span class="font-label-md text-label-md">Set Ekle</span>
-        `;
-        addSetBtn.onclick = () => {
-            currCol.appendChild(createSetInput('', '', () => calculateDiff(card, lastSets)));
-            calculateDiff(card, lastSets);
+        const renderSetRows = () => {
+            setsContainer.innerHTML = "";
+            currentSets.forEach((set, index) => {
+                const prevSet = lastSets[index];
+                const prevText = prevSet && prevSet.weight && prevSet.reps 
+                    ? `(Geçen: ${prevSet.weight}x${prevSet.reps})` 
+                    : "(Geçen kayıt yok)";
+                
+                const setRow = document.createElement("div");
+                setRow.className = "flex items-center gap-3 bg-surface-container-low p-3 rounded-xl border border-outline-variant/20 set-row";
+                setRow.dataset.index = index;
+                
+                setRow.innerHTML = `
+                    <div class="flex-1">
+                        <div class="flex justify-between items-center mb-1">
+                            <div class="text-label-sm text-outline">Set ${index + 1} ${prevText}</div>
+                            <button class="text-error opacity-0 hover:opacity-100 transition-opacity p-1 text-[10px] uppercase font-bold tracking-widest delete-set-btn">SİL</button>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <div class="flex items-center bg-surface-dim rounded-lg overflow-hidden flex-1">
+                                <button class="p-2 hover:bg-surface-variant active:scale-95 minus-btn" data-type="weight"><span class="material-symbols-outlined text-sm">remove</span></button>
+                                <input class="w-full bg-transparent border-none text-center font-medium p-0 focus:ring-0 weight-input" type="number" placeholder="Kg" value="${set.weight || ''}" step="2.5" />
+                                <button class="p-2 hover:bg-surface-variant active:scale-95 plus-btn" data-type="weight"><span class="material-symbols-outlined text-sm">add</span></button>
+                            </div>
+                            <div class="text-outline">×</div>
+                            <div class="flex items-center bg-surface-dim rounded-lg overflow-hidden flex-1">
+                                <button class="p-2 hover:bg-surface-variant active:scale-95 minus-btn" data-type="reps"><span class="material-symbols-outlined text-sm">remove</span></button>
+                                <input class="w-full bg-transparent border-none text-center font-medium p-0 focus:ring-0 reps-input" type="number" placeholder="Tekrar" value="${set.reps || ''}" step="1" />
+                                <button class="p-2 hover:bg-surface-variant active:scale-95 plus-btn" data-type="reps"><span class="material-symbols-outlined text-sm">add</span></button>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="w-12 h-12 rounded-full border-2 border-outline-variant text-outline flex items-center justify-center active:scale-90 transition-all check-btn"><span class="material-symbols-outlined">check</span></button>
+                `;
+                
+                // Set hover effect to show delete btn
+                setRow.onmouseenter = () => setRow.querySelector('.delete-set-btn').classList.remove('opacity-0');
+                setRow.onmouseleave = () => setRow.querySelector('.delete-set-btn').classList.add('opacity-0');
+                
+                // Check btn logic
+                const checkBtn = setRow.querySelector('.check-btn');
+                const isDone = !!(set.weight && set.reps); // Simple auto-check if both are filled, or let user manually do it.
+                // We'll let user manually do it or just visual.
+                let done = false;
+                checkBtn.onclick = () => {
+                    done = !done;
+                    if(done) {
+                        checkBtn.className = "w-12 h-12 rounded-full bg-primary text-on-primary flex items-center justify-center shadow-sm active:scale-90 transition-all check-btn";
+                        setRow.classList.remove('opacity-60');
+                    } else {
+                        checkBtn.className = "w-12 h-12 rounded-full border-2 border-outline-variant text-outline flex items-center justify-center active:scale-90 transition-all check-btn";
+                        setRow.classList.add('opacity-60');
+                    }
+                };
+                
+                // Initially visually mark as not done (opacity-60) unless they click check
+                // Or maybe don't make it opacity-60 by default. Let's just make check toggle green.
+                
+                // Delete set logic
+                setRow.querySelector('.delete-set-btn').onclick = () => {
+                    currentSets.splice(index, 1);
+                    renderSetRows(); // Re-render sets
+                };
+                
+                // Plus/Minus logic
+                const inputs = {
+                    weight: setRow.querySelector('.weight-input'),
+                    reps: setRow.querySelector('.reps-input')
+                };
+                
+                setRow.querySelectorAll('.minus-btn, .plus-btn').forEach(btn => {
+                    btn.onclick = (e) => {
+                        const type = e.currentTarget.dataset.type;
+                        const input = inputs[type];
+                        const step = parseFloat(input.step) || 1;
+                        let val = parseFloat(input.value) || 0;
+                        if(e.currentTarget.classList.contains('plus-btn')) {
+                            val += step;
+                        } else {
+                            val = Math.max(0, val - step);
+                        }
+                        input.value = val;
+                        // update currentSets array so it persists re-renders
+                        currentSets[index][type] = val;
+                        // We do not re-render the whole row here, just update value so cursor isn't lost
+                    };
+                });
+                
+                // Input listeners to sync currentSets
+                inputs.weight.oninput = (e) => { currentSets[index].weight = e.target.value; };
+                inputs.reps.oninput = (e) => { currentSets[index].reps = e.target.value; };
+                
+                setsContainer.appendChild(setRow);
+            });
+            
+            // Add Set Button
+            const addSetBtn = document.createElement("button");
+            addSetBtn.className = "w-full mt-2 py-3 bg-surface-container-high text-primary rounded-xl flex items-center justify-center gap-2 hover:bg-surface-variant transition-colors active:scale-98";
+            addSetBtn.innerHTML = `
+                <span class="material-symbols-outlined">add_circle</span>
+                <span class="font-label-md">Set Ekle</span>
+            `;
+            addSetBtn.onclick = () => {
+                currentSets.push({ weight: '', reps: '' });
+                renderSetRows();
+            };
+            setsContainer.appendChild(addSetBtn);
         };
         
-        card.appendChild(header);
-        card.appendChild(grid);
-        card.appendChild(addSetBtn);
-        container.appendChild(card);
+        renderSetRows();
         
-        calculateDiff(card, lastSets);
+        details.appendChild(summary);
+        details.appendChild(setsContainer);
+        card.appendChild(details);
+        container.appendChild(card);
     });
-}
-
-function createSetInput(weight, reps, onChange) {
-    const div = document.createElement("div");
-    div.className = "flex gap-2 h-[48px] set-row";
-    
-    const wInput = document.createElement("input");
-    wInput.className = "w-full bg-surface-dim border-none rounded-lg p-3 font-body-md text-body-md text-on-surface focus:ring-2 focus:ring-primary text-center weight-input";
-    wInput.placeholder = "Kg";
-    wInput.type = "number";
-    if (weight !== undefined && weight !== '') wInput.value = weight;
-    
-    const rInput = document.createElement("input");
-    rInput.className = "w-full bg-surface-dim border-none rounded-lg p-3 font-body-md text-body-md text-on-surface focus:ring-2 focus:ring-primary text-center reps-input";
-    rInput.placeholder = "Tekrar";
-    rInput.type = "number";
-    if (reps !== undefined && reps !== '') rInput.value = reps;
-    
-    wInput.addEventListener('input', onChange);
-    rInput.addEventListener('input', onChange);
-    
-    div.appendChild(wInput);
-    div.appendChild(rInput);
-    return div;
-}
-
-function calculateDiff(card, lastSets) {
-    const badge = card.querySelector(".diff-badge");
-    const setRows = card.querySelectorAll(".set-row");
-    
-    let currentVol = 0;
-    let validCurrentSets = 0;
-    setRows.forEach(row => {
-        const w = parseFloat(row.querySelector(".weight-input").value) || 0;
-        const r = parseInt(row.querySelector(".reps-input").value) || 0;
-        if(w > 0 && r > 0) {
-            currentVol += (w * r);
-            validCurrentSets++;
-        }
-    });
-    
-    let lastVol = 0;
-    lastSets.forEach(set => {
-        lastVol += (parseFloat(set.weight) || 0) * (parseInt(set.reps) || 0);
-    });
-    
-    if (validCurrentSets === 0 || lastSets.length === 0) {
-        badge.className = "diff-badge bg-surface-container-high text-on-surface-variant font-label-sm text-label-sm px-2 py-1 rounded";
-        badge.textContent = "--";
-        return;
-    }
-    
-    const diff = currentVol - lastVol;
-    if (diff > 0) {
-        badge.className = "diff-badge bg-primary-container text-on-primary-container font-label-sm text-label-sm px-2 py-1 rounded";
-        badge.textContent = `+${diff.toFixed(1)} vol`;
-    } else if (diff < 0) {
-        badge.className = "diff-badge bg-error-container text-on-error-container font-label-sm text-label-sm px-2 py-1 rounded";
-        badge.textContent = `${diff.toFixed(1)} vol`;
-    } else {
-        badge.className = "diff-badge bg-surface-container-high text-on-surface-variant font-label-sm text-label-sm px-2 py-1 rounded";
-        badge.textContent = "=";
-    }
 }
 
 async function saveWorkoutSession() {
