@@ -1,0 +1,104 @@
+import { auth, db } from "./firebase-config.js";
+import { collection, doc, addDoc, updateDoc, deleteDoc, writeBatch, onSnapshot, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+import { escapeHtml } from "./utils.js";
+
+let allShopping = [];
+let unsubscribe = null;
+
+export function initShopping(uid) {
+    const shoppingRef = query(collection(db, "users", uid, "shoppingList"), orderBy("createdAt", "desc"));
+    unsubscribe = onSnapshot(shoppingRef, snap => {
+        allShopping = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+        renderShoppingList();
+    });
+
+    const form = document.getElementById("shopping-form");
+    if(form) {
+        form.onsubmit = async (e) => {
+            e.preventDefault();
+            const input = document.getElementById("shopping-input");
+            const title = input.value.trim();
+            if (!title) return;
+            await addDoc(collection(db, "users", uid, "shoppingList"), {
+                title, done: false, createdAt: serverTimestamp()
+            });
+            input.value = "";
+        };
+    }
+
+    const clearBtn = document.getElementById("clear-shopping-btn");
+    if(clearBtn) {
+        clearBtn.onclick = async () => {
+            if(confirm('Tüm listeyi temizlemek istediğinize emin misiniz?')) {
+                const batch = writeBatch(db);
+                allShopping.forEach(item => {
+                    batch.delete(doc(db, "users", uid, "shoppingList", item.id));
+                });
+                await batch.commit();
+            }
+        };
+    }
+}
+
+export function clearShopping() {
+    if(unsubscribe) unsubscribe();
+    allShopping = [];
+}
+
+function renderShoppingList() {
+    const activeList = document.getElementById("active-shopping-list");
+    const completedList = document.getElementById("completed-shopping-list");
+    const countLabel = document.getElementById("active-shopping-count");
+    
+    if(!activeList || !completedList) return;
+    
+    activeList.innerHTML = "";
+    completedList.innerHTML = "";
+    
+    const activeItems = allShopping.filter(i => !i.done);
+    const completedItems = allShopping.filter(i => i.done);
+    
+    if(countLabel) countLabel.textContent = `${activeItems.length} Ürün`;
+    
+    activeItems.forEach(item => {
+        const div = document.createElement("div");
+        div.className = "group bg-surface-container-lowest rounded-[24px] p-4 card-shadow flex items-center justify-between transition-all hover:bg-surface-container-low animate-in fade-in slide-in-from-top-2 duration-300";
+        div.innerHTML = `
+            <div class="flex items-center gap-4">
+                <button class="toggle-btn w-6 h-6 rounded-md border-2 border-primary flex items-center justify-center transition-colors">
+                    <span class="material-symbols-outlined text-[18px] opacity-0 transition-opacity">check</span>
+                </button>
+                <span class="font-body-md text-on-surface text-body-md">${escapeHtml(item.title)}</span>
+            </div>
+            <button class="delete-btn material-symbols-outlined text-outline hover:text-error transition-colors p-1">delete</button>
+        `;
+        div.querySelector(".toggle-btn").addEventListener("click", () => {
+            updateDoc(doc(db, "users", auth.currentUser.uid, "shoppingList", item.id), { done: true });
+        });
+        div.querySelector(".delete-btn").addEventListener("click", () => {
+            deleteDoc(doc(db, "users", auth.currentUser.uid, "shoppingList", item.id));
+        });
+        activeList.appendChild(div);
+    });
+    
+    completedItems.forEach(item => {
+        const div = document.createElement("div");
+        div.className = "bg-surface-dim/40 rounded-[24px] p-4 flex items-center justify-between border border-transparent";
+        div.innerHTML = `
+            <div class="flex items-center gap-4">
+                <button class="toggle-btn w-6 h-6 rounded-md bg-primary flex items-center justify-center transition-colors">
+                    <span class="material-symbols-outlined text-[18px] text-on-primary">check</span>
+                </button>
+                <span class="font-body-md text-outline checked-item text-body-md">${escapeHtml(item.title)}</span>
+            </div>
+            <button class="delete-btn material-symbols-outlined text-outline hover:text-error transition-colors p-1">delete</button>
+        `;
+        div.querySelector(".toggle-btn").addEventListener("click", () => {
+            updateDoc(doc(db, "users", auth.currentUser.uid, "shoppingList", item.id), { done: false });
+        });
+        div.querySelector(".delete-btn").addEventListener("click", () => {
+            deleteDoc(doc(db, "users", auth.currentUser.uid, "shoppingList", item.id));
+        });
+        completedList.appendChild(div);
+    });
+}

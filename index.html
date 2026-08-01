@@ -36,7 +36,10 @@
         .view.hidden { display: none !important; }
     </style>
 </head>
-<body class="bg-background text-on-background font-body-lg antialiased min-h-screen">
+<body class="bg-surface-variant text-on-background font-body-lg antialiased min-h-screen flex justify-center">
+
+<!-- Tırnak içi mobil görünüm (Masaüstünde ortalanmış) -->
+<div id="app-container" class="w-full max-w-[420px] bg-background min-h-screen relative shadow-2xl overflow-x-hidden transform translate-x-0">
 
 <!-- GİRİŞ / KAYIT EKRANI -->
 <div id="auth-screen" class="min-h-screen flex items-center justify-center bg-surface-container-low p-6 z-50 relative">
@@ -431,6 +434,9 @@
     </section>
 </div>
 
-<script type="module" src="app.js?v=2"></script>
+</div>
+<!-- Kapanış: #app-container -->
+
+<script type="module" src="app.js?v=3"></script>
 </body>
 </html>
