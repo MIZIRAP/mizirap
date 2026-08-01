@@ -1000,7 +1000,7 @@
             <!-- History Log -->
             <section class="mt-4 bg-surface-container-lowest rounded-[24px] p-4 shadow-[0px_4px_20px_rgba(0,0,0,0.04)]">
             <h3 class="font-headline-sm text-[18px] font-semibold text-on-surface mb-3 px-2">Günün Kayıtları</h3>
-            <div class="flex flex-col">
+            <div class="flex flex-col" id="daily-log-list">
             <!-- Entry 1 (Newest) -->
             <div class="flex justify-between items-center p-3 border-b border-surface-container-high last:border-0">
             <div class="flex flex-col">
@@ -1061,7 +1061,7 @@
                 <!-- Food List -->
                 <section class="flex flex-col gap-card-gap">
                     <!-- Food Item Card -->
-                    <div class="bg-surface-container-lowest rounded-[24px] p-4 shadow-[0px_4px_20px_rgba(0,0,0,0.04)] hover:scale-[0.99] transition-transform cursor-pointer">
+                    <div class="bg-surface-container-lowest rounded-[24px] p-4 shadow-[0px_4px_20px_rgba(0,0,0,0.04)] hover:scale-[0.99] transition-transform cursor-pointer" onclick="openAddPortionModal('Yulaf Ezmesi', 389)">
                         <div class="flex justify-between items-start mb-2">
                             <h3 class="font-headline-sm text-headline-sm text-on-surface">Yulaf Ezmesi</h3>
                             <span class="font-label-md text-label-md text-on-surface-variant bg-surface-container px-2 py-1 rounded-full">100g</span>
@@ -1076,7 +1076,7 @@
                         </div>
                     </div>
                     <!-- Food Item Card -->
-                    <div class="bg-surface-container-lowest rounded-[24px] p-4 shadow-[0px_4px_20px_rgba(0,0,0,0.04)] hover:scale-[0.99] transition-transform cursor-pointer">
+                    <div class="bg-surface-container-lowest rounded-[24px] p-4 shadow-[0px_4px_20px_rgba(0,0,0,0.04)] hover:scale-[0.99] transition-transform cursor-pointer" onclick="openAddPortionModal('Izgara Tavuk Göğsü', 165)">
                         <div class="flex justify-between items-start mb-2">
                             <h3 class="font-headline-sm text-headline-sm text-on-surface">Izgara Tavuk Göğsü</h3>
                             <span class="font-label-md text-label-md text-on-surface-variant bg-surface-container px-2 py-1 rounded-full">100g</span>
@@ -1091,7 +1091,7 @@
                         </div>
                     </div>
                     <!-- Food Item Card -->
-                    <div class="bg-surface-container-lowest rounded-[24px] p-4 shadow-[0px_4px_20px_rgba(0,0,0,0.04)] hover:scale-[0.99] transition-transform cursor-pointer">
+                    <div class="bg-surface-container-lowest rounded-[24px] p-4 shadow-[0px_4px_20px_rgba(0,0,0,0.04)] hover:scale-[0.99] transition-transform cursor-pointer" onclick="openAddPortionModal('Yeşil Elma', 52)">
                         <div class="flex justify-between items-start mb-2">
                             <h3 class="font-headline-sm text-headline-sm text-on-surface">Yeşil Elma</h3>
                             <span class="font-label-md text-label-md text-on-surface-variant bg-surface-container px-2 py-1 rounded-full">100g</span>
@@ -1286,9 +1286,159 @@
                 }
             });
         }
+
+        // Add Portion Modal Logic
+        const addPortionModal = document.getElementById('addPortionModal');
+        const addPortionModalContent = document.getElementById('addPortionModalContent');
+        const portionFoodName = document.getElementById('portion-food-name');
+        const portionFoodKcalText = document.getElementById('portion-food-kcal-text');
+        const gramInput = document.getElementById('gram-input');
+        const totalKcalEl = document.getElementById('total-kcal');
+        let currentKcalPer100g = 0;
+        let currentFoodName = "";
+
+        window.openAddPortionModal = function(name, kcal100) {
+            currentFoodName = name;
+            currentKcalPer100g = kcal100;
+            portionFoodName.textContent = name;
+            portionFoodKcalText.textContent = `${kcal100} kcal / 100g`;
+            gramInput.value = 100;
+            window.updatePortionTotal();
+            
+            addPortionModal.classList.remove('hidden');
+            setTimeout(() => {
+                addPortionModal.classList.remove('opacity-0');
+                addPortionModalContent.classList.remove('translate-y-full');
+            }, 10);
+        };
+
+        window.closeAddPortionModal = function() {
+            addPortionModal.classList.add('opacity-0');
+            addPortionModalContent.classList.add('translate-y-full');
+            setTimeout(() => {
+                addPortionModal.classList.add('hidden');
+            }, 300);
+        };
+
+        if(addPortionModal) {
+            addPortionModal.addEventListener('click', (e) => {
+                if (e.target === addPortionModal) closeAddPortionModal();
+            });
+        }
+
+        window.updatePortionTotal = function() {
+            let grams = parseInt(gramInput.value);
+            if (isNaN(grams) || grams < 0) grams = 0;
+            const total = Math.round((grams / 100) * currentKcalPer100g);
+            totalKcalEl.textContent = total;
+        };
+
+        window.adjustAmount = function(amount) {
+            let current = parseInt(gramInput.value);
+            if (isNaN(current)) current = 0;
+            let newValue = current + amount;
+            if (newValue < 0) newValue = 0;
+            gramInput.value = newValue;
+            window.updatePortionTotal();
+            
+            gramInput.classList.add('scale-105');
+            setTimeout(() => {
+                gramInput.classList.remove('scale-105');
+            }, 150);
+        };
+
+        if(gramInput) {
+            gramInput.addEventListener('blur', function() {
+                let val = parseInt(this.value);
+                if (isNaN(val) || val <= 0) this.value = 100;
+                window.updatePortionTotal();
+            });
+        }
+
+        window.addFoodToLog = function() {
+            const grams = parseInt(gramInput.value) || 100;
+            const total = Math.round((grams / 100) * currentKcalPer100g);
+            
+            const logList = document.getElementById('daily-log-list');
+            if (logList) {
+                const newEntry = document.createElement('div');
+                newEntry.className = "flex justify-between items-center p-3 border-b border-surface-container-high last:border-0";
+                newEntry.innerHTML = `
+                <div class="flex flex-col">
+                <span class="font-body-md text-body-md text-on-surface font-medium">${currentFoodName}</span>
+                <span class="font-label-sm text-label-sm text-on-surface-variant">${grams}g</span>
+                </div>
+                <span class="font-body-md text-body-md text-on-surface font-semibold text-primary">+${total} kcal</span>
+                `;
+                
+                logList.insertBefore(newEntry, logList.firstChild);
+                
+                while (logList.children.length > 3) {
+                    logList.removeChild(logList.lastChild);
+                }
+            }
+            
+            closeAddPortionModal();
+            
+            document.querySelectorAll(".view").forEach(v => v.classList.add("hidden"));
+            const target = document.getElementById("view-calories");
+            if(target) target.classList.remove("hidden");
+        };
     </script>
 </div>
 <!-- Kapanış: #app-screen -->
+
+<!-- Modal for Add Portion (Hidden by default) -->
+<div class="fixed inset-0 z-[100] flex items-end sm:items-center justify-center bg-black/40 backdrop-blur-sm hidden opacity-0 transition-opacity duration-300" id="addPortionModal">
+<div class="bg-surface w-full rounded-t-[24px] sm:rounded-[24px] sm:max-w-md sm:mb-8 shadow-2xl z-20 flex flex-col transform transition-transform duration-300 translate-y-full" id="addPortionModalContent">
+<div class="w-full flex justify-center pt-3 pb-1 sm:hidden">
+<div class="w-8 h-1 bg-outline-variant rounded-full"></div>
+</div>
+<div class="flex items-center justify-between px-container-padding py-element-spacing border-b border-surface-variant/50">
+<h2 class="font-headline-sm text-headline-sm text-on-surface">Porsiyon Ekle</h2>
+<button aria-label="Close" class="p-2 -mr-2 rounded-full hover:bg-surface-container-low transition-colors text-on-surface-variant" onclick="closeAddPortionModal()">
+<span class="material-symbols-outlined" data-icon="close">close</span>
+</button>
+</div>
+<div class="p-container-padding flex flex-col gap-section-margin overflow-y-auto no-scrollbar">
+<div class="flex flex-col mb-2">
+<h3 class="font-display-lg text-[28px] text-on-surface font-bold tracking-tight" id="portion-food-name">Yulaf Ezmesi</h3>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1" id="portion-food-kcal-text">389 kcal / 100g</p>
+</div>
+<div class="flex flex-col items-center gap-6 py-4">
+<p class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Miktar (Gram)</p>
+<div class="flex items-center justify-center gap-4 w-full max-w-[280px]">
+<button class="w-12 h-12 rounded-full bg-surface-container-low text-primary flex items-center justify-center hover:bg-surface-container transition-colors shrink-0 active:scale-95 shadow-sm" onclick="adjustAmount(-10)">
+<span class="material-symbols-outlined" data-icon="remove">remove</span>
+</button>
+<div class="relative flex-1 group">
+<input class="w-full bg-surface-container-lowest border-2 border-transparent focus:border-primary text-center font-display-lg text-[32px] text-on-surface py-3 rounded-lg focus:ring-0 transition-colors appearance-none" id="gram-input" oninput="updatePortionTotal()" type="number" value="100"/>
+<div class="absolute bottom-1 w-full text-center font-label-sm text-label-sm text-outline group-focus-within:text-primary transition-colors">g</div>
+</div>
+<button class="w-12 h-12 rounded-full bg-surface-container-low text-primary flex items-center justify-center hover:bg-surface-container transition-colors shrink-0 active:scale-95 shadow-sm" onclick="adjustAmount(10)">
+<span class="material-symbols-outlined" data-icon="add">add</span>
+</button>
+</div>
+</div>
+<div class="bg-surface-container-low rounded-[16px] p-4 flex flex-col items-center justify-center border border-surface-variant/30">
+<span class="font-body-md text-body-md text-on-surface-variant mb-1">Toplam Enerji</span>
+<div class="flex items-baseline gap-1 text-primary">
+<span class="font-display-lg text-[32px] font-bold" id="total-kcal">389</span>
+<span class="font-label-md text-label-md">kcal</span>
+</div>
+<div class="w-full mt-4 h-1.5 bg-surface-variant rounded-full overflow-hidden">
+<div class="h-full bg-primary rounded-full transition-all duration-300" style="width: 35%;"></div>
+</div>
+</div>
+</div>
+<div class="p-container-padding pb-8 sm:pb-container-padding bg-surface-container-lowest mt-auto pt-2">
+<button class="w-full bg-primary text-on-primary py-4 rounded-xl font-label-md text-[16px] shadow-[0_4px_12px_rgba(68,101,84,0.2)] hover:bg-surface-tint active:scale-[0.98] transition-all duration-200 flex items-center justify-center gap-2" onclick="addFoodToLog()">
+<span class="material-symbols-outlined" data-icon="check">check</span>
+                Ekle
+            </button>
+</div>
+</div>
+</div>
 
 <!-- Modal for Adding New Food to Library (Hidden by default) -->
 <div class="fixed inset-0 z-[100] flex items-end sm:items-center justify-center bg-black/40 backdrop-blur-sm hidden opacity-0 transition-opacity duration-300" id="newFoodModal">
