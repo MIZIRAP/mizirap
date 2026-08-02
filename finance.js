@@ -229,11 +229,25 @@ function renderTransactions() {
     const today = new Date();
     const currentMonth = today.getMonth();
     const currentYear = today.getFullYear();
+
+    const barsContainer = document.getElementById("finance-expense-bars");
+    let categoryExpenses = {};
+    let totalExpense = 0;
+
     
     financeTransactions.forEach(tx => {
         const val = parseFloat(tx.amount) || 0;
         const change = tx.type === 'income' ? val : -val;
         totalBalance += change;
+
+        if (tx.type === 'expense') {
+            totalExpense += val;
+            if (!categoryExpenses[tx.categoryId]) {
+                categoryExpenses[tx.categoryId] = 0;
+            }
+            categoryExpenses[tx.categoryId] += val;
+        }
+
         
         const txDate = new Date(tx.dateStr);
         if (txDate.getMonth() === currentMonth && txDate.getFullYear() === currentYear) {
@@ -241,6 +255,35 @@ function renderTransactions() {
         }
     });
     
+    
+    if (barsContainer) {
+        if (totalExpense === 0) {
+            barsContainer.innerHTML = '<div class="text-sm text-outline-variant italic">Henüz harcama yok.</div>';
+        } else {
+            const sortedCats = Object.keys(categoryExpenses).sort((a, b) => categoryExpenses[b] - categoryExpenses[a]);
+            const colorClasses = ['bg-primary', 'bg-secondary', 'bg-tertiary-container', 'bg-error', 'bg-primary-container'];
+            
+            barsContainer.innerHTML = sortedCats.slice(0, 4).map((catId, index) => {
+                const amount = categoryExpenses[catId];
+                const percentage = Math.round((amount / totalExpense) * 100);
+                const catObj = financeCategories.find(c => c.id === catId) || { name: 'Genel' };
+                const colorClass = colorClasses[index % colorClasses.length];
+                
+                return `
+                <div class="flex flex-col gap-1">
+                    <div class="flex justify-between items-center">
+                        <span class="font-label-sm text-label-sm text-on-surface">${catObj.name}</span>
+                        <span class="font-label-sm text-label-sm text-on-surface-variant">${percentage}%</span>
+                    </div>
+                    <div class="w-full bg-surface-container-high rounded-full h-2">
+                        <div class="${colorClass} h-2 rounded-full" style="width: ${percentage}%"></div>
+                    </div>
+                </div>
+                `;
+            }).join('');
+        }
+    }
+
     // Format balance
     const tlFormat = new Intl.NumberFormat('tr-TR', { style: 'currency', currency: 'TRY' });
     if(balanceEl) {
