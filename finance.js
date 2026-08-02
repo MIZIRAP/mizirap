@@ -1,72 +1,200 @@
 import { auth, db } from "./firebase-config.js";
-import { collection, doc, addDoc, deleteDoc, onSnapshot, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
-import { escapeHtml, tl } from "./utils.js";
+import { collection, doc, addDoc, setDoc, getDocs, query, orderBy, limit, serverTimestamp, onSnapshot, where } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
 
-let allTx = [];
-let unsubscribe = null;
+let currentUid = null;
 let callback = null;
 
+let financeCategories = [];
+let financePaymentMethods = [];
+let financeTransactions = [];
+
+let unsubCategories = null;
+let unsubPaymentMethods = null;
+let unsubTransactions = null;
+
 export function initFinance(uid, onChangeCallback) {
+    currentUid = uid;
     callback = onChangeCallback;
-    const txRef = query(collection(db, "users", uid, "transactions"), orderBy("createdAt", "desc"));
-    unsubscribe = onSnapshot(txRef, snap => {
-        allTx = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-        renderTx();
-        if(callback) callback(allTx);
+    
+    // 1. Load Categories
+    const categoriesRef = collection(db, "users", uid, "finance_categories");
+    unsubCategories = onSnapshot(categoriesRef, (snap) => {
+        financeCategories = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+        renderTransactions();
     });
 
-    const form = document.getElementById("tx-form");
-    if(form) {
-        form.onsubmit = async (e) => {
-            e.preventDefault();
-            const desc = document.getElementById("tx-desc").value.trim();
-            const amount = parseFloat(document.getElementById("tx-amount").value);
-            const type = document.getElementById("tx-type").value;
-            if (!desc || isNaN(amount)) return;
-            await addDoc(collection(db, "users", uid, "transactions"), {
-                desc, amount, type, createdAt: serverTimestamp()
-            });
-            e.target.reset();
-        };
-    }
+    // 2. Load Payment Methods
+    const paymentMethodsRef = collection(db, "users", uid, "finance_payment_methods");
+    unsubPaymentMethods = onSnapshot(paymentMethodsRef, (snap) => {
+        financePaymentMethods = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+        renderTransactions();
+    });
+
+    // 3. Load Transactions
+    const txRef = collection(db, "users", uid, "finance_transactions");
+    const q = query(txRef, orderBy("dateStr", "desc"), orderBy("createdAt", "desc"));
+    
+    unsubTransactions = onSnapshot(q, (snap) => {
+        financeTransactions = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+        renderTransactions();
+        if(callback) callback(financeTransactions);
+    });
+    
+    setupFinanceModals();
 }
 
 export function clearFinance() {
-    if(unsubscribe) unsubscribe();
-    allTx = [];
+    if(unsubCategories) unsubCategories();
+    if(unsubPaymentMethods) unsubPaymentMethods();
+    if(unsubTransactions) unsubTransactions();
+    currentUid = null;
+    financeCategories = [];
+    financePaymentMethods = [];
+    financeTransactions = [];
+    
+    const list = document.getElementById("finance-recent-transactions");
+    if(list) list.innerHTML = "";
+    const balance = document.getElementById("finance-total-balance");
+    if(balance) balance.textContent = "₺0,00";
 }
 
-export function calcBalance(txs = allTx) {
-    return txs.reduce((sum, t) => sum + (t.type === "income" ? t.amount : -t.amount), 0);
+function setupFinanceModals() {
+    // Expose open/close functions globally for inline onclicks
+    window.openAddTransactionModal = () => openModal('finance-add-tx-modal');
+    window.closeAddTransactionModal = () => closeModal('finance-add-tx-modal');
+    
+    window.openAddCategoryModal = () => openModal('finance-add-category-modal');
+    window.closeAddCategoryModal = () => closeModal('finance-add-category-modal');
+    
+    window.openAddPaymentMethodModal = () => openModal('finance-add-payment-modal');
+    window.closeAddPaymentMethodModal = () => closeModal('finance-add-payment-modal');
 }
 
-function renderTx() {
-    const list = document.getElementById("tx-list");
+function openModal(id) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.classList.remove("hidden");
+    el.classList.add("flex");
+    requestAnimationFrame(() => {
+        el.classList.remove("opacity-0");
+        const panel = el.querySelector("div");
+        if(panel) panel.classList.remove("translate-y-full");
+    });
+}
+
+function closeModal(id) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.classList.add("opacity-0");
+    const panel = el.querySelector("div");
+    if(panel) panel.classList.add("translate-y-full");
+    setTimeout(() => {
+        el.classList.remove("flex");
+        el.classList.add("hidden");
+    }, 300);
+}
+
+function renderTransactions() {
+    const list = document.getElementById("finance-recent-transactions");
+    const balanceEl = document.getElementById("finance-total-balance");
+    const trendEl = document.getElementById("finance-monthly-trend");
+    
     if(!list) return;
-    list.innerHTML = "";
-    if (allTx.length === 0) {
-        list.innerHTML = "<p class='text-on-surface-variant text-sm'>Henüz işlem yok.</p>";
+    
+    // Calculate balances
+    let totalBalance = 0;
+    let currentMonthBalance = 0;
+    
+    const today = new Date();
+    const currentMonth = today.getMonth();
+    const currentYear = today.getFullYear();
+    
+    financeTransactions.forEach(tx => {
+        const val = parseFloat(tx.amount) || 0;
+        const change = tx.type === 'income' ? val : -val;
+        totalBalance += change;
+        
+        const txDate = new Date(tx.dateStr);
+        if (txDate.getMonth() === currentMonth && txDate.getFullYear() === currentYear) {
+            currentMonthBalance += change;
+        }
+    });
+    
+    // Format balance
+    const tlFormat = new Intl.NumberFormat('tr-TR', { style: 'currency', currency: 'TRY' });
+    if(balanceEl) {
+        balanceEl.textContent = tlFormat.format(totalBalance);
+    }
+    
+    if(trendEl) {
+        if(currentMonthBalance > 0) {
+            trendEl.innerHTML = `
+                <span class="material-symbols-outlined text-primary bg-primary-container rounded-full p-1 text-sm" style="font-variation-settings: 'FILL' 1;">trending_up</span>
+                <span class="font-body-md text-body-md text-primary">+${tlFormat.format(currentMonthBalance)} (Bu Ay)</span>
+            `;
+        } else if (currentMonthBalance < 0) {
+            trendEl.innerHTML = `
+                <span class="material-symbols-outlined text-error bg-error-container rounded-full p-1 text-sm" style="font-variation-settings: 'FILL' 1;">trending_down</span>
+                <span class="font-body-md text-body-md text-error">${tlFormat.format(currentMonthBalance)} (Bu Ay)</span>
+            `;
+        } else {
+            trendEl.innerHTML = `
+                <span class="material-symbols-outlined text-outline bg-surface-variant rounded-full p-1 text-sm" style="font-variation-settings: 'FILL' 1;">trending_flat</span>
+                <span class="font-body-md text-body-md text-outline">Değişim Yok (Bu Ay)</span>
+            `;
+        }
+    }
+    
+    if(financeTransactions.length === 0) {
+        list.innerHTML = `<div class="text-center text-outline text-sm py-4">Henüz bir işlem bulunmuyor.</div>`;
         return;
     }
-    allTx.forEach(t => {
-        const li = document.createElement("div");
-        li.className = "flex justify-between items-center bg-surface-container-low p-3 rounded-lg";
-        const dateStr = t.createdAt?.toDate ? t.createdAt.toDate().toLocaleDateString("tr-TR") : "";
-        const sign = t.type === "income" ? "+" : "−";
-        const colorClass = t.type === "income" ? "text-primary" : "text-error";
-        li.innerHTML = `
-            <div class="flex flex-col">
-                <span class="text-on-background font-body-md">${escapeHtml(t.desc)}</span>
-                <span class="text-outline text-label-sm">${dateStr}</span>
-            </div>
-            <div class="flex items-center gap-3">
-                <span class="font-headline-sm ${colorClass}">${sign}${tl(Math.abs(t.amount))}</span>
-                <button class="material-symbols-outlined text-outline hover:text-error transition-colors p-1" data-id="${t.id}">delete</button>
+    
+    list.innerHTML = "";
+    // Only show last 5 in recent activity
+    const recentTx = financeTransactions.slice(0, 5);
+    
+    recentTx.forEach(tx => {
+        const cat = financeCategories.find(c => c.id === tx.categoryId) || { name: 'Genel', icon: 'payments', type: tx.type, color: 'surface-container-high' };
+        const pm = financePaymentMethods.find(p => p.id === tx.paymentMethodId) || { name: 'Bilinmiyor', type: 'Nakit' };
+        
+        const isIncome = tx.type === 'income';
+        const sign = isIncome ? "+" : "-";
+        const valStr = tlFormat.format(tx.amount);
+        
+        const dateObj = new Date(tx.dateStr);
+        const dateFormatted = dateObj.toLocaleDateString('tr-TR', { day: 'numeric', month: 'long' });
+        
+        // Dynamic colors based on type
+        const iconBg = isIncome ? 'bg-primary-container' : 'bg-surface-container-high';
+        const iconColor = isIncome ? 'text-on-primary-container' : 'text-on-surface-variant';
+        const valColor = isIncome ? 'text-primary' : 'text-on-surface';
+        
+        // Payment badge
+        const pmBadgeClass = isIncome 
+            ? "bg-primary-container/20 text-primary border-primary/20" 
+            : "bg-surface-container-high text-on-surface-variant border-outline-variant";
+            
+        list.innerHTML += `
+            <div class="bg-surface-container-lowest shadow-[0px_4px_20px_rgba(0,0,0,0.04)] rounded-[16px] p-4 flex items-center justify-between active:scale-98 transition-transform duration-100 ease-in-out">
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-full ${iconBg} flex items-center justify-center">
+                        <span class="material-symbols-outlined ${iconColor}" style="font-variation-settings: 'FILL' 0;">${cat.icon}</span>
+                    </div>
+                    <div class="flex flex-col">
+                        <span class="font-label-md text-label-md text-on-surface">${tx.title}</span>
+                        <div class="flex items-center gap-2 mt-1">
+                            <span class="font-body-md text-body-md text-on-surface-variant text-xs">${cat.name}</span>
+                            <span class="text-on-surface-variant text-xs">•</span>
+                            <span class="${pmBadgeClass} text-[10px] font-bold px-2 py-0.5 rounded-lg border uppercase tracking-tight">${pm.type}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex flex-col items-end">
+                    <span class="font-label-md text-label-md ${valColor}">${sign}${valStr}</span>
+                    <span class="font-label-sm text-label-sm text-on-surface-variant mt-1">${dateFormatted}</span>
+                </div>
             </div>
         `;
-        li.querySelector("button").addEventListener("click", () =>
-            deleteDoc(doc(db, "users", auth.currentUser.uid, "transactions", t.id))
-        );
-        list.appendChild(li);
     });
 }
