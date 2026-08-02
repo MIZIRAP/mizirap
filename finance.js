@@ -198,3 +198,11 @@ function renderTransactions() {
         `;
     });
 }
+
+export function calcBalance(txs) {
+    if(!txs) return 0;
+    return txs.reduce((acc, tx) => {
+        const val = parseFloat(tx.amount) || 0;
+        return acc + (tx.type === 'income' ? val : -val);
+    }, 0);
+}
