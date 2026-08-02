@@ -34,7 +34,7 @@ export function initFinance(uid, onChangeCallback) {
 
     // 3. Load Transactions
     const txRef = collection(db, "users", uid, "finance_transactions");
-    const q = query(txRef, orderBy("dateStr", "desc"), orderBy("createdAt", "desc"));
+    const q = query(txRef, orderBy("dateStr", "desc"));
     
     unsubTransactions = onSnapshot(q, (snap) => {
         financeTransactions = snap.docs.map(d => ({ id: d.id, ...d.data() }));
