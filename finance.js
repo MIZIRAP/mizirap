@@ -1,4 +1,79 @@
-import { auth, db } from "./firebase-config.js";
+import { auth, db 
+    // Payment Icon Selection
+    const paymentIcons = document.querySelectorAll('.payment-icon-option');
+    paymentIcons.forEach(iconEl => {
+        iconEl.addEventListener('click', () => {
+            paymentIcons.forEach(el => {
+                el.classList.remove('selected', 'bg-primary', 'text-on-primary', 'shadow-md', 'scale-105');
+                el.classList.add('bg-surface', 'border', 'border-surface-variant', 'text-on-surface-variant', 'hover:bg-surface-container-low');
+                const span = el.querySelector('span');
+                if(span) span.style.fontVariationSettings = "'FILL' 0";
+            });
+            iconEl.classList.add('selected', 'bg-primary', 'text-on-primary', 'shadow-md', 'scale-105');
+            iconEl.classList.remove('bg-surface', 'border', 'border-surface-variant', 'text-on-surface-variant', 'hover:bg-surface-container-low');
+            const span = iconEl.querySelector('span');
+            if(span) span.style.fontVariationSettings = "'FILL' 1";
+        });
+    });
+
+    // Save Payment Method
+    const savePaymentBtn = document.getElementById('finance-save-payment-btn');
+    if(savePaymentBtn) {
+        savePaymentBtn.addEventListener('click', savePaymentMethod);
+    }
+}
+
+async function savePaymentMethod() {
+    if(!currentUid) return;
+    
+    const nameEl = document.getElementById('method-name');
+    const typeEl = document.querySelector('input[name="payment-type"]:checked');
+    const iconEl = document.querySelector('.payment-icon-option.selected');
+    
+    if(!nameEl || !typeEl || !iconEl) return;
+    
+    const name = nameEl.value.trim();
+    if(!name) {
+        alert('Lütfen bir hesap/kart adı girin.');
+        return;
+    }
+    
+    const type = typeEl.value;
+    const icon = iconEl.dataset.icon || 'account_balance';
+    
+    const saveBtn = document.getElementById('finance-save-payment-btn');
+    const originalText = saveBtn.innerHTML;
+    saveBtn.innerHTML = 'Kaydediliyor...';
+    saveBtn.disabled = true;
+    
+    try {
+        await addDoc(collection(db, "users", currentUid, "finance_payment_methods"), {
+            name,
+            type,
+            icon,
+            createdAt: serverTimestamp()
+        });
+        
+        saveBtn.innerHTML = `<span class="material-symbols-outlined">check_circle</span> Eklendi!`;
+        saveBtn.classList.add("bg-primary-container", "text-on-primary-container");
+        
+        setTimeout(() => {
+            saveBtn.innerHTML = originalText;
+            saveBtn.classList.remove("bg-primary-container", "text-on-primary-container");
+            saveBtn.disabled = false;
+            
+            // Clear inputs
+            nameEl.value = '';
+            
+            closeModal('finance-add-payment-modal');
+        }, 1000);
+    } catch(err) {
+        console.error(err);
+        alert('Kaydedilirken hata oluştu.');
+        saveBtn.innerHTML = originalText;
+        saveBtn.disabled = false;
+    }
+ from "./firebase-config.js";
 import { collection, doc, addDoc, setDoc, getDocs, query, orderBy, limit, serverTimestamp, onSnapshot, where } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
 
 let currentUid = null;
@@ -68,7 +143,81 @@ function setupFinanceModals() {
     
     window.openAddPaymentMethodModal = () => openModal('finance-add-payment-modal');
     window.closeAddPaymentMethodModal = () => closeModal('finance-add-payment-modal');
+    // Payment Icon Selection
+    const paymentIcons = document.querySelectorAll('.payment-icon-option');
+    paymentIcons.forEach(iconEl => {
+        iconEl.addEventListener('click', () => {
+            paymentIcons.forEach(el => {
+                el.classList.remove('selected', 'bg-primary', 'text-on-primary', 'shadow-md', 'scale-105');
+                el.classList.add('bg-surface', 'border', 'border-surface-variant', 'text-on-surface-variant', 'hover:bg-surface-container-low');
+                const span = el.querySelector('span');
+                if(span) span.style.fontVariationSettings = "'FILL' 0";
+            });
+            iconEl.classList.add('selected', 'bg-primary', 'text-on-primary', 'shadow-md', 'scale-105');
+            iconEl.classList.remove('bg-surface', 'border', 'border-surface-variant', 'text-on-surface-variant', 'hover:bg-surface-container-low');
+            const span = iconEl.querySelector('span');
+            if(span) span.style.fontVariationSettings = "'FILL' 1";
+        });
+    });
+
+    // Save Payment Method
+    const savePaymentBtn = document.getElementById('finance-save-payment-btn');
+    if(savePaymentBtn) {
+        savePaymentBtn.addEventListener('click', savePaymentMethod);
+    }
 }
+
+async function savePaymentMethod() {
+    if(!currentUid) return;
+    
+    const nameEl = document.getElementById('method-name');
+    const typeEl = document.querySelector('input[name="payment-type"]:checked');
+    const iconEl = document.querySelector('.payment-icon-option.selected');
+    
+    if(!nameEl || !typeEl || !iconEl) return;
+    
+    const name = nameEl.value.trim();
+    if(!name) {
+        alert('Lütfen bir hesap/kart adı girin.');
+        return;
+    }
+    
+    const type = typeEl.value;
+    const icon = iconEl.dataset.icon || 'account_balance';
+    
+    const saveBtn = document.getElementById('finance-save-payment-btn');
+    const originalText = saveBtn.innerHTML;
+    saveBtn.innerHTML = 'Kaydediliyor...';
+    saveBtn.disabled = true;
+    
+    try {
+        await addDoc(collection(db, "users", currentUid, "finance_payment_methods"), {
+            name,
+            type,
+            icon,
+            createdAt: serverTimestamp()
+        });
+        
+        saveBtn.innerHTML = `<span class="material-symbols-outlined">check_circle</span> Eklendi!`;
+        saveBtn.classList.add("bg-primary-container", "text-on-primary-container");
+        
+        setTimeout(() => {
+            saveBtn.innerHTML = originalText;
+            saveBtn.classList.remove("bg-primary-container", "text-on-primary-container");
+            saveBtn.disabled = false;
+            
+            // Clear inputs
+            nameEl.value = '';
+            
+            closeModal('finance-add-payment-modal');
+        }, 1000);
+    } catch(err) {
+        console.error(err);
+        alert('Kaydedilirken hata oluştu.');
+        saveBtn.innerHTML = originalText;
+        saveBtn.disabled = false;
+    }
+
 
 function openModal(id) {
     const el = document.getElementById(id);
