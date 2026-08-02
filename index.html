@@ -271,17 +271,18 @@
     <!-- ================= ALIŞVERİŞ LİSTESİ (Shopping) ================= -->
     <section id="view-shopping" class="view hidden">
         <!-- TopAppBar -->
-        <header class="fixed top-0 w-full z-40 bg-background/80 backdrop-blur-md">
-            <div class="flex items-center justify-between px-container-padding h-16 w-full max-w-md mx-auto">
-                <button class="material-symbols-outlined text-primary p-2 hover:bg-surface-container-low transition-colors rounded-full transition-transform active:scale-90" data-icon="menu">menu</button>
-                <h1 class="font-headline-md text-headline-md font-bold text-primary">Alışveriş Listesi</h1>
+        <header class="w-full top-0 sticky bg-background dark:bg-background flat no shadows transition-opacity duration-200 z-40 max-w-md mx-auto">
+            <div class="flex items-center justify-between px-container-padding py-4 w-full">
+                <div class="flex items-center gap-3">
+                    <button class="nav-tab hover:opacity-80 p-2 -ml-2 rounded-full focus:outline-none focus:ring-2 focus:ring-primary" data-target="view-dashboard">
+                        <span class="material-symbols-outlined text-primary dark:text-primary-fixed-dim" data-icon="arrow_back" data-weight="regular">arrow_back</span>
+                    </button>
+                    <h1 class="font-headline-md text-headline-md text-primary dark:text-primary-fixed-dim font-bold tracking-tight">Alışveriş Listesi</h1>
+                </div>
                 <button class="flex items-center gap-1 text-error hover:bg-error-container/20 px-2 py-1 rounded-md transition-colors active:scale-95" id="clear-shopping-btn">
                     <span class="material-symbols-outlined text-[18px]" data-icon="delete_sweep">delete_sweep</span>
                     <span class="text-label-md font-label-md">Temizle</span>
                 </button>
-                <div class="w-10 h-10 rounded-full overflow-hidden border-2 border-primary-container cursor-pointer nav-tab" data-target="view-profile">
-                    <img class="user-profile-img w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD4SYppxZWTrQ134mNFWlgNeiSJ-XVyOiCMA4VJB_d-y7j1NQRYw8xlbsahB3AiYtKt-CsmqtPgrlgJodG10yK91CDzU0GrxB23sgSbSp95cQhw1Mc_gapepZNrd-sEUDU5fen15kCDBZq7kXl2IsXZAx4jtOid1eAHaJHP4f0CJUsG9ALsIoO-Q3YdTPR9VIWs7CKfrrzXmkiFHh0GlPRa2VuP8S_V6KioKJvmMmxRuWBgvr3WHYAE">
-                </div>
             </div>
         </header>
         
@@ -347,14 +348,15 @@
     <!-- ================= SPOR TAKİBİ (Workout) ================= -->
     <section id="view-workout" class="view hidden">
         <!-- TopAppBar -->
-        <header class="bg-background dark:bg-background flex justify-between items-center px-container-padding py-element-spacing w-full sticky top-0 z-40">
-            <button class="text-on-surface-variant hover:bg-surface-container-low transition-colors p-2 rounded-full active:scale-95 duration-150">
-                <span class="material-symbols-outlined">menu</span>
-            </button>
-            <h1 class="font-display-lg text-display-lg-mobile md:text-display-lg text-primary dark:text-primary-fixed-dim tracking-tight">My Life</h1>
-            <button class="hover:bg-surface-container-low transition-colors rounded-full active:scale-95 duration-150 overflow-hidden w-10 h-10 nav-tab" data-target="view-profile">
-                <img alt="User profile avatar" class="user-profile-img w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCmCGaIAEyzjYMZfQzRE2fGjOHusRgZdsrUKIqf_DpSMri_cQ9hD1m4zzPk7xHQo23dDeMq1GMEjpoK-rhdNYUwpbvM_lMr9ccPB0Yoh_PBnKdEYtfeXIrcOL4jY-WjMClarykzv0YsxlEt0hWt8p6lbW5qVaAIc-Xt03qqcEQolNC0YHSo_54OeT1-hbeYreS2Wzsmw8c3h-rZUHB_dXnPB1p1FHD0A63blKb0L9dSVXuo_aZy4mZK">
-            </button>
+        <header class="w-full top-0 sticky bg-background dark:bg-background flat no shadows transition-opacity duration-200 z-40 max-w-md mx-auto">
+            <div class="flex items-center justify-between px-container-padding py-4 w-full">
+                <div class="flex items-center gap-3">
+                    <button class="nav-tab hover:opacity-80 p-2 -ml-2 rounded-full focus:outline-none focus:ring-2 focus:ring-primary" data-target="view-dashboard">
+                        <span class="material-symbols-outlined text-primary dark:text-primary-fixed-dim" data-icon="arrow_back" data-weight="regular">arrow_back</span>
+                    </button>
+                    <h1 class="font-headline-md text-headline-md text-primary dark:text-primary-fixed-dim font-bold tracking-tight">Spor</h1>
+                </div>
+            </div>
         </header>
 
         <!-- Main Content Area -->
@@ -877,13 +879,14 @@
     
 <section id="view-finance" class="view hidden px-container-padding py-6">
         <!-- Top App Bar -->
-        <header class="sticky top-0 w-full z-40 flex items-center justify-between px-container-padding h-16 max-w-md mx-auto bg-background dark:bg-background">
-            <button class="scale-95 active:scale-90 transition-transform w-10 h-10 flex items-center justify-center hover:bg-surface-container-low transition-colors rounded-full text-on-surface-variant">
-                <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">menu</span>
-            </button>
-            <h1 class="font-headline-md text-headline-md font-bold text-primary dark:text-primary-fixed">Finans</h1>
-            <div class="scale-95 active:scale-90 transition-transform hover:bg-surface-container-low transition-colors rounded-full overflow-hidden w-10 h-10 shadow-sm text-on-surface-variant cursor-pointer nav-tab" data-target="view-profile">
-                <img alt="User Profile Avatar" class="user-profile-img w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCmCGaIAEyzjYMZfQzRE2fGjOHusRgZdsrUKIqf_DpSMri_cQ9hD1m4zzPk7xHQo23dDeMq1GMEjpoK-rhdNYUwpbvM_lMr9ccPB0Yoh_PBnKdEYtfeXIrcOL4jY-WjMClarykzv0YsxlEt0hWt8p6lbW5qVaAIc-Xt03qqcEQolNC0YHSo_54OeT1-hbeYreS2Wzsmw8c3h-rZUHB_dXnPB1p1FHD0A63blKb0L9dSVXuo_aZy4mZK">
+        <header class="w-full top-0 sticky bg-background dark:bg-background flat no shadows transition-opacity duration-200 z-40 max-w-md mx-auto">
+            <div class="flex items-center justify-between px-container-padding py-4 w-full">
+                <div class="flex items-center gap-3">
+                    <button class="nav-tab hover:opacity-80 p-2 -ml-2 rounded-full focus:outline-none focus:ring-2 focus:ring-primary" data-target="view-dashboard">
+                        <span class="material-symbols-outlined text-primary dark:text-primary-fixed-dim" data-icon="arrow_back" data-weight="regular">arrow_back</span>
+                    </button>
+                    <h1 class="font-headline-md text-headline-md text-primary dark:text-primary-fixed-dim font-bold tracking-tight">Finans</h1>
+                </div>
             </div>
         </header>
 
