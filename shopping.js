@@ -60,6 +60,9 @@ function renderShoppingList() {
     
     if(countLabel) countLabel.textContent = `${activeItems.length} Ürün`;
     
+    const dashboardCountLabel = document.getElementById("dashboard-shopping-count");
+    if(dashboardCountLabel) dashboardCountLabel.textContent = `${activeItems.length} Ürün`;
+    
     activeItems.forEach(item => {
         const div = document.createElement("div");
         div.className = "group bg-surface-container-lowest rounded-[24px] p-4 card-shadow flex items-center justify-between transition-all hover:bg-surface-container-low animate-in fade-in slide-in-from-top-2 duration-300";
