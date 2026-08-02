@@ -21,6 +21,7 @@ export function initFinance(uid, onChangeCallback) {
     unsubCategories = onSnapshot(categoriesRef, (snap) => {
         financeCategories = snap.docs.map(d => ({ id: d.id, ...d.data() }));
         renderTransactions();
+        renderTxModalOptions();
     });
 
     // 2. Load Payment Methods
@@ -28,6 +29,7 @@ export function initFinance(uid, onChangeCallback) {
     unsubPaymentMethods = onSnapshot(paymentMethodsRef, (snap) => {
         financePaymentMethods = snap.docs.map(d => ({ id: d.id, ...d.data() }));
         renderTransactions();
+        renderTxModalOptions();
     });
 
     // 3. Load Transactions
@@ -37,6 +39,7 @@ export function initFinance(uid, onChangeCallback) {
     unsubTransactions = onSnapshot(q, (snap) => {
         financeTransactions = snap.docs.map(d => ({ id: d.id, ...d.data() }));
         renderTransactions();
+        renderTxModalOptions();
         if(callback) callback(financeTransactions);
     });
     
@@ -126,7 +129,14 @@ function setupFinanceModals() {
     if(saveCategoryBtn) {
         saveCategoryBtn.addEventListener('click', saveCategory);
     }
+
+    // Save Transaction
+    const saveTxBtn = document.getElementById('finance-save-tx-btn');
+    if(saveTxBtn) {
+        saveTxBtn.addEventListener('click', saveTransaction);
+    }
 }
+
 
 
 async function savePaymentMethod() {
@@ -362,6 +372,166 @@ async function saveCategory() {
             nameEl.value = '';
             
             closeModal('finance-add-category-modal');
+        }, 1000);
+    } catch(err) {
+        console.error(err);
+        alert('Kaydedilirken hata oluştu.');
+        saveBtn.innerHTML = originalText;
+        saveBtn.disabled = false;
+    }
+}
+
+
+export function renderTxModalOptions() {
+    const catContainer = document.getElementById('tx-category-container');
+    const pmContainer = document.getElementById('tx-payment-container');
+    
+    if (catContainer) {
+        if (financeCategories.length === 0) {
+            catContainer.innerHTML = '<div class="text-sm text-outline-variant py-2">Önce kategori ekleyin.</div>';
+        } else {
+            catContainer.innerHTML = financeCategories.map((c, idx) => `
+                <button class="tx-cat-btn flex items-center gap-2 px-4 py-2 rounded-full ${idx === 0 ? 'bg-primary-container text-on-primary-container border-transparent' : 'bg-surface-container-high text-on-surface-variant hover:bg-surface-variant border-transparent'} shrink-0 snap-start transition-colors active:scale-95 border-2" data-id="${c.id}">
+                    <span class="material-symbols-outlined text-[18px]">${c.icon || 'category'}</span>
+                    <span class="font-label-md text-label-md">${c.name}</span>
+                </button>
+            `).join('');
+            
+            // Add Listeners
+            document.querySelectorAll('.tx-cat-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.tx-cat-btn').forEach(b => {
+                        b.classList.remove('bg-primary-container', 'text-on-primary-container');
+                        b.classList.add('bg-surface-container-high', 'text-on-surface-variant');
+                    });
+                    btn.classList.add('bg-primary-container', 'text-on-primary-container');
+                    btn.classList.remove('bg-surface-container-high', 'text-on-surface-variant');
+                });
+            });
+        }
+    }
+    
+    if (pmContainer) {
+        if (financePaymentMethods.length === 0) {
+            pmContainer.innerHTML = '<div class="text-sm text-outline-variant py-2">Önce ödeme yöntemi ekleyin.</div>';
+        } else {
+            pmContainer.innerHTML = financePaymentMethods.map((p, idx) => `
+                <div class="tx-pm-btn flex items-center justify-between p-3 rounded-xl border-2 ${idx === 0 ? 'border-primary bg-primary-fixed-dim/10' : 'border-transparent bg-surface-container-high hover:bg-surface-variant'} cursor-pointer transition-transform active:scale-95" data-id="${p.id}">
+                    <div class="flex items-center gap-2">
+                        <span class="material-symbols-outlined ${idx === 0 ? 'text-primary' : 'text-on-surface-variant'}">${p.icon || 'credit_card'}</span>
+                        <span class="font-label-md text-label-md ${idx === 0 ? 'text-on-surface' : 'text-on-surface-variant'}">${p.name}</span>
+                    </div>
+                    ${idx === 0 ? '<span class="material-symbols-outlined text-primary text-[16px] check-icon" style="font-variation-settings: \'FILL\' 1;">check_circle</span>' : ''}
+                </div>
+            `).join('');
+            
+            // Add Listeners
+            document.querySelectorAll('.tx-pm-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.tx-pm-btn').forEach(b => {
+                        b.classList.remove('border-primary', 'bg-primary-fixed-dim/10');
+                        b.classList.add('border-transparent', 'bg-surface-container-high', 'text-on-surface-variant');
+                        const icon1 = b.querySelector('.material-symbols-outlined:first-child');
+                        const text = b.querySelector('.font-label-md');
+                        const check = b.querySelector('.check-icon');
+                        if (icon1) { icon1.classList.remove('text-primary'); icon1.classList.add('text-on-surface-variant'); }
+                        if (text) { text.classList.remove('text-on-surface'); text.classList.add('text-on-surface-variant'); }
+                        if (check) check.remove();
+                    });
+                    
+                    btn.classList.add('border-primary', 'bg-primary-fixed-dim/10');
+                    btn.classList.remove('border-transparent', 'bg-surface-container-high', 'text-on-surface-variant');
+                    const icon1 = btn.querySelector('.material-symbols-outlined:first-child');
+                    const text = btn.querySelector('.font-label-md');
+                    if (icon1) { icon1.classList.add('text-primary'); icon1.classList.remove('text-on-surface-variant'); }
+                    if (text) { text.classList.add('text-on-surface'); text.classList.remove('text-on-surface-variant'); }
+                    
+                    if (!btn.querySelector('.check-icon')) {
+                        btn.insertAdjacentHTML('beforeend', '<span class="material-symbols-outlined text-primary text-[16px] check-icon" style="font-variation-settings: \'FILL\' 1;">check_circle</span>');
+                    }
+                });
+            });
+        }
+    }
+    
+    // Set default date
+    const dateInput = document.getElementById('tx-date');
+    if(dateInput && !dateInput.value) {
+        const today = new Date();
+        const yyyy = today.getFullYear();
+        const mm = String(today.getMonth() + 1).padStart(2, '0');
+        const dd = String(today.getDate()).padStart(2, '0');
+        dateInput.value = `${yyyy}-${mm}-${dd}`;
+    }
+}
+
+async function saveTransaction() {
+    if(!currentUid) return;
+    
+    const amountEl = document.getElementById('tx-amount');
+    const titleEl = document.getElementById('tx-title');
+    const typeEl = document.querySelector('input[name="tx-type"]:checked');
+    const dateEl = document.getElementById('tx-date');
+    
+    const activeCat = document.querySelector('.tx-cat-btn.bg-primary-container');
+    const activePm = document.querySelector('.tx-pm-btn.border-primary');
+    
+    if(!amountEl || !titleEl || !typeEl || !dateEl) return;
+    
+    const amount = parseFloat(amountEl.value);
+    const title = titleEl.value.trim();
+    const type = typeEl.value; // income or expense
+    const dateStr = dateEl.value;
+    
+    if(isNaN(amount) || amount <= 0) {
+        alert('Lütfen geçerli bir tutar girin.');
+        return;
+    }
+    if(!title) {
+        alert('Lütfen işlem adı girin.');
+        return;
+    }
+    if(!activeCat) {
+        alert('Lütfen bir kategori seçin.');
+        return;
+    }
+    if(!activePm) {
+        alert('Lütfen bir ödeme yöntemi seçin.');
+        return;
+    }
+    
+    const categoryId = activeCat.dataset.id;
+    const paymentMethodId = activePm.dataset.id;
+    
+    const saveBtn = document.getElementById('finance-save-tx-btn');
+    const originalText = saveBtn.innerHTML;
+    saveBtn.innerHTML = 'Kaydediliyor...';
+    saveBtn.disabled = true;
+    
+    try {
+        await addDoc(collection(db, "users", currentUid, "finance_transactions"), {
+            title,
+            amount,
+            type,
+            categoryId,
+            paymentMethodId,
+            dateStr,
+            createdAt: serverTimestamp()
+        });
+        
+        saveBtn.innerHTML = `<span class="material-symbols-outlined">check_circle</span> Eklendi!`;
+        saveBtn.classList.add("bg-primary-container", "text-on-primary-container");
+        
+        setTimeout(() => {
+            saveBtn.innerHTML = originalText;
+            saveBtn.classList.remove("bg-primary-container", "text-on-primary-container");
+            saveBtn.disabled = false;
+            
+            // Clear inputs
+            amountEl.value = '';
+            titleEl.value = '';
+            
+            closeModal('finance-add-tx-modal');
         }, 1000);
     } catch(err) {
         console.error(err);
