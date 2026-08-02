@@ -7,6 +7,7 @@ import { initWorkout, clearWorkout } from "./workout.js";
 import { initFinance, clearFinance } from "./finance.js";
 import { initWater, clearWater } from "./water.js";
 import { initBooks, clearBooks } from "./books.js";
+import { initProfile } from "./profile.js";
 
 // ---------- DOM referansları ----------
 const authScreen = document.getElementById("auth-screen");
@@ -52,6 +53,8 @@ onAuthStateChanged(auth, async (user) => {
             initBooks(user.uid, (books) => {
                 updateDashboardBooks(books);
             });
+            
+            initProfile(user.uid);
             
         } catch (err) {
             console.error("Login transition error:", err);
