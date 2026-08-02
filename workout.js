@@ -255,21 +255,17 @@ async function loadWorkoutDataForDay(splitId, dayId) {
     
     const snap = await getDocs(q);
     const logs = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-    logs.sort((a,b) => new Date(b.dateStr) - new Date(a.dateStr));
+    // Sort by createdAt descending, fallback to dateStr
+    logs.sort((a,b) => {
+        const timeA = a.createdAt ? (a.createdAt.toMillis ? a.createdAt.toMillis() : a.createdAt) : new Date(a.dateStr).getTime();
+        const timeB = b.createdAt ? (b.createdAt.toMillis ? b.createdAt.toMillis() : b.createdAt) : new Date(b.dateStr).getTime();
+        return timeB - timeA;
+    });
     
-    const todayStr = new Date().toLocaleDateString('en-CA'); 
-    
+    // Always start fresh for "ertesi gün" behavior.
+    // The most recently saved log is the "lastWorkoutLog" (Hedef).
     currentWorkoutLog = null;
-    lastWorkoutLog = null;
-    
-    for (const log of logs) {
-        if (log.dateStr === todayStr) {
-            currentWorkoutLog = log;
-        } else if (!lastWorkoutLog) {
-            lastWorkoutLog = log;
-        }
-        if (currentWorkoutLog && lastWorkoutLog) break;
-    }
+    lastWorkoutLog = logs.length > 0 ? logs[0] : null;
 
     renderExercises(day, lastWorkoutLog, currentWorkoutLog);
 }
@@ -351,9 +347,12 @@ function renderExercises(day, lastLog, currentLog) {
         summary.innerHTML = `
             <div class="flex flex-col">
                 <h2 class="font-headline-sm text-headline-sm text-on-surface">${escapeHtml(ex.name)}</h2>
-                <div class="flex items-center gap-1 text-outline hover:text-primary transition-colors cursor-pointer" onclick="event.preventDefault(); openExerciseHistory('${ex.id}', '${escapeHtml(ex.name)}')">
-                    <span class="material-symbols-outlined" style="font-size: 14px;">history</span>
-                    <span class="text-label-sm">${targetText}</span>
+                <div class="flex items-center gap-1">
+                    <span class="text-label-sm text-outline">${targetText}</span>
+                    <button class="flex items-center justify-center p-1.5 ml-2 bg-surface-container rounded-lg hover:bg-surface-container-high transition-colors active:scale-95 text-primary" onclick="event.preventDefault(); event.stopPropagation(); openExerciseHistory('${ex.id}', '${escapeHtml(ex.name)}')">
+                        <span class="material-symbols-outlined" style="font-size: 18px;">history</span>
+                        <span class="text-[11px] font-bold ml-1 uppercase">Geçmiş</span>
+                    </button>
                 </div>
             </div>
             <div class="flex items-center gap-2">
@@ -523,20 +522,25 @@ async function saveWorkoutSession() {
         saveBtn.innerHTML = "Kaydediliyor...";
         saveBtn.disabled = true;
         
-        if (currentWorkoutLog) {
-            await setDoc(doc(db, "users", currentUid, "workout_logs", currentWorkoutLog.id), logData, { merge: true });
-        } else {
-            const newDoc = await addDoc(collection(db, "users", currentUid, "workout_logs"), logData);
-            currentWorkoutLog = { id: newDoc.id, ...logData };
-        }
+        // Always create a new log since we act like "ertesi gün"
+        logData.completed = true;
+        const newDoc = await addDoc(collection(db, "users", currentUid, "workout_logs"), logData);
+        currentWorkoutLog = { id: newDoc.id, ...logData };
         
         saveBtn.innerHTML = `<span class="material-symbols-outlined">check_circle</span> Kaydedildi!`;
         saveBtn.classList.add("bg-primary-container", "text-on-primary-container");
+        
         setTimeout(() => {
             saveBtn.innerHTML = originalText;
             saveBtn.classList.remove("bg-primary-container", "text-on-primary-container");
             saveBtn.disabled = false;
-        }, 2000);
+            
+            // RESET STATE
+            activeDayId = null;
+            currentWorkoutLog = null;
+            renderSplitView(); 
+            window.scrollTo(0,0);
+        }, 1500);
         
     } catch (e) {
         console.error("Save error:", e);
@@ -878,7 +882,14 @@ window.closeSplitSelectionModal = function() {
 // EXERCISE HISTORY VIEW
 // ==========================================
 
+function switchView(viewId) {
+    document.querySelectorAll(".view").forEach(v => v.classList.add("hidden"));
+    const target = document.getElementById("view-" + viewId);
+    if(target) target.classList.remove("hidden");
+}
+
 window.closeExerciseHistory = function() {
+
     switchView('workout');
     renderSplitView(); 
 };
