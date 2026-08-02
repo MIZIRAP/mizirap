@@ -90,7 +90,44 @@ function setupFinanceModals() {
     if(savePaymentBtn) {
         savePaymentBtn.addEventListener('click', savePaymentMethod);
     }
+
+    // Category Icon Selection
+    const categoryIcons = document.querySelectorAll('.category-icon-option');
+    categoryIcons.forEach(iconEl => {
+        iconEl.addEventListener('click', () => {
+            categoryIcons.forEach(el => {
+                el.classList.remove('selected', 'bg-primary', 'text-on-primary', 'shadow-sm');
+                el.classList.add('bg-surface-container', 'text-on-surface', 'hover:bg-surface-container-high');
+                const span = el.querySelector('span');
+                if(span) span.style.fontVariationSettings = "'FILL' 0";
+            });
+            iconEl.classList.add('selected', 'bg-primary', 'text-on-primary', 'shadow-sm');
+            iconEl.classList.remove('bg-surface-container', 'text-on-surface', 'hover:bg-surface-container-high');
+            const span = iconEl.querySelector('span');
+            if(span) span.style.fontVariationSettings = "'FILL' 1";
+        });
+    });
+
+    // Category Color Selection
+    const categoryColors = document.querySelectorAll('.category-color-option');
+    categoryColors.forEach(colorEl => {
+        colorEl.addEventListener('click', () => {
+            categoryColors.forEach(el => {
+                el.classList.remove('selected', 'ring-4', 'ring-primary-container', 'ring-offset-2', 'ring-offset-surface-container-lowest');
+                el.innerHTML = '';
+            });
+            colorEl.classList.add('selected', 'ring-4', 'ring-primary-container', 'ring-offset-2', 'ring-offset-surface-container-lowest');
+            colorEl.innerHTML = '<span class="material-symbols-outlined text-on-primary">check</span>';
+        });
+    });
+
+    // Save Category
+    const saveCategoryBtn = document.getElementById('finance-save-category-btn');
+    if(saveCategoryBtn) {
+        saveCategoryBtn.addEventListener('click', saveCategory);
+    }
 }
+
 
 async function savePaymentMethod() {
     if(!currentUid) return;
@@ -279,4 +316,57 @@ export function calcBalance(txs) {
         const val = parseFloat(tx.amount) || 0;
         return acc + (tx.type === 'income' ? val : -val);
     }, 0);
+}
+
+
+async function saveCategory() {
+    if(!currentUid) return;
+    
+    const nameEl = document.getElementById('category-name');
+    const iconEl = document.querySelector('.category-icon-option.selected');
+    const colorEl = document.querySelector('.category-color-option.selected');
+    
+    if(!nameEl || !iconEl || !colorEl) return;
+    
+    const name = nameEl.value.trim();
+    if(!name) {
+        alert('Lütfen bir tür adı girin.');
+        return;
+    }
+    
+    const icon = iconEl.dataset.icon || 'receipt_long';
+    const color = colorEl.dataset.color || 'primary';
+    
+    const saveBtn = document.getElementById('finance-save-category-btn');
+    const originalText = saveBtn.innerHTML;
+    saveBtn.innerHTML = 'Kaydediliyor...';
+    saveBtn.disabled = true;
+    
+    try {
+        await addDoc(collection(db, "users", currentUid, "finance_categories"), {
+            name,
+            icon,
+            color,
+            createdAt: serverTimestamp()
+        });
+        
+        saveBtn.innerHTML = `<span class="material-symbols-outlined">check_circle</span> Eklendi!`;
+        saveBtn.classList.add("bg-primary-container", "text-on-primary-container");
+        
+        setTimeout(() => {
+            saveBtn.innerHTML = originalText;
+            saveBtn.classList.remove("bg-primary-container", "text-on-primary-container");
+            saveBtn.disabled = false;
+            
+            // Clear inputs
+            nameEl.value = '';
+            
+            closeModal('finance-add-category-modal');
+        }, 1000);
+    } catch(err) {
+        console.error(err);
+        alert('Kaydedilirken hata oluştu.');
+        saveBtn.innerHTML = originalText;
+        saveBtn.disabled = false;
+    }
 }
