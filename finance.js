@@ -218,30 +218,64 @@ function closeModal(id) {
     }, 300);
 }
 
+
+let currentMainFinanceMonth = new Date();
+
 function renderTransactions() {
     const list = document.getElementById("finance-recent-transactions");
     const balanceEl = document.getElementById("finance-total-balance");
     const trendEl = document.getElementById("finance-monthly-trend");
     
+    // Main Page Month Selector
+    const mainMonthLabel = document.getElementById('finance-month-label');
+    const mainPrevBtn = document.getElementById('finance-prev-month');
+    const mainNextBtn = document.getElementById('finance-next-month');
+    
+    if (mainMonthLabel) {
+        if (mainPrevBtn && !mainPrevBtn.hasAttribute('data-listener')) {
+            mainPrevBtn.addEventListener('click', () => {
+                currentMainFinanceMonth.setMonth(currentMainFinanceMonth.getMonth() - 1);
+                renderTransactions();
+            });
+            mainPrevBtn.setAttribute('data-listener', 'true');
+        }
+        if (mainNextBtn && !mainNextBtn.hasAttribute('data-listener')) {
+            mainNextBtn.addEventListener('click', () => {
+                currentMainFinanceMonth.setMonth(currentMainFinanceMonth.getMonth() + 1);
+                renderTransactions();
+            });
+            mainNextBtn.setAttribute('data-listener', 'true');
+        }
+        
+        const monthOptions = { month: 'long', year: 'numeric' };
+        const dateStrFormatted = currentMainFinanceMonth.toLocaleDateString('tr-TR', monthOptions);
+        mainMonthLabel.textContent = dateStrFormatted.charAt(0).toUpperCase() + dateStrFormatted.slice(1);
+    }
+    
     if(!list) return;
+    
+    // Filter transactions for current selected month
+    const targetMonth = currentMainFinanceMonth.getMonth();
+    const targetYear = currentMainFinanceMonth.getFullYear();
+    
+    const monthTxs = financeTransactions.filter(tx => {
+        const d = new Date(tx.dateStr);
+        return d.getMonth() === targetMonth && d.getFullYear() === targetYear;
+    });
     
     // Calculate balances
     let totalBalance = 0;
-    let currentMonthBalance = 0;
+    let currentMonthBalance = 0; // Same as total for the view
     
-    const today = new Date();
-    const currentMonth = today.getMonth();
-    const currentYear = today.getFullYear();
-
     const barsContainer = document.getElementById("finance-expense-bars");
     let categoryExpenses = {};
     let totalExpense = 0;
 
-    
-    financeTransactions.forEach(tx => {
+    monthTxs.forEach(tx => {
         const val = parseFloat(tx.amount) || 0;
         const change = tx.type === 'income' ? val : -val;
         totalBalance += change;
+        currentMonthBalance += change;
 
         if (tx.type === 'expense') {
             totalExpense += val;
@@ -250,13 +284,8 @@ function renderTransactions() {
             }
             categoryExpenses[tx.categoryId] += val;
         }
-
-        
-        const txDate = new Date(tx.dateStr);
-        if (txDate.getMonth() === currentMonth && txDate.getFullYear() === currentYear) {
-            currentMonthBalance += change;
-        }
     });
+
     
     
     if (barsContainer) {
@@ -312,16 +341,16 @@ function renderTransactions() {
         }
     }
     
-    if(financeTransactions.length === 0) {
+    if(monthTxs.length === 0) {
         list.innerHTML = `<div class="text-center text-outline text-sm py-4">Henüz bir işlem bulunmuyor.</div>`;
         return;
     }
     
     list.innerHTML = "";
     // Only show last 5 in recent activity
-    const recentTx = financeTransactions.slice(0, 5);
+    const recent = monthTxs.slice(0, 5);
     
-    recentTx.forEach(tx => {
+    recent.forEach(tx => {
         const cat = financeCategories.find(c => c.id === tx.categoryId) || { name: 'Genel', icon: 'payments', type: tx.type, color: 'surface-container-high' };
         const pm = financePaymentMethods.find(p => p.id === tx.paymentMethodId) || { name: 'Bilinmiyor', type: 'Nakit' };
         
