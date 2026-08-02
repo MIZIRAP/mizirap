@@ -3,6 +3,7 @@ import { doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.14.1/
 import { updatePassword, EmailAuthProvider, reauthenticateWithCredential } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
 
 let currentUid = null;
+let currentPhotoUrl = null;
 
 export function initProfile(uid) {
     currentUid = uid;
@@ -26,12 +27,18 @@ async function loadProfile() {
         const docRef = doc(db, "users", currentUid, "profile", "data");
         const docSnap = await getDoc(docRef);
         
+        
         if (docSnap.exists()) {
             const data = docSnap.data();
             if (nameEl) nameEl.value = data.name || (auth.currentUser ? auth.currentUser.displayName : "") || "";
             if (bioEl) bioEl.value = data.bio || "";
             if (dobEl) dobEl.value = data.dob || "";
+            if (data.photoUrl) {
+                currentPhotoUrl = data.photoUrl;
+                updateAllProfileImages(currentPhotoUrl);
+            }
         } else {
+
             // Default to Auth display name if profile doc doesn't exist
             if (nameEl) nameEl.value = (auth.currentUser ? auth.currentUser.displayName : "") || "";
         }
@@ -40,8 +47,33 @@ async function loadProfile() {
     }
 }
 
+
+function updateAllProfileImages(url) {
+    if(!url) return;
+    document.querySelectorAll('.user-profile-img').forEach(img => {
+        img.src = url;
+    });
+}
+
 document.addEventListener("DOMContentLoaded", () => {
+    
+    const photoInput = document.getElementById('profile-photo-input');
+    if (photoInput) {
+        photoInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    currentPhotoUrl = e.target.result;
+                    updateAllProfileImages(currentPhotoUrl);
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    }
+
     const saveBtn = document.getElementById('profile-save-btn');
+
     if (saveBtn) {
         saveBtn.addEventListener('click', async () => {
             if (!currentUid) return;
@@ -55,12 +87,15 @@ document.addEventListener("DOMContentLoaded", () => {
             saveBtn.disabled = true;
 
             try {
+                
                 await setDoc(doc(db, "users", currentUid, "profile", "data"), {
                     name: nameEl.value.trim(),
                     bio: bioEl.value.trim(),
                     dob: dobEl.value.trim(),
+                    photoUrl: currentPhotoUrl,
                     updatedAt: new Date()
                 }, { merge: true });
+
 
                 saveBtn.innerHTML = `<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">check_circle</span> Kaydedildi!`;
                 saveBtn.classList.add("bg-primary-container", "text-on-primary-container");
