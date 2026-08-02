@@ -22,6 +22,7 @@ export function initFinance(uid, onChangeCallback) {
         financeCategories = snap.docs.map(d => ({ id: d.id, ...d.data() }));
         renderTransactions();
         renderTxModalOptions();
+        if (typeof renderFinanceDetail !== "undefined") renderFinanceDetail();
     });
 
     // 2. Load Payment Methods
@@ -30,6 +31,7 @@ export function initFinance(uid, onChangeCallback) {
         financePaymentMethods = snap.docs.map(d => ({ id: d.id, ...d.data() }));
         renderTransactions();
         renderTxModalOptions();
+        if (typeof renderFinanceDetail !== "undefined") renderFinanceDetail();
     });
 
     // 3. Load Transactions
@@ -40,6 +42,7 @@ export function initFinance(uid, onChangeCallback) {
         financeTransactions = snap.docs.map(d => ({ id: d.id, ...d.data() }));
         renderTransactions();
         renderTxModalOptions();
+        if (typeof renderFinanceDetail !== "undefined") renderFinanceDetail();
         if(callback) callback(financeTransactions);
     });
     
@@ -583,3 +586,140 @@ async function saveTransaction() {
         saveBtn.disabled = false;
     }
 }
+
+
+let currentDetailDate = new Date();
+
+export function renderFinanceDetail() {
+    // Labels & Buttons
+    const monthLabel = document.getElementById('fd-month-label');
+    const prevBtn = document.getElementById('fd-prev-month');
+    const nextBtn = document.getElementById('fd-next-month');
+    
+    // Stats
+    const netTotalEl = document.getElementById('fd-net-total');
+    const incomeTotalEl = document.getElementById('fd-total-income');
+    const expenseTotalEl = document.getElementById('fd-total-expense');
+    const incomeCountEl = document.getElementById('fd-income-count');
+    const expenseCountEl = document.getElementById('fd-expense-count');
+    
+    // Lists
+    const incomeListEl = document.getElementById('fd-income-list');
+    const expenseListEl = document.getElementById('fd-expense-list');
+    const insightTextEl = document.getElementById('fd-insight-text');
+    
+    if(!monthLabel) return;
+    
+    // Setup listeners if not already
+    if (!prevBtn.hasAttribute('data-listener')) {
+        prevBtn.addEventListener('click', () => {
+            currentDetailDate.setMonth(currentDetailDate.getMonth() - 1);
+            renderFinanceDetail();
+        });
+        prevBtn.setAttribute('data-listener', 'true');
+    }
+    if (!nextBtn.hasAttribute('data-listener')) {
+        nextBtn.addEventListener('click', () => {
+            currentDetailDate.setMonth(currentDetailDate.getMonth() + 1);
+            renderFinanceDetail();
+        });
+        nextBtn.setAttribute('data-listener', 'true');
+    }
+
+    // Format current month
+    const monthOptions = { month: 'long', year: 'numeric' };
+    const dateStrFormatted = currentDetailDate.toLocaleDateString('tr-TR', monthOptions);
+    monthLabel.textContent = dateStrFormatted.charAt(0).toUpperCase() + dateStrFormatted.slice(1);
+    
+    // Filter transactions for this month
+    const targetMonth = currentDetailDate.getMonth();
+    const targetYear = currentDetailDate.getFullYear();
+    
+    const monthTxs = financeTransactions.filter(tx => {
+        const d = new Date(tx.dateStr);
+        return d.getMonth() === targetMonth && d.getFullYear() === targetYear;
+    });
+    
+    const incomes = monthTxs.filter(tx => tx.type === 'income');
+    const expenses = monthTxs.filter(tx => tx.type === 'expense');
+    
+    const totalIncome = incomes.reduce((sum, tx) => sum + parseFloat(tx.amount || 0), 0);
+    const totalExpense = expenses.reduce((sum, tx) => sum + parseFloat(tx.amount || 0), 0);
+    const netTotal = totalIncome - totalExpense;
+    
+    const tlFormat = new Intl.NumberFormat('tr-TR', { style: 'currency', currency: 'TRY' });
+    const tlFormatNoSymbol = new Intl.NumberFormat('tr-TR', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+    
+    netTotalEl.textContent = (netTotal >= 0 ? '+' : '') + tlFormat.format(netTotal);
+    netTotalEl.className = \`font-display-lg text-display-lg \${netTotal >= 0 ? 'text-primary' : 'text-error'}\`;
+    
+    incomeTotalEl.textContent = tlFormatNoSymbol.format(totalIncome) + ' ₺';
+    expenseTotalEl.textContent = tlFormatNoSymbol.format(totalExpense) + ' ₺';
+    
+    incomeCountEl.textContent = \`\${incomes.length} Kayıt\`;
+    
+    // Render Incomes
+    if(incomes.length === 0) {
+        incomeListEl.innerHTML = '<div class="text-center text-sm text-on-surface-variant italic py-2">Henüz gelir yok</div>';
+    } else {
+        incomeListEl.innerHTML = incomes.map(tx => {
+            const pm = financePaymentMethods.find(p => p.id === tx.paymentMethodId) || { name: 'Genel', icon: 'payments' };
+            return \`
+            <div class="bg-surface-container-lowest p-4 rounded-2xl flex items-center justify-between custom-shadow border-l-4 border-primary mb-3 active:scale-98 transition-transform">
+                <div class="flex items-center gap-4">
+                    <div class="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
+                        <span class="material-symbols-outlined text-primary">\${pm.icon}</span>
+                    </div>
+                    <div>
+                        <p class="font-body-lg text-body-lg font-semibold">\${tx.title}</p>
+                        <p class="font-label-sm text-label-sm text-on-surface-variant">\${pm.name}</p>
+                    </div>
+                </div>
+                <p class="font-headline-sm text-headline-sm text-primary">\${tlFormat.format(tx.amount)}</p>
+            </div>
+            \`;
+        }).join('');
+    }
+    
+    // Group Expenses by Category
+    let categorySums = {};
+    expenses.forEach(tx => {
+        if(!categorySums[tx.categoryId]) categorySums[tx.categoryId] = 0;
+        categorySums[tx.categoryId] += parseFloat(tx.amount || 0);
+    });
+    
+    const sortedCatIds = Object.keys(categorySums).sort((a,b) => categorySums[b] - categorySums[a]);
+    expenseCountEl.textContent = \`\${sortedCatIds.length} Kategori\`;
+    
+    if(sortedCatIds.length === 0) {
+        expenseListEl.innerHTML = '<div class="text-center text-sm text-on-surface-variant italic py-2">Henüz gider yok</div>';
+        insightTextEl.textContent = 'Harika, hiç harcamanız yok!';
+    } else {
+        const topCatId = sortedCatIds[0];
+        const topCat = financeCategories.find(c => c.id === topCatId) || { name: 'Genel', icon: 'receipt_long' };
+        const topAmount = categorySums[topCatId];
+        const topPercentage = Math.round((topAmount / totalExpense) * 100);
+        
+        insightTextEl.textContent = \`\${topCat.name}, toplam harcamalarınızın %\${topPercentage}'ini oluşturuyor.\`;
+        
+        const colors = ['tertiary', 'secondary', 'primary', 'error'];
+        
+        expenseListEl.innerHTML = sortedCatIds.map((catId, index) => {
+            const amount = categorySums[catId];
+            const cat = financeCategories.find(c => c.id === catId) || { name: 'Bilinmiyor', icon: 'more_horiz' };
+            const cColor = colors[index % colors.length];
+            return \`
+            <div class="flex items-center justify-between p-3 rounded-2xl hover:bg-surface-container-low transition-colors active:scale-98">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-full bg-\${cColor}-fixed-dim/30 flex items-center justify-center">
+                        <span class="material-symbols-outlined text-\${cColor}">\${cat.icon}</span>
+                    </div>
+                    <p class="font-body-lg text-body-lg">\${cat.name}</p>
+                </div>
+                <p class="font-body-lg text-body-lg font-bold">\${tlFormat.format(amount)}</p>
+            </div>
+            \`;
+        }).join('');
+    }
+}
+window.renderFinanceDetail = renderFinanceDetail;
