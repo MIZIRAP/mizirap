@@ -1386,7 +1386,7 @@
                             <span class="material-symbols-outlined text-outline-variant mb-1">database</span>
                         </div>
                     </div>
-                    <button class="bg-primary-container text-on-primary-container rounded-[24px] p-4 shadow-[0px_4px_20px_rgba(0,0,0,0.04)] flex flex-col justify-center items-center gap-2 h-24 hover:scale-[0.98] transition-transform" onclick="openNewFoodModal()">
+                    <button class="bg-primary-container text-on-primary-container rounded-[24px] p-4 shadow-[0px_4px_20px_rgba(0,0,0,0.04)] flex flex-col justify-center items-center gap-2 h-24 hover:scale-[0.98] transition-transform open-new-food-modal-btn">
                         <span class="material-symbols-outlined text-3xl">add_circle</span>
                         <span class="font-label-md text-label-md">Yeni Besin Ekle</span>
                     </button>
@@ -1414,7 +1414,7 @@
             <div class="w-12 h-1.5 bg-surface-variant rounded-full mx-auto mb-6 md:hidden"></div>
             <div class="flex justify-between items-center mb-6">
                 <h2 class="font-headline-md text-headline-md text-on-surface" id="modalMealTitle">Yiyecek Ekle</h2>
-                <button class="w-8 h-8 flex items-center justify-center bg-surface-container rounded-full text-on-surface-variant hover:bg-surface-container-high transition-colors" onclick="closeAddFoodModal()">
+                <button class="w-8 h-8 flex items-center justify-center bg-surface-container rounded-full text-on-surface-variant hover:bg-surface-container-high transition-colors" class="close-add-food-modal-btn">
                     <span class="material-symbols-outlined text-[20px]">close</span>
                 </button>
             </div>
@@ -1453,472 +1453,7 @@
             </div>
         </div>
     </div>
-    <script>
-        // Modal Logic
-        const addFoodModal = document.getElementById('addFoodModal');
-        const addFoodModalContent = document.getElementById('addFoodModalContent');
-        const addFoodModalTitle = document.getElementById('modalMealTitle');
-
-        window.openAddFoodModal = function(mealName) {
-            addFoodModalTitle.innerText = `${mealName} - Yiyecek Ekle`;
-            addFoodModal.classList.remove('hidden');
-            addFoodModal.classList.add('flex');
-            
-            // Trigger animation
-            setTimeout(() => {
-                addFoodModalContent.classList.remove('translate-y-full');
-                addFoodModalContent.classList.add('translate-y-0');
-            }, 10);
-            
-            document.body.style.overflow = 'hidden';
-        }
-
-        window.closeAddFoodModal = function() {
-            addFoodModalContent.classList.remove('translate-y-0');
-            addFoodModalContent.classList.add('translate-y-full');
-            
-            setTimeout(() => {
-                addFoodModal.classList.add('hidden');
-                addFoodModal.classList.remove('flex');
-                document.body.style.overflow = 'auto';
-            }, 300);
-        }
-
-        // Close on backdrop click
-        addFoodModal.addEventListener('click', function(e) {
-            if (e.target === addFoodModal) {
-                closeAddFoodModal();
-            }
-        });
-
-        // Calories Goal Modal UI Logic
-        const caloriesGoalBtn = document.getElementById('calories-goal-btn');
-        const caloriesGoalModal = document.getElementById('calories-goal-modal');
-        const caloriesGoalModalContent = document.getElementById('calories-goal-modal-content');
-        const caloriesGoalMinus = document.getElementById('calories-goal-minus');
-        const caloriesGoalPlus = document.getElementById('calories-goal-plus');
-        const caloriesGoalAmountDisplay = document.getElementById('calories-goal-amount-display');
-        const caloriesGoalCancel = document.getElementById('calories-goal-cancel');
-        const caloriesGoalSave = document.getElementById('calories-goal-save');
-
-        function openCaloriesGoalModal() {
-            caloriesGoalModal.classList.remove('hidden');
-            setTimeout(() => {
-                caloriesGoalModalContent.classList.remove('scale-95', 'opacity-0');
-                caloriesGoalModalContent.classList.add('scale-100', 'opacity-100');
-            }, 10);
-        }
-
-        function closeCaloriesGoalModal() {
-            caloriesGoalModalContent.classList.remove('scale-100', 'opacity-100');
-            caloriesGoalModalContent.classList.add('scale-95', 'opacity-0');
-            setTimeout(() => {
-                caloriesGoalModal.classList.add('hidden');
-            }, 200);
-        }
-
-        if (caloriesGoalBtn) caloriesGoalBtn.addEventListener('click', openCaloriesGoalModal);
-        if (caloriesGoalCancel) caloriesGoalCancel.addEventListener('click', closeCaloriesGoalModal);
-        
-        caloriesGoalModal.addEventListener('click', function(e) {
-            if (e.target === caloriesGoalModal) {
-                closeCaloriesGoalModal();
-            }
-        });
-
-        let tempCaloriesGoal = 2000;
-        if (caloriesGoalMinus) {
-            caloriesGoalMinus.addEventListener('click', () => {
-                if (tempCaloriesGoal > 500) tempCaloriesGoal -= 100;
-                caloriesGoalAmountDisplay.textContent = tempCaloriesGoal;
-            });
-        }
-        if (caloriesGoalPlus) {
-            caloriesGoalPlus.addEventListener('click', () => {
-                tempCaloriesGoal += 100;
-                caloriesGoalAmountDisplay.textContent = tempCaloriesGoal;
-            });
-        }
-
-        document.querySelectorAll('.calories-goal-preset').forEach(btn => {
-            btn.addEventListener('click', () => {
-                tempCaloriesGoal = parseInt(btn.dataset.amount);
-                caloriesGoalAmountDisplay.textContent = tempCaloriesGoal;
-                
-                document.querySelectorAll('.calories-goal-preset').forEach(b => {
-                    b.classList.remove('bg-primary-container', 'text-on-primary-container', 'font-bold');
-                    b.classList.add('bg-surface-container', 'text-on-surface-variant');
-                });
-                btn.classList.add('bg-primary-container', 'text-on-primary-container', 'font-bold');
-                btn.classList.remove('bg-surface-container', 'text-on-surface-variant');
-            });
-        });
-
-        if (caloriesGoalSave) {
-            caloriesGoalSave.addEventListener('click', () => {
-                const amountDisplay = document.getElementById('calories-goal-amount-display');
-                if (amountDisplay) dailyCalorieGoal = parseInt(amountDisplay.textContent) || 2000;
-                
-                const karbInput = document.getElementById('macro-goal-karb');
-                if (karbInput) karbGoal = parseInt(karbInput.value) || 240;
-                
-                const proteinInput = document.getElementById('macro-goal-protein');
-                if (proteinInput) proteinGoal = parseInt(proteinInput.value) || 110;
-                
-                const yagInput = document.getElementById('macro-goal-yag');
-                if (yagInput) yagGoal = parseInt(yagInput.value) || 66;
-                
-                if (typeof updateUIState === 'function') updateUIState();
-                closeCaloriesGoalModal();
-            });
-        }
-
-        // Global State for Tracking
-        let totalCaloriesConsumed = parseInt(localStorage.getItem('miz_totalCal')) || 0;
-        let dailyCalorieGoal = parseInt(localStorage.getItem('miz_calGoal')) || 2000;
-        let proteinConsumed = parseInt(localStorage.getItem('miz_protCons')) || 0;
-        let proteinGoal = parseInt(localStorage.getItem('miz_protGoal')) || 110;
-        let karbConsumed = parseInt(localStorage.getItem('miz_karbCons')) || 0;
-        let karbGoal = parseInt(localStorage.getItem('miz_karbGoal')) || 240;
-        let yagConsumed = parseInt(localStorage.getItem('miz_yagCons')) || 0;
-        let yagGoal = parseInt(localStorage.getItem('miz_yagGoal')) || 66;
-        let dailyLogs = JSON.parse(localStorage.getItem('miz_logs')) || [];
-        let libraryFoods = JSON.parse(localStorage.getItem('miz_library')) || [];
-
-        function saveState() {
-            localStorage.setItem('miz_totalCal', totalCaloriesConsumed);
-            localStorage.setItem('miz_calGoal', dailyCalorieGoal);
-            localStorage.setItem('miz_protCons', proteinConsumed);
-            localStorage.setItem('miz_protGoal', proteinGoal);
-            localStorage.setItem('miz_karbCons', karbConsumed);
-            localStorage.setItem('miz_karbGoal', karbGoal);
-            localStorage.setItem('miz_yagCons', yagConsumed);
-            localStorage.setItem('miz_yagGoal', yagGoal);
-            localStorage.setItem('miz_logs', JSON.stringify(dailyLogs));
-        }
-
-        function renderLogs() {
-            const logList = document.getElementById('daily-log-list');
-            if (logList) {
-                logList.innerHTML = '';
-                dailyLogs.forEach(log => {
-                    const newEntry = document.createElement('div');
-                    newEntry.className = "flex justify-between items-center p-3 border-b border-surface-container-high last:border-0";
-                    newEntry.innerHTML = `
-                    <div class="flex flex-col">
-                    <span class="font-body-md text-body-md text-on-surface font-medium">${log.name}</span>
-                    <span class="font-label-sm text-label-sm text-on-surface-variant">${log.amount}</span>
-                    </div>
-                    <span class="font-body-md text-body-md text-on-surface font-semibold text-primary">+${log.kcal} kcal</span>
-                    `;
-                    logList.appendChild(newEntry);
-                });
-            }
-        }
-
-        function renderLibraryFoods() {
-            const list = document.getElementById('library-food-list');
-            if (!list) return;
-            
-            list.innerHTML = '';
-            libraryFoods.forEach((food, index) => {
-                const item = document.createElement('div');
-                item.className = "bg-surface-container-lowest rounded-[24px] p-4 shadow-[0px_4px_20px_rgba(0,0,0,0.04)] hover:scale-[0.99] transition-transform relative group";
-                
-                let macrosHtml = '';
-                if(food.karb !== null || food.protein !== null || food.yag !== null) {
-                    macrosHtml = '<div class="flex gap-2">';
-                    if(food.karb !== null && !isNaN(food.karb)) macrosHtml += `<span class="font-label-sm text-label-sm bg-tertiary-container/20 text-tertiary rounded-md px-2 py-1">K: ${food.karb}g</span>`;
-                    if(food.protein !== null && !isNaN(food.protein)) macrosHtml += `<span class="font-label-sm text-label-sm bg-secondary-container/30 text-secondary rounded-md px-2 py-1">P: ${food.protein}g</span>`;
-                    if(food.yag !== null && !isNaN(food.yag)) macrosHtml += `<span class="font-label-sm text-label-sm bg-error-container/40 text-on-error-container rounded-md px-2 py-1">Y: ${food.yag}g</span>`;
-                    macrosHtml += '</div>';
-                }
-
-                item.innerHTML = `
-                    <div class="cursor-pointer" onclick="openAddPortionModal('${food.name}', ${food.kcal})">
-                        <div class="flex justify-between items-start mb-2 pr-8">
-                            <h3 class="font-headline-sm text-headline-sm text-on-surface">${food.name}</h3>
-                            <span class="font-label-md text-label-md text-on-surface-variant bg-surface-container px-2 py-1 rounded-full">100g</span>
-                        </div>
-                        <div class="flex items-center gap-2 mb-3">
-                            <span class="font-body-lg text-body-lg text-primary font-bold">${food.kcal} kcal</span>
-                        </div>
-                        ${macrosHtml}
-                    </div>
-                    <!-- Delete Button -->
-                    <button class="absolute top-4 right-4 w-8 h-8 rounded-full bg-error-container text-on-error-container flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity active:scale-95 z-10" onclick="deleteLibraryFood(${index}, event)">
-                        <span class="material-symbols-outlined text-[18px]">delete</span>
-                    </button>
-                `;
-                
-                list.appendChild(item);
-            });
-            
-            const countEl = document.getElementById('library-food-count');
-            if (countEl) countEl.textContent = libraryFoods.length;
-        }
-
-        window.deleteLibraryFood = function(index, event) {
-            event.stopPropagation();
-            libraryFoods.splice(index, 1);
-            localStorage.setItem('miz_library', JSON.stringify(libraryFoods));
-            renderLibraryFoods();
-        }
-
-        function updateUIState() {
-            saveState();
-            // Update Goals
-            const calGoalEl = document.getElementById('ui-calorie-goal');
-            if (calGoalEl) calGoalEl.textContent = dailyCalorieGoal;
-            
-            const proteinGoalEl = document.getElementById('ui-protein-goal');
-            if (proteinGoalEl) proteinGoalEl.textContent = proteinGoal;
-            
-            const karbGoalEl = document.getElementById('ui-karb-goal');
-            if (karbGoalEl) karbGoalEl.textContent = karbGoal;
-            
-            const yagGoalEl = document.getElementById('ui-yag-goal');
-            if (yagGoalEl) yagGoalEl.textContent = yagGoal;
-            
-            // Update Consumed
-            const calConsEl = document.getElementById('ui-calorie-consumed');
-            if (calConsEl) calConsEl.textContent = totalCaloriesConsumed;
-            
-            const calRemEl = document.getElementById('ui-calorie-remaining');
-            if (calRemEl) {
-                let remaining = dailyCalorieGoal - totalCaloriesConsumed;
-                calRemEl.textContent = `Kalan: ${remaining > 0 ? remaining : 0} kcal`;
-            }
-            
-            const proteinConsEl = document.getElementById('ui-protein-consumed');
-            if (proteinConsEl) proteinConsEl.textContent = proteinConsumed;
-            
-            const karbConsEl = document.getElementById('ui-karb-consumed');
-            if (karbConsEl) karbConsEl.textContent = karbConsumed;
-            
-            const yagConsEl = document.getElementById('ui-yag-consumed');
-            if (yagConsEl) yagConsEl.textContent = yagConsumed;
-            
-            // Update SVG Circle
-            const circle = document.getElementById('ui-calorie-circle');
-            if (circle) {
-                let percentage = Math.min(totalCaloriesConsumed / dailyCalorieGoal, 1);
-                let offset = 339.292 - (339.292 * percentage);
-                circle.style.strokeDashoffset = offset;
-            }
-            
-            // Update Macro Bars
-            const proteinBar = document.getElementById('ui-protein-bar');
-            if (proteinBar) proteinBar.style.width = `${Math.min((proteinConsumed / proteinGoal) * 100, 100)}%`;
-            
-            const karbBar = document.getElementById('ui-karb-bar');
-            if (karbBar) karbBar.style.width = `${Math.min((karbConsumed / karbGoal) * 100, 100)}%`;
-            
-            const yagBar = document.getElementById('ui-yag-bar');
-            if (yagBar) yagBar.style.width = `${Math.min((yagConsumed / yagGoal) * 100, 100)}%`;
-            
-            // Update Dashboard
-            const dashCalText = document.getElementById('dashboard-calories-text');
-            if (dashCalText) {
-                dashCalText.innerHTML = `${totalCaloriesConsumed} <span class="text-sm font-normal text-on-surface-variant">/ ${dailyCalorieGoal} kcal</span>`;
-            }
-            const dashCalProg = document.getElementById('dashboard-calories-progress');
-            if (dashCalProg) {
-                let percentage = Math.min((totalCaloriesConsumed / dailyCalorieGoal) * 100, 100);
-                dashCalProg.style.width = `${percentage}%`;
-            }
-        }
-
-        // New Food (Library) Modal Logic
-        window.openNewFoodModal = function() {
-            const newFoodModal = document.getElementById('newFoodModal');
-            const newFoodModalContent = document.getElementById('newFoodModalContent');
-            if (!newFoodModal || !newFoodModalContent) return;
-            
-            newFoodModal.classList.remove('hidden');
-            setTimeout(() => {
-                newFoodModal.classList.remove('opacity-0');
-                newFoodModalContent.classList.remove('translate-y-full');
-            }, 10);
-            setTimeout(() => {
-                const fn = document.getElementById('new-food-name');
-                if (fn) fn.focus();
-            }, 300);
-        }
-
-        window.closeNewFoodModal = function() {
-            const newFoodModal = document.getElementById('newFoodModal');
-            const newFoodModalContent = document.getElementById('newFoodModalContent');
-            if (!newFoodModal || !newFoodModalContent) return;
-            
-            newFoodModal.classList.add('opacity-0');
-            newFoodModalContent.classList.add('translate-y-full');
-            setTimeout(() => {
-                newFoodModal.classList.add('hidden');
-            }, 300);
-        }
-        
-        window.saveNewFood = function() {
-            const nameInput = document.getElementById('new-food-name');
-            const kcalInput = document.getElementById('new-food-kcal');
-            const karbInput = document.getElementById('new-food-karb');
-            const proteinInput = document.getElementById('new-food-protein');
-            const yagInput = document.getElementById('new-food-yag');
-            
-            if (!nameInput || !kcalInput || !nameInput.value || !kcalInput.value) return; // Basic validation
-            
-            const newFood = {
-                name: nameInput.value,
-                kcal: parseInt(kcalInput.value) || 0,
-                karb: karbInput.value ? parseInt(karbInput.value) : null,
-                protein: proteinInput.value ? parseInt(proteinInput.value) : null,
-                yag: yagInput.value ? parseInt(yagInput.value) : null
-            };
-            
-            libraryFoods.unshift(newFood);
-            localStorage.setItem('miz_library', JSON.stringify(libraryFoods));
-            renderLibraryFoods();
-            
-            // Clear inputs
-            nameInput.value = '';
-            kcalInput.value = '';
-            if(karbInput) karbInput.value = '';
-            if(proteinInput) proteinInput.value = '';
-            if(yagInput) yagInput.value = '';
-            
-            closeNewFoodModal();
-        }
-
-        // Add Portion Modal Logic
-        let currentKcalPer100g = 0;
-        let currentFoodName = "";
-
-        window.openAddPortionModal = function(name, kcal100) {
-            currentFoodName = name;
-            currentKcalPer100g = kcal100;
-            document.getElementById('portion-food-name').textContent = name;
-            document.getElementById('portion-food-kcal-text').textContent = `${kcal100} kcal / 100g`;
-            const gramInput = document.getElementById('gram-input');
-            if(gramInput) gramInput.value = 100;
-            window.updatePortionTotal();
-            
-            const modal = document.getElementById('addPortionModal');
-            const content = document.getElementById('addPortionModalContent');
-            if(modal && content) {
-                modal.classList.remove('hidden');
-                setTimeout(() => {
-                    modal.classList.remove('opacity-0');
-                    content.classList.remove('translate-y-full');
-                }, 10);
-            }
-        };
-
-        window.closeAddPortionModal = function() {
-            const modal = document.getElementById('addPortionModal');
-            const content = document.getElementById('addPortionModalContent');
-            if(modal && content) {
-                modal.classList.add('opacity-0');
-                content.classList.add('translate-y-full');
-                setTimeout(() => {
-                    modal.classList.add('hidden');
-                }, 300);
-            }
-        };
-
-        window.updatePortionTotal = function() {
-            const gramInput = document.getElementById('gram-input');
-            const totalKcalEl = document.getElementById('total-kcal');
-            if(gramInput && totalKcalEl) {
-                let grams = parseInt(gramInput.value);
-                if (isNaN(grams) || grams < 0) grams = 0;
-                const total = Math.round((grams / 100) * currentKcalPer100g);
-                totalKcalEl.textContent = total;
-            }
-        };
-
-        window.adjustAmount = function(amount) {
-            const gramInput = document.getElementById('gram-input');
-            if(gramInput) {
-                let current = parseInt(gramInput.value);
-                if (isNaN(current)) current = 0;
-                let newValue = current + amount;
-                if (newValue < 0) newValue = 0;
-                gramInput.value = newValue;
-                window.updatePortionTotal();
-                
-                gramInput.classList.add('scale-105');
-                setTimeout(() => {
-                    gramInput.classList.remove('scale-105');
-                }, 150);
-            }
-        };
-
-        window.addFoodToLog = function() {
-            const gramInput = document.getElementById('gram-input');
-            let grams = 100;
-            if(gramInput) grams = parseInt(gramInput.value) || 100;
-            const total = Math.round((grams / 100) * currentKcalPer100g);
-            
-            // Update Global State
-            totalCaloriesConsumed += total;
-            // Approximate macros for demo
-            let p = 0, k = 0, y = 0;
-            if(currentFoodName.includes("Tavuk")) { p = Math.round(31 * grams/100); y = Math.round(3.6 * grams/100); }
-            else if(currentFoodName.includes("Yulaf")) { k = Math.round(66 * grams/100); p = Math.round(17 * grams/100); y = Math.round(7 * grams/100); }
-            else if(currentFoodName.includes("Elma")) { k = Math.round(14 * grams/100); }
-            else { p = Math.round(10 * grams/100); k = Math.round(20 * grams/100); y = Math.round(5 * grams/100); }
-            
-            proteinConsumed += p;
-            karbConsumed += k;
-            yagConsumed += y;
-            
-            dailyLogs.unshift({ name: currentFoodName, amount: grams, kcal: total });
-            if (dailyLogs.length > 3) dailyLogs.pop();
-            renderLogs();
-            
-            if (typeof updateUIState === 'function') updateUIState();
-            
-            closeAddPortionModal();
-            
-            document.querySelectorAll(".view").forEach(v => v.classList.add("hidden"));
-            const target = document.getElementById("view-calories");
-            if(target) target.classList.remove("hidden");
-        };
-
-        // Attach listeners safely
-        document.addEventListener('DOMContentLoaded', () => {
-            if (typeof renderLogs === 'function') renderLogs();
-            if (typeof renderLibraryFoods === 'function') renderLibraryFoods();
-            if (typeof updateUIState === 'function') updateUIState();
-            
-            const portionModal = document.getElementById('addPortionModal');
-            if(portionModal) {
-                portionModal.addEventListener('click', (e) => {
-                    if (e.target === portionModal) {
-                        closeAddPortionModal();
-                    }
-                });
-            }
-            
-            const newFoodModal = document.getElementById('newFoodModal');
-            if (newFoodModal) {
-                newFoodModal.addEventListener('click', (e) => {
-                    if (e.target === newFoodModal) {
-                        closeNewFoodModal();
-                    }
-                });
-            }
-
-            const gramInput = document.getElementById('gram-input');
-            if(gramInput) {
-                gramInput.addEventListener('blur', function() {
-                    let val = parseInt(this.value);
-                    if (isNaN(val) || val <= 0) this.value = 100;
-                    window.updatePortionTotal();
-                });
-            }
-        });
-    </script>
+    
 </div>
 <!-- Kapanış: #app-screen -->
 
@@ -1930,7 +1465,7 @@
 </div>
 <div class="flex items-center justify-between px-container-padding py-element-spacing border-b border-surface-variant/50">
 <h2 class="font-headline-sm text-headline-sm text-on-surface">Porsiyon Ekle</h2>
-<button aria-label="Close" class="p-2 -mr-2 rounded-full hover:bg-surface-container-low transition-colors text-on-surface-variant" onclick="closeAddPortionModal()">
+<button aria-label="Close" class="p-2 -mr-2 rounded-full hover:bg-surface-container-low transition-colors text-on-surface-variant" id="portion-close-btn">
 <span class="material-symbols-outlined" data-icon="close">close</span>
 </button>
 </div>
@@ -1942,14 +1477,14 @@
 <div class="flex flex-col items-center gap-6 py-4">
 <p class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Miktar (Gram)</p>
 <div class="flex items-center justify-center gap-4 w-full max-w-[280px]">
-<button class="w-12 h-12 rounded-full bg-surface-container-low text-primary flex items-center justify-center hover:bg-surface-container transition-colors shrink-0 active:scale-95 shadow-sm" onclick="adjustAmount(-10)">
+<button class="w-12 h-12 rounded-full bg-surface-container-low text-primary flex items-center justify-center hover:bg-surface-container transition-colors shrink-0 active:scale-95 shadow-sm" id="portion-minus-btn">
 <span class="material-symbols-outlined" data-icon="remove">remove</span>
 </button>
 <div class="relative flex-1 group">
-<input class="w-full bg-surface-container-lowest border-2 border-transparent focus:border-primary text-center font-display-lg text-[32px] text-on-surface py-3 rounded-lg focus:ring-0 transition-colors appearance-none" id="gram-input" oninput="updatePortionTotal()" type="number" value="100"/>
+<input class="w-full bg-surface-container-lowest border-2 border-transparent focus:border-primary text-center font-display-lg text-[32px] text-on-surface py-3 rounded-lg focus:ring-0 transition-colors appearance-none" id="gram-input"  type="number" value="100"/>
 <div class="absolute bottom-1 w-full text-center font-label-sm text-label-sm text-outline group-focus-within:text-primary transition-colors">g</div>
 </div>
-<button class="w-12 h-12 rounded-full bg-surface-container-low text-primary flex items-center justify-center hover:bg-surface-container transition-colors shrink-0 active:scale-95 shadow-sm" onclick="adjustAmount(10)">
+<button class="w-12 h-12 rounded-full bg-surface-container-low text-primary flex items-center justify-center hover:bg-surface-container transition-colors shrink-0 active:scale-95 shadow-sm" id="portion-plus-btn">
 <span class="material-symbols-outlined" data-icon="add">add</span>
 </button>
 </div>
@@ -1966,7 +1501,7 @@
 </div>
 </div>
 <div class="p-container-padding pb-8 sm:pb-container-padding bg-surface-container-lowest mt-auto pt-2">
-<button class="w-full bg-primary text-on-primary py-4 rounded-xl font-label-md text-[16px] shadow-[0_4px_12px_rgba(68,101,84,0.2)] hover:bg-surface-tint active:scale-[0.98] transition-all duration-200 flex items-center justify-center gap-2" onclick="addFoodToLog()">
+<button class="w-full bg-primary text-on-primary py-4 rounded-xl font-label-md text-[16px] shadow-[0_4px_12px_rgba(68,101,84,0.2)] hover:bg-surface-tint active:scale-[0.98] transition-all duration-200 flex items-center justify-center gap-2" id="add-food-to-log-btn">
 <span class="material-symbols-outlined" data-icon="check">check</span>
                 Ekle
             </button>
@@ -1984,7 +1519,7 @@
 <!-- Header -->
 <div class="flex justify-between items-center px-container-padding py-4 shrink-0">
 <h1 class="font-headline-sm text-headline-sm text-on-surface">Yeni Besin Ekle</h1>
-<button aria-label="Kapat" class="w-10 h-10 flex items-center justify-center bg-surface-container rounded-full text-on-surface-variant hover:bg-surface-container-high transition-colors active:scale-95" onclick="closeNewFoodModal()">
+<button aria-label="Kapat" class="w-10 h-10 flex items-center justify-center bg-surface-container rounded-full text-on-surface-variant hover:bg-surface-container-high transition-colors active:scale-95" id="new-food-close-btn">
 <span class="material-symbols-outlined" style="font-variation-settings: 'wght' 400;">close</span>
 </button>
 </div>
@@ -2060,7 +1595,7 @@
 </div>
 <!-- Sticky Footer Action -->
 <div class="absolute bottom-0 left-0 w-full px-container-padding py-6 bg-gradient-to-t from-surface via-surface to-transparent pt-12 shrink-0">
-<button class="w-full h-[56px] bg-primary text-on-primary rounded-full flex items-center justify-center gap-2 hover:opacity-95 active:scale-[0.98] transition-all shadow-lg shadow-primary/20" onclick="saveNewFood()">
+<button class="w-full h-[56px] bg-primary text-on-primary rounded-full flex items-center justify-center gap-2 hover:opacity-95 active:scale-[0.98] transition-all shadow-lg shadow-primary/20" id="save-new-food-btn">
 <span class="font-label-md text-label-md text-[16px]">Besini Kaydet</span>
 <span class="material-symbols-outlined text-[20px]">check_circle</span>
 </button>

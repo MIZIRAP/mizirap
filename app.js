@@ -8,6 +8,7 @@ import { initFinance, clearFinance } from "./finance.js";
 import { initWater, clearWater } from "./water.js";
 import { initBooks, clearBooks } from "./books.js";
 import { initProfile } from "./profile.js";
+import { initCalories, clearCalories } from "./calories.js";
 
 // ---------- DOM referansları ----------
 const authScreen = document.getElementById("auth-screen");
@@ -49,6 +50,7 @@ onAuthStateChanged(auth, async (user) => {
             initWater(user.uid, (waterStats) => {
                 updateDashboardWater(waterStats);
             });
+            initCalories(user.uid);
             
             initBooks(user.uid, (books) => {
                 updateDashboardBooks(books);
@@ -88,4 +90,5 @@ document.addEventListener("click", (e) => {
     if(target) {
         target.classList.remove("hidden");
     }
-});
+
+
