@@ -721,5 +721,38 @@ export function renderFinanceDetail() {
             `;
         }).join('');
     }
+
+    // Group Expenses by Payment Method
+    const paymentListEl = document.getElementById('fd-payment-list');
+    if (paymentListEl) {
+        let pmSums = {};
+        expenses.forEach(tx => {
+            if(!pmSums[tx.paymentMethodId]) pmSums[tx.paymentMethodId] = 0;
+            pmSums[tx.paymentMethodId] += parseFloat(tx.amount || 0);
+        });
+        
+        const sortedPmIds = Object.keys(pmSums).sort((a,b) => pmSums[b] - pmSums[a]);
+        
+        if (sortedPmIds.length === 0) {
+            paymentListEl.innerHTML = '<div class="text-center text-sm text-on-surface-variant italic py-2">Veri yok</div>';
+        } else {
+            paymentListEl.innerHTML = sortedPmIds.map((pmId) => {
+                const amount = pmSums[pmId];
+                const pm = financePaymentMethods.find(p => p.id === pmId) || { name: 'Bilinmiyor', icon: 'payments' };
+                return `
+                <div class="flex items-center justify-between p-3 rounded-2xl hover:bg-surface-container-low transition-colors active:scale-98">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+                            <span class="material-symbols-outlined text-primary">${pm.icon}</span>
+                        </div>
+                        <p class="font-body-lg text-body-lg">${pm.name}</p>
+                    </div>
+                    <p class="font-body-lg text-body-lg font-bold">${tlFormat.format(amount)}</p>
+                </div>
+                `;
+            }).join('');
+        }
+    }
 }
 window.renderFinanceDetail = renderFinanceDetail;
+
