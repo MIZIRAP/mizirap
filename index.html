@@ -349,7 +349,7 @@
         </header>
 
         <!-- Main Content Area -->
-        <main class="flex-1 overflow-y-auto px-[20px] pb-[160px] md:pb-[140px] max-w-2xl mx-auto w-full flex flex-col gap-card-gap" id="workout-main-content">
+        <main class="flex-1 overflow-y-auto px-[20px] pb-[40px] max-w-2xl mx-auto w-full flex flex-col gap-card-gap" id="workout-main-content">
             <!-- Header Spacer for Mobile -->
             <div class="h-6 md:hidden"></div>
             
@@ -386,16 +386,16 @@
             <div class="flex flex-col gap-card-gap" id="workout-exercises-container">
                 <!-- Exercises Go Here -->
             </div>
+            
+            <!-- Save Button Area -->
+            <div class="w-full flex justify-center mt-4">
+                <button class="w-full max-w-md bg-primary text-on-primary font-headline-sm text-headline-sm py-4 rounded-xl shadow-sm active:scale-98 transition-transform flex items-center justify-center gap-2" id="workout-save-btn">
+                    <span class="material-symbols-outlined">check_circle</span>
+                    Bugünün Antrenmanını Kaydet
+                </button>
+            </div>
         </main>
-        
-        <!-- Floating Action Area (Save Button) -->
-        <div class="fixed bottom-20 md:bottom-8 left-0 right-0 px-container-padding flex justify-center z-40 pointer-events-none">
-            <button class="pointer-events-auto w-full max-w-md bg-primary text-on-primary font-headline-sm text-headline-sm py-4 rounded-xl shadow-[0px_4px_20px_rgba(0,0,0,0.1)] active:scale-98 transition-transform flex items-center justify-center gap-2" id="workout-save-btn">
-                <span class="material-symbols-outlined">check_circle</span>
-                Bugünün Antrenmanını Kaydet
-            </button>
-        </div>
-    </section>
+            </section>
 
     <!-- Edit Workout Template View -->
     <section id="view-edit-workout-template" class="view hidden bg-background text-on-background antialiased min-h-screen flex flex-col items-center pb-[100px]">
@@ -456,6 +456,14 @@
                     </button>
                 </div>
             </div>
+            
+            <!-- Save Button Area -->
+            <div class="w-full flex justify-center mt-4">
+                <button class="w-full max-w-md bg-primary text-on-primary font-headline-sm text-headline-sm py-4 rounded-xl shadow-sm active:scale-98 transition-transform flex items-center justify-center gap-2" id="workout-save-btn">
+                    <span class="material-symbols-outlined">check_circle</span>
+                    Bugünün Antrenmanını Kaydet
+                </button>
+            </div>
         </main>
     </section>
     
@@ -506,6 +514,14 @@
                     </div>
                 </section>
 
+            </div>
+            
+            <!-- Save Button Area -->
+            <div class="w-full flex justify-center mt-4">
+                <button class="w-full max-w-md bg-primary text-on-primary font-headline-sm text-headline-sm py-4 rounded-xl shadow-sm active:scale-98 transition-transform flex items-center justify-center gap-2" id="workout-save-btn">
+                    <span class="material-symbols-outlined">check_circle</span>
+                    Bugünün Antrenmanını Kaydet
+                </button>
             </div>
         </main>
     </section>
@@ -794,6 +810,14 @@
                 <section class="flex flex-col gap-card-gap" id="library-food-list">
                     <!-- Foods will be rendered here via JS -->
                 </section>
+            </div>
+            
+            <!-- Save Button Area -->
+            <div class="w-full flex justify-center mt-4">
+                <button class="w-full max-w-md bg-primary text-on-primary font-headline-sm text-headline-sm py-4 rounded-xl shadow-sm active:scale-98 transition-transform flex items-center justify-center gap-2" id="workout-save-btn">
+                    <span class="material-symbols-outlined">check_circle</span>
+                    Bugünün Antrenmanını Kaydet
+                </button>
             </div>
         </main>
     </section>
