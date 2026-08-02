@@ -651,12 +651,12 @@ export function renderFinanceDetail() {
     const tlFormatNoSymbol = new Intl.NumberFormat('tr-TR', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
     
     netTotalEl.textContent = (netTotal >= 0 ? '+' : '') + tlFormat.format(netTotal);
-    netTotalEl.className = \`font-display-lg text-display-lg \${netTotal >= 0 ? 'text-primary' : 'text-error'}\`;
+    netTotalEl.className = `font-display-lg text-display-lg ${netTotal >= 0 ? 'text-primary' : 'text-error'}`;
     
     incomeTotalEl.textContent = tlFormatNoSymbol.format(totalIncome) + ' ₺';
     expenseTotalEl.textContent = tlFormatNoSymbol.format(totalExpense) + ' ₺';
     
-    incomeCountEl.textContent = \`\${incomes.length} Kayıt\`;
+    incomeCountEl.textContent = `${incomes.length} Kayıt`;
     
     // Render Incomes
     if(incomes.length === 0) {
@@ -664,20 +664,20 @@ export function renderFinanceDetail() {
     } else {
         incomeListEl.innerHTML = incomes.map(tx => {
             const pm = financePaymentMethods.find(p => p.id === tx.paymentMethodId) || { name: 'Genel', icon: 'payments' };
-            return \`
+            return `
             <div class="bg-surface-container-lowest p-4 rounded-2xl flex items-center justify-between custom-shadow border-l-4 border-primary mb-3 active:scale-98 transition-transform">
                 <div class="flex items-center gap-4">
                     <div class="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
-                        <span class="material-symbols-outlined text-primary">\${pm.icon}</span>
+                        <span class="material-symbols-outlined text-primary">${pm.icon}</span>
                     </div>
                     <div>
-                        <p class="font-body-lg text-body-lg font-semibold">\${tx.title}</p>
-                        <p class="font-label-sm text-label-sm text-on-surface-variant">\${pm.name}</p>
+                        <p class="font-body-lg text-body-lg font-semibold">${tx.title}</p>
+                        <p class="font-label-sm text-label-sm text-on-surface-variant">${pm.name}</p>
                     </div>
                 </div>
-                <p class="font-headline-sm text-headline-sm text-primary">\${tlFormat.format(tx.amount)}</p>
+                <p class="font-headline-sm text-headline-sm text-primary">${tlFormat.format(tx.amount)}</p>
             </div>
-            \`;
+            `;
         }).join('');
     }
     
@@ -689,7 +689,7 @@ export function renderFinanceDetail() {
     });
     
     const sortedCatIds = Object.keys(categorySums).sort((a,b) => categorySums[b] - categorySums[a]);
-    expenseCountEl.textContent = \`\${sortedCatIds.length} Kategori\`;
+    expenseCountEl.textContent = `${sortedCatIds.length} Kategori`;
     
     if(sortedCatIds.length === 0) {
         expenseListEl.innerHTML = '<div class="text-center text-sm text-on-surface-variant italic py-2">Henüz gider yok</div>';
@@ -700,7 +700,7 @@ export function renderFinanceDetail() {
         const topAmount = categorySums[topCatId];
         const topPercentage = Math.round((topAmount / totalExpense) * 100);
         
-        insightTextEl.textContent = \`\${topCat.name}, toplam harcamalarınızın %\${topPercentage}'ini oluşturuyor.\`;
+        insightTextEl.textContent = `${topCat.name}, toplam harcamalarınızın %${topPercentage}'ini oluşturuyor.`;
         
         const colors = ['tertiary', 'secondary', 'primary', 'error'];
         
@@ -708,17 +708,17 @@ export function renderFinanceDetail() {
             const amount = categorySums[catId];
             const cat = financeCategories.find(c => c.id === catId) || { name: 'Bilinmiyor', icon: 'more_horiz' };
             const cColor = colors[index % colors.length];
-            return \`
+            return `
             <div class="flex items-center justify-between p-3 rounded-2xl hover:bg-surface-container-low transition-colors active:scale-98">
                 <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-full bg-\${cColor}-fixed-dim/30 flex items-center justify-center">
-                        <span class="material-symbols-outlined text-\${cColor}">\${cat.icon}</span>
+                    <div class="w-10 h-10 rounded-full bg-${cColor}-fixed-dim/30 flex items-center justify-center">
+                        <span class="material-symbols-outlined text-${cColor}">${cat.icon}</span>
                     </div>
-                    <p class="font-body-lg text-body-lg">\${cat.name}</p>
+                    <p class="font-body-lg text-body-lg">${cat.name}</p>
                 </div>
-                <p class="font-body-lg text-body-lg font-bold">\${tlFormat.format(amount)}</p>
+                <p class="font-body-lg text-body-lg font-bold">${tlFormat.format(amount)}</p>
             </div>
-            \`;
+            `;
         }).join('');
     }
 }
