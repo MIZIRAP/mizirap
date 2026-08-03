@@ -36,11 +36,17 @@ async function loadProfile() {
             if (data.photoUrl) {
                 currentPhotoUrl = data.photoUrl;
                 updateAllProfileImages(currentPhotoUrl);
+            } else if (auth.currentUser && auth.currentUser.photoURL) {
+                currentPhotoUrl = auth.currentUser.photoURL;
+                updateAllProfileImages(currentPhotoUrl);
             }
         } else {
-
             // Default to Auth display name if profile doc doesn't exist
             if (nameEl) nameEl.value = (auth.currentUser ? auth.currentUser.displayName : "") || "";
+            if (auth.currentUser && auth.currentUser.photoURL) {
+                currentPhotoUrl = auth.currentUser.photoURL;
+                updateAllProfileImages(currentPhotoUrl);
+            }
         }
     } catch (err) {
         console.error("Error loading profile:", err);
