@@ -17,7 +17,8 @@ function turkceHataMesaji(code) {
     "auth/popup-closed-by-user": "Giriş işlemi iptal edildi.",
     "auth/cancelled-popup-request": "Zaten bir giriş penceresi açık.",
     "auth/operation-not-allowed": "Google girişi aktif değil (Firebase panelinden açın).",
-    "auth/network-request-failed": "Ağ bağlantısı hatası, internetinizi kontrol edin."
+    "auth/network-request-failed": "Ağ bağlantısı hatası, internetinizi kontrol edin.",
+    "auth/unauthorized-domain": "Bu alan adı yetkisiz. Firebase panelinden yetkilendirin."
   };
   return map[code] || "Bir hata oluştu (" + code + "), tekrar dener misin?";
 }
