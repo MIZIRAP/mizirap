@@ -1,5 +1,9 @@
-export const tl = (n) => new Intl.NumberFormat("tr-TR", { style: "currency", currency: "TRY" }).format(n);
-export const fmtDate = (d) => d ? new Date(d).toLocaleDateString("tr-TR") : "";
+export const formatCurrency = (n) => new Intl.NumberFormat("tr-TR", { style: "currency", currency: "TRY" }).format(n);
+export const formatDate = (d, options = {}) => {
+    if (!d) return "";
+    const dateObj = d.toDate ? d.toDate() : new Date(d);
+    return dateObj.toLocaleDateString("tr-TR", options);
+};
 export function escapeHtml(str) {
   const div = document.createElement("div");
   div.textContent = str;

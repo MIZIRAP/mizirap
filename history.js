@@ -1,3 +1,4 @@
+import { formatDate, formatCurrency } from "./utils.js";
 import { db } from "./firebase-config.js";
 import { collection, query, orderBy, limit, onSnapshot } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
 import { registerListener } from "./listenerManager.js";
@@ -65,7 +66,7 @@ function renderHistory() {
         const dateObj = doc.createdAt.toDate ? doc.createdAt.toDate() : new Date(doc.createdAt);
         if(isNaN(dateObj)) return; 
         
-        const dateKey = dateObj.toLocaleDateString("tr-TR"); 
+        const dateKey = formatDate(dateObj); 
 
         if(!grouped[dateKey]) {
             grouped[dateKey] = {
@@ -111,7 +112,7 @@ function renderHistory() {
     const todayStr = new Date().toLocaleDateString("tr-TR");
     const yesterday = new Date();
     yesterday.setDate(yesterday.getDate() - 1);
-    const yesterdayStr = yesterday.toLocaleDateString("tr-TR");
+    const yesterdayStr = formatDate(yesterday);
 
     sortedKeys.forEach((key, index) => {
         const data = grouped[key];
@@ -121,9 +122,9 @@ function renderHistory() {
         let formattedDate = data.dateObj.toLocaleDateString('tr-TR', options);
         
         if (key === todayStr) {
-            title = "Bugün, " + data.dateObj.toLocaleDateString('tr-TR', { day: 'numeric', month: 'long' });
+            title = "Bugün, " + data.formatDate(dateObj, { day: 'numeric', month: 'long' });
         } else if (key === yesterdayStr) {
-            title = "Dün, " + data.dateObj.toLocaleDateString('tr-TR', { day: 'numeric', month: 'long' });
+            title = "Dün, " + data.formatDate(dateObj, { day: 'numeric', month: 'long' });
         } else {
             title = formattedDate;
         }

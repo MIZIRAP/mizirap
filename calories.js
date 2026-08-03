@@ -706,15 +706,12 @@ function renderWeeklyChart() {
         const div = document.createElement("div");
         div.className = "flex flex-col items-center gap-2 w-[14%] group relative";
         
-        let barClass = "bg-surface-variant group-hover:bg-primary-fixed";
+        let barClass = "bg-primary/70 group-hover:bg-primary/90";
         let textClass = "text-outline";
         
         if(day.isToday) {
-            barClass = "bg-primary-container group-hover:bg-primary";
+            barClass = "bg-primary group-hover:bg-primary/90";
             textClass = "text-primary font-bold";
-        }
-        if(day.amount >= dailyCalorieGoal && !day.isToday) {
-            barClass = "bg-primary group-hover:opacity-80";
         }
 
         div.innerHTML = `

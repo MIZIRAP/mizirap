@@ -1,4 +1,5 @@
 import { auth, db } from "./firebase-config.js";
+import { formatDate, formatCurrency } from "./utils.js";
 import { collection, doc, addDoc, setDoc, updateDoc, deleteDoc, getDocs, query, orderBy, limit, serverTimestamp, onSnapshot, where } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
 import { registerListener } from "./listenerManager.js";
 import { validatePositiveNumber } from "./utils.js";
@@ -319,21 +320,20 @@ function renderTransactions() {
     }
 
     // Format balance
-    const tlFormat = new Intl.NumberFormat('tr-TR', { style: 'currency', currency: 'TRY' });
-    if(balanceEl) {
-        balanceEl.textContent = tlFormat.format(totalBalance);
+        if(balanceEl) {
+        balanceEl.textContent = formatCurrency(totalBalance);
     }
     
     if(trendEl) {
         if(currentMonthBalance > 0) {
             trendEl.innerHTML = `
                 <span class="material-symbols-outlined text-primary bg-primary-container rounded-full p-1 text-sm" style="font-variation-settings: 'FILL' 1;">trending_up</span>
-                <span class="font-body-md text-body-md text-primary">+${tlFormat.format(currentMonthBalance)} (Bu Ay)</span>
+                <span class="font-body-md text-body-md text-primary">+${formatCurrency(currentMonthBalance)} (Bu Ay)</span>
             `;
         } else if (currentMonthBalance < 0) {
             trendEl.innerHTML = `
                 <span class="material-symbols-outlined text-error bg-error-container rounded-full p-1 text-sm" style="font-variation-settings: 'FILL' 1;">trending_down</span>
-                <span class="font-body-md text-body-md text-error">${tlFormat.format(currentMonthBalance)} (Bu Ay)</span>
+                <span class="font-body-md text-body-md text-error">${formatCurrency(currentMonthBalance)} (Bu Ay)</span>
             `;
         } else {
             trendEl.innerHTML = `
@@ -358,10 +358,10 @@ function renderTransactions() {
         
         const isIncome = tx.type === 'income';
         const sign = isIncome ? "+" : "-";
-        const valStr = tlFormat.format(tx.amount);
+        const valStr = formatCurrency(tx.amount);
         
         const dateObj = new Date(tx.dateStr);
-        const dateFormatted = dateObj.toLocaleDateString('tr-TR', { day: 'numeric', month: 'long' });
+        const dateFormatted = formatDate(dateObj, { day: 'numeric', month: 'long' });
         
         // Dynamic colors based on type
         const iconBg = isIncome ? 'bg-primary-container' : 'bg-surface-container-high';
@@ -774,10 +774,9 @@ export function renderFinanceDetail() {
     const totalExpense = expenses.reduce((sum, tx) => sum + parseFloat(tx.amount || 0), 0);
     const netTotal = totalIncome - totalExpense;
     
-    const tlFormat = new Intl.NumberFormat('tr-TR', { style: 'currency', currency: 'TRY' });
-    const tlFormatNoSymbol = new Intl.NumberFormat('tr-TR', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+        const tlFormatNoSymbol = new Intl.NumberFormat('tr-TR', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
     
-    netTotalEl.textContent = (netTotal >= 0 ? '+' : '') + tlFormat.format(netTotal);
+    netTotalEl.textContent = (netTotal >= 0 ? '+' : '') + formatCurrency(netTotal);
     netTotalEl.className = `font-display-lg text-display-lg ${netTotal >= 0 ? 'text-primary' : 'text-error'}`;
     
     incomeTotalEl.textContent = tlFormatNoSymbol.format(totalIncome) + ' ₺';
@@ -802,7 +801,7 @@ export function renderFinanceDetail() {
                         <p class="font-label-sm text-label-sm text-on-surface-variant">${pm.name}</p>
                     </div>
                 </div>
-                <p class="font-headline-sm text-headline-sm text-primary">${tlFormat.format(tx.amount)}</p>
+                <p class="font-headline-sm text-headline-sm text-primary">${formatCurrency(tx.amount)}</p>
             </div>
             `;
         }).join('');
@@ -843,7 +842,7 @@ export function renderFinanceDetail() {
                     </div>
                     <p class="font-body-lg text-body-lg">${cat.name}</p>
                 </div>
-                <p class="font-body-lg text-body-lg font-bold">${tlFormat.format(amount)}</p>
+                <p class="font-body-lg text-body-lg font-bold">${formatCurrency(amount)}</p>
             </div>
             `;
         }).join('');
@@ -874,7 +873,7 @@ export function renderFinanceDetail() {
                         </div>
                         <p class="font-body-lg text-body-lg">${pm.name}</p>
                     </div>
-                    <p class="font-body-lg text-body-lg font-bold">${tlFormat.format(amount)}</p>
+                    <p class="font-body-lg text-body-lg font-bold">${formatCurrency(amount)}</p>
                 </div>
                 `;
             }).join('');

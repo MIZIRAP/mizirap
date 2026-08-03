@@ -1,4 +1,5 @@
 import { auth, db } from "./firebase-config.js";
+import { formatDate, formatCurrency } from "./utils.js";
 import { collection, doc, addDoc, setDoc, getDocs, getDoc, query, orderBy, limit, serverTimestamp, where, onSnapshot } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
 import { escapeHtml } from "./utils.js";
 import { registerListener } from "./listenerManager.js";
@@ -293,7 +294,7 @@ function renderExercises(day, lastLog, currentLog) {
     if(lastSessionDateEl) {
         if (lastLog) {
             const d = new Date(lastLog.dateStr);
-            const formatted = d.toLocaleDateString('tr-TR', { day: 'numeric', month: 'long' });
+            const formatted = formatDate(d, { day: 'numeric', month: 'long' });
             lastSessionDateEl.textContent = `Son ${day.name} günü: ${formatted}`;
         } else {
             lastSessionDateEl.textContent = "Daha önce kayıt yok";
@@ -344,11 +345,11 @@ function renderExercises(day, lastLog, currentLog) {
         if (bestLastSet && bestCurrSet && bestLastSet.weight && bestCurrSet.weight) {
             const diff = parseFloat(bestCurrSet.weight) - parseFloat(bestLastSet.weight);
             if (diff > 0) {
-                diffBadgeHTML = `<span class="bg-primary-container text-on-primary-container font-label-sm text-label-sm px-2 py-1 rounded">+${diff}kg</span>`;
+                diffBadgeHTML = `<span class="bg-primary-container text-on-primary-container font-label-sm text-label-sm px-1 py-1 rounded inline-block min-w-[48px] text-center">+${diff} kg</span>`;
             } else if (diff < 0) {
-                diffBadgeHTML = `<span class="bg-error-container text-on-error-container font-label-sm text-label-sm px-2 py-1 rounded">${diff}kg</span>`;
+                diffBadgeHTML = `<span class="bg-error-container text-on-error-container font-label-sm text-label-sm px-1 py-1 rounded inline-block min-w-[48px] text-center">${diff} kg</span>`;
             } else {
-                diffBadgeHTML = `<span class="bg-surface-container-high text-on-surface-variant font-label-sm text-label-sm px-2 py-1 rounded">0kg</span>`;
+                diffBadgeHTML = `<span class="bg-surface-container-high text-on-surface-variant font-label-sm text-label-sm px-1 py-1 rounded inline-block min-w-[48px] text-center">0.0 kg</span>`;
             }
         }
         
@@ -606,7 +607,7 @@ window.openExerciseHistory = async function(exId, exName) {
         
         exLogs.forEach(log => {
             const d = new Date(log.dateStr);
-            const formatted = d.toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', year: 'numeric' });
+            const formatted = formatDate(d, { day: 'numeric', month: 'long', year: 'numeric' });
             
             const sets = log.exercises[exId];
             let setsHtml = '';
@@ -850,7 +851,7 @@ window.openSplitSelectionModal = function() {
                 let subTitle = "Kayıtlı Program";
                 if (split.createdAt && split.createdAt.toDate) {
                     const d = split.createdAt.toDate();
-                    subTitle = `Eklenme: ${d.toLocaleDateString('tr-TR')}`;
+                    subTitle = `Eklenme: ${formatDate(d)}`;
                 }
                 
                 btn.innerHTML = `
@@ -1018,13 +1019,13 @@ window.openExerciseHistory = async function(triggerExId, exName) {
             if(diff > 0) {
                 trendBadgeEl.innerHTML = `
                     <span class="material-symbols-outlined text-primary text-[14px]" data-icon="trending_up">trending_up</span>
-                    <span class="font-label-sm text-label-sm text-primary">+${diff.toFixed(1)}kg</span>
+                    <span class="font-label-sm text-label-sm text-primary inline-block min-w-[48px] text-right">+${diff.toFixed(1)} kg</span>
                 `;
                 trendBadgeEl.className = "bg-primary-container bg-opacity-20 rounded-full px-3 py-1 flex items-center gap-1";
             } else if (diff < 0) {
                 trendBadgeEl.innerHTML = `
                     <span class="material-symbols-outlined text-error text-[14px]" data-icon="trending_down">trending_down</span>
-                    <span class="font-label-sm text-label-sm text-error">${diff.toFixed(1)}kg</span>
+                    <span class="font-label-sm text-label-sm text-error inline-block min-w-[48px] text-right">${diff.toFixed(1)} kg</span>
                 `;
                 trendBadgeEl.className = "bg-error-container bg-opacity-20 rounded-full px-3 py-1 flex items-center gap-1";
             } else {
@@ -1048,7 +1049,7 @@ window.openExerciseHistory = async function(triggerExId, exName) {
         
         recordsToDisplay.forEach((rec, idx) => {
             const dateObj = new Date(rec.dateStr);
-            const dateFormatted = dateObj.toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', year: 'numeric' });
+            const dateFormatted = formatDate(dateObj, { day: 'numeric', month: 'long', year: 'numeric' });
             
             // Format best set like "4 x 8 x 85.0 kg" -> actually users want "Sets x Reps x Kg". 
             // In the UI mockup it is "4 x 8 x 85.0 kg". Let's show "Total Sets x Best Reps x Best Kg" or just "Best Set"
@@ -1061,9 +1062,9 @@ window.openExerciseHistory = async function(triggerExId, exName) {
                 const prevRec = historyRecords[idx+1];
                 const diff = rec.maxWeight - prevRec.maxWeight;
                 if(diff > 0) {
-                    diffBadge = `<div class="bg-primary-container bg-opacity-10 text-primary font-label-md text-label-md px-2 py-1 rounded">+${diff.toFixed(1)}kg</div>`;
+                    diffBadge = `<div class="bg-primary-container bg-opacity-10 text-primary font-label-md text-label-md px-1 py-1 rounded inline-block min-w-[56px] text-center">+${diff.toFixed(1)} kg</div>`;
                 } else if(diff < 0) {
-                    diffBadge = `<div class="bg-error-container bg-opacity-10 text-error font-label-md text-label-md px-2 py-1 rounded">${diff.toFixed(1)}kg</div>`;
+                    diffBadge = `<div class="bg-error-container bg-opacity-10 text-error font-label-md text-label-md px-1 py-1 rounded inline-block min-w-[56px] text-center">${diff.toFixed(1)} kg</div>`;
                 }
             }
             
@@ -1134,7 +1135,7 @@ window.openExerciseHistory = async function(triggerExId, exName) {
                 pointsHtml += `<div class="w-2 h-2 rounded-full bg-primary border-2 border-surface-container-lowest absolute bottom-[${100-y}%] left-[${x}%] transform -translate-x-1/2 translate-y-1/2"></div>`;
                 
                 const dObj = new Date(d.dateStr);
-                const shortDate = dObj.toLocaleDateString('tr-TR', { day: 'numeric', month: 'short' });
+                const shortDate = formatDate(dObj, { day: 'numeric', month: 'short' });
                 xLabelsHtml += `<span>${shortDate}</span>`;
             });
             
