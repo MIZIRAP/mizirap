@@ -118,17 +118,18 @@
     <!-- ================= ÖZET (Dashboard) ================= -->
     <section id="view-dashboard" class="view active">
         <!-- TopAppBar -->
-        <header class="flex justify-between items-center px-container-padding py-element-spacing w-full sticky top-0 z-40 bg-paper flat no shadows">
-            <div class="flex items-center gap-4">
-                <span class="material-symbols-outlined text-green" style="font-variation-settings: 'FILL' 1;">menu</span>
-                <h1 class="text-[24px] font-bold text-green tracking-tight">My Life</h1>
-            </div>
-            <div class="flex items-center gap-2">
-                <button class="nav-tab p-2 text-green hover:bg-green/10 rounded-full transition-all flex items-center justify-center" data-target="view-history">
-                    <span class="material-symbols-outlined text-[24px]">history</span>
-                </button>
-                <div class="nav-tab w-10 h-10 rounded-full overflow-hidden bg-white border border-outline-variant cursor-pointer" data-target="view-profile">
-                    <img alt="User Profile" class="user-profile-img w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD6pbBf1WbDO9xMS_XZVPq3Hat-IK7RVbQRVC5-9p8PWsv7SHG_Yojo0BjpUQAjhbGfBVWyXpGohNDbHg-yOrIOtX0zvzHvWJ0XjCLkLb4jDyzHW1tUnhdG4g69-o5TjKC7k0rOwSaXpzWjKDRZIhOzP1obI9IDh1PtPTw3cqmnIhUiMtmYi4lnBR1JB31WEtk7J5y65lOTNGEai5pKftjSXWP6cklloZAmRN4fheHJAMy0AjKzxoBO">
+        <header class="w-full top-0 sticky bg-background dark:bg-background flat no shadows transition-opacity duration-200 z-40 max-w-md mx-auto">
+            <div class="flex items-center justify-between px-container-padding py-4 w-full">
+                <div class="flex items-center gap-3">
+                    <h1 class="font-headline-md text-headline-md text-primary dark:text-primary-fixed-dim font-bold tracking-tight">My Life</h1>
+                </div>
+                <div class="flex items-center gap-2">
+                    <button class="nav-tab p-2 text-primary hover:bg-primary/10 rounded-full transition-all flex items-center justify-center" data-target="view-history">
+                        <span class="material-symbols-outlined text-[24px]">history</span>
+                    </button>
+                    <div class="nav-tab w-10 h-10 rounded-full overflow-hidden bg-white border border-outline-variant cursor-pointer" data-target="view-profile">
+                        <img alt="User Profile" class="user-profile-img w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD6pbBf1WbDO9xMS_XZVPq3Hat-IK7RVbQRVC5-9p8PWsv7SHG_Yojo0BjpUQAjhbGfBVWyXpGohNDbHg-yOrIOtX0zvzHvWJ0XjCLkLb4jDyzHW1tUnhdG4g69-o5TjKC7k0rOwSaXpzWjKDRZIhOzP1obI9IDh1PtPTw3cqmnIhUiMtmYi4lnBR1JB31WEtk7J5y65lOTNGEai5pKftjSXWP6cklloZAmRN4fheHJAMy0AjKzxoBO">
+                    </div>
                 </div>
             </div>
         </header>
@@ -275,7 +276,7 @@
             <div class="flex items-center justify-between px-container-padding py-4 w-full">
                 <div class="flex items-center gap-3">
                     <button class="nav-tab hover:opacity-80 p-2 -ml-2 rounded-full focus:outline-none focus:ring-2 focus:ring-primary" data-target="view-dashboard">
-                        <span class="material-symbols-outlined text-primary dark:text-primary-fixed-dim" data-icon="arrow_back" data-weight="regular">arrow_back</span>
+                        <span class="material-symbols-outlined text-primary dark:text-primary-fixed-dim" style="font-variation-settings: \'FILL\' 0;">arrow_back</span>
                     </button>
                     <h1 class="font-headline-md text-headline-md text-primary dark:text-primary-fixed-dim font-bold tracking-tight">Alışveriş Listesi</h1>
                 </div>
@@ -768,9 +769,6 @@
                     </button>
                     <h1 class="font-headline-md text-headline-md text-primary dark:text-primary-fixed-dim font-bold tracking-tight">Su Takibi</h1>
                 </div>
-                <button class="hover:opacity-80 p-2 -mr-2 rounded-full focus:outline-none focus:ring-2 focus:ring-primary">
-                    <span class="material-symbols-outlined text-primary dark:text-primary-fixed-dim" data-icon="settings" data-weight="regular">settings</span>
-                </button>
             </div>
         </header>
 
@@ -883,13 +881,10 @@
             <div class="flex items-center justify-between px-container-padding py-4 w-full">
                 <div class="flex items-center gap-3">
                     <button class="nav-tab hover:opacity-80 p-2 -ml-2 rounded-full focus:outline-none focus:ring-2 focus:ring-primary" data-target="view-dashboard">
-                        <span class="material-symbols-outlined text-primary dark:text-primary-fixed-dim" data-icon="arrow_back" data-weight="regular">arrow_back</span>
+                        <span class="material-symbols-outlined text-primary dark:text-primary-fixed-dim" style="font-variation-settings: 'FILL' 0;">arrow_back</span>
                     </button>
                     <h1 class="font-headline-md text-headline-md text-primary dark:text-primary-fixed-dim font-bold tracking-tight">Geçmiş</h1>
                 </div>
-                <button class="nav-tab hover:opacity-80 p-2 -mr-2 rounded-full focus:outline-none focus:ring-2 focus:ring-primary" data-target="view-profile">
-                    <span class="material-symbols-outlined text-primary dark:text-primary-fixed-dim" data-icon="settings" data-weight="regular">settings</span>
-                </button>
             </div>
         </header>
 
@@ -909,13 +904,10 @@
             <div class="flex items-center justify-between px-container-padding py-4 w-full">
                 <div class="flex items-center gap-3">
                     <button class="nav-tab hover:opacity-80 p-2 -ml-2 rounded-full focus:outline-none focus:ring-2 focus:ring-primary" data-target="view-dashboard">
-                        <span class="material-symbols-outlined text-primary dark:text-primary-fixed-dim" data-icon="arrow_back" data-weight="regular">arrow_back</span>
+                        <span class="material-symbols-outlined text-primary dark:text-primary-fixed-dim" style="font-variation-settings: 'FILL' 0;">arrow_back</span>
                     </button>
                     <h1 class="font-headline-md text-headline-md text-primary dark:text-primary-fixed-dim font-bold tracking-tight">Dizi / Film</h1>
                 </div>
-                <button class="nav-tab hover:opacity-80 p-2 -mr-2 rounded-full focus:outline-none focus:ring-2 focus:ring-primary" data-target="view-profile">
-                    <span class="material-symbols-outlined text-primary dark:text-primary-fixed-dim" data-icon="settings" data-weight="regular">settings</span>
-                </button>
             </div>
         </header>
 
@@ -1368,7 +1360,7 @@
             <div class="flex items-center justify-between px-container-padding py-4 w-full">
                 <div class="flex items-center gap-3">
                     <button class="nav-tab hover:opacity-80 p-2 -ml-2 rounded-full focus:outline-none focus:ring-2 focus:ring-primary" data-target="view-dashboard">
-                        <span class="material-symbols-outlined text-primary dark:text-primary-fixed-dim" data-icon="arrow_back" data-weight="regular">arrow_back</span>
+                        <span class="material-symbols-outlined text-primary dark:text-primary-fixed-dim" style="font-variation-settings: \'FILL\' 0;">arrow_back</span>
                     </button>
                     <h1 class="font-headline-md text-headline-md text-primary dark:text-primary-fixed-dim font-bold tracking-tight">Kalori Takibi</h1>
                 </div>
