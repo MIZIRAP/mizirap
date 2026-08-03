@@ -1,5 +1,6 @@
-import { db } from "./firebase-config.js";
+import { db, storage } from "./firebase-config.js";
 import { collection, doc, addDoc, updateDoc, deleteDoc, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+import { ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-storage.js";
 import { escapeHtml } from "./utils.js";
 
 let currentUid = null;
@@ -7,6 +8,7 @@ let currentStatusTab = 'watching'; // watching, watchlist, completed
 let movies = [];
 let unsubMovies = null;
 let dashboardCallback = null;
+let currentSelectedImageFile = null;
 
 let currentEditingId = null; // null for add, string for edit
 
@@ -61,6 +63,27 @@ function setupUI() {
     if (deleteBtn) {
         deleteBtn.addEventListener('click', deleteMovie);
     }
+
+    // Image Input
+    const imgInput = document.getElementById('movies-modal-image-input');
+    if (imgInput) {
+        imgInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                currentSelectedImageFile = file;
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const cover = document.getElementById('movies-modal-cover');
+                    cover.style.backgroundImage = `url('${e.target.result}')`;
+                    cover.style.backgroundSize = 'cover';
+                    cover.style.backgroundPosition = 'center';
+                    const letter = document.getElementById('movies-modal-cover-letter');
+                    if(letter) letter.style.display = 'none';
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    }
 }
 
 window.openMoviesModal = function(movieId) {
@@ -89,6 +112,17 @@ window.openMoviesModal = function(movieId) {
             titleInput.value = item.title || '';
             coverLetter.textContent = item.coverLetter || (item.title ? item.title.charAt(0).toUpperCase() : 'D');
             
+            const coverEl = document.getElementById('movies-modal-cover');
+            if (item.imageUrl) {
+                coverEl.style.backgroundImage = `url('${item.imageUrl}')`;
+                coverEl.style.backgroundSize = 'cover';
+                coverEl.style.backgroundPosition = 'center';
+                coverLetter.style.display = 'none';
+            } else {
+                coverEl.style.backgroundImage = 'none';
+                coverLetter.style.display = 'block';
+            }
+            
             if (item.type === 'movie') typeMovie.checked = true;
             else typeSeries.checked = true;
 
@@ -108,6 +142,10 @@ window.openMoviesModal = function(movieId) {
         let defaultTitle = searchInput && searchInput.value ? searchInput.value : '';
         titleInput.value = defaultTitle;
         coverLetter.textContent = defaultTitle ? defaultTitle.charAt(0).toUpperCase() : 'D';
+        coverLetter.style.display = 'block';
+        
+        const coverEl = document.getElementById('movies-modal-cover');
+        coverEl.style.backgroundImage = 'none';
         typeSeries.checked = true; // default
         statusWatching.checked = true;
         seasonInput.value = 1;
@@ -120,6 +158,10 @@ window.openMoviesModal = function(movieId) {
         // Clear search input for convenience
         if (searchInput) searchInput.value = '';
     }
+
+    currentSelectedImageFile = null;
+    const imgInput = document.getElementById('movies-modal-image-input');
+    if(imgInput) imgInput.value = '';
 
     window.toggleMovieType();
 
@@ -186,6 +228,16 @@ async function saveMovie() {
             data.episode = parseInt(episode) || 1;
         }
 
+        // Upload image if selected
+        if (currentSelectedImageFile) {
+            saveBtn.innerHTML = "Yükleniyor...";
+            const ext = currentSelectedImageFile.name.split('.').pop();
+            const filename = `movie_covers/${currentUid}_${Date.now()}.${ext}`;
+            const imageRef = ref(storage, filename);
+            await uploadBytes(imageRef, currentSelectedImageFile);
+            data.imageUrl = await getDownloadURL(imageRef);
+        }
+
         if (currentEditingId) {
             await updateDoc(doc(db, "users", currentUid, "movies", currentEditingId), data);
         } else {
@@ -198,6 +250,7 @@ async function saveMovie() {
         console.error("Dizi/Film kaydedilemedi:", e);
         alert("Kaydetme işlemi başarısız oldu.");
     } finally {
+        saveBtn.innerHTML = `<span class="material-symbols-outlined text-[18px]">check</span><span id="movies-modal-save-text">${currentEditingId ? 'Güncelle' : 'Kaydet'}</span>`;
         saveBtn.disabled = false;
     }
 }
