@@ -1,5 +1,5 @@
 import { auth } from "./firebase-config.js";
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, updateProfile } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, updateProfile, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
 
 const loginForm = document.getElementById("login-form");
 const registerForm = document.getElementById("register-form");
@@ -64,6 +64,21 @@ export function setupAuthUI() {
             try {
                 await signInWithEmailAndPassword(auth, email, password);
             } catch (err) {
+                loginError.textContent = turkceHataMesaji(err.code);
+            }
+        });
+    }
+
+    // Google Giriş
+    const googleBtn = document.getElementById("btn-google-login");
+    if(googleBtn) {
+        googleBtn.addEventListener("click", async () => {
+            loginError.textContent = "";
+            const provider = new GoogleAuthProvider();
+            try {
+                await signInWithPopup(auth, provider);
+            } catch (err) {
+                console.error("Google Auth Error", err);
                 loginError.textContent = turkceHataMesaji(err.code);
             }
         });

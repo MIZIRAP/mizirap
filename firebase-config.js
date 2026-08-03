@@ -1,6 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
 import { getAuth } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
-import { getFirestore } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+import { getFirestore, enableMultiTabIndexedDbPersistence } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
 import { getStorage } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-storage.js";
 
 export const firebaseConfig = {
@@ -15,4 +15,12 @@ export const firebaseConfig = {
 export const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 export const db = getFirestore(app);
+
+enableMultiTabIndexedDbPersistence(db).catch((err) => {
+    if (err.code == 'failed-precondition') {
+        console.warn("Offline persistence: Multiple tabs open, persistence can only be enabled in one tab at a time.");
+    } else if (err.code == 'unimplemented') {
+        console.warn("Offline persistence: The current browser does not support all of the features required to enable persistence.");
+    }
+});
 export const storage = getStorage(app);

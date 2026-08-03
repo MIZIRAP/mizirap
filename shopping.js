@@ -29,12 +29,18 @@ export function initShopping(uid) {
     const clearBtn = document.getElementById("clear-shopping-btn");
     if(clearBtn) {
         clearBtn.onclick = async () => {
-            if(confirm('Tüm listeyi temizlemek istediğinize emin misiniz?')) {
+            if(confirm('Tamamlanan ürünleri temizlemek istediğinize emin misiniz?')) {
                 const batch = writeBatch(db);
-                allShopping.forEach(item => {
+                let count = 0;
+                allShopping.filter(item => item.done).forEach(item => {
                     batch.delete(doc(db, "users", uid, "shoppingList", item.id));
+                    count++;
                 });
-                await batch.commit();
+                if (count > 0) {
+                    await batch.commit();
+                } else {
+                    alert('Silinecek tamamlanmış ürün bulunamadı.');
+                }
             }
         };
     }

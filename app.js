@@ -70,14 +70,10 @@ onAuthStateChanged(auth, async (user) => {
             alert("Giriş yapılırken bir hata oluştu: " + err.message);
         }
     } else {
-        // Test modunda direkt anonim olarak giriş yaptır (Kayıt ekranını atlamak için)
-        try {
-            await signInAnonymously(auth);
-            console.log("Anonim giriş başarılı (Test Modu)");
-        } catch (error) {
-            console.error("Anonim giriş hatası:", error);
-            alert("Test girişi sağlanamadı. Firebase Auth ayarlarından Anonymous/Misafir girişini açmanız gerekebilir.");
-        }
+        // Oturum açılmamışsa auth-screen zaten default olarak açıktır.
+        authScreen.classList.remove("hidden");
+        authScreen.classList.add("flex");
+        appScreen.classList.add("hidden");
     }
 });
 

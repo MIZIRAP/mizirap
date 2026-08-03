@@ -59,13 +59,39 @@ document.addEventListener("DOMContentLoaded", () => {
     
     const photoInput = document.getElementById('profile-photo-input');
     if (photoInput) {
-        photoInput.addEventListener('change', (e) => {
+        photoInput.addEventListener('change', async (e) => {
             const file = e.target.files[0];
             if (file) {
                 const reader = new FileReader();
-                reader.onload = (e) => {
-                    currentPhotoUrl = e.target.result;
-                    updateAllProfileImages(currentPhotoUrl);
+                reader.onload = function(e) {
+                    const img = new Image();
+                    img.onload = function() {
+                        const canvas = document.createElement('canvas');
+                        const MAX_WIDTH = 400;
+                        const MAX_HEIGHT = 400;
+                        let width = img.width;
+                        let height = img.height;
+
+                        if (width > height) {
+                            if (width > MAX_WIDTH) {
+                                height *= MAX_WIDTH / width;
+                                width = MAX_WIDTH;
+                            }
+                        } else {
+                            if (height > MAX_HEIGHT) {
+                                width *= MAX_HEIGHT / height;
+                                height = MAX_HEIGHT;
+                            }
+                        }
+                        
+                        canvas.width = width;
+                        canvas.height = height;
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0, width, height);
+                        currentPhotoUrl = canvas.toDataURL('image/jpeg', 0.8);
+                        updateAllProfileImages(currentPhotoUrl);
+                    };
+                    img.src = e.target.result;
                 };
                 reader.readAsDataURL(file);
             }
