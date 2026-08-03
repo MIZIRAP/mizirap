@@ -2076,12 +2076,12 @@
 
 
 <!-- Dizi/Film Modal -->
-<div id="movies-modal" class="fixed inset-0 z-[105] hidden items-end justify-center sm:items-center">
+<div id="movies-modal" class="fixed inset-0 z-[105] hidden items-end justify-center sm:items-center bg-inverse-surface/40 backdrop-blur-sm transition-opacity duration-300 opacity-0">
     <!-- Overlay -->
-    <div aria-hidden="true" class="absolute inset-0 bg-inverse-surface/40 animate-fade-in backdrop-blur-sm" onclick="window.closeMoviesModal()"></div>
+    <div aria-hidden="true" class="absolute inset-0" onclick="window.closeMoviesModal()"></div>
     
     <!-- Bottom Sheet / Modal -->
-    <div aria-labelledby="movies-modal-title" aria-modal="true" class="bg-surface-container-lowest w-full sm:w-[90%] sm:max-w-md rounded-t-[24px] sm:rounded-[24px] shadow-[0px_-4px_24px_rgba(0,0,0,0.06)] sm:shadow-[0px_8px_32px_rgba(0,0,0,0.08)] animate-slide-up overflow-hidden flex flex-col relative z-10" role="dialog">
+    <div aria-labelledby="movies-modal-title" aria-modal="true" class="bg-surface-container-lowest w-full sm:w-[90%] sm:max-w-md rounded-t-[24px] sm:rounded-[24px] shadow-[0px_-4px_24px_rgba(0,0,0,0.06)] sm:shadow-[0px_8px_32px_rgba(0,0,0,0.08)] transform translate-y-full transition-transform duration-300 overflow-hidden flex flex-col relative z-10 max-h-[90vh]" role="dialog">
         <!-- Drag Handle (Mobile only) -->
         <div class="w-full flex justify-center pt-3 pb-1 md:hidden">
             <div class="w-12 h-1.5 bg-outline-variant rounded-full"></div>
@@ -2096,7 +2096,7 @@
         </div>
         
         <!-- Content Area -->
-        <div class="px-container-padding py-6 flex flex-col gap-6">
+        <div class="px-container-padding py-6 flex flex-col gap-6 overflow-y-auto flex-1">
             <!-- Target Content Info -->
             <div class="flex items-center space-x-4">
                 <div class="w-16 h-24 rounded-lg overflow-hidden shrink-0 shadow-sm bg-primary/10 flex items-center justify-center" id="movies-modal-cover">

@@ -123,13 +123,25 @@ window.openMoviesModal = function(movieId) {
 
     window.toggleMovieType();
 
-    modal.classList.remove('hidden');
-    // slight delay for animation if needed, handled by css classes already
+    modal.classList.remove("hidden");
+    modal.classList.add("flex");
+    requestAnimationFrame(() => {
+        modal.classList.remove("opacity-0");
+        const panel = modal.querySelector("div[role='dialog']");
+        if(panel) panel.classList.remove("translate-y-full");
+    });
 };
 
 window.closeMoviesModal = function() {
     const modal = document.getElementById('movies-modal');
-    modal.classList.add('hidden');
+    if (!modal) return;
+    modal.classList.add("opacity-0");
+    const panel = modal.querySelector("div[role='dialog']");
+    if(panel) panel.classList.add("translate-y-full");
+    setTimeout(() => {
+        modal.classList.remove("flex");
+        modal.classList.add("hidden");
+    }, 300);
 };
 
 window.toggleMovieType = function() {
