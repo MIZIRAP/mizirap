@@ -450,25 +450,37 @@ function renderTransactions() {
         actionsDiv.appendChild(delBtn);
 
         div.innerHTML = `
-            <div class="flex items-center gap-4">
-                <div class="w-12 h-12 rounded-full ${iconBg} flex items-center justify-center">
-                    <span class="material-symbols-outlined ${iconColor}" style="font-variation-settings: 'FILL' 0;">${cat.icon}</span>
+            <div class="flex items-center gap-3 min-w-0 flex-1">
+                <div class="w-11 h-11 shrink-0 rounded-full ${iconBg} flex items-center justify-center">
+                    <span class="material-symbols-outlined ${iconColor} text-[20px]" style="font-variation-settings: 'FILL' 0;">${cat.icon}</span>
                 </div>
-                <div class="flex flex-col">
-                    <span class="font-label-md text-label-md text-on-surface">${tx.title}</span>
-                    <div class="flex items-center gap-2 mt-1">
-                        <span class="font-body-md text-body-md text-on-surface-variant text-xs">${cat.name}</span>
-                        <span class="text-on-surface-variant text-xs">•</span>
-                        <span class="${pmBadgeClass} text-[10px] font-bold px-2 py-0.5 rounded-lg border uppercase tracking-tight">${pm.type}</span>
-                    </div>
+                <div class="flex flex-col min-w-0">
+                    <span class="font-label-md text-label-md text-on-surface truncate">${tx.title}</span>
+                    <span class="font-body-md text-body-md text-on-surface-variant text-[11px] mt-0.5 truncate">${cat.name}</span>
                 </div>
             </div>
-            <div class="flex flex-col items-end pr-16">
-                <span class="font-label-md text-label-md ${valColor}">${sign}${valStr}</span>
-                <span class="font-label-sm text-label-sm text-on-surface-variant mt-1">${dateFormatted}</span>
+            <div class="flex flex-col items-end shrink-0 ml-2">
+                <span class="font-label-md text-label-md ${valColor} whitespace-nowrap">${sign}${valStr}</span>
+                <div class="flex items-center gap-1.5 mt-1">
+                    <span class="${pmBadgeClass} text-[9px] font-bold px-1.5 py-0.5 rounded border uppercase tracking-tight">${pm.type}</span>
+                    <span class="font-label-sm text-label-sm text-on-surface-variant text-[10px] whitespace-nowrap">${dateFormatted}</span>
+                </div>
+                <div class="flex items-center gap-0.5 mt-1.5">
+                    <button class="edit-tx-btn p-1 text-primary hover:bg-primary-container/20 rounded-full active:scale-95 transition-colors" data-id="${tx.id}">
+                        <span class="material-symbols-outlined text-[14px]">edit</span>
+                    </button>
+                    <button class="del-tx-btn p-1 text-error hover:bg-error-container/20 rounded-full active:scale-95 transition-colors" data-id="${tx.id}">
+                        <span class="material-symbols-outlined text-[14px]">delete</span>
+                    </button>
+                </div>
             </div>
         `;
-        div.appendChild(actionsDiv);
+        // Bind inline edit/delete buttons
+        const inlineEdit = div.querySelector('.edit-tx-btn');
+        const inlineDel = div.querySelector('.del-tx-btn');
+        if (inlineEdit) inlineEdit.onclick = editBtn.onclick;
+        if (inlineDel) inlineDel.onclick = delBtn.onclick;
+        
         list.appendChild(div);
     });
 }
