@@ -1,12 +1,13 @@
 import { auth } from "./firebase-config.js";
 import { onAuthStateChanged, signInAnonymously } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
 import { setupAuthUI } from "./auth.js";
-import { initDashboard, clearDashboard, updateDashboardWorkouts, updateDashboardFinance, updateDashboardWater, updateDashboardBooks } from "./dashboard.js";
+import { initDashboard, clearDashboard, updateDashboardWorkouts, updateDashboardFinance, updateDashboardWater, updateDashboardBooks, updateDashboardMovies } from "./dashboard.js";
 import { initShopping, clearShopping } from "./shopping.js";
 import { initWorkout, clearWorkout } from "./workout.js";
 import { initFinance, clearFinance } from "./finance.js";
 import { initWater, clearWater } from "./water.js";
 import { initBooks, clearBooks } from "./books.js";
+import { initMovies } from "./movies.js";
 import { initProfile } from "./profile.js";
 import { initCalories, clearCalories } from "./calories.js";
 import { initHistory, clearHistory } from "./history.js";
@@ -55,6 +56,10 @@ onAuthStateChanged(auth, async (user) => {
             
             initBooks(user.uid, (books) => {
                 updateDashboardBooks(books);
+            });
+            
+            initMovies(user.uid, (movies) => {
+                updateDashboardMovies(movies);
             });
             
             initProfile(user.uid);

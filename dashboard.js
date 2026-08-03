@@ -12,6 +12,7 @@ let currentWorkouts = [];
 let currentTxs = [];
 let currentWaterStats = { currentAmount: 0, dailyGoal: 2000 };
 let currentBooks = [];
+let currentMovies = [];
 
 export function initDashboard(uid) {
     const tasksRef = query(collection(db, "users", uid, "tasks"), orderBy("createdAt", "desc"));
@@ -60,6 +61,11 @@ export function updateDashboardBooks(books) {
     renderDashboard();
 }
 
+export function updateDashboardMovies(movies) {
+    currentMovies = movies;
+    renderDashboard();
+}
+
 function renderDashboard() {
     // Su Tüketimi
     const waterText = document.getElementById("dashboard-water-text");
@@ -90,6 +96,16 @@ function renderDashboard() {
         }
     }
     
+    // Dizi/Film
+    const dashMoviesText = document.getElementById("dashboard-movies-text");
+    const dashMoviesProg = document.getElementById("dashboard-movies-progress");
+    if (dashMoviesText && dashMoviesProg) {
+        const watchingMovies = currentMovies.filter(m => (m.status || 'watching') === 'watching');
+        dashMoviesText.innerHTML = `${watchingMovies.length} <span class="text-[12px] font-normal text-[var(--ink)]/60">izleniyor</span>`;
+        const percent = watchingMovies.length > 0 ? Math.min(100, watchingMovies.length * 10) : 0;
+        dashMoviesProg.style.width = `${percent}%`;
+    }
+
     // Spor
     const statWorkout = document.getElementById("stat-workout-split");
     if(statWorkout) statWorkout.textContent = window._miz_active_split_name || "Yapılmadı";

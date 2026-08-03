@@ -196,9 +196,9 @@
                     </div>
                     <div class="mt-4 flex flex-col gap-1">
                         <span class="text-[12px] font-medium text-ink/60 uppercase">Dizi / Film</span>
-                        <span class="text-[20px] font-semibold text-ink">2 <span class="text-[12px] font-normal text-ink/60">/ 5 bölüm</span></span>
+                        <span class="text-[20px] font-semibold text-ink" id="dashboard-movies-text">0 <span class="text-[12px] font-normal text-ink/60">izleniyor</span></span>
                         <div class="w-full h-1.5 bg-green/20 rounded-full mt-2 overflow-hidden">
-                            <div class="h-full bg-green rounded-full" style="width: 40%;"></div>
+                            <div id="dashboard-movies-progress" class="h-full bg-green rounded-full" style="width: 0%;"></div>
                         </div>
                     </div>
                 </div>
@@ -927,13 +927,37 @@
             </div>
         </header>
 
-        <main class="px-5 flex flex-col gap-4 max-w-md mx-auto mt-4">
-            
-            <div class="text-center text-ink/60 mt-10 p-6 bg-white rounded-card shadow-sm">
-                <span class="material-symbols-outlined text-[48px] text-green opacity-50 mb-4">movie</span>
-                <p>Bu özellik yapım aşamasındadır.</p>
-                <p class="text-sm mt-2">Yakında eklenecek!</p>
-            </div>
+        <main class="px-5 mt-4 max-w-md mx-auto">
+            <!-- Title & Quick Add -->
+            <section class="mb-6">
+                <div class="relative flex items-center gap-2 mb-6">
+                    <div class="relative flex-grow">
+                        <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-[20px]" data-icon="search">search</span>
+                        <input class="w-full pl-10 pr-4 py-3 bg-surface-container-low border border-outline-variant/30 rounded-xl text-body focus:ring-2 focus:ring-primary/20 focus:border-primary/50 placeholder:text-outline-variant" placeholder="Hızlı ekle..." type="text" id="movies-search-input"/>
+                    </div>
+                    <button class="w-12 h-12 bg-primary text-on-primary rounded-full flex items-center justify-center shadow-sm active:scale-95 transition-transform" id="movies-add-btn">
+                        <span class="material-symbols-outlined" data-icon="add">add</span>
+                    </button>
+                </div>
+
+                <!-- Segmented Control -->
+                <div class="bg-surface-container-high p-1 rounded-full flex items-center shadow-inner">
+                    <button class="movies-tab flex-1 py-2 px-4 rounded-full bg-primary text-on-primary text-caption transition-all" data-status="watching">
+                        Devam Ediyor
+                    </button>
+                    <button class="movies-tab flex-1 py-2 px-4 rounded-full text-on-surface-variant hover:text-primary text-caption transition-all" data-status="watchlist">
+                        İstek Listesi
+                    </button>
+                    <button class="movies-tab flex-1 py-2 px-4 rounded-full text-on-surface-variant hover:text-primary text-caption transition-all" data-status="completed">
+                        Tamamlandı
+                    </button>
+                </div>
+            </section>
+
+            <!-- Compact Grid List -->
+            <section class="grid grid-cols-2 gap-3" id="movies-list-container">
+                <!-- Javascript will populate this based on Firebase -->
+            </section>
         </main>
     </section>
 
@@ -1776,7 +1800,7 @@
 </div>
 <!-- Kapanış: #app-container -->
 
-<script type="module" src="app.js?v=25"></script>
+    <script type="module" src="app.js?v=25"></script>
 
 <!-- ================= FINANCE MODALS ================= -->
 <!-- Add Transaction Modal -->
@@ -2051,7 +2075,6 @@
 </div>
 
 
-    
-
+    <script type="module" src="./movies.js"></script>
 </body>
 </html>
