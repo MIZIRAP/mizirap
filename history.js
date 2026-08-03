@@ -119,12 +119,12 @@ function renderHistory() {
         
         let title = key; 
         const options = { day: 'numeric', month: 'long', weekday: 'long' };
-        let formattedDate = data.dateObj.toLocaleDateString('tr-TR', options);
+        let formattedDate = formatDate(data.dateObj, options);
         
         if (key === todayStr) {
-            title = "Bugün, " + data.formatDate(dateObj, { day: 'numeric', month: 'long' });
+            title = "Bugün, " + formatDate(data.dateObj, { day: 'numeric', month: 'long' });
         } else if (key === yesterdayStr) {
-            title = "Dün, " + data.formatDate(dateObj, { day: 'numeric', month: 'long' });
+            title = "Dün, " + formatDate(data.dateObj, { day: 'numeric', month: 'long' });
         } else {
             title = formattedDate;
         }

@@ -1,6 +1,6 @@
 import { auth, db } from "./firebase-config.js";
 import { collection, doc, updateDoc, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
-import { escapeHtml, fmtDate, tl } from "./utils.js";
+import { escapeHtml, formatDate, formatCurrency } from "./utils.js";
 import { calcBalance } from "./finance.js";
 
 let currentWorkouts = [];
@@ -94,5 +94,5 @@ function renderDashboard() {
     // Finans
     const balance = calcBalance(currentTxs);
     const statBalance = document.getElementById("stat-balance");
-    if(statBalance) statBalance.textContent = tl(balance);
+    if(statBalance) statBalance.textContent = formatCurrency(balance);
 }
