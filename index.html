@@ -246,30 +246,6 @@
             </section>
 
         </main>
-        
-        <!-- BottomNavBar -->
-        <nav class="fixed bottom-0 left-0 right-0 z-50 flex justify-around items-center px-4 py-2 rounded-full mx-auto mb-8 w-[90%] max-w-md shadow-[0px_4px_20px_rgba(0,0,0,0.04)] bg-surface-container-lowest dark:bg-surface-container-lowest border-none md:hidden">
-            <button class="nav-tab flex flex-col items-center justify-center gap-1 bg-secondary-container text-primary rounded-xl px-3 py-2 transition-all" data-target="view-dashboard">
-                <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">home</span>
-                <span class="text-label-sm font-label-sm">Özet</span>
-            </button>
-            <button class="nav-tab flex flex-col items-center justify-center gap-1 text-on-surface-variant p-2 hover:text-primary transition-all" data-target="view-dashboard">
-                <span class="material-symbols-outlined">task_alt</span>
-                <span class="text-label-sm font-label-sm">Alışkanlık</span>
-            </button>
-            <button class="nav-tab flex flex-col items-center justify-center gap-1 text-on-surface-variant p-2 hover:text-primary transition-all" data-target="view-workout">
-                <span class="material-symbols-outlined">fitness_center</span>
-                <span class="text-label-sm font-label-sm">Spor</span>
-            </button>
-            <button class="nav-tab flex flex-col items-center justify-center gap-1 text-on-surface-variant p-2 hover:text-primary transition-all" data-target="view-finance">
-                <span class="material-symbols-outlined">account_balance_wallet</span>
-                <span class="text-label-sm font-label-sm">Finans</span>
-            </button>
-            <button class="nav-tab flex flex-col items-center justify-center gap-1 text-on-surface-variant p-2 hover:text-primary transition-all" data-target="view-shopping">
-                <span class="material-symbols-outlined">grid_view</span>
-                <span class="text-label-sm font-label-sm">Daha</span>
-            </button>
-        </nav>
     </section>
 
     <!-- ================= ALIŞVERİŞ LİSTESİ (Shopping) ================= -->
@@ -322,30 +298,6 @@
                 </div>
             </section>
         </main>
-
-        <!-- BottomNavBar -->
-        <nav class="fixed bottom-6 left-0 right-0 z-50 flex justify-around items-center px-4 py-3 bg-surface-container-lowest/90 backdrop-blur-md rounded-full mx-auto w-[90%] max-w-md shadow-2xl">
-            <button class="nav-tab flex flex-col items-center justify-center text-on-surface-variant hover:scale-105 transition-transform active:scale-95" data-target="view-dashboard">
-                <span class="material-symbols-outlined" data-icon="home">home</span>
-                <span class="text-[10px] font-label-md">Özet</span>
-            </button>
-            <button class="nav-tab flex flex-col items-center justify-center text-on-surface-variant hover:scale-105 transition-transform active:scale-95" data-target="view-dashboard">
-                <span class="material-symbols-outlined" data-icon="check_circle">check_circle</span>
-                <span class="text-[10px] font-label-md">Alışkanlık</span>
-            </button>
-            <button class="nav-tab flex flex-col items-center justify-center text-on-surface-variant hover:scale-105 transition-transform active:scale-95" data-target="view-workout">
-                <span class="material-symbols-outlined" data-icon="fitness_center">fitness_center</span>
-                <span class="text-[10px] font-label-md">Spor</span>
-            </button>
-            <button class="nav-tab flex flex-col items-center justify-center text-on-surface-variant hover:scale-105 transition-transform active:scale-95" data-target="view-finance">
-                <span class="material-symbols-outlined" data-icon="account_balance_wallet">account_balance_wallet</span>
-                <span class="text-[10px] font-label-md">Finans</span>
-            </button>
-            <button class="nav-tab flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-full px-3 py-1 hover:scale-105 transition-transform active:scale-95 shadow-md" data-target="view-shopping">
-                <span class="material-symbols-outlined" data-icon="shopping_cart">shopping_cart</span>
-                <span class="text-[10px] font-label-md">Liste</span>
-            </button>
-        </nav>
     </section>
 
     <!-- ================= SPOR TAKİBİ (Workout) ================= -->
@@ -823,44 +775,6 @@
             </section>
         </main>
 
-        <!-- BottomNavBar (Mobile Only per semantics) -->
-        <nav class="md:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-6 pt-3 shadow-[0px_-4px_20px_rgba(0,0,0,0.04)] bg-surface-container-lowest rounded-t-xl transition-transform duration-200">
-            <!-- Summary -->
-            <a class="nav-tab flex flex-col items-center justify-center text-secondary dark:text-secondary-fixed-dim opacity-60 hover:scale-105 active:scale-98 transition-transform duration-200 w-16 group" data-target="view-dashboard" href="#">
-                <div class="w-8 h-8 rounded-full flex items-center justify-center mb-1 group-hover:bg-surface-variant/30 transition-colors">
-                    <span class="material-symbols-outlined text-[24px]" data-icon="dashboard" data-weight="regular">dashboard</span>
-                </div>
-                <span class="font-label-md text-label-md">Summary</span>
-            </a>
-            <!-- Active Tab (Habits) -->
-            <a class="nav-tab flex flex-col items-center justify-center text-primary dark:text-primary-fixed-dim font-bold hover:scale-105 active:scale-98 transition-transform duration-200 w-16" data-target="view-water" href="#">
-                <div class="w-10 h-10 rounded-full bg-secondary-container flex items-center justify-center mb-1">
-                    <span class="material-symbols-outlined text-[24px] text-primary" data-icon="check_circle" data-weight="fill" style="font-variation-settings: 'FILL' 1;">check_circle</span>
-                </div>
-                <span class="font-label-md text-label-md">Habits</span>
-            </a>
-            <!-- Sports -->
-            <a class="nav-tab flex flex-col items-center justify-center text-secondary dark:text-secondary-fixed-dim opacity-60 hover:scale-105 active:scale-98 transition-transform duration-200 w-16 group" data-target="view-workout" href="#">
-                <div class="w-8 h-8 rounded-full flex items-center justify-center mb-1 group-hover:bg-surface-variant/30 transition-colors">
-                    <span class="material-symbols-outlined text-[24px]" data-icon="fitness_center" data-weight="regular">fitness_center</span>
-                </div>
-                <span class="font-label-md text-label-md">Sports</span>
-            </a>
-            <!-- Finance -->
-            <a class="nav-tab flex flex-col items-center justify-center text-secondary dark:text-secondary-fixed-dim opacity-60 hover:scale-105 active:scale-98 transition-transform duration-200 w-16 group" data-target="view-finance" href="#">
-                <div class="w-8 h-8 rounded-full flex items-center justify-center mb-1 group-hover:bg-surface-variant/30 transition-colors">
-                    <span class="material-symbols-outlined text-[24px]" data-icon="payments" data-weight="regular">payments</span>
-                </div>
-                <span class="font-label-md text-label-md">Finance</span>
-            </a>
-            <!-- More -->
-            <a class="nav-tab flex flex-col items-center justify-center text-secondary dark:text-secondary-fixed-dim opacity-60 hover:scale-105 active:scale-98 transition-transform duration-200 w-16 group" data-target="view-shopping" href="#">
-                <div class="w-8 h-8 rounded-full flex items-center justify-center mb-1 group-hover:bg-surface-variant/30 transition-colors">
-                    <span class="material-symbols-outlined text-[24px]" data-icon="more_horiz" data-weight="regular">more_horiz</span>
-                </div>
-                <span class="font-label-md text-label-md">More</span>
-            </a>
-        </nav>
     </section>
 
     <!-- ================= GEÇMİŞ (History) ================= -->
