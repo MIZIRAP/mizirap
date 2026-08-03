@@ -1,6 +1,5 @@
-import { db, storage } from "./firebase-config.js";
+import { db } from "./firebase-config.js";
 import { collection, doc, addDoc, updateDoc, deleteDoc, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
-import { ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-storage.js";
 import { escapeHtml } from "./utils.js";
 
 let currentUid = null;
@@ -228,14 +227,48 @@ async function saveMovie() {
             data.episode = parseInt(episode) || 1;
         }
 
-        // Upload image if selected
+        // Upload image if selected (Resize and save as Base64 Data URL)
         if (currentSelectedImageFile) {
-            saveBtn.innerHTML = "Yükleniyor...";
-            const ext = currentSelectedImageFile.name.split('.').pop();
-            const filename = `movie_covers/${currentUid}_${Date.now()}.${ext}`;
-            const imageRef = ref(storage, filename);
-            await uploadBytes(imageRef, currentSelectedImageFile);
-            data.imageUrl = await getDownloadURL(imageRef);
+            saveBtn.innerHTML = "Görsel İşleniyor...";
+            
+            // Resize image using Canvas
+            const base64Image = await new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const img = new Image();
+                    img.onload = function() {
+                        const canvas = document.createElement('canvas');
+                        const MAX_WIDTH = 400;
+                        const MAX_HEIGHT = 600;
+                        let width = img.width;
+                        let height = img.height;
+
+                        if (width > height) {
+                            if (width > MAX_WIDTH) {
+                                height *= MAX_WIDTH / width;
+                                width = MAX_WIDTH;
+                            }
+                        } else {
+                            if (height > MAX_HEIGHT) {
+                                width *= MAX_HEIGHT / height;
+                                height = MAX_HEIGHT;
+                            }
+                        }
+                        
+                        canvas.width = width;
+                        canvas.height = height;
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0, width, height);
+                        resolve(canvas.toDataURL('image/jpeg', 0.8)); // compress to 80% quality JPEG
+                    };
+                    img.onerror = reject;
+                    img.src = e.target.result;
+                };
+                reader.onerror = reject;
+                reader.readAsDataURL(currentSelectedImageFile);
+            });
+            
+            data.imageUrl = base64Image;
         }
 
         if (currentEditingId) {
