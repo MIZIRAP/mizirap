@@ -351,7 +351,7 @@
             <div class="flex items-center justify-between px-container-padding py-4 w-full">
                 <div class="flex items-center gap-3">
                     <button class="nav-tab hover:opacity-80 p-2 -ml-2 rounded-full focus:outline-none focus:ring-2 focus:ring-primary" data-target="view-dashboard">
-                        <span class="material-symbols-outlined text-primary dark:text-primary-fixed-dim" data-icon="arrow_back" data-weight="regular">arrow_back</span>
+                        <span class="material-symbols-outlined text-primary dark:text-primary-fixed-dim" style="font-variation-settings: 'FILL' 0;">arrow_back</span>
                     </button>
                     <h1 class="font-headline-md text-headline-md text-primary dark:text-primary-fixed-dim font-bold tracking-tight">Spor</h1>
                 </div>
@@ -429,12 +429,14 @@
         </style>
         
         <!-- TopAppBar -->
-        <header class="w-full top-0 sticky bg-background dark:bg-background z-40">
-            <div class="flex items-center justify-between px-container-padding py-4 w-full flat no shadows">
-                <button class="flex items-center justify-center p-2 rounded-full hover:bg-surface-variant transition-colors duration-200" id="edit-template-back-btn">
-                    <span class="material-symbols-outlined text-on-surface-variant">arrow_back</span>
-                </button>
-                <h1 class="font-headline-sm text-headline-sm text-primary dark:text-primary-fixed-dim" id="edit-template-header-title">Şablonu Düzenle</h1>
+        <header class="w-full top-0 sticky bg-background dark:bg-background flat no shadows transition-opacity duration-200 z-40 max-w-md mx-auto">
+            <div class="flex items-center justify-between px-container-padding py-4 w-full">
+                <div class="flex items-center gap-3">
+                    <button class="flex items-center justify-center p-2 rounded-full hover:bg-surface-variant transition-colors duration-200" id="edit-template-back-btn">
+                        <span class="material-symbols-outlined text-primary dark:text-primary-fixed-dim" style="font-variation-settings: 'FILL' 0;">arrow_back</span>
+                    </button>
+                    <h1 class="font-headline-md text-headline-md text-primary dark:text-primary-fixed-dim font-bold tracking-tight" id="edit-template-header-title">Şablonu Düzenle</h1>
+                </div>
                 <button class="flex items-center justify-center p-2 rounded-full hover:bg-surface-variant transition-colors duration-200" id="edit-template-save-btn">
                     <span class="material-symbols-outlined text-primary">done</span>
                 </button>
@@ -542,7 +544,7 @@
             <div class="flex items-center justify-between px-container-padding py-4 w-full">
                 <div class="flex items-center gap-3">
                     <button class="nav-tab hover:opacity-80 p-2 -ml-2 rounded-full focus:outline-none focus:ring-2 focus:ring-primary" data-target="view-dashboard">
-                        <span class="material-symbols-outlined text-primary dark:text-primary-fixed-dim" data-icon="arrow_back" data-weight="regular">arrow_back</span>
+                        <span class="material-symbols-outlined text-primary dark:text-primary-fixed-dim" style="font-variation-settings: 'FILL' 0;">arrow_back</span>
                     </button>
                     <h1 class="font-headline-md text-headline-md text-primary dark:text-primary-fixed-dim font-bold tracking-tight">Kitap Takibi</h1>
                 </div>
@@ -762,9 +764,9 @@
             <div class="flex items-center justify-between px-container-padding py-4 w-full">
                 <div class="flex items-center gap-3">
                     <button class="nav-tab hover:opacity-80 p-2 -ml-2 rounded-full focus:outline-none focus:ring-2 focus:ring-primary" data-target="view-dashboard">
-                        <span class="material-symbols-outlined text-primary dark:text-primary-fixed-dim" data-icon="arrow_back" data-weight="regular">arrow_back</span>
+                        <span class="material-symbols-outlined text-primary dark:text-primary-fixed-dim" style="font-variation-settings: 'FILL' 0;">arrow_back</span>
                     </button>
-                    <h1 class="font-headline-md text-headline-md text-primary dark:text-primary-fixed-dim font-bold tracking-tight">Water</h1>
+                    <h1 class="font-headline-md text-headline-md text-primary dark:text-primary-fixed-dim font-bold tracking-tight">Su Takibi</h1>
                 </div>
                 <button class="hover:opacity-80 p-2 -mr-2 rounded-full focus:outline-none focus:ring-2 focus:ring-primary">
                     <span class="material-symbols-outlined text-primary dark:text-primary-fixed-dim" data-icon="settings" data-weight="regular">settings</span>
@@ -959,9 +961,9 @@
             <div class="flex items-center justify-between px-container-padding py-4 w-full">
                 <div class="flex items-center gap-3">
                     <button class="nav-tab hover:opacity-80 p-2 -ml-2 rounded-full focus:outline-none focus:ring-2 focus:ring-primary" data-target="view-dashboard">
-                        <span class="material-symbols-outlined text-primary dark:text-primary-fixed-dim" data-icon="arrow_back" data-weight="regular">arrow_back</span>
+                        <span class="material-symbols-outlined text-primary dark:text-primary-fixed-dim" style="font-variation-settings: 'FILL' 0;">arrow_back</span>
                     </button>
-                    <h1 class="font-headline-md text-headline-md text-primary dark:text-primary-fixed-dim font-bold tracking-tight">Finans</h1>
+                    <h1 class="font-headline-md text-headline-md text-primary dark:text-primary-fixed-dim font-bold tracking-tight">Finans Takibi</h1>
                 </div>
             </div>
         </header>
@@ -1153,12 +1155,15 @@
     <!-- ================= KALORİ TAKİBİ (Calories) ================= -->
         <section id="view-profile" class="view hidden bg-background text-on-background min-h-screen flex flex-col font-body-lg no-scrollbar">
         <!-- TopAppBar -->
-        <header class="w-full top-0 sticky bg-background flex items-center justify-between px-container-padding py-unit w-full z-40">
-            <button class="nav-tab text-primary hover:opacity-80 transition-opacity p-2 -ml-2 rounded-full hover:bg-surface-variant flex items-center justify-center" data-target="view-dashboard">
-                <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">arrow_back</span>
-            </button>
-            <h1 class="font-headline-md text-headline-md text-primary font-bold tracking-tight">Profili Düzenle</h1>
-            <div class="w-10"></div> <!-- Spacer for centering -->
+        <header class="w-full top-0 sticky bg-background dark:bg-background flat no shadows transition-opacity duration-200 z-40 max-w-md mx-auto">
+            <div class="flex items-center justify-between px-container-padding py-4 w-full">
+                <div class="flex items-center gap-3">
+                    <button class="nav-tab hover:opacity-80 p-2 -ml-2 rounded-full focus:outline-none focus:ring-2 focus:ring-primary" data-target="view-dashboard">
+                        <span class="material-symbols-outlined text-primary dark:text-primary-fixed-dim" style="font-variation-settings: 'FILL' 0;">arrow_back</span>
+                    </button>
+                    <h1 class="font-headline-md text-headline-md text-primary dark:text-primary-fixed-dim font-bold tracking-tight">Profili Düzenle</h1>
+                </div>
+            </div> <!-- Spacer for centering -->
         </header>
 
         <!-- Main Content Canvas -->
