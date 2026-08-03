@@ -363,7 +363,7 @@ export function initBooks(uid, onChangeCallback) {
         }
     }, (error) => {
         console.error("Kitaplar dinlenirken hata oluştu:", error);
-    });
+    }));
 }
 
 function renderBooks(uid) {

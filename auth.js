@@ -1,5 +1,5 @@
 import { auth } from "./firebase-config.js";
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, updateProfile, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, updateProfile, GoogleAuthProvider, signInWithPopup, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
 import { clearAllListeners } from "./listenerManager.js";
 
 const loginForm = document.getElementById("login-form");
@@ -88,6 +88,67 @@ export function setupAuthUI() {
                 loginError.textContent = turkceHataMesaji(err.code);
             }
         });
+    }
+
+    // Şifremi Unuttum Modal Akışı
+    const forgotLink = document.getElementById("forgot-password-link");
+    const forgotModal = document.getElementById("forgot-password-modal");
+    const forgotCancel = document.getElementById("forgot-password-cancel");
+    const forgotSend = document.getElementById("forgot-password-send");
+    const forgotEmail = document.getElementById("forgot-password-email");
+    const forgotMsg = document.getElementById("forgot-password-message");
+
+    if (forgotLink && forgotModal) {
+        forgotLink.addEventListener("click", (e) => {
+            e.preventDefault();
+            forgotEmail.value = document.getElementById("login-email")?.value || "";
+            forgotMsg.textContent = "";
+            forgotMsg.className = "font-label-sm min-h-[20px] mb-4";
+            
+            forgotModal.classList.remove("hidden");
+            void forgotModal.offsetWidth;
+            const content = document.getElementById("forgot-password-modal-content");
+            if(content) content.classList.remove("opacity-0", "scale-95");
+        });
+
+        const closeForgotModal = () => {
+            const content = document.getElementById("forgot-password-modal-content");
+            if(content) content.classList.add("opacity-0", "scale-95");
+            setTimeout(() => forgotModal.classList.add("hidden"), 200);
+        };
+
+        if (forgotCancel) forgotCancel.addEventListener("click", closeForgotModal);
+        
+        forgotModal.addEventListener("click", (e) => {
+            if(e.target === forgotModal) closeForgotModal();
+        });
+
+        if (forgotSend) {
+            forgotSend.addEventListener("click", async () => {
+                const email = forgotEmail.value.trim();
+                if (!email) {
+                    forgotMsg.textContent = "Lütfen e-posta adresinizi girin.";
+                    forgotMsg.className = "font-label-sm min-h-[20px] mb-4 text-error";
+                    return;
+                }
+                
+                forgotSend.disabled = true;
+                forgotSend.textContent = "Gönderiliyor...";
+                
+                try {
+                    await sendPasswordResetEmail(auth, email);
+                    forgotMsg.textContent = "Şifre sıfırlama bağlantısı gönderildi! Lütfen e-postanızı kontrol edin.";
+                    forgotMsg.className = "font-label-sm min-h-[20px] mb-4 text-primary";
+                    setTimeout(closeForgotModal, 3000);
+                } catch (err) {
+                    forgotMsg.textContent = getFriendlyError(err.code);
+                    forgotMsg.className = "font-label-sm min-h-[20px] mb-4 text-error";
+                } finally {
+                    forgotSend.disabled = false;
+                    forgotSend.textContent = "Gönder";
+                }
+            });
+        }
     }
 
     // Çıkış yap

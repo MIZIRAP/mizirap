@@ -1,6 +1,6 @@
 import { db } from "./firebase-config.js";
-import { collection, doc, addDoc, setDoc, deleteDoc, onSnapshot, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
-import { escapeHtml } from "./utils.js";
+import { collection, doc, addDoc, setDoc, updateDoc, deleteDoc, onSnapshot, query, orderBy, where, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+import { escapeHtml, validatePositiveNumber } from "./utils.js";
 import { registerListener } from "./listenerManager.js";
 
 let dailyCalorieGoal = 2000;
@@ -13,8 +13,11 @@ let libraryFoods = [];
 let unsubscribeLogs = null;
 let unsubscribeSettings = null;
 let unsubscribeLibrary = null;
+let unsubWeeklyLogs = null;
+let weeklyLogs = [];
 let onChangeCb = null;
 let currentUid = null;
+let currentEditLogId = null;
 
 // Modal Elements
 const addFoodModal = document.getElementById('addFoodModal');
@@ -76,7 +79,7 @@ export function initCalories(uid, onChangeCallback) {
             yagGoal = 66;
         }
         updateUIState();
-    });
+    }));
 
     // Listen to Logs (Only needed for daily tracking)
     const logsRef = query(collection(db, "users", uid, "calorieLogs"), orderBy("createdAt", "desc"));
@@ -95,14 +98,27 @@ export function initCalories(uid, onChangeCallback) {
         });
         renderLogs();
         updateUIState();
-    });
+    }));
 
     // Listen to Food Library
     const libRef = query(collection(db, "users", uid, "foodLibrary"), orderBy("createdAt", "desc"));
     unsubscribeLibrary = registerListener(onSnapshot(libRef, (snap) => {
         libraryFoods = snap.docs.map(d => ({ id: d.id, ...d.data() }));
         renderLibraryFoods();
-    });
+    }));
+
+    // Listen to Weekly Calorie Logs (for chart)
+    const oneWeekAgo = new Date();
+    oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+    const weeklyRef = query(
+        collection(db, "users", uid, "calorieLogs"),
+        where("createdAt", ">=", oneWeekAgo),
+        orderBy("createdAt", "desc")
+    );
+    unsubWeeklyLogs = registerListener(onSnapshot(weeklyRef, (snap) => {
+        weeklyLogs = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+        renderWeeklyChart();
+    }));
 
     bindEvents();
 }
@@ -270,7 +286,13 @@ function bindEvents() {
     if (addFoodToLogBtn) {
         addFoodToLogBtn.onclick = async () => {
             let grams = 100;
-            if(gramInput) grams = parseInt(gramInput.value) || 100;
+            if(gramInput) {
+                if (!validatePositiveNumber(gramInput.value)) {
+                    alert('Lütfen geçerli bir gramaj girin (Sıfırdan büyük olmalıdır).');
+                    return;
+                }
+                grams = parseInt(gramInput.value) || 100;
+            }
             const total = Math.round((grams / 100) * currentKcalPer100g);
             
             // Approximate macros based on library macros or standard ratios
@@ -279,29 +301,34 @@ function bindEvents() {
             if (currentFoodMacros.karb !== null) k = Math.round((grams / 100) * currentFoodMacros.karb);
             if (currentFoodMacros.yag !== null) y = Math.round((grams / 100) * currentFoodMacros.yag);
             
-            const logEntry = {
-                name: currentFoodName,
-                amount: grams,
-                kcal: total,
-                protein: p,
-                karb: k,
-                yag: y,
-                createdAt: serverTimestamp()
-            };
-            
             try {
-                await addDoc(collection(db, "users", currentUid, "calorieLogs"), logEntry);
+                if (currentEditLogId) {
+                    await updateDoc(doc(db, "users", currentUid, "calorieLogs", currentEditLogId), {
+                        amount: grams,
+                        kcal: total,
+                        protein: p,
+                        karb: k,
+                        yag: y
+                    });
+                } else {
+                    const logEntry = {
+                        name: currentFoodName,
+                        amount: grams,
+                        kcal: total,
+                        protein: p,
+                        karb: k,
+                        yag: y,
+                        createdAt: serverTimestamp()
+                    };
+                    await addDoc(collection(db, "users", currentUid, "calorieLogs"), logEntry);
+                }
             } catch(err) {
-                console.error("Test Modu:", err);
-                logEntry.id = "temp-" + Date.now();
-                logEntry.createdAt = { toDate: () => new Date() };
-                dailyLogs.unshift(logEntry);
-                renderLogs();
-                updateUIState();
+                console.error("Kayıt Hatası:", err);
+            } finally {
+                currentEditLogId = null;
+                closeAddPortionModal();
+                closeAddFoodModal();
             }
-            
-            closeAddPortionModal();
-            closeAddFoodModal();
         };
     }
 }
@@ -430,6 +457,26 @@ function renderLogs() {
             const newEntry = document.createElement('div');
             newEntry.className = "flex justify-between items-center p-3 border-b border-surface-container-high last:border-0 relative group";
             
+            const editBtn = document.createElement('button');
+            editBtn.className = "absolute right-12 top-1/2 -translate-y-1/2 p-2 text-primary opacity-0 group-hover:opacity-100 transition-opacity bg-primary-container/20 rounded-full active:scale-95";
+            editBtn.innerHTML = `<span class="material-symbols-outlined text-sm">edit</span>`;
+            editBtn.onclick = (e) => {
+                e.stopPropagation();
+                currentEditLogId = log.id;
+                const baseKcal = (log.kcal / log.amount) * 100;
+                const baseP = log.protein ? (log.protein / log.amount) * 100 : 0;
+                const baseK = log.karb ? (log.karb / log.amount) * 100 : 0;
+                const baseY = log.yag ? (log.yag / log.amount) * 100 : 0;
+                openAddPortionModal(log.name, baseKcal, { protein: baseP, karb: baseK, yag: baseY });
+                setTimeout(() => {
+                    const gramInput = document.getElementById('gram-input');
+                    if (gramInput) {
+                        gramInput.value = log.amount;
+                        updatePortionTotal();
+                    }
+                }, 100);
+            };
+
             const delBtn = document.createElement('button');
             delBtn.className = "absolute right-2 top-1/2 -translate-y-1/2 p-2 text-error opacity-0 group-hover:opacity-100 transition-opacity bg-error-container/20 rounded-full active:scale-95";
             delBtn.innerHTML = `<span class="material-symbols-outlined text-sm">delete</span>`;
@@ -445,12 +492,13 @@ function renderLogs() {
             };
 
             newEntry.innerHTML = `
-            <div class="flex flex-col pr-10">
+            <div class="flex flex-col pr-20">
             <span class="font-body-md text-body-md text-on-surface font-medium">${escapeHtml(log.name)}</span>
             <span class="font-label-sm text-label-sm text-on-surface-variant">${log.amount}g</span>
             </div>
-            <span class="font-body-md text-body-md text-on-surface font-semibold text-primary group-hover:opacity-0 transition-opacity">+${log.kcal} kcal</span>
+            <span class="font-body-lg text-body-lg text-on-surface font-bold pr-20">${log.kcal} kcal</span>
             `;
+            newEntry.appendChild(editBtn);
             newEntry.appendChild(delBtn);
             logList.appendChild(newEntry);
         });
@@ -600,4 +648,89 @@ export function clearCalories() {
     if(unsubscribeLibrary) unsubscribeLibrary();
     dailyLogs = [];
     libraryFoods = [];
+}
+
+
+function renderWeeklyChart() {
+    const chartContainer = document.getElementById("calories-chart-container");
+    const labelsContainer = document.getElementById("calories-chart-labels");
+    const avgText = document.getElementById("calories-avg-text");
+    
+    if(!chartContainer || !labelsContainer || !avgText) return;
+    
+    chartContainer.innerHTML = "";
+    labelsContainer.innerHTML = "";
+    
+    const days = [];
+    const dayNames = ["Paz", "Pzt", "Sal", "Çar", "Per", "Cum", "Cmt"];
+    let total7Days = 0;
+    
+    for (let i = 6; i >= 0; i--) {
+        const d = new Date();
+        d.setHours(0,0,0,0);
+        d.setDate(d.getDate() - i);
+        days.push({
+            date: d,
+            name: dayNames[d.getDay()],
+            amount: 0,
+            isToday: i === 0
+        });
+    }
+
+    const oneWeekAgo = new Date();
+    oneWeekAgo.setHours(0,0,0,0);
+    oneWeekAgo.setDate(oneWeekAgo.getDate() - 6);
+
+    weeklyLogs.forEach(log => {
+        if(!log.createdAt || !log.createdAt.toDate) return;
+        const logDate = log.createdAt.toDate();
+        if(logDate >= oneWeekAgo) {
+            const matchingDay = days.find(day => 
+                logDate.getDate() === day.date.getDate() && 
+                logDate.getMonth() === day.date.getMonth()
+            );
+            if(matchingDay) {
+                matchingDay.amount += (log.kcal || 0);
+                total7Days += (log.kcal || 0);
+            }
+        }
+    });
+
+    avgText.textContent = `Avg: ${Math.round(total7Days / 7)} kcal`;
+
+    days.forEach(day => {
+        let percent = day.amount / dailyCalorieGoal * 100;
+        if(percent > 100) percent = 100;
+        if(percent < 5 && day.amount > 0) percent = 5;
+
+        const div = document.createElement("div");
+        div.className = "flex flex-col items-center gap-2 w-[14%] group relative";
+        
+        let barClass = "bg-surface-variant group-hover:bg-primary-fixed";
+        let textClass = "text-outline";
+        
+        if(day.isToday) {
+            barClass = "bg-primary-container group-hover:bg-primary";
+            textClass = "text-primary font-bold";
+        }
+        if(day.amount >= dailyCalorieGoal && !day.isToday) {
+            barClass = "bg-primary group-hover:opacity-80";
+        }
+
+        div.innerHTML = `
+            <div class="absolute -top-8 bg-surface-container-high text-on-surface text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10 pointer-events-none">
+                ${Math.round(day.amount)} kcal
+            </div>
+            <div class="w-2 md:w-3 bg-surface-container rounded-full h-24 relative flex items-end overflow-hidden">
+                <div class="w-full rounded-full transition-all duration-500 ${barClass}" style="height: ${percent}%"></div>
+            </div>
+        `;
+        
+        const labelDiv = document.createElement("div");
+        labelDiv.className = `text-[10px] md:text-xs w-[14%] text-center uppercase tracking-wider ${textClass}`;
+        labelDiv.textContent = day.name;
+
+        chartContainer.appendChild(div);
+        labelsContainer.appendChild(labelDiv);
+    });
 }

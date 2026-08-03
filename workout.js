@@ -40,7 +40,7 @@ export function initWorkout(uid, onChangeCallback) {
             // We use the last known mappedLogs or empty array
             callback(window._miz_last_workout_logs || [], activeSplitName);
         }
-    });
+    }));
 
     const logsRef = query(collection(db, "users", uid, "workout_logs"), orderBy("dateStr", "desc"));
     unsubLogs = registerListener(onSnapshot(logsRef, (snap) => {
@@ -61,7 +61,7 @@ export function initWorkout(uid, onChangeCallback) {
             const activeSplitName = activeSplit ? activeSplit.name : "Yapılmadı";
             callback(mappedLogs, activeSplitName);
         }
-    });
+    }));
 
     setupEventListeners();
 }

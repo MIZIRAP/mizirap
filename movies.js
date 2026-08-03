@@ -338,7 +338,7 @@ function listenToMovies() {
         renderMovies();
     }, (error) => {
         console.error("Dizi/Film verisi çekilemedi:", error);
-    });
+    }));
 }
 
 function renderMovies() {

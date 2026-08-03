@@ -11,7 +11,7 @@ export function initShopping(uid) {
     unsubscribe = registerListener(onSnapshot(shoppingRef, snap => {
         allShopping = snap.docs.map(d => ({ id: d.id, ...d.data() }));
         renderShoppingList();
-    });
+    }));
 
     const form = document.getElementById("shopping-form");
     if(form) {

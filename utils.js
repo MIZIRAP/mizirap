@@ -5,3 +5,10 @@ export function escapeHtml(str) {
   div.textContent = str;
   return div.innerHTML;
 }
+
+export function validatePositiveNumber(value) {
+    const num = parseFloat(value);
+    if (isNaN(num)) return false;
+    if (num <= 0) return false;
+    return true;
+}

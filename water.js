@@ -1,5 +1,5 @@
 import { auth, db } from "./firebase-config.js";
-import { collection, doc, addDoc, setDoc, onSnapshot, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+import { collection, doc, addDoc, setDoc, deleteDoc, onSnapshot, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
 import { escapeHtml } from "./utils.js";
 import { registerListener } from "./listenerManager.js";
 
@@ -22,7 +22,7 @@ export function initWater(uid, onChangeCallback) {
         }
         document.getElementById("water-goal-text").textContent = dailyGoal;
         updateWaterUI();
-    });
+    }));
 
     // Logs listener (last 7 days)
     const logsRef = query(collection(db, "users", uid, "waterLogs"), orderBy("createdAt", "desc"));
@@ -31,7 +31,7 @@ export function initWater(uid, onChangeCallback) {
         // For a huge app we might want to query where createdAt > 7 days ago, but this is fine for now
         waterLogs = snap.docs.map(d => ({ id: d.id, ...d.data() }));
         updateWaterUI();
-    });
+    }));
 
     // Event Listeners for Quick Add
     document.querySelectorAll(".water-add-btn").forEach(btn => {
@@ -285,12 +285,24 @@ function updateWaterUI() {
         if(todaysLogs.length === 0) {
             logList.innerHTML = `<div class="p-4 text-center text-on-surface-variant text-sm">Bugün henüz su içilmedi.</div>`;
         } else {
-            // Sort by time descending (newest first)
-            // Sadece en yeni 3 log'u göster
-            todaysLogs.slice(0, 3).forEach(log => {
+            // Show all today's logs and add a delete button
+            todaysLogs.forEach(log => {
                 const timeStr = log.createdAt?.toDate ? log.createdAt.toDate().toLocaleTimeString("tr-TR", {hour: '2-digit', minute:'2-digit'}) : "";
                 const div = document.createElement("div");
-                div.className = "flex items-center justify-between p-4 border-b border-surface-container/50 last:border-0";
+                div.className = "flex items-center justify-between p-4 border-b border-surface-container/50 last:border-0 relative group";
+                
+                const delBtn = document.createElement('button');
+                delBtn.className = "absolute right-2 top-1/2 -translate-y-1/2 p-2 text-error opacity-0 group-hover:opacity-100 transition-opacity bg-error-container/20 rounded-full active:scale-95";
+                delBtn.innerHTML = `<span class="material-symbols-outlined text-sm">delete</span>`;
+                delBtn.onclick = async (e) => {
+                    e.stopPropagation();
+                    try {
+                        await deleteDoc(doc(db, "users", currentUid, "waterLogs", log.id));
+                    } catch(err) {
+                        console.error("Silme Hatası:", err);
+                    }
+                };
+
                 div.innerHTML = `
                     <div class="flex items-center gap-4">
                         <div class="w-10 h-10 rounded-full bg-secondary-container flex items-center justify-center text-secondary">
@@ -301,10 +313,12 @@ function updateWaterUI() {
                             <span class="font-body-md text-body-md text-on-surface-variant text-sm">${timeStr}</span>
                         </div>
                     </div>
-                    <span class="font-headline-sm text-headline-sm text-primary">+${log.amount}ml</span>
+                    <span class="font-headline-sm text-headline-sm text-primary pr-10">+${log.amount}ml</span>
                 `;
+                div.appendChild(delBtn);
                 logList.appendChild(div);
             });
+            logList.classList.add("max-h-64", "overflow-y-auto");
         }
     }
 

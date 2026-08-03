@@ -1,6 +1,7 @@
 import { auth, db } from "./firebase-config.js";
-import { collection, doc, addDoc, setDoc, getDocs, query, orderBy, limit, serverTimestamp, onSnapshot, where } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+import { collection, doc, addDoc, setDoc, updateDoc, deleteDoc, getDocs, query, orderBy, limit, serverTimestamp, onSnapshot, where } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
 import { registerListener } from "./listenerManager.js";
+import { validatePositiveNumber } from "./utils.js";
 
 let currentUid = null;
 let callback = null;
@@ -24,7 +25,7 @@ export function initFinance(uid, onChangeCallback) {
         renderTransactions();
         renderTxModalOptions();
         if (typeof renderFinanceDetail !== "undefined") renderFinanceDetail();
-    });
+    }));
 
     // 2. Load Payment Methods
     const paymentMethodsRef = collection(db, "users", uid, "finance_payment_methods");
@@ -33,7 +34,7 @@ export function initFinance(uid, onChangeCallback) {
         renderTransactions();
         renderTxModalOptions();
         if (typeof renderFinanceDetail !== "undefined") renderFinanceDetail();
-    });
+    }));
 
     // 3. Load Transactions
     const txRef = collection(db, "users", uid, "finance_transactions");
@@ -45,7 +46,7 @@ export function initFinance(uid, onChangeCallback) {
         renderTxModalOptions();
         if (typeof renderFinanceDetail !== "undefined") renderFinanceDetail();
         if(callback) callback(financeTransactions);
-    });
+    }));
     
     setupFinanceModals();
 }
@@ -372,27 +373,103 @@ function renderTransactions() {
             ? "bg-primary-container/20 text-primary border-primary/20" 
             : "bg-surface-container-high text-on-surface-variant border-outline-variant";
             
-        list.innerHTML += `
-            <div class="bg-surface-container-lowest shadow-[0px_4px_20px_rgba(0,0,0,0.04)] rounded-[16px] p-4 flex items-center justify-between active:scale-98 transition-transform duration-100 ease-in-out">
-                <div class="flex items-center gap-4">
-                    <div class="w-12 h-12 rounded-full ${iconBg} flex items-center justify-center">
-                        <span class="material-symbols-outlined ${iconColor}" style="font-variation-settings: 'FILL' 0;">${cat.icon}</span>
-                    </div>
-                    <div class="flex flex-col">
-                        <span class="font-label-md text-label-md text-on-surface">${tx.title}</span>
-                        <div class="flex items-center gap-2 mt-1">
-                            <span class="font-body-md text-body-md text-on-surface-variant text-xs">${cat.name}</span>
-                            <span class="text-on-surface-variant text-xs">•</span>
-                            <span class="${pmBadgeClass} text-[10px] font-bold px-2 py-0.5 rounded-lg border uppercase tracking-tight">${pm.type}</span>
-                        </div>
-                    </div>
+        const div = document.createElement("div");
+        div.className = "bg-surface-container-lowest shadow-[0px_4px_20px_rgba(0,0,0,0.04)] rounded-[16px] p-4 flex items-center justify-between active:scale-98 transition-transform duration-100 ease-in-out relative group";
+        
+        const actionsDiv = document.createElement("div");
+        actionsDiv.className = "absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity bg-surface-container-lowest/90 px-2 py-1 rounded-full shadow-sm";
+        
+        const editBtn = document.createElement('button');
+        editBtn.className = "p-2 text-primary hover:bg-primary-container/20 rounded-full active:scale-95 transition-colors";
+        editBtn.innerHTML = `<span class="material-symbols-outlined text-sm">edit</span>`;
+        editBtn.onclick = (e) => {
+            e.stopPropagation();
+            window.currentEditFinanceTxId = tx.id;
+            const titleEl = document.getElementById('tx-title');
+            const amtEl = document.getElementById('tx-amount');
+            if (titleEl) titleEl.value = tx.title;
+            if (amtEl) amtEl.value = tx.amount;
+            
+            // set type
+            const typeRadios = document.querySelectorAll('input[name="tx-type"]');
+            typeRadios.forEach(r => {
+                if(r.value === tx.type) r.checked = true;
+            });
+            window.currentTxType = tx.type;
+            if (typeof window.renderCategoryOptions === 'function') {
+                window.renderCategoryOptions();
+            }
+            
+            setTimeout(() => {
+                const catOpts = document.querySelectorAll('.tx-cat-btn');
+                catOpts.forEach(o => {
+                    if(o.dataset.id === tx.categoryId) {
+                        o.classList.add('bg-primary-container', 'border-primary', 'text-on-primary-container');
+                        o.classList.remove('bg-surface', 'border-surface-variant', 'text-on-surface');
+                    } else {
+                        o.classList.remove('bg-primary-container', 'border-primary', 'text-on-primary-container');
+                        o.classList.add('bg-surface', 'border-surface-variant', 'text-on-surface');
+                    }
+                });
+            }, 50);
+
+            const pmOpts = document.querySelectorAll('.tx-pm-btn');
+            pmOpts.forEach(o => {
+                if(o.dataset.id === tx.paymentMethodId) {
+                    o.classList.add('border-primary', 'bg-primary/5');
+                    o.classList.remove('border-surface-variant');
+                } else {
+                    o.classList.remove('border-primary', 'bg-primary/5');
+                    o.classList.add('border-surface-variant');
+                }
+            });
+
+            const modal = document.getElementById("finance-add-tx-modal");
+            if (modal) {
+                modal.classList.remove("hidden");
+                void modal.offsetWidth;
+                modal.classList.remove("opacity-0");
+                const panel = modal.querySelector("div");
+                if (panel) panel.classList.remove("translate-y-full");
+            }
+        };
+
+        const delBtn = document.createElement('button');
+        delBtn.className = "p-2 text-error hover:bg-error-container/20 rounded-full active:scale-95 transition-colors";
+        delBtn.innerHTML = `<span class="material-symbols-outlined text-sm">delete</span>`;
+        delBtn.onclick = async (e) => {
+            e.stopPropagation();
+            try {
+                await deleteDoc(doc(db, "users", currentUid, "finance_transactions", tx.id));
+            } catch(err) {
+                console.error("Silme Hatası:", err);
+            }
+        };
+
+        actionsDiv.appendChild(editBtn);
+        actionsDiv.appendChild(delBtn);
+
+        div.innerHTML = `
+            <div class="flex items-center gap-4">
+                <div class="w-12 h-12 rounded-full ${iconBg} flex items-center justify-center">
+                    <span class="material-symbols-outlined ${iconColor}" style="font-variation-settings: 'FILL' 0;">${cat.icon}</span>
                 </div>
-                <div class="flex flex-col items-end">
-                    <span class="font-label-md text-label-md ${valColor}">${sign}${valStr}</span>
-                    <span class="font-label-sm text-label-sm text-on-surface-variant mt-1">${dateFormatted}</span>
+                <div class="flex flex-col">
+                    <span class="font-label-md text-label-md text-on-surface">${tx.title}</span>
+                    <div class="flex items-center gap-2 mt-1">
+                        <span class="font-body-md text-body-md text-on-surface-variant text-xs">${cat.name}</span>
+                        <span class="text-on-surface-variant text-xs">•</span>
+                        <span class="${pmBadgeClass} text-[10px] font-bold px-2 py-0.5 rounded-lg border uppercase tracking-tight">${pm.type}</span>
+                    </div>
                 </div>
             </div>
+            <div class="flex flex-col items-end pr-16">
+                <span class="font-label-md text-label-md ${valColor}">${sign}${valStr}</span>
+                <span class="font-label-sm text-label-sm text-on-surface-variant mt-1">${dateFormatted}</span>
+            </div>
         `;
+        div.appendChild(actionsDiv);
+        list.appendChild(div);
     });
 }
 
@@ -559,8 +636,8 @@ async function saveTransaction() {
     const type = typeEl.value; // income or expense
     const dateStr = dateEl.value;
     
-    if(isNaN(amount) || amount <= 0) {
-        alert('Lütfen geçerli bir tutar girin.');
+    if(!validatePositiveNumber(amount)) {
+        alert('Lütfen geçerli bir tutar girin (Sıfırdan büyük olmalıdır).');
         return;
     }
     if(!title) {
@@ -585,15 +662,23 @@ async function saveTransaction() {
     saveBtn.disabled = true;
     
     try {
-        await addDoc(collection(db, "users", currentUid, "finance_transactions"), {
+        const txData = {
             title,
             amount,
             type,
             categoryId,
             paymentMethodId,
             dateStr,
-            createdAt: serverTimestamp()
-        });
+            updatedAt: serverTimestamp()
+        };
+
+        if (window.currentEditFinanceTxId) {
+            await updateDoc(doc(db, "users", currentUid, "finance_transactions", window.currentEditFinanceTxId), txData);
+            window.currentEditFinanceTxId = null;
+        } else {
+            txData.createdAt = serverTimestamp();
+            await addDoc(collection(db, "users", currentUid, "finance_transactions"), txData);
+        }
         
         saveBtn.innerHTML = `<span class="material-symbols-outlined">check_circle</span> Eklendi!`;
         saveBtn.classList.add("bg-primary-container", "text-on-primary-container");

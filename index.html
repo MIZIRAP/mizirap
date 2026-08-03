@@ -77,7 +77,10 @@
                 <input type="email" id="login-email" required class="w-full bg-surface border border-outline-variant focus:border-primary focus:ring-1 focus:ring-primary rounded-lg py-3 px-4 font-body-md text-on-surface">
             </div>
             <div>
-                <label class="block font-label-md text-on-surface-variant mb-1">Şifre</label>
+                <div class="flex justify-between items-center mb-1">
+                    <label class="block font-label-md text-on-surface-variant">Şifre</label>
+                    <a href="#" id="forgot-password-link" class="font-label-sm text-primary hover:underline">Şifremi unuttum</a>
+                </div>
                 <input type="password" id="login-password" required class="w-full bg-surface border border-outline-variant focus:border-primary focus:ring-1 focus:ring-primary rounded-lg py-3 px-4 font-body-md text-on-surface">
             </div>
             <p id="login-error" class="text-error font-label-sm min-h-[14px]"></p>
@@ -673,7 +676,7 @@
                 <!-- Total Pages -->
                 <div>
                     <label class="font-label-md text-label-md text-on-surface-variant mb-1 block" for="book-edit-pages">Toplam Sayfa</label>
-                    <input class="bg-surface-container-lowest border border-transparent rounded-lg py-2.5 px-3 font-body-md text-on-surface focus:outline-none focus:border-primary transition-colors w-32" id="book-edit-pages" type="number" />
+                    <input class="bg-surface-container-lowest border border-transparent rounded-lg py-2.5 px-3 font-body-md text-on-surface focus:outline-none focus:border-primary transition-colors w-32" id="book-edit-pages" type="number" min="0" />
                 </div>
                 <!-- Reading Status -->
                 <div>
@@ -1110,15 +1113,15 @@
                     <div class="grid grid-cols-3 gap-2">
                         <div class="flex flex-col gap-1">
                             <label class="font-label-sm text-label-sm text-on-surface-variant ml-1 text-center">Karb</label>
-                            <input class="bg-surface-container border border-transparent rounded-[12px] px-2 py-3 font-body-md text-body-md text-center text-on-surface focus:border-primary outline-none w-full transition-colors" placeholder="240" type="number" id="macro-goal-karb" value="240">
+                            <input class="bg-surface-container border border-transparent rounded-[12px] px-2 py-3 font-body-md text-body-md text-center text-on-surface focus:border-primary outline-none w-full transition-colors" placeholder="240" type="number" min="0" id="macro-goal-karb" value="240">
                         </div>
                         <div class="flex flex-col gap-1">
                             <label class="font-label-sm text-label-sm text-on-surface-variant ml-1 text-center">Protein</label>
-                            <input class="bg-surface-container border border-transparent rounded-[12px] px-2 py-3 font-body-md text-body-md text-center text-on-surface focus:border-primary outline-none w-full transition-colors" placeholder="110" type="number" id="macro-goal-protein" value="110">
+                            <input class="bg-surface-container border border-transparent rounded-[12px] px-2 py-3 font-body-md text-body-md text-center text-on-surface focus:border-primary outline-none w-full transition-colors" placeholder="110" type="number" min="0" id="macro-goal-protein" value="110">
                         </div>
                         <div class="flex flex-col gap-1">
                             <label class="font-label-sm text-label-sm text-on-surface-variant ml-1 text-center">Yağ</label>
-                            <input class="bg-surface-container border border-transparent rounded-[12px] px-2 py-3 font-body-md text-body-md text-center text-on-surface focus:border-primary outline-none w-full transition-colors" placeholder="66" type="number" id="macro-goal-yag" value="66">
+                            <input class="bg-surface-container border border-transparent rounded-[12px] px-2 py-3 font-body-md text-body-md text-center text-on-surface focus:border-primary outline-none w-full transition-colors" placeholder="66" type="number" min="0" id="macro-goal-yag" value="66">
                         </div>
                     </div>
                 </div>
@@ -1432,6 +1435,19 @@
             </div>
             </div>
             </section>
+            <!-- Weekly Chart Section -->
+            <section class="bg-surface-container-lowest rounded-xl p-5 shadow-[0px_4px_20px_rgba(0,0,0,0.04)] mt-4 flex flex-col gap-2">
+                <div class="flex justify-between items-end">
+                    <span class="font-label-md text-label-md text-on-surface-variant uppercase">Haftalık Kalori</span>
+                    <span class="font-headline-sm text-headline-sm text-primary" id="calories-avg-text">Avg: 0 kcal</span>
+                </div>
+                <div id="calories-chart-container" class="h-40 flex items-end justify-between pt-4 pb-2 border-b border-outline-variant/30">
+                    <!-- Dinamik Grafik Çubukları -->
+                </div>
+                <div class="flex justify-between w-full mt-2" id="calories-chart-labels">
+                    <!-- Dinamik Etiketler -->
+                </div>
+            </section>
             <!-- History Log -->
             <section class="mt-4 bg-surface-container-lowest rounded-[24px] p-4 shadow-[0px_4px_20px_rgba(0,0,0,0.04)]">
             <h3 class="font-headline-sm text-[18px] font-semibold text-on-surface mb-3 px-2">Günün Kayıtları</h3>
@@ -1496,7 +1512,7 @@
                 <div class="grid grid-cols-2 gap-4">
                     <div>
                         <label class="block font-label-md text-label-md text-on-surface-variant mb-1 ml-1">Kalori (kcal)</label>
-                        <input class="w-full bg-surface-container-lowest border border-outline-variant focus:border-primary focus:ring-1 focus:ring-primary rounded-xl px-4 py-3 font-body-md text-body-md text-on-surface placeholder:text-outline outline-none transition-all" placeholder="0" type="number">
+                        <input class="w-full bg-surface-container-lowest border border-outline-variant focus:border-primary focus:ring-1 focus:ring-primary rounded-xl px-4 py-3 font-body-md text-body-md text-on-surface placeholder:text-outline outline-none transition-all" placeholder="0" type="number" min="0">
                     </div>
                     <div>
                         <label class="block font-label-md text-label-md text-on-surface-variant mb-1 ml-1">Porsiyon</label>
@@ -1506,15 +1522,15 @@
                 <div class="grid grid-cols-3 gap-3 mt-2">
                     <div>
                         <label class="block font-label-sm text-label-sm text-on-surface-variant mb-1 ml-1">Protein (g)</label>
-                        <input class="w-full bg-surface-container-lowest border border-outline-variant focus:border-primary focus:ring-1 focus:ring-primary rounded-lg px-3 py-2 font-body-md text-body-md text-on-surface placeholder:text-outline outline-none transition-all text-center" placeholder="0" type="number">
+                        <input class="w-full bg-surface-container-lowest border border-outline-variant focus:border-primary focus:ring-1 focus:ring-primary rounded-lg px-3 py-2 font-body-md text-body-md text-on-surface placeholder:text-outline outline-none transition-all text-center" placeholder="0" type="number" min="0">
                     </div>
                     <div>
                         <label class="block font-label-sm text-label-sm text-on-surface-variant mb-1 ml-1">Karb (g)</label>
-                        <input class="w-full bg-surface-container-lowest border border-outline-variant focus:border-primary focus:ring-1 focus:ring-primary rounded-lg px-3 py-2 font-body-md text-body-md text-on-surface placeholder:text-outline outline-none transition-all text-center" placeholder="0" type="number">
+                        <input class="w-full bg-surface-container-lowest border border-outline-variant focus:border-primary focus:ring-1 focus:ring-primary rounded-lg px-3 py-2 font-body-md text-body-md text-on-surface placeholder:text-outline outline-none transition-all text-center" placeholder="0" type="number" min="0">
                     </div>
                     <div>
                         <label class="block font-label-sm text-label-sm text-on-surface-variant mb-1 ml-1">Yağ (g)</label>
-                        <input class="w-full bg-surface-container-lowest border border-outline-variant focus:border-primary focus:ring-1 focus:ring-primary rounded-lg px-3 py-2 font-body-md text-body-md text-on-surface placeholder:text-outline outline-none transition-all text-center" placeholder="0" type="number">
+                        <input class="w-full bg-surface-container-lowest border border-outline-variant focus:border-primary focus:ring-1 focus:ring-primary rounded-lg px-3 py-2 font-body-md text-body-md text-on-surface placeholder:text-outline outline-none transition-all text-center" placeholder="0" type="number" min="0">
                     </div>
                 </div>
                 <button class="w-full mt-4 bg-primary text-on-primary py-3 rounded-xl font-label-md text-label-md uppercase tracking-wider hover:bg-primary/90 active:scale-95 transition-all shadow-md">
@@ -1551,7 +1567,7 @@
 <span class="material-symbols-outlined" data-icon="remove">remove</span>
 </button>
 <div class="relative flex-1 group">
-<input class="w-full bg-surface-container-lowest border-2 border-transparent focus:border-primary text-center font-display-lg text-[32px] text-on-surface py-3 rounded-lg focus:ring-0 transition-colors appearance-none" id="gram-input"  type="number" value="100"/>
+<input class="w-full bg-surface-container-lowest border-2 border-transparent focus:border-primary text-center font-display-lg text-[32px] text-on-surface py-3 rounded-lg focus:ring-0 transition-colors appearance-none" id="gram-input"  type="number" min="0" value="100"/>
 <div class="absolute bottom-1 w-full text-center font-label-sm text-label-sm text-outline group-focus-within:text-primary transition-colors">g</div>
 </div>
 <button class="w-12 h-12 rounded-full bg-surface-container-low text-primary flex items-center justify-center hover:bg-surface-container transition-colors shrink-0 active:scale-95 shadow-sm" id="portion-plus-btn">
@@ -1617,7 +1633,7 @@
 <div class="flex flex-col">
 <label class="font-label-sm text-label-sm text-on-primary-fixed-variant mb-1">Kalori</label>
 <div class="flex items-baseline gap-1">
-<input class="w-20 bg-transparent outline-none border-none p-0 font-headline-md text-headline-md text-on-primary-fixed focus:ring-0" placeholder="0" type="number" id="new-food-kcal"/>
+<input class="w-20 bg-transparent outline-none border-none p-0 font-headline-md text-headline-md text-on-primary-fixed focus:ring-0" placeholder="0" type="number" min="0" id="new-food-kcal"/>
 <span class="font-body-md text-body-md text-on-primary-fixed-variant/70 font-medium">kcal</span>
 </div>
 </div>
@@ -1632,7 +1648,7 @@
 <div class="w-2 h-2 rounded-full bg-tertiary-fixed-dim"></div>
 </div>
 <div class="flex items-baseline gap-1 mt-auto">
-<input class="w-full bg-transparent outline-none border-none p-0 font-headline-sm text-headline-sm text-on-surface focus:ring-0" placeholder="0" type="number" id="new-food-karb"/>
+<input class="w-full bg-transparent outline-none border-none p-0 font-headline-sm text-headline-sm text-on-surface focus:ring-0" placeholder="0" type="number" min="0" id="new-food-karb"/>
 <span class="font-body-md text-body-md text-outline">g</span>
 </div>
 </div>
@@ -1643,7 +1659,7 @@
 <div class="w-2 h-2 rounded-full bg-secondary-fixed-dim"></div>
 </div>
 <div class="flex items-baseline gap-1 mt-auto">
-<input class="w-full bg-transparent outline-none border-none p-0 font-headline-sm text-headline-sm text-on-surface focus:ring-0" placeholder="0" type="number" id="new-food-protein"/>
+<input class="w-full bg-transparent outline-none border-none p-0 font-headline-sm text-headline-sm text-on-surface focus:ring-0" placeholder="0" type="number" min="0" id="new-food-protein"/>
 <span class="font-body-md text-body-md text-outline">g</span>
 </div>
 </div>
@@ -1654,7 +1670,7 @@
 <div class="w-2 h-2 rounded-full bg-tertiary"></div>
 </div>
 <div class="flex items-baseline gap-1 mt-auto">
-<input class="w-full bg-transparent outline-none border-none p-0 font-headline-sm text-headline-sm text-on-surface focus:ring-0" placeholder="0" type="number" id="new-food-yag"/>
+<input class="w-full bg-transparent outline-none border-none p-0 font-headline-sm text-headline-sm text-on-surface focus:ring-0" placeholder="0" type="number" min="0" id="new-food-yag"/>
 <span class="font-body-md text-body-md text-outline">g</span>
 </div>
 </div>
@@ -1772,7 +1788,7 @@
 </div>
 <!-- Kapanış: #app-container -->
 
-    <script type="module" src="app.js?v=25"></script>
+    <script type="module" src="app.js?v=99"></script>
 
 <!-- ================= FINANCE MODALS ================= -->
 <!-- Add Transaction Modal -->
@@ -1793,7 +1809,7 @@
                 <span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest mb-2">Tutar</span>
                 <div class="flex items-center text-primary">
                     <span class="font-display-lg text-display-lg mr-1">₺</span>
-                    <input id="tx-amount" class="bg-transparent border-none outline-none font-display-lg text-display-lg text-center w-full max-w-[200px] text-primary focus:ring-0 p-0 placeholder-primary/30" placeholder="0" type="number" step="0.01">
+                    <input id="tx-amount" class="bg-transparent border-none outline-none font-display-lg text-display-lg text-center w-full max-w-[200px] text-primary focus:ring-0 p-0 placeholder-primary/30" placeholder="0" type="number" min="0" step="0.01">
                 </div>
             </div>
             <!-- Transaction Type -->
@@ -2147,5 +2163,18 @@
 </div>
 
     <script type="module" src="./movies.js"></script>
+    <!-- Forgot Password Modal -->
+    <div class="hidden fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm" id="forgot-password-modal">
+        <div class="bg-surface-container-lowest w-full max-w-sm rounded-[24px] shadow-lg flex flex-col p-6 scale-95 opacity-0 transition-all duration-200" id="forgot-password-modal-content">
+            <h3 class="font-headline-sm text-headline-sm text-on-surface mb-2">Şifre Sıfırlama</h3>
+            <p class="font-body-md text-body-md text-on-surface-variant mb-4">Kayıtlı e-posta adresinizi girin, size bir sıfırlama bağlantısı gönderelim.</p>
+            <input type="email" id="forgot-password-email" class="w-full bg-surface border border-outline-variant focus:border-primary focus:ring-1 focus:ring-primary rounded-lg py-3 px-4 font-body-md text-on-surface mb-4" placeholder="E-posta adresiniz">
+            <p id="forgot-password-message" class="font-label-sm min-h-[20px] mb-4"></p>
+            <div class="flex gap-3">
+                <button id="forgot-password-cancel" class="flex-1 py-3 rounded-xl font-label-md text-primary bg-surface-container-lowest hover:bg-surface-container transition-colors">İptal</button>
+                <button id="forgot-password-send" class="flex-1 py-3 rounded-xl font-label-md text-on-primary bg-primary hover:opacity-90 shadow-sm transition-all">Gönder</button>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

@@ -28,25 +28,25 @@ export function initHistory(uid) {
     unsubCalories = registerListener(onSnapshot(calRef, snap => {
         rawCalories = snap.docs.map(d => d.data());
         renderHistory();
-    });
+    }));
 
     const waterRef = query(collection(db, "users", uid, "waterLogs"), orderBy("createdAt", "desc"), limit(100));
     unsubWater = registerListener(onSnapshot(waterRef, snap => {
         rawWater = snap.docs.map(d => d.data());
         renderHistory();
-    });
+    }));
 
     const finRef = query(collection(db, "users", uid, "finance_transactions"), orderBy("createdAt", "desc"), limit(100));
     unsubFinance = registerListener(onSnapshot(finRef, snap => {
         rawFinance = snap.docs.map(d => d.data());
         renderHistory();
-    });
+    }));
 
     const bookRef = query(collection(db, "users", uid, "book_logs"), orderBy("createdAt", "desc"), limit(100));
     unsubBooks = registerListener(onSnapshot(bookRef, snap => {
         rawBooks = snap.docs.map(d => d.data());
         renderHistory();
-    });
+    }));
 }
 
 export function clearHistory() {
