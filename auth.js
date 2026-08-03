@@ -14,8 +14,12 @@ function turkceHataMesaji(code) {
     "auth/invalid-credential": "E-posta veya şifre hatalı.",
     "auth/email-already-in-use": "Bu e-posta zaten kayıtlı.",
     "auth/weak-password": "Şifre en az 6 karakter olmalı.",
+    "auth/popup-closed-by-user": "Giriş işlemi iptal edildi.",
+    "auth/cancelled-popup-request": "Zaten bir giriş penceresi açık.",
+    "auth/operation-not-allowed": "Google girişi aktif değil (Firebase panelinden açın).",
+    "auth/network-request-failed": "Ağ bağlantısı hatası, internetinizi kontrol edin."
   };
-  return map[code] || "Bir hata oluştu, tekrar dener misin?";
+  return map[code] || "Bir hata oluştu (" + code + "), tekrar dener misin?";
 }
 
 export function setupAuthUI() {
