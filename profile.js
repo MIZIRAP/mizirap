@@ -55,8 +55,7 @@ function updateAllProfileImages(url) {
     });
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-    
+function setupProfileEvents() {
     const photoInput = document.getElementById('profile-photo-input');
     if (photoInput) {
         photoInput.addEventListener('change', async (e) => {
@@ -210,4 +209,10 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
     }
-});
+}
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', setupProfileEvents);
+} else {
+    setupProfileEvents();
+}
