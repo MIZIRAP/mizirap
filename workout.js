@@ -32,6 +32,13 @@ export function initWorkout(uid, onChangeCallback) {
         }
 
         renderSplitView();
+        
+        if(callback) {
+            const activeSplit = splits.find(s => s.id === activeSplitId);
+            const activeSplitName = activeSplit ? activeSplit.name : "Yapılmadı";
+            // We use the last known mappedLogs or empty array
+            callback(window._miz_last_workout_logs || [], activeSplitName);
+        }
     });
 
     const logsRef = query(collection(db, "users", uid, "workout_logs"), orderBy("dateStr", "desc"));
@@ -46,7 +53,13 @@ export function initWorkout(uid, onChangeCallback) {
             };
         });
         
-        if(callback) callback(mappedLogs);
+        window._miz_last_workout_logs = mappedLogs;
+        
+        if(callback) {
+            const activeSplit = splits.find(s => s.id === activeSplitId);
+            const activeSplitName = activeSplit ? activeSplit.name : "Yapılmadı";
+            callback(mappedLogs, activeSplitName);
+        }
     });
 
     setupEventListeners();

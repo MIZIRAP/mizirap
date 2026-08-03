@@ -9,6 +9,7 @@ import { initWater, clearWater } from "./water.js";
 import { initBooks, clearBooks } from "./books.js";
 import { initProfile } from "./profile.js";
 import { initCalories, clearCalories } from "./calories.js";
+import { initHistory, clearHistory } from "./history.js";
 
 // ---------- DOM referansları ----------
 const authScreen = document.getElementById("auth-screen");
@@ -39,8 +40,8 @@ onAuthStateChanged(auth, async (user) => {
             initDashboard(user.uid);
             initShopping(user.uid);
             
-            initWorkout(user.uid, (workouts) => {
-                updateDashboardWorkouts(workouts);
+            initWorkout(user.uid, (workouts, activeSplitName) => {
+                updateDashboardWorkouts(workouts, activeSplitName);
             });
             
             initFinance(user.uid, (txs) => {
@@ -57,6 +58,7 @@ onAuthStateChanged(auth, async (user) => {
             });
             
             initProfile(user.uid);
+            initHistory(user.uid);
             
         } catch (err) {
             console.error("Login transition error:", err);

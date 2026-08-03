@@ -109,118 +109,127 @@
     <!-- ================= ÖZET (Dashboard) ================= -->
     <section id="view-dashboard" class="view active">
         <!-- TopAppBar -->
-        <header class="flex justify-between items-center px-container-padding py-element-spacing w-full sticky top-0 z-40 bg-background dark:bg-background flat no shadows">
+        <header class="flex justify-between items-center px-container-padding py-element-spacing w-full sticky top-0 z-40 bg-[var(--paper)] flat no shadows">
             <div class="flex items-center gap-4">
-                <h1 class="font-display-lg text-display-lg text-primary dark:text-primary-fixed-dim tracking-tight">My Life</h1>
+                <span class="material-symbols-outlined text-[var(--green)]" style="font-variation-settings: 'FILL' 1;">menu</span>
+                <h1 class="text-[24px] font-bold text-[var(--green)] tracking-tight">My Life</h1>
             </div>
-            <div class="w-10 h-10 rounded-full overflow-hidden bg-surface-container-high border-2 border-outline-variant cursor-pointer nav-tab" data-target="view-profile">
-                <!-- User Profile Picture -->
-                <img alt="User Profile" class="user-profile-img w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD6pbBf1WbDO9xMS_XZVPq3Hat-IK7RVbQRVC5-9p8PWsv7SHG_Yojo0BjpUQAjhbGfBVWyXpGohNDbHg-yOrIOtX0zvzHvWJ0XjCLkLb4jDyzHW1tUnhdG4g69-o5TjKC7k0rOwSaXpzWjKDRZIhOzP1obI9IDh1PtPTw3cqmnIhUiMtmYi4lnBR1JB31WEtk7J5y65lOTNGEai5pKftjSXWP6cklloZAmRN4fheHJAMy0AjKzxoBO">
+            <div class="flex items-center gap-2">
+                <button class="nav-tab p-2 text-[var(--green)] hover:bg-[var(--green)]/10 rounded-full transition-all flex items-center justify-center" data-target="view-history">
+                    <span class="material-symbols-outlined text-[24px]">history</span>
+                </button>
+                <div class="nav-tab w-10 h-10 rounded-full overflow-hidden bg-white border border-outline-variant cursor-pointer" data-target="view-profile">
+                    <img alt="User Profile" class="user-profile-img w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD6pbBf1WbDO9xMS_XZVPq3Hat-IK7RVbQRVC5-9p8PWsv7SHG_Yojo0BjpUQAjhbGfBVWyXpGohNDbHg-yOrIOtX0zvzHvWJ0XjCLkLb4jDyzHW1tUnhdG4g69-o5TjKC7k0rOwSaXpzWjKDRZIhOzP1obI9IDh1PtPTw3cqmnIhUiMtmYi4lnBR1JB31WEtk7J5y65lOTNGEai5pKftjSXWP6cklloZAmRN4fheHJAMy0AjKzxoBO">
+                </div>
             </div>
         </header>
 
         <!-- Main Content Canvas -->
         <main class="px-container-padding pt-6 pb-24 mx-auto max-w-2xl flex flex-col gap-section-margin">
             <!-- Featured Section -->
-            <section class="bg-surface-container-lowest rounded-card p-5 ambient-shadow flex flex-col gap-2">
-                <h2 class="font-headline-md text-headline-md text-on-surface">Merhaba, <span id="dashboard-user-name">Selin</span>!</h2>
-                <p class="font-body-md text-body-md text-on-surface-variant">Bugün harika bir gün olacak. İşte senin için hazırladığımız özet.</p>
-                <p class="font-label-sm text-label-sm text-on-surface-variant uppercase mt-2" id="dashboard-date">14 Ekim 2023, Cumartesi</p>
+            <section class="bg-white rounded-card p-6 shadow-sm flex flex-col gap-2">
+                <h2 class="text-[24px] font-bold text-[var(--ink)]">Merhaba, <span id="dashboard-user-name">Selin</span>!</h2>
+                <p class="text-[16px] text-[var(--ink)]/80">Bugün harika bir gün olacak. İşte senin için hazırladığımız özet.</p>
+                <p class="text-[12px] font-medium text-[var(--ink)]/60 uppercase mt-2" id="dashboard-date">14 Ekim 2023, Cumartesi</p>
             </section>
 
-            <!-- 2x2 Grid Section -->
+            <!-- Sport Section -->
+            <section class="nav-tab bg-white rounded-card p-6 shadow-sm interactive-card flex items-center cursor-pointer" data-target="view-workout">
+                <div class="flex items-center gap-4">
+                    <div class="p-3 rounded-full bg-[var(--green)]/10 text-[var(--green)]">
+                        <span class="material-symbols-outlined text-[24px]">fitness_center</span>
+                    </div>
+                    <div class="flex flex-col">
+                        <span class="text-[12px] font-medium text-[var(--ink)]/60 uppercase">Spor</span>
+                        <span class="text-[16px] text-[var(--ink)]/80" id="stat-workout-split">Yapılmadı</span>
+                    </div>
+                </div>
+            </section>
+
             <section class="grid grid-cols-2 gap-card-gap">
                 <!-- Water Card -->
-                <div class="nav-tab bg-surface-container-lowest rounded-card p-4 ambient-shadow interactive-card flex flex-col justify-between aspect-square cursor-pointer" data-target="view-water">
-                    <div class="p-2 w-fit rounded-full bg-secondary-container text-primary">
+                <div class="nav-tab bg-white rounded-card p-6 shadow-sm interactive-card flex flex-col justify-between aspect-square cursor-pointer" data-target="view-water">
+                    <div class="p-2 w-fit rounded-full bg-[var(--green)]/10 text-[var(--green)]">
                         <span class="material-symbols-outlined text-[20px]">water_drop</span>
                     </div>
                     <div class="mt-4 flex flex-col gap-1">
-                        <span class="font-label-sm text-label-sm text-on-surface-variant uppercase">Su Tüketimi</span>
-                        <span class="font-headline-sm text-headline-sm text-on-surface" id="dashboard-water-text">0 <span class="text-sm font-normal text-on-surface-variant">/ 2000 ml</span></span>
-                        <div class="w-full h-1.5 bg-surface-variant rounded-full mt-2 overflow-hidden">
-                            <div id="dashboard-water-progress" class="h-full bg-primary rounded-full transition-all duration-300" style="width: 0%;"></div>
-                        </div>
-                        <div class="flex gap-2 mt-2">
-                            <!-- We use e.stopPropagation() here to prevent navigating to view-water when clicking + buttons -->
-                            <button class="flex-1 py-1 px-2 rounded-full bg-secondary-container text-primary text-label-sm font-label-sm active:scale-95 transition-all dash-water-add" data-amount="250" onclick="event.stopPropagation()">+250ml</button>
-                            <button class="flex-1 py-1 px-2 rounded-full bg-secondary-container text-primary text-label-sm font-label-sm active:scale-95 transition-all dash-water-add" data-amount="500" onclick="event.stopPropagation()">+500ml</button>
+                        <span class="text-[12px] font-medium text-[var(--ink)]/60 uppercase">Su Tüketimi</span>
+                        <span class="text-[20px] font-semibold text-[var(--ink)]" id="dashboard-water-text">0 <span class="text-[12px] font-normal text-[var(--ink)]/60">/ 2000 ml</span></span>
+                        <div class="w-full h-1.5 bg-[var(--green)]/20 rounded-full mt-2 overflow-hidden">
+                            <div id="dashboard-water-progress" class="h-full bg-[var(--green)] rounded-full transition-all duration-300" style="width: 0%;"></div>
                         </div>
                     </div>
                 </div>
 
                 <!-- Nutrition Card -->
-                <div class="nav-tab bg-surface-container-lowest rounded-card p-4 ambient-shadow interactive-card flex flex-col justify-between aspect-square cursor-pointer" data-target="view-calories">
-                    <div class="p-2 w-fit rounded-full bg-secondary-container text-primary">
+                <div class="nav-tab bg-white rounded-card p-6 shadow-sm interactive-card flex flex-col justify-between aspect-square cursor-pointer" data-target="view-calories">
+                    <div class="p-2 w-fit rounded-full bg-[var(--green)]/10 text-[var(--green)]">
                         <span class="material-symbols-outlined text-[20px]">restaurant</span>
                     </div>
                     <div class="mt-4 flex flex-col gap-1">
-                        <span class="font-label-sm text-label-sm text-on-surface-variant uppercase">Kalori Takibi</span>
-                        <span class="font-headline-sm text-headline-sm text-on-surface" id="dashboard-calories-text">0 <span class="text-sm font-normal text-on-surface-variant">/ 2000 kcal</span></span>
-                        <div class="w-full h-1.5 bg-surface-variant rounded-full mt-2 overflow-hidden">
-                            <div class="h-full bg-primary rounded-full transition-all duration-300" id="dashboard-calories-progress" style="width: 0%;"></div>
+                        <span class="text-[12px] font-medium text-[var(--ink)]/60 uppercase">Besin Takibi</span>
+                        <span class="text-[20px] font-semibold text-[var(--ink)]" id="dashboard-calories-text">0 <span class="text-[12px] font-normal text-[var(--ink)]/60">/ 2000 kcal</span></span>
+                        <div class="w-full h-1.5 bg-[var(--green)]/20 rounded-full mt-2 overflow-hidden">
+                            <div id="dashboard-calories-progress" class="h-full bg-[var(--green)] rounded-full transition-all duration-300" style="width: 0%;"></div>
                         </div>
-                        <span class="font-body-md text-body-md text-on-surface-variant mt-1">bugün</span>
                     </div>
                 </div>
 
                 <!-- Reading Card -->
-                <div class="nav-tab bg-surface-container-lowest rounded-card p-4 ambient-shadow interactive-card flex flex-col justify-between aspect-square cursor-pointer" data-target="view-books">
-                    <div class="p-2 w-fit rounded-full bg-secondary-container text-primary">
+                <div class="nav-tab bg-white rounded-card p-6 shadow-sm interactive-card flex flex-col justify-between aspect-square cursor-pointer" data-target="view-books">
+                    <div class="p-2 w-fit rounded-full bg-[var(--green)]/10 text-[var(--green)]">
                         <span class="material-symbols-outlined text-[20px]">menu_book</span>
                     </div>
                     <div class="mt-4 flex flex-col gap-1">
-                        <span class="font-label-sm text-label-sm text-on-surface-variant uppercase">Kitap Okuma</span>
-                        <span class="font-headline-sm text-headline-sm text-on-surface" id="dashboard-books-text">0 <span class="text-sm font-normal text-on-surface-variant">/ 0 sayfa</span></span>
-                        <div class="w-full h-1.5 bg-surface-variant rounded-full mt-2 overflow-hidden">
-                            <div class="h-full bg-primary rounded-full" id="dashboard-books-progress" style="width: 0%;"></div>
+                        <span class="text-[12px] font-medium text-[var(--ink)]/60 uppercase">Kitap Okuma</span>
+                        <span class="text-[20px] font-semibold text-[var(--ink)]" id="dashboard-books-text">0 <span class="text-[12px] font-normal text-[var(--ink)]/60">/ 0 sayfa</span></span>
+                        <div class="w-full h-1.5 bg-[var(--green)]/20 rounded-full mt-2 overflow-hidden">
+                            <div id="dashboard-books-progress" class="h-full bg-[var(--green)] rounded-full transition-all duration-300" style="width: 0%;"></div>
                         </div>
-                        <span class="font-body-md text-body-md text-on-surface-variant mt-1 truncate" id="dashboard-books-title">-</span>
                     </div>
                 </div>
 
-                <!-- Sport Card -->
-                <div class="nav-tab bg-surface-container-lowest rounded-card p-4 ambient-shadow interactive-card flex flex-col justify-between aspect-square cursor-pointer" data-target="view-workout">
-                    <div class="flex justify-between items-start">
-                        <div class="p-2 rounded-full bg-secondary-container text-primary">
-                            <span class="material-symbols-outlined text-[20px]">fitness_center</span>
-                        </div>
-                        <button class="w-6 h-6 rounded-full border-2 border-outline-variant flex items-center justify-center"></button>
+                <!-- Media Card (Placeholder) -->
+                <div class="nav-tab bg-white rounded-card p-6 shadow-sm interactive-card flex flex-col justify-between aspect-square cursor-pointer" data-target="view-movies">
+                    <div class="p-2 w-fit rounded-full bg-[var(--green)]/10 text-[var(--green)]">
+                        <span class="material-symbols-outlined text-[20px]">movie</span>
                     </div>
                     <div class="mt-4 flex flex-col gap-1">
-                        <span class="font-label-sm text-label-sm text-on-surface-variant uppercase">Spor</span>
-                        <span class="font-headline-sm text-headline-sm text-on-surface" id="stat-workout-count">Yapılmadı</span>
-                        <span class="font-body-md text-body-md text-on-surface-variant">Hedef: 4/hafta</span>
+                        <span class="text-[12px] font-medium text-[var(--ink)]/60 uppercase">Dizi / Film</span>
+                        <span class="text-[20px] font-semibold text-[var(--ink)]">2 <span class="text-[12px] font-normal text-[var(--ink)]/60">/ 5 bölüm</span></span>
+                        <div class="w-full h-1.5 bg-[var(--green)]/20 rounded-full mt-2 overflow-hidden">
+                            <div class="h-full bg-[var(--green)] rounded-full" style="width: 40%;"></div>
+                        </div>
                     </div>
                 </div>
             </section>
 
             <!-- Full-width Finance Card -->
-            <section class="nav-tab bg-surface-container-lowest rounded-card p-5 ambient-shadow interactive-card flex items-center justify-between cursor-pointer" data-target="view-finance">
+            <section class="nav-tab bg-white rounded-card p-6 shadow-sm interactive-card flex items-center justify-between cursor-pointer" data-target="view-finance">
                 <div class="flex items-center gap-4">
-                    <div class="p-3 rounded-full bg-secondary-container text-primary">
+                    <div class="p-3 rounded-full bg-[var(--green)]/10 text-[var(--green)]">
                         <span class="material-symbols-outlined text-[24px]">account_balance_wallet</span>
                     </div>
                     <div class="flex flex-col">
-                        <span class="font-label-sm text-label-sm text-on-surface-variant uppercase">Finans</span>
-                        <span class="font-body-md text-body-md text-on-surface-variant">Bakiye</span>
+                        <span class="text-[12px] font-medium text-[var(--ink)]/60 uppercase">Finans</span>
+                        <span class="text-[16px] text-[var(--ink)]/80">Bakiye</span>
                     </div>
                 </div>
-                <span class="font-headline-md text-headline-md text-primary" id="stat-balance">0 TL</span>
+                <span class="text-[24px] font-bold text-[var(--green)]" id="stat-balance">0 TL</span>
             </section>
 
             <!-- Full-width Shopping Card -->
-            <section class="nav-tab bg-surface-container-lowest rounded-card p-5 ambient-shadow interactive-card flex items-center justify-between cursor-pointer" data-target="view-shopping">
+            <section class="nav-tab bg-white rounded-card p-6 shadow-sm interactive-card flex items-center justify-between cursor-pointer" data-target="view-shopping">
                 <div class="flex items-center gap-4">
-                    <div class="p-3 rounded-full bg-secondary-container text-primary">
+                    <div class="p-3 rounded-full bg-[var(--green)]/10 text-[var(--green)]">
                         <span class="material-symbols-outlined text-[24px]">shopping_basket</span>
                     </div>
                     <div class="flex flex-col">
-                        <span class="font-label-sm text-label-sm text-on-surface-variant uppercase">Alışveriş</span>
-                        <span class="font-body-md text-body-md text-on-surface-variant">Listeye Git</span>
+                        <span class="text-[12px] font-medium text-[var(--ink)]/60 uppercase">Alışveriş</span>
+                        <span class="text-[16px] text-[var(--ink)]/80">Listeye Git</span>
                     </div>
                 </div>
-                <span class="font-headline-sm text-headline-sm text-primary" id="dashboard-shopping-count">0 Ürün</span>
+                <span class="text-[20px] font-semibold text-[var(--green)]" id="dashboard-shopping-count">0 Ürün</span>
             </section>
 
             <!-- Bottom List Section -->
@@ -875,8 +884,63 @@
         </nav>
     </section>
 
+    <!-- ================= GEÇMİŞ (History) ================= -->
+    <section id="view-history" class="view hidden bg-[var(--paper)] text-[var(--ink)] font-sans antialiased min-h-screen pb-32" style="--green: #446554; --paper: #f7faf3; --ink: #1a1c18; --coral: #ff8a80; --tan: #d2b48c;">
+        <!-- TopAppBar -->
+        <header class="bg-[var(--paper)] w-full top-0 sticky flex items-center justify-between px-5 py-4 z-40">
+            <div class="flex items-center gap-3 transition-opacity duration-200 hover:opacity-80 cursor-pointer nav-tab" data-target="view-profile">
+                <img class="w-8 h-8 rounded-full object-cover user-profile-img" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD6pbBf1WbDO9xMS_XZVPq3Hat-IK7RVbQRVC5-9p8PWsv7SHG_Yojo0BjpUQAjhbGfBVWyXpGohNDbHg-yOrIOtX0zvzHvWJ0XjCLkLb4jDyzHW1tUnhdG4g69-o5TjKC7k0rOwSaXpzWjKDRZIhOzP1obI9IDh1PtPTw3cqmnIhUiMtmYi4lnBR1JB31WEtk7J5y65lOTNGEai5pKftjSXWP6cklloZAmRN4fheHJAMy0AjKzxoBO" alt="Profile" />
+            </div>
+            <div class="text-[24px] font-bold text-[var(--green)] tracking-tight font-display-lg">
+                My Life
+            </div>
+            <button class="transition-opacity duration-200 hover:opacity-80 text-[var(--green)] flex items-center justify-center p-2 rounded-full nav-tab" data-target="view-profile">
+                <span class="material-symbols-outlined">settings</span>
+            </button>
+        </header>
+
+        <main class="px-5 flex flex-col gap-4 max-w-md mx-auto">
+            <!-- Page Context Header -->
+            <div class="flex items-center gap-2 mb-2 mt-4">
+                <button class="nav-tab text-[var(--ink)] opacity-70 hover:opacity-100 transition-colors flex items-center justify-center rounded-full p-2 bg-[var(--green)]/10" data-target="view-dashboard">
+                    <span class="material-symbols-outlined">arrow_back</span>
+                </button>
+                <h1 class="text-[24px] font-bold text-[var(--ink)] ml-2">Geçmiş</h1>
+            </div>
+            
+            <!-- Dinamik İçerik Buraya Gelecek -->
+            <div id="history-cards-container" class="flex flex-col gap-4">
+                <div class="text-center text-[var(--ink)]/60 mt-10">Yükleniyor...</div>
+            </div>
+        </main>
+    </section>
+
+    <!-- ================= DİZİ / FİLM (Placeholder) ================= -->
+    <section id="view-movies" class="view hidden bg-[var(--paper)] text-[var(--ink)] font-sans antialiased min-h-screen pb-32" style="--green: #446554; --paper: #f7faf3; --ink: #1a1c18; --coral: #ff8a80; --tan: #d2b48c;">
+        <header class="bg-[var(--paper)] w-full top-0 sticky flex items-center justify-between px-5 py-4 z-40">
+            <div class="text-[24px] font-bold text-[var(--green)] tracking-tight font-display-lg">
+                My Life
+            </div>
+        </header>
+
+        <main class="px-5 flex flex-col gap-4 max-w-md mx-auto">
+            <div class="flex items-center gap-2 mb-2 mt-4">
+                <button class="nav-tab text-[var(--ink)] opacity-70 hover:opacity-100 transition-colors flex items-center justify-center rounded-full p-2 bg-[var(--green)]/10" data-target="view-dashboard">
+                    <span class="material-symbols-outlined">arrow_back</span>
+                </button>
+                <h1 class="text-[24px] font-bold text-[var(--ink)] ml-2">Dizi / Film Takibi</h1>
+            </div>
+            
+            <div class="text-center text-[var(--ink)]/60 mt-10 p-6 bg-white rounded-card shadow-sm">
+                <span class="material-symbols-outlined text-[48px] text-[var(--green)] opacity-50 mb-4">movie</span>
+                <p>Bu özellik yapım aşamasındadır.</p>
+                <p class="text-sm mt-2">Yakında eklenecek!</p>
+            </div>
+        </main>
+    </section>
+
     <!-- ================= FİNANS (Placeholder) ================= -->
-    
+
 <section id="view-finance" class="view hidden px-container-padding py-6">
         <!-- Top App Bar -->
         <header class="w-full top-0 sticky bg-background dark:bg-background flat no shadows transition-opacity duration-200 z-40 max-w-md mx-auto">

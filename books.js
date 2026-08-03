@@ -466,9 +466,23 @@ function renderBooks(uid) {
                     try {
                         const originalBtnText = btn.textContent;
                         btn.textContent = "...";
-                        await updateDoc(doc(db, "users", uid, "books", id), { readPages: newPages });
-                        // Update status to finished if completed
                         const book = readingBooks.find(b => b.id === id);
+                        const oldPages = book ? (book.readPages || 0) : 0;
+                        const diff = newPages - oldPages;
+                        
+                        // Update the book document
+                        await updateDoc(doc(db, "users", uid, "books", id), { readPages: newPages });
+                        
+                        // Log the reading session if progress was made
+                        if (diff > 0) {
+                            await addDoc(collection(db, "users", uid, "book_logs"), {
+                                pagesRead: diff,
+                                bookId: id,
+                                createdAt: serverTimestamp()
+                            });
+                        }
+                        
+                        // Update status to finished if completed
                         if (book && newPages >= book.totalPages) {
                             await updateDoc(doc(db, "users", uid, "books", id), { status: "finished" });
                         }
