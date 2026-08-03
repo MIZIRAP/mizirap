@@ -1,6 +1,7 @@
 import { db } from "./firebase-config.js";
 import { collection, onSnapshot, serverTimestamp, doc, updateDoc, writeBatch, addDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
 import { escapeHtml } from "./utils.js";
+import { registerListener } from "./listenerManager.js";
 
 let booksUnsubscribe = null;
 let currentBooks = [];
@@ -345,7 +346,7 @@ export function initBooks(uid, onChangeCallback) {
 
     const booksRef = collection(db, "users", uid, "books");
     
-    booksUnsubscribe = onSnapshot(booksRef, async (snapshot) => {
+    booksUnsubscribe = registerListener(onSnapshot(booksRef, async (snapshot) => {
         if (snapshot.empty) {
             currentBooks = [];
             renderBooks(uid);

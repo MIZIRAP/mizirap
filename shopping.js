@@ -1,13 +1,14 @@
 import { auth, db } from "./firebase-config.js";
 import { collection, doc, addDoc, updateDoc, deleteDoc, writeBatch, onSnapshot, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
 import { escapeHtml } from "./utils.js";
+import { registerListener } from "./listenerManager.js";
 
 let allShopping = [];
 let unsubscribe = null;
 
 export function initShopping(uid) {
     const shoppingRef = query(collection(db, "users", uid, "shoppingList"), orderBy("createdAt", "desc"));
-    unsubscribe = onSnapshot(shoppingRef, snap => {
+    unsubscribe = registerListener(onSnapshot(shoppingRef, snap => {
         allShopping = snap.docs.map(d => ({ id: d.id, ...d.data() }));
         renderShoppingList();
     });

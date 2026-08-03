@@ -1,6 +1,7 @@
 import { auth, db } from "./firebase-config.js";
 import { collection, doc, addDoc, setDoc, onSnapshot, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
 import { escapeHtml } from "./utils.js";
+import { registerListener } from "./listenerManager.js";
 
 let dailyGoal = 2000;
 let waterLogs = [];
@@ -13,7 +14,7 @@ export function initWater(uid, onChangeCallback) {
     
     // Settings listener for daily goal
     const settingsRef = doc(db, "users", uid, "settings", "water");
-    unsubscribeSettings = onSnapshot(settingsRef, (docSnap) => {
+    unsubscribeSettings = registerListener(onSnapshot(settingsRef, (docSnap) => {
         if (docSnap.exists() && docSnap.data().dailyGoal) {
             dailyGoal = docSnap.data().dailyGoal;
         } else {
@@ -25,7 +26,7 @@ export function initWater(uid, onChangeCallback) {
 
     // Logs listener (last 7 days)
     const logsRef = query(collection(db, "users", uid, "waterLogs"), orderBy("createdAt", "desc"));
-    unsubscribeLogs = onSnapshot(logsRef, (snap) => {
+    unsubscribeLogs = registerListener(onSnapshot(logsRef, (snap) => {
         // Fetch all logs to filter locally (since we need last 7 days and today)
         // For a huge app we might want to query where createdAt > 7 days ago, but this is fine for now
         waterLogs = snap.docs.map(d => ({ id: d.id, ...d.data() }));

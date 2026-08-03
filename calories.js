@@ -1,6 +1,7 @@
 import { db } from "./firebase-config.js";
 import { collection, doc, addDoc, setDoc, deleteDoc, onSnapshot, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
 import { escapeHtml } from "./utils.js";
+import { registerListener } from "./listenerManager.js";
 
 let dailyCalorieGoal = 2000;
 let proteinGoal = 110;
@@ -61,7 +62,7 @@ export function initCalories(uid, onChangeCallback) {
 
     // Listen to Settings
     const settingsRef = doc(db, "users", uid, "settings", "calories");
-    unsubscribeSettings = onSnapshot(settingsRef, (docSnap) => {
+    unsubscribeSettings = registerListener(onSnapshot(settingsRef, (docSnap) => {
         if (docSnap.exists()) {
             const data = docSnap.data();
             if (data.dailyCalorieGoal) dailyCalorieGoal = data.dailyCalorieGoal;
@@ -79,7 +80,7 @@ export function initCalories(uid, onChangeCallback) {
 
     // Listen to Logs (Only needed for daily tracking)
     const logsRef = query(collection(db, "users", uid, "calorieLogs"), orderBy("createdAt", "desc"));
-    unsubscribeLogs = onSnapshot(logsRef, (snap) => {
+    unsubscribeLogs = registerListener(onSnapshot(logsRef, (snap) => {
         const today = new Date();
         today.setHours(0,0,0,0);
         
@@ -98,7 +99,7 @@ export function initCalories(uid, onChangeCallback) {
 
     // Listen to Food Library
     const libRef = query(collection(db, "users", uid, "foodLibrary"), orderBy("createdAt", "desc"));
-    unsubscribeLibrary = onSnapshot(libRef, (snap) => {
+    unsubscribeLibrary = registerListener(onSnapshot(libRef, (snap) => {
         libraryFoods = snap.docs.map(d => ({ id: d.id, ...d.data() }));
         renderLibraryFoods();
     });

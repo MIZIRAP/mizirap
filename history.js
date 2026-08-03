@@ -1,5 +1,6 @@
 import { db } from "./firebase-config.js";
 import { collection, query, orderBy, limit, onSnapshot } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+import { registerListener } from "./listenerManager.js";
 
 let unsubCalories = null;
 let unsubWater = null;
@@ -24,25 +25,25 @@ export function initHistory(uid) {
 
     // Query past 30 days roughly or just limit to 100 docs each
     const calRef = query(collection(db, "users", uid, "calorieLogs"), orderBy("createdAt", "desc"), limit(100));
-    unsubCalories = onSnapshot(calRef, snap => {
+    unsubCalories = registerListener(onSnapshot(calRef, snap => {
         rawCalories = snap.docs.map(d => d.data());
         renderHistory();
     });
 
     const waterRef = query(collection(db, "users", uid, "waterLogs"), orderBy("createdAt", "desc"), limit(100));
-    unsubWater = onSnapshot(waterRef, snap => {
+    unsubWater = registerListener(onSnapshot(waterRef, snap => {
         rawWater = snap.docs.map(d => d.data());
         renderHistory();
     });
 
     const finRef = query(collection(db, "users", uid, "finance_transactions"), orderBy("createdAt", "desc"), limit(100));
-    unsubFinance = onSnapshot(finRef, snap => {
+    unsubFinance = registerListener(onSnapshot(finRef, snap => {
         rawFinance = snap.docs.map(d => d.data());
         renderHistory();
     });
 
     const bookRef = query(collection(db, "users", uid, "book_logs"), orderBy("createdAt", "desc"), limit(100));
-    unsubBooks = onSnapshot(bookRef, snap => {
+    unsubBooks = registerListener(onSnapshot(bookRef, snap => {
         rawBooks = snap.docs.map(d => d.data());
         renderHistory();
     });

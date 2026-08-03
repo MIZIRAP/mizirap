@@ -1,6 +1,7 @@
 import { auth, db } from "./firebase-config.js";
 import { collection, doc, addDoc, setDoc, getDocs, getDoc, query, orderBy, limit, serverTimestamp, where, onSnapshot } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
 import { escapeHtml } from "./utils.js";
+import { registerListener } from "./listenerManager.js";
 
 let currentUid = null;
 let splits = [];
@@ -19,7 +20,7 @@ export function initWorkout(uid, onChangeCallback) {
     callback = onChangeCallback;
     
     const splitsRef = collection(db, "users", uid, "splits");
-    unsubSplits = onSnapshot(splitsRef, (snap) => {
+    unsubSplits = registerListener(onSnapshot(splitsRef, (snap) => {
         splits = snap.docs.map(d => ({ id: d.id, ...d.data() }));
         
         const savedSplit = localStorage.getItem(`miz_activeSplit_${uid}`);
@@ -42,7 +43,7 @@ export function initWorkout(uid, onChangeCallback) {
     });
 
     const logsRef = query(collection(db, "users", uid, "workout_logs"), orderBy("dateStr", "desc"));
-    unsubLogs = onSnapshot(logsRef, (snap) => {
+    unsubLogs = registerListener(onSnapshot(logsRef, (snap) => {
         const allLogs = snap.docs.map(d => ({ id: d.id, ...d.data() }));
         
         const mappedLogs = allLogs.map(log => {
@@ -535,10 +536,11 @@ async function saveWorkoutSession() {
         saveBtn.innerHTML = "Kaydediliyor...";
         saveBtn.disabled = true;
         
-        // Always create a new log since we act like "ertesi gün"
+        // Always update or create a log for this specific split, day, and date
         logData.completed = true;
-        const newDoc = await addDoc(collection(db, "users", currentUid, "workout_logs"), logData);
-        currentWorkoutLog = { id: newDoc.id, ...logData };
+        const docId = `${activeSplitId}_${activeDayId}_${todayStr}`;
+        await setDoc(doc(db, "users", currentUid, "workout_logs", docId), logData);
+        currentWorkoutLog = { id: docId, ...logData };
         
         saveBtn.innerHTML = `<span class="material-symbols-outlined">check_circle</span> Kaydedildi!`;
         saveBtn.classList.add("bg-primary-container", "text-on-primary-container");

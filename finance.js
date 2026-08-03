@@ -1,5 +1,6 @@
 import { auth, db } from "./firebase-config.js";
 import { collection, doc, addDoc, setDoc, getDocs, query, orderBy, limit, serverTimestamp, onSnapshot, where } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+import { registerListener } from "./listenerManager.js";
 
 let currentUid = null;
 let callback = null;
@@ -18,7 +19,7 @@ export function initFinance(uid, onChangeCallback) {
     
     // 1. Load Categories
     const categoriesRef = collection(db, "users", uid, "finance_categories");
-    unsubCategories = onSnapshot(categoriesRef, (snap) => {
+    unsubCategories = registerListener(onSnapshot(categoriesRef, (snap) => {
         financeCategories = snap.docs.map(d => ({ id: d.id, ...d.data() }));
         renderTransactions();
         renderTxModalOptions();
@@ -27,7 +28,7 @@ export function initFinance(uid, onChangeCallback) {
 
     // 2. Load Payment Methods
     const paymentMethodsRef = collection(db, "users", uid, "finance_payment_methods");
-    unsubPaymentMethods = onSnapshot(paymentMethodsRef, (snap) => {
+    unsubPaymentMethods = registerListener(onSnapshot(paymentMethodsRef, (snap) => {
         financePaymentMethods = snap.docs.map(d => ({ id: d.id, ...d.data() }));
         renderTransactions();
         renderTxModalOptions();
@@ -38,7 +39,7 @@ export function initFinance(uid, onChangeCallback) {
     const txRef = collection(db, "users", uid, "finance_transactions");
     const q = query(txRef, orderBy("dateStr", "desc"));
     
-    unsubTransactions = onSnapshot(q, (snap) => {
+    unsubTransactions = registerListener(onSnapshot(q, (snap) => {
         financeTransactions = snap.docs.map(d => ({ id: d.id, ...d.data() }));
         renderTransactions();
         renderTxModalOptions();

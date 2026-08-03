@@ -1,6 +1,7 @@
 import { db } from "./firebase-config.js";
 import { collection, doc, addDoc, updateDoc, deleteDoc, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
 import { escapeHtml } from "./utils.js";
+import { registerListener } from "./listenerManager.js";
 
 let currentUid = null;
 let currentStatusTab = 'watching'; // watching, watchlist, completed
@@ -323,7 +324,7 @@ function listenToMovies() {
     
     if (unsubMovies) unsubMovies();
 
-    unsubMovies = onSnapshot(moviesRef, (snapshot) => {
+    unsubMovies = registerListener(onSnapshot(moviesRef, (snapshot) => {
         movies = [];
         snapshot.forEach(doc => {
             movies.push({ id: doc.id, ...doc.data() });
