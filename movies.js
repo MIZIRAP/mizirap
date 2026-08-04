@@ -283,13 +283,7 @@ async function saveMovie() {
         }
 
         window.closeMoviesModal();
-    } catch (e) {
-        console.error("Dizi/Film kaydedilemedi:", e);
-        alert("Kaydetme işlemi başarısız oldu.");
-    } finally {
-        saveBtn.innerHTML = `<span class="material-symbols-outlined text-[18px]">check</span><span id="movies-modal-save-text">${currentEditingId ? 'Güncelle' : 'Kaydet'}</span>`;
-        saveBtn.disabled = false;
-    }
+    });
 }
 
 async function deleteMovie() {
