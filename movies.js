@@ -1,6 +1,6 @@
 import { db } from "./firebase-config.js";
 import { collection, doc, addDoc, updateDoc, deleteDoc, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
-import { escapeHtml } from "./utils.js";
+import { escapeHtml, handleFormSubmit } from "./utils.js";
 import { registerListener } from "./listenerManager.js";
 
 let currentUid = null;
@@ -201,21 +201,24 @@ window.toggleMovieType = function() {
 async function saveMovie() {
     if (!currentUid) return;
 
-    const title = document.getElementById('movies-modal-input-title').value.trim();
-    if (!title) {
-        alert("Lütfen bir ad girin.");
-        return;
-    }
-
+    const titleInput = document.getElementById('movies-modal-input-title');
     const type = document.querySelector('input[name="movies-type"]:checked').value;
     const status = document.querySelector('input[name="movies-status"]:checked').value;
-    const season = document.getElementById('movies-modal-season').value;
-    const episode = document.getElementById('movies-modal-episode').value;
-
+    const seasonInput = document.getElementById('movies-modal-season');
+    const episodeInput = document.getElementById('movies-modal-episode');
     const saveBtn = document.getElementById('movies-modal-save-btn');
-    saveBtn.disabled = true;
 
-    try {
+    const inputsToValidate = [{ el: titleInput, type: 'text', required: true }];
+    if (type === 'series') {
+        inputsToValidate.push({ el: seasonInput, type: 'number', required: true, min: 0 });
+        inputsToValidate.push({ el: episodeInput, type: 'number', required: true, min: 0 });
+    }
+
+    await handleFormSubmit(saveBtn, inputsToValidate, async () => {
+        const title = titleInput.value.trim();
+        const season = seasonInput.value;
+        const episode = episodeInput.value;
+
         const data = {
             title: title,
             type: type,
@@ -398,4 +401,13 @@ function renderMovies() {
         
         container.insertAdjacentHTML('beforeend', html);
     });
+}
+
+export function clearMovies() {
+    if(unsubMovies) unsubMovies();
+    currentUid = null;
+    movies = [];
+    currentStatusTab = 'watching';
+    currentEditingId = null;
+    currentSelectedImageFile = null;
 }

@@ -7,10 +7,11 @@ import { initWorkout, clearWorkout } from "./workout.js";
 import { initFinance, clearFinance } from "./finance.js";
 import { initWater, clearWater } from "./water.js";
 import { initBooks, clearBooks } from "./books.js";
-import { initMovies } from "./movies.js";
-import { initProfile } from "./profile.js";
+import { initMovies, clearMovies } from "./movies.js";
+import { initProfile, clearProfile } from "./profile.js";
 import { initCalories, clearCalories } from "./calories.js";
 import { initHistory, clearHistory } from "./history.js";
+import { clearAllListeners } from "./listenerManager.js";
 
 // ---------- DOM referansları ----------
 const authScreen = document.getElementById("auth-screen");
@@ -74,6 +75,19 @@ onAuthStateChanged(auth, async (user) => {
         authScreen.classList.remove("hidden");
         authScreen.classList.add("flex");
         appScreen.classList.add("hidden");
+        
+        // Temizlik işlemleri (Logout sonrası state sıfırlama)
+        clearAllListeners();
+        clearDashboard();
+        clearShopping();
+        clearWorkout();
+        clearFinance();
+        clearWater();
+        clearBooks();
+        clearMovies();
+        clearProfile();
+        clearCalories();
+        clearHistory();
     }
 });
 

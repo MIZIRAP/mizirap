@@ -1,6 +1,6 @@
 import { auth, db } from "./firebase-config.js";
-import { collection, doc, addDoc, setDoc, deleteDoc, onSnapshot, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
-import { escapeHtml } from "./utils.js";
+import { collection, doc, addDoc, setDoc, deleteDoc, updateDoc, onSnapshot, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+import { escapeHtml, handleFormSubmit } from "./utils.js";
 import { registerListener } from "./listenerManager.js";
 
 let dailyGoal = 2000;
@@ -291,6 +291,12 @@ function updateWaterUI() {
                 const div = document.createElement("div");
                 div.className = "flex items-center justify-between p-4 border-b border-surface-container/50 last:border-0 relative group";
                 
+                const normalView = document.createElement('div');
+                normalView.className = "flex items-center justify-between w-full";
+                
+                const editView = document.createElement('div');
+                editView.className = "hidden flex items-center justify-between w-full gap-2";
+
                 const delBtn = document.createElement('button');
                 delBtn.className = "absolute right-2 top-1/2 -translate-y-1/2 p-2 text-error opacity-0 group-hover:opacity-100 transition-opacity bg-error-container/20 rounded-full active:scale-95";
                 delBtn.innerHTML = `<span class="material-symbols-outlined text-sm">delete</span>`;
@@ -302,8 +308,19 @@ function updateWaterUI() {
                         console.error("Silme Hatası:", err);
                     }
                 };
+                
+                const editBtn = document.createElement('button');
+                editBtn.className = "absolute right-12 top-1/2 -translate-y-1/2 p-2 text-primary opacity-0 group-hover:opacity-100 transition-opacity bg-primary-container/20 rounded-full active:scale-95";
+                editBtn.innerHTML = `<span class="material-symbols-outlined text-sm">edit</span>`;
+                editBtn.onclick = (e) => {
+                    e.stopPropagation();
+                    normalView.classList.add('hidden');
+                    editView.classList.remove('hidden');
+                    delBtn.classList.add('hidden');
+                    editBtn.classList.add('hidden');
+                };
 
-                div.innerHTML = `
+                normalView.innerHTML = `
                     <div class="flex items-center gap-4">
                         <div class="w-10 h-10 rounded-full bg-secondary-container flex items-center justify-center text-secondary">
                             <span class="material-symbols-outlined" data-icon="${log.icon}" data-weight="regular">${escapeHtml(log.icon || 'local_drink')}</span>
@@ -313,9 +330,48 @@ function updateWaterUI() {
                             <span class="font-body-md text-body-md text-on-surface-variant text-sm">${timeStr}</span>
                         </div>
                     </div>
-                    <span class="font-headline-sm text-headline-sm text-primary pr-10">+${log.amount}ml</span>
+                    <span class="font-headline-sm text-headline-sm text-primary pr-20">+${log.amount}ml</span>
                 `;
+                
+                editView.innerHTML = `
+                    <div class="flex items-center gap-2 flex-1">
+                        <div class="w-8 h-8 rounded-full bg-secondary-container flex items-center justify-center text-secondary shrink-0">
+                            <span class="material-symbols-outlined text-sm" data-icon="${log.icon}" data-weight="regular">${escapeHtml(log.icon || 'local_drink')}</span>
+                        </div>
+                        <input type="number" class="w-full bg-surface-container border border-outline-variant rounded-lg px-2 py-1 text-sm text-on-surface focus:border-primary focus:ring-1 focus:ring-primary edit-amount-input" value="${log.amount}" min="1">
+                        <span class="text-on-surface-variant text-sm">ml</span>
+                    </div>
+                    <button class="bg-primary text-on-primary px-3 py-1 rounded-lg text-sm font-medium shrink-0 edit-save-btn">Kaydet</button>
+                    <button class="text-on-surface-variant px-2 py-1 rounded-lg text-sm shrink-0 edit-cancel-btn">İptal</button>
+                `;
+
+                div.appendChild(normalView);
+                div.appendChild(editView);
+                div.appendChild(editBtn);
                 div.appendChild(delBtn);
+
+                const saveBtn = editView.querySelector('.edit-save-btn');
+                const cancelBtn = editView.querySelector('.edit-cancel-btn');
+                const amountInput = editView.querySelector('.edit-amount-input');
+
+                cancelBtn.onclick = (e) => {
+                    e.stopPropagation();
+                    editView.classList.add('hidden');
+                    normalView.classList.remove('hidden');
+                    delBtn.classList.remove('hidden');
+                    editBtn.classList.remove('hidden');
+                    amountInput.value = log.amount;
+                };
+
+                saveBtn.onclick = async (e) => {
+                    e.stopPropagation();
+                    await handleFormSubmit(saveBtn, [{ el: amountInput, type: 'number', required: true, min: 1 }], async () => {
+                        const newAmount = parseInt(amountInput.value);
+                        await updateDoc(doc(db, "users", currentUid, "waterLogs", log.id), {
+                            amount: newAmount
+                        });
+                    });
+                };
                 logList.appendChild(div);
             });
             logList.classList.add("max-h-64", "overflow-y-auto");

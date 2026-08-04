@@ -1,6 +1,5 @@
 import { auth } from "./firebase-config.js";
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, updateProfile, GoogleAuthProvider, signInWithPopup, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
-import { clearAllListeners } from "./listenerManager.js";
 
 const loginForm = document.getElementById("login-form");
 const registerForm = document.getElementById("register-form");
@@ -154,7 +153,6 @@ export function setupAuthUI() {
     // Çıkış yap
     document.querySelectorAll(".logout-trigger").forEach(btn => {
         btn.addEventListener("click", () => {
-            clearAllListeners();
             signOut(auth);
         });
     });

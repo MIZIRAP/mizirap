@@ -283,3 +283,8 @@ if (document.readyState === 'loading') {
 } else {
     setupProfileEvents();
 }
+
+export function clearProfile() {
+    currentUid = null;
+    currentPhotoUrl = null;
+}
