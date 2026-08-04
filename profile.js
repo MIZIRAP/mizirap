@@ -1,6 +1,7 @@
-import { db, auth } from "./firebase-config.js";
+import { db, auth, storage } from "./firebase-config.js";
+import { ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-storage.js";
 import { doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
-import { updatePassword, EmailAuthProvider, reauthenticateWithCredential } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
+import { updatePassword, EmailAuthProvider, reauthenticateWithCredential, updateProfile } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
 
 let currentUid = null;
 let currentPhotoUrl = null;
@@ -66,39 +67,66 @@ function setupProfileEvents() {
     if (photoInput) {
         photoInput.addEventListener('change', async (e) => {
             const file = e.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const img = new Image();
-                    img.onload = function() {
-                        const canvas = document.createElement('canvas');
-                        const MAX_WIDTH = 400;
-                        const MAX_HEIGHT = 400;
-                        let width = img.width;
-                        let height = img.height;
+            if (!file) return;
 
-                        if (width > height) {
-                            if (width > MAX_WIDTH) {
-                                height *= MAX_WIDTH / width;
-                                width = MAX_WIDTH;
-                            }
-                        } else {
-                            if (height > MAX_HEIGHT) {
-                                width *= MAX_HEIGHT / height;
-                                height = MAX_HEIGHT;
-                            }
-                        }
-                        
-                        canvas.width = width;
-                        canvas.height = height;
-                        const ctx = canvas.getContext('2d');
-                        ctx.drawImage(img, 0, 0, width, height);
-                        currentPhotoUrl = canvas.toDataURL('image/jpeg', 0.8);
-                        updateAllProfileImages(currentPhotoUrl);
-                    };
-                    img.src = e.target.result;
-                };
-                reader.readAsDataURL(file);
+            // 1. Validation (size & type)
+            if (!file.type.startsWith('image/')) {
+                alert('Lütfen geçerli bir resim dosyası seçin.');
+                return;
+            }
+            if (file.size > 5 * 1024 * 1024) { // 5MB
+                alert('Dosya boyutu 5MB\'dan küçük olmalıdır.');
+                return;
+            }
+
+            if (!currentUid) {
+                alert('Oturum açmadınız.');
+                return;
+            }
+
+            // 2. Loading UI
+            const loadingOverlay = document.createElement('div');
+            loadingOverlay.className = "absolute inset-0 bg-surface/70 flex flex-col items-center justify-center z-10 backdrop-blur-sm rounded-full";
+            loadingOverlay.innerHTML = `
+                <div class="animate-spin rounded-full h-6 w-6 border-2 border-primary border-t-transparent mb-1"></div>
+                <span class="text-[10px] font-medium text-primary">Yükleniyor</span>
+            `;
+            const wrapper = photoInput.closest('.relative') || photoInput.parentElement;
+            if(wrapper) wrapper.appendChild(loadingOverlay);
+
+            try {
+                // 3. Upload to Firebase Storage
+                const storageRef = ref(storage, `users/${currentUid}/profile-photo`);
+                await uploadBytes(storageRef, file);
+                const downloadURL = await getDownloadURL(storageRef);
+                
+                currentPhotoUrl = downloadURL;
+
+                // 4. Update Firestore
+                await setDoc(doc(db, "users", currentUid, "profile", "data"), {
+                    photoUrl: currentPhotoUrl,
+                    updatedAt: new Date()
+                }, { merge: true });
+
+                // 5. Update Auth
+                if (auth.currentUser) {
+                    await updateProfile(auth.currentUser, {
+                        photoURL: currentPhotoUrl
+                    });
+                }
+
+                // 6. Update UI
+                updateAllProfileImages(currentPhotoUrl);
+
+            } catch (err) {
+                console.error('Fotoğraf yükleme hatası:', err);
+                alert('Fotoğraf yüklenirken bir hata oluştu: ' + err.message);
+            } finally {
+                if(wrapper && loadingOverlay.parentNode === wrapper) {
+                    wrapper.removeChild(loadingOverlay);
+                }
+                // Reset input
+                photoInput.value = '';
             }
         });
     }
