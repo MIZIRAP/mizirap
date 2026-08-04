@@ -173,15 +173,25 @@
             </section>
 
             <!-- Sport Section -->
-            <section class="nav-tab bg-white rounded-2xl p-6 shadow-sm interactive-card flex items-center cursor-pointer" data-target="view-workout">
-                <div class="flex items-center gap-4">
-                    <div class="p-3 rounded-full bg-green/10 text-primary">
-                        <span class="material-symbols-outlined icon-lg">fitness_center</span>
+            <section class="nav-tab relative bg-surface-container-lowest rounded-3xl p-5 shadow-sm interactive-card flex items-center justify-between cursor-pointer overflow-hidden border border-outline-variant/30" data-target="view-workout">
+                <!-- Decorative background shape -->
+                <div class="absolute -right-8 -top-24 -bottom-24 w-48 bg-[#E3F0E6] rounded-[100%]"></div>
+                
+                <div class="flex items-center gap-4 relative z-10">
+                    <div class="p-3 rounded-full bg-[#BEE5CB] text-[#294B37]">
+                        <span class="material-symbols-outlined icon-md" style="font-variation-settings: 'FILL' 1;">fitness_center</span>
                     </div>
-                    <div class="flex flex-col">
-                        <span class="text-label-md font-label-md font-medium text-on-surface-variant uppercase">Spor</span>
-                        <span class="text-body-lg font-body-lg text-on-surface" id="stat-workout-split">Yapılmadı</span>
+                    <div class="flex flex-col gap-0.5">
+                        <span class="text-[10px] font-bold text-on-surface-variant tracking-wider uppercase">UP NEXT</span>
+                        <span class="text-title-lg font-title-lg font-bold text-on-surface leading-tight max-w-[140px]" id="stat-workout-split">Yapılmadı</span>
                     </div>
+                </div>
+
+                <div class="relative z-10 flex items-center pr-1">
+                    <button class="flex items-center gap-1 bg-[#334F3C] hover:bg-[#25392B] text-white pl-4 pr-3 py-1.5 rounded-full text-xs font-bold tracking-wide transition-colors">
+                        Start 
+                        <span class="material-symbols-outlined text-[14px]" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+                    </button>
                 </div>
             </section>
 
