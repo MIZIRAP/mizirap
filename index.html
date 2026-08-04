@@ -173,24 +173,20 @@
             </section>
 
             <!-- Sport Section -->
-            <section class="nav-tab relative bg-surface-container-lowest rounded-3xl p-5 shadow-sm interactive-card flex items-center justify-between cursor-pointer overflow-hidden border border-outline-variant/30" data-target="view-workout">
-                <!-- Decorative background shape -->
-                <div class="absolute -right-8 -top-24 -bottom-24 w-48 bg-[#E3F0E6] rounded-[100%]"></div>
-                
-                <div class="flex items-center gap-4 relative z-10">
-                    <div class="p-3 rounded-full bg-[#BEE5CB] text-[#294B37]">
-                        <span class="material-symbols-outlined icon-md" style="font-variation-settings: 'FILL' 1;">fitness_center</span>
+            <section class="nav-tab bg-surface rounded-2xl shadow-[0_4px_12px_rgba(51,79,66,0.04)] border border-[#7ea18d]/20 p-6 relative overflow-hidden group hover:shadow-[0_8px_24px_rgba(51,79,66,0.08)] transition-all duration-300 cursor-pointer" data-target="view-workout">
+                <div class="absolute right-0 top-0 w-32 h-32 bg-[#caead8] opacity-50 rounded-bl-full -z-0 pointer-events-none transition-transform group-hover:scale-110"></div>
+                <div class="flex items-center justify-between relative z-10">
+                    <div class="flex items-center gap-3">
+                        <div class="w-12 h-12 rounded-full bg-[#c3e8d2] flex items-center justify-center text-[#486a58]">
+                            <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">fitness_center</span>
+                        </div>
+                        <div>
+                            <p class="font-label-md text-label-md text-on-surface-variant uppercase">Up Next</p>
+                            <h2 class="font-headline-sm text-headline-sm md:font-headline-md md:text-headline-md text-on-surface" id="stat-workout-split">Yapılmadı</h2>
+                        </div>
                     </div>
-                    <div class="flex flex-col gap-0.5">
-                        <span class="text-[10px] font-bold text-on-surface-variant tracking-wider uppercase">UP NEXT</span>
-                        <span class="text-title-lg font-title-lg font-bold text-on-surface leading-tight max-w-[140px]" id="stat-workout-split">Yapılmadı</span>
-                    </div>
-                </div>
-
-                <div class="relative z-10 flex items-center pr-1">
-                    <button class="flex items-center gap-1 bg-[#334F3C] hover:bg-[#25392B] text-white pl-4 pr-3 py-1.5 rounded-full text-xs font-bold tracking-wide transition-colors">
-                        Start 
-                        <span class="material-symbols-outlined text-[14px]" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+                    <button class="bg-[#334f42] text-white rounded-full px-4 py-2 font-label-md text-label-md hover:opacity-90 transition-opacity flex items-center gap-1">
+                        Start <span class="material-symbols-outlined text-[16px]">play_arrow</span>
                     </button>
                 </div>
             </section>
