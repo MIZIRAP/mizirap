@@ -8,9 +8,11 @@ let waterLogs = [];
 let unsubscribeLogs = null;
 let unsubscribeSettings = null;
 let callback = null;
+let currentUid = null;
 
 export function initWater(uid, onChangeCallback) {
     callback = onChangeCallback;
+    currentUid = uid;
     
     // Settings listener for daily goal
     const settingsRef = doc(db, "users", uid, "settings", "water");
