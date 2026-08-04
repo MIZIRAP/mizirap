@@ -4,5 +4,9 @@ service cloud.firestore {
     match /users/{userId}/{document=**} {
       allow read, write: if request.auth != null && request.auth.uid == userId;
     }
+    // Shared app data (e.g. metal prices cache) - any authenticated user
+    match /app/{document=**} {
+      allow read, write: if request.auth != null;
+    }
   }
 }

@@ -1,8 +1,9 @@
 import { auth, db } from "./firebase-config.js";
 import { formatDate, formatCurrency } from "./utils.js";
-import { collection, doc, addDoc, setDoc, updateDoc, deleteDoc, getDocs, query, orderBy, limit, serverTimestamp, onSnapshot, where } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+import { collection, doc, addDoc, setDoc, updateDoc, deleteDoc, getDocs, getDoc, query, orderBy, limit, serverTimestamp, onSnapshot, where } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
 import { registerListener } from "./listenerManager.js";
 import { validatePositiveNumber } from "./utils.js";
+import { COLLECTAPI_KEY } from "./api-config.js";
 
 let currentUid = null;
 let callback = null;
@@ -50,6 +51,7 @@ export function initFinance(uid, onChangeCallback) {
     }));
     
     setupFinanceModals();
+    fetchMetalPrices();
 }
 
 export function clearFinance() {
@@ -882,3 +884,152 @@ export function renderFinanceDetail() {
 }
 window.renderFinanceDetail = renderFinanceDetail;
 
+// ==================== METAL PRICES ====================
+
+async function fetchMetalPrices() {
+    const goldPriceEl = document.getElementById('metal-gold-price');
+    const goldChangeEl = document.getElementById('metal-gold-change');
+    const silverPriceEl = document.getElementById('metal-silver-price');
+    const silverChangeEl = document.getElementById('metal-silver-change');
+
+    if (!goldPriceEl || !silverPriceEl) return;
+
+    // Show loading state
+    goldPriceEl.textContent = '...';
+    silverPriceEl.textContent = '...';
+
+    try {
+        // 1. Check Firestore cache first
+        const cacheRef = doc(db, 'app', 'metalPrices');
+        const cacheSnap = await getDoc(cacheRef);
+
+        if (cacheSnap.exists()) {
+            const cached = cacheSnap.data();
+            const cachedAt = cached.updatedAt?.toDate ? cached.updatedAt.toDate() : new Date(cached.updatedAt);
+            const now = new Date();
+            const diffMs = now - cachedAt;
+            const THIRTY_MIN = 30 * 60 * 1000;
+
+            if (diffMs < THIRTY_MIN && cached.gold && cached.silver) {
+                // Cache is still fresh, use it
+                renderMetalPrices(cached.gold, cached.silver);
+                return;
+            }
+        }
+
+        // 2. Cache expired or missing — fetch from CollectAPI
+        const response = await fetch('https://api.collectapi.com/economy/goldPrice', {
+            method: 'GET',
+            headers: {
+                'authorization': 'apikey ' + COLLECTAPI_KEY,
+                'content-type': 'application/json'
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error('API response: ' + response.status);
+        }
+
+        const data = await response.json();
+
+        if (!data.success || !data.result) {
+            throw new Error('API returned unsuccessful result');
+        }
+
+        // 3. Find gram altın and gram gümüş from result array
+        let goldData = null;
+        let silverData = null;
+
+        for (const item of data.result) {
+            const name = (item.name || '').toLowerCase();
+            if (name.includes('gram') && name.includes('altın') && !name.includes('çeyrek') && !name.includes('yarım') && !name.includes('tam') && !name.includes('18') && !name.includes('14') && !name.includes('22')) {
+                goldData = {
+                    price: parseFloat(item.buying || item.selling || 0),
+                    change: parseFloat(item.changeRate || 0)
+                };
+            }
+            if (name.includes('gümüş')) {
+                silverData = {
+                    price: parseFloat(item.buying || item.selling || 0),
+                    change: parseFloat(item.changeRate || 0)
+                };
+            }
+        }
+
+        // Fallback: if we didn't find exact match, try by index or broader match
+        if (!goldData) {
+            const gramAltin = data.result.find(i => (i.name || '').toLowerCase().includes('gram'));
+            if (gramAltin) {
+                goldData = {
+                    price: parseFloat(gramAltin.buying || gramAltin.selling || 0),
+                    change: parseFloat(gramAltin.changeRate || 0)
+                };
+            }
+        }
+
+        if (!goldData || !silverData) {
+            throw new Error('Could not find gold/silver data in API response');
+        }
+
+        // 4. Write to Firestore cache (shared, not user-specific)
+        try {
+            await setDoc(cacheRef, {
+                gold: goldData,
+                silver: silverData,
+                updatedAt: new Date()
+            });
+        } catch (cacheErr) {
+            console.warn('Metal prices cache write failed (Firestore rules may need update):', cacheErr.message);
+        }
+
+        // 5. Render
+        renderMetalPrices(goldData, silverData);
+
+    } catch (err) {
+        console.warn('Metal prices fetch failed:', err.message);
+        goldPriceEl.textContent = 'Alınamıyor';
+        silverPriceEl.textContent = 'Alınamıyor';
+        goldChangeEl.textContent = '';
+        silverChangeEl.textContent = '';
+    }
+}
+
+function renderMetalPrices(gold, silver) {
+    const goldPriceEl = document.getElementById('metal-gold-price');
+    const goldChangeEl = document.getElementById('metal-gold-change');
+    const silverPriceEl = document.getElementById('metal-silver-price');
+    const silverChangeEl = document.getElementById('metal-silver-change');
+
+    if (!goldPriceEl || !silverPriceEl) return;
+
+    // Format prices
+    const formatPrice = (val) => {
+        if (!val || isNaN(val)) return '—';
+        return new Intl.NumberFormat('tr-TR', { style: 'decimal', minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(val) + ' TL';
+    };
+
+    goldPriceEl.textContent = formatPrice(gold.price);
+    silverPriceEl.textContent = formatPrice(silver.price);
+
+    // Format change percentages
+    const formatChange = (el, val) => {
+        if (val === undefined || val === null || isNaN(val)) {
+            el.textContent = '';
+            return;
+        }
+        const abs = Math.abs(val).toFixed(1);
+        if (val > 0) {
+            el.textContent = `▲ ${abs}%`;
+            el.className = 'text-label-sm font-label-sm font-bold text-primary';
+        } else if (val < 0) {
+            el.textContent = `▼ ${abs}%`;
+            el.className = 'text-label-sm font-label-sm font-bold text-error';
+        } else {
+            el.textContent = `— ${abs}%`;
+            el.className = 'text-label-sm font-label-sm font-bold text-on-surface-variant';
+        }
+    };
+
+    formatChange(goldChangeEl, gold.change);
+    formatChange(silverChangeEl, silver.change);
+}
