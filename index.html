@@ -761,7 +761,6 @@
                     </svg>
                     <!-- Inner Content -->
                     <div class="flex flex-col items-center justify-center z-10 text-center">
-                        <span class="material-symbols-outlined text-primary text-4xl mb-2 opacity-80" data-icon="water_drop" data-weight="fill" style="font-variation-settings: 'FILL' 1;">water_drop</span>
                         <h2 id="water-current-text" class="font-display-lg text-display-lg text-primary tracking-tight">0</h2>
                         <p class="font-body-md text-body-md text-on-surface-variant mt-1">of <span id="water-goal-text">2000</span> ml</p>
                     </div>
@@ -1318,26 +1317,26 @@
 
         <main class="flex-1 w-full max-w-md mx-auto px-container-padding pb-32 flex flex-col gap-section-margin pt-4">
             <!-- Circular Progress Section -->
-            <section class="bg-surface-container-lowest rounded-[32px] py-8 px-6 shadow-sm flex flex-col items-center justify-center relative">
-            <div class="relative w-56 h-56 flex items-center justify-center">
-            <!-- SVG Circle -->
-            <svg class="absolute inset-0 w-full h-full" viewBox="0 0 120 120">
-            <circle class="text-surface-container stroke-current" cx="60" cy="60" fill="transparent" r="54" stroke-width="8"></circle>
-            <circle id="ui-calorie-circle" class="text-primary stroke-current progress-ring__circle transition-all duration-500 ease-out" cx="60" cy="60" fill="transparent" r="54" stroke-dasharray="339.292" stroke-dashoffset="339.292" stroke-linecap="round" stroke-width="8"></circle>
-            </svg>
-            <!-- Inner Content -->
-            <div class="flex flex-col items-center justify-center z-10 text-center">
-            <h2 id="ui-calorie-consumed" class="font-display-lg text-[42px] leading-[48px] text-on-surface font-bold tracking-tight">0</h2>
-            <p class="font-body-md text-body-md text-on-surface-variant mt-1">/ <span id="ui-calorie-goal">2000</span> kcal</p>
-            </div>
-            </div>
-            <button id="calories-goal-btn" class="mt-8 flex items-center gap-2 px-5 py-2.5 bg-surface-container hover:bg-surface-container-high rounded-full shadow-sm active:scale-95 transition-all duration-200">
-            <span class="material-symbols-outlined text-primary icon-sm" data-icon="edit" data-weight="regular">edit</span>
-            <span class="font-label-md text-label-md text-primary font-bold tracking-wider">DAİLY GOAL</span>
-            </button>
-            <div class="mt-4 flex items-center justify-center">
-            <span id="ui-calorie-remaining" class="font-body-md text-body-md text-on-surface-variant bg-surface-container-lowest border border-outline-variant/30 px-5 py-2 rounded-full shadow-sm">Kalan: 2000 kcal</span>
-            </div>
+            <section class="flex flex-col items-center justify-center relative">
+                <div class="relative w-64 h-64 flex items-center justify-center">
+                    <!-- SVG Circle -->
+                    <svg class="absolute inset-0 w-full h-full drop-shadow-md" viewBox="0 0 120 120">
+                        <circle class="text-surface-variant stroke-current" cx="60" cy="60" fill="transparent" r="54" stroke-width="8"></circle>
+                        <circle id="ui-calorie-circle" class="text-primary stroke-current progress-ring__circle transition-all duration-500 ease-out" cx="60" cy="60" fill="transparent" r="54" stroke-dasharray="339.292" stroke-dashoffset="339.292" stroke-linecap="round" stroke-width="8"></circle>
+                    </svg>
+                    <!-- Inner Content -->
+                    <div class="flex flex-col items-center justify-center z-10 text-center">
+                        <h2 id="ui-calorie-consumed" class="font-display-lg text-display-lg text-primary tracking-tight">0</h2>
+                        <p class="font-body-md text-body-md text-on-surface-variant mt-1">of <span id="ui-calorie-goal">2000</span> kcal</p>
+                    </div>
+                </div>
+                <div class="mt-6 flex flex-col items-center gap-3">
+                    <button id="calories-goal-btn" class="flex items-center gap-2 px-4 py-2 bg-surface-container rounded-full shadow-sm hover:scale-95 transition-transform duration-200">
+                        <span class="material-symbols-outlined text-primary text-sm" data-icon="edit" data-weight="regular">edit</span>
+                        <span class="font-label-md text-label-md text-primary uppercase">Daily Goal</span>
+                    </button>
+                    <span id="ui-calorie-remaining" class="font-body-md text-body-md text-on-surface-variant">Kalan: 2000 kcal</span>
+                </div>
             </section>
             <!-- Action Section -->
             <section class="flex flex-col gap-card-gap">
