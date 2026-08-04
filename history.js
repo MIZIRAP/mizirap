@@ -105,7 +105,7 @@ function renderHistory() {
     container.innerHTML = "";
     
     if (sortedKeys.length === 0) {
-        container.innerHTML = `<div class="text-center text-[var(--ink)]/60 mt-10">Henüz geçmiş kaydı bulunmuyor.</div>`;
+        container.innerHTML = `<div class="text-center text-on-surface/60 mt-10">Henüz geçmiş kaydı bulunmuyor.</div>`;
         return;
     }
 
@@ -139,43 +139,43 @@ function renderHistory() {
         const calPercent = Math.min((data.calories / 2500) * 100, 100);
 
         const html = `
-        <article class="bg-white rounded-[24px] shadow-sm p-6 flex flex-col gap-4 active-scale transition-transform duration-200 cursor-pointer border border-[var(--ink)]/10 ${opacityClass}">
-            <div class="flex justify-between items-center w-full border-b border-[var(--ink)]/10 pb-3">
-                <h2 class="text-[20px] font-bold text-[var(--ink)]">${title}</h2>
-                <span class="material-symbols-outlined text-[var(--ink)]/40">chevron_right</span>
+        <article class="bg-white rounded-2xl shadow-sm p-6 flex flex-col gap-4 active-scale transition-transform duration-200 cursor-pointer border border-outline-variant/30 ${opacityClass}">
+            <div class="flex justify-between items-center w-full border-b border-outline-variant/30 pb-3">
+                <h2 class="text-headline-sm font-headline-sm font-bold text-on-surface">${title}</h2>
+                <span class="material-symbols-outlined text-on-surface/40">chevron_right</span>
             </div>
             <div class="flex justify-between items-center gap-2 overflow-x-auto pb-2">
                 <!-- Calories -->
                 <div class="flex flex-col items-center gap-1 min-w-[60px]">
                     <div class="relative w-8 h-8 flex items-center justify-center">
                         <svg class="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
-                            <path class="text-[var(--green)]/20 stroke-current" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke-width="3"></path>
-                            <path class="text-[var(--green)] stroke-current" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke-dasharray="${calPercent}, 100" stroke-width="3"></path>
+                            <path class="text-primary/20 stroke-current" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke-width="3"></path>
+                            <path class="text-primary stroke-current" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke-dasharray="${calPercent}, 100" stroke-width="3"></path>
                         </svg>
-                        <span class="material-symbols-outlined absolute text-[14px] text-[var(--green)]" style="font-variation-settings: 'FILL' 1;">restaurant</span>
+                        <span class="material-symbols-outlined absolute icon-sm text-primary" style="font-variation-settings: 'FILL' 1;">restaurant</span>
                     </div>
-                    <span class="text-[11px] text-[var(--ink)] font-semibold">${Math.round(data.calories)}</span>
+                    <span class="text-label-sm text-on-surface font-semibold">${Math.round(data.calories)}</span>
                 </div>
                 <!-- Water -->
                 <div class="flex flex-col items-center gap-1 min-w-[60px]">
-                    <div class="w-8 h-8 rounded-full bg-[var(--green)]/10 flex items-center justify-center text-[var(--green)]">
-                        <span class="material-symbols-outlined text-[18px]">water_drop</span>
+                    <div class="w-8 h-8 rounded-full bg-[var(--green)]/10 flex items-center justify-center text-primary">
+                        <span class="material-symbols-outlined icon-sm">water_drop</span>
                     </div>
-                    <span class="text-[11px] text-[var(--ink)] font-semibold">${Math.round(data.water)}ml</span>
+                    <span class="text-label-sm text-on-surface font-semibold">${Math.round(data.water)}ml</span>
                 </div>
                 <!-- Reading -->
                 <div class="flex flex-col items-center gap-1 min-w-[60px]">
                     <div class="w-8 h-8 rounded-full bg-[var(--tan)]/20 flex items-center justify-center text-[var(--tan)]">
-                        <span class="material-symbols-outlined text-[18px]">menu_book</span>
+                        <span class="material-symbols-outlined icon-sm">menu_book</span>
                     </div>
-                    <span class="text-[11px] text-[var(--ink)] font-semibold">${data.books}s</span>
+                    <span class="text-label-sm text-on-surface font-semibold">${data.books}s</span>
                 </div>
                 <!-- Finance -->
                 <div class="flex flex-col items-center gap-1 min-w-[60px]">
                     <div class="w-8 h-8 rounded-full ${financeBg} flex items-center justify-center text-[${financeColor}]">
-                        <span class="material-symbols-outlined text-[18px]">account_balance_wallet</span>
+                        <span class="material-symbols-outlined icon-sm">account_balance_wallet</span>
                     </div>
-                    <span class="text-[11px] text-[${financeColor}] font-semibold">${financeSign}₺${Math.abs(data.finance)}</span>
+                    <span class="text-label-sm text-[${financeColor}] font-semibold">${financeSign}₺${Math.abs(data.finance)}</span>
                 </div>
             </div>
         </article>

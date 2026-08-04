@@ -52,7 +52,7 @@ function renderDashboard() {
     const waterText = document.getElementById("dashboard-water-text");
     const waterProg = document.getElementById("dashboard-water-progress");
     if(waterText && waterProg) {
-        waterText.innerHTML = `${currentWaterStats.currentAmount} <span class="text-[12px] font-normal text-[var(--ink)]/60">/ ${currentWaterStats.dailyGoal} ml</span>`;
+        waterText.innerHTML = `${currentWaterStats.currentAmount} <span class="text-label-md font-label-md font-normal text-on-surface/60">/ ${currentWaterStats.dailyGoal} ml</span>`;
         let percent = currentWaterStats.currentAmount / currentWaterStats.dailyGoal * 100;
         if (percent > 100) percent = 100;
         waterProg.style.width = `${percent}%`;
@@ -69,10 +69,10 @@ function renderDashboard() {
             const read = book.readPages || 0;
             const total = book.totalPages || 1;
             const percent = Math.min(100, Math.round((read / total) * 100));
-            dashBooksText.innerHTML = `${read} <span class="text-[12px] font-normal text-[var(--ink)]/60">/ ${total} sayfa</span>`;
+            dashBooksText.innerHTML = `${read} <span class="text-label-md font-label-md font-normal text-on-surface/60">/ ${total} sayfa</span>`;
             dashBooksProg.style.width = `${percent}%`;
         } else {
-            dashBooksText.innerHTML = `0 <span class="text-[12px] font-normal text-[var(--ink)]/60">/ 0 sayfa</span>`;
+            dashBooksText.innerHTML = `0 <span class="text-label-md font-label-md font-normal text-on-surface/60">/ 0 sayfa</span>`;
             dashBooksProg.style.width = `0%`;
         }
     }
@@ -82,7 +82,7 @@ function renderDashboard() {
     const dashMoviesProg = document.getElementById("dashboard-movies-progress");
     if (dashMoviesText && dashMoviesProg) {
         const watchingMovies = currentMovies.filter(m => (m.status || 'watching') === 'watching');
-        dashMoviesText.innerHTML = `${watchingMovies.length} <span class="text-[12px] font-normal text-[var(--ink)]/60">izleniyor</span>`;
+        dashMoviesText.innerHTML = `${watchingMovies.length} <span class="text-label-md font-label-md font-normal text-on-surface/60">izleniyor</span>`;
         const percent = watchingMovies.length > 0 ? Math.min(100, watchingMovies.length * 10) : 0;
         dashMoviesProg.style.width = `${percent}%`;
     }

@@ -37,3 +37,9 @@ body {
     transform: rotate(-90deg);
     transform-origin: 50% 50%;
 }
+
+.icon-sm { font-size: 18px !important; }
+.icon-md { font-size: 20px !important; }
+.icon-lg { font-size: 24px !important; }
+.badge-primary { @apply px-2 py-0.5 rounded-full border border-primary text-primary text-label-sm font-label-sm; }
+.badge-outline { @apply px-2 py-0.5 rounded-full border border-outline-variant text-on-surface-variant text-label-sm font-label-sm; }

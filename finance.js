@@ -374,7 +374,7 @@ function renderTransactions() {
             : "bg-surface-container-high text-on-surface-variant border-outline-variant";
             
         const div = document.createElement("div");
-        div.className = "bg-surface-container-lowest shadow-[0px_4px_20px_rgba(0,0,0,0.04)] rounded-[16px] p-4 flex items-center justify-between active:scale-98 transition-transform duration-100 ease-in-out relative group";
+        div.className = "bg-surface-container-lowest shadow-sm rounded-[16px] p-4 flex items-center justify-between active:scale-98 transition-transform duration-100 ease-in-out relative group";
         
         const actionsDiv = document.createElement("div");
         actionsDiv.className = "absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity bg-surface-container-lowest/90 px-2 py-1 rounded-full shadow-sm";
@@ -452,25 +452,25 @@ function renderTransactions() {
         div.innerHTML = `
             <div class="flex items-center gap-3 min-w-0 flex-1">
                 <div class="w-11 h-11 shrink-0 rounded-full ${iconBg} flex items-center justify-center">
-                    <span class="material-symbols-outlined ${iconColor} text-[20px]" style="font-variation-settings: 'FILL' 0;">${cat.icon}</span>
+                    <span class="material-symbols-outlined ${iconColor} icon-md" style="font-variation-settings: 'FILL' 0;">${cat.icon}</span>
                 </div>
                 <div class="flex flex-col min-w-0">
                     <span class="font-label-md text-label-md text-on-surface truncate">${tx.title}</span>
-                    <span class="font-body-md text-body-md text-on-surface-variant text-[11px] mt-0.5 truncate">${cat.name}</span>
+                    <span class="font-body-md text-body-md text-on-surface-variant text-label-sm mt-0.5 truncate">${cat.name}</span>
                 </div>
             </div>
             <div class="flex flex-col items-end shrink-0 ml-2">
                 <span class="font-label-md text-label-md ${valColor} whitespace-nowrap">${sign}${valStr}</span>
                 <div class="flex items-center gap-1.5 mt-1">
-                    <span class="${pmBadgeClass} text-[9px] font-bold px-1.5 py-0.5 rounded border uppercase tracking-tight">${pm.type}</span>
-                    <span class="font-label-sm text-label-sm text-on-surface-variant text-[10px] whitespace-nowrap">${dateFormatted}</span>
+                    <span class="${pmBadgeClass} text-label-sm font-bold badge-outline">${pm.type}</span>
+                    <span class="font-label-sm text-label-sm text-on-surface-variant text-label-sm whitespace-nowrap">${dateFormatted}</span>
                 </div>
                 <div class="flex items-center gap-0.5 mt-1.5">
                     <button class="edit-tx-btn p-1 text-primary hover:bg-primary-container/20 rounded-full active:scale-95 transition-colors" data-id="${tx.id}">
-                        <span class="material-symbols-outlined text-[14px]">edit</span>
+                        <span class="material-symbols-outlined icon-sm">edit</span>
                     </button>
                     <button class="del-tx-btn p-1 text-error hover:bg-error-container/20 rounded-full active:scale-95 transition-colors" data-id="${tx.id}">
-                        <span class="material-symbols-outlined text-[14px]">delete</span>
+                        <span class="material-symbols-outlined icon-sm">delete</span>
                     </button>
                 </div>
             </div>
@@ -557,7 +557,7 @@ export function renderTxModalOptions() {
         } else {
             catContainer.innerHTML = financeCategories.map((c, idx) => `
                 <button class="tx-cat-btn flex items-center gap-2 px-4 py-2 rounded-full ${idx === 0 ? 'bg-primary-container text-on-primary-container border-transparent' : 'bg-surface-container-high text-on-surface-variant hover:bg-surface-variant border-transparent'} shrink-0 snap-start transition-colors active:scale-95 border-2" data-id="${c.id}">
-                    <span class="material-symbols-outlined text-[18px]">${c.icon || 'category'}</span>
+                    <span class="material-symbols-outlined icon-sm">${c.icon || 'category'}</span>
                     <span class="font-label-md text-label-md">${c.name}</span>
                 </button>
             `).join('');
@@ -586,7 +586,7 @@ export function renderTxModalOptions() {
                         <span class="material-symbols-outlined ${idx === 0 ? 'text-primary' : 'text-on-surface-variant'}">${p.icon || 'credit_card'}</span>
                         <span class="font-label-md text-label-md ${idx === 0 ? 'text-on-surface' : 'text-on-surface-variant'}">${p.name}</span>
                     </div>
-                    ${idx === 0 ? '<span class="material-symbols-outlined text-primary text-[16px] check-icon" style="font-variation-settings: \'FILL\' 1;">check_circle</span>' : ''}
+                    ${idx === 0 ? '<span class="material-symbols-outlined text-primary icon-sm check-icon" style="font-variation-settings: \'FILL\' 1;">check_circle</span>' : ''}
                 </div>
             `).join('');
             
@@ -612,7 +612,7 @@ export function renderTxModalOptions() {
                     if (text) { text.classList.add('text-on-surface'); text.classList.remove('text-on-surface-variant'); }
                     
                     if (!btn.querySelector('.check-icon')) {
-                        btn.insertAdjacentHTML('beforeend', '<span class="material-symbols-outlined text-primary text-[16px] check-icon" style="font-variation-settings: \'FILL\' 1;">check_circle</span>');
+                        btn.insertAdjacentHTML('beforeend', '<span class="material-symbols-outlined text-primary icon-sm check-icon" style="font-variation-settings: \'FILL\' 1;">check_circle</span>');
                     }
                 });
             });
@@ -791,7 +791,7 @@ export function renderFinanceDetail() {
         incomeListEl.innerHTML = incomes.map(tx => {
             const pm = financePaymentMethods.find(p => p.id === tx.paymentMethodId) || { name: 'Genel', icon: 'payments' };
             return `
-            <div class="bg-surface-container-lowest p-4 rounded-2xl flex items-center justify-between custom-shadow border-l-4 border-primary mb-3 active:scale-98 transition-transform">
+            <div class="bg-surface-container-lowest p-4 rounded-2xl flex items-center justify-between shadow-sm border-l-4 border-primary mb-3 active:scale-98 transition-transform">
                 <div class="flex items-center gap-4">
                     <div class="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
                         <span class="material-symbols-outlined text-primary">${pm.icon}</span>

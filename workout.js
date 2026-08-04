@@ -189,7 +189,7 @@ function addDayToSplitForm() {
     
     dayEl.innerHTML = `
         <button class="absolute top-2 right-2 text-on-surface-variant hover:text-error transition-colors" onclick="this.parentElement.remove()">
-            <span class="material-symbols-outlined text-[20px]">delete</span>
+            <span class="material-symbols-outlined icon-md">delete</span>
         </button>
         <div class="flex flex-col gap-1 pr-8">
             <label class="font-label-sm text-label-sm text-on-surface-variant">Gün Adı</label>
@@ -324,7 +324,7 @@ function renderExercises(day, lastLog, currentLog) {
         }
         
         const card = document.createElement("div");
-        card.className = "bg-surface-container-lowest rounded-xl p-5 shadow-[0px_4px_20px_rgba(0,0,0,0.04)] border-none exercise-card mb-4";
+        card.className = "bg-surface-container-lowest rounded-xl p-6 shadow-sm border-none exercise-card mb-4";
         card.dataset.exerciseId = ex.id;
         
         const targetText = bestLastSet && bestLastSet.weight && bestLastSet.reps 
@@ -366,7 +366,7 @@ function renderExercises(day, lastLog, currentLog) {
                     <span class="text-label-sm text-outline">${targetText}</span>
                     <button class="flex items-center justify-center p-1.5 ml-2 bg-surface-container rounded-lg hover:bg-surface-container-high transition-colors active:scale-95 text-primary" onclick="event.preventDefault(); event.stopPropagation(); openExerciseHistory('${ex.id}', '${escapeHtml(ex.name)}')">
                         <span class="material-symbols-outlined" style="font-size: 18px;">history</span>
-                        <span class="text-[11px] font-bold ml-1 uppercase">Geçmiş</span>
+                        <span class="text-label-sm font-bold ml-1 uppercase">Geçmiş</span>
                     </button>
                 </div>
             </div>
@@ -395,7 +395,7 @@ function renderExercises(day, lastLog, currentLog) {
                     <div class="flex-1">
                         <div class="flex justify-between items-center mb-1">
                             <div class="text-label-sm text-outline">Set ${index + 1} ${prevText}</div>
-                            <button class="text-error opacity-0 hover:opacity-100 transition-opacity p-1 text-[10px] uppercase font-bold tracking-widest delete-set-btn">SİL</button>
+                            <button class="text-error opacity-0 hover:opacity-100 transition-opacity p-1 text-label-sm uppercase font-bold tracking-widest delete-set-btn">SİL</button>
                         </div>
                         <div class="flex items-center gap-2">
                             <div class="flex items-center bg-surface-dim rounded-lg overflow-hidden flex-1">
@@ -688,7 +688,7 @@ function renderEditTemplateList() {
     
     editingExercises.forEach((ex, index) => {
         const item = document.createElement("div");
-        item.className = "exercise-item bg-surface-container-lowest rounded-xl p-4 shadow-[0px_4px_20px_rgba(0,0,0,0.04)] flex items-center gap-4 group";
+        item.className = "exercise-item bg-surface-container-lowest rounded-xl p-4 shadow-sm flex items-center gap-4 group";
         item.dataset.index = index;
         
         item.innerHTML = `
@@ -833,14 +833,14 @@ window.openSplitSelectionModal = function() {
             const btn = document.createElement("button");
             
             if (isActive) {
-                btn.className = "w-full text-left bg-surface-container-low border-2 border-primary rounded-xl p-4 flex items-center justify-between group transition-transform active:scale-[0.98] relative overflow-hidden shadow-[0px_4px_20px_rgba(0,0,0,0.04)]";
+                btn.className = "w-full text-left bg-surface-container-low border-2 border-primary rounded-xl p-4 flex items-center justify-between group transition-transform active:scale-[0.98] relative overflow-hidden shadow-sm";
                 btn.innerHTML = `
                     <div class="flex flex-col gap-1 z-10">
                         <span class="font-body-lg text-body-lg text-on-background font-medium">${escapeHtml(split.name)}</span>
                         <span class="font-label-md text-label-md text-primary">Aktif Program</span>
                     </div>
                     <div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center z-10">
-                        <span class="material-symbols-outlined text-on-primary text-[20px] font-bold">check</span>
+                        <span class="material-symbols-outlined text-on-primary icon-md font-bold">check</span>
                     </div>
                     <div class="absolute inset-0 bg-primary/5 pointer-events-none"></div>
                 `;
@@ -1018,26 +1018,26 @@ window.openExerciseHistory = async function(triggerExId, exName) {
             const diff = historyRecords[0].maxWeight - historyRecords[1].maxWeight;
             if(diff > 0) {
                 trendBadgeEl.innerHTML = `
-                    <span class="material-symbols-outlined text-primary text-[14px]" data-icon="trending_up">trending_up</span>
+                    <span class="material-symbols-outlined text-primary icon-sm" data-icon="trending_up">trending_up</span>
                     <span class="font-label-sm text-label-sm text-primary inline-block min-w-[48px] text-right">+${diff.toFixed(1)} kg</span>
                 `;
                 trendBadgeEl.className = "bg-primary-container bg-opacity-20 rounded-full px-3 py-1 flex items-center gap-1";
             } else if (diff < 0) {
                 trendBadgeEl.innerHTML = `
-                    <span class="material-symbols-outlined text-error text-[14px]" data-icon="trending_down">trending_down</span>
+                    <span class="material-symbols-outlined text-error icon-sm" data-icon="trending_down">trending_down</span>
                     <span class="font-label-sm text-label-sm text-error inline-block min-w-[48px] text-right">${diff.toFixed(1)} kg</span>
                 `;
                 trendBadgeEl.className = "bg-error-container bg-opacity-20 rounded-full px-3 py-1 flex items-center gap-1";
             } else {
                 trendBadgeEl.innerHTML = `
-                    <span class="material-symbols-outlined text-outline text-[14px]" data-icon="trending_flat">trending_flat</span>
+                    <span class="material-symbols-outlined text-outline icon-sm" data-icon="trending_flat">trending_flat</span>
                     <span class="font-label-sm text-label-sm text-outline">Değişim Yok</span>
                 `;
                 trendBadgeEl.className = "bg-surface-variant bg-opacity-50 rounded-full px-3 py-1 flex items-center gap-1";
             }
         } else {
              trendBadgeEl.innerHTML = `
-                <span class="material-symbols-outlined text-primary text-[14px]" data-icon="fiber_new">fiber_new</span>
+                <span class="material-symbols-outlined text-primary icon-sm" data-icon="fiber_new">fiber_new</span>
                 <span class="font-label-sm text-label-sm text-primary">İlk Kayıt</span>
             `;
              trendBadgeEl.className = "bg-primary-container bg-opacity-20 rounded-full px-3 py-1 flex items-center gap-1";
@@ -1072,7 +1072,7 @@ window.openExerciseHistory = async function(triggerExId, exName) {
             const opacityClass = idx === 0 ? "opacity-100" : (idx === 1 ? "opacity-90" : "opacity-80");
             
             listContainer.innerHTML += `
-                <div class="bg-surface-container-lowest rounded-xl shadow-[0px_4px_20px_rgba(0,0,0,0.04)] p-4 flex items-center justify-between interactive-card cursor-pointer ${opacityClass}">
+                <div class="bg-surface-container-lowest rounded-xl shadow-sm p-4 flex items-center justify-between interactive-card cursor-pointer ${opacityClass}">
                     <div class="flex items-center gap-4">
                         <div class="w-10 h-10 rounded-lg bg-surface-container flex items-center justify-center text-${idx===0 ? 'primary' : 'secondary'}">
                             <span class="material-symbols-outlined" data-icon="calendar_today" ${idx===0 ? "style=\"font-variation-settings: 'FILL' 1;\"" : ""}>calendar_today</span>
@@ -1101,7 +1101,7 @@ window.openExerciseHistory = async function(triggerExId, exName) {
             
             // Y Axis Labels
             const yLabels = `
-                <div class="absolute left-0 top-0 h-full flex flex-col justify-between text-[10px] text-outline font-label-sm pb-6 pr-2">
+                <div class="absolute left-0 top-0 h-full flex flex-col justify-between text-label-sm text-outline font-label-sm pb-6 pr-2">
                     <span>${Math.round(maxW)}k</span>
                     <span>${Math.round(maxW - range*0.33)}k</span>
                     <span>${Math.round(maxW - range*0.66)}k</span>
@@ -1148,7 +1148,7 @@ window.openExerciseHistory = async function(triggerExId, exName) {
                     </svg>
                     ${pointsHtml}
                 </div>
-                <div class="absolute bottom-0 left-6 right-0 flex justify-between text-[10px] text-outline font-label-sm px-2">
+                <div class="absolute bottom-0 left-6 right-0 flex justify-between text-label-sm text-outline font-label-sm px-2">
                     ${xLabelsHtml}
                 </div>
             `;

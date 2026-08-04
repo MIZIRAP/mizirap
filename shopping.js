@@ -72,13 +72,13 @@ function renderShoppingList() {
     
     activeItems.forEach(item => {
         const div = document.createElement("div");
-        div.className = "group bg-surface-container-lowest rounded-[24px] p-4 card-shadow flex items-center justify-between transition-all hover:bg-surface-container-low animate-in fade-in slide-in-from-top-2 duration-300";
+        div.className = "group bg-surface-container-lowest rounded-2xl p-4 shadow-sm flex items-center justify-between transition-all hover:bg-surface-container-low animate-in fade-in slide-in-from-top-2 duration-300";
         div.innerHTML = `
             <!-- Normal View -->
             <div class="flex items-center justify-between w-full normal-view">
                 <div class="flex items-center gap-4">
                     <button class="toggle-btn w-6 h-6 rounded-md border-2 border-primary flex items-center justify-center transition-colors">
-                        <span class="material-symbols-outlined text-[18px] text-transparent">check</span>
+                        <span class="material-symbols-outlined icon-sm text-transparent">check</span>
                     </button>
                     <span class="font-body-md text-on-surface text-body-md">${escapeHtml(item.title)}</span>
                 </div>
@@ -129,13 +129,13 @@ function renderShoppingList() {
     
     completedItems.forEach(item => {
         const div = document.createElement("div");
-        div.className = "bg-surface-dim/40 rounded-[24px] p-4 flex items-center justify-between border border-transparent";
+        div.className = "bg-surface-dim/40 rounded-2xl p-4 flex items-center justify-between border border-transparent";
         div.innerHTML = `
             <!-- Normal View -->
             <div class="flex items-center justify-between w-full normal-view">
                 <div class="flex items-center gap-4">
                     <button class="toggle-btn w-6 h-6 rounded-md bg-primary flex items-center justify-center transition-colors">
-                        <span class="material-symbols-outlined text-[18px] text-on-primary">check</span>
+                        <span class="material-symbols-outlined icon-sm text-on-primary">check</span>
                     </button>
                     <span class="font-body-md text-outline checked-item text-body-md">${escapeHtml(item.title)}</span>
                 </div>

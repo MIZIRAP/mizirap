@@ -88,7 +88,7 @@ function setupProfileEvents() {
             loadingOverlay.className = "absolute inset-0 bg-surface/70 flex flex-col items-center justify-center z-10 backdrop-blur-sm rounded-full";
             loadingOverlay.innerHTML = `
                 <div class="animate-spin rounded-full h-6 w-6 border-2 border-primary border-t-transparent mb-1"></div>
-                <span class="text-[10px] font-medium text-primary">Yükleniyor</span>
+                <span class="text-label-sm font-medium text-primary">Yükleniyor</span>
             `;
             const wrapper = photoInput.closest('.relative') || photoInput.parentElement;
             if(wrapper) wrapper.appendChild(loadingOverlay);

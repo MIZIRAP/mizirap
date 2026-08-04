@@ -516,7 +516,7 @@ function renderLibraryFoods() {
 
     libraryFoods.forEach((food) => {
         const item = document.createElement('div');
-        item.className = "bg-surface-container-lowest rounded-[24px] p-4 shadow-[0px_4px_20px_rgba(0,0,0,0.04)] hover:scale-[0.99] transition-transform relative group";
+        item.className = "bg-surface-container-lowest rounded-2xl p-4 shadow-sm hover:scale-[0.99] transition-transform relative group";
         
         let macrosHtml = '';
         if(food.karb !== null || food.protein !== null || food.yag !== null) {
@@ -540,7 +540,7 @@ function renderLibraryFoods() {
             </div>
             <!-- Delete Button -->
             <button class="absolute top-4 right-4 w-8 h-8 rounded-full bg-error-container text-on-error-container flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity active:scale-95 z-10 delete-library-btn">
-                <span class="material-symbols-outlined text-[18px]">delete</span>
+                <span class="material-symbols-outlined icon-sm">delete</span>
             </button>
         `;
         
@@ -715,7 +715,7 @@ function renderWeeklyChart() {
         }
 
         div.innerHTML = `
-            <div class="absolute -top-8 bg-surface-container-high text-on-surface text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10 pointer-events-none">
+            <div class="absolute -top-6 bg-surface-container-high text-on-surface text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10 pointer-events-none">
                 ${Math.round(day.amount)} kcal
             </div>
             <div class="w-2 md:w-3 bg-surface-container rounded-full h-24 relative flex items-end overflow-hidden">
@@ -724,7 +724,7 @@ function renderWeeklyChart() {
         `;
         
         const labelDiv = document.createElement("div");
-        labelDiv.className = `text-[10px] md:text-xs w-[14%] text-center uppercase tracking-wider ${textClass}`;
+        labelDiv.className = `text-label-sm md:text-xs w-[14%] text-center uppercase tracking-wider ${textClass}`;
         labelDiv.textContent = day.name;
 
         chartContainer.appendChild(div);

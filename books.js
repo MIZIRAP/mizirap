@@ -519,9 +519,9 @@ function renderBooks(uid) {
             
             let statusBadge = "";
             if(book.status === "finished") {
-                statusBadge = `<div class="absolute top-2 right-2 bg-surface-container-lowest/90 backdrop-blur-sm px-2 py-1 rounded text-[10px] font-bold text-on-surface shadow-sm">Bitti</div>`;
+                statusBadge = `<div class="absolute top-2 right-2 bg-surface-container-lowest/90 backdrop-blur-sm px-2 py-1 rounded text-label-sm font-bold text-on-surface shadow-sm">Bitti</div>`;
             } else if (book.status === "to_read") {
-                statusBadge = `<div class="absolute top-2 right-2 bg-secondary-container/90 backdrop-blur-sm px-2 py-1 rounded text-[10px] font-bold text-on-secondary-container shadow-sm">Okunacak</div>`;
+                statusBadge = `<div class="absolute top-2 right-2 bg-secondary-container/90 backdrop-blur-sm px-2 py-1 rounded text-label-sm font-bold text-on-secondary-container shadow-sm">Okunacak</div>`;
             }
 
             const card = document.createElement("div");
@@ -596,7 +596,7 @@ function renderViewAllList() {
             statusHtml = `
                 <div>
                     <span class="inline-flex items-center px-2 py-0.5 rounded text-label-sm font-label-sm bg-surface-container-highest text-on-surface-variant">
-                        <span class="material-symbols-outlined text-[14px] mr-1" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+                        <span class="material-symbols-outlined icon-sm mr-1" style="font-variation-settings: 'FILL' 1;">check_circle</span>
                         Bitti
                     </span>
                 </div>
@@ -614,7 +614,7 @@ function renderViewAllList() {
         card.dataset.id = book.id;
         card.innerHTML = `
             <button class="absolute top-3 right-3 p-1.5 rounded-full text-on-surface-variant/40 hover:text-error hover:bg-error-container/20 transition-colors z-10 delete-book-btn" data-id="${book.id}">
-                <span class="material-symbols-outlined text-[18px]">delete</span>
+                <span class="material-symbols-outlined icon-sm">delete</span>
             </button>
             <div class="w-16 h-24 shrink-0 rounded-lg overflow-hidden bg-surface-container-high relative">
                 <img class="w-full h-full object-cover" src="${safeCover}">

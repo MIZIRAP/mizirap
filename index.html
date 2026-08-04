@@ -14,7 +14,26 @@
             theme: {
                 extend: {
                     "colors": {
-                        "on-surface-variant": "#414844", "inverse-on-surface": "#eff2eb", "on-secondary-container": "#53695d", "surface-container-high": "#e6e9e2", "secondary-fixed-dim": "#b3ccbd", "surface-tint": "#446554", "on-primary-container": "#163728", "error-container": "#ffdad6", "on-tertiary-fixed": "#2c1600", "on-secondary-fixed": "#0a2016", "secondary-fixed": "#cfe9d9", "tertiary-fixed-dim": "#f1bd89", "on-background": "#191d18", "outline": "#727973", "on-secondary": "#ffffff", "surface-container-lowest": "#ffffff", "outline-variant": "#c1c8c2", "surface-bright": "#f7faf3", "on-surface": "#191d18", "surface": "#f7faf3", "on-tertiary": "#ffffff", "on-tertiary-fixed-variant": "#623f16", "surface-dim": "#d8dbd4", "on-tertiary-container": "#492a03", "on-primary-fixed": "#002113", "primary": "#446554", "surface-container": "#ecefe8", "primary-fixed-dim": "#abcfb9", "on-primary": "#ffffff", "secondary-container": "#cfe9d9", "inverse-surface": "#2d312d", "on-primary-fixed-variant": "#2d4d3d", "tertiary-container": "#bf9060", "on-error-container": "#93000a", "surface-container-highest": "#e0e4dc", "inverse-primary": "#abcfb9", "primary-fixed": "#c6ebd5", "tertiary-fixed": "#ffdcbd", "surface-container-low": "#f1f5ed", "tertiary": "#7d562b", "error": "#ba1a1a", "secondary": "#4d6357", "on-error": "#ffffff", "primary-container": "#7ea18d", "background": "#f7faf3", "surface-variant": "#e0e4dc", "on-secondary-fixed-variant": "#354b40"
+                        "primary": "#7EA18D",
+                        "primary-dark": "#94B7A3",
+                        "surface": "#FFFFFF",
+                        "surface-dim": "#F8F8F8",
+                        "on-surface": "#131713",
+                        "on-surface-variant": "#474747",
+                        "background": "#B7D0C1",
+                        "secondary": "#A4784A",
+                        "tertiary": "#A4784A",
+                        "error": "#D45341",
+                        "outline": "#CBCCC5",
+                        "outline-variant": "#E6E6E6",
+                        "on-primary": "#ffffff",
+                        "on-secondary": "#ffffff",
+                        "on-error": "#ffffff",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container-low": "#f8f8f8",
+                        "surface-container": "#f8f8f8",
+                        "surface-container-high": "#e6e6e6",
+                        "surface-container-highest": "#cbccc5"
                     },
                     "borderRadius": { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px", "card": "24px" },
                     "spacing": { "element-spacing": "12px", "unit": "4px", "section-margin": "32px", "container-padding": "20px", "card-gap": "16px" },
@@ -67,7 +86,7 @@
 
 <!-- GİRİŞ / KAYIT EKRANI -->
 <div id="auth-screen" class="min-h-screen flex items-center justify-center bg-surface-container-low p-6 z-50 relative">
-    <div class="w-full max-w-md bg-surface-container-lowest rounded-card p-8 shadow-[0_8px_32px_rgba(0,0,0,0.08)]">
+    <div class="w-full max-w-md bg-surface-container-lowest rounded-2xl p-6 shadow-md">
         <div class="text-center mb-8">
             <h1 class="font-display-lg text-primary tracking-tight mb-2">My Life</h1>
             <p class="text-on-surface-variant font-body-md">Hayatını yönetmek hiç bu kadar huzurlu olmamıştı.</p>
@@ -91,13 +110,13 @@
                 <input type="password" id="login-password" required class="w-full bg-surface border border-outline-variant focus:border-primary focus:ring-1 focus:ring-primary rounded-lg py-3 px-4 font-body-md text-on-surface">
             </div>
             <p id="login-error" class="text-error font-label-sm min-h-[14px]"></p>
-            <button type="submit" class="w-full bg-primary text-on-primary font-headline-sm text-body-lg py-4 rounded-[24px] shadow-sm hover:shadow-md transition-all active:scale-[0.98] flex items-center justify-center gap-2">Giriş yap</button>
+            <button type="submit" class="w-full bg-primary text-on-primary font-headline-sm text-body-lg py-4 rounded-2xl shadow-sm hover:shadow-md transition-all active:scale-[0.98] flex items-center justify-center gap-2">Giriş yap</button>
             <div class="flex items-center my-2">
                 <div class="flex-1 border-t border-outline-variant"></div>
                 <span class="px-3 text-on-surface-variant font-label-sm uppercase">veya</span>
                 <div class="flex-1 border-t border-outline-variant"></div>
             </div>
-            <button type="button" id="btn-google-login" class="w-full bg-surface-container-low border border-outline-variant text-on-surface font-headline-sm text-body-lg py-4 rounded-[24px] transition-all active:scale-[0.98] hover:bg-surface-container hover:shadow-sm flex items-center justify-center gap-2">
+            <button type="button" id="btn-google-login" class="w-full bg-surface-container-low border border-outline-variant text-on-surface font-headline-sm text-body-lg py-4 rounded-2xl transition-all active:scale-[0.98] hover:bg-surface-container hover:shadow-sm flex items-center justify-center gap-2">
                 <svg viewBox="0 0 24 24" class="w-5 h-5"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/><path fill="none" d="M1 1h22v22H1z"/></svg>
                 Google ile giriş yap
             </button>
@@ -117,7 +136,7 @@
                 <input type="password" id="register-password" required minlength="6" class="w-full bg-surface border border-outline-variant focus:border-primary focus:ring-1 focus:ring-primary rounded-lg py-3 px-4 font-body-md text-on-surface">
             </div>
             <p id="register-error" class="text-error font-label-sm min-h-[14px]"></p>
-            <button type="submit" class="w-full bg-primary text-on-primary font-headline-sm text-body-lg py-4 rounded-[24px] shadow-sm hover:shadow-md transition-all active:scale-[0.98] flex items-center justify-center gap-2">Hesap oluştur</button>
+            <button type="submit" class="w-full bg-primary text-on-primary font-headline-sm text-body-lg py-4 rounded-2xl shadow-sm hover:shadow-md transition-all active:scale-[0.98] flex items-center justify-center gap-2">Hesap oluştur</button>
         </form>
     </div>
 </div>
@@ -135,7 +154,7 @@
                 </div>
                 <div class="flex items-center gap-2">
                     <button class="nav-tab p-2 text-primary hover:bg-primary/10 rounded-full transition-all flex items-center justify-center" data-target="view-history">
-                        <span class="material-symbols-outlined text-[24px]">history</span>
+                        <span class="material-symbols-outlined icon-lg">history</span>
                     </button>
                     <div class="nav-tab w-10 h-10 rounded-full overflow-hidden bg-white border border-outline-variant cursor-pointer" data-target="view-profile">
                         <img alt="User Profile" class="user-profile-img w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD6pbBf1WbDO9xMS_XZVPq3Hat-IK7RVbQRVC5-9p8PWsv7SHG_Yojo0BjpUQAjhbGfBVWyXpGohNDbHg-yOrIOtX0zvzHvWJ0XjCLkLb4jDyzHW1tUnhdG4g69-o5TjKC7k0rOwSaXpzWjKDRZIhOzP1obI9IDh1PtPTw3cqmnIhUiMtmYi4lnBR1JB31WEtk7J5y65lOTNGEai5pKftjSXWP6cklloZAmRN4fheHJAMy0AjKzxoBO">
@@ -147,34 +166,34 @@
         <!-- Main Content Canvas -->
         <main class="px-container-padding pt-6 pb-24 mx-auto max-w-2xl flex flex-col gap-section-margin">
             <!-- Featured Section -->
-            <section class="bg-white rounded-card p-6 shadow-sm flex flex-col gap-2">
-                <h2 class="text-[24px] font-bold text-ink">Merhaba, <span id="dashboard-user-name">Selin</span>!</h2>
-                <p class="text-[16px] text-ink/80">Bugün harika bir gün olacak. İşte senin için hazırladığımız özet.</p>
-                <p class="text-[12px] font-medium text-ink/60 uppercase mt-2" id="dashboard-date">14 Ekim 2023, Cumartesi</p>
+            <section class="bg-white rounded-2xl p-6 shadow-sm flex flex-col gap-2">
+                <h2 class="text-headline-md font-headline-md font-bold text-on-surface">Merhaba, <span id="dashboard-user-name">Selin</span>!</h2>
+                <p class="text-body-lg font-body-lg text-on-surface">Bugün harika bir gün olacak. İşte senin için hazırladığımız özet.</p>
+                <p class="text-label-md font-label-md font-medium text-on-surface-variant uppercase mt-2" id="dashboard-date">14 Ekim 2023, Cumartesi</p>
             </section>
 
             <!-- Sport Section -->
-            <section class="nav-tab bg-white rounded-card p-6 shadow-sm interactive-card flex items-center cursor-pointer" data-target="view-workout">
+            <section class="nav-tab bg-white rounded-2xl p-6 shadow-sm interactive-card flex items-center cursor-pointer" data-target="view-workout">
                 <div class="flex items-center gap-4">
-                    <div class="p-3 rounded-full bg-green/10 text-green">
-                        <span class="material-symbols-outlined text-[24px]">fitness_center</span>
+                    <div class="p-3 rounded-full bg-green/10 text-primary">
+                        <span class="material-symbols-outlined icon-lg">fitness_center</span>
                     </div>
                     <div class="flex flex-col">
-                        <span class="text-[12px] font-medium text-ink/60 uppercase">Spor</span>
-                        <span class="text-[16px] text-ink/80" id="stat-workout-split">Yapılmadı</span>
+                        <span class="text-label-md font-label-md font-medium text-on-surface-variant uppercase">Spor</span>
+                        <span class="text-body-lg font-body-lg text-on-surface" id="stat-workout-split">Yapılmadı</span>
                     </div>
                 </div>
             </section>
 
             <section class="grid grid-cols-2 gap-card-gap">
                 <!-- Water Card -->
-                <div class="nav-tab bg-white rounded-card p-6 shadow-sm interactive-card flex flex-col justify-between aspect-square cursor-pointer" data-target="view-water">
-                    <div class="p-2 w-fit rounded-full bg-green/10 text-green">
-                        <span class="material-symbols-outlined text-[20px]">water_drop</span>
+                <div class="nav-tab bg-white rounded-2xl p-6 shadow-sm interactive-card flex flex-col justify-between aspect-square cursor-pointer" data-target="view-water">
+                    <div class="p-2 w-fit rounded-full bg-green/10 text-primary">
+                        <span class="material-symbols-outlined icon-md">water_drop</span>
                     </div>
                     <div class="mt-4 flex flex-col gap-1">
-                        <span class="text-[12px] font-medium text-ink/60 uppercase">Su Tüketimi</span>
-                        <span class="text-[20px] font-semibold text-ink" id="dashboard-water-text">0 <span class="text-[12px] font-normal text-ink/60">/ 2000 ml</span></span>
+                        <span class="text-label-md font-label-md font-medium text-on-surface-variant uppercase">Su Tüketimi</span>
+                        <span class="text-headline-sm font-headline-sm font-semibold text-on-surface" id="dashboard-water-text">0 <span class="text-label-md font-label-md font-normal text-on-surface-variant">/ 2000 ml</span></span>
                         <div class="w-full h-1.5 bg-green/20 rounded-full mt-2 overflow-hidden">
                             <div id="dashboard-water-progress" class="h-full bg-green rounded-full transition-all duration-300" style="width: 0%;"></div>
                         </div>
@@ -182,13 +201,13 @@
                 </div>
 
                 <!-- Nutrition Card -->
-                <div class="nav-tab bg-white rounded-card p-6 shadow-sm interactive-card flex flex-col justify-between aspect-square cursor-pointer" data-target="view-calories">
-                    <div class="p-2 w-fit rounded-full bg-green/10 text-green">
-                        <span class="material-symbols-outlined text-[20px]">restaurant</span>
+                <div class="nav-tab bg-white rounded-2xl p-6 shadow-sm interactive-card flex flex-col justify-between aspect-square cursor-pointer" data-target="view-calories">
+                    <div class="p-2 w-fit rounded-full bg-green/10 text-primary">
+                        <span class="material-symbols-outlined icon-md">restaurant</span>
                     </div>
                     <div class="mt-4 flex flex-col gap-1">
-                        <span class="text-[12px] font-medium text-ink/60 uppercase">Besin Takibi</span>
-                        <span class="text-[20px] font-semibold text-ink" id="dashboard-calories-text">0 <span class="text-[12px] font-normal text-ink/60">/ 2000 kcal</span></span>
+                        <span class="text-label-md font-label-md font-medium text-on-surface-variant uppercase">Besin Takibi</span>
+                        <span class="text-headline-sm font-headline-sm font-semibold text-on-surface" id="dashboard-calories-text">0 <span class="text-label-md font-label-md font-normal text-on-surface-variant">/ 2000 kcal</span></span>
                         <div class="w-full h-1.5 bg-green/20 rounded-full mt-2 overflow-hidden">
                             <div id="dashboard-calories-progress" class="h-full bg-green rounded-full transition-all duration-300" style="width: 0%;"></div>
                         </div>
@@ -196,13 +215,13 @@
                 </div>
 
                 <!-- Reading Card -->
-                <div class="nav-tab bg-white rounded-card p-6 shadow-sm interactive-card flex flex-col justify-between aspect-square cursor-pointer" data-target="view-books">
-                    <div class="p-2 w-fit rounded-full bg-green/10 text-green">
-                        <span class="material-symbols-outlined text-[20px]">menu_book</span>
+                <div class="nav-tab bg-white rounded-2xl p-6 shadow-sm interactive-card flex flex-col justify-between aspect-square cursor-pointer" data-target="view-books">
+                    <div class="p-2 w-fit rounded-full bg-green/10 text-primary">
+                        <span class="material-symbols-outlined icon-md">menu_book</span>
                     </div>
                     <div class="mt-4 flex flex-col gap-1">
-                        <span class="text-[12px] font-medium text-ink/60 uppercase">Kitap Okuma</span>
-                        <span class="text-[20px] font-semibold text-ink" id="dashboard-books-text">0 <span class="text-[12px] font-normal text-ink/60">/ 0 sayfa</span></span>
+                        <span class="text-label-md font-label-md font-medium text-on-surface-variant uppercase">Kitap Okuma</span>
+                        <span class="text-headline-sm font-headline-sm font-semibold text-on-surface" id="dashboard-books-text">0 <span class="text-label-md font-label-md font-normal text-on-surface-variant">/ 0 sayfa</span></span>
                         <div class="w-full h-1.5 bg-green/20 rounded-full mt-2 overflow-hidden">
                             <div id="dashboard-books-progress" class="h-full bg-green rounded-full transition-all duration-300" style="width: 0%;"></div>
                         </div>
@@ -210,13 +229,13 @@
                 </div>
 
                 <!-- Media Card (Placeholder) -->
-                <div class="nav-tab bg-white rounded-card p-6 shadow-sm interactive-card flex flex-col justify-between aspect-square cursor-pointer" data-target="view-movies">
-                    <div class="p-2 w-fit rounded-full bg-green/10 text-green">
-                        <span class="material-symbols-outlined text-[20px]">movie</span>
+                <div class="nav-tab bg-white rounded-2xl p-6 shadow-sm interactive-card flex flex-col justify-between aspect-square cursor-pointer" data-target="view-movies">
+                    <div class="p-2 w-fit rounded-full bg-green/10 text-primary">
+                        <span class="material-symbols-outlined icon-md">movie</span>
                     </div>
                     <div class="mt-4 flex flex-col gap-1">
-                        <span class="text-[12px] font-medium text-ink/60 uppercase">Dizi / Film</span>
-                        <span class="text-[20px] font-semibold text-ink" id="dashboard-movies-text">0 <span class="text-[12px] font-normal text-ink/60">izleniyor</span></span>
+                        <span class="text-label-md font-label-md font-medium text-on-surface-variant uppercase">Dizi / Film</span>
+                        <span class="text-headline-sm font-headline-sm font-semibold text-on-surface" id="dashboard-movies-text">0 <span class="text-label-md font-label-md font-normal text-on-surface-variant">izleniyor</span></span>
                         <div class="w-full h-1.5 bg-green/20 rounded-full mt-2 overflow-hidden">
                             <div id="dashboard-movies-progress" class="h-full bg-green rounded-full" style="width: 0%;"></div>
                         </div>
@@ -225,31 +244,31 @@
             </section>
 
             <!-- Full-width Finance Card -->
-            <section class="nav-tab bg-white rounded-card p-6 shadow-sm interactive-card flex items-center justify-between cursor-pointer" data-target="view-finance">
+            <section class="nav-tab bg-white rounded-2xl p-6 shadow-sm interactive-card flex items-center justify-between cursor-pointer" data-target="view-finance">
                 <div class="flex items-center gap-4">
-                    <div class="p-3 rounded-full bg-green/10 text-green">
-                        <span class="material-symbols-outlined text-[24px]">account_balance_wallet</span>
+                    <div class="p-3 rounded-full bg-green/10 text-primary">
+                        <span class="material-symbols-outlined icon-lg">account_balance_wallet</span>
                     </div>
                     <div class="flex flex-col">
-                        <span class="text-[12px] font-medium text-ink/60 uppercase">Finans</span>
-                        <span class="text-[16px] text-ink/80">Bakiye</span>
+                        <span class="text-label-md font-label-md font-medium text-on-surface-variant uppercase">Finans</span>
+                        <span class="text-body-lg font-body-lg text-on-surface">Bakiye</span>
                     </div>
                 </div>
-                <span class="text-[24px] font-bold text-green" id="stat-balance">0 TL</span>
+                <span class="text-headline-md font-headline-md font-bold text-primary" id="stat-balance">0 TL</span>
             </section>
 
             <!-- Full-width Shopping Card -->
-            <section class="nav-tab bg-white rounded-card p-6 shadow-sm interactive-card flex items-center justify-between cursor-pointer" data-target="view-shopping">
+            <section class="nav-tab bg-white rounded-2xl p-6 shadow-sm interactive-card flex items-center justify-between cursor-pointer" data-target="view-shopping">
                 <div class="flex items-center gap-4">
-                    <div class="p-3 rounded-full bg-green/10 text-green">
-                        <span class="material-symbols-outlined text-[24px]">shopping_basket</span>
+                    <div class="p-3 rounded-full bg-green/10 text-primary">
+                        <span class="material-symbols-outlined icon-lg">shopping_basket</span>
                     </div>
                     <div class="flex flex-col">
-                        <span class="text-[12px] font-medium text-ink/60 uppercase">Alışveriş</span>
-                        <span class="text-[16px] text-ink/80">Listeye Git</span>
+                        <span class="text-label-md font-label-md font-medium text-on-surface-variant uppercase">Alışveriş</span>
+                        <span class="text-body-lg font-body-lg text-on-surface">Listeye Git</span>
                     </div>
                 </div>
-                <span class="text-[20px] font-semibold text-green" id="dashboard-shopping-count">0 Ürün</span>
+                <span class="text-headline-sm font-headline-sm font-semibold text-primary" id="dashboard-shopping-count">0 Ürün</span>
             </section>
 
         </main>
@@ -267,7 +286,7 @@
                     <h1 class="font-headline-md text-headline-md text-primary dark:text-primary-fixed-dim font-bold tracking-tight">Alışveriş Listesi</h1>
                 </div>
                 <button class="flex items-center gap-1 text-error hover:bg-error-container/20 p-2 rounded-full transition-colors active:scale-95" id="clear-shopping-btn">
-                    <span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">delete</span>
+                    <span class="material-symbols-outlined icon-md" style="font-variation-settings: 'FILL' 1;">delete</span>
                 </button>
             </div>
         </header>
@@ -275,7 +294,7 @@
         <main class="pt-20 pb-32 px-container-padding max-w-md mx-auto min-h-screen">
             <!-- Search/Input Area -->
             <section class="mb-section-margin">
-                <form id="shopping-form" class="bg-surface-container-lowest rounded-[24px] p-4 card-shadow flex items-center gap-3 border border-outline-variant/20 focus-within:border-primary transition-colors">
+                <form id="shopping-form" class="bg-surface-container-lowest rounded-2xl p-4 shadow-sm flex items-center gap-3 border border-outline-variant/20 focus-within:border-primary transition-colors">
                     <input class="flex-grow bg-transparent border-none focus:ring-0 font-body-lg text-on-surface placeholder:text-outline text-body-lg" id="shopping-input" placeholder="Ürün adı girin..." type="text">
                     <button type="submit" class="w-14 h-14 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center transition-transform active:scale-[0.98] shadow-md">
                         <span class="material-symbols-outlined" data-icon="add">add</span>
@@ -289,7 +308,7 @@
                     <h2 class="font-headline-sm text-headline-sm text-primary">Alınacaklar</h2>
                     <span class="bg-secondary-container text-on-secondary-container px-3 py-1 rounded-full text-label-md font-label-md" id="active-shopping-count">0 Ürün</span>
                 </div>
-                <p class="text-[10px] text-outline mb-2 px-1 flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">swipe_left</span> Silmek için sola kaydırın</p>
+                <p class="text-label-sm text-outline mb-2 px-1 flex items-center gap-1"><span class="material-symbols-outlined icon-sm">swipe_left</span> Silmek için sola kaydırın</p>
                 <div class="space-y-card-gap overflow-hidden" id="active-shopping-list">
                     <div class="flex justify-center items-center py-8"><div class="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div></div>
                 
@@ -350,11 +369,11 @@
                 <!-- Last Session Info -->
                 <div class="flex items-center justify-between text-on-surface-variant px-2 py-1">
                     <div class="flex items-center gap-2">
-                        <span class="material-symbols-outlined text-sm" style="font-size: 16px;">history</span>
+                        <span class="material-symbols-outlined text-sm" class="icon-sm" style="">history</span>
                         <span class="font-body-md text-body-md" id="workout-last-session-date">Geçmiş antrenman aranıyor...</span>
                     </div>
                     <button class="hover:bg-surface-variant p-2 rounded-full transition-colors flex items-center justify-center" onclick="openEditTemplateView()">
-                        <span class="material-symbols-outlined text-sm" style="font-size: 16px;">edit</span>
+                        <span class="material-symbols-outlined text-sm" class="icon-sm" style="">edit</span>
                     </button>
                 </div>
             </div>
@@ -366,7 +385,7 @@
             
             <!-- Save Button Area -->
             <div class="w-full flex justify-center mt-4">
-                <button class="w-full max-w-md bg-primary text-on-primary font-headline-sm text-body-lg py-4 rounded-[24px] shadow-sm hover:shadow-md transition-all active:scale-[0.98] flex items-center justify-center gap-2" id="workout-save-btn">
+                <button class="w-full max-w-md bg-primary text-on-primary font-headline-sm text-body-lg py-4 rounded-2xl shadow-sm hover:shadow-md transition-all active:scale-[0.98] flex items-center justify-center gap-2" id="workout-save-btn">
                     <span class="material-symbols-outlined">check_circle</span>
                     Bugünün Antrenmanını Kaydet
                 </button>
@@ -460,14 +479,14 @@
             <div class="w-full max-w-md flex flex-col gap-card-gap">
                 
                 <!-- Chart Section -->
-                <section class="bg-surface-container-lowest rounded-xl shadow-[0px_4px_20px_rgba(0,0,0,0.04)] p-5 flex flex-col gap-4">
+                <section class="bg-surface-container-lowest rounded-xl shadow-sm p-6 flex flex-col gap-4">
                     <div class="flex justify-between items-end">
                         <div>
                             <p class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Maksimum Ağırlık</p>
                             <h2 class="font-headline-md text-headline-md text-primary mt-1" id="history-max-weight">0.0 kg</h2>
                         </div>
                         <div class="bg-primary-container bg-opacity-20 rounded-full px-3 py-1 flex items-center gap-1" id="history-trend-badge">
-                            <span class="material-symbols-outlined text-primary text-[14px]" data-icon="trending_flat">trending_flat</span>
+                            <span class="material-symbols-outlined text-primary icon-sm" data-icon="trending_flat">trending_flat</span>
                             <span class="font-label-sm text-label-sm text-primary">0%</span>
                         </div>
                     </div>
@@ -539,7 +558,7 @@
                 <div class="flex items-center justify-between">
                     <h2 class="font-headline-sm text-headline-sm text-on-surface" id="modal-title">Yeni Kitap Ekle</h2>
                     <button id="book-add-close" class="text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high rounded-full p-2 transition-colors focus:outline-none focus:ring-2 focus:ring-primary">
-                        <span class="material-symbols-outlined text-[24px]">close</span>
+                        <span class="material-symbols-outlined icon-lg">close</span>
                     </button>
                 </div>
                 <!-- Form Fields -->
@@ -549,7 +568,7 @@
                         <label class="font-label-md text-label-md text-on-surface-variant">Kitap Kapağı Ekle</label>
                         <div class="relative group cursor-pointer" id="book-add-cover-container">
                             <div class="w-full h-32 bg-surface-dim border-2 border-dashed border-outline-variant rounded-xl flex flex-col items-center justify-center gap-2 transition-all hover:bg-surface-container-high hover:border-primary group-focus-within:ring-2 group-focus-within:ring-primary overflow-hidden" id="book-add-cover-preview-box">
-                                <span class="material-symbols-outlined text-outline text-[32px] group-hover:text-primary transition-colors" id="book-add-cover-icon">add_photo_alternate</span>
+                                <span class="material-symbols-outlined text-outline icon-lg group-hover:text-primary transition-colors" id="book-add-cover-icon">add_photo_alternate</span>
                                 <span class="font-label-md text-label-md text-outline-variant group-hover:text-on-surface-variant transition-colors" id="book-add-cover-text">Görsel Seç veya Sürükle</span>
                                 <img id="book-add-cover-preview" class="hidden object-cover w-full h-full absolute inset-0 z-10" />
                             </div>
@@ -560,7 +579,7 @@
                     <div class="flex flex-col gap-1">
                         <label class="font-label-md text-label-md text-on-surface-variant" for="book-add-title">Kitap Adı</label>
                         <div class="relative">
-                            <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-[20px]">book</span>
+                            <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline icon-md">book</span>
                             <input id="book-add-title" class="w-full bg-surface-dim border-none rounded-lg py-3 pl-10 pr-4 font-body-md text-body-md text-on-surface placeholder:text-outline-variant focus:ring-2 focus:ring-primary focus:bg-surface-container-lowest transition-colors" placeholder="Kitap adını girin" type="text"/>
                         </div>
                     </div>
@@ -568,7 +587,7 @@
                     <div class="flex flex-col gap-1">
                         <label class="font-label-md text-label-md text-on-surface-variant" for="book-add-author">Yazar</label>
                         <div class="relative">
-                            <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-[20px]">person</span>
+                            <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline icon-md">person</span>
                             <input id="book-add-author" class="w-full bg-surface-dim border-none rounded-lg py-3 pl-10 pr-4 font-body-md text-body-md text-on-surface placeholder:text-outline-variant focus:ring-2 focus:ring-primary focus:bg-surface-container-lowest transition-colors" placeholder="Yazar adını girin" type="text"/>
                         </div>
                     </div>
@@ -576,7 +595,7 @@
                     <div class="flex flex-col gap-1">
                         <label class="font-label-md text-label-md text-on-surface-variant" for="book-add-pages">Toplam Sayfa Sayısı</label>
                         <div class="relative">
-                            <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-[20px]">format_list_numbered</span>
+                            <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline icon-md">format_list_numbered</span>
                             <input id="book-add-pages" class="w-full bg-surface-dim border-none rounded-lg py-3 pl-10 pr-4 font-body-md text-body-md text-on-surface placeholder:text-outline-variant focus:ring-2 focus:ring-primary focus:bg-surface-container-lowest transition-colors" min="1" placeholder="Sayfa sayısı" type="number"/>
                         </div>
                     </div>
@@ -600,10 +619,10 @@
                 </div>
                 <!-- Action Buttons -->
                 <div class="flex items-center justify-between gap-3 mt-4">
-                    <button id="book-add-cancel" class="flex-1 bg-surface-container-low text-primary font-headline-sm text-body-lg py-4 rounded-[24px] transition-all active:scale-[0.98] hover:bg-surface-container-high flex items-center justify-center gap-2" type="button">
+                    <button id="book-add-cancel" class="flex-1 bg-surface-container-low text-primary font-headline-sm text-body-lg py-4 rounded-2xl transition-all active:scale-[0.98] hover:bg-surface-container-high flex items-center justify-center gap-2" type="button">
                         İptal
                     </button>
-                    <button id="book-add-save" class="flex-1 bg-primary text-on-primary font-headline-sm text-body-lg py-4 rounded-[24px] shadow-sm hover:shadow-md transition-all active:scale-[0.98] flex items-center justify-center gap-2" type="button">
+                    <button id="book-add-save" class="flex-1 bg-primary text-on-primary font-headline-sm text-body-lg py-4 rounded-2xl shadow-sm hover:shadow-md transition-all active:scale-[0.98] flex items-center justify-center gap-2" type="button">
                         Ekle
                     </button>
                 </div>
@@ -612,12 +631,12 @@
 
         <!-- Edit Book Modal -->
         <div class="hidden fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm" id="book-edit-modal">
-            <div class="bg-surface w-full max-w-md rounded-3xl shadow-sm p-6 flex flex-col gap-5 scale-95 opacity-0 transition-all duration-200 overflow-y-auto max-h-[90vh]" id="book-edit-modal-content">
+            <div class="bg-surface w-full max-w-md rounded-2xl shadow-sm p-6 flex flex-col gap-6 scale-95 opacity-0 transition-all duration-200 overflow-y-auto max-h-[90vh]" id="book-edit-modal-content">
                 <!-- Header -->
                 <div class="flex justify-between items-center mb-2">
                     <h1 class="font-headline-sm text-headline-sm text-on-surface">Kitabı Düzenle</h1>
                     <button id="book-edit-close" aria-label="Close" class="text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high rounded-full p-2 transition-colors">
-                        <span class="material-symbols-outlined text-[24px]">close</span>
+                        <span class="material-symbols-outlined icon-lg">close</span>
                     </button>
                 </div>
                 <!-- Cover & Name/Author Row -->
@@ -665,8 +684,8 @@
                 </div>
                 <!-- Actions -->
                 <div class="flex flex-col gap-3 mt-4">
-                    <button id="book-edit-save" class="w-full bg-primary text-on-primary font-headline-sm text-body-lg py-4 rounded-[24px] shadow-sm hover:shadow-md transition-all active:scale-[0.98] flex items-center justify-center gap-2">Güncelle</button>
-                    <button id="book-edit-delete" class="w-full bg-transparent text-error border border-error-container font-headline-sm text-body-lg py-4 rounded-[24px] transition-all active:scale-[0.98] hover:bg-error-container flex items-center justify-center gap-2">
+                    <button id="book-edit-save" class="w-full bg-primary text-on-primary font-headline-sm text-body-lg py-4 rounded-2xl shadow-sm hover:shadow-md transition-all active:scale-[0.98] flex items-center justify-center gap-2">Güncelle</button>
+                    <button id="book-edit-delete" class="w-full bg-transparent text-error border border-error-container font-headline-sm text-body-lg py-4 rounded-2xl transition-all active:scale-[0.98] hover:bg-error-container flex items-center justify-center gap-2">
                         <span class="material-symbols-outlined text-lg">delete</span>
                         Sil
                     </button>
@@ -757,15 +776,15 @@
             <section class="flex flex-col gap-card-gap">
                 <h3 class="font-headline-sm text-headline-sm text-on-surface font-semibold">Quick Add</h3>
                 <div class="grid grid-cols-3 gap-3">
-                    <button class="water-add-btn bg-surface-container-lowest shadow-[0px_4px_20px_rgba(0,0,0,0.04)] rounded-xl py-4 flex flex-col items-center justify-center gap-2 hover:scale-[0.98] transition-transform active:bg-surface-container duration-200" data-amount="250" data-type="Glass of Water" data-icon="local_drink">
+                    <button class="water-add-btn bg-surface-container-lowest shadow-sm rounded-full h-14 flex flex-col items-center justify-center gap-2 hover:scale-[0.98] transition-transform active:bg-surface-container duration-200" data-amount="250" data-type="Glass of Water" data-icon="local_drink">
                         <span class="material-symbols-outlined text-primary" data-icon="local_drink" data-weight="regular">local_drink</span>
                         <span class="font-label-md text-label-md text-on-surface">+250ml</span>
                     </button>
-                    <button class="water-add-btn bg-surface-container-lowest shadow-[0px_4px_20px_rgba(0,0,0,0.04)] rounded-xl py-4 flex flex-col items-center justify-center gap-2 hover:scale-[0.98] transition-transform active:bg-surface-container duration-200" data-amount="500" data-type="Water Bottle" data-icon="water_bottle">
+                    <button class="water-add-btn bg-surface-container-lowest shadow-sm rounded-full h-14 flex flex-col items-center justify-center gap-2 hover:scale-[0.98] transition-transform active:bg-surface-container duration-200" data-amount="500" data-type="Water Bottle" data-icon="water_bottle">
                         <span class="material-symbols-outlined text-primary" data-icon="water_bottle" data-weight="regular">water_bottle</span>
                         <span class="font-label-md text-label-md text-on-surface">+500ml</span>
                     </button>
-                    <button id="water-custom-btn" class="bg-surface-container-lowest shadow-[0px_4px_20px_rgba(0,0,0,0.04)] rounded-xl py-4 flex flex-col items-center justify-center gap-2 hover:scale-[0.98] transition-transform active:bg-surface-container duration-200">
+                    <button id="water-custom-btn" class="bg-surface-container-lowest shadow-sm rounded-full h-14 flex flex-col items-center justify-center gap-2 hover:scale-[0.98] transition-transform active:bg-surface-container duration-200">
                         <span class="material-symbols-outlined text-primary" data-icon="add" data-weight="regular">add</span>
                         <span class="font-label-md text-label-md text-on-surface">Custom</span>
                     </button>
@@ -773,7 +792,7 @@
             </section>
             
             <!-- Weekly Chart Section -->
-            <section class="bg-surface-container-lowest shadow-[0px_4px_20px_rgba(0,0,0,0.04)] rounded-xl p-5 flex flex-col gap-4">
+            <section class="bg-surface-container-lowest shadow-sm rounded-xl p-6 flex flex-col gap-4">
                 <div class="flex justify-between items-end">
                     <h3 class="font-headline-sm text-headline-sm text-on-surface font-semibold">Last 7 Days</h3>
                     <span id="water-avg-text" class="font-label-md text-label-md text-on-surface-variant uppercase">Avg: 0ml</span>
@@ -786,7 +805,7 @@
             <!-- History Log -->
             <section class="flex flex-col gap-4">
                 <h3 class="font-headline-sm text-headline-sm text-on-surface font-semibold">Today's Log</h3>
-                <div id="water-log-list" class="bg-surface-container-lowest shadow-[0px_4px_20px_rgba(0,0,0,0.04)] rounded-xl flex flex-col overflow-hidden">
+                <div id="water-log-list" class="bg-surface-container-lowest shadow-sm rounded-xl flex flex-col overflow-hidden">
                     <!-- Dinamik -->
                 </div>
             </section>
@@ -795,7 +814,7 @@
     </section>
 
     <!-- ================= GEÇMİŞ (History) ================= -->
-    <section id="view-history" class="view hidden bg-paper text-ink font-sans antialiased min-h-screen pb-32" style="--green: #446554; --paper: #f7faf3; --ink: #1a1c18; --coral: #ff8a80; --tan: #d2b48c;">
+    <section id="view-history" class="view hidden bg-paper text-on-surface font-sans antialiased min-h-screen pb-32" style="--green: #446554; --paper: #f7faf3; --ink: #1a1c18; --coral: #ff8a80; --tan: #d2b48c;">
         <!-- Top App Bar -->
         <header class="w-full top-0 sticky bg-background dark:bg-background flat no shadows transition-opacity duration-200 z-40 max-w-md mx-auto">
             <div class="flex items-center justify-between px-container-padding py-4 w-full">
@@ -812,13 +831,13 @@
             
             <!-- Dinamik İçerik Buraya Gelecek -->
             <div id="history-cards-container" class="flex flex-col gap-4">
-                <div class="text-center text-ink/60 mt-10">Yükleniyor...</div>
+                <div class="text-center text-on-surface-variant mt-10">Yükleniyor...</div>
             </div>
         </main>
     </section>
 
     <!-- ================= DİZİ / FİLM (Placeholder) ================= -->
-    <section id="view-movies" class="view hidden bg-paper text-ink font-sans antialiased min-h-screen pb-32" style="--green: #446554; --paper: #f7faf3; --ink: #1a1c18; --coral: #ff8a80; --tan: #d2b48c;">
+    <section id="view-movies" class="view hidden bg-paper text-on-surface font-sans antialiased min-h-screen pb-32" style="--green: #446554; --paper: #f7faf3; --ink: #1a1c18; --coral: #ff8a80; --tan: #d2b48c;">
         <!-- Top App Bar -->
         <header class="w-full top-0 sticky bg-background dark:bg-background flat no shadows transition-opacity duration-200 z-40 max-w-md mx-auto">
             <div class="flex items-center justify-between px-container-padding py-4 w-full">
@@ -836,7 +855,7 @@
             <section class="mb-6">
                 <div class="relative flex items-center gap-2 mb-6">
                     <div class="relative flex-grow">
-                        <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-[20px]" data-icon="search">search</span>
+                        <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant icon-md" data-icon="search">search</span>
                         <input class="w-full pl-10 pr-4 py-3 bg-surface-container-low border border-outline-variant/30 rounded-xl text-body focus:ring-2 focus:ring-primary/20 focus:border-primary/50 placeholder:text-outline-variant" placeholder="Hızlı ekle..." type="text" id="movies-search-input"/>
                     </div>
                     <button class="w-12 h-12 bg-primary text-on-primary rounded-full flex items-center justify-center shadow-sm active:scale-95 transition-transform" id="movies-add-btn">
@@ -886,7 +905,7 @@
         <main class="flex-1 overflow-y-auto px-container-padding max-w-md mx-auto w-full flex flex-col gap-section-margin pb-[140px] pt-4">
             
             <!-- Month/Year Selector -->
-            <div class="flex items-center justify-between bg-surface-container-lowest rounded-full px-4 py-2 shadow-[0px_4px_20px_rgba(0,0,0,0.04)]">
+            <div class="flex items-center justify-between bg-surface-container-lowest rounded-full px-4 py-2 shadow-sm">
                 <button class="w-10 h-10 rounded-full flex items-center justify-center hover:bg-surface-container-low transition-colors" id="finance-prev-month">
                     <span class="material-symbols-outlined text-primary">chevron_left</span>
                 </button>
@@ -900,7 +919,7 @@
 
             <!-- Balance Overview -->
             <section class="flex flex-col gap-element-spacing">
-                <div class="bg-surface-container-lowest shadow-[0px_4px_20px_rgba(0,0,0,0.04)] rounded-[24px] p-6 active:scale-98 transition-transform duration-100 ease-in-out cursor-pointer">
+                <div class="bg-surface-container-lowest shadow-sm rounded-2xl p-6 active:scale-98 transition-transform duration-100 ease-in-out cursor-pointer">
                     <p class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider mb-2">Toplam Bakiye</p>
                     <h2 class="font-display-lg text-display-lg text-on-surface" id="finance-total-balance">₺0,00</h2>
                     <div class="mt-4 flex items-center gap-2" id="finance-monthly-trend">
@@ -909,7 +928,7 @@
                     </div>
                 </div>
 
-                <div class="bg-surface-container-lowest shadow-[0px_4px_20px_rgba(0,0,0,0.04)] rounded-[24px] p-6 mt-4 active:scale-98 transition-transform duration-100 ease-in-out cursor-pointer" onclick="document.getElementById('view-finance').classList.add('hidden'); document.getElementById('view-finance-detail').classList.remove('hidden'); renderFinanceDetail();">
+                <div class="bg-surface-container-lowest shadow-sm rounded-2xl p-6 mt-4 active:scale-98 transition-transform duration-100 ease-in-out cursor-pointer" onclick="document.getElementById('view-finance').classList.add('hidden'); document.getElementById('view-finance-detail').classList.remove('hidden'); renderFinanceDetail();">
                     <p class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider mb-4">Harcama Dağılımı</p>
                     <div class="flex flex-col gap-4" id="finance-expense-bars">
                         <!-- Bars injected dynamically -->
@@ -925,13 +944,13 @@
 
             <!-- Configuration Section (Categories & Types) -->
             <section class="flex gap-4">
-                <button class="flex-1 flex flex-col items-center justify-center gap-2 bg-surface-container-lowest shadow-[0px_4px_20px_rgba(0,0,0,0.04)] rounded-[20px] p-4 active:scale-98 transition-transform duration-100 ease-in-out group" onclick="openAddPaymentMethodModal()">
+                <button class="flex-1 flex flex-col items-center justify-center gap-2 bg-surface-container-lowest shadow-sm rounded-[20px] p-4 active:scale-98 transition-transform duration-100 ease-in-out group" onclick="openAddPaymentMethodModal()">
                     <div class="w-10 h-10 rounded-full bg-secondary-container flex items-center justify-center group-hover:scale-110 transition-transform">
                         <span class="material-symbols-outlined text-on-secondary-container" style="font-variation-settings: 'FILL' 0;">add_card</span>
                     </div>
                     <span class="font-label-sm text-label-sm text-on-surface text-center">Ödeme Yöntemi Ekle</span>
                 </button>
-                <button class="flex-1 flex flex-col items-center justify-center gap-2 bg-surface-container-lowest shadow-[0px_4px_20px_rgba(0,0,0,0.04)] rounded-[20px] p-4 active:scale-98 transition-transform duration-100 ease-in-out group" onclick="openAddCategoryModal()">
+                <button class="flex-1 flex flex-col items-center justify-center gap-2 bg-surface-container-lowest shadow-sm rounded-[20px] p-4 active:scale-98 transition-transform duration-100 ease-in-out group" onclick="openAddCategoryModal()">
                     <div class="w-10 h-10 rounded-full bg-tertiary-container flex items-center justify-center group-hover:scale-110 transition-transform">
                         <span class="material-symbols-outlined text-on-tertiary-container" style="font-variation-settings: 'FILL' 0;">receipt_long</span>
                     </div>
@@ -953,7 +972,7 @@
 
     <!-- ================= SU HEDEFİ MODALI ================= -->
     <div class="hidden fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm" id="water-goal-modal">
-        <div class="bg-surface-container-lowest w-full max-w-sm rounded-[24px] shadow-lg overflow-hidden flex flex-col scale-95 opacity-0 transition-all duration-200" id="water-goal-modal-content">
+        <div class="bg-surface-container-lowest w-full max-w-sm rounded-2xl shadow-lg overflow-hidden flex flex-col scale-95 opacity-0 transition-all duration-200" id="water-goal-modal-content">
             <div class="p-6 flex flex-col gap-6">
                 <div class="flex flex-col gap-1">
                     <h2 class="font-headline-sm text-headline-sm text-on-surface font-semibold">Günlük Hedefini Belirle</h2>
@@ -987,7 +1006,7 @@
 
     <!-- ================= ÖZEL MİKTAR MODALI ================= -->
     <div class="hidden fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm" id="water-custom-modal">
-        <div class="bg-surface-container-lowest w-full max-w-sm rounded-[24px] shadow-[0px_4px_20px_rgba(0,0,0,0.08)] flex flex-col scale-95 opacity-0 transition-all duration-200" id="water-custom-modal-content">
+        <div class="bg-surface-container-lowest w-full max-w-sm rounded-2xl shadow-md flex flex-col scale-95 opacity-0 transition-all duration-200" id="water-custom-modal-content">
             <div class="pt-8 px-6 pb-2 text-center flex flex-col gap-1">
                 <h2 class="font-headline-md text-headline-md text-on-surface font-semibold">Özel Miktar Ekle</h2>
                 <p class="font-body-md text-body-md text-on-surface-variant">İçtiğin su miktarını manuel olarak gir.</p>
@@ -1013,14 +1032,14 @@
             </div>
             <div class="flex p-4 gap-3 border-t border-surface-container-highest">
                 <button id="water-custom-cancel" class="flex-1 py-3.5 rounded-xl font-label-md text-label-md text-primary bg-surface-container-lowest hover:bg-surface-container-low transition-colors active:scale-[0.98]">İPTAL</button>
-                <button id="water-custom-save" class="flex-1 py-3.5 rounded-xl font-label-md text-label-md text-on-primary bg-primary hover:opacity-90 shadow-[0px_2px_8px_rgba(68,101,84,0.3)] transition-all active:scale-[0.98] active:shadow-sm">EKLE</button>
+                <button id="water-custom-save" class="flex-1 py-3.5 rounded-xl font-label-md text-label-md text-on-primary bg-primary hover:opacity-90 shadow-sm transition-all active:scale-[0.98] active:shadow-sm">EKLE</button>
             </div>
         </div>
     </div>
 
     <!-- ================= KALORİ HEDEFİ MODALI ================= -->
     <div class="hidden fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm" id="calories-goal-modal">
-        <div class="bg-surface-container-lowest w-full max-w-sm rounded-[24px] shadow-lg overflow-hidden flex flex-col scale-95 opacity-0 transition-all duration-200" id="calories-goal-modal-content">
+        <div class="bg-surface-container-lowest w-full max-w-sm rounded-2xl shadow-lg overflow-hidden flex flex-col scale-95 opacity-0 transition-all duration-200" id="calories-goal-modal-content">
             <div class="p-6 flex flex-col gap-6">
                 <div class="flex flex-col gap-1">
                     <h2 class="font-headline-sm text-headline-sm text-on-surface font-semibold">Günlük Kalori Hedefi</h2>
@@ -1087,7 +1106,7 @@
             
             <!-- Profile Photo Edit Area -->
             <div class="relative w-32 h-32 mb-6 group cursor-pointer" onclick="document.getElementById('profile-photo-input').click()">
-                <img id="profile-edit-photo" class="user-profile-img w-full h-full object-cover rounded-full shadow-[0px_4px_20px_rgba(0,0,0,0.04)] ring-4 ring-surface" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBN2LY6Awb3wVgBvih9JKyp1CwhDN4LDNpt_5IqiYyNWQyGb4zHzzu5utwTNmJTrK-T6sJ5N_hJBDMyHsKjeff59NjrORxyxPWXI6_yhu0v3PKjvuNms0YMsshGWhWhcrYdnPXTzV7bDta8SAMUbUBZnAOoyfbI5vWNTk4Hs_mt5KEVKxcjBlFtpyPP4o21TIOkPwOfoQO0rXwYWrHaUD0j10DRhpXqdpRFhP0UBIB1b3gSLT3tZuPt"/>
+                <img id="profile-edit-photo" class="user-profile-img w-full h-full object-cover rounded-full shadow-sm ring-4 ring-surface" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBN2LY6Awb3wVgBvih9JKyp1CwhDN4LDNpt_5IqiYyNWQyGb4zHzzu5utwTNmJTrK-T6sJ5N_hJBDMyHsKjeff59NjrORxyxPWXI6_yhu0v3PKjvuNms0YMsshGWhWhcrYdnPXTzV7bDta8SAMUbUBZnAOoyfbI5vWNTk4Hs_mt5KEVKxcjBlFtpyPP4o21TIOkPwOfoQO0rXwYWrHaUD0j10DRhpXqdpRFhP0UBIB1b3gSLT3tZuPt"/>
                 <div class="absolute inset-0 bg-black/20 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
                     <span class="material-symbols-outlined text-white" style="font-variation-settings: 'FILL' 1;">photo_camera</span>
                 </div>
@@ -1098,7 +1117,7 @@
             </div>
 
             <!-- Form Fields Container -->
-            <div class="w-full bg-surface-container-lowest rounded-[24px] p-container-padding shadow-[0px_4px_20px_rgba(0,0,0,0.04)] space-y-6">
+            <div class="w-full bg-surface-container-lowest rounded-2xl p-container-padding shadow-sm space-y-6">
                 <!-- Full Name -->
                 <div class="space-y-2">
                     <label class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider block ml-1">Ad Soyad</label>
@@ -1167,13 +1186,13 @@
                 </div>
                 
                 <div class="pt-4 pb-2">
-                    <button id="profile-save-btn" class="w-full bg-primary text-on-primary font-headline-sm text-body-lg py-4 rounded-[24px] shadow-sm hover:shadow-md transition-all active:scale-[0.98] flex items-center justify-center gap-2">
+                    <button id="profile-save-btn" class="w-full bg-primary text-on-primary font-headline-sm text-body-lg py-4 rounded-2xl shadow-sm hover:shadow-md transition-all active:scale-[0.98] flex items-center justify-center gap-2">
                         <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">check_circle</span>
                         Değişiklikleri Kaydet
                     </button>
                 </div>
                 <div class="pb-2">
-                    <button class="logout-trigger w-full bg-error-container text-on-error-container font-headline-sm text-body-lg py-4 rounded-[24px] transition-all active:scale-[0.98] hover:bg-error hover:text-on-error flex items-center justify-center gap-2">
+                    <button class="logout-trigger w-full bg-error-container text-on-error-container font-headline-sm text-body-lg py-4 rounded-2xl transition-all active:scale-[0.98] hover:bg-error hover:text-on-error flex items-center justify-center gap-2">
                         <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">logout</span>
                         Çıkış Yap
                     </button>
@@ -1195,7 +1214,7 @@
         
         <main class="px-container-padding max-w-lg mx-auto">
             <!-- Month/Year Selector -->
-            <div class="flex items-center justify-between mt-6 mb-8 bg-surface-container-lowest rounded-full px-4 py-2 custom-shadow">
+            <div class="flex items-center justify-between mt-6 mb-8 bg-surface-container-lowest rounded-full px-4 py-2 shadow-sm">
                 <button class="w-10 h-10 rounded-full flex items-center justify-center hover:bg-surface-container-low transition-colors" id="fd-prev-month">
                     <span class="material-symbols-outlined text-primary">chevron_left</span>
                 </button>
@@ -1208,7 +1227,7 @@
             </div>
 
             <!-- Net Total Card -->
-            <div class="bg-primary-container/20 rounded-3xl p-6 mb-8 border border-primary/10 flex flex-col items-center justify-center text-center">
+            <div class="bg-primary-container/20 rounded-2xl p-6 mb-8 border border-primary/10 flex flex-col items-center justify-center text-center">
                 <p class="font-label-md text-label-md text-primary uppercase tracking-widest mb-1">Aylık Toplam Net</p>
                 <h2 class="font-display-lg text-display-lg text-primary-container text-on-primary-container" id="fd-net-total">+0,00 ₺</h2>
                 
@@ -1252,7 +1271,7 @@
                         <span class="font-label-md text-label-md px-3 py-1 bg-tertiary/10 text-tertiary rounded-full" id="fd-expense-count">0 Kategori</span>
                     </div>
                     
-                    <div class="bg-surface-container-lowest rounded-3xl p-4 custom-shadow space-y-2" id="fd-expense-list">
+                    <div class="bg-surface-container-lowest rounded-2xl p-4 shadow-sm space-y-2" id="fd-expense-list">
                         <!-- Dynamic expense records will go here -->
                         <div class="text-center text-sm text-on-surface-variant italic py-2">Henüz gider yok</div>
                     </div>
@@ -1267,13 +1286,13 @@
                             Ödeme Yöntemleri
                         </h3>
                     </div>
-                    <div class="bg-surface-container-lowest rounded-3xl p-4 custom-shadow space-y-2" id="fd-payment-list">
+                    <div class="bg-surface-container-lowest rounded-2xl p-4 shadow-sm space-y-2" id="fd-payment-list">
                         <!-- Dynamic payment methods will go here -->
                         <div class="text-center text-sm text-on-surface-variant italic py-2">Veri yok</div>
                     </div>
                 </section>
                 <!-- Visual Insight Placeholder -->
-                <div class="relative h-48 rounded-3xl overflow-hidden custom-shadow group">
+                <div class="relative h-48 rounded-2xl overflow-hidden shadow-sm group">
                     <div class="w-full h-full bg-cover bg-center transition-transform duration-700 group-hover:scale-110" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBilJBe_6JmA0asvVdNaxem-dCH7_XSbhFF5MFjgkrq5fpkV26B_obqXvANaxFn_GbEPnszfIxuXSzefx_Kf8kvhmbDW-w91W9T2YTTPPlWlfQZ9bMCelIAUoX9fCHyVMmZaSZhRE3FW4Q_t0R-WcuQ8eE2wKdBtWa0idTgt53_WFCWJVQfiZv5aukE23E49x2A9wmMjh-7z0SIVSPKLUQDn_8-CZgBLDZhezR1ksI5omE-5ZjkzCJE')"></div>
                     <div class="absolute inset-0 bg-gradient-to-t from-primary/80 to-transparent flex flex-col justify-end p-6">
                         <p class="text-white font-label-md uppercase tracking-wider mb-1">Harcama Dağılımı</p>
@@ -1299,7 +1318,7 @@
 
         <main class="flex-1 w-full max-w-md mx-auto px-container-padding pb-32 flex flex-col gap-section-margin pt-4">
             <!-- Circular Progress Section -->
-            <section class="bg-surface-container-lowest rounded-[32px] py-8 px-6 shadow-[0px_4px_20px_rgba(0,0,0,0.04)] flex flex-col items-center justify-center relative">
+            <section class="bg-surface-container-lowest rounded-[32px] py-8 px-6 shadow-sm flex flex-col items-center justify-center relative">
             <div class="relative w-56 h-56 flex items-center justify-center">
             <!-- SVG Circle -->
             <svg class="absolute inset-0 w-full h-full" viewBox="0 0 120 120">
@@ -1313,7 +1332,7 @@
             </div>
             </div>
             <button id="calories-goal-btn" class="mt-8 flex items-center gap-2 px-5 py-2.5 bg-surface-container hover:bg-surface-container-high rounded-full shadow-sm active:scale-95 transition-all duration-200">
-            <span class="material-symbols-outlined text-primary text-[18px]" data-icon="edit" data-weight="regular">edit</span>
+            <span class="material-symbols-outlined text-primary icon-sm" data-icon="edit" data-weight="regular">edit</span>
             <span class="font-label-md text-label-md text-primary font-bold tracking-wider">DAİLY GOAL</span>
             </button>
             <div class="mt-4 flex items-center justify-center">
@@ -1323,13 +1342,13 @@
             <!-- Action Section -->
             <section class="flex flex-col gap-card-gap">
             <h3 class="font-headline-sm text-headline-sm text-on-surface font-semibold">Yiyecek Ekle</h3>
-            <button class="nav-tab w-full bg-surface-container-lowest shadow-[0px_4px_20px_rgba(0,0,0,0.04)] rounded-[24px] py-4 flex items-center justify-center gap-3 hover:scale-[0.98] transition-transform active:bg-surface-container duration-200" data-target="view-foods">
-            <span class="material-symbols-outlined text-primary text-[24px]" data-icon="restaurant" data-weight="regular">restaurant</span>
-            <span class="font-label-md text-[16px] text-on-surface font-semibold">Öğün Ekle</span>
+            <button class="nav-tab w-full bg-surface-container-lowest shadow-sm rounded-full h-14 flex items-center justify-center gap-3 hover:scale-[0.98] transition-transform active:bg-surface-container duration-200" data-target="view-foods">
+            <span class="material-symbols-outlined text-primary icon-lg" data-icon="restaurant" data-weight="regular">restaurant</span>
+            <span class="font-label-md text-body-lg font-body-lg text-on-surface font-semibold">Öğün Ekle</span>
             </button>
             </section>
             <!-- Macros/Stats Section -->
-            <section class="bg-surface-container-lowest shadow-[0px_4px_20px_rgba(0,0,0,0.04)] rounded-xl p-5 flex flex-col gap-4">
+            <section class="bg-surface-container-lowest shadow-sm rounded-xl p-6 flex flex-col gap-4">
             <div class="flex justify-between items-end">
             <h3 class="font-headline-sm text-headline-sm text-on-surface font-semibold">Makrolar</h3>
             <span class="font-label-md text-label-md text-on-surface-variant uppercase">Günlük Hedef</span>
@@ -1340,7 +1359,7 @@
             <div class="flex justify-between items-center">
             <span class="font-label-md text-label-md text-on-surface-variant uppercase">Protein</span>
             </div>
-            <div class="font-headline-sm text-headline-sm text-on-surface"><span id="ui-protein-consumed">0</span><span class="font-body-sm text-[12px] text-on-surface-variant font-normal">g</span></div>
+            <div class="font-headline-sm text-headline-sm text-on-surface"><span id="ui-protein-consumed">0</span><span class="font-body-sm text-label-md font-label-md text-on-surface-variant font-normal">g</span></div>
             <div class="w-full h-1.5 bg-surface-container rounded-full overflow-hidden">
             <div id="ui-protein-bar" class="h-full bg-primary rounded-full transition-all duration-500 ease-out" style="width: 0%"></div>
             </div>
@@ -1351,7 +1370,7 @@
             <div class="flex justify-between items-center">
             <span class="font-label-md text-label-md text-on-surface-variant uppercase">Karb</span>
             </div>
-            <div class="font-headline-sm text-headline-sm text-on-surface"><span id="ui-karb-consumed">0</span><span class="font-body-sm text-[12px] text-on-surface-variant font-normal">g</span></div>
+            <div class="font-headline-sm text-headline-sm text-on-surface"><span id="ui-karb-consumed">0</span><span class="font-body-sm text-label-md font-label-md text-on-surface-variant font-normal">g</span></div>
             <div class="w-full h-1.5 bg-surface-container rounded-full overflow-hidden">
             <div id="ui-karb-bar" class="h-full bg-primary rounded-full transition-all duration-500 ease-out" style="width: 0%"></div>
             </div>
@@ -1362,7 +1381,7 @@
             <div class="flex justify-between items-center">
             <span class="font-label-md text-label-md text-on-surface-variant uppercase">Yağ</span>
             </div>
-            <div class="font-headline-sm text-headline-sm text-on-surface"><span id="ui-yag-consumed">0</span><span class="font-body-sm text-[12px] text-on-surface-variant font-normal">g</span></div>
+            <div class="font-headline-sm text-headline-sm text-on-surface"><span id="ui-yag-consumed">0</span><span class="font-body-sm text-label-md font-label-md text-on-surface-variant font-normal">g</span></div>
             <div class="w-full h-1.5 bg-surface-container rounded-full overflow-hidden">
             <div id="ui-yag-bar" class="h-full bg-primary rounded-full transition-all duration-500 ease-out" style="width: 0%"></div>
             </div>
@@ -1371,7 +1390,7 @@
             </div>
             </section>
             <!-- Weekly Chart Section -->
-            <section class="bg-surface-container-lowest rounded-xl p-5 shadow-[0px_4px_20px_rgba(0,0,0,0.04)] mt-4 flex flex-col gap-2">
+            <section class="bg-surface-container-lowest rounded-xl p-6 shadow-sm mt-4 flex flex-col gap-2">
                 <div class="flex justify-between items-end">
                     <span class="font-label-md text-label-md text-on-surface-variant uppercase">Haftalık Kalori</span>
                     <span class="font-headline-sm text-headline-sm text-primary" id="calories-avg-text">Avg: 0 kcal</span>
@@ -1384,8 +1403,8 @@
                 </div>
             </section>
             <!-- History Log -->
-            <section class="mt-4 bg-surface-container-lowest rounded-[24px] p-4 shadow-[0px_4px_20px_rgba(0,0,0,0.04)]">
-            <h3 class="font-headline-sm text-[18px] font-semibold text-on-surface mb-3 px-2">Günün Kayıtları</h3>
+            <section class="mt-4 bg-surface-container-lowest rounded-2xl p-4 shadow-sm">
+            <h3 class="font-headline-sm text-body-lg font-body-lg font-semibold text-on-surface mb-3 px-2">Günün Kayıtları</h3>
             <div class="flex flex-col" id="daily-log-list">
                     <div class="flex justify-center items-center py-8"><div class="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div></div>
                 
@@ -1409,14 +1428,14 @@
             <div class="px-container-padding flex-1 flex flex-col gap-section-margin mt-4">
                 <!-- Bento-style Macro Overview -->
                 <section class="grid grid-cols-2 gap-4">
-                    <div class="bg-surface-container-lowest rounded-[24px] p-4 shadow-[0px_4px_20px_rgba(0,0,0,0.04)] flex flex-col justify-between h-24">
+                    <div class="bg-surface-container-lowest rounded-2xl p-4 shadow-sm flex flex-col justify-between h-24">
                         <span class="font-label-sm text-label-sm text-on-surface-variant uppercase">Kayıtlı Besinler</span>
                         <div class="flex items-end justify-between">
                             <span class="font-display-lg text-display-lg text-primary" id="library-food-count">0</span>
                             <span class="material-symbols-outlined text-outline-variant mb-1">database</span>
                         </div>
                     </div>
-                    <button class="bg-primary-container text-on-primary-container rounded-[24px] p-4 shadow-[0px_4px_20px_rgba(0,0,0,0.04)] flex flex-col justify-center items-center gap-2 h-24 hover:scale-[0.98] transition-transform open-new-food-modal-btn">
+                    <button class="bg-primary-container text-on-primary-container rounded-2xl p-4 shadow-sm flex flex-col justify-center items-center gap-2 h-24 hover:scale-[0.98] transition-transform open-new-food-modal-btn">
                         <span class="material-symbols-outlined text-3xl">add_circle</span>
                         <span class="font-label-md text-label-md">Yeni Besin Ekle</span>
                     </button>
@@ -1438,7 +1457,7 @@
             <div class="flex justify-between items-center mb-6">
                 <h2 class="font-headline-md text-headline-md text-on-surface" id="modalMealTitle">Yiyecek Ekle</h2>
                 <button class="w-8 h-8 flex items-center justify-center bg-surface-container rounded-full text-on-surface-variant hover:bg-surface-container-high transition-colors" class="close-add-food-modal-btn">
-                    <span class="material-symbols-outlined text-[20px]">close</span>
+                    <span class="material-symbols-outlined icon-md">close</span>
                 </button>
             </div>
             <div class="flex flex-col gap-4">
@@ -1482,7 +1501,7 @@
 
 <!-- Modal for Add Portion (Hidden by default) -->
 <div class="fixed inset-0 z-[100] flex items-end sm:items-center justify-center bg-black/40 backdrop-blur-sm hidden opacity-0 transition-opacity duration-300" id="addPortionModal">
-<div class="bg-surface w-full rounded-t-[24px] sm:rounded-[24px] sm:max-w-md sm:mb-8 shadow-2xl z-20 flex flex-col transform transition-transform duration-300 translate-y-full max-h-[90vh] overflow-y-auto" id="addPortionModalContent">
+<div class="bg-surface w-full rounded-t-[24px] sm:rounded-2xl sm:max-w-md sm:mb-8 shadow-2xl z-20 flex flex-col transform transition-transform duration-300 translate-y-full max-h-[90vh] overflow-y-auto" id="addPortionModalContent">
 <div class="w-full flex justify-center pt-3 pb-1 sm:hidden">
 <div class="w-8 h-1 bg-outline-variant rounded-full"></div>
 </div>
@@ -1534,7 +1553,7 @@
 
 <!-- Modal for Adding New Food to Library (Hidden by default) -->
 <div class="fixed inset-0 z-[100] flex items-end sm:items-center justify-center bg-black/40 backdrop-blur-sm hidden opacity-0 transition-opacity duration-300" id="newFoodModal">
-<div class="relative z-10 w-full max-w-md bg-surface sm:rounded-[24px] rounded-t-[32px] shadow-[0px_-8px_32px_rgba(0,0,0,0.06)] flex flex-col max-h-[90vh] transform translate-y-full transition-transform duration-300 ease-out" id="newFoodModalContent">
+<div class="relative z-10 w-full max-w-md bg-surface sm:rounded-2xl rounded-t-[32px] shadow-[0px_-8px_32px_rgba(0,0,0,0.06)] flex flex-col max-h-[90vh] transform translate-y-full transition-transform duration-300 ease-out" id="newFoodModalContent">
 <!-- Drag Handle Indicator -->
 <div class="w-full flex justify-center pt-3 pb-1 cursor-grab active:cursor-grabbing sm:hidden">
 <div class="w-12 h-1.5 bg-outline-variant/50 rounded-full"></div>
@@ -1561,12 +1580,12 @@
 <!-- Macros Section (Bento Grid Style) -->
 <div class="flex flex-col gap-4">
 <div class="flex items-center gap-2 mb-1 ml-1">
-<span class="material-symbols-outlined text-primary text-[20px]" style="font-variation-settings: 'FILL' 1;">scale</span>
+<span class="material-symbols-outlined text-primary icon-md" style="font-variation-settings: 'FILL' 1;">scale</span>
 <h2 class="font-label-md text-label-md text-on-surface-variant">100g Porsiyon İçin Değerler</h2>
 </div>
 <div class="grid grid-cols-2 gap-card-gap">
 <!-- Calories Card (Prominent) -->
-<div class="col-span-2 bg-primary-fixed/20 border-2 border-transparent focus-within:border-primary/40 focus-within:bg-primary-fixed/30 rounded-[24px] p-5 flex items-center justify-between transition-all cursor-text">
+<div class="col-span-2 bg-primary-fixed/20 border-2 border-transparent focus-within:border-primary/40 focus-within:bg-primary-fixed/30 rounded-2xl p-6 flex items-center justify-between transition-all cursor-text">
 <div class="flex flex-col">
 <label class="font-label-sm text-label-sm text-on-primary-fixed-variant mb-1">Kalori</label>
 <div class="flex items-baseline gap-1">
@@ -1579,7 +1598,7 @@
 </div>
 </div>
 <!-- Carbs Card -->
-<div class="bg-surface-container-low border-2 border-transparent focus-within:border-outline-variant focus-within:bg-surface rounded-3xl p-4 flex flex-col transition-all shadow-sm">
+<div class="bg-surface-container-low border-2 border-transparent focus-within:border-outline-variant focus-within:bg-surface rounded-2xl p-4 flex flex-col transition-all shadow-sm">
 <div class="flex justify-between items-start mb-2">
 <label class="font-label-sm text-label-sm text-on-surface-variant">Karbonhidrat</label>
 <div class="w-2 h-2 rounded-full bg-tertiary-fixed-dim"></div>
@@ -1590,7 +1609,7 @@
 </div>
 </div>
 <!-- Protein Card -->
-<div class="bg-surface-container-low border-2 border-transparent focus-within:border-outline-variant focus-within:bg-surface rounded-3xl p-4 flex flex-col transition-all shadow-sm">
+<div class="bg-surface-container-low border-2 border-transparent focus-within:border-outline-variant focus-within:bg-surface rounded-2xl p-4 flex flex-col transition-all shadow-sm">
 <div class="flex justify-between items-start mb-2">
 <label class="font-label-sm text-label-sm text-on-surface-variant">Protein</label>
 <div class="w-2 h-2 rounded-full bg-secondary-fixed-dim"></div>
@@ -1601,7 +1620,7 @@
 </div>
 </div>
 <!-- Fat Card -->
-<div class="bg-surface-container-low border-2 border-transparent focus-within:border-outline-variant focus-within:bg-surface rounded-3xl p-4 flex flex-col transition-all shadow-sm col-span-2 sm:col-span-1">
+<div class="bg-surface-container-low border-2 border-transparent focus-within:border-outline-variant focus-within:bg-surface rounded-2xl p-4 flex flex-col transition-all shadow-sm col-span-2 sm:col-span-1">
 <div class="flex justify-between items-start mb-2">
 <label class="font-label-sm text-label-sm text-on-surface-variant">Yağ</label>
 <div class="w-2 h-2 rounded-full bg-tertiary"></div>
@@ -1619,8 +1638,8 @@
 <!-- Sticky Footer Action -->
 <div class="absolute bottom-0 left-0 w-full px-container-padding pt-6 pb-[calc(24px+env(safe-area-inset-bottom))] bg-gradient-to-t from-surface via-surface to-transparent shrink-0">
 <button class="w-full h-[56px] bg-primary text-on-primary rounded-full flex items-center justify-center gap-2 hover:opacity-95 active:scale-[0.98] transition-all shadow-lg shadow-primary/20" id="save-new-food-btn">
-<span class="font-label-md text-label-md text-[16px]">Besini Kaydet</span>
-<span class="material-symbols-outlined text-[20px]">check_circle</span>
+<span class="font-label-md text-label-md text-body-lg font-body-lg">Besini Kaydet</span>
+<span class="material-symbols-outlined icon-md">check_circle</span>
 </button>
 </div>
 </div>
@@ -1628,7 +1647,7 @@
 </div>
 <!-- New Split Modal (Hidden by default) -->
 <div class="fixed inset-0 z-[100] flex items-end sm:items-center justify-center bg-black/40 backdrop-blur-sm hidden opacity-0 transition-opacity duration-300" id="newSplitModal">
-    <div class="relative z-10 w-full max-w-md bg-surface sm:rounded-[24px] rounded-t-[32px] shadow-[0px_-8px_32px_rgba(0,0,0,0.06)] flex flex-col max-h-[90vh] transform translate-y-full transition-transform duration-300 ease-out" id="newSplitModalContent">
+    <div class="relative z-10 w-full max-w-md bg-surface sm:rounded-2xl rounded-t-[32px] shadow-[0px_-8px_32px_rgba(0,0,0,0.06)] flex flex-col max-h-[90vh] transform translate-y-full transition-transform duration-300 ease-out" id="newSplitModalContent">
         <!-- Drag Handle Indicator -->
         <div class="w-full flex justify-center pt-3 pb-1 cursor-grab active:cursor-grabbing sm:hidden">
             <div class="w-12 h-1.5 bg-outline-variant/50 rounded-full"></div>
@@ -1653,7 +1672,7 @@
                 <div class="flex justify-between items-center">
                     <label class="font-label-md text-label-md text-on-surface-variant ml-1">Gün Tipleri ve Hareketler</label>
                     <button class="text-primary font-label-sm flex items-center gap-1 hover:bg-primary/10 px-2 py-1 rounded transition-colors" id="add-day-btn">
-                        <span class="material-symbols-outlined text-[16px]">add</span> Gün Ekle
+                        <span class="material-symbols-outlined icon-sm">add</span> Gün Ekle
                     </button>
                 </div>
                 
@@ -1666,8 +1685,8 @@
             
             <div class="mt-8">
                 <button class="w-full h-[56px] bg-primary text-on-primary rounded-full flex items-center justify-center gap-2 hover:opacity-95 active:scale-[0.98] transition-all shadow-lg shadow-primary/20" id="save-split-btn">
-                <span class="font-label-md text-label-md text-[16px]">Split'i Kaydet</span>
-                <span class="material-symbols-outlined text-[20px]">check_circle</span>
+                <span class="font-label-md text-label-md text-body-lg font-body-lg">Split'i Kaydet</span>
+                <span class="material-symbols-outlined icon-md">check_circle</span>
             </button>
             </div>
         </div>
@@ -1675,7 +1694,7 @@
 </div>
 <!-- Exercise History Modal -->
 <div class="fixed inset-0 z-[110] flex items-end sm:items-center justify-center bg-black/40 backdrop-blur-sm hidden opacity-0 transition-opacity duration-300" id="exerciseHistoryModal">
-    <div class="relative z-10 w-full max-w-md bg-surface sm:rounded-[24px] rounded-t-[32px] shadow-[0px_-8px_32px_rgba(0,0,0,0.06)] flex flex-col h-[75vh] sm:h-[600px] transform translate-y-full transition-transform duration-300 ease-out" id="exerciseHistoryModalContent">
+    <div class="relative z-10 w-full max-w-md bg-surface sm:rounded-2xl rounded-t-[32px] shadow-[0px_-8px_32px_rgba(0,0,0,0.06)] flex flex-col h-[75vh] sm:h-[600px] transform translate-y-full transition-transform duration-300 ease-out" id="exerciseHistoryModalContent">
         <div class="w-full flex justify-center pt-3 pb-1 cursor-grab active:cursor-grabbing sm:hidden">
             <div class="w-12 h-1.5 bg-outline-variant/50 rounded-full"></div>
         </div>
@@ -1714,8 +1733,8 @@
         
         <!-- Fixed Bottom Action -->
         <div class="absolute bottom-0 left-0 right-0 p-container-padding bg-gradient-to-t from-surface-container-lowest via-surface-container-lowest to-transparent pb-[calc(20px+env(safe-area-inset-bottom))]">
-            <button class="w-full bg-primary text-on-primary font-headline-sm text-headline-sm rounded-xl py-4 flex justify-center items-center gap-2 shadow-md hover:bg-primary/90 transition-colors active:scale-[0.98]" onclick="closeSplitSelectionModal(); setTimeout(openSplitModal, 300)">
-                <span class="material-symbols-outlined text-[20px]">add</span>
+            <button class="w-full bg-primary text-on-primary font-headline-sm text-headline-sm rounded-full h-14 flex justify-center items-center gap-2 shadow-md hover:bg-primary/90 transition-colors active:scale-[0.98]" onclick="closeSplitSelectionModal(); setTimeout(openSplitModal, 300)">
+                <span class="material-symbols-outlined icon-md">add</span>
                 Yeni Split Oluştur
             </button>
         </div>
@@ -1754,14 +1773,14 @@
                     <label class="cursor-pointer relative">
                         <input checked class="peer sr-only" name="tx-type" type="radio" value="expense">
                         <div class="flex items-center justify-center gap-2 p-3 rounded-xl border border-surface-variant bg-surface peer-checked:bg-error-container peer-checked:border-error peer-checked:text-on-error-container transition-all">
-                            <span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 0;">arrow_downward</span>
+                            <span class="material-symbols-outlined icon-md" style="font-variation-settings: 'FILL' 0;">arrow_downward</span>
                             <span class="font-label-md text-label-md">Gider</span>
                         </div>
                     </label>
                     <label class="cursor-pointer relative">
                         <input class="peer sr-only" name="tx-type" type="radio" value="income">
                         <div class="flex items-center justify-center gap-2 p-3 rounded-xl border border-surface-variant bg-surface peer-checked:bg-primary-container peer-checked:border-primary peer-checked:text-on-primary-container transition-all">
-                            <span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 0;">arrow_upward</span>
+                            <span class="material-symbols-outlined icon-md" style="font-variation-settings: 'FILL' 0;">arrow_upward</span>
                             <span class="font-label-md text-label-md">Gelir</span>
                         </div>
                     </label>
@@ -2004,7 +2023,7 @@
     <div aria-hidden="true" class="absolute inset-0" onclick="window.closeMoviesModal()"></div>
     
     <!-- Bottom Sheet / Modal -->
-    <div aria-labelledby="movies-modal-title" aria-modal="true" class="bg-surface-container-lowest w-full sm:w-[90%] sm:max-w-[390px] mx-auto rounded-t-[24px] sm:rounded-[24px] shadow-[0px_-4px_24px_rgba(0,0,0,0.06)] sm:shadow-[0px_8px_32px_rgba(0,0,0,0.08)] transform translate-y-full transition-transform duration-300 overflow-hidden flex flex-col relative z-10 max-h-[90vh]" role="dialog">
+    <div aria-labelledby="movies-modal-title" aria-modal="true" class="bg-surface-container-lowest w-full sm:w-[90%] sm:max-w-[390px] mx-auto rounded-t-[24px] sm:rounded-2xl shadow-[0px_-4px_24px_rgba(0,0,0,0.06)] sm:shadow-[0px_8px_32px_rgba(0,0,0,0.08)] transform translate-y-full transition-transform duration-300 overflow-hidden flex flex-col relative z-10 max-h-[90vh]" role="dialog">
         <!-- Drag Handle (Mobile only) -->
         <div class="w-full flex justify-center pt-3 pb-1 md:hidden">
             <div class="w-12 h-1.5 bg-outline-variant rounded-full"></div>
@@ -2085,12 +2104,12 @@
         
         <!-- Footer Actions -->
         <div class="px-container-padding py-6 mt-auto flex items-center justify-between gap-4 border-t border-surface-variant/50 bg-surface-container-lowest">
-            <button class="flex items-center justify-center px-4 py-3 rounded-[24px] text-error hover:bg-error-container transition-colors font-headline-sm text-body-lg gap-2 w-1/3" id="movies-modal-delete-btn">
-                <span class="material-symbols-outlined text-[18px]">delete</span>
+            <button class="flex items-center justify-center px-4 py-3 rounded-2xl text-error hover:bg-error-container transition-colors font-headline-sm text-body-lg gap-2 w-1/3" id="movies-modal-delete-btn">
+                <span class="material-symbols-outlined icon-sm">delete</span>
                 Sil
             </button>
-            <button class="flex-1 bg-primary hover:bg-primary/90 text-on-primary font-headline-sm text-body-lg py-4 rounded-[24px] shadow-sm hover:shadow-md transition-all active:scale-[0.98] flex items-center justify-center gap-2" id="movies-modal-save-btn">
-                <span class="material-symbols-outlined text-[18px]">check</span>
+            <button class="flex-1 bg-primary hover:bg-primary/90 text-on-primary font-headline-sm text-body-lg py-4 rounded-2xl shadow-sm hover:shadow-md transition-all active:scale-[0.98] flex items-center justify-center gap-2" id="movies-modal-save-btn">
+                <span class="material-symbols-outlined icon-sm">check</span>
                 <span id="movies-modal-save-text">Güncelle</span>
             </button>
         </div>
@@ -2100,7 +2119,7 @@
     <script type="module" src="./movies.js"></script>
     <!-- Forgot Password Modal -->
     <div class="hidden fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm" id="forgot-password-modal">
-        <div class="bg-surface-container-lowest w-full max-w-sm rounded-[24px] shadow-lg flex flex-col p-6 scale-95 opacity-0 transition-all duration-200" id="forgot-password-modal-content">
+        <div class="bg-surface-container-lowest w-full max-w-sm rounded-2xl shadow-lg flex flex-col p-6 scale-95 opacity-0 transition-all duration-200" id="forgot-password-modal-content">
             <h3 class="font-headline-sm text-headline-sm text-on-surface mb-2">Şifre Sıfırlama</h3>
             <p class="font-body-md text-body-md text-on-surface-variant mb-4">Kayıtlı e-posta adresinizi girin, size bir sıfırlama bağlantısı gönderelim.</p>
             <input type="email" id="forgot-password-email" class="w-full bg-surface border border-outline-variant focus:border-primary focus:ring-1 focus:ring-primary rounded-lg py-3 px-4 font-body-md text-on-surface mb-4" placeholder="E-posta adresiniz">
