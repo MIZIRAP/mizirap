@@ -463,7 +463,7 @@ function updateWaterUI() {
             `;
             
             const labelDiv = document.createElement("div");
-            labelDiv.className = \`text-label-sm md:text-xs w-[14%] text-center uppercase tracking-wider \${textClass}\`;
+            labelDiv.className = `text-label-sm md:text-xs w-[14%] text-center uppercase tracking-wider ${textClass}`;
             labelDiv.textContent = day.name;
 
             chartContainer.appendChild(div);
