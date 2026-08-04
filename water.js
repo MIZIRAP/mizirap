@@ -382,9 +382,12 @@ function updateWaterUI() {
 
     // 3. Weekly Chart Calculation
     const chartContainer = document.getElementById("water-chart-container");
+    const labelsContainer = document.getElementById("water-chart-labels");
     const avgText = document.getElementById("water-avg-text");
-    if(chartContainer && avgText) {
+    
+    if(chartContainer && labelsContainer && avgText) {
         chartContainer.innerHTML = "";
+        labelsContainer.innerHTML = "";
         
         let total7Days = 0;
         const days = [];
@@ -439,12 +442,11 @@ function updateWaterUI() {
             const div = document.createElement("div");
             div.className = "flex flex-col items-center gap-2 w-[14%] group relative";
             
-            // Stylings based on whether it's today and whether goal is met
-            let barClass = "bg-surface-variant group-hover:bg-primary-fixed";
+            let barClass = "bg-primary/70 group-hover:bg-primary/90";
             let textClass = "text-outline";
             
             if(day.isToday) {
-                barClass = "bg-primary-container group-hover:bg-primary";
+                barClass = "bg-primary group-hover:bg-primary/90";
                 textClass = "text-primary font-bold";
             }
             if(day.amount >= dailyGoal && !day.isToday) {
@@ -452,12 +454,20 @@ function updateWaterUI() {
             }
 
             div.innerHTML = `
-                <div class="w-full flex justify-center h-32 items-end">
-                    <div class="w-6 ${barClass} rounded-t-sm transition-all duration-300" style="height: ${percent}%;"></div>
+                <div class="absolute -top-6 bg-surface-container-high text-on-surface text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10 pointer-events-none">
+                    ${Math.round(day.amount)} ml
                 </div>
-                <span class="font-label-sm text-label-sm ${textClass}">${day.name}</span>
+                <div class="w-2 md:w-3 bg-surface-container rounded-full h-24 relative flex items-end overflow-hidden">
+                    <div class="w-full rounded-full transition-all duration-500 ${barClass}" style="height: ${percent}%"></div>
+                </div>
             `;
+            
+            const labelDiv = document.createElement("div");
+            labelDiv.className = \`text-label-sm md:text-xs w-[14%] text-center uppercase tracking-wider \${textClass}\`;
+            labelDiv.textContent = day.name;
+
             chartContainer.appendChild(div);
+            labelsContainer.appendChild(labelDiv);
         });
     }
 
