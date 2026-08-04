@@ -665,26 +665,36 @@ function renderWeeklyChart() {
     const dayNames = ["Paz", "Pzt", "Sal", "Çar", "Per", "Cum", "Cmt"];
     let total7Days = 0;
     
-    for (let i = 6; i >= 0; i--) {
-        const d = new Date();
-        d.setHours(0,0,0,0);
-        d.setDate(d.getDate() - i);
+    // Find Monday of the current week
+    const today = new Date();
+    today.setHours(0,0,0,0);
+    const currentDayOfWeek = today.getDay(); // 0 is Sunday, 1 is Monday
+    const diffToMonday = currentDayOfWeek === 0 ? 6 : currentDayOfWeek - 1;
+    
+    const monday = new Date(today);
+    monday.setDate(monday.getDate() - diffToMonday);
+
+    // Generate Monday to Sunday
+    for (let i = 0; i < 7; i++) {
+        const d = new Date(monday);
+        d.setDate(d.getDate() + i);
+        
         days.push({
             date: d,
             name: dayNames[d.getDay()],
             amount: 0,
-            isToday: i === 0
+            isToday: d.getTime() === today.getTime()
         });
     }
 
-    const oneWeekAgo = new Date();
-    oneWeekAgo.setHours(0,0,0,0);
-    oneWeekAgo.setDate(oneWeekAgo.getDate() - 6);
+    const endOfWeek = new Date(monday);
+    endOfWeek.setDate(endOfWeek.getDate() + 6);
+    endOfWeek.setHours(23,59,59,999);
 
     weeklyLogs.forEach(log => {
         if(!log.createdAt || !log.createdAt.toDate) return;
         const logDate = log.createdAt.toDate();
-        if(logDate >= oneWeekAgo) {
+        if(logDate >= monday && logDate <= endOfWeek) {
             const matchingDay = days.find(day => 
                 logDate.getDate() === day.date.getDate() && 
                 logDate.getMonth() === day.date.getMonth()

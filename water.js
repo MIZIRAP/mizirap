@@ -386,32 +386,37 @@ function updateWaterUI() {
     if(chartContainer && avgText) {
         chartContainer.innerHTML = "";
         
-        // Find past 7 days
         let total7Days = 0;
         const days = [];
-        const dayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+        const dayNames = ["Paz", "Pzt", "Sal", "Çar", "Per", "Cum", "Cmt"];
         
-        for (let i = 6; i >= 0; i--) {
-            const d = new Date();
-            d.setHours(0,0,0,0);
-            d.setDate(d.getDate() - i);
+        const today = new Date();
+        today.setHours(0,0,0,0);
+        const currentDayOfWeek = today.getDay();
+        const diffToMonday = currentDayOfWeek === 0 ? 6 : currentDayOfWeek - 1;
+        
+        const monday = new Date(today);
+        monday.setDate(monday.getDate() - diffToMonday);
+
+        for (let i = 0; i < 7; i++) {
+            const d = new Date(monday);
+            d.setDate(d.getDate() + i);
             days.push({
                 date: d,
                 name: dayNames[d.getDay()],
                 amount: 0,
-                isToday: i === 0
+                isToday: d.getTime() === today.getTime()
             });
         }
 
-        // Fill amounts
-        const oneWeekAgo = new Date();
-        oneWeekAgo.setHours(0,0,0,0);
-        oneWeekAgo.setDate(oneWeekAgo.getDate() - 6);
+        const endOfWeek = new Date(monday);
+        endOfWeek.setDate(endOfWeek.getDate() + 6);
+        endOfWeek.setHours(23,59,59,999);
 
         waterLogs.forEach(log => {
             if(!log.createdAt || !log.createdAt.toDate) return;
             const logDate = log.createdAt.toDate();
-            if(logDate >= oneWeekAgo) {
+            if(logDate >= monday && logDate <= endOfWeek) {
                 // Find matching day
                 const matchingDay = days.find(day => 
                     logDate.getDate() === day.date.getDate() && 
