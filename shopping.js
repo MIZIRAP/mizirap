@@ -78,7 +78,7 @@ function renderShoppingList() {
             <div class="flex items-center justify-between w-full normal-view">
                 <div class="flex items-center gap-4">
                     <button class="toggle-btn w-6 h-6 rounded-md border-2 border-primary flex items-center justify-center transition-colors">
-                        <span class="material-symbols-outlined icon-sm text-transparent">check</span>
+                        <span class="material-symbols-outlined text-lg text-transparent">check</span>
                     </button>
                     <span class="font-body-md text-on-surface text-body-md">${escapeHtml(item.title)}</span>
                 </div>
@@ -135,7 +135,7 @@ function renderShoppingList() {
             <div class="flex items-center justify-between w-full normal-view">
                 <div class="flex items-center gap-4">
                     <button class="toggle-btn w-6 h-6 rounded-md bg-primary flex items-center justify-center transition-colors">
-                        <span class="material-symbols-outlined icon-sm text-on-primary">check</span>
+                        <span class="material-symbols-outlined text-lg text-on-primary">check</span>
                     </button>
                     <span class="font-body-md text-outline checked-item text-body-md">${escapeHtml(item.title)}</span>
                 </div>

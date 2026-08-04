@@ -596,7 +596,7 @@ function renderViewAllList() {
             statusHtml = `
                 <div>
                     <span class="inline-flex items-center px-2 py-0.5 rounded text-label-sm font-label-sm bg-surface-container-highest text-on-surface-variant">
-                        <span class="material-symbols-outlined icon-sm mr-1" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+                        <span class="material-symbols-outlined text-lg mr-1" style="font-variation-settings: 'FILL' 1;">check_circle</span>
                         Bitti
                     </span>
                 </div>
@@ -614,7 +614,7 @@ function renderViewAllList() {
         card.dataset.id = book.id;
         card.innerHTML = `
             <button class="absolute top-3 right-3 p-1.5 rounded-full text-on-surface-variant/40 hover:text-error hover:bg-error-container/20 transition-colors z-10 delete-book-btn" data-id="${book.id}">
-                <span class="material-symbols-outlined icon-sm">delete</span>
+                <span class="material-symbols-outlined text-lg">delete</span>
             </button>
             <div class="w-16 h-24 shrink-0 rounded-lg overflow-hidden bg-surface-container-high relative">
                 <img class="w-full h-full object-cover" src="${safeCover}">

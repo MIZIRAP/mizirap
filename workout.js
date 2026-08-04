@@ -621,7 +621,7 @@ window.openExerciseHistory = async function(exId, exName) {
             });
             
             const card = document.createElement("div");
-            card.className = "bg-surface-container-lowest rounded-xl p-4 flex flex-col gap-2 shadow-[0px_4px_16px_rgba(0,0,0,0.03)]";
+            card.className = "bg-surface-container-lowest rounded-2xl p-4 flex flex-col gap-2 shadow-sm";
             card.innerHTML = `
                 <div class="font-label-md text-primary mb-2">${formatted}</div>
                 ${setsHtml}
@@ -1018,26 +1018,26 @@ window.openExerciseHistory = async function(triggerExId, exName) {
             const diff = historyRecords[0].maxWeight - historyRecords[1].maxWeight;
             if(diff > 0) {
                 trendBadgeEl.innerHTML = `
-                    <span class="material-symbols-outlined text-primary icon-sm" data-icon="trending_up">trending_up</span>
+                    <span class="material-symbols-outlined text-primary text-lg" data-icon="trending_up">trending_up</span>
                     <span class="font-label-sm text-label-sm text-primary inline-block min-w-[48px] text-right">+${diff.toFixed(1)} kg</span>
                 `;
                 trendBadgeEl.className = "bg-primary-container bg-opacity-20 rounded-full px-3 py-1 flex items-center gap-1";
             } else if (diff < 0) {
                 trendBadgeEl.innerHTML = `
-                    <span class="material-symbols-outlined text-error icon-sm" data-icon="trending_down">trending_down</span>
+                    <span class="material-symbols-outlined text-error text-lg" data-icon="trending_down">trending_down</span>
                     <span class="font-label-sm text-label-sm text-error inline-block min-w-[48px] text-right">${diff.toFixed(1)} kg</span>
                 `;
                 trendBadgeEl.className = "bg-error-container bg-opacity-20 rounded-full px-3 py-1 flex items-center gap-1";
             } else {
                 trendBadgeEl.innerHTML = `
-                    <span class="material-symbols-outlined text-outline icon-sm" data-icon="trending_flat">trending_flat</span>
+                    <span class="material-symbols-outlined text-outline text-lg" data-icon="trending_flat">trending_flat</span>
                     <span class="font-label-sm text-label-sm text-outline">Değişim Yok</span>
                 `;
                 trendBadgeEl.className = "bg-surface-variant bg-opacity-50 rounded-full px-3 py-1 flex items-center gap-1";
             }
         } else {
              trendBadgeEl.innerHTML = `
-                <span class="material-symbols-outlined text-primary icon-sm" data-icon="fiber_new">fiber_new</span>
+                <span class="material-symbols-outlined text-primary text-lg" data-icon="fiber_new">fiber_new</span>
                 <span class="font-label-sm text-label-sm text-primary">İlk Kayıt</span>
             `;
              trendBadgeEl.className = "bg-primary-container bg-opacity-20 rounded-full px-3 py-1 flex items-center gap-1";

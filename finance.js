@@ -376,7 +376,7 @@ function renderTransactions() {
             : "bg-surface-container-high text-on-surface-variant border-outline-variant";
             
         const div = document.createElement("div");
-        div.className = "bg-surface-container-lowest shadow-sm rounded-[16px] p-4 flex items-center justify-between active:scale-98 transition-transform duration-100 ease-in-out relative group";
+        div.className = "bg-surface-container-lowest shadow-sm rounded-2xl p-4 flex items-center justify-between active:scale-98 transition-transform duration-100 ease-in-out relative group";
         
         const actionsDiv = document.createElement("div");
         actionsDiv.className = "absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity bg-surface-container-lowest/90 px-2 py-1 rounded-full shadow-sm";
@@ -469,10 +469,10 @@ function renderTransactions() {
                 </div>
                 <div class="flex items-center gap-0.5 mt-1.5">
                     <button class="edit-tx-btn p-1 text-primary hover:bg-primary-container/20 rounded-full active:scale-95 transition-colors" data-id="${tx.id}">
-                        <span class="material-symbols-outlined icon-sm">edit</span>
+                        <span class="material-symbols-outlined text-lg">edit</span>
                     </button>
                     <button class="del-tx-btn p-1 text-error hover:bg-error-container/20 rounded-full active:scale-95 transition-colors" data-id="${tx.id}">
-                        <span class="material-symbols-outlined icon-sm">delete</span>
+                        <span class="material-symbols-outlined text-lg">delete</span>
                     </button>
                 </div>
             </div>
@@ -559,7 +559,7 @@ export function renderTxModalOptions() {
         } else {
             catContainer.innerHTML = financeCategories.map((c, idx) => `
                 <button class="tx-cat-btn flex items-center gap-2 px-4 py-2 rounded-full ${idx === 0 ? 'bg-primary-container text-on-primary-container border-transparent' : 'bg-surface-container-high text-on-surface-variant hover:bg-surface-variant border-transparent'} shrink-0 snap-start transition-colors active:scale-95 border-2" data-id="${c.id}">
-                    <span class="material-symbols-outlined icon-sm">${c.icon || 'category'}</span>
+                    <span class="material-symbols-outlined text-lg">${c.icon || 'category'}</span>
                     <span class="font-label-md text-label-md">${c.name}</span>
                 </button>
             `).join('');
@@ -588,7 +588,7 @@ export function renderTxModalOptions() {
                         <span class="material-symbols-outlined ${idx === 0 ? 'text-primary' : 'text-on-surface-variant'}">${p.icon || 'credit_card'}</span>
                         <span class="font-label-md text-label-md ${idx === 0 ? 'text-on-surface' : 'text-on-surface-variant'}">${p.name}</span>
                     </div>
-                    ${idx === 0 ? '<span class="material-symbols-outlined text-primary icon-sm check-icon" style="font-variation-settings: \'FILL\' 1;">check_circle</span>' : ''}
+                    ${idx === 0 ? '<span class="material-symbols-outlined text-primary text-lg check-icon" style="font-variation-settings: \'FILL\' 1;">check_circle</span>' : ''}
                 </div>
             `).join('');
             
@@ -614,7 +614,7 @@ export function renderTxModalOptions() {
                     if (text) { text.classList.add('text-on-surface'); text.classList.remove('text-on-surface-variant'); }
                     
                     if (!btn.querySelector('.check-icon')) {
-                        btn.insertAdjacentHTML('beforeend', '<span class="material-symbols-outlined text-primary icon-sm check-icon" style="font-variation-settings: \'FILL\' 1;">check_circle</span>');
+                        btn.insertAdjacentHTML('beforeend', '<span class="material-symbols-outlined text-primary text-lg check-icon" style="font-variation-settings: \'FILL\' 1;">check_circle</span>');
                     }
                 });
             });

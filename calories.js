@@ -540,7 +540,7 @@ function renderLibraryFoods() {
             </div>
             <!-- Delete Button -->
             <button class="absolute top-4 right-4 w-8 h-8 rounded-full bg-error-container text-on-error-container flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity active:scale-95 z-10 delete-library-btn">
-                <span class="material-symbols-outlined icon-sm">delete</span>
+                <span class="material-symbols-outlined text-lg">delete</span>
             </button>
         `;
         
