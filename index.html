@@ -171,11 +171,11 @@
             </div>
 
             <!-- Sport Section -->
-            <section class="nav-tab bg-surface rounded-2xl shadow-[0_4px_12px_rgba(51,79,66,0.04)] border border-[#7ea18d]/20 p-6 relative overflow-hidden group hover:shadow-[0_8px_24px_rgba(51,79,66,0.08)] transition-all duration-300 cursor-pointer" data-target="view-workout">
-                <div class="absolute right-0 top-0 w-32 h-32 bg-[#caead8] opacity-50 rounded-bl-full -z-0 pointer-events-none transition-transform group-hover:scale-110"></div>
+            <section class="nav-tab bg-surface rounded-2xl shadow-sm border border-outline-variant/20 p-6 relative overflow-hidden group hover:shadow-md transition-all duration-300 cursor-pointer" data-target="view-workout">
+                <div class="absolute right-0 top-0 w-32 h-32 bg-primary-fixed opacity-50 rounded-bl-full -z-0 pointer-events-none transition-transform group-hover:scale-110"></div>
                 <div class="flex items-center justify-between relative z-10">
                     <div class="flex items-center gap-3">
-                        <div class="w-12 h-12 rounded-full bg-[#c3e8d2] flex items-center justify-center text-[#486a58]">
+                        <div class="w-12 h-12 rounded-full bg-primary-fixed flex items-center justify-center text-primary">
                             <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">fitness_center</span>
                         </div>
                         <div>
@@ -183,8 +183,8 @@
                             <h2 class="font-headline-sm text-headline-sm md:font-headline-md md:text-headline-md text-on-surface" id="stat-workout-split">Yapılmadı</h2>
                         </div>
                     </div>
-                    <button class="bg-[#334f42] text-white rounded-full px-4 py-2 font-label-md text-label-md hover:opacity-90 transition-opacity flex items-center gap-1">
-                        Start <span class="material-symbols-outlined text-[16px]">play_arrow</span>
+                    <button class="bg-primary text-on-primary rounded-full px-4 py-2 font-label-md text-label-md hover:opacity-90 transition-opacity flex items-center gap-1">
+                        Start <span class="material-symbols-outlined icon-sm">play_arrow</span>
                     </button>
                 </div>
             </section>
@@ -557,7 +557,7 @@
         </main>
         <!-- Add Book Modal -->
         <div class="hidden fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm" id="book-add-modal">
-            <div class="bg-surface-container-lowest w-full max-w-md rounded-xl shadow-2xl flex flex-col p-6 gap-6 scale-95 opacity-0 transition-all duration-200 overflow-y-auto max-h-[90vh]" id="book-add-modal-content">
+            <div class="bg-surface-container-lowest w-full max-w-md rounded-xl shadow-2xl flex flex-col p-6 gap-6 scale-95 opacity-0 transition-all duration-200 overflow-y-auto max-h-[90dvh]" id="book-add-modal-content">
                 <!-- Header -->
                 <div class="flex items-center justify-between">
                     <h2 class="font-headline-sm text-headline-sm text-on-surface" id="modal-title">Yeni Kitap Ekle</h2>
@@ -635,7 +635,7 @@
 
         <!-- Edit Book Modal -->
         <div class="hidden fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm" id="book-edit-modal">
-            <div class="bg-surface w-full max-w-md rounded-2xl shadow-sm p-6 flex flex-col gap-6 scale-95 opacity-0 transition-all duration-200 overflow-y-auto max-h-[90vh]" id="book-edit-modal-content">
+            <div class="bg-surface w-full max-w-md rounded-2xl shadow-sm p-6 flex flex-col gap-6 scale-95 opacity-0 transition-all duration-200 overflow-y-auto max-h-[90dvh]" id="book-edit-modal-content">
                 <!-- Header -->
                 <div class="flex justify-between items-center mb-2">
                     <h1 class="font-headline-sm text-headline-sm text-on-surface">Kitabı Düzenle</h1>
@@ -859,20 +859,20 @@
                 <div class="flex justify-between items-center px-1">
                     <h2 class="text-headline-sm font-headline-sm text-on-surface font-bold">İçerikler</h2>
                     <button class="flex items-center gap-1.5 bg-primary text-on-primary rounded-full px-4 py-2 text-label-md font-label-md shadow-sm active:scale-95 transition-transform" id="movies-add-btn">
-                        <span class="material-symbols-outlined text-[18px]">add</span>
+                        <span class="material-symbols-outlined icon-sm">add</span>
                         İçerik Ekle
                     </button>
                 </div>
 
                 <!-- Segmented Control -->
                 <div class="bg-surface-container-high p-1 rounded-full flex items-center shadow-inner">
-                    <button class="movies-tab flex-1 py-1.5 px-2 rounded-full bg-primary text-on-primary text-[13px] font-medium transition-all" data-status="watching">
+                    <button class="movies-tab flex-1 py-1.5 px-2 rounded-full bg-primary text-on-primary text-label-sm font-label-sm font-medium transition-all" data-status="watching">
                         Devam Ediyor
                     </button>
-                    <button class="movies-tab flex-1 py-1.5 px-2 rounded-full text-on-surface-variant hover:text-primary text-[13px] font-medium transition-all" data-status="watchlist">
+                    <button class="movies-tab flex-1 py-1.5 px-2 rounded-full text-on-surface-variant hover:text-primary text-label-sm font-label-sm font-medium transition-all" data-status="watchlist">
                         İstek Listesi
                     </button>
-                    <button class="movies-tab flex-1 py-1.5 px-2 rounded-full text-on-surface-variant hover:text-primary text-[13px] font-medium transition-all" data-status="completed">
+                    <button class="movies-tab flex-1 py-1.5 px-2 rounded-full text-on-surface-variant hover:text-primary text-label-sm font-label-sm font-medium transition-all" data-status="completed">
                         Tamamlandı
                     </button>
                 </div>
@@ -937,7 +937,7 @@
                     </div>
                 </div>
 
-                <button class="flex items-center justify-center gap-2 bg-surface-container-high hover:bg-surface-variant transition-colors rounded-[16px] py-4 text-primary font-label-md text-label-md uppercase tracking-wider active:scale-98 transition-transform duration-100 ease-in-out" onclick="openAddTransactionModal()">
+                <button class="flex items-center justify-center gap-2 bg-surface-container-high hover:bg-surface-variant transition-colors rounded-2xl py-4 text-primary font-label-md text-label-md uppercase tracking-wider active:scale-98 transition-transform duration-100 ease-in-out" onclick="openAddTransactionModal()">
                     <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">add_circle</span>
                     İşlem Gir
                 </button>
@@ -945,13 +945,13 @@
 
             <!-- Configuration Section (Categories & Types) -->
             <section class="flex gap-4">
-                <button class="flex-1 flex flex-col items-center justify-center gap-2 bg-surface-container-lowest shadow-sm rounded-[20px] p-4 active:scale-98 transition-transform duration-100 ease-in-out group" onclick="openAddPaymentMethodModal()">
+                <button class="flex-1 flex flex-col items-center justify-center gap-2 bg-surface-container-lowest shadow-sm rounded-2xl p-4 active:scale-98 transition-transform duration-100 ease-in-out group" onclick="openAddPaymentMethodModal()">
                     <div class="w-10 h-10 rounded-full bg-secondary-container flex items-center justify-center group-hover:scale-110 transition-transform">
                         <span class="material-symbols-outlined text-on-secondary-container" style="font-variation-settings: 'FILL' 0;">add_card</span>
                     </div>
                     <span class="font-label-sm text-label-sm text-on-surface text-center">Ödeme Yöntemi Ekle</span>
                 </button>
-                <button class="flex-1 flex flex-col items-center justify-center gap-2 bg-surface-container-lowest shadow-sm rounded-[20px] p-4 active:scale-98 transition-transform duration-100 ease-in-out group" onclick="openAddCategoryModal()">
+                <button class="flex-1 flex flex-col items-center justify-center gap-2 bg-surface-container-lowest shadow-sm rounded-2xl p-4 active:scale-98 transition-transform duration-100 ease-in-out group" onclick="openAddCategoryModal()">
                     <div class="w-10 h-10 rounded-full bg-tertiary-container flex items-center justify-center group-hover:scale-110 transition-transform">
                         <span class="material-symbols-outlined text-on-tertiary-container" style="font-variation-settings: 'FILL' 0;">receipt_long</span>
                     </div>
@@ -1018,7 +1018,7 @@
                         <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">remove</span>
                     </button>
                     <div class="flex flex-col items-center justify-center min-w-[100px]">
-                        <span class="font-display-lg text-[48px] leading-[48px] font-bold tracking-tight text-primary" id="water-custom-amount-display">250</span>
+                        <span class="font-display-lg text-display-lg font-bold tracking-tight text-primary" id="water-custom-amount-display">250</span>
                         <span class="font-label-md text-label-md text-on-surface-variant mt-1 uppercase">ML</span>
                     </div>
                     <button id="water-custom-plus" class="w-12 h-12 rounded-full bg-primary-container hover:bg-primary/20 text-on-primary-container flex items-center justify-center transition-colors active:scale-95 touch-manipulation">
@@ -1068,15 +1068,15 @@
                     <div class="grid grid-cols-3 gap-2">
                         <div class="flex flex-col gap-1">
                             <label class="font-label-sm text-label-sm text-on-surface-variant ml-1 text-center">Karb</label>
-                            <input class="bg-surface-container border border-transparent rounded-[12px] px-2 py-3 font-body-md text-body-md text-center text-on-surface focus:border-primary outline-none w-full transition-colors" placeholder="240" type="number" min="0" id="macro-goal-karb" value="240">
+                            <input class="bg-surface-container border border-transparent rounded-xl px-2 py-3 font-body-md text-body-md text-center text-on-surface focus:border-primary outline-none w-full transition-colors" placeholder="240" type="number" min="0" id="macro-goal-karb" value="240">
                         </div>
                         <div class="flex flex-col gap-1">
                             <label class="font-label-sm text-label-sm text-on-surface-variant ml-1 text-center">Protein</label>
-                            <input class="bg-surface-container border border-transparent rounded-[12px] px-2 py-3 font-body-md text-body-md text-center text-on-surface focus:border-primary outline-none w-full transition-colors" placeholder="110" type="number" min="0" id="macro-goal-protein" value="110">
+                            <input class="bg-surface-container border border-transparent rounded-xl px-2 py-3 font-body-md text-body-md text-center text-on-surface focus:border-primary outline-none w-full transition-colors" placeholder="110" type="number" min="0" id="macro-goal-protein" value="110">
                         </div>
                         <div class="flex flex-col gap-1">
                             <label class="font-label-sm text-label-sm text-on-surface-variant ml-1 text-center">Yağ</label>
-                            <input class="bg-surface-container border border-transparent rounded-[12px] px-2 py-3 font-body-md text-body-md text-center text-on-surface focus:border-primary outline-none w-full transition-colors" placeholder="66" type="number" min="0" id="macro-goal-yag" value="66">
+                            <input class="bg-surface-container border border-transparent rounded-xl px-2 py-3 font-body-md text-body-md text-center text-on-surface focus:border-primary outline-none w-full transition-colors" placeholder="66" type="number" min="0" id="macro-goal-yag" value="66">
                         </div>
                     </div>
                 </div>
@@ -1453,7 +1453,7 @@
 
     <!-- Add Food Modal (Hidden by default) -->
     <div class="fixed inset-0 bg-on-background/40 backdrop-blur-sm z-[100] hidden flex-col justify-end md:justify-center items-center" id="addFoodModal">
-        <div class="bg-surface w-full md:w-[400px] rounded-t-[32px] md:rounded-[32px] p-6 pb-12 md:pb-6 shadow-2xl transform translate-y-full transition-transform duration-300 ease-out max-h-[90vh] overflow-y-auto" id="addFoodModalContent">
+        <div class="bg-surface w-full md:w-[400px] rounded-t-2xl md:rounded-2xl p-6 pb-12 md:pb-6 shadow-2xl transform translate-y-full transition-transform duration-300 ease-out max-h-[90dvh] overflow-y-auto" id="addFoodModalContent">
             <div class="w-12 h-1.5 bg-surface-variant rounded-full mx-auto mb-6 md:hidden"></div>
             <div class="flex justify-between items-center mb-6">
                 <h2 class="font-headline-md text-headline-md text-on-surface" id="modalMealTitle">Yiyecek Ekle</h2>
@@ -1502,7 +1502,7 @@
 
 <!-- Modal for Add Portion (Hidden by default) -->
 <div class="fixed inset-0 z-[100] flex items-end sm:items-center justify-center bg-black/40 backdrop-blur-sm hidden opacity-0 transition-opacity duration-300" id="addPortionModal">
-<div class="bg-surface w-full rounded-t-[24px] sm:rounded-2xl sm:max-w-md sm:mb-8 shadow-2xl z-20 flex flex-col transform transition-transform duration-300 translate-y-full max-h-[90vh] overflow-y-auto" id="addPortionModalContent">
+<div class="bg-surface w-full rounded-t-2xl sm:rounded-2xl sm:max-w-md sm:mb-8 shadow-2xl z-20 flex flex-col transform transition-transform duration-300 translate-y-full max-h-[90dvh] overflow-y-auto" id="addPortionModalContent">
 <div class="w-full flex justify-center pt-3 pb-1 sm:hidden">
 <div class="w-8 h-1 bg-outline-variant rounded-full"></div>
 </div>
@@ -1514,7 +1514,7 @@
 </div>
 <div class="p-container-padding flex flex-col gap-section-margin overflow-y-auto no-scrollbar">
 <div class="flex flex-col mb-2">
-<h3 class="font-display-lg text-[28px] text-on-surface font-bold tracking-tight" id="portion-food-name">Yulaf Ezmesi</h3>
+<h3 class="font-headline-md text-headline-md text-on-surface font-bold tracking-tight" id="portion-food-name">Yulaf Ezmesi</h3>
 <p class="font-body-md text-body-md text-on-surface-variant mt-1" id="portion-food-kcal-text">389 kcal / 100g</p>
 </div>
 <div class="flex flex-col items-center gap-6 py-4">
@@ -1524,7 +1524,7 @@
 <span class="material-symbols-outlined" data-icon="remove">remove</span>
 </button>
 <div class="relative flex-1 group">
-<input class="w-full bg-surface-container-lowest border-2 border-transparent focus:border-primary text-center font-display-lg text-[32px] text-on-surface py-3 rounded-lg focus:ring-0 transition-colors appearance-none" id="gram-input"  type="number" min="0" value="100"/>
+<input class="w-full bg-surface-container-lowest border-2 border-transparent focus:border-primary text-center font-display-lg text-display-lg text-on-surface py-3 rounded-lg focus:ring-0 transition-colors appearance-none" id="gram-input"  type="number" min="0" value="100"/>
 <div class="absolute bottom-1 w-full text-center font-label-sm text-label-sm text-outline group-focus-within:text-primary transition-colors">g</div>
 </div>
 <button class="w-12 h-12 rounded-full bg-surface-container-low text-primary flex items-center justify-center hover:bg-surface-container transition-colors shrink-0 active:scale-95 shadow-sm" id="portion-plus-btn">
@@ -1532,10 +1532,10 @@
 </button>
 </div>
 </div>
-<div class="bg-surface-container-low rounded-[16px] p-4 flex flex-col items-center justify-center border border-surface-variant/30">
+<div class="bg-surface-container-low rounded-2xl p-4 flex flex-col items-center justify-center border border-surface-variant/30">
 <span class="font-body-md text-body-md text-on-surface-variant mb-1">Toplam Enerji</span>
 <div class="flex items-baseline gap-1 text-primary">
-<span class="font-display-lg text-[32px] font-bold" id="total-kcal">389</span>
+<span class="font-display-lg text-display-lg font-bold" id="total-kcal">389</span>
 <span class="font-label-md text-label-md">kcal</span>
 </div>
 <div class="w-full mt-4 h-1.5 bg-surface-variant rounded-full overflow-hidden">
@@ -1554,7 +1554,7 @@
 
 <!-- Modal for Adding New Food to Library (Hidden by default) -->
 <div class="fixed inset-0 z-[100] flex items-end sm:items-center justify-center bg-black/40 backdrop-blur-sm hidden opacity-0 transition-opacity duration-300" id="newFoodModal">
-<div class="relative z-10 w-full max-w-md bg-surface sm:rounded-2xl rounded-t-[32px] shadow-[0px_-8px_32px_rgba(0,0,0,0.06)] flex flex-col max-h-[90vh] transform translate-y-full transition-transform duration-300 ease-out" id="newFoodModalContent">
+<div class="relative z-10 w-full max-w-md bg-surface sm:rounded-2xl rounded-t-2xl shadow-md flex flex-col max-h-[90dvh] transform translate-y-full transition-transform duration-300 ease-out" id="newFoodModalContent">
 <!-- Drag Handle Indicator -->
 <div class="w-full flex justify-center pt-3 pb-1 cursor-grab active:cursor-grabbing sm:hidden">
 <div class="w-12 h-1.5 bg-outline-variant/50 rounded-full"></div>
@@ -1648,7 +1648,7 @@
 </div>
 <!-- New Split Modal (Hidden by default) -->
 <div class="fixed inset-0 z-[100] flex items-end sm:items-center justify-center bg-black/40 backdrop-blur-sm hidden opacity-0 transition-opacity duration-300" id="newSplitModal">
-    <div class="relative z-10 w-full max-w-md bg-surface sm:rounded-2xl rounded-t-[32px] shadow-[0px_-8px_32px_rgba(0,0,0,0.06)] flex flex-col max-h-[90vh] transform translate-y-full transition-transform duration-300 ease-out" id="newSplitModalContent">
+    <div class="relative z-10 w-full max-w-md bg-surface sm:rounded-2xl rounded-t-2xl shadow-md flex flex-col max-h-[90dvh] transform translate-y-full transition-transform duration-300 ease-out" id="newSplitModalContent">
         <!-- Drag Handle Indicator -->
         <div class="w-full flex justify-center pt-3 pb-1 cursor-grab active:cursor-grabbing sm:hidden">
             <div class="w-12 h-1.5 bg-outline-variant/50 rounded-full"></div>
@@ -1695,7 +1695,7 @@
 </div>
 <!-- Exercise History Modal -->
 <div class="fixed inset-0 z-[110] flex items-end sm:items-center justify-center bg-black/40 backdrop-blur-sm hidden opacity-0 transition-opacity duration-300" id="exerciseHistoryModal">
-    <div class="relative z-10 w-full max-w-md bg-surface sm:rounded-2xl rounded-t-[32px] shadow-[0px_-8px_32px_rgba(0,0,0,0.06)] flex flex-col h-[75vh] sm:h-[600px] transform translate-y-full transition-transform duration-300 ease-out" id="exerciseHistoryModalContent">
+    <div class="relative z-10 w-full max-w-md bg-surface sm:rounded-2xl rounded-t-2xl shadow-md flex flex-col h-[75dvh] sm:h-[600px] transform translate-y-full transition-transform duration-300 ease-out" id="exerciseHistoryModalContent">
         <div class="w-full flex justify-center pt-3 pb-1 cursor-grab active:cursor-grabbing sm:hidden">
             <div class="w-12 h-1.5 bg-outline-variant/50 rounded-full"></div>
         </div>
@@ -1712,7 +1712,7 @@
 </div>
 <!-- Split Selection Modal -->
 <div class="fixed inset-0 z-[105] flex items-end justify-center bg-black/40 backdrop-blur-sm hidden opacity-0 transition-opacity duration-300" id="splitSelectionModal">
-    <div class="w-full max-w-md bg-surface-container-lowest rounded-t-2xl shadow-[0px_-8px_32px_rgba(0,0,0,0.08)] flex flex-col h-[70vh] max-h-[600px] transform translate-y-full transition-transform duration-300 ease-out" id="splitSelectionModalContent">
+    <div class="w-full max-w-md bg-surface-container-lowest rounded-t-2xl shadow-md flex flex-col h-[70dvh] max-h-[600px] transform translate-y-full transition-transform duration-300 ease-out" id="splitSelectionModalContent">
         <!-- Handle & Header -->
         <div class="flex flex-col items-center pt-4 pb-2 px-container-padding sticky top-0 bg-surface-container-lowest rounded-t-2xl z-20">
             <!-- Drag Handle -->
@@ -1748,7 +1748,7 @@
 <!-- ================= FINANCE MODALS ================= -->
 <!-- Add Transaction Modal -->
 <div id="finance-add-tx-modal" class="fixed inset-0 z-50 hidden items-end justify-center bg-inverse-surface/40 backdrop-blur-sm transition-opacity duration-300 opacity-0">
-    <div class="bg-surface-container-lowest w-full max-w-md rounded-t-[32px] p-container-padding pb-[calc(20px+env(safe-area-inset-bottom))] transform translate-y-full transition-transform duration-300">
+    <div class="bg-surface-container-lowest w-full max-w-md rounded-t-2xl p-container-padding pb-[calc(20px+env(safe-area-inset-bottom))] transform translate-y-full transition-transform duration-300">
         <div class="w-12 h-1.5 bg-outline-variant/50 rounded-full mx-auto mb-6"></div>
         <!-- Modal Header -->
         <div class="flex items-center justify-between mb-6">
@@ -1829,7 +1829,7 @@
 
 <!-- Add Category Modal -->
 <div id="finance-add-category-modal" class="fixed inset-0 z-50 hidden items-end justify-center bg-inverse-surface/40 backdrop-blur-sm transition-opacity duration-300 opacity-0">
-    <div class="bg-surface-container-lowest w-full max-w-md rounded-t-[32px] p-container-padding pb-[calc(20px+env(safe-area-inset-bottom))] transform translate-y-full transition-transform duration-300">
+    <div class="bg-surface-container-lowest w-full max-w-md rounded-t-2xl p-container-padding pb-[calc(20px+env(safe-area-inset-bottom))] transform translate-y-full transition-transform duration-300">
         <div class="w-12 h-1.5 bg-outline-variant/50 rounded-full mx-auto mb-6"></div>
         <!-- Header -->
         <div class="flex items-center justify-between mb-6">
@@ -1912,7 +1912,7 @@
         
         <!-- Sticky Bottom Action -->
         <div class="mt-4 pt-4 border-t border-surface-container-high">
-            <button class="w-full bg-primary text-on-primary font-headline-sm text-headline-sm py-4 rounded-full shadow-[0px_4px_20px_rgba(0,0,0,0.1)] active:scale-98 transition-transform duration-200 flex items-center justify-center gap-2" id="finance-save-category-btn">
+            <button class="w-full bg-primary text-on-primary font-headline-sm text-headline-sm py-4 rounded-full shadow-md active:scale-98 transition-transform duration-200 flex items-center justify-center gap-2" id="finance-save-category-btn">
                 <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">check</span>
                 Kaydet
             </button>
@@ -1923,7 +1923,7 @@
 
 <!-- Add Payment Method Modal -->
 <div id="finance-add-payment-modal" class="fixed inset-0 z-50 hidden items-end justify-center bg-inverse-surface/40 backdrop-blur-sm transition-opacity duration-300 opacity-0">
-    <div class="bg-surface-container-lowest w-full max-w-md rounded-t-[32px] p-container-padding pb-[calc(20px+env(safe-area-inset-bottom))] transform translate-y-full transition-transform duration-300">
+    <div class="bg-surface-container-lowest w-full max-w-md rounded-t-2xl p-container-padding pb-[calc(20px+env(safe-area-inset-bottom))] transform translate-y-full transition-transform duration-300">
         <div class="w-12 h-1.5 bg-outline-variant/50 rounded-full mx-auto mb-6"></div>
         <!-- Header -->
         <div class="flex justify-between items-center mb-6">
@@ -2024,7 +2024,7 @@
     <div aria-hidden="true" class="absolute inset-0" onclick="window.closeMoviesModal()"></div>
     
     <!-- Bottom Sheet / Modal -->
-    <div aria-labelledby="movies-modal-title" aria-modal="true" class="bg-surface-container-lowest w-full sm:w-[90%] sm:max-w-[390px] mx-auto rounded-t-[24px] sm:rounded-2xl shadow-[0px_-4px_24px_rgba(0,0,0,0.06)] sm:shadow-[0px_8px_32px_rgba(0,0,0,0.08)] transform translate-y-full transition-transform duration-300 overflow-hidden flex flex-col relative z-10 max-h-[90vh]" role="dialog">
+    <div aria-labelledby="movies-modal-title" aria-modal="true" class="bg-surface-container-lowest w-full sm:w-[90%] sm:max-w-[390px] mx-auto rounded-t-2xl sm:rounded-2xl shadow-md transform translate-y-full transition-transform duration-300 overflow-hidden flex flex-col relative z-10 max-h-[90dvh]" role="dialog">
         <!-- Drag Handle (Mobile only) -->
         <div class="w-full flex justify-center pt-3 pb-1 md:hidden">
             <div class="w-12 h-1.5 bg-outline-variant rounded-full"></div>
