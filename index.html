@@ -404,8 +404,11 @@
     <section id="view-workout" class="view hidden bg-light-sage min-h-[100dvh] text-on-surface antialiased font-body-lg pb-[100px]">
         <div class="max-w-md mx-auto relative h-full flex flex-col">
             <!-- Header -->
-            <header class="pt-8 pb-4 px-margin-mobile">
-                <h1 class="font-headline-lg-mobile text-headline-lg-mobile text-on-primary-container text-center tracking-tight">Spor</h1>
+            <header class="pt-8 pb-4 px-margin-mobile relative flex items-center justify-center">
+                <button onclick="document.getElementById('view-workout').classList.add('hidden'); document.getElementById('view-dashboard').classList.remove('hidden');" class="absolute left-margin-mobile text-on-surface-variant hover:bg-surface-container-low transition-colors active:scale-95 transition-transform p-2 rounded-full flex items-center justify-center z-10">
+                    <span class="material-symbols-outlined">arrow_back</span>
+                </button>
+                <h1 class="font-headline-lg-mobile text-headline-lg-mobile text-on-primary-container tracking-tight">Spor</h1>
             </header>
             <!-- Main Content -->
             <main class="flex-1 px-margin-mobile flex flex-col gap-6 pb-8">
@@ -518,7 +521,7 @@
                 </button>
             </header>
 
-            <main class="flex-1 px-margin-mobile flex flex-col pt-4 gap-6 pb-8">
+            <main class="flex-1 px-margin-mobile flex flex-col pt-4 gap-6 pb-8 min-h-0 overflow-hidden">
                 <!-- Search Bar -->
                 <div>
                     <div class="relative flex items-center w-full h-12 rounded-full bg-surface-container-lowest shadow-sm px-4 focus-within:ring-2 focus-within:ring-primary-container transition-all">
@@ -530,6 +533,7 @@
                 <!-- Filter Chips -->
                 <div class="flex overflow-x-auto gap-2 pb-2 no-scrollbar -mx-margin-mobile px-margin-mobile">
                     <button class="whitespace-nowrap px-4 py-2 rounded-lg bg-primary-container text-on-primary-container font-label-lg transition-colors">Tümü</button>
+                    <button class="whitespace-nowrap px-4 py-2 rounded-lg border border-outline-variant text-on-surface-variant font-label-lg hover:bg-surface-container-low transition-colors bg-surface-container-lowest">Favoriler</button>
                     <button class="whitespace-nowrap px-4 py-2 rounded-lg border border-outline-variant text-on-surface-variant font-label-lg hover:bg-surface-container-low transition-colors bg-surface-container-lowest">Göğüs</button>
                     <button class="whitespace-nowrap px-4 py-2 rounded-lg border border-outline-variant text-on-surface-variant font-label-lg hover:bg-surface-container-low transition-colors bg-surface-container-lowest">Sırt</button>
                     <button class="whitespace-nowrap px-4 py-2 rounded-lg border border-outline-variant text-on-surface-variant font-label-lg hover:bg-surface-container-low transition-colors bg-surface-container-lowest">Omuz</button>
@@ -541,7 +545,7 @@
                 </div>
 
                 <!-- Exercise List Container -->
-                <div id="exercise-list-container" class="flex flex-col gap-6">
+                <div id="exercise-list-container" class="flex flex-col gap-6 flex-1 overflow-y-auto no-scrollbar pb-32">
                     
                 <!-- Exercise List: Göğüs -->
                 <div class="mb-4">
@@ -558,7 +562,7 @@
                                 <p class="font-body-md text-on-surface-variant">Ana Kas: Göğüs</p>
                             </div>
                             <div class="flex items-center gap-1">
-                                <button class="p-2 text-on-surface-variant hover:text-primary transition-colors"><span class="material-symbols-outlined">star</span></button>
+                                <button class="p-2 text-on-surface-variant hover:text-primary transition-colors exercise-fav-btn" onclick="toggleFav(event, this)"><span class="material-symbols-outlined">star</span></button>
                                 <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                             </div>
                         </div>
@@ -580,7 +584,7 @@
                                 <p class="font-body-md text-on-surface-variant">Ana Kas: Kanat</p>
                             </div>
                             <div class="flex items-center gap-1">
-                                <button class="p-2 text-on-surface-variant hover:text-primary transition-colors"><span class="material-symbols-outlined">star</span></button>
+                                <button class="p-2 text-on-surface-variant hover:text-primary transition-colors exercise-fav-btn" onclick="toggleFav(event, this)"><span class="material-symbols-outlined">star</span></button>
                                 <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                             </div>
                         </div>
@@ -602,7 +606,7 @@
                                 <p class="font-body-md text-on-surface-variant">Ana Kas: Omuz</p>
                             </div>
                             <div class="flex items-center gap-1">
-                                <button class="p-2 text-on-surface-variant hover:text-primary transition-colors"><span class="material-symbols-outlined">star</span></button>
+                                <button class="p-2 text-on-surface-variant hover:text-primary transition-colors exercise-fav-btn" onclick="toggleFav(event, this)"><span class="material-symbols-outlined">star</span></button>
                                 <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                             </div>
                         </div>
@@ -624,7 +628,7 @@
                                 <p class="font-body-md text-on-surface-variant">Ana Kas: Biceps</p>
                             </div>
                             <div class="flex items-center gap-1">
-                                <button class="p-2 text-on-surface-variant hover:text-primary transition-colors"><span class="material-symbols-outlined">star</span></button>
+                                <button class="p-2 text-on-surface-variant hover:text-primary transition-colors exercise-fav-btn" onclick="toggleFav(event, this)"><span class="material-symbols-outlined">star</span></button>
                                 <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                             </div>
                         </div>
@@ -646,7 +650,7 @@
                                 <p class="font-body-md text-on-surface-variant">Ana Kas: Triceps</p>
                             </div>
                             <div class="flex items-center gap-1">
-                                <button class="p-2 text-on-surface-variant hover:text-primary transition-colors"><span class="material-symbols-outlined">star</span></button>
+                                <button class="p-2 text-on-surface-variant hover:text-primary transition-colors exercise-fav-btn" onclick="toggleFav(event, this)"><span class="material-symbols-outlined">star</span></button>
                                 <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                             </div>
                         </div>
@@ -668,7 +672,7 @@
                                 <p class="font-body-md text-on-surface-variant">Ana Kas: Bacak</p>
                             </div>
                             <div class="flex items-center gap-1">
-                                <button class="p-2 text-on-surface-variant hover:text-primary transition-colors"><span class="material-symbols-outlined">star</span></button>
+                                <button class="p-2 text-on-surface-variant hover:text-primary transition-colors exercise-fav-btn" onclick="toggleFav(event, this)"><span class="material-symbols-outlined">star</span></button>
                                 <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                             </div>
                         </div>
@@ -690,7 +694,7 @@
                                 <p class="font-body-md text-on-surface-variant">Ana Kas: Karın</p>
                             </div>
                             <div class="flex items-center gap-1">
-                                <button class="p-2 text-on-surface-variant hover:text-primary transition-colors"><span class="material-symbols-outlined">star</span></button>
+                                <button class="p-2 text-on-surface-variant hover:text-primary transition-colors exercise-fav-btn" onclick="toggleFav(event, this)"><span class="material-symbols-outlined">star</span></button>
                                 <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                             </div>
                         </div>
@@ -712,7 +716,7 @@
                                 <p class="font-body-md text-on-surface-variant">Ana Kas: Kalça</p>
                             </div>
                             <div class="flex items-center gap-1">
-                                <button class="p-2 text-on-surface-variant hover:text-primary transition-colors"><span class="material-symbols-outlined">star</span></button>
+                                <button class="p-2 text-on-surface-variant hover:text-primary transition-colors exercise-fav-btn" onclick="toggleFav(event, this)"><span class="material-symbols-outlined">star</span></button>
                                 <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                             </div>
                         </div>
@@ -724,7 +728,7 @@
         </div>
 
         <!-- Bottom Sheet Demonstration Overlay -->
-        <div id="exercise-bottom-sheet" class="fixed inset-0 bg-black/30 z-[100] flex items-end opacity-0 pointer-events-none transition-opacity duration-300">
+        <div id="exercise-bottom-sheet" class="fixed inset-0 bg-black/30 z-[100] flex items-end opacity-0 pointer-events-none transition-opacity duration-300" onclick="closeExerciseSheetOnOutsideClick(event)">
             <div class="bg-surface rounded-t-[24px] w-full max-w-md mx-auto shadow-2xl transform transition-transform translate-y-full duration-300 relative max-h-[90vh] flex flex-col" id="exercise-bottom-sheet-content">
                 <!-- Drag Handle -->
                 <div class="w-full flex justify-center pt-4 pb-2 cursor-pointer" onclick="closeExerciseSheet()">
@@ -2535,6 +2539,26 @@
                 sheetContent.classList.remove('translate-y-full');
                 sheetContent.classList.add('translate-y-0');
             }, 10);
+        }
+
+                function closeExerciseSheetOnOutsideClick(event) {
+            if (event.target.id === 'exercise-bottom-sheet') {
+                closeExerciseSheet();
+            }
+        }
+        
+        function toggleFav(event, btn) {
+            event.stopPropagation();
+            const icon = btn.querySelector('.material-symbols-outlined');
+            if (btn.classList.contains('text-primary')) {
+                btn.classList.remove('text-primary');
+                btn.classList.add('text-on-surface-variant');
+                icon.style.fontVariationSettings = "'FILL' 0";
+            } else {
+                btn.classList.add('text-primary');
+                btn.classList.remove('text-on-surface-variant');
+                icon.style.fontVariationSettings = "'FILL' 1";
+            }
         }
 
         function closeExerciseSheet() {
