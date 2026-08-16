@@ -1,5 +1,5 @@
 
-const EXERCISE_MUSCLE_MAPPING = {
+window.EXERCISE_MUSCLE_MAPPING = {
     "Flat Barbell Bench Press": { primary: ["chest"], secondary: ["deltoids", "triceps"] },
     "Flat Dumbbell Bench Press": { primary: ["chest"], secondary: ["deltoids", "triceps"] },
     "Machine Chest Press": { primary: ["chest"], secondary: ["deltoids", "triceps"] },
@@ -275,7 +275,7 @@ function renderMuscleMap(exerciseName) {
     // Always use the combined SVG
     container.innerHTML = COMBINED_SVG;
     
-    const mapping = EXERCISE_MUSCLE_MAPPING[exerciseName];
+    const mapping = window.EXERCISE_MUSCLE_MAPPING[exerciseName];
     if (!mapping) return;
     
     // Highlight muscles
