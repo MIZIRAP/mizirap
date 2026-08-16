@@ -102,6 +102,13 @@ export function closeActiveSession() {
     Object.values(_debounceTimers).forEach(t => clearTimeout(t));
 }
 
+// Go back without finishing — session stays as in_progress in Firestore
+window.sessionGoBack = function() {
+    _stopTimer();
+    document.getElementById('view-active-session').classList.add('hidden');
+    document.getElementById('view-workout').classList.remove('hidden');
+};
+
 // ─── Previous session data ─────────────────────────────────────────────────
 
 // Map: exerciseId → { weight, reps, e1rm, sets[] }
@@ -192,6 +199,9 @@ function _updateTimerDisplay() {
 
 // ─── Render ────────────────────────────────────────────────────────────────
 
+// Track which exercise accordions are open
+const _openExAccordions = new Set();
+
 function _renderSessionExercises() {
     const container = document.getElementById('session-exercises-container');
     if (!container || !_day) return;
@@ -201,17 +211,21 @@ function _renderSessionExercises() {
         const state = _exState[ex.id];
         if (!state) return;
 
-        const card = document.createElement('section');
-        card.className = 'bg-surface-container-lowest rounded-xl shadow-sm border border-surface-variant/20 flex flex-col overflow-hidden';
-        card.id = `session-card-${ex.id}`;
-
+        const isOpen = _openExAccordions.has(ex.id);
+        const completedCount = state.sets.filter(s => s.status === 'completed').length;
+        const totalSets = state.sets.length;
         const prevLine = (state.prevBestWeight !== null)
             ? `Son antrenman: ${state.prevBestWeight}kg × ${state.prevBestReps} reps`
             : 'İlk antrenman';
 
+        const card = document.createElement('section');
+        card.className = 'bg-surface-container-lowest rounded-xl shadow-sm border border-surface-variant/20 overflow-hidden';
+        card.id = `session-card-${ex.id}`;
+
         card.innerHTML = `
-            <!-- Card Header -->
-            <div class="flex items-center gap-sm p-md pb-sm">
+            <!-- Accordion Header -->
+            <button class="w-full flex items-center gap-sm p-md text-left hover:bg-surface-container-low transition-colors"
+                    onclick="sessionToggleExAccordion('${ex.id}', this)">
                 <div class="w-10 h-10 rounded-full bg-primary-container/20 flex items-center justify-center text-primary shrink-0">
                     <span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1">fitness_center</span>
                 </div>
@@ -219,25 +233,28 @@ function _renderSessionExercises() {
                     <h2 class="font-title-lg text-title-lg text-on-surface truncate">${escHtml(ex.name)}</h2>
                     <p class="font-body-md text-body-md text-on-surface-variant">${prevLine}</p>
                 </div>
-            </div>
-            <!-- Set list -->
-            <div class="flex flex-col" id="sets-container-${ex.id}"></div>
-            <!-- Add Set -->
-            <button onclick="sessionAddSet('${ex.id}')"
-                class="font-label-lg text-label-lg text-primary self-center my-2 hover:bg-primary/5 px-4 py-2 rounded-full transition-colors">
-                + Set Ekle
+                <div class="flex items-center gap-2 shrink-0">
+                    <span class="font-label-sm text-label-sm ${completedCount === totalSets && completedCount > 0 ? 'text-tertiary' : 'text-on-surface-variant'}">${completedCount}/${totalSets}</span>
+                    <span class="material-symbols-outlined text-on-surface-variant transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}" style="font-size:20px" id="chevron-${ex.id}">expand_more</span>
+                </div>
             </button>
+            <!-- Accordion Body -->
+            <div id="accordion-body-${ex.id}" class="${isOpen ? '' : 'hidden'}">
+                <div class="flex flex-col" id="sets-container-${ex.id}"></div>
+                <button onclick="sessionAddSet('${ex.id}')"
+                    class="font-label-lg text-label-lg text-primary w-full py-2.5 hover:bg-primary/5 transition-colors text-center border-t border-surface-container-high">
+                    + Set Ekle
+                </button>
+            </div>
         `;
 
         container.appendChild(card);
-        _renderSets(ex.id);
+        if (isOpen) _renderSets(ex.id);
     });
 
-    // Finish session button
+    // Wire up the finish button that lives in the header
     const finishBtn = document.getElementById('session-finish-btn');
-    if (finishBtn) {
-        finishBtn.onclick = finishSession;
-    }
+    if (finishBtn) finishBtn.onclick = finishSession;
 }
 
 function _renderSets(exId) {
@@ -253,22 +270,24 @@ function _renderSets(exId) {
         setEl.id = `set-row-${exId}-${setIdx}`;
 
         if (set.status === 'completed') {
-            setEl.className = 'flex items-center gap-sm px-md py-sm border-b border-surface-container-high last:border-0 bg-surface-container/40';
+            setEl.className = 'flex items-center gap-sm px-md py-2.5 border-t border-surface-container-high bg-surface-container/30';
             setEl.innerHTML = _completedSetHTML(exId, setIdx, set);
         } else {
-            // Is this the first non-completed set?
             const isActive = state.sets.slice(0, setIdx).every(s => s.status === 'completed');
             if (isActive) {
-                setEl.className = 'flex flex-col gap-md px-md py-md border-b border-surface-container-high last:border-0 bg-surface-container-low/60 border-l-4 border-l-primary relative';
+                setEl.className = 'flex flex-col gap-md px-md py-md border-t border-surface-container-high bg-surface-container-low/40 border-l-4 border-l-primary';
                 setEl.innerHTML = _activeSetHTML(exId, setIdx, set);
             } else {
-                setEl.className = 'flex items-center gap-sm px-md py-sm border-b border-surface-container-high last:border-0 opacity-50';
+                setEl.className = 'flex items-center gap-sm px-md py-2.5 border-t border-surface-container-high opacity-40';
                 setEl.innerHTML = _pendingSetHTML(setIdx, set);
             }
         }
 
         container.appendChild(setEl);
     });
+
+    // Update accordion header counter
+    _updateExAccordionHeader(exId);
 }
 
 // ─── HTML templates ────────────────────────────────────────────────────────
@@ -361,8 +380,8 @@ function _activeSetHTML(exId, setIdx, set) {
         <!-- RPE Selector -->
         <div class="flex flex-col gap-2">
             <span class="font-label-sm text-label-sm text-on-surface-variant">RPE (Zorluk) — opsiyonel</span>
-            <div class="flex justify-between items-center">${rpeButtons}</div>
-            <p class="text-center font-body-md text-body-md text-on-surface-variant mt-1">
+            <div class="rpe-btn-group flex justify-between items-center">${rpeButtons}</div>
+            <p class="text-center font-body-md text-body-md text-on-surface-variant mt-1" id="e1rm-display-${exId}-${setIdx}">
                 Tahmini e1RM: ${e1rmDisplay}
             </p>
         </div>
@@ -384,12 +403,30 @@ function _pendingSetHTML(setIdx, set) {
 
 // ─── User actions (window.* for HTML onclick) ──────────────────────────────
 
+window.sessionToggleExAccordion = function(exId, headerBtn) {
+    const body = document.getElementById(`accordion-body-${exId}`);
+    const chevron = document.getElementById(`chevron-${exId}`);
+    if (!body) return;
+
+    if (_openExAccordions.has(exId)) {
+        _openExAccordions.delete(exId);
+        body.classList.add('hidden');
+        if (chevron) chevron.classList.remove('rotate-180');
+    } else {
+        _openExAccordions.add(exId);
+        body.classList.remove('hidden');
+        if (chevron) chevron.classList.add('rotate-180');
+        _renderSets(exId);
+    }
+};
+
 window.sessionStepWeight = function(exId, setIdx, delta) {
     const set = _exState[exId]?.sets[setIdx];
     if (!set || set.status === 'completed') return;
     set.weight = Math.max(0, Math.round((set.weight + delta) * 10) / 10);
     set.e1rm = calculateE1RM(set.weight, set.reps, set.rpe);
-    _refreshActiveSetDisplay(exId, setIdx, set);
+    _refreshWeightRepsDisplay(exId, setIdx, set);
+    _refreshE1RMDisplay(exId, setIdx, set);
     _debounceSaveDraft(exId, setIdx);
 };
 
@@ -398,17 +435,18 @@ window.sessionStepReps = function(exId, setIdx, delta) {
     if (!set || set.status === 'completed') return;
     set.reps = Math.max(1, set.reps + delta);
     set.e1rm = calculateE1RM(set.weight, set.reps, set.rpe);
-    _refreshActiveSetDisplay(exId, setIdx, set);
+    _refreshWeightRepsDisplay(exId, setIdx, set);
+    _refreshE1RMDisplay(exId, setIdx, set);
     _debounceSaveDraft(exId, setIdx);
 };
 
 window.sessionSetRPE = function(exId, setIdx, rpe) {
     const set = _exState[exId]?.sets[setIdx];
     if (!set || set.status === 'completed') return;
-    // Toggle off if same button tapped twice
     set.rpe = set.rpe === rpe ? null : rpe;
     set.e1rm = calculateE1RM(set.weight, set.reps, set.rpe);
-    _refreshActiveSetDisplay(exId, setIdx, set);
+    _refreshRPEButtons(exId, setIdx, set);
+    _refreshE1RMDisplay(exId, setIdx, set);
     _debounceSaveDraft(exId, setIdx);
 };
 
@@ -500,33 +538,52 @@ window.finishSession = async function() {
     }
 };
 
-// ─── Live display refresh (no full re-render) ──────────────────────────────
+function _updateExAccordionHeader(exId) {
+    const state = _exState[exId];
+    if (!state) return;
+    const completedCount = state.sets.filter(s => s.status === 'completed').length;
+    const totalSets = state.sets.length;
+    const card = document.getElementById(`session-card-${exId}`);
+    if (!card) return;
+    const counterEl = card.querySelector('.shrink-0 .font-label-sm');
+    if (counterEl) {
+        counterEl.textContent = `${completedCount}/${totalSets}`;
+        counterEl.className = `font-label-sm text-label-sm ${completedCount === totalSets && completedCount > 0 ? 'text-tertiary' : 'text-on-surface-variant'}`;
+    }
+}
 
-function _refreshActiveSetDisplay(exId, setIdx, set) {
+// Separate targeted refresh functions to avoid cross-contamination
+function _refreshWeightRepsDisplay(exId, setIdx, set) {
     const row = document.getElementById(`set-row-${exId}-${setIdx}`);
     if (!row) return;
+    // Weight and reps values are the only .font-title-lg spans
+    const valueSpans = row.querySelectorAll('.font-title-lg');
+    if (valueSpans[0]) valueSpans[0].textContent = set.weight;
+    if (valueSpans[1]) valueSpans[1].textContent = set.reps;
+}
 
-    // Update weight display
-    const spans = row.querySelectorAll('.font-title-lg');
-    if (spans[0]) spans[0].textContent = set.weight;
-    if (spans[1]) spans[1].textContent = set.reps;
+function _refreshE1RMDisplay(exId, setIdx, set) {
+    const el = document.getElementById(`e1rm-display-${exId}-${setIdx}`);
+    if (!el) return;
+    const isRough = set.rpe === null;
+    const val = set.e1rm ?? calculateE1RM(set.weight, set.reps, set.rpe);
+    el.innerHTML = isRough
+        ? `Tahmini e1RM: <span class="italic text-on-surface-variant/60">~${val}kg</span>`
+        : `Tahmini e1RM: <span>${val}kg</span>`;
+}
 
-    // Update e1RM display
-    const e1rmPara = row.querySelector('p');
-    if (e1rmPara) {
-        const isRough = set.rpe === null;
-        const e1rmVal = set.e1rm ?? calculateE1RM(set.weight, set.reps, set.rpe);
-        e1rmPara.innerHTML = `Tahmini e1RM: ${isRough ? `<span class="italic text-on-surface-variant/60">~${e1rmVal}kg</span>` : `<span>${e1rmVal}kg</span>`}`;
-    }
-
-    // Refresh RPE buttons
-    const rpeButtons = row.querySelectorAll('.flex.justify-between.items-center button');
-    rpeButtons.forEach((btn, i) => {
+function _refreshRPEButtons(exId, setIdx, set) {
+    const row = document.getElementById(`set-row-${exId}-${setIdx}`);
+    if (!row) return;
+    // Only target buttons inside the dedicated .rpe-btn-group container
+    const rpeGroup = row.querySelector('.rpe-btn-group');
+    if (!rpeGroup) return;
+    rpeGroup.querySelectorAll('button').forEach((btn, i) => {
         const rpeVal = i + 6;
         const isSelected = set.rpe === rpeVal;
         btn.className = `w-10 h-10 rounded-full border transition-all duration-150 font-label-lg text-label-lg active:scale-95
             ${isSelected
-                ? 'bg-primary text-on-primary border-transparent shadow-sm scale-110 ring-2 ring-primary/30 ring-offset-1 ring-offset-surface-container-low'
+                ? 'bg-primary text-on-primary border-transparent shadow-sm scale-110 ring-2 ring-primary/30 ring-offset-1'
                 : 'bg-surface text-on-surface-variant border-surface-variant hover:border-primary/40'}`;
     });
 }

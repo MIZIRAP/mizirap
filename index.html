@@ -4144,32 +4144,33 @@
     <!-- ======= AKTİF ANTRENMAN SEANSI ======= -->
     <section id="view-active-session" class="view hidden bg-background min-h-[100dvh] text-on-surface font-body-lg fixed inset-0 z-50 overflow-y-auto">
         <!-- Sticky Header -->
-        <header class="sticky top-0 bg-background/95 backdrop-blur-sm z-10 shadow-sm">
-            <div class="flex items-center justify-between px-margin-mobile h-16 max-w-md mx-auto">
-                <button onclick="finishSession()" class="w-10 h-10 flex items-center justify-center text-primary hover:bg-surface-variant/10 transition-colors rounded-full active:scale-90">
+        <header class="sticky top-0 bg-background/95 backdrop-blur-sm z-10 border-b border-surface-container-high">
+            <div class="flex items-center justify-between px-margin-mobile h-16 max-w-md mx-auto gap-2">
+                <!-- Back -->
+                <button onclick="sessionGoBack()" class="w-10 h-10 flex items-center justify-center text-on-surface-variant hover:bg-surface-variant/10 transition-colors rounded-full active:scale-90 shrink-0">
                     <span class="material-symbols-outlined">arrow_back</span>
                 </button>
-                <h1 class="font-title-lg text-title-lg text-on-surface" id="session-day-title">Antrenman</h1>
-                <div class="flex items-center gap-1 text-primary">
-                    <span class="material-symbols-outlined" style="font-size:18px">timer</span>
-                    <span class="font-label-lg text-label-lg tracking-wider" id="session-timer">00:00</span>
+                <!-- Title + Timer -->
+                <div class="flex-1 flex flex-col items-center">
+                    <h1 class="font-title-lg text-title-lg text-on-surface leading-tight" id="session-day-title">Antrenman</h1>
+                    <div class="flex items-center gap-1 text-primary">
+                        <span class="material-symbols-outlined" style="font-size:14px">timer</span>
+                        <span class="font-label-sm text-label-sm tracking-wider" id="session-timer">00:00</span>
+                    </div>
                 </div>
+                <!-- Finish -->
+                <button id="session-finish-btn"
+                    class="shrink-0 px-3 h-9 bg-primary text-on-primary rounded-full font-label-sm text-label-sm flex items-center gap-1 hover:opacity-90 active:scale-95 transition-all shadow-sm">
+                    <span class="material-symbols-outlined" style="font-size:16px">flag</span>
+                    Bitir
+                </button>
             </div>
         </header>
 
         <!-- Exercise Cards -->
-        <main class="px-margin-mobile pt-4 pb-32 flex flex-col gap-md max-w-md mx-auto" id="session-exercises-container">
+        <main class="px-margin-mobile pt-4 pb-10 flex flex-col gap-md max-w-md mx-auto" id="session-exercises-container">
             <!-- Populated by activeSession.js -->
         </main>
-
-        <!-- Finish Button (floating) -->
-        <div class="fixed bottom-6 left-0 right-0 px-margin-mobile max-w-md mx-auto z-20">
-            <button id="session-finish-btn"
-                class="w-full h-14 bg-on-surface text-inverse-on-surface rounded-full font-label-lg text-label-lg flex items-center justify-center gap-2 shadow-lg hover:opacity-90 active:scale-[0.98] transition-all">
-                <span class="material-symbols-outlined">flag</span>
-                Antrenmanı Bitir
-            </button>
-        </div>
     </section>
 
 </body>
