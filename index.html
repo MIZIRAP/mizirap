@@ -335,67 +335,113 @@
     </section>
 
     <!-- ================= SPOR TAKİBİ (Workout) ================= -->
-    <section id="view-workout" class="view hidden">
-        <!-- TopAppBar -->
-        <header class="w-full top-0 sticky bg-background dark:bg-background flat no shadows transition-opacity duration-200 z-40 max-w-md mx-auto">
-            <div class="flex items-center justify-between px-container-padding py-4 w-full">
-                <div class="flex items-center gap-3">
-                    <button class="nav-tab hover:opacity-80 p-2 -ml-2 rounded-full focus:outline-none focus:ring-2 focus:ring-primary" data-target="view-dashboard">
-                        <span class="material-symbols-outlined text-primary dark:text-primary-fixed-dim" style="font-variation-settings: 'FILL' 0;">arrow_back</span>
-                    </button>
-                    <h1 class="font-headline-md text-headline-md text-primary dark:text-primary-fixed-dim font-bold tracking-tight">Spor</h1>
-                </div>
-            </div>
-        </header>
-
-        <!-- Main Content Area -->
-        <main class="flex-1 overflow-y-auto px-[20px] pb-[40px] max-w-2xl mx-auto w-full flex flex-col gap-card-gap" id="workout-main-content">
-            <!-- Header Spacer for Mobile -->
-            <div class="h-6 md:hidden"></div>
-            
-            <!-- Header / Split Selector -->
-            <div class="flex flex-col gap-element-spacing pt-4">
-                <div class="flex justify-between items-center cursor-pointer group p-4 rounded-xl bg-surface-container-low hover:bg-surface-container-highest transition-all active:scale-98 border border-outline-variant/20" id="workout-split-selector">
-                    <div class="flex flex-col">
-                        <span class="font-label-sm text-label-sm text-outline uppercase tracking-wider mb-0.5">Mevcut Split</span>
-                        <div class="flex items-center gap-2">
-                            <h1 class="font-headline-sm text-headline-sm text-on-surface" id="workout-split-name">Yükleniyor...</h1>
-                        </div>
-                    </div>
-                    <span class="material-symbols-outlined text-outline group-hover:text-primary transition-colors">chevron_right</span>
-                </div>
-                
-                <!-- Day Pills -->
-                <div class="flex gap-unit overflow-x-auto pb-2 snap-x" id="workout-day-pills">
-                    <!-- Dynamic Pills Go Here -->
-                </div>
-                
-                <!-- Last Session Info -->
-                <div class="flex items-center justify-between text-on-surface-variant px-2 py-1">
-                    <div class="flex items-center gap-2">
-                        <span class="material-symbols-outlined text-sm" class="text-lg" style="">history</span>
-                        <span class="font-body-md text-body-md" id="workout-last-session-date">Geçmiş antrenman aranıyor...</span>
-                    </div>
-                    <button class="hover:bg-surface-variant p-2 rounded-full transition-colors flex items-center justify-center" onclick="openEditTemplateView()">
-                        <span class="material-symbols-outlined text-sm" class="text-lg" style="">edit</span>
-                    </button>
-                </div>
-            </div>
-            
-            <!-- Exercise Cards Container -->
-            <div class="flex flex-col gap-card-gap" id="workout-exercises-container">
-                <!-- Exercises Go Here -->
-            </div>
-            
-            <!-- Save Button Area -->
-            <div class="w-full flex justify-center mt-4">
-                <button class="w-full max-w-md bg-primary text-on-primary font-headline-sm text-body-lg py-4 rounded-2xl shadow-sm hover:shadow-md transition-all active:scale-[0.98] flex items-center justify-center gap-2" id="workout-save-btn">
-                    <span class="material-symbols-outlined">check_circle</span>
-                    Bugünün Antrenmanını Kaydet
+    <section id="view-workout" class="view hidden bg-[#B7D0C1] min-h-screen text-on-surface antialiased font-body-lg pb-[100px]">
+        <div class="max-w-md mx-auto relative h-full flex flex-col">
+            <!-- Header -->
+            <header class="pt-8 pb-4 px-margin-mobile relative flex items-center justify-center">
+                <button class="nav-tab absolute left-4 hover:opacity-80 p-2 rounded-full focus:outline-none focus:ring-2 focus:ring-primary" data-target="view-dashboard">
+                    <span class="material-symbols-outlined text-on-primary-container" style="font-variation-settings: 'FILL' 0;">arrow_back</span>
                 </button>
-            </div>
-        </main>
-            </section>
+                <h1 class="font-headline-lg-mobile text-headline-lg-mobile text-on-primary-container text-center tracking-tight">Spor</h1>
+            </header>
+            
+            <!-- Main Content -->
+            <main class="flex-1 px-margin-mobile flex flex-col gap-6 pb-8" id="workout-main-content">
+                <!-- Hero Card -->
+                <section class="bg-primary-container rounded-2xl p-6 shadow-sm relative overflow-hidden flex flex-col gap-4 text-on-primary">
+                    <!-- Subtle decorative background element -->
+                    <div class="absolute -right-12 -top-12 w-48 h-48 bg-white opacity-5 rounded-full blur-2xl pointer-events-none"></div>
+                    <div>
+                        <h2 class="font-title-lg text-title-lg font-semibold mb-1" id="workout-split-name">Bugün: Push Day</h2>
+                        <p class="font-body-md text-body-md opacity-90" id="workout-split-desc">Göğüs, Omuz ve Triceps odaklı antrenman</p>
+                    </div>
+                    <!-- Rotation Indicator -->
+                    <div class="flex gap-2 items-center mt-2" id="workout-day-pills">
+                        <div class="h-1.5 w-8 bg-white rounded-full"></div>
+                        <div class="h-1.5 w-8 bg-white/30 rounded-full"></div>
+                        <div class="h-1.5 w-8 bg-white/30 rounded-full"></div>
+                    </div>
+                    <!-- Primary Action -->
+                    <button class="w-full bg-white text-primary-container rounded-xl py-3.5 px-4 font-label-lg text-label-lg font-bold shadow-sm active:scale-[0.98] transition-transform duration-150 mt-4" id="workout-save-btn">
+                        Antrenmanı Başlat
+                    </button>
+                    <div class="text-center mt-1">
+                        <a class="font-label-sm text-label-sm text-white/80 underline underline-offset-4 decoration-white/40 hover:text-white transition-colors" href="#" id="workout-split-selector">Farklı bir program seç</a>
+                    </div>
+                </section>
+                
+                <!-- Stats Strip -->
+                <section class="grid grid-cols-3 gap-3">
+                    <div class="bg-surface-container-lowest/60 backdrop-blur-md rounded-xl p-3 flex flex-col items-center justify-center text-center shadow-[0px_4px_16px_rgba(0,0,0,0.02)]">
+                        <span class="font-headline-lg-mobile text-headline-lg-mobile text-primary-container leading-none mb-1">4</span>
+                        <span class="font-label-sm text-label-sm text-on-surface-variant">Bu Hafta</span>
+                    </div>
+                    <div class="bg-surface-container-lowest/60 backdrop-blur-md rounded-xl p-3 flex flex-col items-center justify-center text-center shadow-[0px_4px_16px_rgba(0,0,0,0.02)]">
+                        <span class="font-headline-lg-mobile text-headline-lg-mobile text-primary-container leading-none mb-1">5</span>
+                        <span class="font-label-sm text-label-sm text-on-surface-variant">Günlük Seri</span>
+                    </div>
+                    <div class="bg-surface-container-lowest/60 backdrop-blur-md rounded-xl p-3 flex flex-col items-center justify-center text-center shadow-[0px_4px_16px_rgba(0,0,0,0.02)]" onclick="openExerciseHistory()">
+                        <span class="font-title-lg text-title-lg text-primary-container leading-none mb-1">Dün</span>
+                        <span class="font-label-sm text-label-sm text-on-surface-variant" id="workout-last-session-date">Son Antrenman</span>
+                    </div>
+                </section>
+                
+                <!-- Quick Actions Scroll -->
+                <section class="relative -mx-margin-mobile">
+                    <div class="flex gap-4 overflow-x-auto hide-scrollbar px-margin-mobile snap-x snap-mandatory pb-4">
+                        <button class="snap-start shrink-0 w-36 bg-surface-container-lowest rounded-xl p-4 flex flex-col items-start gap-3 shadow-[0px_2px_8px_rgba(0,0,0,0.04)] active:scale-[0.98] transition-transform">
+                            <div class="w-10 h-10 rounded-full bg-secondary/10 flex items-center justify-center text-secondary">
+                                <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">self_improvement</span>
+                            </div>
+                            <span class="font-label-lg text-label-lg text-on-surface">Esneme Yap</span>
+                        </button>
+                        <button class="snap-start shrink-0 w-36 bg-surface-container-lowest rounded-xl p-4 flex flex-col items-start gap-3 shadow-[0px_2px_8px_rgba(0,0,0,0.04)] active:scale-[0.98] transition-transform">
+                            <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+                                <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">accessibility_new</span>
+                            </div>
+                            <span class="font-label-lg text-label-lg text-on-surface">Core Çalışması</span>
+                        </button>
+                        <button class="snap-start shrink-0 w-36 bg-surface-container-lowest rounded-xl p-4 flex flex-col items-start gap-3 shadow-[0px_2px_8px_rgba(0,0,0,0.04)] active:scale-[0.98] transition-transform">
+                            <div class="w-10 h-10 rounded-full bg-tertiary/10 flex items-center justify-center text-tertiary">
+                                <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">directions_run</span>
+                            </div>
+                            <span class="font-label-lg text-label-lg text-on-surface">Kardiyo</span>
+                        </button>
+                        <!-- Spacer for final scroll padding -->
+                        <div class="shrink-0 w-4"></div>
+                    </div>
+                    <!-- Right fade mask -->
+                    <div class="absolute right-0 top-0 bottom-0 w-12 bg-gradient-to-l from-[#B7D0C1] to-transparent pointer-events-none"></div>
+                </section>
+                
+                <!-- Navigation List -->
+                <section class="bg-surface-container-lowest rounded-2xl shadow-[0px_4px_24px_rgba(0,0,0,0.03)] overflow-hidden">
+                    <nav class="flex flex-col">
+                        <a class="flex items-center gap-4 p-4 border-b border-surface-variant/50 hover:bg-surface-container-low transition-colors active:bg-surface-container" href="#">
+                            <span class="material-symbols-outlined text-on-surface-variant">book</span>
+                            <span class="flex-1 font-body-lg text-body-lg text-on-surface">Egzersiz Kütüphanesi</span>
+                            <span class="material-symbols-outlined text-outline">chevron_right</span>
+                        </a>
+                        <a class="flex items-center gap-4 p-4 border-b border-surface-variant/50 hover:bg-surface-container-low transition-colors active:bg-surface-container" href="#" onclick="openExerciseHistory()">
+                            <span class="material-symbols-outlined text-on-surface-variant">history</span>
+                            <span class="flex-1 font-body-lg text-body-lg text-on-surface">Geçmiş Antrenmanlar</span>
+                            <span class="material-symbols-outlined text-outline">chevron_right</span>
+                        </a>
+                        <a class="flex items-center gap-4 p-4 border-b border-surface-variant/50 hover:bg-surface-container-low transition-colors active:bg-surface-container" href="#" onclick="openEditTemplateView()">
+                            <span class="material-symbols-outlined text-on-surface-variant">settings</span>
+                            <span class="flex-1 font-body-lg text-body-lg text-on-surface">Split Düzenle</span>
+                            <span class="material-symbols-outlined text-outline">chevron_right</span>
+                        </a>
+                        <a class="flex items-center gap-4 p-4 hover:bg-surface-container-low transition-colors active:bg-surface-container" href="#">
+                            <span class="material-symbols-outlined text-on-surface-variant">fitness_center</span>
+                            <span class="flex-1 font-body-lg text-body-lg text-on-surface">Esneme Hareketleri</span>
+                            <span class="material-symbols-outlined text-outline">chevron_right</span>
+                        </a>
+                    </nav>
+                </section>
+            </main>
+        </div>
+    </section>
 
     <!-- Edit Workout Template View -->
     <section id="view-edit-workout-template" class="view hidden bg-background text-on-background antialiased min-h-[100dvh] flex flex-col items-center pb-[100px]">
