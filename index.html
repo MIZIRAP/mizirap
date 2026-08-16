@@ -3983,5 +3983,260 @@
         }
     </script>
 
+
+    <!-- SPLIT EDIT VIEW -->
+    <section id="view-split-edit" class="view hidden bg-[#B7D0C1] min-h-[100dvh] text-on-background font-body-md selection:bg-primary-container selection:text-on-primary-container z-50 fixed inset-0 overflow-y-auto">
+        <!-- Top Navigation Container -->
+        <header class="w-full top-0 sticky bg-[#B7D0C1] z-10">
+            <div class="flex items-center justify-between px-margin-mobile md:px-margin-desktop h-14 w-full max-w-7xl mx-auto">
+                <!-- Leading Action -->
+                <button onclick="document.getElementById('view-split-edit').classList.add('hidden');" aria-label="Geri" class="h-12 w-12 flex items-center justify-center text-primary hover:bg-surface-container-high transition-colors active:opacity-70 rounded-full shrink-0">
+                    <span class="material-symbols-outlined" data-icon="arrow_back">arrow_back</span>
+                </button>
+                <!-- Headline -->
+                <h1 class="font-title-lg text-title-lg font-bold text-primary flex-1 text-center truncate">Split Düzenle</h1>
+                <!-- Trailing Action -->
+                <div class="h-12 w-12 shrink-0"></div>
+            </div>
+        </header>
+
+        <!-- Main Content Canvas -->
+        <main class="w-full max-w-3xl mx-auto px-margin-mobile md:px-margin-desktop pb-24 pt-4 space-y-md">
+            <!-- ACTIVE SPLIT SELECTOR -->
+            <section onclick="openSplitModal()" class="bg-surface-container-lowest rounded-xl p-md shadow-sm flex items-center justify-between group hover:bg-surface-container-highest transition-colors cursor-pointer active:scale-[0.99] duration-150">
+                <div>
+                    <span class="font-label-sm text-label-sm text-on-surface-variant block mb-xs">Aktif Split</span>
+                    <span class="font-body-lg text-body-lg text-on-background font-medium" id="split-edit-active-name">Push / Pull / Legs</span>
+                </div>
+                <button class="h-12 px-4 flex items-center justify-center text-primary font-label-lg text-label-lg rounded-full hover:bg-primary-container hover:text-on-primary-container transition-colors">
+                    Değiştir
+                </button>
+            </section>
+
+            <!-- DAY ROTATION LIST -->
+            <section class="space-y-sm" id="split-edit-days-container">
+                <!-- Will be dynamically populated -->
+            </section>
+            
+            <button class="w-full bg-transparent border-2 border-dashed border-primary-container text-primary font-label-lg text-label-lg rounded-xl h-20 flex items-center justify-center hover:bg-surface-container-lowest hover:border-primary transition-colors focus:ring-2 focus:ring-primary focus:outline-none">
+                + Yeni Gün Ekle
+            </button>
+
+            <!-- BOTTOM ACTION -->
+            <div class="pt-lg flex justify-center pb-xl">
+                <button class="font-label-lg text-label-lg text-on-surface-variant hover:text-primary underline decoration-outline-variant hover:decoration-primary transition-colors h-12 px-4 flex items-center">
+                    + Yeni Split Oluştur
+                </button>
+            </div>
+        </main>
+    </section>
+
+    <!-- SPLIT SELECTION MODAL -->
+    <div id="modal-split-change" class="hidden fixed inset-0 z-[60] flex items-center justify-center font-body-md">
+        <!-- Modal Backdrop -->
+        <div class="absolute inset-0 bg-on-background/40 backdrop-blur-sm z-40 transition-opacity duration-300" onclick="closeSplitModal()"></div>
+        
+        <!-- Modal Container -->
+        <div class="relative bg-surface-container-lowest w-full max-w-md mx-margin-mobile md:mx-auto rounded-2xl shadow-xl z-50 flex flex-col overflow-hidden max-h-[90vh]">
+            <!-- Header -->
+            <div class="px-lg pt-lg pb-md flex items-center justify-between sticky top-0 bg-surface-container-lowest z-10">
+                <h2 class="font-title-lg text-title-lg text-on-surface">Aktif Spliti Değiştir</h2>
+                <button onclick="closeSplitModal()" class="text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest p-sm rounded-full transition-colors flex items-center justify-center w-10 h-10">
+                    <span class="material-symbols-outlined">close</span>
+                </button>
+            </div>
+
+            <!-- Scrollable Content -->
+            <div class="px-lg py-sm overflow-y-auto flex-1 flex flex-col gap-md">
+                <p class="font-body-md text-body-md text-on-surface-variant mb-xs">
+                    Antrenman programınızı değiştirmek için listeden yeni bir split seçin veya sıfırdan oluşturun.
+                </p>
+
+                <!-- Split Options List -->
+                <div class="flex flex-col gap-sm" id="split-modal-options">
+                    <!-- Options populated by JS -->
+                </div>
+
+                <!-- Create New Split Button -->
+                <button class="mt-md w-full border border-dashed border-outline text-primary font-label-lg text-label-lg h-12 rounded-xl flex items-center justify-center gap-sm hover:bg-primary-container/10 transition-colors duration-200">
+                    <span class="material-symbols-outlined">add</span>
+                    Yeni Split Oluştur
+                </button>
+            </div>
+
+            <!-- Footer Actions -->
+            <div class="px-lg py-lg flex justify-end gap-md mt-auto bg-surface-container-lowest border-t border-surface-container-highest">
+                <button onclick="closeSplitModal()" class="px-lg h-12 rounded-full font-label-lg text-label-lg text-primary hover:bg-primary-container/10 transition-colors">
+                    Vazgeç
+                </button>
+                <button onclick="applySplitSelection()" class="px-lg h-12 rounded-full font-label-lg text-label-lg bg-primary-container text-on-primary-container hover:bg-primary/90 hover:text-on-primary transition-colors flex items-center justify-center shadow-sm">
+                    Uygula
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- SPLIT MANAGEMENT ---
+        const splitsData = [
+            { 
+                id: 'ppl', 
+                name: 'Push / Pull / Legs', 
+                days: 3, 
+                daysList: [
+                    { title: 'Push Day', desc: 'Göğüs, Omuz ve Triceps', exCount: 8 },
+                    { title: 'Pull Day', desc: 'Sırt ve Biceps', exCount: 6 },
+                    { title: 'Legs Day', desc: 'Bacak ve Kalf', exCount: 7 }
+                ]
+            },
+            { 
+                id: 'ul', 
+                name: 'Upper / Lower', 
+                days: 4,
+                daysList: [
+                    { title: 'Upper A', desc: 'Üst Vücut (Güç)', exCount: 5 },
+                    { title: 'Lower A', desc: 'Alt Vücut (Güç)', exCount: 5 },
+                    { title: 'Upper B', desc: 'Üst Vücut (Hipertrofi)', exCount: 7 },
+                    { title: 'Lower B', desc: 'Alt Vücut (Hipertrofi)', exCount: 6 }
+                ]
+            },
+            { 
+                id: 'fb', 
+                name: 'Full Body', 
+                days: 2,
+                daysList: [
+                    { title: 'Full Body A', desc: 'Tüm Vücut', exCount: 6 },
+                    { title: 'Full Body B', desc: 'Tüm Vücut', exCount: 6 }
+                ]
+            }
+        ];
+
+        let activeSplitId = 'ppl';
+        let tempSelectedSplitId = 'ppl'; // For modal selection before applying
+
+        function updateWorkoutHomeUI() {
+            const split = splitsData.find(s => s.id === activeSplitId);
+            const titleEl = document.querySelector('#view-workout .font-title-lg.text-title-lg');
+            const descEl = document.querySelector('#view-workout .font-body-md.text-body-md.opacity-90');
+            const dotsContainer = document.querySelector('#view-workout .flex.gap-2.items-center.mt-2');
+            const dashNameEl = document.getElementById('stat-workout-split');
+            
+            if(dashNameEl) dashNameEl.innerText = split.name;
+            
+            // Assume day 1 for now
+            const currentDay = split.daysList[0];
+            if(titleEl) titleEl.innerText = "Bugün: " + currentDay.title;
+            if(descEl) descEl.innerText = currentDay.desc;
+            
+            // Generate dots
+            if(dotsContainer) {
+                let dotsHtml = '';
+                for(let i=0; i<split.days; i++) {
+                    dotsHtml += `<div class="h-1.5 w-8 ${i === 0 ? 'bg-white' : 'bg-white/30'} rounded-full"></div>`;
+                }
+                dotsContainer.innerHTML = dotsHtml;
+            }
+        }
+
+        function updateSplitEditUI() {
+            const split = splitsData.find(s => s.id === activeSplitId);
+            document.getElementById('split-edit-active-name').innerText = split.name;
+            
+            const daysContainer = document.getElementById('split-edit-days-container');
+            let daysHtml = '';
+            
+            split.daysList.forEach((day, idx) => {
+                let segmentsHtml = '';
+                for(let i=0; i<split.days; i++) {
+                    segmentsHtml += `<div class="h-full flex-1 ${i === idx ? 'bg-primary' : 'bg-surface-container-highest'} rounded-full"></div>`;
+                }
+                
+                daysHtml += `
+                <article class="bg-surface-container-lowest rounded-xl p-md shadow-sm relative group hover:shadow-md transition-shadow">
+                    <div class="flex items-start justify-between cursor-pointer">
+                        <div class="flex-1 pr-4">
+                            <div class="flex items-center gap-2 mb-1">
+                                <h2 class="font-title-lg text-title-lg text-on-background">${day.title}</h2>
+                            </div>
+                            <p class="font-body-md text-body-md text-on-surface-variant">${day.desc}</p>
+                            <p class="font-label-sm text-label-sm text-outline mt-2">${day.exCount} egzersiz</p>
+                        </div>
+                        <div class="flex flex-col items-end gap-3">
+                            <button aria-label="Düzenle" class="h-12 w-12 flex items-center justify-center text-outline hover:text-primary transition-colors rounded-full hover:bg-surface-container-highest">
+                                <span class="material-symbols-outlined text-[20px]">edit</span>
+                            </button>
+                            <div class="flex gap-1 h-1.5 w-12 mt-1">
+                                ${segmentsHtml}
+                            </div>
+                        </div>
+                    </div>
+                </article>
+                `;
+            });
+            daysContainer.innerHTML = daysHtml;
+        }
+
+        function openSplitModal() {
+            tempSelectedSplitId = activeSplitId;
+            renderModalOptions();
+            document.getElementById('modal-split-change').classList.remove('hidden');
+        }
+
+        function closeSplitModal() {
+            document.getElementById('modal-split-change').classList.add('hidden');
+        }
+
+        function renderModalOptions() {
+            const container = document.getElementById('split-modal-options');
+            let html = '';
+            splitsData.forEach(split => {
+                const isChecked = split.id === tempSelectedSplitId;
+                html += `
+                <label class="relative cursor-pointer group" onclick="tempSelectedSplitId = '${split.id}'; renderModalOptions();">
+                    <input ${isChecked ? 'checked' : ''} class="peer sr-only" name="split_selection" type="radio" value="${split.id}"/>
+                    <div class="border ${isChecked ? 'border-primary-container bg-surface-container-low' : 'border-outline-variant'} rounded-xl p-md flex items-center justify-between hover:bg-surface-container-low transition-colors duration-200">
+                        <div class="flex flex-col gap-xs">
+                            <span class="font-label-lg text-label-lg text-on-surface font-semibold">${split.name}</span>
+                            <span class="font-body-md text-body-md text-on-surface-variant flex items-center gap-xs">
+                                <span class="material-symbols-outlined text-[16px]">calendar_today</span> ${split.days} Gün
+                            </span>
+                        </div>
+                        <div class="w-6 h-6 rounded-full border-2 ${isChecked ? 'border-primary-container bg-primary-container' : 'border-outline-variant'} flex items-center justify-center radio-inner transition-colors">
+                            <div class="w-2.5 h-2.5 rounded-full bg-surface-container-lowest ${isChecked ? 'block' : 'hidden'}"></div>
+                        </div>
+                    </div>
+                </label>
+                `;
+            });
+            container.innerHTML = html;
+        }
+
+        function applySplitSelection() {
+            activeSplitId = tempSelectedSplitId;
+            updateWorkoutHomeUI();
+            updateSplitEditUI();
+            closeSplitModal();
+        }
+
+        function openSplitEdit() {
+            document.getElementById('view-split-edit').classList.remove('hidden');
+            updateSplitEditUI();
+        }
+
+        // Initialize on load
+        document.addEventListener('DOMContentLoaded', () => {
+            updateWorkoutHomeUI();
+            
+            // Add click listener to "Farklı bir program seç" in view-workout
+            const selectProgramLink = document.querySelector('#view-workout a[href="#"]');
+            if(selectProgramLink) {
+                selectProgramLink.onclick = (e) => {
+                    e.preventDefault();
+                    openSplitEdit();
+                };
+            }
+        });
+    </script>
+
 </body>
 </html>
