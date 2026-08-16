@@ -3988,7 +3988,7 @@
     <section id="view-split-edit" class="view hidden bg-[#B7D0C1] min-h-[100dvh] text-on-background font-body-md selection:bg-primary-container selection:text-on-primary-container z-50 fixed inset-0 overflow-y-auto">
         <!-- Top Navigation Container -->
         <header class="w-full top-0 sticky bg-[#B7D0C1] z-10">
-            <div class="flex items-center justify-between px-margin-mobile md:px-margin-desktop h-14 w-full max-w-7xl mx-auto">
+            <div class="flex items-center justify-between px-margin-mobile h-14 w-full max-w-md mx-auto">
                 <!-- Leading Action -->
                 <button onclick="document.getElementById('view-split-edit').classList.add('hidden');" aria-label="Geri" class="h-12 w-12 flex items-center justify-center text-primary hover:bg-surface-container-high transition-colors active:opacity-70 rounded-full shrink-0">
                     <span class="material-symbols-outlined" data-icon="arrow_back">arrow_back</span>
@@ -4001,7 +4001,7 @@
         </header>
 
         <!-- Main Content Canvas -->
-        <main class="w-full max-w-3xl mx-auto px-margin-mobile md:px-margin-desktop pb-24 pt-4 space-y-md">
+        <main class="w-full max-w-md mx-auto px-margin-mobile pb-24 pt-4 space-y-md">
             <!-- ACTIVE SPLIT SELECTOR -->
             <section onclick="openSplitModal()" class="bg-surface-container-lowest rounded-xl p-md shadow-sm flex items-center justify-between group hover:bg-surface-container-highest transition-colors cursor-pointer active:scale-[0.99] duration-150">
                 <div>
@@ -4018,14 +4018,14 @@
                 <!-- Will be dynamically populated -->
             </section>
             
-            <button class="w-full bg-transparent border-2 border-dashed border-primary-container text-primary font-label-lg text-label-lg rounded-xl h-20 flex items-center justify-center hover:bg-surface-container-lowest hover:border-primary transition-colors focus:ring-2 focus:ring-primary focus:outline-none">
+            <button class="w-full bg-transparent border-2 border-dashed border-primary-container text-primary font-label-lg text-label-lg rounded-xl h-20 hidden" id="split-edit-add-day-btn" flex items-center justify-center hover:bg-surface-container-lowest hover:border-primary transition-colors focus:ring-2 focus:ring-primary focus:outline-none">
                 + Yeni Gün Ekle
             </button>
 
             <!-- BOTTOM ACTION -->
             <div class="pt-lg flex justify-center pb-xl">
                 <button class="font-label-lg text-label-lg text-on-surface-variant hover:text-primary underline decoration-outline-variant hover:decoration-primary transition-colors h-12 px-4 flex items-center">
-                    + Yeni Split Oluştur
+                    <span id="split-edit-create-btn">+ Yeni Split Oluştur</span>
                 </button>
             </div>
         </main>
@@ -4076,167 +4076,74 @@
         </div>
     </div>
 
-    <script>
-        // --- SPLIT MANAGEMENT ---
-        const splitsData = [
-            { 
-                id: 'ppl', 
-                name: 'Push / Pull / Legs', 
-                days: 3, 
-                daysList: [
-                    { title: 'Push Day', desc: 'Göğüs, Omuz ve Triceps', exCount: 8 },
-                    { title: 'Pull Day', desc: 'Sırt ve Biceps', exCount: 6 },
-                    { title: 'Legs Day', desc: 'Bacak ve Kalf', exCount: 7 }
-                ]
-            },
-            { 
-                id: 'ul', 
-                name: 'Upper / Lower', 
-                days: 4,
-                daysList: [
-                    { title: 'Upper A', desc: 'Üst Vücut (Güç)', exCount: 5 },
-                    { title: 'Lower A', desc: 'Alt Vücut (Güç)', exCount: 5 },
-                    { title: 'Upper B', desc: 'Üst Vücut (Hipertrofi)', exCount: 7 },
-                    { title: 'Lower B', desc: 'Alt Vücut (Hipertrofi)', exCount: 6 }
-                ]
-            },
-            { 
-                id: 'fb', 
-                name: 'Full Body', 
-                days: 2,
-                daysList: [
-                    { title: 'Full Body A', desc: 'Tüm Vücut', exCount: 6 },
-                    { title: 'Full Body B', desc: 'Tüm Vücut', exCount: 6 }
-                ]
-            }
-        ];
+    
 
-        let activeSplitId = 'ppl';
-        let tempSelectedSplitId = 'ppl'; // For modal selection before applying
 
-        function updateWorkoutHomeUI() {
-            const split = splitsData.find(s => s.id === activeSplitId);
-            const titleEl = document.querySelector('#view-workout .font-title-lg.text-title-lg');
-            const descEl = document.querySelector('#view-workout .font-body-md.text-body-md.opacity-90');
-            const dotsContainer = document.querySelector('#view-workout .flex.gap-2.items-center.mt-2');
-            const dashNameEl = document.getElementById('stat-workout-split');
+    <!-- CREATE SPLIT VIEW -->
+    <section id="view-create-split" class="view hidden bg-[#B7D0C1] min-h-[100dvh] text-on-background font-body-md selection:bg-primary-container selection:text-on-primary-container z-50 fixed inset-0 overflow-y-auto">
+        <header class="w-full top-0 sticky bg-[#B7D0C1] z-10">
+            <div class="flex items-center justify-between px-margin-mobile h-14 w-full max-w-md mx-auto">
+                <button onclick="closeCreateSplitView()" class="h-12 w-12 flex items-center justify-center text-primary hover:bg-surface-container-high transition-colors rounded-full shrink-0">
+                    <span class="material-symbols-outlined">arrow_back</span>
+                </button>
+                <h1 class="font-title-lg text-title-lg font-bold text-primary flex-1 text-center">Yeni Split</h1>
+                <button id="create-split-save-btn" class="h-12 px-4 flex items-center justify-center text-primary font-label-lg text-label-lg rounded-full hover:bg-primary-container hover:text-on-primary-container transition-colors disabled:opacity-50">
+                    Kaydet
+                </button>
+            </div>
+        </header>
+
+        <main class="w-full max-w-md mx-auto px-margin-mobile pb-24 pt-4 space-y-md">
+            <div class="bg-surface-container-lowest rounded-xl p-md shadow-sm">
+                <label class="block font-label-sm text-label-sm text-on-surface-variant mb-1">Split Adı</label>
+                <input type="text" id="create-split-name-input" placeholder="Örn: Push / Pull / Legs" class="w-full bg-transparent border-b-2 border-outline-variant focus:border-primary py-2 text-body-lg font-medium text-on-background outline-none transition-colors">
+            </div>
+
+            <section id="create-split-days-container" class="space-y-sm">
+                <!-- Days will be added here dynamically -->
+            </section>
             
-            if(dashNameEl) dashNameEl.innerText = split.name;
-            
-            // Assume day 1 for now
-            const currentDay = split.daysList[0];
-            if(titleEl) titleEl.innerText = "Bugün: " + currentDay.title;
-            if(descEl) descEl.innerText = currentDay.desc;
-            
-            // Generate dots
-            if(dotsContainer) {
-                let dotsHtml = '';
-                for(let i=0; i<split.days; i++) {
-                    dotsHtml += `<div class="h-1.5 w-8 ${i === 0 ? 'bg-white' : 'bg-white/30'} rounded-full"></div>`;
-                }
-                dotsContainer.innerHTML = dotsHtml;
-            }
-        }
+            <button onclick="addDayToNewSplit()" class="w-full bg-transparent border-2 border-dashed border-primary-container text-primary font-label-lg text-label-lg rounded-xl h-20 flex items-center justify-center hover:bg-surface-container-lowest transition-colors">
+                + Yeni Gün Ekle
+            </button>
+        </main>
+    </section>
 
-        function updateSplitEditUI() {
-            const split = splitsData.find(s => s.id === activeSplitId);
-            document.getElementById('split-edit-active-name').innerText = split.name;
-            
-            const daysContainer = document.getElementById('split-edit-days-container');
-            let daysHtml = '';
-            
-            split.daysList.forEach((day, idx) => {
-                let segmentsHtml = '';
-                for(let i=0; i<split.days; i++) {
-                    segmentsHtml += `<div class="h-full flex-1 ${i === idx ? 'bg-primary' : 'bg-surface-container-highest'} rounded-full"></div>`;
-                }
-                
-                daysHtml += `
-                <article class="bg-surface-container-lowest rounded-xl p-md shadow-sm relative group hover:shadow-md transition-shadow">
-                    <div class="flex items-start justify-between cursor-pointer">
-                        <div class="flex-1 pr-4">
-                            <div class="flex items-center gap-2 mb-1">
-                                <h2 class="font-title-lg text-title-lg text-on-background">${day.title}</h2>
-                            </div>
-                            <p class="font-body-md text-body-md text-on-surface-variant">${day.desc}</p>
-                            <p class="font-label-sm text-label-sm text-outline mt-2">${day.exCount} egzersiz</p>
-                        </div>
-                        <div class="flex flex-col items-end gap-3">
-                            <button aria-label="Düzenle" class="h-12 w-12 flex items-center justify-center text-outline hover:text-primary transition-colors rounded-full hover:bg-surface-container-highest">
-                                <span class="material-symbols-outlined text-[20px]">edit</span>
-                            </button>
-                            <div class="flex gap-1 h-1.5 w-12 mt-1">
-                                ${segmentsHtml}
-                            </div>
-                        </div>
-                    </div>
-                </article>
-                `;
-            });
-            daysContainer.innerHTML = daysHtml;
-        }
+    <!-- EXERCISE PICKER MODAL -->
+    <div id="modal-exercise-picker" class="hidden fixed inset-0 z-[70] flex items-center justify-center font-body-md">
+        <div class="absolute inset-0 bg-on-background/40 backdrop-blur-sm z-40 transition-opacity duration-300" onclick="closeExercisePickerModal()"></div>
+        <div class="relative bg-surface-container-lowest w-full h-[90vh] md:max-w-md mx-auto md:rounded-t-2xl rounded-t-2xl shadow-xl z-50 flex flex-col overflow-hidden mt-auto md:mt-0">
+            <!-- Header -->
+            <div class="px-lg pt-lg pb-sm flex flex-col gap-2 sticky top-0 bg-surface-container-lowest z-10 border-b border-surface-container-highest">
+                <div class="flex items-center justify-between">
+                    <h2 class="font-title-lg text-title-lg text-on-surface">Egzersiz Seç</h2>
+                    <button onclick="closeExercisePickerModal()" class="text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest p-sm rounded-full transition-colors w-10 h-10 flex items-center justify-center">
+                        <span class="material-symbols-outlined">close</span>
+                    </button>
+                </div>
+                <div class="relative">
+                    <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline">search</span>
+                    <input type="text" id="exercise-picker-search" placeholder="Egzersiz ara..." class="w-full bg-surface-container-low rounded-xl py-3 pl-10 pr-4 text-body-md outline-none focus:ring-2 focus:ring-primary">
+                </div>
+                <!-- Categories filter -->
+                <div class="flex gap-2 overflow-x-auto hide-scrollbar py-2" id="exercise-picker-categories">
+                    <button class="px-4 py-1.5 rounded-full bg-primary text-on-primary font-label-sm whitespace-nowrap" onclick="filterPickerCategory('Tümü', this)">Tümü</button>
+                    <button class="px-4 py-1.5 rounded-full border border-outline-variant text-on-surface-variant font-label-sm whitespace-nowrap" onclick="filterPickerCategory('Göğüs', this)">Göğüs</button>
+                    <button class="px-4 py-1.5 rounded-full border border-outline-variant text-on-surface-variant font-label-sm whitespace-nowrap" onclick="filterPickerCategory('Sırt', this)">Sırt</button>
+                    <button class="px-4 py-1.5 rounded-full border border-outline-variant text-on-surface-variant font-label-sm whitespace-nowrap" onclick="filterPickerCategory('Omuz', this)">Omuz</button>
+                    <button class="px-4 py-1.5 rounded-full border border-outline-variant text-on-surface-variant font-label-sm whitespace-nowrap" onclick="filterPickerCategory('Bacak', this)">Bacak</button>
+                    <button class="px-4 py-1.5 rounded-full border border-outline-variant text-on-surface-variant font-label-sm whitespace-nowrap" onclick="filterPickerCategory('Biceps', this)">Biceps</button>
+                    <button class="px-4 py-1.5 rounded-full border border-outline-variant text-on-surface-variant font-label-sm whitespace-nowrap" onclick="filterPickerCategory('Triceps', this)">Triceps</button>
+                    <button class="px-4 py-1.5 rounded-full border border-outline-variant text-on-surface-variant font-label-sm whitespace-nowrap" onclick="filterPickerCategory('Karın', this)">Karın</button>
+                </div>
+            </div>
 
-        function openSplitModal() {
-            tempSelectedSplitId = activeSplitId;
-            renderModalOptions();
-            document.getElementById('modal-split-change').classList.remove('hidden');
-        }
-
-        function closeSplitModal() {
-            document.getElementById('modal-split-change').classList.add('hidden');
-        }
-
-        function renderModalOptions() {
-            const container = document.getElementById('split-modal-options');
-            let html = '';
-            splitsData.forEach(split => {
-                const isChecked = split.id === tempSelectedSplitId;
-                html += `
-                <label class="relative cursor-pointer group" onclick="tempSelectedSplitId = '${split.id}'; renderModalOptions();">
-                    <input ${isChecked ? 'checked' : ''} class="peer sr-only" name="split_selection" type="radio" value="${split.id}"/>
-                    <div class="border ${isChecked ? 'border-primary-container bg-surface-container-low' : 'border-outline-variant'} rounded-xl p-md flex items-center justify-between hover:bg-surface-container-low transition-colors duration-200">
-                        <div class="flex flex-col gap-xs">
-                            <span class="font-label-lg text-label-lg text-on-surface font-semibold">${split.name}</span>
-                            <span class="font-body-md text-body-md text-on-surface-variant flex items-center gap-xs">
-                                <span class="material-symbols-outlined text-[16px]">calendar_today</span> ${split.days} Gün
-                            </span>
-                        </div>
-                        <div class="w-6 h-6 rounded-full border-2 ${isChecked ? 'border-primary-container bg-primary-container' : 'border-outline-variant'} flex items-center justify-center radio-inner transition-colors">
-                            <div class="w-2.5 h-2.5 rounded-full bg-surface-container-lowest ${isChecked ? 'block' : 'hidden'}"></div>
-                        </div>
-                    </div>
-                </label>
-                `;
-            });
-            container.innerHTML = html;
-        }
-
-        function applySplitSelection() {
-            activeSplitId = tempSelectedSplitId;
-            updateWorkoutHomeUI();
-            updateSplitEditUI();
-            closeSplitModal();
-        }
-
-        function openSplitEdit() {
-            document.getElementById('view-split-edit').classList.remove('hidden');
-            updateSplitEditUI();
-        }
-
-        // Initialize on load
-        document.addEventListener('DOMContentLoaded', () => {
-            updateWorkoutHomeUI();
-            
-            // Add click listener to "Farklı bir program seç" in view-workout
-            const selectProgramLink = document.querySelector('#view-workout a[href="#"]');
-            if(selectProgramLink) {
-                selectProgramLink.onclick = (e) => {
-                    e.preventDefault();
-                    openSplitEdit();
-                };
-            }
-        });
-    </script>
+            <!-- List -->
+            <div class="flex-1 overflow-y-auto p-4 flex flex-col gap-2" id="exercise-picker-list">
+                <!-- Populated by JS -->
+            </div>
+        </div>
+    </div>
 
 </body>
 </html>

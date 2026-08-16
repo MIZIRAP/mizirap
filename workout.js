@@ -91,410 +91,39 @@ function setupEventListeners() {
 }
 
 function renderSplitView() {
-    const splitSelector = document.getElementById("workout-split-selector");
-    const splitName = document.getElementById("workout-split-name");
-    const dayPills = document.getElementById("workout-day-pills");
+    const titleEl = document.querySelector('#view-workout .font-title-lg.text-title-lg');
+    const descEl = document.querySelector('#view-workout .font-body-md.text-body-md.opacity-90');
+    const dotsContainer = document.querySelector('#view-workout .flex.gap-2.items-center.mt-2');
+    const dashNameEl = document.getElementById('stat-workout-split');
     
     if (!activeSplitId || splits.length === 0) {
-        if(splitName) splitName.textContent = "Split Bulunamadı";
-        if(dayPills) dayPills.innerHTML = "";
-        const c = document.getElementById("workout-exercises-container");
-        if(c) {
-            c.innerHTML = `
-                <div class="text-center text-on-surface-variant mt-10">
-                    <p>Henüz bir split profili oluşturmadınız.</p>
-                    <button class="mt-4 bg-primary text-on-primary px-6 py-2 rounded-full font-label-md hover:opacity-90 transition-opacity" onclick="openSplitModal()">Yeni Split Oluştur</button>
-                </div>
-            `;
-        }
+        if(titleEl) titleEl.innerText = "Split Bulunamadı";
+        if(descEl) descEl.innerText = "Henüz bir program oluşturmadınız.";
+        if(dotsContainer) dotsContainer.innerHTML = "";
+        if(dashNameEl) dashNameEl.innerText = "Yapılmadı";
         return;
     }
     
     const activeSplit = splits.find(s => s.id === activeSplitId);
-    if(splitName) splitName.textContent = activeSplit.name;
+    if (!activeSplit) return;
     
-    if(splitSelector) {
-        splitSelector.onclick = () => {
-            openSplitSelectionModal(); 
-        };
+    if(dashNameEl) dashNameEl.innerText = activeSplit.name;
+    
+    // For now, default to the first day of the split
+    const currentDay = activeSplit.days && activeSplit.days.length > 0 ? activeSplit.days[0] : null;
+    if(currentDay) {
+        if(titleEl) titleEl.innerText = "Bugün: " + currentDay.name;
+        if(descEl) descEl.innerText = (currentDay.exercises ? currentDay.exercises.length : 0) + " Hareket içeren antrenman";
     }
     
-    if (dayPills) {
-        dayPills.innerHTML = "";
-        
-        if (!activeDayId || !activeSplit.days.find(d => d.id === activeDayId)) {
-            activeDayId = activeSplit.days[0].id; 
-        }
-        
-        activeSplit.days.forEach(day => {
-            const btn = document.createElement("button");
-            const isActive = day.id === activeDayId;
-            btn.className = isActive 
-                ? "snap-start flex-shrink-0 bg-primary text-on-primary font-label-md text-label-md px-6 py-3 rounded-full transition-transform active:scale-95 shadow-sm"
-                : "snap-start flex-shrink-0 bg-surface-container-high text-on-surface-variant hover:bg-surface-container-highest font-label-md text-label-md px-6 py-3 rounded-full transition-transform active:scale-95 shadow-sm";
-            btn.textContent = day.name;
-            btn.onclick = () => {
-                activeDayId = day.id;
-                renderSplitView(); 
-            };
-            dayPills.appendChild(btn);
+    if(dotsContainer && activeSplit.days) {
+        let dotsHtml = '';
+        activeSplit.days.forEach((day, idx) => {
+            // Highlight the first dot as active for now
+            dotsHtml += `<div class="h-1.5 w-8 ${idx === 0 ? 'bg-white' : 'bg-white/30'} rounded-full"></div>`;
         });
+        dotsContainer.innerHTML = dotsHtml;
     }
-    
-    loadWorkoutDataForDay(activeSplitId, activeDayId);
-}
-
-window.openSplitModal = function() {
-    const modal = document.getElementById("newSplitModal");
-    const content = document.getElementById("newSplitModalContent");
-    if(modal && content) {
-        modal.classList.remove('hidden');
-        setTimeout(() => {
-            modal.classList.remove('opacity-0');
-            content.classList.remove('translate-y-full');
-        }, 10);
-        
-        document.getElementById("new-split-name").value = "";
-        const daysContainer = document.getElementById("split-days-container");
-        if(daysContainer) {
-            daysContainer.innerHTML = "";
-            addDayToSplitForm(); 
-        }
-    }
-};
-
-window.closeSplitModal = function() {
-    const modal = document.getElementById("newSplitModal");
-    const content = document.getElementById("newSplitModalContent");
-    if(modal && content) {
-        modal.classList.add('opacity-0');
-        content.classList.add('translate-y-full');
-        setTimeout(() => {
-            modal.classList.add('hidden');
-        }, 300);
-    }
-};
-
-let splitDayCounter = 0;
-function addDayToSplitForm() {
-    const container = document.getElementById("split-days-container");
-    if (!container) return;
-    
-    splitDayCounter++;
-    const dayId = `day-${splitDayCounter}`;
-    
-    const dayEl = document.createElement("div");
-    dayEl.className = "bg-surface-container-lowest rounded-xl p-4 flex flex-col gap-3 shadow-sm border border-surface-variant/30 relative";
-    dayEl.id = dayId;
-    
-    dayEl.innerHTML = `
-        <button class="absolute top-2 right-2 text-on-surface-variant hover:text-error transition-colors" onclick="this.parentElement.remove()">
-            <span class="material-symbols-outlined icon-md">delete</span>
-        </button>
-        <div class="flex flex-col gap-1 pr-8">
-            <label class="font-label-sm text-label-sm text-on-surface-variant">Gün Adı</label>
-            <input class="w-full bg-surface-container-low border border-transparent focus:border-primary/30 outline-none rounded-lg py-2 px-3 font-body-md text-on-surface" placeholder="Örn: İtiş" type="text" />
-        </div>
-        
-        <div class="flex flex-col gap-2 mt-2">
-            <div class="flex justify-between items-center">
-                <label class="font-label-sm text-label-sm text-on-surface-variant">Hareketler (virgülle ayırın)</label>
-            </div>
-            <textarea class="w-full bg-surface-container-low border border-transparent focus:border-primary/30 outline-none rounded-lg py-2 px-3 font-body-md text-on-surface resize-none h-20" placeholder="Örn: Bench Press, Overhead Press"></textarea>
-        </div>
-    `;
-    container.appendChild(dayEl);
-}
-
-async function saveNewSplit() {
-    if(!currentUid) return;
-    const nameInput = document.getElementById("new-split-name");
-    const splitName = nameInput ? nameInput.value.trim() : "";
-    
-    if(!splitName) {
-        alert("Lütfen split adı girin.");
-        return;
-    }
-    
-    const container = document.getElementById("split-days-container");
-    const dayEls = container.querySelectorAll("div[id^='day-']");
-    
-    const days = [];
-    dayEls.forEach((dayEl, index) => {
-        const name = dayEl.querySelector("input").value.trim() || `Gün ${index+1}`;
-        const exercisesStr = dayEl.querySelector("textarea").value;
-        const exercises = exercisesStr.split(',').map(e => e.trim()).filter(e => e);
-        
-        days.push({
-            id: `d${Date.now()}_${index}`,
-            name,
-            exercises: exercises.map((e, idx) => ({ id: `e${Date.now()}_${idx}`, name: e, defaultSets: 2 }))
-        });
-    });
-    
-    if(days.length === 0) {
-        alert("En az bir gün eklemelisiniz.");
-        return;
-    }
-    
-    try {
-        const splitRef = await addDoc(collection(db, "users", currentUid, "splits"), {
-            name: splitName,
-            days: days,
-            createdAt: serverTimestamp()
-        });
-        
-        localStorage.setItem(`miz_activeSplit_${currentUid}`, splitRef.id);
-        activeSplitId = splitRef.id;
-        window.closeSplitModal();
-        
-    } catch (e) {
-        console.error(e);
-        alert("Split kaydedilirken hata oluştu.");
-    }
-}
-
-async function loadWorkoutDataForDay(splitId, dayId) {
-    if(!splitId || !dayId) return;
-    
-    const split = splits.find(s => s.id === splitId);
-    if(!split) return;
-    const day = split.days.find(d => d.id === dayId);
-    if(!day) return;
-
-    const q = query(
-        collection(db, "users", currentUid, "workout_logs"),
-        where("splitId", "==", splitId),
-        where("dayId", "==", dayId)
-    );
-    
-    const snap = await getDocs(q);
-    const logs = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-    // Sort by createdAt descending, fallback to dateStr
-    logs.sort((a,b) => {
-        const timeA = a.createdAt ? (a.createdAt.toMillis ? a.createdAt.toMillis() : a.createdAt) : new Date(a.dateStr).getTime();
-        const timeB = b.createdAt ? (b.createdAt.toMillis ? b.createdAt.toMillis() : b.createdAt) : new Date(b.dateStr).getTime();
-        return timeB - timeA;
-    });
-    
-    // Always start fresh for "ertesi gün" behavior.
-    // The most recently saved log is the "lastWorkoutLog" (Hedef).
-    currentWorkoutLog = null;
-    lastWorkoutLog = logs.length > 0 ? logs[0] : null;
-
-    renderExercises(day, lastWorkoutLog, currentWorkoutLog);
-}
-
-function renderExercises(day, lastLog, currentLog) {
-    const container = document.getElementById("workout-exercises-container");
-    if(!container) return;
-    container.innerHTML = "";
-    
-    const lastSessionDateEl = document.getElementById("workout-last-session-date");
-    if(lastSessionDateEl) {
-        if (lastLog) {
-            const d = new Date(lastLog.dateStr);
-            const formatted = formatDate(d, { day: 'numeric', month: 'long' });
-            lastSessionDateEl.textContent = `Son ${day.name} günü: ${formatted}`;
-        } else {
-            lastSessionDateEl.textContent = "Daha önce kayıt yok";
-        }
-    }
-    
-    day.exercises.forEach(ex => {
-        const lastSets = lastLog?.exercises ? (lastLog.exercises[ex.id] || []) : [];
-        let currentSets = currentLog?.exercises ? (currentLog.exercises[ex.id] || []) : [];
-        
-        if(currentSets.length === 0) {
-            if (lastSets.length > 0) {
-                currentSets = JSON.parse(JSON.stringify(lastSets));
-            } else {
-                for(let i=0; i<ex.defaultSets; i++) currentSets.push({ weight: '', reps: '' });
-            }
-        }
-        
-        // Find best set from last session for header
-        let bestLastSet = null;
-        if(lastSets.length > 0) {
-            bestLastSet = lastSets.reduce((prev, current) => {
-                const pVol = (parseFloat(prev.weight)||0) * (parseInt(prev.reps)||0);
-                const cVol = (parseFloat(current.weight)||0) * (parseInt(current.reps)||0);
-                return (pVol > cVol) ? prev : current;
-            });
-        }
-        
-        const card = document.createElement("div");
-        card.className = "bg-surface-container-lowest rounded-xl p-6 shadow-sm border-none exercise-card mb-4";
-        card.dataset.exerciseId = ex.id;
-        
-        const targetText = bestLastSet && bestLastSet.weight && bestLastSet.reps 
-            ? `Hedef: ${bestLastSet.weight}kg x ${bestLastSet.reps}` 
-            : "Hedef: Belirlenmedi";
-            
-        // Calculate diff if current best set is available
-        let bestCurrSet = null;
-        if(currentSets.length > 0) {
-            bestCurrSet = currentSets.reduce((prev, current) => {
-                const pVol = (parseFloat(prev.weight)||0) * (parseInt(prev.reps)||0);
-                const cVol = (parseFloat(current.weight)||0) * (parseInt(current.reps)||0);
-                return (pVol > cVol) ? prev : current;
-            });
-        }
-        
-        let diffBadgeHTML = `<span class="bg-surface-container-high text-on-surface-variant font-label-sm text-label-sm px-2 py-1 rounded">--</span>`;
-        if (bestLastSet && bestCurrSet && bestLastSet.weight && bestCurrSet.weight) {
-            const diff = parseFloat(bestCurrSet.weight) - parseFloat(bestLastSet.weight);
-            if (diff > 0) {
-                diffBadgeHTML = `<span class="bg-primary-container text-on-primary-container font-label-sm text-label-sm px-1 py-1 rounded inline-block min-w-[48px] text-center">+${diff} kg</span>`;
-            } else if (diff < 0) {
-                diffBadgeHTML = `<span class="bg-error-container text-on-error-container font-label-sm text-label-sm px-1 py-1 rounded inline-block min-w-[48px] text-center">${diff} kg</span>`;
-            } else {
-                diffBadgeHTML = `<span class="bg-surface-container-high text-on-surface-variant font-label-sm text-label-sm px-1 py-1 rounded inline-block min-w-[48px] text-center">0.0 kg</span>`;
-            }
-        }
-        
-        const details = document.createElement("details");
-        details.className = "group";
-        // Do not open by default
-        
-        const summary = document.createElement("summary");
-        summary.className = "flex justify-between items-center cursor-pointer list-none";
-        summary.innerHTML = `
-            <div class="flex flex-col">
-                <h2 class="font-headline-sm text-headline-sm text-on-surface">${escapeHtml(ex.name)}</h2>
-                <div class="flex items-center gap-1">
-                    <span class="text-label-sm text-outline">${targetText}</span>
-                    <button class="flex items-center justify-center p-1.5 ml-2 bg-surface-container rounded-lg hover:bg-surface-container-high transition-colors active:scale-95 text-primary" onclick="event.preventDefault(); event.stopPropagation(); openExerciseHistory('${ex.id}', '${escapeHtml(ex.name)}')">
-                        <span class="material-symbols-outlined" style="font-size: 18px;">history</span>
-                        <span class="text-label-sm font-bold ml-1 uppercase">Geçmiş</span>
-                    </button>
-                </div>
-            </div>
-            <div class="flex items-center gap-2">
-                ${diffBadgeHTML}
-                <span class="material-symbols-outlined text-outline group-open:rotate-180 transition-transform">expand_more</span>
-            </div>
-        `;
-        
-        const setsContainer = document.createElement("div");
-        setsContainer.className = "flex flex-col gap-3 mt-4 transition-all duration-200 sets-container";
-        
-        const renderSetRows = () => {
-            setsContainer.innerHTML = "";
-            currentSets.forEach((set, index) => {
-                const prevSet = lastSets[index];
-                const prevText = prevSet && prevSet.weight && prevSet.reps 
-                    ? `(Geçen: ${prevSet.weight}x${prevSet.reps})` 
-                    : "(Geçen kayıt yok)";
-                
-                const setRow = document.createElement("div");
-                setRow.className = "flex items-center gap-3 bg-surface-container-low p-3 rounded-xl border border-outline-variant/20 set-row";
-                setRow.dataset.index = index;
-                
-                setRow.innerHTML = `
-                    <div class="flex-1">
-                        <div class="flex justify-between items-center mb-1">
-                            <div class="text-label-sm text-outline">Set ${index + 1} ${prevText}</div>
-                            <button class="text-error opacity-0 hover:opacity-100 transition-opacity p-1 text-label-sm uppercase font-bold tracking-widest delete-set-btn">SİL</button>
-                        </div>
-                        <div class="flex items-center gap-2">
-                            <div class="flex items-center bg-surface-dim rounded-lg overflow-hidden flex-1">
-                                <button class="p-2 hover:bg-surface-variant active:scale-95 minus-btn" data-type="weight"><span class="material-symbols-outlined text-sm">remove</span></button>
-                                <input class="w-full bg-transparent border-none text-center font-medium p-0 focus:ring-0 weight-input" type="number" placeholder="Kg" value="${set.weight || ''}" step="2.5" />
-                                <button class="p-2 hover:bg-surface-variant active:scale-95 plus-btn" data-type="weight"><span class="material-symbols-outlined text-sm">add</span></button>
-                            </div>
-                            <div class="text-outline">×</div>
-                            <div class="flex items-center bg-surface-dim rounded-lg overflow-hidden flex-1">
-                                <button class="p-2 hover:bg-surface-variant active:scale-95 minus-btn" data-type="reps"><span class="material-symbols-outlined text-sm">remove</span></button>
-                                <input class="w-full bg-transparent border-none text-center font-medium p-0 focus:ring-0 reps-input" type="number" placeholder="Tekrar" value="${set.reps || ''}" step="1" />
-                                <button class="p-2 hover:bg-surface-variant active:scale-95 plus-btn" data-type="reps"><span class="material-symbols-outlined text-sm">add</span></button>
-                            </div>
-                        </div>
-                    </div>
-                    <button class="w-12 h-12 rounded-full border-2 border-outline-variant text-outline flex items-center justify-center active:scale-90 transition-all check-btn"><span class="material-symbols-outlined">check</span></button>
-                `;
-                
-                // Set hover effect to show delete btn
-                setRow.onmouseenter = () => setRow.querySelector('.delete-set-btn').classList.remove('opacity-0');
-                setRow.onmouseleave = () => setRow.querySelector('.delete-set-btn').classList.add('opacity-0');
-                
-                // Check btn logic
-                const checkBtn = setRow.querySelector('.check-btn');
-                const isDone = !!(set.weight && set.reps); // Simple auto-check if both are filled, or let user manually do it.
-                // We'll let user manually do it or just visual.
-                let done = false;
-                checkBtn.onclick = () => {
-                    done = !done;
-                    if(done) {
-                        checkBtn.className = "w-12 h-12 rounded-full bg-primary text-on-primary flex items-center justify-center shadow-sm active:scale-90 transition-all check-btn";
-                        setRow.classList.remove('opacity-60');
-                    } else {
-                        checkBtn.className = "w-12 h-12 rounded-full border-2 border-outline-variant text-outline flex items-center justify-center active:scale-90 transition-all check-btn";
-                        setRow.classList.add('opacity-60');
-                    }
-                };
-                
-                // Initially visually mark as not done (opacity-60) unless they click check
-                // Or maybe don't make it opacity-60 by default. Let's just make check toggle green.
-                
-                // Delete set logic
-                setRow.querySelector('.delete-set-btn').onclick = () => {
-                    currentSets.splice(index, 1);
-                    renderSetRows(); // Re-render sets
-                };
-                
-                // Plus/Minus logic
-                const inputs = {
-                    weight: setRow.querySelector('.weight-input'),
-                    reps: setRow.querySelector('.reps-input')
-                };
-                
-                setRow.querySelectorAll('.minus-btn, .plus-btn').forEach(btn => {
-                    btn.onclick = (e) => {
-                        const type = e.currentTarget.dataset.type;
-                        const input = inputs[type];
-                        const step = parseFloat(input.step) || 1;
-                        let val = parseFloat(input.value) || 0;
-                        if(e.currentTarget.classList.contains('plus-btn')) {
-                            val += step;
-                        } else {
-                            val = Math.max(0, val - step);
-                        }
-                        input.value = val;
-                        // update currentSets array so it persists re-renders
-                        currentSets[index][type] = val;
-                        // We do not re-render the whole row here, just update value so cursor isn't lost
-                    };
-                });
-                
-                // Input listeners to sync currentSets
-                inputs.weight.oninput = (e) => { currentSets[index].weight = e.target.value; };
-                inputs.reps.oninput = (e) => { currentSets[index].reps = e.target.value; };
-                
-                setsContainer.appendChild(setRow);
-            });
-            
-            // Add Set Button
-            const addSetBtn = document.createElement("button");
-            addSetBtn.className = "w-full mt-2 py-3 bg-surface-container-high text-primary rounded-xl flex items-center justify-center gap-2 hover:bg-surface-variant transition-colors active:scale-98";
-            addSetBtn.innerHTML = `
-                <span class="material-symbols-outlined">add_circle</span>
-                <span class="font-label-md">Set Ekle</span>
-            `;
-            addSetBtn.onclick = () => {
-                currentSets.push({ weight: '', reps: '' });
-                renderSetRows();
-            };
-            setsContainer.appendChild(addSetBtn);
-        };
-        
-        renderSetRows();
-        
-        details.appendChild(summary);
-        details.appendChild(setsContainer);
-        card.appendChild(details);
-        container.appendChild(card);
-    });
 }
 
 async function saveWorkoutSession() {
@@ -1159,6 +788,306 @@ window.openExerciseHistory = async function(triggerExId, exName) {
     } catch (e) {
         console.error("Error loading history:", e);
         listContainer.innerHTML = `<div class="text-center text-error text-sm py-4">Veriler getirilirken bir hata oluştu.</div>`;
+    }
+};
+
+
+
+// ==========================================
+// SPLIT EDIT & CREATE LOGIC
+// ==========================================
+
+let newSplitDays = [];
+let currentPickerDayId = null;
+let newSplitId = null;
+
+// Extends the global scope
+window.openSplitEdit = function() {
+    // Hide workout home
+    document.getElementById('view-workout').classList.add('hidden');
+    // Hide all other views just in case
+    document.querySelectorAll('.view').forEach(v => {
+        if(v.id !== 'view-split-edit') v.classList.add('hidden');
+    });
+    
+    document.getElementById('view-split-edit').classList.remove('hidden');
+    renderSplitEditView();
+};
+
+window.closeSplitEdit = function() {
+    document.getElementById('view-split-edit').classList.add('hidden');
+    document.getElementById('view-workout').classList.remove('hidden');
+};
+
+function renderSplitEditView() {
+    const activeNameEl = document.getElementById('split-edit-active-name');
+    const daysContainer = document.getElementById('split-edit-days-container');
+    const createBtn = document.getElementById('split-edit-create-btn');
+    
+    // Bind create button
+    if(createBtn) {
+        createBtn.onclick = openCreateSplitView;
+    }
+    
+    if(!activeSplitId || splits.length === 0) {
+        if(activeNameEl) activeNameEl.innerText = "Henüz Split Yok";
+        if(daysContainer) {
+            daysContainer.innerHTML = `
+                <div class="text-center text-on-surface-variant p-4">
+                    Kayıtlı bir splitiniz bulunmuyor. Yeni bir split oluşturun.
+                </div>
+            `;
+        }
+        return;
+    }
+    
+    const activeSplit = splits.find(s => s.id === activeSplitId);
+    if(activeNameEl) activeNameEl.innerText = activeSplit.name;
+    
+    if(daysContainer) {
+        daysContainer.innerHTML = '';
+        activeSplit.days.forEach((day, idx) => {
+            const dayCard = document.createElement('div');
+            dayCard.className = "bg-surface-container-lowest rounded-xl p-md shadow-sm";
+            dayCard.innerHTML = `
+                <div class="flex items-center justify-between mb-sm">
+                    <h3 class="font-title-md text-title-md font-bold text-on-surface">${day.name}</h3>
+                    <div class="text-on-surface-variant font-label-sm">${day.exercises ? day.exercises.length : 0} Hareket</div>
+                </div>
+                <div class="flex items-center gap-xs overflow-x-auto hide-scrollbar">
+                </div>
+            `;
+            daysContainer.appendChild(dayCard);
+        });
+    }
+}
+
+window.openCreateSplitView = function() {
+    document.getElementById('view-split-edit').classList.add('hidden');
+    document.getElementById('view-create-split').classList.remove('hidden');
+    
+    newSplitId = 'split_' + Date.now();
+    newSplitDays = [];
+    document.getElementById('create-split-name-input').value = "";
+    renderCreateSplitDays();
+    
+    // Bind save button
+    document.getElementById('create-split-save-btn').onclick = saveNewSplit;
+};
+
+window.closeCreateSplitView = function() {
+    document.getElementById('view-create-split').classList.add('hidden');
+    document.getElementById('view-split-edit').classList.remove('hidden');
+};
+
+window.addDayToNewSplit = function() {
+    const dayCount = newSplitDays.length + 1;
+    newSplitDays.push({
+        id: `d${Date.now()}`,
+        name: `Day ${dayCount}`,
+        exercises: []
+    });
+    renderCreateSplitDays();
+};
+
+function renderCreateSplitDays() {
+    const container = document.getElementById('create-split-days-container');
+    container.innerHTML = '';
+    
+    newSplitDays.forEach((day, index) => {
+        const div = document.createElement('div');
+        div.className = "bg-surface-container-lowest rounded-xl p-md shadow-sm relative";
+        
+        let exHtml = '';
+        if(day.exercises.length === 0) {
+            exHtml = `<p class="text-label-sm text-on-surface-variant italic mb-2">Henüz hareket eklenmedi.</p>`;
+        } else {
+            day.exercises.forEach((ex, exIdx) => {
+                exHtml += `
+                    <div class="flex items-center justify-between py-2 border-b border-surface-container-highest last:border-0">
+                        <span class="text-body-sm">${ex.name}</span>
+                        <button onclick="removeExerciseFromNewDay(${index}, ${exIdx})" class="text-error/80 hover:text-error p-1">
+                            <span class="material-symbols-outlined text-sm">close</span>
+                        </button>
+                    </div>
+                `;
+            });
+        }
+        
+        div.innerHTML = `
+            <div class="flex items-center justify-between mb-sm">
+                <input type="text" value="${day.name}" onchange="updateNewDayName(${index}, this.value)" class="font-title-md text-title-md font-bold text-on-surface bg-transparent outline-none w-3/4 border-b border-transparent focus:border-outline-variant">
+                <button onclick="removeDayFromNewSplit(${index})" class="text-on-surface-variant hover:text-error transition-colors p-1">
+                    <span class="material-symbols-outlined text-[20px]">delete</span>
+                </button>
+            </div>
+            <div class="mb-3">
+                ${exHtml}
+            </div>
+            <button onclick="openExercisePicker('${day.id}')" class="w-full py-2 bg-primary-container/30 text-primary rounded-lg font-label-sm hover:bg-primary-container/50 transition-colors flex items-center justify-center gap-1">
+                <span class="material-symbols-outlined text-[18px]">add</span> Egzersiz Ekle
+            </button>
+        `;
+        container.appendChild(div);
+    });
+}
+
+window.updateNewDayName = function(index, val) {
+    newSplitDays[index].name = val;
+};
+
+window.removeDayFromNewSplit = function(index) {
+    newSplitDays.splice(index, 1);
+    renderCreateSplitDays();
+};
+
+window.removeExerciseFromNewDay = function(dayIndex, exIndex) {
+    newSplitDays[dayIndex].exercises.splice(exIndex, 1);
+    renderCreateSplitDays();
+};
+
+window.openExercisePicker = function(dayId) {
+    currentPickerDayId = dayId;
+    document.getElementById('modal-exercise-picker').classList.remove('hidden');
+    renderExercisePickerList('Tümü');
+    
+    const searchInput = document.getElementById('exercise-picker-search');
+    if(searchInput) {
+        searchInput.value = '';
+        searchInput.oninput = (e) => {
+            renderExercisePickerList('Tümü', e.target.value);
+        };
+    }
+};
+
+window.closeExercisePickerModal = function() {
+    document.getElementById('modal-exercise-picker').classList.add('hidden');
+    currentPickerDayId = null;
+};
+
+window.filterPickerCategory = function(cat, btnElement) {
+    const buttons = document.querySelectorAll('#exercise-picker-categories button');
+    buttons.forEach(b => {
+        b.className = "px-4 py-1.5 rounded-full border border-outline-variant text-on-surface-variant font-label-sm whitespace-nowrap";
+    });
+    if(btnElement) btnElement.className = "px-4 py-1.5 rounded-full bg-primary text-on-primary font-label-sm whitespace-nowrap";
+    
+    const searchInput = document.getElementById('exercise-picker-search');
+    renderExercisePickerList(cat, searchInput ? searchInput.value : '');
+};
+
+function renderExercisePickerList(category, searchTerm = '') {
+    const list = document.getElementById('exercise-picker-list');
+    list.innerHTML = '';
+    
+    if(!window.EXERCISE_MUSCLE_MAPPING) {
+        list.innerHTML = '<p class="text-on-surface-variant p-4">Egzersiz verisi bulunamadı. Lütfen sayfayı yenileyin.</p>';
+        return;
+    }
+    
+    const exercises = Object.keys(window.EXERCISE_MUSCLE_MAPPING);
+    let filtered = exercises;
+    
+    if(category !== 'Tümü') {
+        const catMap = {
+            'Göğüs': 'chest',
+            'Sırt': 'upper-back',
+            'Omuz': 'deltoids',
+            'Bacak': 'glutes',
+            'Biceps': 'biceps',
+            'Triceps': 'triceps',
+            'Karın': 'abs'
+        };
+        const target = catMap[category] || category.toLowerCase();
+        
+        filtered = filtered.filter(exName => {
+            const data = window.EXERCISE_MUSCLE_MAPPING[exName];
+            if(!data) return false;
+            return (data.primary && data.primary.includes(target)) || 
+                   (data.secondary && data.secondary.includes(target));
+        });
+    }
+    
+    if(searchTerm.trim() !== '') {
+        const term = searchTerm.toLowerCase();
+        filtered = filtered.filter(ex => ex.toLowerCase().includes(term));
+    }
+    
+    filtered.forEach(exName => {
+        const btn = document.createElement('button');
+        btn.className = "w-full text-left p-3 rounded-xl hover:bg-surface-container-high transition-colors flex items-center justify-between border border-transparent hover:border-outline-variant/30";
+        btn.innerHTML = `
+            <span class="font-body-md text-on-surface">${exName}</span>
+            <span class="material-symbols-outlined text-primary">add_circle</span>
+        `;
+        btn.onclick = () => {
+            if(currentPickerDayId) {
+                const day = newSplitDays.find(d => d.id === currentPickerDayId);
+                if(day) {
+                    day.exercises.push({
+                        id: `e${Date.now()}_${Math.floor(Math.random()*1000)}`,
+                        name: exName,
+                        defaultSets: 3
+                    });
+                    closeExercisePickerModal();
+                    renderCreateSplitDays();
+                }
+            }
+        };
+        list.appendChild(btn);
+    });
+}
+
+window.saveNewSplit = async function() {
+    const nameInput = document.getElementById('create-split-name-input').value.trim();
+    if(!nameInput) {
+        alert("Lütfen split adı girin.");
+        return;
+    }
+    
+    if(newSplitDays.length === 0) {
+        alert("En az bir gün eklemelisiniz.");
+        return;
+    }
+    
+    const saveBtn = document.getElementById('create-split-save-btn');
+    saveBtn.disabled = true;
+    saveBtn.innerText = "Kaydediliyor...";
+    
+    try {
+        
+        const newSplit = {
+            id: newSplitId,
+            name: nameInput,
+            days: newSplitDays,
+            createdAt: new Date().toISOString()
+        };
+        
+        await setDoc(doc(db, "users", currentUid, "splits", newSplitId), newSplit);
+        
+        splits.push(newSplit);
+        
+        if(splits.length === 1 || !activeSplitId) {
+            activeSplitId = newSplitId;
+            await updateDoc(doc(db, "users", currentUid), {
+                activeSplitId: newSplitId
+            });
+            localStorage.setItem(`miz_activeSplit_${currentUid}`, newSplitId);
+        }
+        
+        closeCreateSplitView();
+        renderSplitEditView();
+        
+        if(typeof renderSplitView === 'function') {
+            renderSplitView();
+        }
+        
+    } catch(e) {
+        console.error("Error saving new split", e);
+        alert("Kaydedilirken hata oluştu.");
+    } finally {
+        saveBtn.disabled = false;
+        saveBtn.innerText = "Kaydet";
     }
 };
 
