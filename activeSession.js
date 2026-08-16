@@ -119,25 +119,32 @@ async function _loadPreviousSessionData() {
     _prevData = {};
 
     try {
-        const logsRef = collection(db, 'users', _uid, 'workout_logs');
-        const q = query(
-            logsRef,
-            where('splitId', '==', _splitId),
-            where('dayId', '==', _dayId),
-            where('status', '==', 'completed'),
-            orderBy('dateStr', 'desc'),
-            limit(1)
+        const allLogs = window._miz_last_workout_logs || [];
+        
+        // Find the most recent completed session for this specific day
+        const lastDayLog = allLogs.find(log => 
+            log.status === 'completed' && log.splitId === _splitId && log.dayId === _dayId
         );
-        const snap = await getDocs(q);
-        if (snap.empty) return;
+        
+        if (lastDayLog && lastDayLog.exercises) {
+            _prevData = lastDayLog.exercises;
+        }
 
-        const lastLog = snap.docs[0].data();
-        if (lastLog.exercises) {
-            _prevData = lastLog.exercises; // { [exId]: { sets:[{weight,reps,rpe,e1rm}] } }
+        // For any exercise not found in that day's last session, search all past logs for the most recent usage
+        if (_day && _day.exercises) {
+            for (const ex of _day.exercises) {
+                if (!_prevData[ex.id]) {
+                    const latestLogWithEx = allLogs.find(log => 
+                        log.status === 'completed' && log.exercises && log.exercises[ex.id]
+                    );
+                    if (latestLogWithEx) {
+                        _prevData[ex.id] = latestLogWithEx.exercises[ex.id];
+                    }
+                }
+            }
         }
     } catch (e) {
-        // Index may not exist yet; silently fail — delta won't show
-        console.warn('[activeSession] Could not load previous session:', e.message);
+        console.warn('[activeSession] Could not load previous session from memory:', e.message);
     }
 }
 
@@ -147,16 +154,27 @@ function _buildExState() {
     if (!_day || !_day.exercises) return;
 
     _day.exercises.forEach(ex => {
-        const defaultSets = ex.defaultSets || 3;
         const draftSets = _sessionDoc?.exercises?.[ex.id]?.sets || [];
+        const prevSets = _prevData?.[ex.id]?.sets || [];
+        const defaultSets = ex.defaultSets || 3;
+
+        let targetSetCount = defaultSets;
+        if (draftSets.length > 0) {
+            targetSetCount = Math.max(defaultSets, draftSets.length);
+        } else if (prevSets.length > 0) {
+            targetSetCount = prevSets.length;
+        }
 
         const sets = [];
-        for (let i = 0; i < defaultSets; i++) {
+        for (let i = 0; i < targetSetCount; i++) {
             const draft = draftSets[i];
-            const prevSet = _prevData?.[ex.id]?.sets?.[i];
+            const prevSet = prevSets[i];
+            // If we run out of previous sets but need more, copy the last one
+            const fallbackPrevSet = prevSet || prevSets[prevSets.length - 1] || null;
+
             sets.push({
-                weight: draft?.weight ?? prevSet?.weight ?? 60,
-                reps:   draft?.reps   ?? prevSet?.reps   ?? (ex.defaultSets ? 8 : 8),
+                weight: draft?.weight ?? fallbackPrevSet?.weight ?? 60,
+                reps:   draft?.reps   ?? fallbackPrevSet?.reps   ?? 8,
                 rpe:    draft?.rpe    ?? null,
                 e1rm:   draft?.e1rm   ?? null,
                 status: draft?.status ?? 'pending',   // 'pending' | 'draft' | 'completed'
@@ -168,7 +186,7 @@ function _buildExState() {
         _exState[ex.id] = {
             sets,
             prevBestWeight: prevBest?.sets?.[0]?.weight ?? null,
-            prevBestReps:   prevBest?.sets?.[0]?.reps   ?? null,
+            prevBestReps:   prevBest?.sets?.[0]?.reps ?? null
         };
     });
 }
