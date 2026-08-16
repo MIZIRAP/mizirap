@@ -814,116 +814,153 @@ window.closeSplitEdit = function() {
     document.getElementById('view-workout').classList.remove('hidden');
 };
 
+// Track which day accordions are open
+const _openDayAccordions = new Set();
+
 function renderSplitEditView() {
     const activeNameEl = document.getElementById('split-edit-active-name');
     const daysContainer = document.getElementById('split-edit-days-container');
     const createBtn = document.getElementById('split-edit-create-btn');
     
-    // Bind create button
-    if(createBtn) {
-        createBtn.onclick = openCreateSplitView;
-    }
+    if(createBtn) createBtn.onclick = openCreateSplitView;
     
     if(!activeSplitId || splits.length === 0) {
         if(activeNameEl) activeNameEl.innerText = "Henüz Split Yok";
         if(daysContainer) {
-            daysContainer.innerHTML = `
-                <div class="text-center text-on-surface-variant p-4">
-                    Kayıtlı bir splitiniz bulunmuyor. Yeni bir split oluşturun.
-                </div>
-            `;
+            daysContainer.innerHTML = `<div class="text-center text-on-surface-variant p-4">Kayıtlı bir splitiniz bulunmuyor. Yeni bir split oluşturun.</div>`;
         }
         return;
     }
     
     const activeSplit = splits.find(s => s.id === activeSplitId);
     if(activeNameEl) activeNameEl.innerText = activeSplit.name;
+    if(!daysContainer) return;
     
-    if(daysContainer) {
-        daysContainer.innerHTML = '';
-        activeSplit.days.forEach((day, dayIdx) => {
-            const dayCard = document.createElement('div');
-            dayCard.className = "bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden";
-            
-            let exRows = '';
-            if(!day.exercises || day.exercises.length === 0) {
-                exRows = `<p class="text-label-sm text-on-surface-variant italic px-md py-sm">Henüz hareket eklenmedi.</p>`;
-            } else {
-                day.exercises.forEach((ex, exIdx) => {
-                    const isFirst = exIdx === 0;
-                    const isLast = exIdx === day.exercises.length - 1;
-                    exRows += `
-                        <div class="flex items-center gap-2 px-md py-2.5 border-b border-surface-container-highest last:border-0 group" id="ex-row-${activeSplit.id}-${dayIdx}-${exIdx}">
-                            <!-- Sıralama Butonları -->
-                            <div class="flex flex-col gap-0.5 shrink-0">
-                                <button onclick="moveExercise('${activeSplit.id}', ${dayIdx}, ${exIdx}, -1)"
-                                    class="w-6 h-5 flex items-center justify-center text-on-surface-variant hover:text-primary transition-colors rounded ${isFirst ? 'opacity-20 pointer-events-none' : ''}">
-                                    <span class="material-symbols-outlined" style="font-size:16px">arrow_drop_up</span>
-                                </button>
-                                <button onclick="moveExercise('${activeSplit.id}', ${dayIdx}, ${exIdx}, 1)"
-                                    class="w-6 h-5 flex items-center justify-center text-on-surface-variant hover:text-primary transition-colors rounded ${isLast ? 'opacity-20 pointer-events-none' : ''}">
-                                    <span class="material-symbols-outlined" style="font-size:16px">arrow_drop_down</span>
-                                </button>
-                            </div>
-                            <!-- Hareket Adı -->
-                            <span class="flex-1 font-body-md text-on-surface text-sm leading-tight">${ex.name}</span>
-                            <!-- Set Sayısı -->
-                            <div class="flex items-center gap-1.5 shrink-0">
-                                <button onclick="changeExerciseSets('${activeSplit.id}', ${dayIdx}, ${exIdx}, -1)"
-                                    class="w-7 h-7 rounded-full bg-surface-container-high flex items-center justify-center hover:bg-primary-container/40 transition-colors text-on-surface font-bold text-lg leading-none">
-                                    −
-                                </button>
-                                <span class="font-label-lg text-on-surface w-8 text-center" id="sets-display-${activeSplit.id}-${dayIdx}-${exIdx}">${ex.defaultSets || 3} set</span>
-                                <button onclick="changeExerciseSets('${activeSplit.id}', ${dayIdx}, ${exIdx}, 1)"
-                                    class="w-7 h-7 rounded-full bg-surface-container-high flex items-center justify-center hover:bg-primary-container/40 transition-colors text-on-surface font-bold text-lg leading-none">
-                                    +
-                                </button>
-                            </div>
-                            <!-- Sil Butonu -->
-                            <button onclick="removeExerciseFromSplit('${activeSplit.id}', ${dayIdx}, ${exIdx})"
-                                class="shrink-0 w-8 h-8 flex items-center justify-center text-on-surface-variant hover:text-error hover:bg-error-container/20 rounded-full transition-colors">
-                                <span class="material-symbols-outlined" style="font-size:18px">delete</span>
-                            </button>
+    daysContainer.innerHTML = '';
+    
+    activeSplit.days.forEach((day, dayIdx) => {
+        const isOpen = _openDayAccordions.has(`${activeSplit.id}-${dayIdx}`);
+        const exCount = day.exercises ? day.exercises.length : 0;
+        const accordionKey = `${activeSplit.id}-${dayIdx}`;
+        
+        const dayCard = document.createElement('div');
+        dayCard.className = "bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden";
+        dayCard.dataset.dayIdx = dayIdx;
+        dayCard.dataset.splitId = activeSplit.id;
+        
+        // Build exercise rows
+        let exRows = '';
+        if(exCount === 0) {
+            exRows = `<p class="text-label-sm text-on-surface-variant italic px-md py-sm pb-3">Henüz hareket eklenmedi.</p>`;
+        } else {
+            day.exercises.forEach((ex, exIdx) => {
+                exRows += `
+                    <div class="ex-drag-item flex items-center gap-2 px-md py-2.5 border-b border-surface-container-highest last:border-0 active:bg-surface-container-high transition-colors"
+                         data-ex-idx="${exIdx}" data-split-id="${activeSplit.id}" data-day-idx="${dayIdx}">
+                        <!-- Drag Handle -->
+                        <span class="material-symbols-outlined text-on-surface-variant/50 drag-handle select-none shrink-0 cursor-grab active:cursor-grabbing" style="font-size:20px">drag_indicator</span>
+                        <!-- Hareket Adı -->
+                        <span class="flex-1 font-body-md text-on-surface text-sm leading-tight">${ex.name}</span>
+                        <!-- Set Sayısı -->
+                        <div class="flex items-center gap-1 shrink-0">
+                            <button onclick="changeExerciseSets('${activeSplit.id}', ${dayIdx}, ${exIdx}, -1)"
+                                class="w-7 h-7 rounded-full bg-surface-container-high flex items-center justify-center hover:bg-primary-container/40 transition-colors text-on-surface font-bold text-lg leading-none">−</button>
+                            <span class="font-label-sm text-on-surface w-10 text-center whitespace-nowrap" id="sets-lbl-${activeSplit.id}-${dayIdx}-${exIdx}">${ex.defaultSets || 3} set</span>
+                            <button onclick="changeExerciseSets('${activeSplit.id}', ${dayIdx}, ${exIdx}, 1)"
+                                class="w-7 h-7 rounded-full bg-surface-container-high flex items-center justify-center hover:bg-primary-container/40 transition-colors text-on-surface font-bold text-lg leading-none">+</button>
                         </div>
-                    `;
-                });
-            }
-            
-            dayCard.innerHTML = `
-                <div class="flex items-center justify-between px-md pt-md pb-sm">
-                    <h3 class="font-title-md text-title-md font-bold text-on-surface">${day.name}</h3>
-                    <span class="font-label-sm text-on-surface-variant">${day.exercises ? day.exercises.length : 0} hareket</span>
+                        <!-- Sil -->
+                        <button onclick="removeExerciseFromSplit('${activeSplit.id}', ${dayIdx}, ${exIdx})"
+                            class="shrink-0 w-8 h-8 flex items-center justify-center text-on-surface-variant hover:text-error hover:bg-error-container/20 rounded-full transition-colors">
+                            <span class="material-symbols-outlined" style="font-size:18px">delete</span>
+                        </button>
+                    </div>
+                `;
+            });
+        }
+        
+        dayCard.innerHTML = `
+            <!-- Accordion Header -->
+            <button class="accordion-header w-full flex items-center justify-between px-md py-3.5 text-left group transition-colors hover:bg-surface-container-high"
+                    onclick="toggleDayAccordion('${accordionKey}', this)">
+                <div class="flex items-center gap-2">
+                    <span class="material-symbols-outlined text-primary transition-transform duration-200 ${isOpen ? 'rotate-90' : ''}" style="font-size:20px">chevron_right</span>
+                    <h3 class="font-title-md text-title-md font-semibold text-on-surface">${day.name}</h3>
                 </div>
-                <div class="flex flex-col">
+                <span class="font-label-sm text-on-surface-variant">${exCount} hareket</span>
+            </button>
+            <!-- Accordion Body -->
+            <div class="accordion-body ${isOpen ? '' : 'hidden'}">
+                <div class="ex-list flex flex-col" id="ex-list-${activeSplit.id}-${dayIdx}">
                     ${exRows}
                 </div>
-                <div class="px-md pt-sm pb-md">
+                <div class="px-md pt-2 pb-md">
                     <button onclick="openExercisePickerForSplit('${activeSplit.id}', ${dayIdx})"
                         class="w-full py-2 bg-primary-container/20 text-primary rounded-lg font-label-sm hover:bg-primary-container/40 transition-colors flex items-center justify-center gap-1">
                         <span class="material-symbols-outlined text-[18px]">add</span> Egzersiz Ekle
                     </button>
                 </div>
-            `;
-            daysContainer.appendChild(dayCard);
-        });
+            </div>
+        `;
+        
+        daysContainer.appendChild(dayCard);
+        
+        // Init Sortable on the exercise list
+        if(isOpen) {
+            const listEl = dayCard.querySelector(`#ex-list-${activeSplit.id}-${dayIdx}`);
+            if(listEl) _initExSortable(listEl, activeSplit.id, dayIdx);
+        }
+    });
+}
+
+window.toggleDayAccordion = function(key, headerBtn) {
+    const body = headerBtn.closest('.bg-surface-container-lowest').querySelector('.accordion-body');
+    const chevron = headerBtn.querySelector('.material-symbols-outlined');
+    
+    if(_openDayAccordions.has(key)) {
+        _openDayAccordions.delete(key);
+        body.classList.add('hidden');
+        chevron.classList.remove('rotate-90');
+    } else {
+        _openDayAccordions.add(key);
+        body.classList.remove('hidden');
+        chevron.classList.add('rotate-90');
+        
+        // Init sortable after opening
+        const [splitId, dayIdx] = [key.split('-')[0] + '-' + key.split('-')[1] + '-' + key.split('-')[2], parseInt(key.split('-').pop())];
+        // Re-parse key properly: key is `${activeSplit.id}-${dayIdx}` but splitId may contain dashes
+        const lastDash = key.lastIndexOf('-');
+        const parsedSplitId = key.substring(0, lastDash);
+        const parsedDayIdx = parseInt(key.substring(lastDash + 1));
+        
+        const listEl = document.getElementById(`ex-list-${parsedSplitId}-${parsedDayIdx}`);
+        if(listEl) _initExSortable(listEl, parsedSplitId, parsedDayIdx);
     }
+};
+
+function _initExSortable(listEl, splitId, dayIdx) {
+    if(listEl._sortable) { listEl._sortable.destroy(); }
+    if(typeof Sortable === 'undefined') return;
+    
+    listEl._sortable = Sortable.create(listEl, {
+        handle: '.drag-handle',
+        animation: 150,
+        ghostClass: 'opacity-30',
+        chosenClass: 'bg-primary-container/10',
+        onEnd: function(evt) {
+            const split = splits.find(s => s.id === splitId);
+            if(!split) return;
+            const day = split.days[dayIdx];
+            const moved = day.exercises.splice(evt.oldIndex, 1)[0];
+            day.exercises.splice(evt.newIndex, 0, moved);
+            persistSplitEdit(split);
+            // Re-render to update indices on buttons
+            renderSplitEditView();
+        }
+    });
 }
 
 // ---------- Split Düzenle – Inline Hareket İşlemleri ----------
-
-window.moveExercise = function(splitId, dayIdx, exIdx, direction) {
-    const split = splits.find(s => s.id === splitId);
-    if(!split) return;
-    const day = split.days[dayIdx];
-    const newIdx = exIdx + direction;
-    if(newIdx < 0 || newIdx >= day.exercises.length) return;
-    
-    // Swap
-    [day.exercises[exIdx], day.exercises[newIdx]] = [day.exercises[newIdx], day.exercises[exIdx]];
-    
-    persistSplitEdit(split);
-    renderSplitEditView();
-};
 
 window.changeExerciseSets = function(splitId, dayIdx, exIdx, delta) {
     const split = splits.find(s => s.id === splitId);
@@ -931,8 +968,7 @@ window.changeExerciseSets = function(splitId, dayIdx, exIdx, delta) {
     const ex = split.days[dayIdx].exercises[exIdx];
     ex.defaultSets = Math.max(1, (ex.defaultSets || 3) + delta);
     
-    // Sadece label'ı güncelle, tüm listeyi yeniden render etme
-    const label = document.getElementById(`sets-display-${splitId}-${dayIdx}-${exIdx}`);
+    const label = document.getElementById(`sets-lbl-${splitId}-${dayIdx}-${exIdx}`);
     if(label) label.innerText = `${ex.defaultSets} set`;
     
     persistSplitEdit(split);
