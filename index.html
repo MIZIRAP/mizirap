@@ -526,7 +526,7 @@
                 <div>
                     <div class="relative flex items-center w-full h-12 rounded-full bg-surface-container-lowest shadow-sm px-4 focus-within:ring-2 focus-within:ring-primary-container transition-all">
                         <span class="material-symbols-outlined text-on-surface-variant mr-2">search</span>
-                        <input class="w-full bg-transparent border-none focus:outline-none focus:ring-0 text-body-lg text-on-surface placeholder:text-on-surface-variant" placeholder="Egzersiz Ara..." type="text"/>
+                        <input id="exercise-search-input" class="w-full bg-transparent border-none focus:outline-none focus:ring-0 text-body-lg text-on-surface placeholder:text-on-surface-variant" placeholder="Egzersiz Ara..." type="text" oninput="handleExerciseSearch(this.value)"/>
                     </div>
                 </div>
 
@@ -2569,7 +2569,17 @@
         }
         
         
+        let currentExerciseCategory = 'Tümü';
+        let currentExerciseSearchTerm = '';
+
+        function handleExerciseSearch(value) {
+            currentExerciseSearchTerm = value.toLowerCase().trim();
+            applyExerciseFilters();
+        }
+
         function filterExercises(category, btnElement) {
+            currentExerciseCategory = category;
+            
             // Update active styling on chips
             const allChips = document.querySelectorAll('.filter-chip');
             allChips.forEach(chip => {
@@ -2581,6 +2591,10 @@
             btnElement.classList.add('bg-primary-container', 'text-on-primary-container');
             btnElement.classList.remove('border', 'border-outline-variant', 'text-on-surface-variant', 'bg-surface-container-lowest');
 
+            applyExerciseFilters();
+        }
+        
+        function applyExerciseFilters() {
             const categories = document.querySelectorAll('.exercise-category');
             
             categories.forEach(catGroup => {
@@ -2591,15 +2605,22 @@
                 items.forEach(item => {
                     let shouldShow = false;
                     
-                    if (category === 'Tümü') {
+                    // 1. Tab Filter
+                    if (currentExerciseCategory === 'Tümü') {
                         shouldShow = true;
-                    } else if (category === 'Favoriler') {
-                        // Check if star button is active
+                    } else if (currentExerciseCategory === 'Favoriler') {
                         const isFav = item.querySelector('.exercise-fav-btn').classList.contains('text-primary');
                         shouldShow = isFav;
                     } else {
-                        // Specific category
-                        shouldShow = (catName === category);
+                        shouldShow = (catName === currentExerciseCategory);
+                    }
+                    
+                    // 2. Search Filter
+                    if (shouldShow && currentExerciseSearchTerm !== '') {
+                        const exerciseName = item.querySelector('h3').innerText.toLowerCase();
+                        if (!exerciseName.includes(currentExerciseSearchTerm)) {
+                            shouldShow = false;
+                        }
                     }
                     
                     if (shouldShow) {
@@ -2610,7 +2631,7 @@
                     }
                 });
                 
-                // Hide the whole category group if no items are visible (e.g. no favorites in this category)
+                // Hide the whole category group if no items are visible
                 if (hasVisibleItems) {
                     catGroup.classList.remove('hidden');
                 } else {
@@ -2628,6 +2649,7 @@
             
             // Toggle the list item star
             toggleFav({ stopPropagation: () => {} }, listFavBtn);
+            if(currentExerciseCategory === 'Favoriler') { applyExerciseFilters(); }
             
             // Update sheet star visually
             const isFav = listFavBtn.classList.contains('text-primary');
@@ -2653,6 +2675,10 @@
                 btn.classList.add('text-primary');
                 btn.classList.remove('text-on-surface-variant');
                 icon.style.fontVariationSettings = "'FILL' 1";
+            }
+            // if we are looking at Favoriler tab, removing a favorite should instantly hide it
+            if(typeof currentExerciseCategory !== 'undefined' && currentExerciseCategory === 'Favoriler') {
+                applyExerciseFilters();
             }
         }
 
