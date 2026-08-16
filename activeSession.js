@@ -520,6 +520,12 @@ window.finishSession = async function() {
 
         _stopTimer();
 
+        // Reset button
+        if (btn) {
+            btn.disabled = false;
+            btn.innerHTML = `<span class="material-symbols-outlined" style="font-size:16px">flag</span> Bitir`;
+        }
+
         // Navigate back to workout home
         document.getElementById('view-active-session').classList.add('hidden');
         document.getElementById('view-workout').classList.remove('hidden');
@@ -530,7 +536,10 @@ window.finishSession = async function() {
     } catch (e) {
         console.error('[activeSession] finishSession error:', e);
         alert('Antrenman kaydedilemedi: ' + e.message);
-        if (btn) { btn.disabled = false; btn.textContent = 'Antrenmanı Bitir'; }
+        if (btn) {
+            btn.disabled = false;
+            btn.innerHTML = `<span class="material-symbols-outlined" style="font-size:16px">flag</span> Bitir`;
+        }
     }
 };
 
