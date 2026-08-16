@@ -511,12 +511,21 @@ window.finishSession = async function() {
             ? Math.floor((Date.now() - _sessionStartTs.getTime()) / 1000)
             : 0;
 
-        // Build exercises summary
+        // Build exercises summary and auto-complete sets
         const exercises = {};
         if (_day && _day.exercises) {
-            _day.exercises.forEach(ex => {
+            for (const ex of _day.exercises) {
                 const state = _exState[ex.id];
-                if (!state) return;
+                if (!state) continue;
+                
+                // Auto-complete pending sets and update progress
+                for (const set of state.sets) {
+                    if (set.status !== 'completed') {
+                        set.status = 'completed';
+                        await _updateExerciseProgress(ex.id, set);
+                    }
+                }
+
                 exercises[ex.id] = {
                     name: ex.name,
                     sets: state.sets.map(s => ({
@@ -527,7 +536,7 @@ window.finishSession = async function() {
                         status: s.status
                     }))
                 };
-            });
+            }
         }
 
         await setDoc(
@@ -693,7 +702,11 @@ async function _updateExerciseProgress(exId, completedSet) {
         
         const trimmedSummaries = recentSessionSummaries.slice(-5);
 
+        const exObj = _day?.exercises?.find(e => e.id === exId);
+        const exName = exObj ? exObj.name : 'Bilinmeyen Egzersiz';
+
         const update = {
+            exName:        exName,
             currentE1RM:   (existing.currentE1RM == null || newE1RM > existing.currentE1RM) ? newE1RM : existing.currentE1RM,
             lastWeight:    completedSet.weight,
             lastReps:      completedSet.reps,

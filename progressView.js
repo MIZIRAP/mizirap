@@ -50,12 +50,14 @@ export async function openProgressView() {
             if (summaries.length >= 2) {
                 const status = detectProgressStatus(summaries);
                 if (status) {
-                    const muscleData = window.EXERCISE_MUSCLE_MAPPING?.[exId] || {};
+                    const exName = data.exName || exId;
+                    const muscleData = window.EXERCISE_MUSCLE_MAPPING?.[exName] || {};
                     const primaryMuscle = (muscleData.primary && muscleData.primary[0]) ? muscleData.primary[0] : "diğer";
                     const currentE1RM = data.currentE1RM || summaries[summaries.length - 1].e1rm || 0;
 
                     allProgressData.push({
                         exId,
+                        exName,
                         status,
                         summaries,
                         primaryMuscle,
@@ -164,7 +166,7 @@ function renderProgressView(filterStatus = 'all') {
             return `
                 <div class="p-4 border-t border-surface-variant flex items-start justify-between cursor-pointer hover:bg-surface-container-low transition-colors" onclick="openProgressExHistory('${item.exId}')">
                     <div class="flex flex-col gap-1 max-w-[70%]">
-                        <h4 class="font-body-lg text-body-lg font-medium text-on-surface">${item.exId}</h4>
+                        <h4 class="font-body-lg text-body-lg font-medium text-on-surface">${item.exName}</h4>
                         <div class="flex items-center gap-1.5">
                             <div class="w-2 h-2 rounded-full bg-${statusClass}"></div>
                             <span class="font-label-sm text-label-sm text-${statusClass} uppercase tracking-wider">${statusLabel}</span>
