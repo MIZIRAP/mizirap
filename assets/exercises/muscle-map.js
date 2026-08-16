@@ -1,27 +1,16 @@
 
-const MAPPINGS = {
-    'Göğüs': { target: 'chest', view: 'front' },
-    'Sırt': { target: 'lats', view: 'back' },
-    'Omuz': { target: 'deltoids', view: 'front' },
-    'Biceps': { target: 'biceps', view: 'front' },
-    'Triceps': { target: 'triceps', view: 'back' },
-    'Bacak': { target: 'quadriceps', view: 'front' }, // Or hamstrings for back
-    'Karın': { target: 'abs', view: 'front' },
-    'Kalça': { target: 'gluteal', view: 'back' }
-};
-
 const EXERCISE_MUSCLE_MAPPING = {
-    'Bench Press': { view: 'front', primary: ['chest'], secondary: ['triceps', 'deltoids'] },
-    'Lat Pulldown': { view: 'back', primary: ['lats'], secondary: ['biceps', 'deltoids'] },
-    'Overhead Press': { view: 'front', primary: ['deltoids'], secondary: ['triceps'] },
-    'Barbell Curl': { view: 'front', primary: ['biceps'], secondary: ['forearms'] },
-    'Tricep Pushdown': { view: 'back', primary: ['triceps'], secondary: [] },
-    'Squat': { view: 'front', primary: ['quadriceps', 'gluteal'], secondary: ['hamstrings'] }, // We'll show front, but gluteal is back. We can just pick front for now.
-    'Crunch': { view: 'front', primary: ['abs'], secondary: ['obliques'] },
-    'Hip Thrust': { view: 'back', primary: ['gluteal'], secondary: ['hamstrings'] }
+    'Bench Press': { primary: ['chest'], secondary: ['triceps', 'deltoids'] },
+    'Lat Pulldown': { primary: ['lats'], secondary: ['biceps', 'deltoids'] },
+    'Overhead Press': { primary: ['deltoids'], secondary: ['triceps'] },
+    'Barbell Curl': { primary: ['biceps'], secondary: ['forearm'] }, // some SVGs use 'forearm', let's check exact slugs later.
+    'Tricep Pushdown': { primary: ['triceps'], secondary: [] },
+    'Squat': { primary: ['quadriceps', 'gluteal'], secondary: ['hamstrings', 'calves'] },
+    'Crunch': { primary: ['abs'], secondary: ['obliques'] },
+    'Hip Thrust': { primary: ['gluteal'], secondary: ['hamstrings'] }
 };
 
-const SVG_FRONT = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="-80 -50 800 1500" width="100%" height="100%" preserveAspectRatio="xMidYMid meet" class="muscle-map-svg front-map">
+const COMBINED_SVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="-100 -50 1600 1500" width="100%" height="100%" preserveAspectRatio="xMidYMid meet" class="muscle-map-svg">
   <path data-muscle="chest" class="muscle-path chest" fill="#e0e0e0" stroke="#ffffff" stroke-width="2" d="M272.91 422.84c-18.95-17.19-22-57-12.64-78.79 5.57-12.99 26.54-24.37 39.97-25.87q20.36-2.26 37.02.75c9.74 1.76 16.13 15.64 18.41 25.04 3.99 16.48 3.23 31.38 1.67 48.06q-1.35 14.35-2.05 16.89c-6.52 23.5-38.08 29.23-58.28 24.53-9.12-2.12-17.24-4.38-24.1-10.61z" style="transition: fill 0.3s ease;"/>
   <path data-muscle="chest" class="muscle-path chest" fill="#e0e0e0" stroke="#ffffff" stroke-width="2" d="M416.04 435c-15.12.11-34.46-6.78-41.37-21.48q-1.88-3.99-2.84-12.18c-2.89-24.41-5.9-53.65 8.44-74.79 4.26-6.26 10.49-7.93 18.36-8.56q11.66-.92 23.32-.35c10.58.53 18.02 2.74 26.62 7.87 12.81 7.65 19.73 14.52 22.67 29.75 4.94 25.57.24 64.14-28.21 74.97q-12.26 4.67-26.99 4.77z" style="transition: fill 0.3s ease;"/>
   <path data-muscle="obliques" class="muscle-path obliques" fill="#e0e0e0" stroke="#ffffff" stroke-width="2" d="M264.21 435.53c-4.88-3.13-5.75-12.11-5.39-17.36q.03-.53.51-.75 1.8-.84 3.43.85 10.05 10.45 22.57 16.9c3.64 1.89 5.54 3.62 4.79 7.8q-.42 2.35-2.82 1.87-12.45-2.49-23.09-9.31z" style="transition: fill 0.3s ease;"/>
@@ -111,8 +100,6 @@ const SVG_FRONT = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="-80 -50 800 
   <path data-muscle="feet" class="muscle-path feet" fill="#e0e0e0" stroke="#ffffff" stroke-width="2" d="M426.94 1338.55c-2.01-.34-2.96-5.48-3-7.12-.15-6.02-6.29-11.65-3.12-17.89q4.35-8.53 6.34-17.75a.78.78 0 011.47-.17c2.12 4.52 4.18 9.08 4.35 14.33q.35 10.43 3.97 20.24c1.19 3.22 1.52 5.83.39 8.78a2.32 2.31 19.3 01-2.87 1.38q-3.44-1.09-7.53-1.8z" style="transition: fill 0.3s ease;"/>
   <path data-muscle="head" class="muscle-path head" fill="#e0e0e0" stroke="#ffffff" stroke-width="2" d="M 418.91 167.68 c 3.92 -1.77 6.58 0.47 7.06 4.32 c 1.48 11.93 -4.92 26.67 -11.75 36.45 c -2.21 3.17 -3.86 0.17 -4.74 -1.76 a 0.38 0.38 0 0 0 -0.73 0.16 c 0.02 8.31 1.01 17.01 -3.36 24.53 c -0.167 0.293 -4.39 4.62 -10.799 9.508 c -23.591 18.112 -41.591 16.112 -61.446 -0.797 c -4.736 -3.649 -5.925 -5.041 -8.805 -7.621 c -5.66 -5.07 -5.28 -17.38 -4.47 -24.92 c 0.05 -0.51 -0.468 -0.892 -0.933 -0.687 a 0.653 0.653 0 0 0 -0.357 0.397 c -0.57 1.69 -2.24 4.05 -4.07 1.48 c -6.2 -8.71 -16.02 -28.53 -11.19 -38.98 c 1.68 -3.627 3.733 -3.91 6.16 -0.85 a 182.853 182.853 0 0 1 3.78 23.29 a 1.02 1.02 0 0 0 1.56 0.77 c 2.79 -1.75 2.61 -18.93 2.63 -24.22 c 0.02 -4.53 1.12 -8.94 3.8 -13.1 c 4.36 -6.76 4.86 -11.51 5.57 -19.82 c 0.47 -5.53 4.34 -8.12 9.77 -8.21 c 6.39 -0.12 12.69 -0.07 19 -0.93 c 4.02 -0.55 7.4 -1.43 11.53 -0.75 c 6.7 1.1 13.44 1.64 20.22 1.62 c 4.607 -0.013 7.523 0.227 8.75 0.72 c 5.96 2.37 5.56 9.73 6.11 15.22 c 0.44 4.34 2.097 8.447 4.97 12.32 c 6.57 8.88 2.19 25.6 5.64 36.36 a 1.14 1.14 0 0 0 2.22 -0.23 c 0.887 -8.36 2.18 -16.45 3.88 -24.27 z z z z" style="transition: fill 0.3s ease;"/>
   <path data-muscle="hair" class="muscle-path hair" fill="#e0e0e0" stroke="#ffffff" stroke-width="2" d="M418.91 167.68q-2.55 11.73-3.88 24.27a1.14 1.14 0 01-2.22.23c-3.45-10.76.93-27.48-5.64-36.36q-4.31-5.81-4.97-12.32c-.55-5.49-.15-12.85-6.11-15.22q-1.84-.74-8.75-.72-10.17.03-20.22-1.62c-4.13-.68-7.51.2-11.53.75-6.31.86-12.61.81-19 .93-5.43.09-9.3 2.68-9.77 8.21-.71 8.31-1.21 13.06-5.57 19.82-2.68 4.16-3.78 8.57-3.8 13.1-.02 5.29.16 22.47-2.63 24.22a1.02 1.02 0 01-1.56-.77q-1.14-11.78-3.78-23.29-1.48-6.99-1.9-9.7c-2.49-15.94.13-40.13 13.53-51.15 9.39-7.72 28.53-11.63 40.37-11.51 4.2.05 8.74-.3 12.68.22 13.82 1.82 31.67 5.83 39.42 18.92 9.01 15.21 9.88 35.14 5.33 51.99z" style="transition: fill 0.3s ease;"/>
-</svg>`;
-const SVG_BACK = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="-80 -50 800 1500" width="100%" height="100%" preserveAspectRatio="xMidYMid meet" class="muscle-map-svg back-map">
   <path data-muscle="neck" class="muscle-path neck" fill="#e0e0e0" stroke="#ffffff" stroke-width="2" d="M1022.74 290.63a.62.61 25.9 01-.36-1.03q1.71-1.83 4.11-3.11c8.19-4.35 19.4-8.3 23.38-17.48q8.48-19.57 8.22-40.85-.05-4.38.57-5.76c1.98-4.38 9.65-3.66 13.85-2.91 4.3.76 4.71 3.25 4.68 7.3q-.2 24.11-.88 48.2c-.12 4.25 1.6 15.84-4.88 16.32-14.57 1.08-32.6 1.81-48.69-.68z" style="transition: fill 0.3s ease;"/>
   <path data-muscle="neck" class="muscle-path neck" fill="#e0e0e0" stroke="#ffffff" stroke-width="2" d="M1095.75 291.46c-4.3-.25-4.9-3.99-4.95-7.71q-.46-29.47-1-58.94c-.13-7.39 11.74-6.23 15.99-4.85 4.2 1.36 3.01 6.89 2.88 10.79-.28 8.88 5.15 41.1 15.32 46.78q8.6 4.81 17.27 9.51 1.97 1.07 3.26 2.36a.8.79 63.6 01-.45 1.35c-16.12 2.17-33.78 1.56-48.32.71z" style="transition: fill 0.3s ease;"/>
   <path data-muscle="trapezius" class="muscle-path trapezius" fill="#e0e0e0" stroke="#ffffff" stroke-width="2" d="M1071.06 308.94c5.6 4.92 6.96 17.83 7.43 24.88q1.5 22.3.93 44.68-1.2 46.76-5.66 94a.57.56 3.7 01-.59.51q-.68-.03-.94-1.01-4.29-15.9-9.79-25.19c-10.24-17.31-18.8-31.84-25.59-49.4-10.19-26.38-15.6-54.28-26.46-80.58q-3.07-7.43-7.61-14.07-.3-.43.2-.6 12.47-4.28 25.48-4.85c5.54-.25 12.15.86 18.32 1.41 9.7.87 16.77 3.6 24.28 10.22z" style="transition: fill 0.3s ease;"/>
@@ -189,14 +176,11 @@ function renderMuscleMap(exerciseName) {
     const container = document.getElementById('sheet-interactive-map');
     if (!container) return;
     
-    const mapping = EXERCISE_MUSCLE_MAPPING[exerciseName];
-    if (!mapping) {
-        container.innerHTML = SVG_FRONT; // default
-        return;
-    }
+    // Always use the combined SVG
+    container.innerHTML = COMBINED_SVG;
     
-    // Set the SVG (front or back based on primary muscle)
-    container.innerHTML = mapping.view === 'front' ? SVG_FRONT : SVG_BACK;
+    const mapping = EXERCISE_MUSCLE_MAPPING[exerciseName];
+    if (!mapping) return;
     
     // Highlight muscles
     const svgEl = container.querySelector('svg');
