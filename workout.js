@@ -3,6 +3,7 @@ import { formatDate, formatCurrency } from "./utils.js";
 import { collection, doc, addDoc, setDoc, getDocs, getDoc, query, orderBy, limit, serverTimestamp, where, onSnapshot, updateDoc, deleteDoc, deleteField } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
 import { escapeHtml, handleFormSubmit } from "./utils.js";
 import { registerListener } from "./listenerManager.js";
+import { openActiveSession, closeActiveSession } from "./activeSession.js";
 
 let currentUid = null;
 let splits = [];
@@ -144,6 +145,21 @@ window.selectActiveDay = function(dayId) {
     localStorage.setItem(`miz_activeDay_${currentUid}`, dayId);
     
     renderSplitView();
+};
+
+window.startActiveSession = function() {
+    if(!currentUid || !activeSplitId || !activeDayId) {
+        alert('Lütfen önce bir split ve gün seçin.');
+        return;
+    }
+    const activeSplit = splits.find(s => s.id === activeSplitId);
+    if(!activeSplit) return;
+    const day = activeSplit.days.find(d => d.id === activeDayId);
+    if(!day || !day.exercises || day.exercises.length === 0) {
+        alert('Seçili günde egzersiz bulunmuyor. Önce split düzenleyenden egzersiz ekleyin.');
+        return;
+    }
+    openActiveSession(currentUid, activeSplitId, activeDayId, day);
 };
 
 async function saveWorkoutSession() {
