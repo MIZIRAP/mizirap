@@ -100,6 +100,10 @@ const EXERCISE_MUSCLE_MAPPING = {
     'Ab Wheel Rollout': { primary: ["abs"], secondary: ["upper-back", "lower-back"] },
     'Machine Torso Twist': { primary: ["obliques"], secondary: ["abs"] },
     'Russian Twist (with Dumbbell)': { primary: ["obliques", "abs"], secondary: ["lower-back"] },
+    'Incline Machine Chest Press': { primary: ["chest"], secondary: ["deltoids", "triceps"] },
+    'Wide-Grip Lat Pulldown': { primary: ["upper-back"], secondary: ["biceps", "trapezius"] },
+    'Wide-Grip Cable Row': { primary: ["upper-back"], secondary: ["trapezius", "biceps"] },
+    'Close-Grip Cable Row': { primary: ["upper-back"], secondary: ["biceps"] },
 };
 
 const COMBINED_SVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="-100 -50 1600 1500" width="100%" height="100%" preserveAspectRatio="xMidYMid meet" class="muscle-map-svg">
