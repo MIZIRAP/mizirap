@@ -1072,9 +1072,9 @@ window.saveNewSplit = async function() {
         
         if(splits.length === 1 || !activeSplitId) {
             activeSplitId = newSplitId;
-            await updateDoc(doc(db, "users", currentUid), {
+            await setDoc(doc(db, "users", currentUid), {
                 activeSplitId: newSplitId
-            });
+            }, { merge: true });
             localStorage.setItem(`miz_activeSplit_${currentUid}`, newSplitId);
         }
         
@@ -1157,9 +1157,9 @@ window.applySplitSelection = async function() {
     activeSplitId = tempSelectedSplitId;
     
     try {
-        await updateDoc(doc(db, "users", currentUid), {
+        await setDoc(doc(db, "users", currentUid), {
             activeSplitId: activeSplitId
-        });
+        }, { merge: true });
         localStorage.setItem(`miz_activeSplit_${currentUid}`, activeSplitId);
         
         if (typeof renderSplitEditView === 'function') renderSplitEditView();
@@ -1203,10 +1203,10 @@ window.deleteSplit = async function(splitId) {
         if(activeSplitId === splitId) {
             activeSplitId = splits.length > 0 ? splits[0].id : null;
             if(activeSplitId) {
-                await updateDoc(doc(db, "users", currentUid), { activeSplitId });
+                await setDoc(doc(db, "users", currentUid), { activeSplitId }, { merge: true });
                 localStorage.setItem(`miz_activeSplit_${currentUid}`, activeSplitId);
             } else {
-                await updateDoc(doc(db, "users", currentUid), { activeSplitId: deleteField() });
+                await setDoc(doc(db, "users", currentUid), { activeSplitId: deleteField() }, { merge: true });
                 localStorage.removeItem(`miz_activeSplit_${currentUid}`);
             }
         }
