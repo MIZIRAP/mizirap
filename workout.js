@@ -861,6 +861,9 @@ window.openCreateSplitView = function() {
     document.getElementById('view-split-edit').classList.add('hidden');
     document.getElementById('view-create-split').classList.remove('hidden');
     
+    const headerTitle = document.querySelector('#view-create-split header h1');
+    if(headerTitle) headerTitle.innerText = "Yeni Split";
+    
     newSplitId = 'split_' + Date.now();
     newSplitDays = [];
     document.getElementById('create-split-name-input').value = "";
@@ -1060,7 +1063,12 @@ window.saveNewSplit = async function() {
         
         await setDoc(doc(db, "users", currentUid, "splits", newSplitId), newSplit);
         
-        splits.push(newSplit);
+        const existingIdx = splits.findIndex(s => s.id === newSplitId);
+        if (existingIdx !== -1) {
+            splits[existingIdx] = newSplit;
+        } else {
+            splits.push(newSplit);
+        }
         
         if(splits.length === 1 || !activeSplitId) {
             activeSplitId = newSplitId;
@@ -1086,3 +1094,133 @@ window.saveNewSplit = async function() {
     }
 };
 
+window.openSplitModal = function() {
+    const modal = document.getElementById('modal-split-change');
+    const optionsContainer = document.getElementById('split-modal-options');
+    
+    if(!modal || !optionsContainer) return;
+    
+    optionsContainer.innerHTML = '';
+    tempSelectedSplitId = activeSplitId;
+    
+    splits.forEach(split => {
+        const isAct = split.id === activeSplitId;
+        const div = document.createElement('div');
+        div.className = `flex flex-col p-4 rounded-xl border ${isAct ? 'border-primary bg-primary-container/10' : 'border-outline-variant bg-surface'} cursor-pointer hover:bg-surface-container-high transition-colors`;
+        
+        div.innerHTML = `
+            <div class="flex items-center justify-between mb-2" onclick="selectSplit('${split.id}')">
+                <div>
+                    <div class="font-title-md text-on-surface font-bold">${split.name}</div>
+                    <div class="font-label-sm text-on-surface-variant">${split.days ? split.days.length : 0} Gün</div>
+                </div>
+                ${isAct ? '<span class="material-symbols-outlined text-primary">check_circle</span>' : '<span class="material-symbols-outlined text-outline">radio_button_unchecked</span>'}
+            </div>
+            <div class="flex justify-end gap-2 mt-2 pt-2 border-t border-outline-variant/30">
+                <button onclick="event.stopPropagation(); openEditSplitView('${split.id}')" class="p-2 rounded-full text-primary hover:bg-primary-container/20 transition-colors flex items-center justify-center">
+                    <span class="material-symbols-outlined text-sm">edit</span>
+                </button>
+                <button onclick="event.stopPropagation(); deleteSplit('${split.id}')" class="p-2 rounded-full text-error hover:bg-error-container/20 transition-colors flex items-center justify-center">
+                    <span class="material-symbols-outlined text-sm">delete</span>
+                </button>
+            </div>
+        `;
+        optionsContainer.appendChild(div);
+    });
+    
+    modal.classList.remove('hidden');
+};
+
+window.closeSplitModal = function() {
+    const modal = document.getElementById('modal-split-change');
+    if(modal) modal.classList.add('hidden');
+};
+
+let tempSelectedSplitId = null;
+window.selectSplit = function(splitId) {
+    tempSelectedSplitId = splitId;
+    const optionsContainer = document.getElementById('split-modal-options');
+    Array.from(optionsContainer.children).forEach((child, index) => {
+        const split = splits[index];
+        const isSel = split.id === tempSelectedSplitId;
+        child.className = `flex flex-col p-4 rounded-xl border ${isSel ? 'border-primary bg-primary-container/10' : 'border-outline-variant bg-surface'} cursor-pointer hover:bg-surface-container-high transition-colors`;
+        const icon = child.querySelector('.material-symbols-outlined.text-primary, .material-symbols-outlined.text-outline');
+        if(icon) {
+            icon.className = `material-symbols-outlined ${isSel ? 'text-primary' : 'text-outline'}`;
+            icon.innerText = isSel ? 'check_circle' : 'radio_button_unchecked';
+        }
+    });
+};
+
+window.applySplitSelection = async function() {
+    if(!tempSelectedSplitId) return;
+    activeSplitId = tempSelectedSplitId;
+    
+    try {
+        await updateDoc(doc(db, "users", currentUid), {
+            activeSplitId: activeSplitId
+        });
+        localStorage.setItem(`miz_activeSplit_${currentUid}`, activeSplitId);
+        
+        if (typeof renderSplitEditView === 'function') renderSplitEditView();
+        if (typeof renderSplitView === 'function') renderSplitView();
+        
+        closeSplitModal();
+    } catch(e) {
+        console.error(e);
+        alert("Split seçimi kaydedilemedi.");
+    }
+};
+
+window.openEditSplitView = function(splitId) {
+    const split = splits.find(s => s.id === splitId);
+    if(!split) return;
+    
+    closeSplitModal();
+    
+    document.getElementById('view-split-edit').classList.add('hidden');
+    document.getElementById('view-create-split').classList.remove('hidden');
+    
+    const headerTitle = document.querySelector('#view-create-split header h1');
+    if(headerTitle) headerTitle.innerText = "Split Düzenle";
+    
+    newSplitId = split.id;
+    newSplitDays = JSON.parse(JSON.stringify(split.days || []));
+    
+    document.getElementById('create-split-name-input').value = split.name;
+    renderCreateSplitDays();
+    
+    document.getElementById('create-split-save-btn').onclick = saveNewSplit;
+};
+
+window.deleteSplit = async function(splitId) {
+    if(!confirm("Bu split'i silmek istediğinize emin misiniz?")) return;
+    
+    try {
+        await deleteDoc(doc(db, "users", currentUid, "splits", splitId));
+        splits = splits.filter(s => s.id !== splitId);
+        
+        if(activeSplitId === splitId) {
+            activeSplitId = splits.length > 0 ? splits[0].id : null;
+            if(activeSplitId) {
+                await updateDoc(doc(db, "users", currentUid), { activeSplitId });
+                localStorage.setItem(`miz_activeSplit_${currentUid}`, activeSplitId);
+            } else {
+                await updateDoc(doc(db, "users", currentUid), { activeSplitId: deleteField() });
+                localStorage.removeItem(`miz_activeSplit_${currentUid}`);
+            }
+        }
+        
+        if (typeof renderSplitEditView === 'function') renderSplitEditView();
+        if (typeof renderSplitView === 'function') renderSplitView();
+        
+        const modal = document.getElementById('modal-split-change');
+        if(modal && !modal.classList.contains('hidden')) {
+            openSplitModal();
+        }
+        
+    } catch(e) {
+        console.error(e);
+        alert("Silme işlemi başarısız.");
+    }
+};

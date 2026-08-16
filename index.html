@@ -3985,9 +3985,9 @@
 
 
     <!-- SPLIT EDIT VIEW -->
-    <section id="view-split-edit" class="view hidden bg-[#B7D0C1] min-h-[100dvh] text-on-background font-body-md selection:bg-primary-container selection:text-on-primary-container z-50 fixed inset-0 overflow-y-auto">
+    <section id="view-split-edit" class="view hidden bg-background min-h-[100dvh] text-on-background font-body-md selection:bg-primary-container selection:text-on-primary-container z-50 fixed inset-0 overflow-y-auto">
         <!-- Top Navigation Container -->
-        <header class="w-full top-0 sticky bg-[#B7D0C1] z-10">
+        <header class="w-full top-0 sticky bg-background z-10">
             <div class="flex items-center justify-between px-margin-mobile h-14 w-full max-w-md mx-auto">
                 <!-- Leading Action -->
                 <button onclick="document.getElementById('view-split-edit').classList.add('hidden');" aria-label="Geri" class="h-12 w-12 flex items-center justify-center text-primary hover:bg-surface-container-high transition-colors active:opacity-70 rounded-full shrink-0">
@@ -4022,12 +4022,7 @@
                 + Yeni Gün Ekle
             </button>
 
-            <!-- BOTTOM ACTION -->
-            <div class="pt-lg flex justify-center pb-xl">
-                <button class="font-label-lg text-label-lg text-on-surface-variant hover:text-primary underline decoration-outline-variant hover:decoration-primary transition-colors h-12 px-4 flex items-center">
-                    <span id="split-edit-create-btn">+ Yeni Split Oluştur</span>
-                </button>
-            </div>
+            <!-- REMOVED BOTTOM ACTION AS PER USER REQUEST -->
         </main>
     </section>
 
@@ -4058,7 +4053,7 @@
                 </div>
 
                 <!-- Create New Split Button -->
-                <button class="mt-md w-full border border-dashed border-outline text-primary font-label-lg text-label-lg h-12 rounded-xl flex items-center justify-center gap-sm hover:bg-primary-container/10 transition-colors duration-200">
+                <button onclick="closeSplitModal(); setTimeout(openCreateSplitView, 300)" class="mt-md w-full border border-dashed border-outline text-primary font-label-lg text-label-lg h-12 rounded-xl flex items-center justify-center gap-sm hover:bg-primary-container/10 transition-colors duration-200">
                     <span class="material-symbols-outlined">add</span>
                     Yeni Split Oluştur
                 </button>
@@ -4080,8 +4075,8 @@
 
 
     <!-- CREATE SPLIT VIEW -->
-    <section id="view-create-split" class="view hidden bg-[#B7D0C1] min-h-[100dvh] text-on-background font-body-md selection:bg-primary-container selection:text-on-primary-container z-50 fixed inset-0 overflow-y-auto">
-        <header class="w-full top-0 sticky bg-[#B7D0C1] z-10">
+    <section id="view-create-split" class="view hidden bg-background min-h-[100dvh] text-on-background font-body-md selection:bg-primary-container selection:text-on-primary-container z-50 fixed inset-0 overflow-y-auto">
+        <header class="w-full top-0 sticky bg-background z-10">
             <div class="flex items-center justify-between px-margin-mobile h-14 w-full max-w-md mx-auto">
                 <button onclick="closeCreateSplitView()" class="h-12 w-12 flex items-center justify-center text-primary hover:bg-surface-container-high transition-colors rounded-full shrink-0">
                     <span class="material-symbols-outlined">arrow_back</span>
