@@ -476,7 +476,7 @@
                 <!-- Navigation List -->
                 <section class="bg-surface-container-lowest rounded-2xl shadow-[0px_4px_24px_rgba(0,0,0,0.03)] overflow-hidden">
                     <nav class="flex flex-col">
-                        <a class="flex items-center gap-4 p-4 border-b border-surface-variant/50 hover:bg-surface-container-low transition-colors active:bg-surface-container" href="#">
+                        <a class="flex items-center gap-4 p-4 border-b border-surface-variant/50 hover:bg-surface-container-low transition-colors active:bg-surface-container" href="#" onclick="document.getElementById('view-workout').classList.add('hidden'); document.getElementById('view-exercise-library').classList.remove('hidden'); return false;">
                             <span class="material-symbols-outlined text-on-surface-variant">book</span>
                             <span class="flex-1 font-body-lg text-body-lg text-on-surface">Egzersiz Kütüphanesi</span>
                             <span class="material-symbols-outlined text-outline">chevron_right</span>
@@ -503,6 +503,254 @@
     </section>
 
     <!-- Edit Workout Template View -->
+    
+    <!-- ================= EGZERSİZ KÜTÜPHANESI ================= -->
+    <section id="view-exercise-library" class="view hidden bg-background min-h-[100dvh] text-on-surface antialiased font-body-lg pb-[100px]">
+        <div class="max-w-md mx-auto relative h-full flex flex-col">
+            <!-- Header -->
+            <header class="bg-surface flex items-center justify-between px-margin-mobile h-16 w-full sticky top-0 z-10">
+                <button onclick="document.getElementById('view-exercise-library').classList.add('hidden'); document.getElementById('view-workout').classList.remove('hidden');" class="text-on-surface-variant hover:bg-surface-container-low transition-colors active:scale-95 transition-transform p-2 rounded-full flex items-center justify-center">
+                    <span class="material-symbols-outlined">arrow_back</span>
+                </button>
+                <h1 class="font-title-lg text-title-lg font-bold text-primary">Egzersiz Kütüphanesi</h1>
+                <button class="text-on-surface-variant hover:bg-surface-container-low transition-colors active:scale-95 transition-transform p-2 rounded-full flex items-center justify-center">
+                    <span class="material-symbols-outlined">add</span>
+                </button>
+            </header>
+
+            <main class="flex-1 px-margin-mobile flex flex-col pt-4 gap-6 pb-8">
+                <!-- Search Bar -->
+                <div>
+                    <div class="relative flex items-center w-full h-12 rounded-full bg-surface-container-lowest shadow-sm px-4 focus-within:ring-2 focus-within:ring-primary-container transition-all">
+                        <span class="material-symbols-outlined text-on-surface-variant mr-2">search</span>
+                        <input class="w-full bg-transparent border-none focus:outline-none focus:ring-0 text-body-lg text-on-surface placeholder:text-on-surface-variant" placeholder="Egzersiz Ara..." type="text"/>
+                    </div>
+                </div>
+
+                <!-- Filter Chips -->
+                <div class="flex overflow-x-auto gap-2 pb-2 no-scrollbar -mx-margin-mobile px-margin-mobile">
+                    <button class="whitespace-nowrap px-4 py-2 rounded-lg bg-primary-container text-on-primary-container font-label-lg transition-colors">Tümü</button>
+                    <button class="whitespace-nowrap px-4 py-2 rounded-lg border border-outline-variant text-on-surface-variant font-label-lg hover:bg-surface-container-low transition-colors bg-surface-container-lowest">Göğüs</button>
+                    <button class="whitespace-nowrap px-4 py-2 rounded-lg border border-outline-variant text-on-surface-variant font-label-lg hover:bg-surface-container-low transition-colors bg-surface-container-lowest">Sırt</button>
+                    <button class="whitespace-nowrap px-4 py-2 rounded-lg border border-outline-variant text-on-surface-variant font-label-lg hover:bg-surface-container-low transition-colors bg-surface-container-lowest">Omuz</button>
+                    <button class="whitespace-nowrap px-4 py-2 rounded-lg border border-outline-variant text-on-surface-variant font-label-lg hover:bg-surface-container-low transition-colors bg-surface-container-lowest">Biceps</button>
+                    <button class="whitespace-nowrap px-4 py-2 rounded-lg border border-outline-variant text-on-surface-variant font-label-lg hover:bg-surface-container-low transition-colors bg-surface-container-lowest">Triceps</button>
+                    <button class="whitespace-nowrap px-4 py-2 rounded-lg border border-outline-variant text-on-surface-variant font-label-lg hover:bg-surface-container-low transition-colors bg-surface-container-lowest">Bacak</button>
+                    <button class="whitespace-nowrap px-4 py-2 rounded-lg border border-outline-variant text-on-surface-variant font-label-lg hover:bg-surface-container-low transition-colors bg-surface-container-lowest">Karın</button>
+                    <button class="whitespace-nowrap px-4 py-2 rounded-lg border border-outline-variant text-on-surface-variant font-label-lg hover:bg-surface-container-low transition-colors bg-surface-container-lowest">Kalça</button>
+                </div>
+
+                <!-- Exercise List Container -->
+                <div id="exercise-list-container" class="flex flex-col gap-6">
+                    
+                <!-- Exercise List: Göğüs -->
+                <div class="mb-4">
+                    <div class="flex items-center justify-between mb-2 py-1">
+                        <h2 class="font-title-lg text-on-surface">Göğüs</h2>
+                    </div>
+                    <div class="flex flex-col gap-2">
+                        <div onclick="openExerciseSheet('Bench Press', 'assets/exercises/chest_bench_press_1786893760582.jpg', [{color: '#7ea18d', label: 'Göğüs (Pectorals)'}, {color: '#c6ebd5', label: 'Triceps, Ön Omuz'}])" class="flex items-center p-4 bg-surface-container-lowest rounded-xl shadow-sm min-h-[48px] cursor-pointer hover:bg-surface-container-low transition-colors active:scale-[0.98]">
+                            <div class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center mr-4 flex-shrink-0">
+                                <img class="w-6 h-6 object-contain opacity-70" src="assets/exercises/chest_bench_press_1786893760582.jpg"/>
+                            </div>
+                            <div class="flex-grow">
+                                <h3 class="font-body-lg font-medium text-on-surface">Bench Press</h3>
+                                <p class="font-body-md text-on-surface-variant">Ana Kas: Göğüs</p>
+                            </div>
+                            <div class="flex items-center gap-1">
+                                <button class="p-2 text-on-surface-variant hover:text-primary transition-colors"><span class="material-symbols-outlined">star</span></button>
+                                <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Exercise List: Sırt -->
+                <div class="mb-4">
+                    <div class="flex items-center justify-between mb-2 py-1">
+                        <h2 class="font-title-lg text-on-surface">Sırt</h2>
+                    </div>
+                    <div class="flex flex-col gap-2">
+                        <div onclick="openExerciseSheet('Lat Pulldown', 'assets/exercises/back_lat_pulldown_1786893771754.jpg', [{color: '#7ea18d', label: 'Kanat (Lats)'}, {color: '#c6ebd5', label: 'Biceps, Arka Omuz'}])" class="flex items-center p-4 bg-surface-container-lowest rounded-xl shadow-sm min-h-[48px] cursor-pointer hover:bg-surface-container-low transition-colors active:scale-[0.98]">
+                            <div class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center mr-4 flex-shrink-0">
+                                <img class="w-6 h-6 object-contain opacity-70" src="assets/exercises/back_lat_pulldown_1786893771754.jpg"/>
+                            </div>
+                            <div class="flex-grow">
+                                <h3 class="font-body-lg font-medium text-on-surface">Lat Pulldown</h3>
+                                <p class="font-body-md text-on-surface-variant">Ana Kas: Kanat</p>
+                            </div>
+                            <div class="flex items-center gap-1">
+                                <button class="p-2 text-on-surface-variant hover:text-primary transition-colors"><span class="material-symbols-outlined">star</span></button>
+                                <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Exercise List: Omuz -->
+                <div class="mb-4">
+                    <div class="flex items-center justify-between mb-2 py-1">
+                        <h2 class="font-title-lg text-on-surface">Omuz</h2>
+                    </div>
+                    <div class="flex flex-col gap-2">
+                        <div onclick="openExerciseSheet('Overhead Press', 'assets/exercises/shoulder_overhead_press_1786893781779.jpg', [{color: '#7ea18d', label: 'Omuz (Deltoids)'}, {color: '#c6ebd5', label: 'Triceps'}])" class="flex items-center p-4 bg-surface-container-lowest rounded-xl shadow-sm min-h-[48px] cursor-pointer hover:bg-surface-container-low transition-colors active:scale-[0.98]">
+                            <div class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center mr-4 flex-shrink-0">
+                                <img class="w-6 h-6 object-contain opacity-70" src="assets/exercises/shoulder_overhead_press_1786893781779.jpg"/>
+                            </div>
+                            <div class="flex-grow">
+                                <h3 class="font-body-lg font-medium text-on-surface">Overhead Press</h3>
+                                <p class="font-body-md text-on-surface-variant">Ana Kas: Omuz</p>
+                            </div>
+                            <div class="flex items-center gap-1">
+                                <button class="p-2 text-on-surface-variant hover:text-primary transition-colors"><span class="material-symbols-outlined">star</span></button>
+                                <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Exercise List: Biceps -->
+                <div class="mb-4">
+                    <div class="flex items-center justify-between mb-2 py-1">
+                        <h2 class="font-title-lg text-on-surface">Biceps</h2>
+                    </div>
+                    <div class="flex flex-col gap-2">
+                        <div onclick="openExerciseSheet('Barbell Curl', 'assets/exercises/biceps_barbell_curl_1786893790565.jpg', [{color: '#7ea18d', label: 'Biceps'}, {color: '#c6ebd5', label: 'Ön Kol (Forearms)'}])" class="flex items-center p-4 bg-surface-container-lowest rounded-xl shadow-sm min-h-[48px] cursor-pointer hover:bg-surface-container-low transition-colors active:scale-[0.98]">
+                            <div class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center mr-4 flex-shrink-0">
+                                <img class="w-6 h-6 object-contain opacity-70" src="assets/exercises/biceps_barbell_curl_1786893790565.jpg"/>
+                            </div>
+                            <div class="flex-grow">
+                                <h3 class="font-body-lg font-medium text-on-surface">Barbell Curl</h3>
+                                <p class="font-body-md text-on-surface-variant">Ana Kas: Biceps</p>
+                            </div>
+                            <div class="flex items-center gap-1">
+                                <button class="p-2 text-on-surface-variant hover:text-primary transition-colors"><span class="material-symbols-outlined">star</span></button>
+                                <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Exercise List: Triceps -->
+                <div class="mb-4">
+                    <div class="flex items-center justify-between mb-2 py-1">
+                        <h2 class="font-title-lg text-on-surface">Triceps</h2>
+                    </div>
+                    <div class="flex flex-col gap-2">
+                        <div onclick="openExerciseSheet('Tricep Pushdown', 'assets/exercises/triceps_pushdown_1786893802854.jpg', [{color: '#7ea18d', label: 'Triceps'}])" class="flex items-center p-4 bg-surface-container-lowest rounded-xl shadow-sm min-h-[48px] cursor-pointer hover:bg-surface-container-low transition-colors active:scale-[0.98]">
+                            <div class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center mr-4 flex-shrink-0">
+                                <img class="w-6 h-6 object-contain opacity-70" src="assets/exercises/triceps_pushdown_1786893802854.jpg"/>
+                            </div>
+                            <div class="flex-grow">
+                                <h3 class="font-body-lg font-medium text-on-surface">Tricep Pushdown</h3>
+                                <p class="font-body-md text-on-surface-variant">Ana Kas: Triceps</p>
+                            </div>
+                            <div class="flex items-center gap-1">
+                                <button class="p-2 text-on-surface-variant hover:text-primary transition-colors"><span class="material-symbols-outlined">star</span></button>
+                                <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Exercise List: Bacak -->
+                <div class="mb-4">
+                    <div class="flex items-center justify-between mb-2 py-1">
+                        <h2 class="font-title-lg text-on-surface">Bacak</h2>
+                    </div>
+                    <div class="flex flex-col gap-2">
+                        <div onclick="openExerciseSheet('Squat', 'assets/exercises/legs_squat_1786893813775.jpg', [{color: '#7ea18d', label: 'Ön Bacak (Quads), Kalça'}, {color: '#c6ebd5', label: 'Arka Bacak (Hamstrings)'}])" class="flex items-center p-4 bg-surface-container-lowest rounded-xl shadow-sm min-h-[48px] cursor-pointer hover:bg-surface-container-low transition-colors active:scale-[0.98]">
+                            <div class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center mr-4 flex-shrink-0">
+                                <img class="w-6 h-6 object-contain opacity-70" src="assets/exercises/legs_squat_1786893813775.jpg"/>
+                            </div>
+                            <div class="flex-grow">
+                                <h3 class="font-body-lg font-medium text-on-surface">Squat</h3>
+                                <p class="font-body-md text-on-surface-variant">Ana Kas: Bacak</p>
+                            </div>
+                            <div class="flex items-center gap-1">
+                                <button class="p-2 text-on-surface-variant hover:text-primary transition-colors"><span class="material-symbols-outlined">star</span></button>
+                                <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Exercise List: Karın -->
+                <div class="mb-4">
+                    <div class="flex items-center justify-between mb-2 py-1">
+                        <h2 class="font-title-lg text-on-surface">Karın</h2>
+                    </div>
+                    <div class="flex flex-col gap-2">
+                        <div onclick="openExerciseSheet('Crunch', 'assets/exercises/abs_crunch_1786893825131.jpg', [{color: '#7ea18d', label: 'Karın (Abs)'}, {color: '#c6ebd5', label: 'Oblikler'}])" class="flex items-center p-4 bg-surface-container-lowest rounded-xl shadow-sm min-h-[48px] cursor-pointer hover:bg-surface-container-low transition-colors active:scale-[0.98]">
+                            <div class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center mr-4 flex-shrink-0">
+                                <img class="w-6 h-6 object-contain opacity-70" src="assets/exercises/abs_crunch_1786893825131.jpg"/>
+                            </div>
+                            <div class="flex-grow">
+                                <h3 class="font-body-lg font-medium text-on-surface">Crunch</h3>
+                                <p class="font-body-md text-on-surface-variant">Ana Kas: Karın</p>
+                            </div>
+                            <div class="flex items-center gap-1">
+                                <button class="p-2 text-on-surface-variant hover:text-primary transition-colors"><span class="material-symbols-outlined">star</span></button>
+                                <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Exercise List: Kalça -->
+                <div class="mb-4">
+                    <div class="flex items-center justify-between mb-2 py-1">
+                        <h2 class="font-title-lg text-on-surface">Kalça</h2>
+                    </div>
+                    <div class="flex flex-col gap-2">
+                        <div onclick="openExerciseSheet('Hip Thrust', 'assets/exercises/glutes_hip_thrust_1786893834251.jpg', [{color: '#7ea18d', label: 'Kalça (Glutes)'}, {color: '#c6ebd5', label: 'Arka Bacak (Hamstrings)'}])" class="flex items-center p-4 bg-surface-container-lowest rounded-xl shadow-sm min-h-[48px] cursor-pointer hover:bg-surface-container-low transition-colors active:scale-[0.98]">
+                            <div class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center mr-4 flex-shrink-0">
+                                <img class="w-6 h-6 object-contain opacity-70" src="assets/exercises/glutes_hip_thrust_1786893834251.jpg"/>
+                            </div>
+                            <div class="flex-grow">
+                                <h3 class="font-body-lg font-medium text-on-surface">Hip Thrust</h3>
+                                <p class="font-body-md text-on-surface-variant">Ana Kas: Kalça</p>
+                            </div>
+                            <div class="flex items-center gap-1">
+                                <button class="p-2 text-on-surface-variant hover:text-primary transition-colors"><span class="material-symbols-outlined">star</span></button>
+                                <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                </div>
+            </main>
+        </div>
+
+        <!-- Bottom Sheet Demonstration Overlay -->
+        <div id="exercise-bottom-sheet" class="fixed inset-0 bg-black/30 z-[100] flex items-end opacity-0 pointer-events-none transition-opacity duration-300">
+            <div class="bg-surface rounded-t-[24px] w-full max-w-md mx-auto shadow-2xl transform transition-transform translate-y-full duration-300 relative max-h-[90vh] flex flex-col" id="exercise-bottom-sheet-content">
+                <!-- Drag Handle -->
+                <div class="w-full flex justify-center pt-4 pb-2 cursor-pointer" onclick="closeExerciseSheet()">
+                    <div class="w-12 h-1.5 bg-outline-variant rounded-full"></div>
+                </div>
+                <!-- Sheet Header -->
+                <div class="px-6 pb-4 flex items-center justify-between flex-shrink-0 pt-2">
+                    <h2 id="sheet-exercise-name" class="font-headline-lg-mobile text-on-surface">Egzersiz Adı</h2>
+                    <button class="p-2 text-primary hover:bg-surface-container-low rounded-full transition-colors flex-shrink-0">
+                        <span class="material-symbols-outlined text-2xl" style="font-variation-settings: 'FILL' 1;">star</span>
+                    </button>
+                </div>
+                <!-- Sheet Content -->
+                <div class="px-6 pb-6 overflow-y-auto flex-grow flex flex-col gap-4">
+                    <!-- Muscle Diagram Area -->
+                    <div class="bg-surface-container-lowest rounded-xl p-4 flex flex-col items-center justify-center shadow-sm border border-surface-container-low">
+                        <img id="sheet-exercise-img" alt="Anatomical muscle map" class="w-[80%] h-auto object-contain mb-6 rounded-lg mix-blend-multiply" src=""/>
+                        <div class="flex flex-col gap-2 items-center" id="sheet-exercise-legend">
+                            <!-- Eklenecek -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <section id="view-edit-workout-template" class="view hidden bg-background text-on-background antialiased min-h-[100dvh] flex flex-col items-center pb-[100px]">
         <style>
             .drag-handle {
@@ -2260,5 +2508,49 @@
             </div>
         </div>
     </div>
+
+    <script>
+        function openExerciseSheet(name, imgSrc, legendItems) {
+            document.getElementById('sheet-exercise-name').innerText = name;
+            document.getElementById('sheet-exercise-img').src = imgSrc;
+            
+            let legendHtml = '';
+            legendItems.forEach(item => {
+                legendHtml += `
+                <div class="flex items-center gap-2">
+                    <div class="w-2 h-2 rounded-full" style="background-color: ${item.color};"></div>
+                    <span class="text-body-md text-on-surface-variant">${item.label}</span>
+                </div>`;
+            });
+            document.getElementById('sheet-exercise-legend').innerHTML = legendHtml;
+            
+            const sheet = document.getElementById('exercise-bottom-sheet');
+            const sheetContent = document.getElementById('exercise-bottom-sheet-content');
+            
+            sheet.classList.remove('pointer-events-none');
+            sheet.classList.add('opacity-100');
+            sheet.classList.remove('opacity-0');
+            
+            setTimeout(() => {
+                sheetContent.classList.remove('translate-y-full');
+                sheetContent.classList.add('translate-y-0');
+            }, 10);
+        }
+
+        function closeExerciseSheet() {
+            const sheet = document.getElementById('exercise-bottom-sheet');
+            const sheetContent = document.getElementById('exercise-bottom-sheet-content');
+            
+            sheetContent.classList.add('translate-y-full');
+            sheetContent.classList.remove('translate-y-0');
+            
+            setTimeout(() => {
+                sheet.classList.add('opacity-0');
+                sheet.classList.remove('opacity-100');
+                sheet.classList.add('pointer-events-none');
+            }, 300);
+        }
+    </script>
+
 </body>
 </html>
