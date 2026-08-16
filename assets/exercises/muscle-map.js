@@ -95,7 +95,7 @@ const EXERCISE_MUSCLE_MAPPING = {
     'Dumbbell Side Bend': { primary: ["obliques"], secondary: ["abs"] },
     'Cable Woodchopper': { primary: ["obliques"], secondary: ["abs"] },
     'Hanging Leg Raise': { primary: ["abs"], secondary: ["quadriceps"] },
-    'Captain's Chair Leg Raise': { primary: ["abs"], secondary: ["quadriceps"] },
+    "Captain's Chair Leg Raise": { primary: ["abs"], secondary: ["quadriceps"] },
     'Lying Leg Raise': { primary: ["abs"], secondary: ["quadriceps"] },
     'Ab Wheel Rollout': { primary: ["abs"], secondary: ["lats", "lower_back"] },
     'Machine Torso Twist': { primary: ["obliques"], secondary: ["abs"] },
