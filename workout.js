@@ -1213,21 +1213,23 @@ function renderExercisePickerList(category, searchTerm = '') {
     
     if(category !== 'Tümü') {
         const catMap = {
-            'Göğüs': 'chest',
-            'Sırt': 'upper-back',
-            'Omuz': 'deltoids',
-            'Bacak': 'glutes',
-            'Biceps': 'biceps',
-            'Triceps': 'triceps',
-            'Karın': 'abs'
+            'Göğüs': ['chest'],
+            'Sırt': ['upper-back', 'lower-back'],
+            'Omuz': ['deltoids'],
+            'Bacak': ['quadriceps', 'hamstring', 'calves', 'gluteal'],
+            'Biceps': ['biceps'],
+            'Triceps': ['triceps'],
+            'Karın': ['abs', 'obliques']
         };
-        const target = catMap[category] || category.toLowerCase();
+        const targets = catMap[category] || [category.toLowerCase()];
         
         filtered = filtered.filter(exName => {
             const data = window.EXERCISE_MUSCLE_MAPPING[exName];
             if(!data) return false;
-            return (data.primary && data.primary.includes(target)) || 
-                   (data.secondary && data.secondary.includes(target));
+            return targets.some(t =>
+                (data.primary && data.primary.includes(t)) ||
+                (data.secondary && data.secondary.includes(t))
+            );
         });
     }
     
