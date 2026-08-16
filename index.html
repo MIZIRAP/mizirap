@@ -532,28 +532,28 @@
 
                 <!-- Filter Chips -->
                 <div class="flex overflow-x-auto gap-2 pb-2 no-scrollbar -mx-margin-mobile px-margin-mobile">
-                    <button class="whitespace-nowrap px-4 py-2 rounded-lg bg-primary-container text-on-primary-container font-label-lg transition-colors">Tümü</button>
-                    <button class="whitespace-nowrap px-4 py-2 rounded-lg border border-outline-variant text-on-surface-variant font-label-lg hover:bg-surface-container-low transition-colors bg-surface-container-lowest">Favoriler</button>
-                    <button class="whitespace-nowrap px-4 py-2 rounded-lg border border-outline-variant text-on-surface-variant font-label-lg hover:bg-surface-container-low transition-colors bg-surface-container-lowest">Göğüs</button>
-                    <button class="whitespace-nowrap px-4 py-2 rounded-lg border border-outline-variant text-on-surface-variant font-label-lg hover:bg-surface-container-low transition-colors bg-surface-container-lowest">Sırt</button>
-                    <button class="whitespace-nowrap px-4 py-2 rounded-lg border border-outline-variant text-on-surface-variant font-label-lg hover:bg-surface-container-low transition-colors bg-surface-container-lowest">Omuz</button>
-                    <button class="whitespace-nowrap px-4 py-2 rounded-lg border border-outline-variant text-on-surface-variant font-label-lg hover:bg-surface-container-low transition-colors bg-surface-container-lowest">Biceps</button>
-                    <button class="whitespace-nowrap px-4 py-2 rounded-lg border border-outline-variant text-on-surface-variant font-label-lg hover:bg-surface-container-low transition-colors bg-surface-container-lowest">Triceps</button>
-                    <button class="whitespace-nowrap px-4 py-2 rounded-lg border border-outline-variant text-on-surface-variant font-label-lg hover:bg-surface-container-low transition-colors bg-surface-container-lowest">Bacak</button>
-                    <button class="whitespace-nowrap px-4 py-2 rounded-lg border border-outline-variant text-on-surface-variant font-label-lg hover:bg-surface-container-low transition-colors bg-surface-container-lowest">Karın</button>
-                    <button class="whitespace-nowrap px-4 py-2 rounded-lg border border-outline-variant text-on-surface-variant font-label-lg hover:bg-surface-container-low transition-colors bg-surface-container-lowest">Kalça</button>
+                    <button onclick="filterExercises('Tümü', this)" class="whitespace-nowrap px-4 py-2 rounded-lg bg-primary-container text-on-primary-container font-label-lg transition-colors filter-chip active">Tümü</button>
+                    <button onclick="filterExercises('Favoriler', this)" class="whitespace-nowrap px-4 py-2 rounded-lg border border-outline-variant text-on-surface-variant font-label-lg hover:bg-surface-container-low transition-colors bg-surface-container-lowest filter-chip">Favoriler</button>
+                    <button onclick="filterExercises('Göğüs', this)" class="whitespace-nowrap px-4 py-2 rounded-lg border border-outline-variant text-on-surface-variant font-label-lg hover:bg-surface-container-low transition-colors bg-surface-container-lowest filter-chip">Göğüs</button>
+                    <button onclick="filterExercises('Sırt', this)" class="whitespace-nowrap px-4 py-2 rounded-lg border border-outline-variant text-on-surface-variant font-label-lg hover:bg-surface-container-low transition-colors bg-surface-container-lowest filter-chip">Sırt</button>
+                    <button onclick="filterExercises('Omuz', this)" class="whitespace-nowrap px-4 py-2 rounded-lg border border-outline-variant text-on-surface-variant font-label-lg hover:bg-surface-container-low transition-colors bg-surface-container-lowest filter-chip">Omuz</button>
+                    <button onclick="filterExercises('Biceps', this)" class="whitespace-nowrap px-4 py-2 rounded-lg border border-outline-variant text-on-surface-variant font-label-lg hover:bg-surface-container-low transition-colors bg-surface-container-lowest filter-chip">Biceps</button>
+                    <button onclick="filterExercises('Triceps', this)" class="whitespace-nowrap px-4 py-2 rounded-lg border border-outline-variant text-on-surface-variant font-label-lg hover:bg-surface-container-low transition-colors bg-surface-container-lowest filter-chip">Triceps</button>
+                    <button onclick="filterExercises('Bacak', this)" class="whitespace-nowrap px-4 py-2 rounded-lg border border-outline-variant text-on-surface-variant font-label-lg hover:bg-surface-container-low transition-colors bg-surface-container-lowest filter-chip">Bacak</button>
+                    <button onclick="filterExercises('Karın', this)" class="whitespace-nowrap px-4 py-2 rounded-lg border border-outline-variant text-on-surface-variant font-label-lg hover:bg-surface-container-low transition-colors bg-surface-container-lowest filter-chip">Karın</button>
+                    <button onclick="filterExercises('Kalça', this)" class="whitespace-nowrap px-4 py-2 rounded-lg border border-outline-variant text-on-surface-variant font-label-lg hover:bg-surface-container-low transition-colors bg-surface-container-lowest filter-chip">Kalça</button>
                 </div>
 
                 <!-- Exercise List Container -->
                 <div id="exercise-list-container" class="flex flex-col gap-6 flex-1 overflow-y-auto no-scrollbar pb-32">
                     
                 <!-- Exercise List: Göğüs -->
-                <div class="mb-4">
+                <div class="mb-4 exercise-category" data-category="Göğüs">
                     <div class="flex items-center justify-between mb-2 py-1">
                         <h2 class="font-title-lg text-on-surface">Göğüs</h2>
                     </div>
                     <div class="flex flex-col gap-2">
-                        <div onclick="openExerciseSheet('Bench Press', 'assets/exercises/chest_bench_press_1786893760582.jpg', [{color: '#7ea18d', label: 'Göğüs (Pectorals)'}, {color: '#c6ebd5', label: 'Triceps, Ön Omuz'}])" class="flex items-center p-4 bg-surface-container-lowest rounded-xl shadow-sm min-h-[48px] cursor-pointer hover:bg-surface-container-low transition-colors active:scale-[0.98]">
+                        <div onclick="openExerciseSheet('Bench Press', 'assets/exercises/chest_bench_press_1786893760582.jpg', [{color: '#7ea18d', label: 'Göğüs (Pectorals)'}, {color: '#c6ebd5', label: 'Triceps, Ön Omuz'}])" class="flex items-center p-4 bg-surface-container-lowest exercise-item rounded-xl shadow-sm min-h-[48px] cursor-pointer hover:bg-surface-container-low transition-colors active:scale-[0.98]">
                             <div class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center mr-4 flex-shrink-0">
                                 <img class="w-6 h-6 object-contain opacity-70" src="assets/exercises/chest_bench_press_1786893760582.jpg"/>
                             </div>
@@ -570,12 +570,12 @@
                 </div>
 
                 <!-- Exercise List: Sırt -->
-                <div class="mb-4">
+                <div class="mb-4 exercise-category" data-category="Sırt">
                     <div class="flex items-center justify-between mb-2 py-1">
                         <h2 class="font-title-lg text-on-surface">Sırt</h2>
                     </div>
                     <div class="flex flex-col gap-2">
-                        <div onclick="openExerciseSheet('Lat Pulldown', 'assets/exercises/back_lat_pulldown_1786893771754.jpg', [{color: '#7ea18d', label: 'Kanat (Lats)'}, {color: '#c6ebd5', label: 'Biceps, Arka Omuz'}])" class="flex items-center p-4 bg-surface-container-lowest rounded-xl shadow-sm min-h-[48px] cursor-pointer hover:bg-surface-container-low transition-colors active:scale-[0.98]">
+                        <div onclick="openExerciseSheet('Lat Pulldown', 'assets/exercises/back_lat_pulldown_1786893771754.jpg', [{color: '#7ea18d', label: 'Kanat (Lats)'}, {color: '#c6ebd5', label: 'Biceps, Arka Omuz'}])" class="flex items-center p-4 bg-surface-container-lowest exercise-item rounded-xl shadow-sm min-h-[48px] cursor-pointer hover:bg-surface-container-low transition-colors active:scale-[0.98]">
                             <div class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center mr-4 flex-shrink-0">
                                 <img class="w-6 h-6 object-contain opacity-70" src="assets/exercises/back_lat_pulldown_1786893771754.jpg"/>
                             </div>
@@ -592,12 +592,12 @@
                 </div>
 
                 <!-- Exercise List: Omuz -->
-                <div class="mb-4">
+                <div class="mb-4 exercise-category" data-category="Omuz">
                     <div class="flex items-center justify-between mb-2 py-1">
                         <h2 class="font-title-lg text-on-surface">Omuz</h2>
                     </div>
                     <div class="flex flex-col gap-2">
-                        <div onclick="openExerciseSheet('Overhead Press', 'assets/exercises/shoulder_overhead_press_1786893781779.jpg', [{color: '#7ea18d', label: 'Omuz (Deltoids)'}, {color: '#c6ebd5', label: 'Triceps'}])" class="flex items-center p-4 bg-surface-container-lowest rounded-xl shadow-sm min-h-[48px] cursor-pointer hover:bg-surface-container-low transition-colors active:scale-[0.98]">
+                        <div onclick="openExerciseSheet('Overhead Press', 'assets/exercises/shoulder_overhead_press_1786893781779.jpg', [{color: '#7ea18d', label: 'Omuz (Deltoids)'}, {color: '#c6ebd5', label: 'Triceps'}])" class="flex items-center p-4 bg-surface-container-lowest exercise-item rounded-xl shadow-sm min-h-[48px] cursor-pointer hover:bg-surface-container-low transition-colors active:scale-[0.98]">
                             <div class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center mr-4 flex-shrink-0">
                                 <img class="w-6 h-6 object-contain opacity-70" src="assets/exercises/shoulder_overhead_press_1786893781779.jpg"/>
                             </div>
@@ -614,12 +614,12 @@
                 </div>
 
                 <!-- Exercise List: Biceps -->
-                <div class="mb-4">
+                <div class="mb-4 exercise-category" data-category="Biceps">
                     <div class="flex items-center justify-between mb-2 py-1">
                         <h2 class="font-title-lg text-on-surface">Biceps</h2>
                     </div>
                     <div class="flex flex-col gap-2">
-                        <div onclick="openExerciseSheet('Barbell Curl', 'assets/exercises/biceps_barbell_curl_1786893790565.jpg', [{color: '#7ea18d', label: 'Biceps'}, {color: '#c6ebd5', label: 'Ön Kol (Forearms)'}])" class="flex items-center p-4 bg-surface-container-lowest rounded-xl shadow-sm min-h-[48px] cursor-pointer hover:bg-surface-container-low transition-colors active:scale-[0.98]">
+                        <div onclick="openExerciseSheet('Barbell Curl', 'assets/exercises/biceps_barbell_curl_1786893790565.jpg', [{color: '#7ea18d', label: 'Biceps'}, {color: '#c6ebd5', label: 'Ön Kol (Forearms)'}])" class="flex items-center p-4 bg-surface-container-lowest exercise-item rounded-xl shadow-sm min-h-[48px] cursor-pointer hover:bg-surface-container-low transition-colors active:scale-[0.98]">
                             <div class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center mr-4 flex-shrink-0">
                                 <img class="w-6 h-6 object-contain opacity-70" src="assets/exercises/biceps_barbell_curl_1786893790565.jpg"/>
                             </div>
@@ -636,12 +636,12 @@
                 </div>
 
                 <!-- Exercise List: Triceps -->
-                <div class="mb-4">
+                <div class="mb-4 exercise-category" data-category="Triceps">
                     <div class="flex items-center justify-between mb-2 py-1">
                         <h2 class="font-title-lg text-on-surface">Triceps</h2>
                     </div>
                     <div class="flex flex-col gap-2">
-                        <div onclick="openExerciseSheet('Tricep Pushdown', 'assets/exercises/triceps_pushdown_1786893802854.jpg', [{color: '#7ea18d', label: 'Triceps'}])" class="flex items-center p-4 bg-surface-container-lowest rounded-xl shadow-sm min-h-[48px] cursor-pointer hover:bg-surface-container-low transition-colors active:scale-[0.98]">
+                        <div onclick="openExerciseSheet('Tricep Pushdown', 'assets/exercises/triceps_pushdown_1786893802854.jpg', [{color: '#7ea18d', label: 'Triceps'}])" class="flex items-center p-4 bg-surface-container-lowest exercise-item rounded-xl shadow-sm min-h-[48px] cursor-pointer hover:bg-surface-container-low transition-colors active:scale-[0.98]">
                             <div class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center mr-4 flex-shrink-0">
                                 <img class="w-6 h-6 object-contain opacity-70" src="assets/exercises/triceps_pushdown_1786893802854.jpg"/>
                             </div>
@@ -658,12 +658,12 @@
                 </div>
 
                 <!-- Exercise List: Bacak -->
-                <div class="mb-4">
+                <div class="mb-4 exercise-category" data-category="Bacak">
                     <div class="flex items-center justify-between mb-2 py-1">
                         <h2 class="font-title-lg text-on-surface">Bacak</h2>
                     </div>
                     <div class="flex flex-col gap-2">
-                        <div onclick="openExerciseSheet('Squat', 'assets/exercises/legs_squat_1786893813775.jpg', [{color: '#7ea18d', label: 'Ön Bacak (Quads), Kalça'}, {color: '#c6ebd5', label: 'Arka Bacak (Hamstrings)'}])" class="flex items-center p-4 bg-surface-container-lowest rounded-xl shadow-sm min-h-[48px] cursor-pointer hover:bg-surface-container-low transition-colors active:scale-[0.98]">
+                        <div onclick="openExerciseSheet('Squat', 'assets/exercises/legs_squat_1786893813775.jpg', [{color: '#7ea18d', label: 'Ön Bacak (Quads), Kalça'}, {color: '#c6ebd5', label: 'Arka Bacak (Hamstrings)'}])" class="flex items-center p-4 bg-surface-container-lowest exercise-item rounded-xl shadow-sm min-h-[48px] cursor-pointer hover:bg-surface-container-low transition-colors active:scale-[0.98]">
                             <div class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center mr-4 flex-shrink-0">
                                 <img class="w-6 h-6 object-contain opacity-70" src="assets/exercises/legs_squat_1786893813775.jpg"/>
                             </div>
@@ -680,12 +680,12 @@
                 </div>
 
                 <!-- Exercise List: Karın -->
-                <div class="mb-4">
+                <div class="mb-4 exercise-category" data-category="Karın">
                     <div class="flex items-center justify-between mb-2 py-1">
                         <h2 class="font-title-lg text-on-surface">Karın</h2>
                     </div>
                     <div class="flex flex-col gap-2">
-                        <div onclick="openExerciseSheet('Crunch', 'assets/exercises/abs_crunch_1786893825131.jpg', [{color: '#7ea18d', label: 'Karın (Abs)'}, {color: '#c6ebd5', label: 'Oblikler'}])" class="flex items-center p-4 bg-surface-container-lowest rounded-xl shadow-sm min-h-[48px] cursor-pointer hover:bg-surface-container-low transition-colors active:scale-[0.98]">
+                        <div onclick="openExerciseSheet('Crunch', 'assets/exercises/abs_crunch_1786893825131.jpg', [{color: '#7ea18d', label: 'Karın (Abs)'}, {color: '#c6ebd5', label: 'Oblikler'}])" class="flex items-center p-4 bg-surface-container-lowest exercise-item rounded-xl shadow-sm min-h-[48px] cursor-pointer hover:bg-surface-container-low transition-colors active:scale-[0.98]">
                             <div class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center mr-4 flex-shrink-0">
                                 <img class="w-6 h-6 object-contain opacity-70" src="assets/exercises/abs_crunch_1786893825131.jpg"/>
                             </div>
@@ -702,12 +702,12 @@
                 </div>
 
                 <!-- Exercise List: Kalça -->
-                <div class="mb-4">
+                <div class="mb-4 exercise-category" data-category="Kalça">
                     <div class="flex items-center justify-between mb-2 py-1">
                         <h2 class="font-title-lg text-on-surface">Kalça</h2>
                     </div>
                     <div class="flex flex-col gap-2">
-                        <div onclick="openExerciseSheet('Hip Thrust', 'assets/exercises/glutes_hip_thrust_1786893834251.jpg', [{color: '#7ea18d', label: 'Kalça (Glutes)'}, {color: '#c6ebd5', label: 'Arka Bacak (Hamstrings)'}])" class="flex items-center p-4 bg-surface-container-lowest rounded-xl shadow-sm min-h-[48px] cursor-pointer hover:bg-surface-container-low transition-colors active:scale-[0.98]">
+                        <div onclick="openExerciseSheet('Hip Thrust', 'assets/exercises/glutes_hip_thrust_1786893834251.jpg', [{color: '#7ea18d', label: 'Kalça (Glutes)'}, {color: '#c6ebd5', label: 'Arka Bacak (Hamstrings)'}])" class="flex items-center p-4 bg-surface-container-lowest exercise-item rounded-xl shadow-sm min-h-[48px] cursor-pointer hover:bg-surface-container-low transition-colors active:scale-[0.98]">
                             <div class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center mr-4 flex-shrink-0">
                                 <img class="w-6 h-6 object-contain opacity-70" src="assets/exercises/glutes_hip_thrust_1786893834251.jpg"/>
                             </div>
@@ -2547,6 +2547,57 @@
             }
         }
         
+        
+        function filterExercises(category, btnElement) {
+            // Update active styling on chips
+            const allChips = document.querySelectorAll('.filter-chip');
+            allChips.forEach(chip => {
+                chip.classList.remove('bg-primary-container', 'text-on-primary-container');
+                chip.classList.add('border', 'border-outline-variant', 'text-on-surface-variant', 'bg-surface-container-lowest');
+            });
+            
+            // Set clicked chip to active
+            btnElement.classList.add('bg-primary-container', 'text-on-primary-container');
+            btnElement.classList.remove('border', 'border-outline-variant', 'text-on-surface-variant', 'bg-surface-container-lowest');
+
+            const categories = document.querySelectorAll('.exercise-category');
+            
+            categories.forEach(catGroup => {
+                const catName = catGroup.getAttribute('data-category');
+                const items = catGroup.querySelectorAll('.exercise-item');
+                let hasVisibleItems = false;
+                
+                items.forEach(item => {
+                    let shouldShow = false;
+                    
+                    if (category === 'Tümü') {
+                        shouldShow = true;
+                    } else if (category === 'Favoriler') {
+                        // Check if star button is active
+                        const isFav = item.querySelector('.exercise-fav-btn').classList.contains('text-primary');
+                        shouldShow = isFav;
+                    } else {
+                        // Specific category
+                        shouldShow = (catName === category);
+                    }
+                    
+                    if (shouldShow) {
+                        item.classList.remove('hidden');
+                        hasVisibleItems = true;
+                    } else {
+                        item.classList.add('hidden');
+                    }
+                });
+                
+                // Hide the whole category group if no items are visible (e.g. no favorites in this category)
+                if (hasVisibleItems) {
+                    catGroup.classList.remove('hidden');
+                } else {
+                    catGroup.classList.add('hidden');
+                }
+            });
+        }
+
         function toggleFav(event, btn) {
             event.stopPropagation();
             const icon = btn.querySelector('.material-symbols-outlined');
