@@ -144,6 +144,10 @@
             transform-origin: 50% 50%;
         }
     </style>
+
+    <!-- Muscle Map Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/@panzoom/panzoom/dist/panzoom.min.js"></script>
+    <script src="assets/exercises/muscle-map.js"></script>
 </head>
 <body class="bg-surface-variant text-on-background font-body-lg antialiased min-h-[100dvh] flex justify-center">
 
@@ -745,7 +749,19 @@
                 <div class="px-6 pb-6 overflow-y-auto flex-grow flex flex-col gap-4">
                     <!-- Muscle Diagram Area -->
                     <div class="bg-surface-container-lowest rounded-xl p-4 flex flex-col items-center justify-center shadow-sm border border-surface-container-low">
-                        <img id="sheet-exercise-img" alt="Anatomical muscle map" class="w-[80%] h-auto object-contain mb-6 rounded-lg mix-blend-multiply" src=""/>
+                        
+                    <!-- Dynamic Interactive SVG Map Container -->
+                    <div id="sheet-interactive-map-wrapper" class="relative w-full h-[350px] mb-6 flex justify-center items-center overflow-hidden bg-surface-container-lowest rounded-xl border border-surface-container-low shadow-inner">
+                        <div id="sheet-interactive-map" class="w-full h-full cursor-move"></div>
+                        
+                        <!-- Zoom Controls -->
+                        <div class="absolute bottom-2 right-2 flex flex-col gap-1 bg-surface-container-high/80 backdrop-blur-sm rounded-lg p-1 shadow-sm">
+                            <button id="zoom-in" class="p-1 text-on-surface hover:text-primary active:scale-95 transition-transform"><span class="material-symbols-outlined text-sm">add</span></button>
+                            <button id="zoom-out" class="p-1 text-on-surface hover:text-primary active:scale-95 transition-transform"><span class="material-symbols-outlined text-sm">remove</span></button>
+                            <button id="zoom-reset" class="p-1 text-on-surface hover:text-primary active:scale-95 transition-transform"><span class="material-symbols-outlined text-sm">restart_alt</span></button>
+                        </div>
+                    </div>
+
                         <div class="flex flex-col gap-2 items-center" id="sheet-exercise-legend">
                             <!-- Eklenecek -->
                         </div>
@@ -2537,7 +2553,35 @@
             }
 
             document.getElementById('sheet-exercise-name').innerText = name;
-            document.getElementById('sheet-exercise-img').src = imgSrc;
+            
+            // Render the interactive SVG instead of static image
+            if (typeof renderMuscleMap === 'function') {
+                renderMuscleMap(name);
+                
+                // Initialize Panzoom
+                const mapElement = document.getElementById('sheet-interactive-map');
+                
+                // Destroy previous instance if exists to prevent memory leaks
+                if (window.currentPanzoom) {
+                    window.currentPanzoom.destroy();
+                }
+                
+                window.currentPanzoom = Panzoom(mapElement, {
+                    maxScale: 4,
+                    minScale: 0.8,
+                    contain: 'outside',
+                    step: 0.2
+                });
+                
+                // Bind buttons
+                document.getElementById('zoom-in').onclick = () => window.currentPanzoom.zoomIn();
+                document.getElementById('zoom-out').onclick = () => window.currentPanzoom.zoomOut();
+                document.getElementById('zoom-reset').onclick = () => window.currentPanzoom.reset();
+                
+                // Add wheel support
+                mapElement.parentElement.addEventListener('wheel', window.currentPanzoom.zoomWithWheel);
+            }
+
             
             let legendHtml = '';
             legendItems.forEach(item => {
