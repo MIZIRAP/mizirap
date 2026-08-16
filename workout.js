@@ -104,22 +104,47 @@ function renderSplitView() {
     
     if(dashNameEl) dashNameEl.innerText = activeSplit.name;
     
-    // For now, default to the first day of the split
-    const currentDay = activeSplit.days && activeSplit.days.length > 0 ? activeSplit.days[0] : null;
+    // Restore saved active day or default to first
+    if(!activeDayId || !activeSplit.days.find(d => d.id === activeDayId)) {
+        const savedDay = localStorage.getItem(`miz_activeDay_${currentUid}`);
+        if(savedDay && activeSplit.days.find(d => d.id === savedDay)) {
+            activeDayId = savedDay;
+        } else {
+            activeDayId = activeSplit.days.length > 0 ? activeSplit.days[0].id : null;
+        }
+    }
+    
+    const currentDay = activeSplit.days.find(d => d.id === activeDayId) || (activeSplit.days.length > 0 ? activeSplit.days[0] : null);
     if(currentDay) {
         if(titleEl) titleEl.innerText = "Bugün: " + currentDay.name;
         if(descEl) descEl.innerText = (currentDay.exercises ? currentDay.exercises.length : 0) + " Hareket içeren antrenman";
     }
     
     if(dotsContainer && activeSplit.days) {
-        let dotsHtml = '';
+        dotsContainer.innerHTML = '';
         activeSplit.days.forEach((day, idx) => {
-            // Highlight the first dot as active for now
-            dotsHtml += `<div class="h-1.5 w-8 ${idx === 0 ? 'bg-white' : 'bg-white/30'} rounded-full"></div>`;
+            const isActive = day.id === activeDayId;
+            const bar = document.createElement('button');
+            bar.className = `h-1.5 rounded-full transition-all duration-200 cursor-pointer ${isActive ? 'bg-white w-10' : 'bg-white/30 w-8 hover:bg-white/60'}`;
+            bar.title = day.name;
+            bar.onclick = () => selectActiveDay(day.id);
+            dotsContainer.appendChild(bar);
         });
-        dotsContainer.innerHTML = dotsHtml;
     }
 }
+
+window.selectActiveDay = function(dayId) {
+    if(!activeSplitId || !dayId) return;
+    const activeSplit = splits.find(s => s.id === activeSplitId);
+    if(!activeSplit) return;
+    const day = activeSplit.days.find(d => d.id === dayId);
+    if(!day) return;
+    
+    activeDayId = dayId;
+    localStorage.setItem(`miz_activeDay_${currentUid}`, dayId);
+    
+    renderSplitView();
+};
 
 async function saveWorkoutSession() {
     if(!currentUid || !activeSplitId || !activeDayId) return;
