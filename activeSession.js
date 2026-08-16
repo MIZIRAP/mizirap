@@ -668,11 +668,37 @@ async function _updateExerciseProgress(exId, completedSet) {
         }
         const trimmedRPE = last5RPE.slice(-5);
 
+        // Keep track of the best set of the last 5 sessions
+        const recentSessionSummaries = [...(existing.recentSessionSummaries || [])];
+        const dateStr = new Date().toLocaleDateString('en-CA');
+        
+        const summaryObj = {
+            weight: completedSet.weight,
+            reps: completedSet.reps,
+            rpe: completedSet.rpe,
+            e1rm: completedSet.e1rm,
+            date: dateStr
+        };
+
+        if (recentSessionSummaries.length > 0 && recentSessionSummaries[recentSessionSummaries.length - 1].date === dateStr) {
+            // Update today's summary if this set is better (higher e1RM)
+            const currentBest = recentSessionSummaries[recentSessionSummaries.length - 1];
+            if (completedSet.e1rm > currentBest.e1rm) {
+                recentSessionSummaries[recentSessionSummaries.length - 1] = summaryObj;
+            }
+        } else {
+            // New session day
+            recentSessionSummaries.push(summaryObj);
+        }
+        
+        const trimmedSummaries = recentSessionSummaries.slice(-5);
+
         const update = {
             currentE1RM:   (existing.currentE1RM == null || newE1RM > existing.currentE1RM) ? newE1RM : existing.currentE1RM,
             lastWeight:    completedSet.weight,
             lastReps:      completedSet.reps,
             last5SetsRPE:  trimmedRPE,
+            recentSessionSummaries: trimmedSummaries,
             lastUpdated:   serverTimestamp()
         };
 

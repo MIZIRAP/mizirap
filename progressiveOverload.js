@@ -42,3 +42,50 @@ if (typeof window !== 'undefined' && window.location.hostname === 'localhost') {
     assert('55kg×6@RPE9', calculateE1RM(55, 6, 9), 67.8);
     assert('80kg×8@RPE null', calculateE1RM(80, 8, null), 101.3);
 }
+
+/**
+ * Detect progress status based on recent session history for a specific exercise.
+ * @param {Array} recentSessions - Array of best sets from recent sessions in chronological order (oldest to newest).
+ *                                  Format: { weight, reps, rpe, e1rm, date }
+ * @returns {string|null} "progressing", "plateaued", "attention" or null if insufficient data.
+ */
+export function detectProgressStatus(recentSessions) {
+    if (!recentSessions || recentSessions.length < 2) return null;
+
+    const last = recentSessions[recentSessions.length - 1];
+    const prev = recentSessions[recentSessions.length - 2];
+
+    // Rule 1: PLATEAUED — last 3+ sessions have exact same weight, reps, and RPE
+    if (recentSessions.length >= 3) {
+        const lastThree = recentSessions.slice(-3);
+        const allSame = lastThree.every(s => 
+            s.weight === lastThree[0].weight && 
+            s.reps === lastThree[0].reps && 
+            s.rpe === lastThree[0].rpe
+        );
+        if (allSame) return "plateaued";
+    }
+
+    // Rule 2: ATTENTION — RPE is increasing, but weight/reps are stagnant or dropping
+    if (last.rpe && prev.rpe && last.rpe > prev.rpe && last.weight <= prev.weight && last.reps <= prev.reps) {
+        return "attention";
+    }
+
+    // Rule 3: PROGRESSING — e1RM increases, OR same weight/reps with lower RPE
+    if (last.e1rm > prev.e1rm) return "progressing";
+    if (last.weight === prev.weight && last.reps === prev.reps && last.rpe && prev.rpe && last.rpe < prev.rpe) {
+        return "progressing";
+    }
+
+    // Default to neutral / plateaued if not clearly progressing or needing attention
+    return "plateaued";
+}
+
+/**
+ * Get actionable suggestion text based on status.
+ */
+export function getSuggestionText(status, recentSessions) {
+    if (status === "plateaued") return "3 antrenmandır aynı ağırlık — deload düşünülebilir";
+    if (status === "attention") return "RPE yükseliyor, toparlanmaya dikkat";
+    return null;
+}
