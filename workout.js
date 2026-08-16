@@ -841,19 +841,183 @@ function renderSplitEditView() {
     
     if(daysContainer) {
         daysContainer.innerHTML = '';
-        activeSplit.days.forEach((day, idx) => {
+        activeSplit.days.forEach((day, dayIdx) => {
             const dayCard = document.createElement('div');
-            dayCard.className = "bg-surface-container-lowest rounded-xl p-md shadow-sm";
+            dayCard.className = "bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden";
+            
+            let exRows = '';
+            if(!day.exercises || day.exercises.length === 0) {
+                exRows = `<p class="text-label-sm text-on-surface-variant italic px-md py-sm">Henüz hareket eklenmedi.</p>`;
+            } else {
+                day.exercises.forEach((ex, exIdx) => {
+                    const isFirst = exIdx === 0;
+                    const isLast = exIdx === day.exercises.length - 1;
+                    exRows += `
+                        <div class="flex items-center gap-2 px-md py-2.5 border-b border-surface-container-highest last:border-0 group" id="ex-row-${activeSplit.id}-${dayIdx}-${exIdx}">
+                            <!-- Sıralama Butonları -->
+                            <div class="flex flex-col gap-0.5 shrink-0">
+                                <button onclick="moveExercise('${activeSplit.id}', ${dayIdx}, ${exIdx}, -1)"
+                                    class="w-6 h-5 flex items-center justify-center text-on-surface-variant hover:text-primary transition-colors rounded ${isFirst ? 'opacity-20 pointer-events-none' : ''}">
+                                    <span class="material-symbols-outlined" style="font-size:16px">arrow_drop_up</span>
+                                </button>
+                                <button onclick="moveExercise('${activeSplit.id}', ${dayIdx}, ${exIdx}, 1)"
+                                    class="w-6 h-5 flex items-center justify-center text-on-surface-variant hover:text-primary transition-colors rounded ${isLast ? 'opacity-20 pointer-events-none' : ''}">
+                                    <span class="material-symbols-outlined" style="font-size:16px">arrow_drop_down</span>
+                                </button>
+                            </div>
+                            <!-- Hareket Adı -->
+                            <span class="flex-1 font-body-md text-on-surface text-sm leading-tight">${ex.name}</span>
+                            <!-- Set Sayısı -->
+                            <div class="flex items-center gap-1.5 shrink-0">
+                                <button onclick="changeExerciseSets('${activeSplit.id}', ${dayIdx}, ${exIdx}, -1)"
+                                    class="w-7 h-7 rounded-full bg-surface-container-high flex items-center justify-center hover:bg-primary-container/40 transition-colors text-on-surface font-bold text-lg leading-none">
+                                    −
+                                </button>
+                                <span class="font-label-lg text-on-surface w-8 text-center" id="sets-display-${activeSplit.id}-${dayIdx}-${exIdx}">${ex.defaultSets || 3} set</span>
+                                <button onclick="changeExerciseSets('${activeSplit.id}', ${dayIdx}, ${exIdx}, 1)"
+                                    class="w-7 h-7 rounded-full bg-surface-container-high flex items-center justify-center hover:bg-primary-container/40 transition-colors text-on-surface font-bold text-lg leading-none">
+                                    +
+                                </button>
+                            </div>
+                            <!-- Sil Butonu -->
+                            <button onclick="removeExerciseFromSplit('${activeSplit.id}', ${dayIdx}, ${exIdx})"
+                                class="shrink-0 w-8 h-8 flex items-center justify-center text-on-surface-variant hover:text-error hover:bg-error-container/20 rounded-full transition-colors">
+                                <span class="material-symbols-outlined" style="font-size:18px">delete</span>
+                            </button>
+                        </div>
+                    `;
+                });
+            }
+            
             dayCard.innerHTML = `
-                <div class="flex items-center justify-between mb-sm">
+                <div class="flex items-center justify-between px-md pt-md pb-sm">
                     <h3 class="font-title-md text-title-md font-bold text-on-surface">${day.name}</h3>
-                    <div class="text-on-surface-variant font-label-sm">${day.exercises ? day.exercises.length : 0} Hareket</div>
+                    <span class="font-label-sm text-on-surface-variant">${day.exercises ? day.exercises.length : 0} hareket</span>
                 </div>
-                <div class="flex items-center gap-xs overflow-x-auto hide-scrollbar">
+                <div class="flex flex-col">
+                    ${exRows}
+                </div>
+                <div class="px-md pt-sm pb-md">
+                    <button onclick="openExercisePickerForSplit('${activeSplit.id}', ${dayIdx})"
+                        class="w-full py-2 bg-primary-container/20 text-primary rounded-lg font-label-sm hover:bg-primary-container/40 transition-colors flex items-center justify-center gap-1">
+                        <span class="material-symbols-outlined text-[18px]">add</span> Egzersiz Ekle
+                    </button>
                 </div>
             `;
             daysContainer.appendChild(dayCard);
         });
+    }
+}
+
+// ---------- Split Düzenle – Inline Hareket İşlemleri ----------
+
+window.moveExercise = function(splitId, dayIdx, exIdx, direction) {
+    const split = splits.find(s => s.id === splitId);
+    if(!split) return;
+    const day = split.days[dayIdx];
+    const newIdx = exIdx + direction;
+    if(newIdx < 0 || newIdx >= day.exercises.length) return;
+    
+    // Swap
+    [day.exercises[exIdx], day.exercises[newIdx]] = [day.exercises[newIdx], day.exercises[exIdx]];
+    
+    persistSplitEdit(split);
+    renderSplitEditView();
+};
+
+window.changeExerciseSets = function(splitId, dayIdx, exIdx, delta) {
+    const split = splits.find(s => s.id === splitId);
+    if(!split) return;
+    const ex = split.days[dayIdx].exercises[exIdx];
+    ex.defaultSets = Math.max(1, (ex.defaultSets || 3) + delta);
+    
+    // Sadece label'ı güncelle, tüm listeyi yeniden render etme
+    const label = document.getElementById(`sets-display-${splitId}-${dayIdx}-${exIdx}`);
+    if(label) label.innerText = `${ex.defaultSets} set`;
+    
+    persistSplitEdit(split);
+};
+
+window.removeExerciseFromSplit = function(splitId, dayIdx, exIdx) {
+    const split = splits.find(s => s.id === splitId);
+    if(!split) return;
+    split.days[dayIdx].exercises.splice(exIdx, 1);
+    persistSplitEdit(split);
+    renderSplitEditView();
+};
+
+window.openExercisePickerForSplit = function(splitId, dayIdx) {
+    // "Yeni Split Oluştur" formundaki picker'ı yeniden kullanıyoruz,
+    // ama callback'i aktif split'e yazacak şekilde yönlendiriyoruz.
+    currentPickerDayId = `__split__${splitId}__day__${dayIdx}`;
+    document.getElementById('modal-exercise-picker').classList.remove('hidden');
+    renderExercisePickerList('Tümü');
+    
+    const searchInput = document.getElementById('exercise-picker-search');
+    if(searchInput) {
+        searchInput.value = '';
+        searchInput.oninput = (e) => renderExercisePickerList('Tümü', e.target.value);
+    }
+};
+
+// Picker'daki "ekle" butonuna basıldığında çağrılan mevcut fonksiyonu override et
+const _origPickerClick = window._origPickerClick;
+function handlePickerSelect(exName) {
+    if(!currentPickerDayId) return;
+    
+    if(currentPickerDayId.startsWith('__split__')) {
+        // Mevcut split'e ekle
+        const parts = currentPickerDayId.split('__');
+        const splitId = parts[2];
+        const dayIdx = parseInt(parts[4]);
+        const split = splits.find(s => s.id === splitId);
+        if(split) {
+            split.days[dayIdx].exercises.push({
+                id: `e${Date.now()}_${Math.floor(Math.random()*1000)}`,
+                name: exName,
+                defaultSets: 3
+            });
+            persistSplitEdit(split);
+            closeExercisePickerModal();
+            renderSplitEditView();
+        }
+    } else {
+        // Yeni split formuna ekle
+        const day = newSplitDays.find(d => d.id === currentPickerDayId);
+        if(day) {
+            day.exercises.push({
+                id: `e${Date.now()}_${Math.floor(Math.random()*1000)}`,
+                name: exName,
+                defaultSets: 3
+            });
+            closeExercisePickerModal();
+            renderCreateSplitDays();
+        }
+    }
+}
+
+// Picker listesi render fonksiyonu içindeki onclick'i override et
+function patchPickerListClick() {
+    const list = document.getElementById('exercise-picker-list');
+    if(!list) return;
+    list.querySelectorAll('button').forEach(btn => {
+        const oldClick = btn.onclick;
+        btn.onclick = function() {
+            const nameEl = btn.querySelector('.font-body-md');
+            if(nameEl) handlePickerSelect(nameEl.textContent.trim());
+            else if(oldClick) oldClick.call(this);
+        };
+    });
+}
+
+async function persistSplitEdit(split) {
+    try {
+        await setDoc(doc(db, "users", currentUid, "splits", split.id), split);
+        // Yerel listeyi de güncelle
+        const idx = splits.findIndex(s => s.id === split.id);
+        if(idx !== -1) splits[idx] = split;
+    } catch(e) {
+        console.error("Split kayıt hatası:", e);
     }
 }
 
@@ -1018,20 +1182,7 @@ function renderExercisePickerList(category, searchTerm = '') {
             <span class="font-body-md text-on-surface">${exName}</span>
             <span class="material-symbols-outlined text-primary">add_circle</span>
         `;
-        btn.onclick = () => {
-            if(currentPickerDayId) {
-                const day = newSplitDays.find(d => d.id === currentPickerDayId);
-                if(day) {
-                    day.exercises.push({
-                        id: `e${Date.now()}_${Math.floor(Math.random()*1000)}`,
-                        name: exName,
-                        defaultSets: 3
-                    });
-                    closeExercisePickerModal();
-                    renderCreateSplitDays();
-                }
-            }
-        };
+        btn.onclick = () => handlePickerSelect(exName);
         list.appendChild(btn);
     });
 }
