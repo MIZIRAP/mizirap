@@ -3378,9 +3378,96 @@
         </div>
     </div>
 </div>
+    <!-- ======= AKTİF ANTRENMAN SEANSI ======= -->
+    <section id="view-active-session" class="view hidden bg-background min-h-[100dvh] text-on-surface font-body-lg absolute inset-0 z-50 overflow-y-auto">
+        <!-- Sticky Header -->
+        <header class="sticky top-0 bg-background/95 backdrop-blur-sm z-10 border-b border-surface-container-high">
+            <div class="flex items-center justify-between px-margin-mobile h-16 max-w-md mx-auto gap-2">
+                <!-- Back -->
+                <button onclick="sessionGoBack()" class="w-10 h-10 flex items-center justify-center text-on-surface-variant hover:bg-surface-variant/10 transition-colors rounded-full active:scale-90 shrink-0">
+                    <span class="material-symbols-outlined">arrow_back</span>
+                </button>
+                <!-- Title + Timer -->
+                <div class="flex-1 flex flex-col items-center">
+                    <h1 class="font-title-lg text-title-lg text-on-surface leading-tight" id="session-day-title">Antrenman</h1>
+                    <div class="flex items-center gap-1 text-primary">
+                        <span class="material-symbols-outlined" style="font-size:14px">timer</span>
+                        <span class="font-label-sm text-label-sm tracking-wider" id="session-timer">00:00</span>
+                    </div>
+                </div>
+                <!-- Finish -->
+                <button id="session-finish-btn"
+                    class="shrink-0 px-3 h-9 bg-primary text-on-primary rounded-full font-label-sm text-label-sm flex items-center gap-1 hover:opacity-90 active:scale-95 transition-all shadow-sm">
+                    <span class="material-symbols-outlined" style="font-size:16px">flag</span>
+                    Bitir
+                </button>
+            </div>
+        </header>
+
+        <!-- Exercise Cards -->
+        <main class="px-margin-mobile pt-4 pb-10 flex flex-col gap-md max-w-md mx-auto" id="session-exercises-container">
+            <!-- Populated by activeSession.js -->
+        </main>
+    </section>
+
+    <!-- ======= İLERLEME (PROGRESS) ======= -->
+    <section id="view-progress" class="view hidden bg-primary-fixed-dim text-on-background font-body-lg min-h-[100dvh] pb-[100px] overflow-y-auto relative z-40">
+        <!-- TopAppBar -->
+        <header class="w-full top-0 sticky bg-primary-fixed-dim border-b border-primary-container z-40">
+            <div class="flex items-center justify-between px-container-padding h-16 w-full max-w-md mx-auto">
+                <button onclick="document.getElementById('view-progress').classList.add('hidden'); document.getElementById('view-workout').classList.remove('hidden');" class="flex items-center justify-center w-10 h-10 rounded-full hover:bg-surface-container transition-colors active:scale-95 duration-150 ease-in-out text-primary">
+                    <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">arrow_back</span>
+                </button>
+                <h1 class="font-headline-sm text-headline-sm text-primary tracking-tight">İlerleme</h1>
+                <div class="w-10"></div> <!-- Spacer for centering -->
+            </div>
+        </header>
+
+        <main class="max-w-md mx-auto px-container-padding pt-card-gap flex flex-col gap-card-gap">
+            <!-- Summary Card -->
+            <section class="bg-surface-container-lowest rounded-3xl p-6 shadow-sm border border-primary-container/20">
+                <h2 class="font-body-lg text-body-lg text-on-surface-variant mb-4" id="progress-summary-text">
+                    Hesaplanıyor...
+                </h2>
+                <div class="flex justify-between items-center">
+                    <div class="flex items-center gap-2">
+                        <div class="w-3 h-3 rounded-full bg-primary-container"></div>
+                        <span class="font-headline-sm text-headline-sm text-on-surface" id="progress-count-progressing">0</span>
+                        <span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider hidden sm:inline">İlerliyor</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <div class="w-3 h-3 rounded-full bg-tertiary-container"></div>
+                        <span class="font-headline-sm text-headline-sm text-on-surface" id="progress-count-plateaued">0</span>
+                        <span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider hidden sm:inline">Plato</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <div class="w-3 h-3 rounded-full bg-error"></div>
+                        <span class="font-headline-sm text-headline-sm text-on-surface" id="progress-count-attention">0</span>
+                        <span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider hidden sm:inline">Dikkat</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Filter Chips -->
+            <section class="overflow-x-auto hide-scrollbar -mx-container-padding px-container-padding pb-2" id="progress-filters-container" style="display: none;">
+                <div class="flex gap-2 w-max">
+                    <button class="progress-filter-btn px-4 py-2 rounded-full font-label-md text-label-md bg-primary-container text-on-primary-container active:scale-95 transition-transform" data-filter="all">Tümü</button>
+                    <button class="progress-filter-btn px-4 py-2 rounded-full font-label-md text-label-md bg-surface-container-highest text-on-surface-variant hover:bg-surface-variant active:scale-95 transition-transform" data-filter="progressing">İlerliyor</button>
+                    <button class="progress-filter-btn px-4 py-2 rounded-full font-label-md text-label-md bg-surface-container-highest text-on-surface-variant hover:bg-surface-variant active:scale-95 transition-transform" data-filter="plateaued">Platoda</button>
+                    <button class="progress-filter-btn px-4 py-2 rounded-full font-label-md text-label-md bg-surface-container-highest text-on-surface-variant hover:bg-surface-variant active:scale-95 transition-transform" data-filter="attention">Dikkat</button>
+                </div>
+            </section>
+
+            <!-- Exercise List Container -->
+            <div id="progress-list-container" class="flex flex-col gap-card-gap">
+                <!-- Dynamically populated by progressView.js -->
+            </div>
+        </main>
+    </section>
+
 <!-- Kapanış: #app-container -->
 
-    <script type="module" src="app.js?v=100"></script>
+    <script type="module" src="app.js?v=101"></script>
 
 <!-- ================= FINANCE MODALS ================= -->
 <!-- Add Transaction Modal -->
@@ -4141,92 +4228,6 @@
     </div>
 
 
-    <!-- ======= AKTİF ANTRENMAN SEANSI ======= -->
-    <section id="view-active-session" class="view hidden bg-background min-h-[100dvh] text-on-surface font-body-lg fixed inset-0 z-50 overflow-y-auto">
-        <!-- Sticky Header -->
-        <header class="sticky top-0 bg-background/95 backdrop-blur-sm z-10 border-b border-surface-container-high">
-            <div class="flex items-center justify-between px-margin-mobile h-16 max-w-md mx-auto gap-2">
-                <!-- Back -->
-                <button onclick="sessionGoBack()" class="w-10 h-10 flex items-center justify-center text-on-surface-variant hover:bg-surface-variant/10 transition-colors rounded-full active:scale-90 shrink-0">
-                    <span class="material-symbols-outlined">arrow_back</span>
-                </button>
-                <!-- Title + Timer -->
-                <div class="flex-1 flex flex-col items-center">
-                    <h1 class="font-title-lg text-title-lg text-on-surface leading-tight" id="session-day-title">Antrenman</h1>
-                    <div class="flex items-center gap-1 text-primary">
-                        <span class="material-symbols-outlined" style="font-size:14px">timer</span>
-                        <span class="font-label-sm text-label-sm tracking-wider" id="session-timer">00:00</span>
-                    </div>
-                </div>
-                <!-- Finish -->
-                <button id="session-finish-btn"
-                    class="shrink-0 px-3 h-9 bg-primary text-on-primary rounded-full font-label-sm text-label-sm flex items-center gap-1 hover:opacity-90 active:scale-95 transition-all shadow-sm">
-                    <span class="material-symbols-outlined" style="font-size:16px">flag</span>
-                    Bitir
-                </button>
-            </div>
-        </header>
-
-        <!-- Exercise Cards -->
-        <main class="px-margin-mobile pt-4 pb-10 flex flex-col gap-md max-w-md mx-auto" id="session-exercises-container">
-            <!-- Populated by activeSession.js -->
-        </main>
-    </section>
-
-    <!-- ======= İLERLEME (PROGRESS) ======= -->
-    <section id="view-progress" class="view hidden bg-primary-fixed-dim text-on-background font-body-lg min-h-[100dvh] pb-[100px] overflow-y-auto">
-        <!-- TopAppBar -->
-        <header class="w-full top-0 sticky bg-primary-fixed-dim border-b border-primary-container z-40">
-            <div class="flex items-center justify-between px-container-padding h-16 w-full max-w-md mx-auto">
-                <button onclick="document.getElementById('view-progress').classList.add('hidden'); document.getElementById('view-workout').classList.remove('hidden');" class="flex items-center justify-center w-10 h-10 rounded-full hover:bg-surface-container transition-colors active:scale-95 duration-150 ease-in-out text-primary">
-                    <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">arrow_back</span>
-                </button>
-                <h1 class="font-headline-sm text-headline-sm text-primary tracking-tight">İlerleme</h1>
-                <div class="w-10"></div> <!-- Spacer for centering -->
-            </div>
-        </header>
-
-        <main class="max-w-md mx-auto px-container-padding pt-card-gap flex flex-col gap-card-gap">
-            <!-- Summary Card -->
-            <section class="bg-surface-container-lowest rounded-3xl p-6 shadow-sm border border-primary-container/20">
-                <h2 class="font-body-lg text-body-lg text-on-surface-variant mb-4" id="progress-summary-text">
-                    Hesaplanıyor...
-                </h2>
-                <div class="flex justify-between items-center">
-                    <div class="flex items-center gap-2">
-                        <div class="w-3 h-3 rounded-full bg-primary-container"></div>
-                        <span class="font-headline-sm text-headline-sm text-on-surface" id="progress-count-progressing">0</span>
-                        <span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider hidden sm:inline">İlerliyor</span>
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <div class="w-3 h-3 rounded-full bg-tertiary-container"></div>
-                        <span class="font-headline-sm text-headline-sm text-on-surface" id="progress-count-plateaued">0</span>
-                        <span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider hidden sm:inline">Plato</span>
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <div class="w-3 h-3 rounded-full bg-error"></div>
-                        <span class="font-headline-sm text-headline-sm text-on-surface" id="progress-count-attention">0</span>
-                        <span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider hidden sm:inline">Dikkat</span>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Filter Chips -->
-            <section class="overflow-x-auto hide-scrollbar -mx-container-padding px-container-padding pb-2" id="progress-filters-container" style="display: none;">
-                <div class="flex gap-2 w-max">
-                    <button class="progress-filter-btn px-4 py-2 rounded-full font-label-md text-label-md bg-primary-container text-on-primary-container active:scale-95 transition-transform" data-filter="all">Tümü</button>
-                    <button class="progress-filter-btn px-4 py-2 rounded-full font-label-md text-label-md bg-surface-container-highest text-on-surface-variant hover:bg-surface-variant active:scale-95 transition-transform" data-filter="progressing">İlerliyor</button>
-                    <button class="progress-filter-btn px-4 py-2 rounded-full font-label-md text-label-md bg-surface-container-highest text-on-surface-variant hover:bg-surface-variant active:scale-95 transition-transform" data-filter="plateaued">Platoda</button>
-                    <button class="progress-filter-btn px-4 py-2 rounded-full font-label-md text-label-md bg-surface-container-highest text-on-surface-variant hover:bg-surface-variant active:scale-95 transition-transform" data-filter="attention">Dikkat</button>
-                </div>
-            </section>
-
-            <!-- Exercise List Container -->
-            <div id="progress-list-container" class="flex flex-col gap-card-gap">
-                <!-- Dynamically populated by progressView.js -->
-            </div>
-        </main>
-    </section>
 
 </body>
 </html>
