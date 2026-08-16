@@ -43,3 +43,4 @@ body {
 .icon-lg { font-size: 24px !important; }
 .badge-primary { @apply px-2 py-0.5 rounded-full border border-primary text-primary text-label-sm font-label-sm; }
 .badge-outline { @apply px-2 py-0.5 rounded-full border border-outline-variant text-on-surface-variant text-label-sm font-label-sm; }
+.bg-light-sage { background-color: #B7D0C1; }

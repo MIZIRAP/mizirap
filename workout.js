@@ -80,11 +80,6 @@ function setupEventListeners() {
     const saveSplitBtn = document.getElementById("save-split-btn");
     if (saveSplitBtn) saveSplitBtn.onclick = saveNewSplit;
     
-    const addDayBtn = document.getElementById("add-day-btn");
-    if (addDayBtn) addDayBtn.onclick = addDayToSplitForm;
-
-    const closeSplitModalBtn = document.getElementById("close-split-modal-btn");
-    if (closeSplitModalBtn) closeSplitModalBtn.onclick = closeSplitModal;
     
     const saveWorkoutBtn = document.getElementById("workout-save-btn");
     if (saveWorkoutBtn) saveWorkoutBtn.onclick = saveWorkoutSession;
