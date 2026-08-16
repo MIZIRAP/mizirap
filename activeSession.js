@@ -241,10 +241,6 @@ function _renderSessionExercises() {
             <!-- Accordion Body -->
             <div id="accordion-body-${ex.id}" class="${isOpen ? '' : 'hidden'}">
                 <div class="flex flex-col" id="sets-container-${ex.id}"></div>
-                <button onclick="sessionAddSet('${ex.id}')"
-                    class="font-label-lg text-label-lg text-primary w-full py-2.5 hover:bg-primary/5 transition-colors text-center border-t border-surface-container-high">
-                    + Set Ekle
-                </button>
             </div>
         `;
 

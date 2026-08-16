@@ -3,7 +3,7 @@ import { formatDate, formatCurrency } from "./utils.js";
 import { collection, doc, addDoc, setDoc, getDocs, getDoc, query, orderBy, limit, serverTimestamp, where, onSnapshot, updateDoc, deleteDoc, deleteField } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
 import { escapeHtml, handleFormSubmit } from "./utils.js";
 import { registerListener } from "./listenerManager.js";
-import { openActiveSession, closeActiveSession } from "./activeSession.js";
+import { openActiveSession, closeActiveSession } from "./activeSession.js?v=2";
 
 let currentUid = null;
 let splits = [];
