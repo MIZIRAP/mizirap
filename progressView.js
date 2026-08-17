@@ -1,3 +1,10 @@
+/**
+ * progressView.js — İlerleme Sayfası
+ * 
+ * Önce exercise_progress/{exId} dokümanlarından okur (hızlı özet).
+ * Her egzersiz için lastWeight, lastReps, recentSessionSummaries gösterir.
+ * Eğer summaries >= 2 ise trend/status hesaplar, yoksa salt "son bilgiler" kartı gösterir.
+ */
 import { collection, getDocs } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
 import { db } from "./firebase-config.js";
 import { detectProgressStatus, getSuggestionText } from "./progressiveOverload.js";
@@ -17,7 +24,7 @@ const MUSCLE_NAMES_TR = {
 };
 
 // State
-let allProgressData = []; // Array of processed exercise progress
+let allExerciseData = [];
 
 export async function openProgressView() {
     // Show view
@@ -25,171 +32,151 @@ export async function openProgressView() {
     document.getElementById('view-progress').classList.remove('hidden');
 
     const uid = window.currentUid || localStorage.getItem('uid');
-    if (!uid) return;
 
     const summaryText = document.getElementById('progress-summary-text');
     const listContainer = document.getElementById('progress-list-container');
     const filtersContainer = document.getElementById('progress-filters-container');
 
+    if (!uid) {
+        summaryText.innerText = "Oturum bilgisi bulunamadı. Lütfen çıkıp tekrar giriş yapın.";
+        listContainer.innerHTML = '';
+        if (filtersContainer) filtersContainer.style.display = "none";
+        return;
+    }
+
     summaryText.innerText = "Yükleniyor...";
     listContainer.innerHTML = "";
-    filtersContainer.style.display = "none";
+    if (filtersContainer) filtersContainer.style.display = "none";
 
     try {
         const progressRef = collection(db, 'users', uid, 'exercise_progress');
         const snap = await getDocs(progressRef);
-        
-        allProgressData = [];
-        
-        snap.forEach(doc => {
-            const data = doc.data();
-            const exId = doc.id;
-            const summaries = data.recentSessionSummaries || [];
-            
-            // At least 2 sessions needed to calculate progress
-            if (summaries.length >= 2) {
-                const status = detectProgressStatus(summaries);
-                if (status) {
-                    const exName = data.exName || exId;
-                    const muscleData = window.EXERCISE_MUSCLE_MAPPING?.[exName] || {};
-                    const primaryMuscle = (muscleData.primary && muscleData.primary[0]) ? muscleData.primary[0] : "diğer";
-                    const currentE1RM = data.currentE1RM || summaries[summaries.length - 1].e1rm || 0;
 
-                    allProgressData.push({
-                        exId,
-                        exName,
-                        status,
-                        summaries,
-                        primaryMuscle,
-                        currentE1RM
-                    });
-                }
-            }
+        console.log('[progressView] exercise_progress doc count:', snap.size);
+
+        allExerciseData = [];
+
+        snap.forEach(docSnap => {
+            const data = docSnap.data();
+            const exId = docSnap.id;
+            const summaries = data.recentSessionSummaries || [];
+
+            console.log(`[progressView] ${exId}: summaries.length=${summaries.length}, lastWeight=${data.lastWeight}`);
+
+            const exName = data.exName || exId;
+            const muscleData = window.EXERCISE_MUSCLE_MAPPING?.[exName] || {};
+            const primaryMuscle = (muscleData.primary && muscleData.primary[0]) ? muscleData.primary[0] : "diğer";
+
+            // Determine status — needs >= 2 sessions
+            const status = summaries.length >= 2 ? detectProgressStatus(summaries) : null;
+            const currentE1RM = data.currentE1RM || (summaries.length > 0 ? summaries[summaries.length - 1].e1rm : 0) || 0;
+
+            allExerciseData.push({
+                exId,
+                exName,
+                status,         // null if not enough data
+                summaries,
+                primaryMuscle,
+                currentE1RM,
+                lastWeight: data.lastWeight,
+                lastReps: data.lastReps,
+                personalRecordE1RM: data.personalRecordE1RM || null,
+            });
         });
 
-        if (allProgressData.length === 0) {
-            summaryText.innerText = "İlerleme verisi için en az 2 antrenman tamamlaman gerekiyor.";
-            document.getElementById('progress-count-progressing').innerText = "0";
-            document.getElementById('progress-count-plateaued').innerText = "0";
-            document.getElementById('progress-count-attention').innerText = "0";
+        console.log('[progressView] allExerciseData.length:', allExerciseData.length);
+
+        if (allExerciseData.length === 0) {
+            _renderEmptyState(listContainer, summaryText);
             return;
         }
 
-        renderProgressView();
-        setupFilters();
+        _renderAll(listContainer, summaryText, filtersContainer);
+        _setupFilters();
+
     } catch (e) {
-        console.error("Error loading progress data:", e);
-        summaryText.innerText = "Veri yüklenirken hata oluştu.";
+        console.error("[progressView] Error loading progress data:", e);
+        summaryText.innerText = "Veri yüklenirken hata oluştu: " + e.message;
     }
 }
 
-function renderProgressView(filterStatus = 'all') {
-    const listContainer = document.getElementById('progress-list-container');
-    const summaryText = document.getElementById('progress-summary-text');
-    
-    // Filter data
-    const filteredData = filterStatus === 'all' 
-        ? allProgressData 
-        : allProgressData.filter(d => d.status === filterStatus);
+function _renderEmptyState(listContainer, summaryText) {
+    summaryText.innerText = "Henüz antrenman verisi yok.";
+    document.getElementById('progress-count-progressing').innerText = "0";
+    document.getElementById('progress-count-plateaued').innerText = "0";
+    document.getElementById('progress-count-attention').innerText = "0";
 
-    // Calculate totals based on ALL data for the summary card
-    const progressing = allProgressData.filter(d => d.status === 'progressing').length;
-    const plateaued = allProgressData.filter(d => d.status === 'plateaued').length;
-    const attention = allProgressData.filter(d => d.status === 'attention').length;
+    listContainer.innerHTML = `
+        <div class="flex flex-col items-center justify-center py-20 gap-6 text-center px-6">
+            <div class="w-20 h-20 rounded-full bg-primary-container/30 flex items-center justify-center">
+                <span class="material-symbols-outlined text-primary" style="font-size: 40px; font-variation-settings: 'FILL' 1;">fitness_center</span>
+            </div>
+            <div class="flex flex-col gap-2">
+                <h3 class="font-headline-sm text-headline-sm text-on-surface">İlk Antrenmanını Bekliyor</h3>
+                <p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+                    Aktif antrenman sayfasında en az bir seti tamamladıktan sonra burada ilerleme kartlarını göreceksin.
+                </p>
+            </div>
+        </div>
+    `;
+}
+
+function _renderAll(listContainer, summaryText, filtersContainer, filterStatus = 'all') {
+    // Stats only from items with enough data
+    const withStatus = allExerciseData.filter(d => d.status !== null);
+    const progressing = withStatus.filter(d => d.status === 'progressing').length;
+    const plateaued = withStatus.filter(d => d.status === 'plateaued').length;
+    const attention = withStatus.filter(d => d.status === 'attention').length;
 
     document.getElementById('progress-count-progressing').innerText = progressing;
     document.getElementById('progress-count-plateaued').innerText = plateaued;
     document.getElementById('progress-count-attention').innerText = attention;
-    
-    summaryText.innerText = `${progressing} egzersizde ilerliyorsun, ${plateaued} platoda, ${attention} dikkat gerektiriyor`;
-    document.getElementById('progress-filters-container').style.display = "block";
+
+    const totalTracked = allExerciseData.length;
+    if (withStatus.length === 0) {
+        summaryText.innerText = `${totalTracked} egzersiz takip ediliyor. Trend analizi için en az 2 antrenman gerekiyor.`;
+    } else {
+        summaryText.innerText = `${progressing} egzersizde ilerliyorsun, ${plateaued} platoda, ${attention} dikkat gerektiriyor`;
+    }
+
+    if (filtersContainer) filtersContainer.style.display = withStatus.length > 0 ? "block" : "none";
+
+    // Apply filter
+    let filtered = allExerciseData;
+    if (filterStatus !== 'all') {
+        filtered = allExerciseData.filter(d => d.status === filterStatus);
+    }
+
     listContainer.innerHTML = "";
+
+    if (filtered.length === 0) {
+        listContainer.innerHTML = `
+            <div class="flex flex-col items-center justify-center py-16 gap-4 text-center px-6">
+                <span class="material-symbols-outlined text-outline" style="font-size: 36px;">filter_list_off</span>
+                <p class="font-body-md text-body-md text-on-surface-variant">Bu filtre için sonuç yok.</p>
+            </div>
+        `;
+        return;
+    }
 
     // Group by muscle
     const grouped = {};
-    filteredData.forEach(item => {
+    filtered.forEach(item => {
         const m = item.primaryMuscle;
         if (!grouped[m]) grouped[m] = [];
         grouped[m].push(item);
     });
 
-    const getStatusColorClass = (status) => {
-        if (status === 'progressing') return 'primary-container';
-        if (status === 'plateaued') return 'tertiary-container';
-        if (status === 'attention') return 'error';
-        return 'primary-container';
-    };
-
-    const getStatusLabelTR = (status) => {
-        if (status === 'progressing') return 'İLERLİYOR';
-        if (status === 'plateaued') return 'PLATODA';
-        if (status === 'attention') return 'DİKKAT';
-        return '';
-    };
-
-    const drawSparkline = (summaries, statusClass) => {
-        // Create an SVG line based on the last 5 e1RM values
-        if (summaries.length === 0) return '';
-        
-        // Use up to the last 5 values for the sparkline
-        const vals = summaries.slice(-5).map(s => s.e1rm);
-        const min = Math.min(...vals) * 0.95; // give some bottom padding
-        const max = Math.max(...vals) * 1.05; // give some top padding
-        const range = max - min || 1; // avoid div by 0
-        
-        // SVG box: 48x16
-        const width = 48;
-        const height = 16;
-        
-        const points = vals.map((val, idx) => {
-            const x = (idx / Math.max(1, vals.length - 1)) * width;
-            const y = height - ((val - min) / range) * height;
-            return `${x},${y}`;
-        }).join(" L ");
-
-        return `
-            <svg class="w-12 h-4" viewBox="0 0 48 16">
-                <path class="trend-line stroke-${statusClass}" d="M ${points}"></path>
-            </svg>
-        `;
-    };
-
-    // Render each group
     for (const [muscle, items] of Object.entries(grouped)) {
         const muscleNameTR = MUSCLE_NAMES_TR[muscle] || muscle.toUpperCase();
-        
-        let itemsHtml = items.map(item => {
-            const statusClass = getStatusColorClass(item.status);
-            const statusLabel = getStatusLabelTR(item.status);
-            const suggestion = getSuggestionText(item.status, item.summaries);
-            
-            return `
-                <div class="p-4 border-t border-surface-variant flex items-start justify-between cursor-pointer hover:bg-surface-container-low transition-colors" onclick="openProgressExHistory('${item.exId}')">
-                    <div class="flex flex-col gap-1 max-w-[70%]">
-                        <h4 class="font-body-lg text-body-lg font-medium text-on-surface">${item.exName}</h4>
-                        <div class="flex items-center gap-1.5">
-                            <div class="w-2 h-2 rounded-full bg-${statusClass}"></div>
-                            <span class="font-label-sm text-label-sm text-${statusClass} uppercase tracking-wider">${statusLabel}</span>
-                        </div>
-                        ${suggestion ? `<p class="font-body-md text-body-md text-outline mt-1 leading-snug">${suggestion}</p>` : ''}
-                    </div>
-                    <div class="flex flex-col items-end gap-1 shrink-0">
-                        <span class="font-headline-sm text-headline-sm text-on-surface">${item.currentE1RM} <span class="text-sm font-normal text-outline">kg</span></span>
-                        ${drawSparkline(item.summaries, statusClass)}
-                    </div>
-                </div>
-            `;
-        }).join('');
+        const itemsHtml = items.map(item => _renderExCard(item)).join('');
 
         const sectionHtml = `
             <section class="bg-surface-container-lowest rounded-3xl overflow-hidden shadow-sm">
-                <!-- Header -->
-                <button class="w-full flex items-center justify-between p-4 bg-surface hover:bg-surface-container transition-colors" onclick="this.nextElementSibling.classList.toggle('hidden')">
-                    <h3 class="font-headline-sm text-headline-sm text-on-surface">${muscleNameTR}</h3>
-                    <span class="material-symbols-outlined text-outline">expand_more</span>
-                </button>
-                <!-- Content -->
-                <div class="flex flex-col">
+                <div class="flex items-center justify-between px-4 py-3 bg-surface border-b border-surface-variant/20">
+                    <h3 class="font-label-md text-label-md text-on-surface-variant uppercase tracking-widest">${muscleNameTR}</h3>
+                </div>
+                <div class="flex flex-col divide-y divide-surface-variant/30">
                     ${itemsHtml}
                 </div>
             </section>
@@ -198,32 +185,111 @@ function renderProgressView(filterStatus = 'all') {
     }
 }
 
-function setupFilters() {
+function _renderExCard(item) {
+    const hasStatus = item.status !== null;
+
+    const statusColorMap = {
+        progressing: { bg: 'bg-tertiary/10', dot: 'bg-tertiary', text: 'text-tertiary', label: '↑ İLERLİYOR' },
+        plateaued:   { bg: 'bg-outline/10',  dot: 'bg-outline',  text: 'text-outline',  label: '— PLATODA' },
+        attention:   { bg: 'bg-error/10',    dot: 'bg-error',    text: 'text-error',    label: '↓ DİKKAT' },
+    };
+    const sc = hasStatus ? (statusColorMap[item.status] || statusColorMap.plateaued) : null;
+
+    const lastInfo = item.lastWeight != null
+        ? `${item.lastWeight} kg × ${item.lastReps} tekrar`
+        : 'Henüz veri yok';
+
+    const prInfo = item.personalRecordE1RM
+        ? `PR: ${item.personalRecordE1RM} kg e1RM`
+        : '';
+
+    const sparkline = hasStatus && item.summaries.length >= 2 ? _drawSparkline(item.summaries, item.status) : '';
+
+    const statusBadge = hasStatus
+        ? `<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full ${sc.bg}">
+               <span class="w-1.5 h-1.5 rounded-full ${sc.dot}"></span>
+               <span class="font-label-sm text-label-sm ${sc.text} tracking-wider">${sc.label}</span>
+           </span>`
+        : `<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-primary-container/20">
+               <span class="font-label-sm text-label-sm text-primary tracking-wider">YENİ</span>
+           </span>`;
+
+    const suggestion = hasStatus ? getSuggestionText(item.status, item.summaries) : null;
+
+    return `
+        <div class="p-4 flex items-start justify-between cursor-pointer hover:bg-surface-container-low transition-colors active:bg-surface-container"
+             onclick="openProgressExHistory('${item.exId}', '${_escHtml(item.exName)}')">
+            <div class="flex flex-col gap-1.5 max-w-[65%]">
+                <h4 class="font-body-lg text-body-lg font-semibold text-on-surface leading-tight">${_escHtml(item.exName)}</h4>
+                ${statusBadge}
+                <span class="font-body-md text-body-md text-on-surface-variant">${lastInfo}</span>
+                ${suggestion ? `<p class="font-body-md text-body-md text-outline leading-snug">${suggestion}</p>` : ''}
+            </div>
+            <div class="flex flex-col items-end gap-2 shrink-0">
+                ${item.currentE1RM ? `<span class="font-headline-sm text-headline-sm text-on-surface">${item.currentE1RM}<span class="text-xs font-normal text-outline ml-0.5">kg</span></span>` : ''}
+                ${prInfo ? `<span class="font-label-sm text-label-sm text-on-surface-variant">${prInfo}</span>` : ''}
+                ${sparkline}
+            </div>
+        </div>
+    `;
+}
+
+function _drawSparkline(summaries, status) {
+    const vals = summaries.slice(-5).map(s => s.e1rm).filter(v => v != null && v > 0);
+    if (vals.length < 2) return '';
+
+    const min = Math.min(...vals) * 0.97;
+    const max = Math.max(...vals) * 1.03;
+    const range = max - min || 1;
+    const W = 48, H = 18;
+
+    const points = vals.map((v, i) => {
+        const x = (i / (vals.length - 1)) * W;
+        const y = H - ((v - min) / range) * H;
+        return `${x.toFixed(1)},${y.toFixed(1)}`;
+    }).join(' L ');
+
+    const colorMap = { progressing: '#4d6357', plateaued: '#727973', attention: '#ba1a1a' };
+    const color = colorMap[status] || colorMap.plateaued;
+
+    return `
+        <svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" class="opacity-80">
+            <path d="M ${points}" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="${parseFloat(vals.length > 0 ? (W).toFixed(1) : '0')}" cy="${(H - ((vals[vals.length-1] - min) / range) * H).toFixed(1)}" r="2.5" fill="${color}"/>
+        </svg>
+    `;
+}
+
+function _escHtml(str) {
+    const d = document.createElement('div');
+    d.textContent = str || '';
+    return d.innerHTML;
+}
+
+function _setupFilters() {
     const buttons = document.querySelectorAll('.progress-filter-btn');
     buttons.forEach(btn => {
-        // Avoid duplicate listeners
         const newBtn = btn.cloneNode(true);
         btn.parentNode.replaceChild(newBtn, btn);
-        
         newBtn.addEventListener('click', (e) => {
-            // Reset all
             document.querySelectorAll('.progress-filter-btn').forEach(b => {
                 b.className = 'progress-filter-btn px-4 py-2 rounded-full font-label-md text-label-md bg-surface-container-highest text-on-surface-variant hover:bg-surface-variant active:scale-95 transition-transform';
             });
-            // Set active
-            e.target.className = 'progress-filter-btn px-4 py-2 rounded-full font-label-md text-label-md bg-primary-container text-on-primary-container active:scale-95 transition-transform';
-            
-            const filter = e.target.getAttribute('data-filter');
-            renderProgressView(filter);
+            e.currentTarget.className = 'progress-filter-btn px-4 py-2 rounded-full font-label-md text-label-md bg-primary-container text-on-primary-container active:scale-95 transition-transform';
+            const filter = e.currentTarget.getAttribute('data-filter');
+            const summaryText = document.getElementById('progress-summary-text');
+            const listContainer = document.getElementById('progress-list-container');
+            const filtersContainer = document.getElementById('progress-filters-container');
+            _renderAll(listContainer, summaryText, filtersContainer, filter);
         });
     });
 }
 
-// Helper to open history and set back target
-window.openProgressExHistory = function(exId) {
+// Global helper to open exercise history from progress page
+window.openProgressExHistory = function(exId, exName) {
     document.getElementById('view-progress').classList.add('hidden');
     window._historyBackTarget = 'progress';
     if (window.openExerciseHistory) {
-        window.openExerciseHistory(exId, exId);
+        window.openExerciseHistory(exId, exName || exId);
     }
-}
+};
