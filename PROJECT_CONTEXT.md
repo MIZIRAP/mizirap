@@ -63,16 +63,16 @@
 6. **BİLİNEN SORUNLAR / YARIM KALANLAR**
    - **Firestore index**: `activeSession.js`'deki yeni seans sorgusu (`where('status','==','in_progress') + where('dayId','==', dayId)`) bileşik bir Firestore indeksi gerektirebilir — console'da "index required" hatası görülürse Firebase konsolundan ilgili indeksin oluşturulması gerekiyor.
    - **Teknik Borç**: Global değişkenler ve event listener'larla manuel state yönetimi. Tailwind CDN'in tarayıcıda derlenmesi (production için ağır, bilinçli olarak bırakılmış).
-   - **Yarım Kalan / Planlanan**: Finans için grafik/pasta dilimi, notlarda arama, görevlere kategori.
+   - **Yarım Kalan / Planlanan**: Notlarda arama, görevlere kategori.
 
 7. **SON DURUM** *(Güncelleme: 17 Ağustos 2026)*
    - **Bu oturumda tamamlananlar:**
-     - `#app-container` kapanış etiketi eksikliği düzeltildi → split-screen layout sorunu çözüldü.
-     - Aktif antrenman seansında ağırlık/tekrar değişiklikleri artık otomatik kaydediliyor (debounced Firestore write).
-     - "Antrenman Bitir" sonrası zamanlayıcı sıfırlanıyor; aynı gün tekrar girildiğinde yeni seans sıfırdan başlıyor.
-     - `window.currentUid` ve `localStorage uid` tüm modüllere güvenilir şekilde yayılıyor.
-   - **Mevcut durum:** Tüm temel modüller çalışıyor.
-   - **Sonraki potansiyel adım:** Firestore bileşik indeks uyarısını izlemek.
+     - `calories.js` ve `books.js` içerisindeki veri kaybına yol açabilecek "Test Modu Fallback" yapıları kaldırılarak standart hata yönetimine geçildi.
+     - `index.html`'deki ölü ve kullanılmayan (Placeholder) yorum satırları temizlendi.
+     - Finans modülü için `Chart.js` entegrasyonu sağlandı ve harcama dağılımı (pasta grafik) oluşturuldu.
+     - Antrenman geçmişi kayıt gösterimi, UI tasarımına uygun olarak (Sets x Reps x Kg) formatına dönüştürüldü.
+   - **Mevcut durum:** Tespit edilen yapısal tutarsızlıklar giderildi, tüm temel modüller aktif ve istikrarlı çalışıyor.
+   - **Sonraki potansiyel adım:** Firestore bileşik indeks uyarısını izlemek ve yeni özellikler eklemek.
 
 8. **TERCİHLER / ÇALIŞMA TARZI NOTLARI**
    - Gereksiz dolgu metinleri ve uzatılmış açıklamalardan kaçınılmalı.
