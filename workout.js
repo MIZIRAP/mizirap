@@ -21,6 +21,29 @@ let stretches = [];
 let currentStretchImageBase64 = null;
 let editingStretchId = null;
 
+const DEFAULT_STRETCHES = [
+    { id: 'def_catcow', name: 'Cat-Cow Stretch', duration: 30, imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_a_cat_cow_stretch_fitness_exercise_a/screen.png', isDefault: true },
+    { id: 'def_cobra', name: 'Cobra Pose (Abdominal Stretch)', duration: 30, imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_a_cobra_pose_fitness_exercise_a_person/screen.png', isDefault: true },
+    { id: 'def_threadneedle', name: 'Thread the Needle Stretch', duration: 30, imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_a_thread_the_needle_fitness_exercise_a/screen.png', isDefault: true },
+    { id: 'def_doorwaychest', name: 'Doorway Chest Stretch', duration: 30, imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_a_doorway_chest_stretch_fitness_exercise/screen.png', isDefault: true },
+    { id: 'def_wallangel', name: 'Wall Angel (Scapular Slide)', duration: 30, imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_a_wall_angel_fitness_exercise_a_person/screen.png', isDefault: true },
+    { id: 'def_crossbody', name: 'Cross-Body Shoulder Stretch', duration: 30, imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_a_cross_body_shoulder_stretch_fitness/screen.png', isDefault: true },
+    { id: 'def_overheadtri', name: 'Overhead Triceps Stretch', duration: 30, imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_an_overhead_triceps_stretch_fitness/screen.png', isDefault: true },
+    { id: 'def_wallbicep', name: 'Wall Biceps Stretch', duration: 30, imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_a_wall_biceps_stretch_fitness_exercise_a/screen.png', isDefault: true },
+    { id: 'def_forearmflex', name: 'Forearm Flexor Stretch', duration: 30, imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_a_forearm_flexor_stretch_fitness/screen.png', isDefault: true },
+    { id: 'def_forearmext', name: 'Forearm Extensor Stretch', duration: 30, imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_a_forearm_extensor_stretch_fitness/screen.png', isDefault: true },
+    { id: 'def_kneelinghip', name: 'Kneeling Hip Flexor Stretch', duration: 30, imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_a_kneeling_hip_flexor_stretch_fitness/screen.png', isDefault: true },
+    { id: 'def_standingquad', name: 'Standing Quadriceps Stretch', duration: 30, imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_a_standing_quadriceps_stretch_fitness/screen.png', isDefault: true },
+    { id: 'def_supineham', name: 'Supine Hamstring Stretch', duration: 30, imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_a_supine_hamstring_stretch_fitness/screen.png', isDefault: true },
+    { id: 'def_figure4', name: 'Figure 4 Glute Stretch', duration: 30, imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_a_figure_4_glute_stretch_fitness/screen.png', isDefault: true },
+    { id: 'def_pigeon', name: 'Pigeon Pose Stretch', duration: 30, imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_a_pigeon_pose_fitness_exercise_a_person/screen.png', isDefault: true },
+    { id: 'def_seatedspinal', name: 'Seated Spinal Twist Stretch', duration: 30, imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_a_seated_spinal_twist_fitness_exercise_a/screen.png', isDefault: true },
+    { id: 'def_downdog', name: 'Downward-Facing Dog', duration: 30, imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_downward_facing_dog_fitness_exercise_a/screen.png', isDefault: true },
+    { id: 'def_childspose', name: "Child's Pose", duration: 30, imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_child_s_pose_fitness_exercise_a_person/screen.png', isDefault: true },
+    { id: 'def_wallcalf', name: 'Wall Calf Stretch', duration: 30, imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_a_wall_calf_stretch_fitness_exercise_a/screen.png', isDefault: true },
+    { id: 'def_butterfly', name: 'Butterfly Stretch', duration: 30, imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_a_butterfly_stretch_fitness_exercise_a/screen.png', isDefault: true }
+];
+
 let unsubCores = null;
 let cores = [];
 let currentCoreImageBase64 = null;
@@ -1590,39 +1613,59 @@ function renderStretches() {
     const container = document.getElementById('stretching-list-container');
     if (!container) return;
     
-    if (stretches.length === 0) {
+    const allStretches = [...DEFAULT_STRETCHES, ...stretches];
+    
+    if (allStretches.length === 0) {
         container.innerHTML = `<p class="text-center text-on-surface-variant font-body-md mt-4">Henüz hareket eklenmedi.</p>`;
         return;
     }
     
     let html = '';
-    stretches.forEach(stretch => {
-        html += `
-            <div class="bg-surface-container-low rounded-xl p-md flex items-center gap-md">
-                <div class="w-16 h-16 rounded-full overflow-hidden flex-shrink-0 bg-surface-container-highest">
-                    ${stretch.imageBase64 ? `<img alt="${escapeHtml(stretch.name)}" class="w-full h-full object-cover" src="${stretch.imageBase64}"/>` : ''}
-                </div>
-                <div class="flex-1 flex flex-col justify-center">
-                    <h3 class="font-body-lg text-body-lg font-medium text-on-surface">${escapeHtml(stretch.name)}</h3>
-                    <div class="flex items-center gap-2 mt-1">
-                        <span class="text-on-surface-variant font-label-sm text-label-sm flex items-center gap-1">
-                            <span class="material-symbols-outlined text-[14px]" data-icon="timer">timer</span> ${stretch.duration} sn
-                        </span>
-                    </div>
-                </div>
-                <div class="flex items-center gap-sm flex-shrink-0">
-                    <button data-action="editStretch" data-stretch-id="${stretch.id}" class="text-on-surface-variant hover:text-primary transition-colors p-1 rounded-full hover:bg-surface-variant">
-                        <span class="material-symbols-outlined" data-icon="edit">edit</span>
-                    </button>
-                    <button data-action="deleteStretch" data-stretch-id="${stretch.id}" class="text-on-surface-variant hover:text-error transition-colors p-1 rounded-full hover:bg-surface-variant">
-                        <span class="material-symbols-outlined" data-icon="delete">delete</span>
-                    </button>
-                </div>
-            </div>
-        `;
-    });
+    
+    // Group into defaults and customs for better UI
+    if (DEFAULT_STRETCHES.length > 0) {
+        html += `<h3 class="font-title-sm text-on-surface-variant mb-2 mt-4 px-2">Temel Hareketler</h3>`;
+        DEFAULT_STRETCHES.forEach(stretch => {
+            html += generateStretchCard(stretch);
+        });
+    }
+    
+    if (stretches.length > 0) {
+        html += `<h3 class="font-title-sm text-on-surface-variant mb-2 mt-4 px-2">Senin Eklediklerin</h3>`;
+        stretches.forEach(stretch => {
+            html += generateStretchCard(stretch);
+        });
+    }
     
     container.innerHTML = html;
+}
+
+function generateStretchCard(stretch) {
+    return `
+        <div class="bg-surface-container-low rounded-xl p-md flex items-center gap-md">
+            <div class="w-16 h-16 rounded-full overflow-hidden flex-shrink-0 bg-surface-container-highest">
+                ${stretch.imageBase64 ? `<img alt="${escapeHtml(stretch.name)}" class="w-full h-full object-cover" src="${stretch.imageBase64}"/>` : ''}
+            </div>
+            <div class="flex-1 flex flex-col justify-center">
+                <h3 class="font-body-lg text-body-lg font-medium text-on-surface">${escapeHtml(stretch.name)}</h3>
+                <div class="flex items-center gap-2 mt-1">
+                    <span class="text-on-surface-variant font-label-sm text-label-sm flex items-center gap-1">
+                        <span class="material-symbols-outlined text-[14px]" data-icon="timer">timer</span> ${stretch.duration}
+                    </span>
+                </div>
+            </div>
+            ${stretch.isDefault ? '' : `
+            <div class="flex items-center gap-sm flex-shrink-0">
+                <button data-action="editStretch" data-stretch-id="${stretch.id}" class="text-on-surface-variant hover:text-primary transition-colors p-1 rounded-full hover:bg-surface-variant">
+                    <span class="material-symbols-outlined" data-icon="edit">edit</span>
+                </button>
+                <button data-action="deleteStretch" data-stretch-id="${stretch.id}" class="text-on-surface-variant hover:text-error transition-colors p-1 rounded-full hover:bg-surface-variant">
+                    <span class="material-symbols-outlined" data-icon="delete">delete</span>
+                </button>
+            </div>
+            `}
+        </div>
+    `;
 }
 
 function handleStretchImageUpload(e) {
