@@ -2384,9 +2384,17 @@ function openStretchPlayer() {
     _spIdx = 0;
     _spPaused = false;
 
+    // Find the currently active view and hide it
+    const activeView = document.querySelector('.view:not(.hidden)');
+    if (activeView && activeView.id !== 'view-stretch-player') {
+        window._prevStretchView = activeView.id;
+        activeView.classList.add('hidden');
+    }
+
     const view = document.getElementById('view-stretch-player');
     view.classList.remove('hidden');
-    document.body.style.overflow = 'hidden';
+    // Ensure we start at the top of the player
+    view.scrollTop = 0;
 
     _spLoadMovement(_spIdx);
     _spStartTimer();
@@ -2396,7 +2404,15 @@ function closeStretchPlayer() {
     _spStopTimer();
     const view = document.getElementById('view-stretch-player');
     view.classList.add('hidden');
-    document.body.style.overflow = '';
+    
+    // Restore the previous view
+    if (window._prevStretchView) {
+        document.getElementById(window._prevStretchView).classList.remove('hidden');
+        window._prevStretchView = null;
+    } else {
+        // Fallback
+        document.getElementById('view-workout').classList.remove('hidden');
+    }
 }
 
 function _spLoadMovement(idx) {
