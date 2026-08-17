@@ -147,6 +147,7 @@
 
     <!-- Muscle Map Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/@panzoom/panzoom/dist/panzoom.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="assets/exercises/muscle-map.js"></script>
 </head>
 <body class="bg-surface-variant text-on-background font-body-lg antialiased min-h-[100dvh] flex justify-center">
@@ -2914,12 +2915,12 @@
                     </div>
                 </section>
                 <!-- Visual Insight -->
-                <div class="relative h-48 rounded-2xl overflow-hidden shadow-sm group">
-                    <div class="w-full h-full bg-cover bg-center transition-transform duration-700 group-hover:scale-110" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBilJBe_6JmA0asvVdNaxem-dCH7_XSbhFF5MFjgkrq5fpkV26B_obqXvANaxFn_GbEPnszfIxuXSzefx_Kf8kvhmbDW-w91W9T2YTTPPlWlfQZ9bMCelIAUoX9fCHyVMmZaSZhRE3FW4Q_t0R-WcuQ8eE2wKdBtWa0idTgt53_WFCWJVQfiZv5aukE23E49x2A9wmMjh-7z0SIVSPKLUQDn_8-CZgBLDZhezR1ksI5omE-5ZjkzCJE')"></div>
-                    <div class="absolute inset-0 bg-gradient-to-t from-primary/80 to-transparent flex flex-col justify-end p-6">
-                        <p class="text-white font-label-md uppercase tracking-wider mb-1">Harcama Dağılımı</p>
-                        <p class="text-white/80 font-body-md" id="fd-insight-text">Veri bekleniyor...</p>
+                <div class="bg-surface-container-lowest rounded-2xl p-4 shadow-sm group flex flex-col items-center">
+                    <h3 class="font-headline-sm text-headline-sm text-on-surface w-full mb-4">Harcama Dağılımı</h3>
+                    <div class="w-full max-w-[250px] aspect-square relative flex items-center justify-center">
+                        <canvas id="finance-expense-chart"></canvas>
                     </div>
+                    <p class="text-on-surface-variant font-body-sm mt-6 text-center italic" id="fd-insight-text">Veri bekleniyor...</p>
                 </div>
             </div>
         </main>

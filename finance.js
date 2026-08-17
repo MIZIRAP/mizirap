@@ -11,6 +11,7 @@ let callback = null;
 let financeCategories = [];
 let financePaymentMethods = [];
 let financeTransactions = [];
+let expenseChartInstance = null;
 
 let unsubCategories = null;
 let unsubPaymentMethods = null;
@@ -848,6 +849,48 @@ export function renderFinanceDetail() {
             </div>
             `;
         }).join('');
+    }
+
+    // Chart.js render logic
+    const chartCanvas = document.getElementById('finance-expense-chart');
+    if (chartCanvas && typeof Chart !== 'undefined') {
+        if (expenseChartInstance) {
+            expenseChartInstance.destroy();
+        }
+        if (sortedCatIds.length > 0) {
+            const chartLabels = sortedCatIds.map(id => {
+                const cat = financeCategories.find(c => c.id === id);
+                return cat ? cat.name : 'Bilinmiyor';
+            });
+            const chartData = sortedCatIds.map(id => categorySums[id]);
+            const chartColors = ['#446554', '#ff8a80', '#d2b48c', '#a8e6cf', '#ffb7b2', '#ffcc80', '#b39ddb'];
+
+            expenseChartInstance = new Chart(chartCanvas, {
+                type: 'doughnut',
+                data: {
+                    labels: chartLabels,
+                    datasets: [{
+                        data: chartData,
+                        backgroundColor: chartColors.slice(0, chartLabels.length),
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    cutout: '70%',
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return ' ' + context.label + ': ' + formatCurrency(context.raw);
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
     }
 
     // Group Expenses by Payment Method
