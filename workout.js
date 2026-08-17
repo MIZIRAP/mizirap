@@ -4,9 +4,6 @@ import { collection, doc, addDoc, setDoc, getDocs, getDoc, query, orderBy, limit
 import { escapeHtml, handleFormSubmit } from "./utils.js";
 import { registerListener } from "./listenerManager.js";
 import { openActiveSession, closeActiveSession } from "./activeSession.js?v=4";
-import { openProgressView } from "./progressView.js?v=5";
-
-window.openProgressView = openProgressView;
 
 let currentUid = null;
 let splits = [];
@@ -576,14 +573,8 @@ function switchView(viewId) {
 }
 
 window.closeExerciseHistory = function() {
-    if (window._historyBackTarget === 'progress') {
-        document.querySelectorAll(".view").forEach(v => v.classList.add("hidden"));
-        document.getElementById('view-progress').classList.remove('hidden');
-        window._historyBackTarget = null;
-    } else {
-        switchView('workout');
-        renderSplitView(); 
-    }
+    switchView('workout');
+    renderSplitView(); 
 };
 
 window.openExerciseHistory = async function(triggerExId, exName) {

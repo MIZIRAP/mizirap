@@ -17,7 +17,6 @@ import {
     query, where, orderBy, limit,
     serverTimestamp, deleteDoc
 } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js';
-import { calculateE1RM, calculateE1RMDelta } from './progressiveOverload.js';
 
 // ─── Module state ──────────────────────────────────────────────────────────
 let _uid = null;
@@ -177,9 +176,7 @@ function _buildExState() {
                 weight: draft?.weight ?? fallbackPrevSet?.weight ?? 60,
                 reps:   draft?.reps   ?? fallbackPrevSet?.reps   ?? 8,
                 rpe:    draft?.rpe    ?? null,
-                e1rm:   draft?.e1rm   ?? null,
-                status: draft?.status ?? 'pending',   // 'pending' | 'draft' | 'completed'
-                delta:  null
+                status: draft?.status ?? 'pending'   // 'pending' | 'draft' | 'completed'
             });
         }
 
@@ -312,24 +309,11 @@ function _completedSetHTML(exId, setIdx, set) {
         ? `<span class="w-7 h-7 rounded-full bg-primary text-on-primary flex items-center justify-center font-label-sm text-label-sm">${set.rpe}</span>`
         : '';
 
-    const deltaHTML = set.delta !== null
-        ? `<span class="font-label-sm text-label-sm flex items-center gap-0.5 ${set.delta >= 0 ? 'text-tertiary' : 'text-error'}">
-               <span class="material-symbols-outlined" style="font-size:13px">${set.delta >= 0 ? 'arrow_upward' : 'arrow_downward'}</span>
-               ${Math.abs(set.delta)}kg e1RM
-           </span>`
-        : '';
-
-    const e1rmText = set.e1rm !== null
-        ? `<span class="font-label-sm text-label-sm text-on-surface-variant/60">e1RM: ${set.e1rm}kg</span>`
-        : '';
-
     return `
         <span class="font-label-lg text-label-lg text-on-surface-variant w-5 shrink-0">${setIdx + 1}</span>
         <div class="flex-1 min-w-0">
             <div class="font-label-lg text-label-lg text-on-surface">${set.weight}kg × ${set.reps} reps</div>
             <div class="flex items-center gap-2 flex-wrap mt-0.5">
-                ${deltaHTML}
-                ${e1rmText}
             </div>
         </div>
         <div class="flex items-center gap-1.5 shrink-0">
@@ -340,12 +324,6 @@ function _completedSetHTML(exId, setIdx, set) {
 }
 
 function _activeSetHTML(exId, setIdx, set) {
-    const currentE1RM = set.e1rm ?? calculateE1RM(set.weight, set.reps, set.rpe);
-    const isRoughEstimate = set.rpe === null;
-    const e1rmDisplay = isRoughEstimate
-        ? `<span class="italic text-on-surface-variant/60">~${currentE1RM}kg</span>`
-        : `<span>${currentE1RM}kg</span>`;
-
     const rpeButtons = [6, 7, 8, 9, 10].map(r => {
         const isSelected = set.rpe === r;
         return `<button onclick="sessionSetRPE('${exId}', ${setIdx}, ${r})"
@@ -396,9 +374,6 @@ function _activeSetHTML(exId, setIdx, set) {
         <div class="flex flex-col gap-2">
             <span class="font-label-sm text-label-sm text-on-surface-variant">RPE (Zorluk) — opsiyonel</span>
             <div class="rpe-btn-group flex justify-between items-center">${rpeButtons}</div>
-            <p class="text-center font-body-md text-body-md text-on-surface-variant mt-1" id="e1rm-display-${exId}-${setIdx}">
-                Tahmini e1RM: ${e1rmDisplay}
-            </p>
         </div>
         <!-- Complete Button -->
         <button onclick="sessionCompleteSet('${exId}', ${setIdx})"
@@ -439,9 +414,7 @@ window.sessionStepWeight = function(exId, setIdx, delta) {
     const set = _exState[exId]?.sets[setIdx];
     if (!set || set.status === 'completed') return;
     set.weight = Math.max(0, Math.round((set.weight + delta) * 10) / 10);
-    set.e1rm = calculateE1RM(set.weight, set.reps, set.rpe);
     _refreshWeightRepsDisplay(exId, setIdx, set);
-    _refreshE1RMDisplay(exId, setIdx, set);
     _debounceSaveDraft(exId, setIdx);
 };
 
@@ -449,9 +422,7 @@ window.sessionStepReps = function(exId, setIdx, delta) {
     const set = _exState[exId]?.sets[setIdx];
     if (!set || set.status === 'completed') return;
     set.reps = Math.max(1, set.reps + delta);
-    set.e1rm = calculateE1RM(set.weight, set.reps, set.rpe);
     _refreshWeightRepsDisplay(exId, setIdx, set);
-    _refreshE1RMDisplay(exId, setIdx, set);
     _debounceSaveDraft(exId, setIdx);
 };
 
@@ -459,9 +430,7 @@ window.sessionSetRPE = function(exId, setIdx, rpe) {
     const set = _exState[exId]?.sets[setIdx];
     if (!set || set.status === 'completed') return;
     set.rpe = set.rpe === rpe ? null : rpe;
-    set.e1rm = calculateE1RM(set.weight, set.reps, set.rpe);
     _refreshRPEButtons(exId, setIdx, set);
-    _refreshE1RMDisplay(exId, setIdx, set);
     _debounceSaveDraft(exId, setIdx);
 };
 
@@ -470,22 +439,13 @@ window.sessionCompleteSet = async function(exId, setIdx) {
     const set = state?.sets[setIdx];
     if (!set || set.status === 'completed') return;
 
-    set.e1rm = calculateE1RM(set.weight, set.reps, set.rpe);
     set.status = 'completed';
-
-    // Delta vs previous session same set
-    const prevSet = _prevData?.[exId]?.sets?.[setIdx];
-    const prevE1RM = prevSet?.e1rm ?? (prevSet ? calculateE1RM(prevSet.weight, prevSet.reps, prevSet.rpe ?? null) : null);
-    set.delta = calculateE1RMDelta(set.e1rm, prevE1RM);
 
     // Re-render this exercise card
     _renderSets(exId);
 
     // Persist as completed
     await _persistSet(exId, setIdx, set, 'completed');
-
-    // Update exercise_progress summary doc
-    await _updateExerciseProgress(exId, set);
 };
 
 window.sessionAddSet = function(exId) {
@@ -496,9 +456,7 @@ window.sessionAddSet = function(exId) {
         weight: lastSet.weight,
         reps:   lastSet.reps,
         rpe:    null,
-        e1rm:   null,
-        status: 'pending',
-        delta:  null
+        status: 'pending'
     });
     _renderSets(exId);
 };
@@ -519,11 +477,10 @@ window.finishSession = async function() {
                 const state = _exState[ex.id];
                 if (!state) continue;
                 
-                // Auto-complete pending sets and update progress
+                // Auto-complete pending sets
                 for (const set of state.sets) {
                     if (set.status !== 'completed') {
                         set.status = 'completed';
-                        await _updateExerciseProgress(ex.id, set);
                     }
                 }
 
@@ -533,7 +490,6 @@ window.finishSession = async function() {
                         weight: s.weight,
                         reps:   s.reps,
                         rpe:    s.rpe,
-                        e1rm:   s.e1rm,
                         status: s.status
                     }))
                 };
@@ -595,15 +551,6 @@ function _refreshWeightRepsDisplay(exId, setIdx, set) {
     if (valueSpans[1]) valueSpans[1].textContent = set.reps;
 }
 
-function _refreshE1RMDisplay(exId, setIdx, set) {
-    const el = document.getElementById(`e1rm-display-${exId}-${setIdx}`);
-    if (!el) return;
-    const isRough = set.rpe === null;
-    const val = set.e1rm ?? calculateE1RM(set.weight, set.reps, set.rpe);
-    el.innerHTML = isRough
-        ? `Tahmini e1RM: <span class="italic text-on-surface-variant/60">~${val}kg</span>`
-        : `Tahmini e1RM: <span>${val}kg</span>`;
-}
 
 function _refreshRPEButtons(exId, setIdx, set) {
     const row = document.getElementById(`set-row-${exId}-${setIdx}`);
@@ -648,7 +595,6 @@ async function _persistSet(exId, setIdx, set, status) {
             weight: s.weight,
             reps:   s.reps,
             rpe:    s.rpe ?? null,
-            e1rm:   s.e1rm ?? null,
             status: s.status
         }));
 
@@ -662,70 +608,6 @@ async function _persistSet(exId, setIdx, set, status) {
     }
 }
 
-async function _updateExerciseProgress(exId, completedSet) {
-    if (!_uid || !exId) return;
-    try {
-        const progressRef = doc(db, 'users', _uid, 'exercise_progress', exId);
-        const existingSnap = await getDoc(progressRef);
-        const existing = existingSnap.exists() ? existingSnap.data() : {};
-
-        const newE1RM = completedSet.e1rm;
-        const isPR = !existing.personalRecordE1RM || newE1RM > existing.personalRecordE1RM;
-
-        const last5RPE = [...(existing.last5SetsRPE || [])];
-        if (completedSet.rpe !== null) {
-            last5RPE.push(completedSet.rpe);
-        }
-        const trimmedRPE = last5RPE.slice(-5);
-
-        // Keep track of the best set of the last 5 sessions
-        const recentSessionSummaries = [...(existing.recentSessionSummaries || [])];
-        const dateStr = new Date().toLocaleDateString('en-CA');
-        
-        const summaryObj = {
-            weight: completedSet.weight,
-            reps: completedSet.reps,
-            rpe: completedSet.rpe,
-            e1rm: completedSet.e1rm,
-            date: dateStr
-        };
-
-        if (recentSessionSummaries.length > 0 && recentSessionSummaries[recentSessionSummaries.length - 1].date === dateStr) {
-            // Update today's summary if this set is better (higher e1RM)
-            const currentBest = recentSessionSummaries[recentSessionSummaries.length - 1];
-            if (completedSet.e1rm > currentBest.e1rm) {
-                recentSessionSummaries[recentSessionSummaries.length - 1] = summaryObj;
-            }
-        } else {
-            // New session day
-            recentSessionSummaries.push(summaryObj);
-        }
-        
-        const trimmedSummaries = recentSessionSummaries.slice(-5);
-
-        const exObj = _day?.exercises?.find(e => e.id === exId);
-        const exName = exObj ? exObj.name : 'Bilinmeyen Egzersiz';
-
-        const update = {
-            exName:        exName,
-            currentE1RM:   (existing.currentE1RM == null || newE1RM > existing.currentE1RM) ? newE1RM : existing.currentE1RM,
-            lastWeight:    completedSet.weight,
-            lastReps:      completedSet.reps,
-            last5SetsRPE:  trimmedRPE,
-            recentSessionSummaries: trimmedSummaries,
-            lastUpdated:   serverTimestamp()
-        };
-
-        if (isPR) {
-            update.personalRecordE1RM  = newE1RM;
-            update.personalRecordDate  = new Date().toLocaleDateString('en-CA');
-        }
-
-        await setDoc(progressRef, update, { merge: true });
-    } catch (e) {
-        console.warn('[activeSession] _updateExerciseProgress error:', e.message);
-    }
-}
 
 // ─── Helper ────────────────────────────────────────────────────────────────
 

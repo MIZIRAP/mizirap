@@ -11,10 +11,8 @@
    - `auth.js`: Giriş ekranı ve kimlik doğrulama işlemleri.
    - `dashboard.js`: Ana özet ekranının yönetimi.
    - `books.js`, `calories.js`, `finance.js`, `movies.js`, `shopping.js`, `water.js`, `history.js`, `profile.js`: İlgili özelliklerin UI ve veritabanı işlemlerini yürüten ayrık modül dosyaları.
-   - `workout.js`: Antrenman programları (splits), aktif seans navigasyonu ve ilerleme sayfası bağlantısı. `window.openProgressView` burada global'e açılıyor.
+   - `workout.js`: Antrenman programları (splits) ve aktif seans navigasyonu.
    - `activeSession.js`: **[YENİ]** Aktif antrenman seansının tüm state yönetimi, set tamamlama, RPE seçimi, zamanlayıcı ve Firestore yazma işlemleri. (workout.js'ten ayrıştırıldı)
-   - `progressView.js`: **[YENİ]** İlerleme sayfası: `exercise_progress` koleksiyonundan egzersiz başına son ağırlık/tekrar, e1RM ve trend verisi (≥2 seans) render eder. Bölgelere göre gruplar, sparkline çizer.
-   - `progressiveOverload.js`: **[YENİ]** `calculateE1RM`, `calculateE1RMDelta`, `detectProgressStatus`, `getSuggestionText` fonksiyonlarını export eden shared utility.
    - `assets/exercises/muscle-map.js`: Egzersiz adı → kas grubu eşlemesi (`window.EXERCISE_MUSCLE_MAPPING`).
    - `firestore.rules`: Veritabanı okuma/yazma güvenlik izinleri. `match /users/{userId}/{document=**}` ile tüm alt koleksiyonlar kapsanıyor.
 
@@ -24,7 +22,7 @@
    - **Backend / Veritabanı**: Firebase v10 CDN (Authentication, Firestore).
    - **Harici API**: CollectAPI (Finans modülünde kur/metal verisi için).
    - **Build/Deploy**: Herhangi bir build aracı kullanılmıyor. `main` branch üzerinden GitHub Pages ile doğrudan barındırılıyor.
-   - **Cache Busting**: JS modüllerine `?v=N` query string eklenerek tarayıcı önbellekleme zorla kırılıyor (`workout.js?v=4`, `progressView.js?v=5`, vb.).
+   - **Cache Busting**: JS modüllerine `?v=N` query string eklenerek tarayıcı önbellekleme zorla kırılıyor (`workout.js?v=4`, vb.).
 
 3. **MODÜL / ÖZELLİK ENVANTERİ**
    - **Dashboard**: Diğer modüllerden verileri çekip ana sayfada gösterir. (Tamamlandı)
@@ -38,7 +36,7 @@
    - **History**: Diğer modüllerdeki son aktivitelerin ortak listesi. (Tamamlandı)
    - **Workout / Egzersiz Kütüphanesi**: Split oluşturma, gün bazlı egzersiz seçimi, SVG kas haritası. (Tamamlandı)
    - **Aktif Antrenman Seansı** (`activeSession.js`): Akordiyon egzersiz kartları, ağırlık/tekrar stepper, RPE seçici (6–10), e1RM hesaplama, zamanlayıcı, otomatik taslak kayıt (400ms debounce), seti tamamlama. (Tamamlandı)
-   - **İlerleme Sayfası** (`progressView.js`): Egzersiz bazında son ağırlık/tekrar, e1RM, trend durumu (İlerliyor/Platoda/Dikkat), sparkline grafik, bölgeye göre gruplandırma. (Tamamlandı — veri akışı aktif)
+
 
 4. **VERİ MODELİ**
    - Tüm veriler Firestore'da izolasyon için `users/{userId}` path'i altında tutuluyor.
@@ -50,7 +48,6 @@
      - `books`, `book_logs` (Kitap)
      - `splits` (Antrenman programları — gün ve egzersiz listesiyle)
      - `workout_logs` (Seans kayıtları: `status: in_progress | completed`, `exercises: { [exId]: { sets: [...] } }`)
-     - `exercise_progress/{exId}` — **[YENİ]** Her egzersiz için: `lastWeight`, `lastReps`, `currentE1RM`, `personalRecordE1RM`, `personalRecordDate`, `last5SetsRPE`, `recentSessionSummaries[]`, `lastUpdated`
      - `movies` (Sinema)
    - **Dokümanlar**: Global ayarlar `users/{userId}/settings/` altında tutulur.
    - **Seans ID formatı**: `${splitId}_${dayId}_${dateStr}_${Date.now()}` — tekil, tamamlanan seansların üzerine yazılmaz.
@@ -62,10 +59,8 @@
    - **Listener Yönetimi**: `listenerManager.js` üzerinden merkezi kayıt — logout'ta bellek sızıntısını önler.
    - **Global State**: `window.currentUid` ve `localStorage('uid')` ile uid, tüm modüller arası paylaşılıyor. `app.js`'de auth callback'te ve `workout.js`'de `initWorkout`'ta set ediliyor.
    - **Cache Busting**: Modül dosyalarına `?v=N` ekleniyor; production'da CDN'i zorla günceller.
-   - **window.openProgressView bağımlılığı**: `onclick` içinde hem `window.openProgressView()` (birincil) hem de `import('./progressView.js?v=5').then(...)` (fallback) bulunuyor — modül yüklenemese bile sayfa açılıyor.
 
 6. **BİLİNEN SORUNLAR / YARIM KALANLAR**
-   - **İlerleme sayfası verisi**: Sayfa, `exercise_progress` koleksiyonunu okur. Bu koleksiyon **yalnızca "Seti Tamamla" butonuna basıldığında** dolduruluyor. Hiç set tamamlanmamışsa sayfa "İlk antrenmanını bekliyor" mesajını gösterir — bu beklenen davranış.
    - **Firestore index**: `activeSession.js`'deki yeni seans sorgusu (`where('status','==','in_progress') + where('dayId','==', dayId)`) bileşik bir Firestore indeksi gerektirebilir — console'da "index required" hatası görülürse Firebase konsolundan ilgili indeksin oluşturulması gerekiyor.
    - **Teknik Borç**: Global değişkenler ve event listener'larla manuel state yönetimi. Tailwind CDN'in tarayıcıda derlenmesi (production için ağır, bilinçli olarak bırakılmış).
    - **Yarım Kalan / Planlanan**: Finans için grafik/pasta dilimi, notlarda arama, görevlere kategori.
@@ -76,10 +71,8 @@
      - Aktif antrenman seansında ağırlık/tekrar değişiklikleri artık otomatik kaydediliyor (debounced Firestore write).
      - "Antrenman Bitir" sonrası zamanlayıcı sıfırlanıyor; aynı gün tekrar girildiğinde yeni seans sıfırdan başlıyor.
      - `window.currentUid` ve `localStorage uid` tüm modüllere güvenilir şekilde yayılıyor.
-     - `progressView.js` tamamen yeniden yazıldı: boş-durum (empty state) görünümü, ≥1 seans olan egzersizler için kart render, sparkline grafik.
-     - İlerleme sayfası navigasyonu `window.openProgressView?.()` yerine doğrudan DOM gösterme + dinamik import fallback'e geçirildi.
-   - **Mevcut durum:** Tüm temel modüller çalışıyor. İlerleme sayfası deploy'da yayında; `exercise_progress` verisini okuyup gösteriyor. En az bir seti tamamlanmış kullanıcılar için ilerleme kartları görünmeli.
-   - **Sonraki potansiyel adım:** İlerleme sayfasında antrenman geçmişi detayına tıklama akışını (`openProgressExHistory`) test etmek; Firestore bileşik indeks uyarısını izlemek.
+   - **Mevcut durum:** Tüm temel modüller çalışıyor.
+   - **Sonraki potansiyel adım:** Firestore bileşik indeks uyarısını izlemek.
 
 8. **TERCİHLER / ÇALIŞMA TARZI NOTLARI**
    - Gereksiz dolgu metinleri ve uzatılmış açıklamalardan kaçınılmalı.

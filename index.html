@@ -488,11 +488,7 @@
                             <span class="flex-1 font-body-lg text-body-lg text-on-surface">Egzersiz Kütüphanesi</span>
                             <span class="material-symbols-outlined text-outline">chevron_right</span>
                         </a>
-                        <a class="flex items-center gap-4 p-4 border-b border-surface-variant/50 hover:bg-surface-container-low transition-colors active:bg-surface-container" href="#" onclick="document.querySelectorAll('.view').forEach(v=>v.classList.add('hidden')); document.getElementById('view-progress').classList.remove('hidden'); if(typeof window.openProgressView==='function'){window.openProgressView();} else { document.getElementById('progress-summary-text').innerText='Yükleniyor...'; import('./progressView.js?v=5').then(m=>m.openProgressView()); } return false;">
-                            <span class="material-symbols-outlined text-on-surface-variant">monitoring</span>
-                            <span class="flex-1 font-body-lg text-body-lg text-on-surface">İlerleme</span>
-                            <span class="material-symbols-outlined text-outline">chevron_right</span>
-                        </a>
+
                         <a class="flex items-center gap-4 p-4 border-b border-surface-variant/50 hover:bg-surface-container-low transition-colors active:bg-surface-container" href="#" onclick="event.preventDefault(); openSplitEdit(); return false;">
                             <span class="material-symbols-outlined text-on-surface-variant">settings</span>
                             <span class="flex-1 font-body-lg text-body-lg text-on-surface">Split Düzenle</span>
@@ -3410,60 +3406,6 @@
         </main>
     </section>
 
-    <!-- ======= İLERLEME (PROGRESS) ======= -->
-    <section id="view-progress" class="view hidden bg-primary-fixed-dim text-on-background font-body-lg min-h-[100dvh] pb-[100px] overflow-y-auto relative z-40">
-        <!-- TopAppBar -->
-        <header class="w-full top-0 sticky bg-primary-fixed-dim border-b border-primary-container z-40">
-            <div class="flex items-center justify-between px-container-padding h-16 w-full max-w-md mx-auto">
-                <button onclick="document.getElementById('view-progress').classList.add('hidden'); document.getElementById('view-workout').classList.remove('hidden');" class="flex items-center justify-center w-10 h-10 rounded-full hover:bg-surface-container transition-colors active:scale-95 duration-150 ease-in-out text-primary">
-                    <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">arrow_back</span>
-                </button>
-                <h1 class="font-headline-sm text-headline-sm text-primary tracking-tight">İlerleme</h1>
-                <div class="w-10"></div> <!-- Spacer for centering -->
-            </div>
-        </header>
-
-        <main class="max-w-md mx-auto px-container-padding pt-card-gap flex flex-col gap-card-gap">
-            <!-- Summary Card -->
-            <section class="bg-surface-container-lowest rounded-3xl p-6 shadow-sm border border-primary-container/20">
-                <h2 class="font-body-lg text-body-lg text-on-surface-variant mb-4" id="progress-summary-text">
-                    Hesaplanıyor...
-                </h2>
-                <div class="flex justify-between items-center">
-                    <div class="flex items-center gap-2">
-                        <div class="w-3 h-3 rounded-full bg-primary-container"></div>
-                        <span class="font-headline-sm text-headline-sm text-on-surface" id="progress-count-progressing">0</span>
-                        <span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider hidden sm:inline">İlerliyor</span>
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <div class="w-3 h-3 rounded-full bg-tertiary-container"></div>
-                        <span class="font-headline-sm text-headline-sm text-on-surface" id="progress-count-plateaued">0</span>
-                        <span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider hidden sm:inline">Plato</span>
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <div class="w-3 h-3 rounded-full bg-error"></div>
-                        <span class="font-headline-sm text-headline-sm text-on-surface" id="progress-count-attention">0</span>
-                        <span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider hidden sm:inline">Dikkat</span>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Filter Chips -->
-            <section class="overflow-x-auto hide-scrollbar -mx-container-padding px-container-padding pb-2" id="progress-filters-container" style="display: none;">
-                <div class="flex gap-2 w-max">
-                    <button class="progress-filter-btn px-4 py-2 rounded-full font-label-md text-label-md bg-primary-container text-on-primary-container active:scale-95 transition-transform" data-filter="all">Tümü</button>
-                    <button class="progress-filter-btn px-4 py-2 rounded-full font-label-md text-label-md bg-surface-container-highest text-on-surface-variant hover:bg-surface-variant active:scale-95 transition-transform" data-filter="progressing">İlerliyor</button>
-                    <button class="progress-filter-btn px-4 py-2 rounded-full font-label-md text-label-md bg-surface-container-highest text-on-surface-variant hover:bg-surface-variant active:scale-95 transition-transform" data-filter="plateaued">Platoda</button>
-                    <button class="progress-filter-btn px-4 py-2 rounded-full font-label-md text-label-md bg-surface-container-highest text-on-surface-variant hover:bg-surface-variant active:scale-95 transition-transform" data-filter="attention">Dikkat</button>
-                </div>
-            </section>
-
-            <!-- Exercise List Container -->
-            <div id="progress-list-container" class="flex flex-col gap-card-gap">
-                <!-- Dynamically populated by progressView.js -->
-            </div>
-        </main>
-    </section>
 </div>
 <!-- Kapanış: #app-container -->
 
