@@ -22,26 +22,26 @@ let currentStretchImageBase64 = null;
 let editingStretchId = null;
 
 const DEFAULT_STRETCHES = [
-    { id: 'def_catcow', name: 'Cat-Cow Stretch', duration: 30, imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_a_cat_cow_stretch_fitness_exercise_a/screen.png', isDefault: true },
-    { id: 'def_cobra', name: 'Cobra Pose (Abdominal Stretch)', duration: 30, imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_a_cobra_pose_fitness_exercise_a_person/screen.png', isDefault: true },
-    { id: 'def_threadneedle', name: 'Thread the Needle Stretch', duration: 30, imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_a_thread_the_needle_fitness_exercise_a/screen.png', isDefault: true },
-    { id: 'def_doorwaychest', name: 'Doorway Chest Stretch', duration: 30, imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_a_doorway_chest_stretch_fitness_exercise/screen.png', isDefault: true },
-    { id: 'def_wallangel', name: 'Wall Angel (Scapular Slide)', duration: 30, imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_a_wall_angel_fitness_exercise_a_person/screen.png', isDefault: true },
-    { id: 'def_crossbody', name: 'Cross-Body Shoulder Stretch', duration: 30, imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_a_cross_body_shoulder_stretch_fitness/screen.png', isDefault: true },
-    { id: 'def_overheadtri', name: 'Overhead Triceps Stretch', duration: 30, imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_an_overhead_triceps_stretch_fitness/screen.png', isDefault: true },
-    { id: 'def_wallbicep', name: 'Wall Biceps Stretch', duration: 30, imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_a_wall_biceps_stretch_fitness_exercise_a/screen.png', isDefault: true },
-    { id: 'def_forearmflex', name: 'Forearm Flexor Stretch', duration: 30, imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_a_forearm_flexor_stretch_fitness/screen.png', isDefault: true },
-    { id: 'def_forearmext', name: 'Forearm Extensor Stretch', duration: 30, imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_a_forearm_extensor_stretch_fitness/screen.png', isDefault: true },
-    { id: 'def_kneelinghip', name: 'Kneeling Hip Flexor Stretch', duration: 30, imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_a_kneeling_hip_flexor_stretch_fitness/screen.png', isDefault: true },
-    { id: 'def_standingquad', name: 'Standing Quadriceps Stretch', duration: 30, imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_a_standing_quadriceps_stretch_fitness/screen.png', isDefault: true },
-    { id: 'def_supineham', name: 'Supine Hamstring Stretch', duration: 30, imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_a_supine_hamstring_stretch_fitness/screen.png', isDefault: true },
-    { id: 'def_figure4', name: 'Figure 4 Glute Stretch', duration: 30, imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_a_figure_4_glute_stretch_fitness/screen.png', isDefault: true },
-    { id: 'def_pigeon', name: 'Pigeon Pose Stretch', duration: 30, imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_a_pigeon_pose_fitness_exercise_a_person/screen.png', isDefault: true },
-    { id: 'def_seatedspinal', name: 'Seated Spinal Twist Stretch', duration: 30, imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_a_seated_spinal_twist_fitness_exercise_a/screen.png', isDefault: true },
-    { id: 'def_downdog', name: 'Downward-Facing Dog', duration: 30, imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_downward_facing_dog_fitness_exercise_a/screen.png', isDefault: true },
-    { id: 'def_childspose', name: "Child's Pose", duration: 30, imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_child_s_pose_fitness_exercise_a_person/screen.png', isDefault: true },
-    { id: 'def_wallcalf', name: 'Wall Calf Stretch', duration: 30, imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_a_wall_calf_stretch_fitness_exercise_a/screen.png', isDefault: true },
-    { id: 'def_butterfly', name: 'Butterfly Stretch', duration: 30, imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_a_butterfly_stretch_fitness_exercise_a/screen.png', isDefault: true }
+    { id: 'def_catcow', name: 'Cat-Cow Stretch', duration: 30, imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_a_cat_cow_stretch_fitness_exercise_a/screen.jpg', isDefault: true },
+    { id: 'def_cobra', name: 'Cobra Pose (Abdominal Stretch)', duration: 30, imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_a_cobra_pose_fitness_exercise_a_person/screen.jpg', isDefault: true },
+    { id: 'def_threadneedle', name: 'Thread the Needle Stretch', duration: 30, imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_a_thread_the_needle_fitness_exercise_a/screen.jpg', isDefault: true },
+    { id: 'def_doorwaychest', name: 'Doorway Chest Stretch', duration: 30, imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_a_doorway_chest_stretch_fitness_exercise/screen.jpg', isDefault: true },
+    { id: 'def_wallangel', name: 'Wall Angel (Scapular Slide)', duration: 30, imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_a_wall_angel_fitness_exercise_a_person/screen.jpg', isDefault: true },
+    { id: 'def_crossbody', name: 'Cross-Body Shoulder Stretch', duration: 30, imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_a_cross_body_shoulder_stretch_fitness/screen.jpg', isDefault: true },
+    { id: 'def_overheadtri', name: 'Overhead Triceps Stretch', duration: 30, imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_an_overhead_triceps_stretch_fitness/screen.jpg', isDefault: true },
+    { id: 'def_wallbicep', name: 'Wall Biceps Stretch', duration: 30, imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_a_wall_biceps_stretch_fitness_exercise_a/screen.jpg', isDefault: true },
+    { id: 'def_forearmflex', name: 'Forearm Flexor Stretch', duration: 30, imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_a_forearm_flexor_stretch_fitness/screen.jpg', isDefault: true },
+    { id: 'def_forearmext', name: 'Forearm Extensor Stretch', duration: 30, imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_a_forearm_extensor_stretch_fitness/screen.jpg', isDefault: true },
+    { id: 'def_kneelinghip', name: 'Kneeling Hip Flexor Stretch', duration: 30, imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_a_kneeling_hip_flexor_stretch_fitness/screen.jpg', isDefault: true },
+    { id: 'def_standingquad', name: 'Standing Quadriceps Stretch', duration: 30, imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_a_standing_quadriceps_stretch_fitness/screen.jpg', isDefault: true },
+    { id: 'def_supineham', name: 'Supine Hamstring Stretch', duration: 30, imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_a_supine_hamstring_stretch_fitness/screen.jpg', isDefault: true },
+    { id: 'def_figure4', name: 'Figure 4 Glute Stretch', duration: 30, imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_a_figure_4_glute_stretch_fitness/screen.jpg', isDefault: true },
+    { id: 'def_pigeon', name: 'Pigeon Pose Stretch', duration: 30, imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_a_pigeon_pose_fitness_exercise_a_person/screen.jpg', isDefault: true },
+    { id: 'def_seatedspinal', name: 'Seated Spinal Twist Stretch', duration: 30, imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_a_seated_spinal_twist_fitness_exercise_a/screen.jpg', isDefault: true },
+    { id: 'def_downdog', name: 'Downward-Facing Dog', duration: 30, imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_downward_facing_dog_fitness_exercise_a/screen.jpg', isDefault: true },
+    { id: 'def_childspose', name: "Child's Pose", duration: 30, imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_child_s_pose_fitness_exercise_a_person/screen.jpg', isDefault: true },
+    { id: 'def_wallcalf', name: 'Wall Calf Stretch', duration: 30, imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_a_wall_calf_stretch_fitness_exercise_a/screen.jpg', isDefault: true },
+    { id: 'def_butterfly', name: 'Butterfly Stretch', duration: 30, imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_a_butterfly_stretch_fitness_exercise_a/screen.jpg', isDefault: true }
 ];
 
 let unsubCores = null;
