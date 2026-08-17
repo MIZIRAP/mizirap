@@ -51,6 +51,13 @@ let cores = [];
 let currentCoreImageBase64 = null;
 let editingCoreId = null;
 
+let unsubStretchSessions = null;
+let stretchSessions = [];
+let activeStretchSessionId = localStorage.getItem('activeStretchSessionId') || null;
+let sessionDraftMovements = []; // [{id, name, duration, imageBase64}]
+let editingSessionId = null;
+let currentStretchTab = 'movements';
+
 document.addEventListener('click', (e) => {
     const actionBtn = e.target.closest('[data-action]');
     if (!actionBtn) return;
@@ -75,6 +82,16 @@ document.addEventListener('click', (e) => {
     else if (action === 'deleteCore') { e.stopPropagation(); deleteCore(actionBtn.getAttribute('data-core-id')); }
     else if (action === 'editCore') { e.stopPropagation(); editCore(actionBtn.getAttribute('data-core-id')); }
     else if (action === 'triggerCoreImageUpload') document.getElementById('core-image-input').click();
+
+    else if (action === 'switchStretchTab') switchStretchTab(actionBtn.getAttribute('data-tab'));
+    else if (action === 'openAddSessionModal') openAddSessionModal();
+    else if (action === 'closeAddSessionModal') closeAddSessionModal();
+    else if (action === 'saveStretchSession') saveStretchSession();
+    else if (action === 'deleteStretchSession') { e.stopPropagation(); deleteStretchSession(actionBtn.getAttribute('data-session-id')); }
+    else if (action === 'editStretchSession') { e.stopPropagation(); editStretchSession(actionBtn.getAttribute('data-session-id')); }
+    else if (action === 'setActiveStretchSession') { e.stopPropagation(); setActiveStretchSession(actionBtn.getAttribute('data-session-id')); }
+    else if (action === 'toggleSessionMovement') toggleSessionMovement(actionBtn.getAttribute('data-move-id'));
+    else if (action === 'removeSessionMovement') { e.stopPropagation(); removeSessionMovement(actionBtn.getAttribute('data-move-id')); }
     
     else if (action === 'closeExerciseHistory') closeExerciseHistory();
     else if (action === 'closeSplitSelectionModal') closeSplitSelectionModal();
@@ -176,6 +193,12 @@ export function initWorkout(uid, onChangeCallback) {
         renderCores();
     }));
 
+    const stretchSessionsRef = collection(db, "users", uid, "stretchSessions");
+    unsubStretchSessions = registerListener(onSnapshot(stretchSessionsRef, (snap) => {
+        stretchSessions = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+        renderStretchSessions();
+    }));
+
     // Setup image picker
     const imageInput = document.getElementById('stretch-image-input');
     if (imageInput) {
@@ -194,6 +217,7 @@ export function clearWorkout() {
     if(unsubLogs) unsubLogs();
     if(unsubStretches) unsubStretches();
     if(unsubCores) unsubCores();
+    if(unsubStretchSessions) unsubStretchSessions();
     currentUid = null;
     splits = [];
     activeSplitId = null;
@@ -2003,4 +2027,292 @@ async function deleteCore(id) {
         console.error("Error deleting core: ", e);
         alert("Hareket silinirken bir hata oluştu.");
     }
+}
+
+// ==========================================
+// STRETCH SESSIONS
+// ==========================================
+
+function switchStretchTab(tab) {
+    currentStretchTab = tab;
+    const movements = document.getElementById('stretch-panel-movements');
+    const sessions = document.getElementById('stretch-panel-sessions');
+    const tabMovements = document.getElementById('stretch-tab-movements');
+    const tabSessions = document.getElementById('stretch-tab-sessions');
+    if (!movements || !sessions) return;
+
+    if (tab === 'movements') {
+        movements.classList.remove('hidden');
+        sessions.classList.add('hidden');
+        tabMovements.className = 'flex-1 py-3 font-label-lg text-label-lg text-primary border-b-2 border-primary transition-colors';
+        tabSessions.className = 'flex-1 py-3 font-label-lg text-label-lg text-on-surface-variant border-b-2 border-transparent hover:text-on-surface transition-colors';
+    } else {
+        movements.classList.add('hidden');
+        sessions.classList.remove('hidden');
+        tabMovements.className = 'flex-1 py-3 font-label-lg text-label-lg text-on-surface-variant border-b-2 border-transparent hover:text-on-surface transition-colors';
+        tabSessions.className = 'flex-1 py-3 font-label-lg text-label-lg text-primary border-b-2 border-primary transition-colors';
+        renderStretchSessions();
+    }
+}
+
+function getAllStretchMovements() {
+    const visibleDefaults = DEFAULT_STRETCHES.filter(s => !hiddenDefaultStretchIds.has(s.id));
+    return [...visibleDefaults, ...stretches];
+}
+
+function openAddSessionModal(isEdit = false) {
+    if (!isEdit) {
+        editingSessionId = null;
+        sessionDraftMovements = [];
+        document.getElementById('session-name').value = '';
+        document.getElementById('session-modal-title').textContent = 'Yeni Seans';
+    }
+    renderSessionMovementPicker();
+    renderSessionOrderedList();
+
+    const modal = document.getElementById('addStretchSessionModal');
+    const content = document.getElementById('addStretchSessionModalContent');
+    modal.classList.remove('hidden');
+    setTimeout(() => {
+        modal.classList.remove('opacity-0');
+        content.classList.remove('translate-y-full');
+    }, 10);
+}
+
+function closeAddSessionModal() {
+    const modal = document.getElementById('addStretchSessionModal');
+    const content = document.getElementById('addStretchSessionModalContent');
+    modal.classList.add('opacity-0');
+    content.classList.add('translate-y-full');
+    setTimeout(() => modal.classList.add('hidden'), 300);
+}
+
+function renderSessionMovementPicker() {
+    const picker = document.getElementById('session-movement-picker');
+    if (!picker) return;
+    const all = getAllStretchMovements();
+    if (all.length === 0) {
+        picker.innerHTML = `<p class="text-center text-on-surface-variant font-body-sm py-2">Önce Hareketler sekmesinden hareket ekleyin.</p>`;
+        return;
+    }
+    picker.innerHTML = all.map(m => {
+        const selected = sessionDraftMovements.some(d => d.id === m.id);
+        return `
+        <button data-action="toggleSessionMovement" data-move-id="${m.id}"
+            class="flex items-center gap-3 p-2 rounded-lg transition-colors text-left w-full ${selected ? 'bg-primary/10 border border-primary/30' : 'hover:bg-surface-container-low'}">
+            <div class="w-10 h-10 rounded-full overflow-hidden flex-shrink-0 bg-surface-container-highest">
+                ${m.imageBase64 ? `<img src="${m.imageBase64}" class="w-full h-full object-cover" alt="${escapeHtml(m.name)}"/>` : ''}
+            </div>
+            <span class="flex-1 font-body-md text-body-md text-on-surface truncate">${escapeHtml(m.name)}</span>
+            <span class="material-symbols-outlined text-[18px] ${selected ? 'text-primary' : 'text-outline-variant'}" style="font-variation-settings: 'FILL' ${selected ? 1 : 0};">
+                ${selected ? 'check_circle' : 'radio_button_unchecked'}
+            </span>
+        </button>`;
+    }).join('');
+}
+
+function toggleSessionMovement(id) {
+    const all = getAllStretchMovements();
+    const move = all.find(m => m.id === id);
+    if (!move) return;
+    const idx = sessionDraftMovements.findIndex(d => d.id === id);
+    if (idx === -1) {
+        sessionDraftMovements.push({ id: move.id, name: move.name, duration: move.duration, imageBase64: move.imageBase64 || null });
+    } else {
+        sessionDraftMovements.splice(idx, 1);
+    }
+    renderSessionMovementPicker();
+    renderSessionOrderedList();
+}
+
+function removeSessionMovement(id) {
+    sessionDraftMovements = sessionDraftMovements.filter(d => d.id !== id);
+    renderSessionMovementPicker();
+    renderSessionOrderedList();
+}
+
+function renderSessionOrderedList() {
+    const list = document.getElementById('session-ordered-list');
+    const hint = document.getElementById('session-empty-hint');
+    const durationEl = document.getElementById('session-total-duration');
+    if (!list) return;
+
+    if (sessionDraftMovements.length === 0) {
+        list.innerHTML = `<p id="session-empty-hint" class="text-center text-on-surface-variant font-body-sm py-3">Yukarıdan hareket seçin</p>`;
+        if (durationEl) durationEl.textContent = '0 dk';
+        return;
+    }
+
+    list.innerHTML = sessionDraftMovements.map((m, i) => `
+        <div class="flex items-center gap-3 bg-surface-container-low rounded-lg p-2 cursor-grab active:cursor-grabbing session-drag-item"
+            draggable="true" data-drag-idx="${i}">
+            <span class="material-symbols-outlined text-outline text-[20px] select-none">drag_indicator</span>
+            <div class="w-10 h-10 rounded-full overflow-hidden flex-shrink-0 bg-surface-container-highest">
+                ${m.imageBase64 ? `<img src="${m.imageBase64}" class="w-full h-full object-cover" alt="${escapeHtml(m.name)}"/>` : ''}
+            </div>
+            <span class="flex-1 font-body-md text-body-md text-on-surface truncate">${escapeHtml(m.name)}</span>
+            <span class="font-label-sm text-label-sm text-on-surface-variant">${m.duration}s</span>
+            <button data-action="removeSessionMovement" data-move-id="${m.id}" class="text-on-surface-variant hover:text-error transition-colors p-1 rounded-full">
+                <span class="material-symbols-outlined text-[18px]">close</span>
+            </button>
+        </div>
+    `).join('');
+
+    // Total duration
+    const total = sessionDraftMovements.reduce((acc, m) => acc + (parseInt(m.duration) || 0), 0);
+    const mins = Math.floor(total / 60);
+    const secs = total % 60;
+    if (durationEl) durationEl.textContent = mins > 0 ? `${mins} dk ${secs > 0 ? secs + ' sn' : ''}` : `${secs} sn`;
+
+    initSessionDrag(list);
+}
+
+function initSessionDrag(list) {
+    let dragIdx = null;
+    list.querySelectorAll('.session-drag-item').forEach(item => {
+        item.addEventListener('dragstart', (e) => {
+            dragIdx = parseInt(item.getAttribute('data-drag-idx'));
+            item.classList.add('opacity-50');
+            e.dataTransfer.effectAllowed = 'move';
+        });
+        item.addEventListener('dragend', () => item.classList.remove('opacity-50'));
+        item.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            e.dataTransfer.dropEffect = 'move';
+        });
+        item.addEventListener('drop', (e) => {
+            e.preventDefault();
+            const targetIdx = parseInt(item.getAttribute('data-drag-idx'));
+            if (dragIdx === null || dragIdx === targetIdx) return;
+            const moved = sessionDraftMovements.splice(dragIdx, 1)[0];
+            sessionDraftMovements.splice(targetIdx, 0, moved);
+            dragIdx = null;
+            renderSessionOrderedList();
+        });
+    });
+}
+
+async function saveStretchSession() {
+    if (!currentUid) return;
+    const name = document.getElementById('session-name').value.trim();
+    if (!name) { alert('Lütfen seans adı girin.'); return; }
+    if (sessionDraftMovements.length === 0) { alert('En az bir hareket seçin.'); return; }
+
+    const totalDuration = sessionDraftMovements.reduce((acc, m) => acc + (parseInt(m.duration) || 0), 0);
+    const data = {
+        name,
+        movements: sessionDraftMovements,
+        totalDuration,
+        updatedAt: serverTimestamp()
+    };
+
+    try {
+        if (editingSessionId) {
+            await updateDoc(doc(db, "users", currentUid, "stretchSessions", editingSessionId), data);
+        } else {
+            data.createdAt = serverTimestamp();
+            await addDoc(collection(db, "users", currentUid, "stretchSessions"), data);
+        }
+        closeAddSessionModal();
+    } catch (e) {
+        console.error("Error saving session:", e);
+        alert("Seans kaydedilirken hata oluştu.");
+    }
+}
+
+function editStretchSession(id) {
+    const session = stretchSessions.find(s => s.id === id);
+    if (!session) return;
+    editingSessionId = id;
+    sessionDraftMovements = [...(session.movements || [])];
+    document.getElementById('session-name').value = session.name;
+    document.getElementById('session-modal-title').textContent = 'Seans Düzenle';
+    openAddSessionModal(true);
+}
+
+async function deleteStretchSession(id) {
+    if (!currentUid) return;
+    if (!confirm("Bu seansı silmek istediğinize emin misiniz?")) return;
+    try {
+        await deleteDoc(doc(db, "users", currentUid, "stretchSessions", id));
+        if (activeStretchSessionId === id) {
+            activeStretchSessionId = null;
+            localStorage.removeItem('activeStretchSessionId');
+        }
+    } catch (e) {
+        console.error("Error deleting session:", e);
+        alert("Seans silinirken hata oluştu.");
+    }
+}
+
+function setActiveStretchSession(id) {
+    activeStretchSessionId = id;
+    localStorage.setItem('activeStretchSessionId', id);
+    renderStretchSessions();
+}
+
+function renderStretchSessions() {
+    const container = document.getElementById('stretch-sessions-container');
+    if (!container) return;
+
+    if (stretchSessions.length === 0) {
+        container.innerHTML = `<p class="text-center text-on-surface-variant font-body-md mt-4">Henüz seans eklenmedi.</p>`;
+        return;
+    }
+
+    container.innerHTML = stretchSessions.map(session => {
+        const isActive = session.id === activeStretchSessionId;
+        const mins = Math.floor((session.totalDuration || 0) / 60);
+        const secs = (session.totalDuration || 0) % 60;
+        const durationStr = mins > 0 ? `${mins} dk ${secs > 0 ? secs + ' sn' : ''}` : `${secs} sn`;
+        const moveCount = (session.movements || []).length;
+
+        return `
+        <div class="rounded-2xl p-4 flex flex-col gap-3 border transition-colors ${isActive ? 'bg-primary/8 border-primary/40' : 'bg-surface-container-low border-surface-variant/20'}">
+            <!-- Header row -->
+            <div class="flex items-start justify-between gap-2">
+                <div class="flex-1">
+                    <div class="flex items-center gap-2">
+                        ${isActive ? `<span class="inline-flex items-center gap-1 bg-primary text-on-primary font-label-sm text-label-sm px-2 py-0.5 rounded-full text-[11px]">
+                            <span class="material-symbols-outlined text-[12px]" style="font-variation-settings:'FILL' 1;">check_circle</span> Aktif
+                        </span>` : ''}
+                        <h3 class="font-title-sm text-title-sm font-semibold text-on-surface">${escapeHtml(session.name)}</h3>
+                    </div>
+                    <div class="flex items-center gap-3 mt-1">
+                        <span class="flex items-center gap-1 text-on-surface-variant font-label-sm text-label-sm">
+                            <span class="material-symbols-outlined text-[14px]">timer</span> ${durationStr}
+                        </span>
+                        <span class="flex items-center gap-1 text-on-surface-variant font-label-sm text-label-sm">
+                            <span class="material-symbols-outlined text-[14px]">fitness_center</span> ${moveCount} hareket
+                        </span>
+                    </div>
+                </div>
+                <div class="flex items-center gap-1 flex-shrink-0">
+                    ${!isActive ? `<button data-action="setActiveStretchSession" data-session-id="${session.id}"
+                        class="text-on-surface-variant hover:text-primary transition-colors p-1.5 rounded-full hover:bg-surface-variant active:scale-95" title="Aktif Seans Yap">
+                        <span class="material-symbols-outlined text-[20px]">play_circle</span>
+                    </button>` : ''}
+                    <button data-action="editStretchSession" data-session-id="${session.id}"
+                        class="text-on-surface-variant hover:text-primary transition-colors p-1.5 rounded-full hover:bg-surface-variant active:scale-95">
+                        <span class="material-symbols-outlined text-[20px]">edit</span>
+                    </button>
+                    <button data-action="deleteStretchSession" data-session-id="${session.id}"
+                        class="text-on-surface-variant hover:text-error transition-colors p-1.5 rounded-full hover:bg-surface-variant active:scale-95">
+                        <span class="material-symbols-outlined text-[20px]">delete</span>
+                    </button>
+                </div>
+            </div>
+            <!-- Movement Preview Strip -->
+            ${moveCount > 0 ? `
+            <div class="flex gap-1.5 overflow-x-auto hide-scrollbar">
+                ${(session.movements || []).map(m => `
+                    <div class="flex-shrink-0 flex flex-col items-center gap-1">
+                        <div class="w-10 h-10 rounded-full overflow-hidden bg-surface-container-highest border border-surface-variant/30">
+                            ${m.imageBase64 ? `<img src="${m.imageBase64}" class="w-full h-full object-cover" alt="${escapeHtml(m.name)}"/>` : ''}
+                        </div>
+                    </div>
+                `).join('')}
+            </div>` : ''}
+        </div>`;
+    }).join('');
 }
