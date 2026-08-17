@@ -16,6 +16,10 @@ let callback = null;
 
 let unsubSplits = null;
 let unsubLogs = null;
+let unsubStretches = null;
+let stretches = [];
+let currentStretchImageBase64 = null;
+let editingStretchId = null;
 
 document.addEventListener('click', (e) => {
     const actionBtn = e.target.closest('[data-action]');
@@ -30,6 +34,10 @@ document.addEventListener('click', (e) => {
     else if (action === 'closeCoreView') closeCoreView();
     else if (action === 'openAddStretchModal') openAddStretchModal();
     else if (action === 'closeAddStretchModal') closeAddStretchModal();
+    else if (action === 'saveNewStretch') saveStretch();
+    else if (action === 'deleteStretch') { e.stopPropagation(); deleteStretch(actionBtn.getAttribute('data-stretch-id')); }
+    else if (action === 'editStretch') { e.stopPropagation(); editStretch(actionBtn.getAttribute('data-stretch-id')); }
+    else if (action === 'triggerStretchImageUpload') document.getElementById('stretch-image-input').click();
     else if (action === 'closeExerciseHistory') closeExerciseHistory();
     else if (action === 'closeSplitSelectionModal') closeSplitSelectionModal();
     else if (action === 'closeSplitSelectionAndOpenModal') { closeSplitSelectionModal(); setTimeout(openSplitModal, 300); }
@@ -118,12 +126,25 @@ export function initWorkout(uid, onChangeCallback) {
         }
     }));
 
+    const stretchesRef = collection(db, "users", uid, "stretches");
+    unsubStretches = registerListener(onSnapshot(stretchesRef, (snap) => {
+        stretches = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+        renderStretches();
+    }));
+
+    // Setup image picker
+    const imageInput = document.getElementById('stretch-image-input');
+    if (imageInput) {
+        imageInput.addEventListener('change', handleStretchImageUpload);
+    }
+
     setupEventListeners();
 }
 
 export function clearWorkout() {
     if(unsubSplits) unsubSplits();
     if(unsubLogs) unsubLogs();
+    if(unsubStretches) unsubStretches();
     currentUid = null;
     splits = [];
     activeSplitId = null;
@@ -1498,7 +1519,23 @@ function closeCoreView() {
     document.getElementById('view-workout').classList.remove('hidden');
 }
 
-function openAddStretchModal() {
+function openAddStretchModal(isEdit = false) {
+    if (!isEdit) {
+        editingStretchId = null;
+        currentStretchImageBase64 = null;
+        document.getElementById('stretch-name').value = '';
+        document.getElementById('stretch-duration').value = '';
+        document.getElementById('modal-title').textContent = "Yeni Hareket";
+        
+        const preview = document.getElementById('stretch-image-preview');
+        const placeholder = document.getElementById('stretch-image-placeholder');
+        if (preview && placeholder) {
+            preview.src = "";
+            preview.classList.add('hidden');
+            placeholder.classList.remove('hidden');
+        }
+    }
+
     const modal = document.getElementById('addStretchModal');
     const content = document.getElementById('addStretchModalContent');
     modal.classList.remove('hidden');
@@ -1519,4 +1556,165 @@ function closeAddStretchModal() {
     setTimeout(() => {
         modal.classList.add('hidden');
     }, 300);
+}
+
+// ==========================================
+// STRETCHES CRUD & RENDERING
+// ==========================================
+
+function renderStretches() {
+    const container = document.getElementById('stretching-list-container');
+    if (!container) return;
+    
+    if (stretches.length === 0) {
+        container.innerHTML = `<p class="text-center text-on-surface-variant font-body-md mt-4">Henüz hareket eklenmedi.</p>`;
+        return;
+    }
+    
+    let html = '';
+    stretches.forEach(stretch => {
+        html += `
+            <div class="bg-surface-container-low rounded-xl p-md flex items-center gap-md">
+                <div class="w-16 h-16 rounded-full overflow-hidden flex-shrink-0 bg-surface-container-highest">
+                    ${stretch.imageBase64 ? `<img alt="${escapeHtml(stretch.name)}" class="w-full h-full object-cover" src="${stretch.imageBase64}"/>` : ''}
+                </div>
+                <div class="flex-1 flex flex-col justify-center">
+                    <h3 class="font-body-lg text-body-lg font-medium text-on-surface">${escapeHtml(stretch.name)}</h3>
+                    <div class="flex items-center gap-2 mt-1">
+                        <span class="text-on-surface-variant font-label-sm text-label-sm flex items-center gap-1">
+                            <span class="material-symbols-outlined text-[14px]" data-icon="timer">timer</span> ${stretch.duration} sn
+                        </span>
+                    </div>
+                </div>
+                <div class="flex items-center gap-sm flex-shrink-0">
+                    <button data-action="editStretch" data-stretch-id="${stretch.id}" class="text-on-surface-variant hover:text-primary transition-colors p-1 rounded-full hover:bg-surface-variant">
+                        <span class="material-symbols-outlined" data-icon="edit">edit</span>
+                    </button>
+                    <button data-action="deleteStretch" data-stretch-id="${stretch.id}" class="text-on-surface-variant hover:text-error transition-colors p-1 rounded-full hover:bg-surface-variant">
+                        <span class="material-symbols-outlined" data-icon="delete">delete</span>
+                    </button>
+                </div>
+            </div>
+        `;
+    });
+    
+    container.innerHTML = html;
+}
+
+function handleStretchImageUpload(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    
+    const reader = new FileReader();
+    reader.onload = function(event) {
+        const img = new Image();
+        img.onload = function() {
+            const canvas = document.createElement('canvas');
+            const MAX_WIDTH = 200;
+            const MAX_HEIGHT = 200;
+            let width = img.width;
+            let height = img.height;
+
+            if (width > height) {
+                if (width > MAX_WIDTH) {
+                    height *= MAX_WIDTH / width;
+                    width = MAX_WIDTH;
+                }
+            } else {
+                if (height > MAX_HEIGHT) {
+                    width *= MAX_HEIGHT / height;
+                    height = MAX_HEIGHT;
+                }
+            }
+            canvas.width = width;
+            canvas.height = height;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0, width, height);
+            
+            currentStretchImageBase64 = canvas.toDataURL('image/jpeg', 0.8);
+            
+            const preview = document.getElementById('stretch-image-preview');
+            const placeholder = document.getElementById('stretch-image-placeholder');
+            
+            if (preview && placeholder) {
+                preview.src = currentStretchImageBase64;
+                preview.classList.remove('hidden');
+                placeholder.classList.add('hidden');
+            }
+        };
+        img.src = event.target.result;
+    };
+    reader.readAsDataURL(file);
+}
+
+async function saveStretch() {
+    if (!currentUid) return;
+    const nameInput = document.getElementById('stretch-name').value.trim();
+    const durationInput = document.getElementById('stretch-duration').value.trim();
+    
+    if (!nameInput || !durationInput) {
+        alert('Lütfen hareket adı ve süresi girin.');
+        return;
+    }
+    
+    const stretchData = {
+        name: nameInput,
+        duration: parseInt(durationInput, 10) || 30,
+        imageBase64: currentStretchImageBase64 || null,
+        updatedAt: serverTimestamp()
+    };
+    
+    try {
+        if (editingStretchId) {
+            await updateDoc(doc(db, "users", currentUid, "stretches", editingStretchId), stretchData);
+        } else {
+            stretchData.createdAt = serverTimestamp();
+            await addDoc(collection(db, "users", currentUid, "stretches"), stretchData);
+        }
+        
+        closeAddStretchModal();
+    } catch (e) {
+        console.error("Error saving stretch: ", e);
+        alert("Hareket kaydedilirken bir hata oluştu.");
+    }
+}
+
+function editStretch(id) {
+    const stretch = stretches.find(s => s.id === id);
+    if (!stretch) return;
+    
+    editingStretchId = id;
+    
+    document.getElementById('stretch-name').value = stretch.name;
+    document.getElementById('stretch-duration').value = stretch.duration;
+    
+    currentStretchImageBase64 = stretch.imageBase64 || null;
+    
+    const preview = document.getElementById('stretch-image-preview');
+    const placeholder = document.getElementById('stretch-image-placeholder');
+    
+    if (currentStretchImageBase64) {
+        preview.src = currentStretchImageBase64;
+        preview.classList.remove('hidden');
+        placeholder.classList.add('hidden');
+    } else {
+        preview.src = "";
+        preview.classList.add('hidden');
+        placeholder.classList.remove('hidden');
+    }
+    
+    document.getElementById('modal-title').textContent = "Hareketi Düzenle";
+    openAddStretchModal(true);
+}
+
+async function deleteStretch(id) {
+    if (!currentUid) return;
+    if (!confirm("Bu hareketi silmek istediğinize emin misiniz?")) return;
+    
+    try {
+        await deleteDoc(doc(db, "users", currentUid, "stretches", id));
+    } catch (e) {
+        console.error("Error deleting stretch: ", e);
+        alert("Hareket silinirken bir hata oluştu.");
+    }
 }
