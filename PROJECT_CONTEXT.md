@@ -57,7 +57,7 @@
    - **Tasarım Sistemi**: Tailwind Play CDN ile yapılandırılmış; ana renkler (`#446554` primary, `#7d562b` secondary), Inter fontu, Material Symbols ikonlar.
    - **Vanilla JS & Firebase CDN**: Build süreci olmaksızın GitHub Pages'te doğrudan çalışacak şekilde tasarlandı.
    - **Listener Yönetimi**: `listenerManager.js` üzerinden merkezi kayıt — logout'ta bellek sızıntısını önler.
-   - **Global State**: `window.currentUid` ve `localStorage('uid')` ile uid, tüm modüller arası paylaşılıyor. `app.js`'de auth callback'te ve `workout.js`'de `initWorkout`'ta set ediliyor.
+   - **Global State**: `window.*` atamaları tamamen temizlendi. UI olayları (tıklamalar vb.) Event Delegation (olay devri) ile `data-action` etiketleri üzerinden yönetiliyor.
    - **Cache Busting**: Modül dosyalarına `?v=N` ekleniyor; production'da CDN'i zorla günceller.
 
 6. **BİLİNEN SORUNLAR / YARIM KALANLAR**
@@ -67,12 +67,10 @@
 
 7. **SON DURUM** *(Güncelleme: 17 Ağustos 2026)*
    - **Bu oturumda tamamlananlar:**
-     - `calories.js` ve `books.js` içerisindeki veri kaybına yol açabilecek "Test Modu Fallback" yapıları kaldırılarak standart hata yönetimine geçildi.
-     - `index.html`'deki ölü ve kullanılmayan (Placeholder) yorum satırları temizlendi.
-     - Finans modülü için `Chart.js` entegrasyonu sağlandı ve harcama dağılımı (pasta grafik) oluşturuldu.
-     - Antrenman geçmişi kayıt gösterimi, UI tasarımına uygun olarak (Sets x Reps x Kg) formatına dönüştürüldü.
-   - **Mevcut durum:** Tespit edilen yapısal tutarsızlıklar giderildi, tüm temel modüller aktif ve istikrarlı çalışıyor.
-   - **Sonraki potansiyel adım:** Firestore bileşik indeks uyarısını izlemek ve yeni özellikler eklemek.
+     - **Z-Index/Overlay Düzeltmeleri**: `activeSession`, `split-edit` ve `create-split` görünümlerindeki modal yapıları kaldırılarak diğer sayfa görünümleriyle aynı standart `view` hiyerarşisine geçirildi.
+     - **Global Scope Temizliği**: `window.currentUid`, `window.initWorkout` ve tüm HTML satıriçi `onclick` çağrıları Vanilla JS Event Delegation (olay devri) modeline taşındı.
+     - **Hata Yönetimi (activeSession.js)**: Firestore kayıt işlemleri (`_persistSet`) ve yükleme işlemlerindeki sessiz `catch` bloklarına, kullanıcı bildirimleri (alerts) eklendi.
+   - **Mevcut durum:** Tespit edilen mimari tutarsızlıklar ve sessiz hatalar başarıyla giderildi, tüm modüller daha izole ve güvenilir hale geldi.
 
 8. **TERCİHLER / ÇALIŞMA TARZI NOTLARI**
    - Gereksiz dolgu metinleri ve uzatılmış açıklamalardan kaçınılmalı.

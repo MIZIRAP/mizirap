@@ -407,86 +407,94 @@
 
     <!-- ================= SPOR TAKİBİ (Workout) ================= -->
     <section id="view-workout" class="view hidden bg-light-sage min-h-[100dvh] text-on-surface antialiased font-body-lg pb-[100px]">
-        <div class="max-w-md mx-auto relative h-full flex flex-col">
-            <!-- Header -->
-            <header class="pt-8 pb-4 px-margin-mobile relative flex items-center justify-center">
-                <button onclick="document.getElementById('view-workout').classList.add('hidden'); document.getElementById('view-dashboard').classList.remove('hidden');" class="absolute left-margin-mobile text-on-surface-variant hover:bg-surface-container-low transition-colors active:scale-95 transition-transform p-2 rounded-full flex items-center justify-center z-10">
-                    <span class="material-symbols-outlined">arrow_back</span>
-                </button>
-                <h1 class="font-headline-lg-mobile text-headline-lg-mobile text-on-primary-container tracking-tight">Spor</h1>
-            </header>
-            <!-- Main Content -->
-            <main class="flex-1 px-margin-mobile flex flex-col gap-6 pb-8">
-                <!-- Hero Card -->
-                <section class="bg-primary-container rounded-2xl p-6 shadow-sm relative overflow-hidden flex flex-col gap-4 text-on-primary">
-                    <!-- Subtle decorative background element -->
-                    <div class="absolute -right-12 -top-12 w-48 h-48 bg-white opacity-5 rounded-full blur-2xl pointer-events-none"></div>
+        <div class="max-w-md mx-auto relative h-full flex flex-col bg-surface">
+            <!-- Immersive Header -->
+            <div class="bg-gradient-to-b from-primary-container to-[#B7D0C1] rounded-b-3xl pt-12 pb-8 px-margin-mobile shadow-sm relative overflow-hidden">
+                <!-- Decorative background elements -->
+                <div class="absolute -right-16 -top-16 w-64 h-64 bg-white opacity-10 rounded-full blur-3xl pointer-events-none"></div>
+                <div class="absolute -left-12 bottom-0 w-48 h-48 bg-white opacity-5 rounded-full blur-2xl pointer-events-none"></div>
+                <header class="pb-6 relative flex items-center justify-center">
+                    <button onclick="document.getElementById('view-workout').classList.add('hidden'); document.getElementById('view-dashboard').classList.remove('hidden');" class="absolute left-0 text-on-primary-container hover:bg-black/10 transition-colors active:scale-95 transition-transform p-2 rounded-full flex items-center justify-center z-10">
+                        <span class="material-symbols-outlined">arrow_back</span>
+                    </button>
+                    <h1 class="font-headline-lg-mobile text-headline-lg-mobile text-on-primary-container tracking-tight">Spor</h1>
+                </header>
+                <div class="flex flex-col gap-4 text-on-primary relative z-10">
                     <div>
-                        <h2 class="font-title-lg text-title-lg font-semibold mb-1">Bugün: Push Day</h2>
-                        <p class="font-body-md text-body-md opacity-90">Göğüs, Omuz ve Triceps odaklı antrenman</p>
-                    </div>
-                    <!-- Rotation Indicator -->
-                    <div class="flex gap-2 items-center mt-2">
-                        <div class="h-1.5 w-8 bg-white rounded-full"></div>
-                        <div class="h-1.5 w-8 bg-white/30 rounded-full"></div>
-                        <div class="h-1.5 w-8 bg-white/30 rounded-full"></div>
+                        <h2 class="font-headline-lg text-headline-lg font-semibold mb-1">Push Day</h2>
+                        <p class="font-body-md text-body-md opacity-95">Göğüs, Omuz ve Triceps odaklı antrenman</p>
+                        <!-- Rotation Indicator Container -->
+                        <div id="workout-day-indicator" class="flex gap-2 items-center mt-2 mb-2">
+                        </div>
                     </div>
                     <!-- Primary Action -->
-                    <button onclick="startActiveSession()" class="w-full bg-white text-primary-container rounded-xl py-3.5 px-4 font-label-lg text-label-lg font-bold shadow-sm active:scale-[0.98] transition-transform duration-150 mt-4">
+                    <button data-action="startActiveSession" class="w-full bg-surface text-primary rounded-full py-4 px-6 font-label-lg text-label-lg font-bold shadow-[0_4px_14px_0_rgba(0,0,0,0.1)] active:scale-[0.98] transition-transform duration-150 mt-2 flex items-center justify-center gap-2">
+                        <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
                         Antrenmanı Başlat
                     </button>
-                    <div class="text-center mt-1">
-                        <a class="font-label-sm text-label-sm text-white/80 underline underline-offset-4 decoration-white/40 hover:text-white transition-colors" href="#" onclick="event.preventDefault(); console.log('Clicked!'); openSplitEdit(); return false;">Farklı bir program seç</a>
+                    <div class="text-center mt-2">
                     </div>
-                </section>
-
-                <!-- Quick Actions Scroll -->
-                <section class="relative -mx-margin-mobile">
-                    <div class="flex gap-4 overflow-x-auto hide-scrollbar px-margin-mobile snap-x snap-mandatory pb-4">
-                        <button class="snap-start shrink-0 w-36 bg-surface-container-lowest rounded-xl p-4 flex flex-col items-start gap-3 shadow-[0px_2px_8px_rgba(0,0,0,0.04)] active:scale-[0.98] transition-transform">
-                            <div class="w-10 h-10 rounded-full bg-secondary/10 flex items-center justify-center text-secondary">
+                </div>
+            </div>
+            
+            <!-- Main Content -->
+            <main class="flex-1 px-margin-mobile flex flex-col gap-8 py-8">
+                <!-- Stretching / Esneklik - First Class Citizen -->
+                <section>
+                    <div class="grid grid-cols-2 gap-4">
+                        <button class="bg-primary-container/10 rounded-2xl p-5 flex flex-col gap-3 shadow-sm active:scale-[0.98] transition-transform border border-primary-container/20">
+                            <div class="w-12 h-12 rounded-full bg-primary-container flex items-center justify-center text-white">
                                 <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">self_improvement</span>
                             </div>
-                            <span class="font-label-lg text-label-lg text-on-surface">Esneme Yap</span>
+                            <div class="text-left">
+                                <span class="block font-label-lg text-label-lg font-bold text-on-surface">Esneme Yap</span>
+                            </div>
                         </button>
-                        <button class="snap-start shrink-0 w-36 bg-surface-container-lowest rounded-xl p-4 flex flex-col items-start gap-3 shadow-[0px_2px_8px_rgba(0,0,0,0.04)] active:scale-[0.98] transition-transform">
-                            <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+                        <button class="bg-tertiary/10 rounded-2xl p-5 flex flex-col gap-3 shadow-sm active:scale-[0.98] transition-transform border border-tertiary/20">
+                            <div class="w-12 h-12 rounded-full bg-tertiary flex items-center justify-center text-white">
                                 <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">accessibility_new</span>
                             </div>
-                            <span class="font-label-lg text-label-lg text-on-surface">Core Çalışması</span>
-                        </button>
-                        <button class="snap-start shrink-0 w-36 bg-surface-container-lowest rounded-xl p-4 flex flex-col items-start gap-3 shadow-[0px_2px_8px_rgba(0,0,0,0.04)] active:scale-[0.98] transition-transform">
-                            <div class="w-10 h-10 rounded-full bg-tertiary/10 flex items-center justify-center text-tertiary">
-                                <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">directions_run</span>
+                            <div class="text-left">
+                                <span class="block font-label-lg text-label-lg font-bold text-on-surface">Core Çalışması</span>
                             </div>
-                            <span class="font-label-lg text-label-lg text-on-surface">Kardiyo</span>
                         </button>
-                        <!-- Spacer for final scroll padding -->
-                        <div class="shrink-0 w-4"></div>
                     </div>
-                    <!-- Right fade mask -->
-                    <div class="absolute right-0 top-0 bottom-0 w-12 bg-gradient-to-l from-[#B7D0C1] to-transparent pointer-events-none"></div>
                 </section>
-                <!-- Navigation List -->
-                <section class="bg-surface-container-lowest rounded-2xl shadow-[0px_4px_24px_rgba(0,0,0,0.03)] overflow-hidden">
-                    <nav class="flex flex-col">
-                        <a class="flex items-center gap-4 p-4 border-b border-surface-variant/50 hover:bg-surface-container-low transition-colors active:bg-surface-container" href="#" onclick="document.getElementById('view-workout').classList.add('hidden'); document.getElementById('view-exercise-library').classList.remove('hidden'); return false;">
-                            <span class="material-symbols-outlined text-on-surface-variant">book</span>
-                            <span class="flex-1 font-body-lg text-body-lg text-on-surface">Egzersiz Kütüphanesi</span>
-                            <span class="material-symbols-outlined text-outline">chevron_right</span>
+                
+                <!-- Navigation Cards -->
+                <section>
+                    <div class="grid grid-cols-1 gap-4">
+                        <a class="bg-surface-container-lowest rounded-2xl p-5 shadow-sm flex items-center gap-4 hover:shadow-md transition-shadow active:scale-[0.99] border border-surface-variant/30" href="#" onclick="document.getElementById('view-workout').classList.add('hidden'); document.getElementById('view-exercise-library').classList.remove('hidden'); return false;">
+                            <div class="w-12 h-12 rounded-xl bg-surface-container flex items-center justify-center text-on-surface-variant">
+                                <span class="material-symbols-outlined">book</span>
+                            </div>
+                            <div class="flex-1">
+                                <h4 class="font-label-lg text-label-lg font-bold text-on-surface">Egzersiz Kütüphanesi</h4>
+                                <p class="font-body-md text-body-md text-on-surface-variant mt-0.5">Tüm hareketler ve detayları</p>
+                            </div>
+                            <span class="material-symbols-outlined text-outline">arrow_forward</span>
                         </a>
-
-                        <a class="flex items-center gap-4 p-4 border-b border-surface-variant/50 hover:bg-surface-container-low transition-colors active:bg-surface-container" href="#" onclick="event.preventDefault(); openSplitEdit(); return false;">
-                            <span class="material-symbols-outlined text-on-surface-variant">settings</span>
-                            <span class="flex-1 font-body-lg text-body-lg text-on-surface">Split Düzenle</span>
-                            <span class="material-symbols-outlined text-outline">chevron_right</span>
+                        <a class="bg-surface-container-lowest rounded-2xl p-5 shadow-sm flex items-center gap-4 hover:shadow-md transition-shadow active:scale-[0.99] border border-surface-variant/30" href="#">
+                            <div class="w-12 h-12 rounded-xl bg-surface-container flex items-center justify-center text-on-surface-variant">
+                                <span class="material-symbols-outlined">history</span>
+                            </div>
+                            <div class="flex-1">
+                                <h4 class="font-label-lg text-label-lg font-bold text-on-surface">Geçmiş Antrenmanlar</h4>
+                                <p class="font-body-md text-body-md text-on-surface-variant mt-0.5">İlerlemeni takip et</p>
+                            </div>
+                            <span class="material-symbols-outlined text-outline">arrow_forward</span>
                         </a>
-                        <a class="flex items-center gap-4 p-4 hover:bg-surface-container-low transition-colors active:bg-surface-container" href="#">
-                            <span class="material-symbols-outlined text-on-surface-variant">fitness_center</span>
-                            <span class="flex-1 font-body-lg text-body-lg text-on-surface">Esneme Hareketleri</span>
-                            <span class="material-symbols-outlined text-outline">chevron_right</span>
+                        <a class="bg-surface-container-lowest rounded-2xl p-5 shadow-sm flex items-center gap-4 hover:shadow-md transition-shadow active:scale-[0.99] border border-surface-variant/30" href="#" data-action="openSplitEdit">
+                            <div class="w-12 h-12 rounded-xl bg-surface-container flex items-center justify-center text-on-surface-variant">
+                                <span class="material-symbols-outlined">settings</span>
+                            </div>
+                            <div class="flex-1">
+                                <h4 class="font-label-lg text-label-lg font-bold text-on-surface">Split Düzenle</h4>
+                                <p class="font-body-md text-body-md text-on-surface-variant mt-0.5">Programını kişiselleştir</p>
+                            </div>
+                            <span class="material-symbols-outlined text-outline">arrow_forward</span>
                         </a>
-                    </nav>
+                    </div>
                 </section>
             </main>
         </div>
@@ -2063,7 +2071,7 @@
         <!-- TopAppBar -->
         <header class="w-full top-0 sticky bg-background dark:bg-background flat no shadows flex items-center justify-between px-container-padding py-4 z-40">
             <div class="flex items-center gap-4">
-                <button class="hover:opacity-80 transition-opacity duration-200 text-on-surface-variant flex items-center justify-center p-2 -ml-2 rounded-full hover:bg-surface-variant" onclick="closeExerciseHistory()">
+                <button class="hover:opacity-80 transition-opacity duration-200 text-on-surface-variant flex items-center justify-center p-2 -ml-2 rounded-full hover:bg-surface-variant" data-action="closeExerciseHistory">
                     <span class="material-symbols-outlined" data-icon="arrow_back">arrow_back</span>
                 </button>
                 <h1 class="font-headline-sm text-headline-sm text-primary dark:text-primary-fixed-dim" id="history-title">Hareket Geçmişi</h1>
@@ -2559,7 +2567,7 @@
                     </div>
                 </section>
 
-                <button class="flex items-center justify-center gap-2 bg-surface-container-high hover:bg-surface-variant transition-colors rounded-2xl py-4 text-primary font-label-md text-label-md uppercase tracking-wider active:scale-98 transition-transform duration-100 ease-in-out" onclick="openAddTransactionModal()">
+                <button class="flex items-center justify-center gap-2 bg-surface-container-high hover:bg-surface-variant transition-colors rounded-2xl py-4 text-primary font-label-md text-label-md uppercase tracking-wider active:scale-98 transition-transform duration-100 ease-in-out" data-action="openAddTransactionModal">
                     <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">add_circle</span>
                     İşlem Gir
                 </button>
@@ -2567,13 +2575,13 @@
 
             <!-- Configuration Section (Categories & Types) -->
             <section class="flex gap-4">
-                <button class="flex-1 flex flex-col items-center justify-center gap-2 bg-surface-container-lowest shadow-sm rounded-2xl p-4 active:scale-98 transition-transform duration-100 ease-in-out group" onclick="openAddPaymentMethodModal()">
+                <button class="flex-1 flex flex-col items-center justify-center gap-2 bg-surface-container-lowest shadow-sm rounded-2xl p-4 active:scale-98 transition-transform duration-100 ease-in-out group" data-action="openAddPaymentMethodModal">
                     <div class="w-10 h-10 rounded-full bg-secondary-container flex items-center justify-center group-hover:scale-110 transition-transform">
                         <span class="material-symbols-outlined text-on-secondary-container" style="font-variation-settings: 'FILL' 0;">add_card</span>
                     </div>
                     <span class="font-label-sm text-label-sm text-on-surface text-center">Ödeme Yöntemi Ekle</span>
                 </button>
-                <button class="flex-1 flex flex-col items-center justify-center gap-2 bg-surface-container-lowest shadow-sm rounded-2xl p-4 active:scale-98 transition-transform duration-100 ease-in-out group" onclick="openAddCategoryModal()">
+                <button class="flex-1 flex flex-col items-center justify-center gap-2 bg-surface-container-lowest shadow-sm rounded-2xl p-4 active:scale-98 transition-transform duration-100 ease-in-out group" data-action="openAddCategoryModal">
                     <div class="w-10 h-10 rounded-full bg-tertiary-container flex items-center justify-center group-hover:scale-110 transition-transform">
                         <span class="material-symbols-outlined text-on-tertiary-container" style="font-variation-settings: 'FILL' 0;">receipt_long</span>
                     </div>
@@ -3341,7 +3349,7 @@
             <div class="flex justify-between items-center w-full">
                 <div class="w-8"></div>
                 <h2 class="font-headline-sm text-headline-sm text-on-background">Split Seç</h2>
-                <button class="w-8 h-8 flex items-center justify-center text-outline hover:bg-surface-container rounded-full transition-colors" onclick="closeSplitSelectionModal()">
+                <button class="w-8 h-8 flex items-center justify-center text-outline hover:bg-surface-container rounded-full transition-colors" data-action="closeSplitSelectionModal">
                     <span class="material-symbols-outlined">close</span>
                 </button>
             </div>
@@ -3354,7 +3362,7 @@
         
         <!-- Static Bottom Action -->
         <div class="w-full px-container-padding py-4 border-t border-surface-variant/30 shrink-0 bg-surface-container-lowest">
-            <button class="w-full bg-primary text-on-primary font-headline-sm text-headline-sm rounded-full h-14 flex justify-center items-center gap-2 shadow-md hover:bg-primary/90 transition-colors active:scale-[0.98]" onclick="closeSplitSelectionModal(); setTimeout(openSplitModal, 300)">
+            <button class="w-full bg-primary text-on-primary font-headline-sm text-headline-sm rounded-full h-14 flex justify-center items-center gap-2 shadow-md hover:bg-primary/90 transition-colors active:scale-[0.98]" data-action="closeSplitSelectionAndOpenModal">
                 <span class="material-symbols-outlined icon-md">add</span>
                 Yeni Split Oluştur
             </button>
@@ -3362,7 +3370,7 @@
     </div>
 </div>
     <!-- ======= AKTİF ANTRENMAN SEANSI ======= -->
-    <section id="view-active-session" class="view hidden bg-background min-h-[100dvh] text-on-surface font-body-lg absolute inset-0 z-50 overflow-y-auto">
+    <section id="view-active-session" class="view hidden bg-background min-h-[100dvh] text-on-surface font-body-lg pb-[100px] overflow-y-auto">
         <!-- Sticky Header -->
         <header class="sticky top-0 bg-background/95 backdrop-blur-sm z-10 border-b border-surface-container-high">
             <div class="flex items-center justify-between px-margin-mobile h-16 max-w-md mx-auto gap-2">
@@ -3406,7 +3414,7 @@
         <!-- Modal Header -->
         <div class="flex items-center justify-between mb-6">
             <h2 class="font-headline-sm text-headline-sm text-on-surface">İşlem Gir</h2>
-            <button aria-label="Close" class="w-10 h-10 rounded-full flex items-center justify-center bg-surface-container hover:bg-surface-container-high transition-colors text-on-surface-variant active:scale-95" onclick="closeAddTransactionModal()">
+            <button aria-label="Close" class="w-10 h-10 rounded-full flex items-center justify-center bg-surface-container hover:bg-surface-container-high transition-colors text-on-surface-variant active:scale-95" data-action="closeAddTransactionModal">
                 <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">close</span>
             </button>
         </div>
@@ -3487,7 +3495,7 @@
         <!-- Header -->
         <div class="flex items-center justify-between mb-6">
             <h2 class="font-headline-md text-headline-md text-on-surface">Harcama Türü Ekle</h2>
-            <button aria-label="Close" class="w-10 h-10 rounded-full flex items-center justify-center bg-surface-container hover:bg-surface-container-high transition-colors text-on-surface-variant active:scale-95" onclick="closeAddCategoryModal()">
+            <button aria-label="Close" class="w-10 h-10 rounded-full flex items-center justify-center bg-surface-container hover:bg-surface-container-high transition-colors text-on-surface-variant active:scale-95" data-action="closeAddCategoryModal">
                 <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">close</span>
             </button>
         </div>
@@ -3581,7 +3589,7 @@
         <!-- Header -->
         <div class="flex justify-between items-center mb-6">
             <h2 class="font-headline-sm text-headline-sm text-on-surface">Ödeme Yöntemi Ekle</h2>
-            <button aria-label="Close" class="p-2 text-on-surface-variant hover:bg-surface-container-low rounded-full transition-colors flex items-center justify-center" onclick="closeAddPaymentMethodModal()">
+            <button aria-label="Close" class="p-2 text-on-surface-variant hover:bg-surface-container-low rounded-full transition-colors flex items-center justify-center" data-action="closeAddPaymentMethodModal">
                 <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">close</span>
             </button>
         </div>
@@ -3674,7 +3682,7 @@
 <!-- Dizi/Film Modal -->
 <div id="movies-modal" class="fixed inset-0 z-[105] hidden items-end justify-center sm:items-center bg-inverse-surface/40 backdrop-blur-sm transition-opacity duration-300 opacity-0">
     <!-- Overlay -->
-    <div aria-hidden="true" class="absolute inset-0" onclick="window.closeMoviesModal()"></div>
+    <div aria-hidden="true" class="absolute inset-0" data-action="closeMoviesModal"></div>
     
     <!-- Bottom Sheet / Modal -->
     <div aria-labelledby="movies-modal-title" aria-modal="true" class="bg-surface-container-lowest w-full sm:w-[90%] sm:max-w-[390px] mx-auto rounded-t-2xl sm:rounded-2xl shadow-md transform translate-y-full transition-transform duration-300 overflow-hidden flex flex-col relative z-10 max-h-[90dvh]" role="dialog">
@@ -3686,7 +3694,7 @@
         <!-- Header -->
         <div class="px-container-padding py-4 flex items-center justify-between border-b border-surface-variant/50">
             <h2 class="font-headline-sm text-headline-sm text-on-surface" id="movies-modal-title">İçeriği Düzenle</h2>
-            <button class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-surface-container-low transition-colors text-on-surface-variant" onclick="window.closeMoviesModal()">
+            <button class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-surface-container-low transition-colors text-on-surface-variant" data-action="closeMoviesModal">
                 <span class="material-symbols-outlined" style="font-size: 20px;">close</span>
             </button>
         </div>
@@ -3714,11 +3722,11 @@
                 <label class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">TÜR</label>
                 <div class="flex gap-2 w-full">
                     <label class="flex-1 cursor-pointer">
-                        <input class="peer sr-only" name="movies-type" type="radio" value="movie" onchange="window.toggleMovieType()">
+                        <input class="peer sr-only" name="movies-type" type="radio" value="movie">
                         <div class="text-center py-3 px-4 rounded-full border border-surface-variant bg-surface-container-lowest peer-checked:bg-primary peer-checked:border-primary peer-checked:text-on-primary text-on-surface font-label-md uppercase tracking-wider transition-all">Film</div>
                     </label>
                     <label class="flex-1 cursor-pointer">
-                        <input checked class="peer sr-only" name="movies-type" type="radio" value="series" onchange="window.toggleMovieType()">
+                        <input checked class="peer sr-only" name="movies-type" type="radio" value="series">
                         <div class="text-center py-3 px-4 rounded-full border border-surface-variant bg-surface-container-lowest peer-checked:bg-primary peer-checked:border-primary peer-checked:text-on-primary text-on-surface font-label-md uppercase tracking-wider transition-all">Dizi</div>
                     </label>
                 </div>
@@ -4001,12 +4009,12 @@
 
 
     <!-- SPLIT EDIT VIEW -->
-    <section id="view-split-edit" class="view hidden bg-background min-h-[100dvh] text-on-background font-body-md selection:bg-primary-container selection:text-on-primary-container z-50 fixed inset-0 overflow-y-auto">
+    <section id="view-split-edit" class="view hidden bg-background min-h-[100dvh] text-on-background font-body-md selection:bg-primary-container selection:text-on-primary-container pb-[100px] overflow-y-auto">
         <!-- Top Navigation Container -->
         <header class="w-full top-0 sticky bg-background z-10">
             <div class="flex items-center justify-between px-margin-mobile h-14 w-full max-w-md mx-auto">
                 <!-- Leading Action -->
-                <button onclick="closeSplitEdit()" aria-label="Geri" class="h-12 w-12 flex items-center justify-center text-primary hover:bg-surface-container-high transition-colors active:opacity-70 rounded-full shrink-0">
+                <button data-action="closeSplitEdit" aria-label="Geri" class="h-12 w-12 flex items-center justify-center text-primary hover:bg-surface-container-high transition-colors active:opacity-70 rounded-full shrink-0">
                     <span class="material-symbols-outlined" data-icon="arrow_back">arrow_back</span>
                 </button>
                 <!-- Headline -->
@@ -4069,7 +4077,7 @@
                 </div>
 
                 <!-- Create New Split Button -->
-                <button onclick="closeSplitModal(); setTimeout(openCreateSplitView, 300)" class="mt-md w-full border border-dashed border-outline text-primary font-label-lg text-label-lg h-12 rounded-xl flex items-center justify-center gap-sm hover:bg-primary-container/10 transition-colors duration-200">
+                <button data-action="closeSplitModalAndOpenCreate" class="mt-md w-full border border-dashed border-outline text-primary font-label-lg text-label-lg h-12 rounded-xl flex items-center justify-center gap-sm hover:bg-primary-container/10 transition-colors duration-200">
                     <span class="material-symbols-outlined">add</span>
                     Yeni Split Oluştur
                 </button>
@@ -4091,10 +4099,10 @@
 
 
     <!-- CREATE SPLIT VIEW -->
-    <section id="view-create-split" class="view hidden bg-background min-h-[100dvh] text-on-background font-body-md selection:bg-primary-container selection:text-on-primary-container z-50 fixed inset-0 overflow-y-auto">
+    <section id="view-create-split" class="view hidden bg-background min-h-[100dvh] text-on-background font-body-md selection:bg-primary-container selection:text-on-primary-container pb-[100px] overflow-y-auto">
         <header class="w-full top-0 sticky bg-background z-10">
             <div class="flex items-center justify-between px-margin-mobile h-14 w-full max-w-md mx-auto">
-                <button onclick="closeCreateSplitView()" class="h-12 w-12 flex items-center justify-center text-primary hover:bg-surface-container-high transition-colors rounded-full shrink-0">
+                <button data-action="closeCreateSplitView" class="h-12 w-12 flex items-center justify-center text-primary hover:bg-surface-container-high transition-colors rounded-full shrink-0">
                     <span class="material-symbols-outlined">arrow_back</span>
                 </button>
                 <h1 class="font-title-lg text-title-lg font-bold text-primary flex-1 text-center">Yeni Split</h1>

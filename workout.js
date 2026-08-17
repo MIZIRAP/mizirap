@@ -17,10 +17,35 @@ let callback = null;
 let unsubSplits = null;
 let unsubLogs = null;
 
+document.addEventListener('click', (e) => {
+    const actionBtn = e.target.closest('[data-action]');
+    if (!actionBtn) return;
+    const action = actionBtn.getAttribute('data-action');
+
+    if (action === 'openSplitEdit') openSplitEdit();
+    else if (action === 'closeSplitEdit') closeSplitEdit();
+    else if (action === 'closeExerciseHistory') closeExerciseHistory();
+    else if (action === 'closeSplitSelectionModal') closeSplitSelectionModal();
+    else if (action === 'closeSplitSelectionAndOpenModal') { closeSplitSelectionModal(); setTimeout(openSplitModal, 300); }
+    else if (action === 'closeSplitModalAndOpenCreate') { closeSplitModal(); setTimeout(openCreateSplitView, 300); }
+    else if (action === 'closeCreateSplitView') closeCreateSplitView();
+    else if (action === 'changeExerciseSets') changeExerciseSets(actionBtn.getAttribute('data-split-id'), parseInt(actionBtn.getAttribute('data-day-idx'), 10), parseInt(actionBtn.getAttribute('data-ex-idx'), 10), parseInt(actionBtn.getAttribute('data-delta'), 10));
+    else if (action === 'removeExerciseFromSplit') removeExerciseFromSplit(actionBtn.getAttribute('data-split-id'), parseInt(actionBtn.getAttribute('data-day-idx'), 10), parseInt(actionBtn.getAttribute('data-ex-idx'), 10));
+    else if (action === 'toggleDayAccordion') toggleDayAccordion(actionBtn.getAttribute('data-accordion-key'), actionBtn);
+    else if (action === 'openExercisePickerForSplit') openExercisePickerForSplit(actionBtn.getAttribute('data-split-id'), parseInt(actionBtn.getAttribute('data-day-idx'), 10));
+    else if (action === 'removeExerciseFromNewDay') removeExerciseFromNewDay(parseInt(actionBtn.getAttribute('data-day-idx'), 10), parseInt(actionBtn.getAttribute('data-ex-idx'), 10));
+    else if (action === 'removeDayFromNewSplit') removeDayFromNewSplit(parseInt(actionBtn.getAttribute('data-day-idx'), 10));
+    else if (action === 'openExercisePicker') openExercisePicker(actionBtn.getAttribute('data-day-id'));
+    else if (action === 'selectSplit') selectSplit(actionBtn.getAttribute('data-split-id'));
+    else if (action === 'openEditSplitView') { e.stopPropagation(); openEditSplitView(actionBtn.getAttribute('data-split-id')); }
+    else if (action === 'startActiveSession') startActiveSession();
+    else if (action === 'deleteSplit') { e.stopPropagation(); deleteSplit(actionBtn.getAttribute('data-split-id')); }
+});
+
+
 export function initWorkout(uid, onChangeCallback) {
     if(!uid) return;
     currentUid = uid;
-    window.currentUid = uid;
     localStorage.setItem('uid', uid);
     callback = onChangeCallback;
     
@@ -92,7 +117,7 @@ function setupEventListeners() {
 function renderSplitView() {
     const titleEl = document.querySelector('#view-workout .font-title-lg.text-title-lg');
     const descEl = document.querySelector('#view-workout .font-body-md.text-body-md.opacity-90');
-    const dotsContainer = document.querySelector('#view-workout .flex.gap-2.items-center.mt-2');
+    const dotsContainer = document.getElementById('workout-day-indicator');
     const dashNameEl = document.getElementById('stat-workout-split');
     
     if (!activeSplitId || splits.length === 0) {
@@ -137,7 +162,7 @@ function renderSplitView() {
     }
 }
 
-window.selectActiveDay = function(dayId) {
+function selectActiveDay(dayId) {
     if(!activeSplitId || !dayId) return;
     const activeSplit = splits.find(s => s.id === activeSplitId);
     if(!activeSplit) return;
@@ -150,7 +175,7 @@ window.selectActiveDay = function(dayId) {
     renderSplitView();
 };
 
-window.startActiveSession = function() {
+function startActiveSession() {
     if(!currentUid || !activeSplitId || !activeDayId) {
         alert('Lütfen önce bir split ve gün seçin.');
         return;
@@ -236,7 +261,7 @@ async function saveWorkoutSession() {
 // EXERCISE HISTORY
 // ==========================================
 
-window.openExerciseHistory = async function(exId, exName) {
+async function openExerciseHistory(exId, exName) {
     const modal = document.getElementById("exerciseHistoryModal");
     const content = document.getElementById("exerciseHistoryModalContent");
     const title = document.getElementById("history-modal-title");
@@ -303,7 +328,7 @@ window.openExerciseHistory = async function(exId, exName) {
     }
 };
 
-window.closeHistoryModal = function() {
+function closeHistoryModal() {
     const modal = document.getElementById("exerciseHistoryModal");
     const content = document.getElementById("exerciseHistoryModalContent");
     if(modal && content) {
@@ -321,7 +346,7 @@ window.closeHistoryModal = function() {
 
 let editingExercises = [];
 
-window.openEditTemplateView = function() {
+function openEditTemplateView() {
     if (!activeSplitId || !activeDayId) return;
     const split = splits.find(s => s.id === activeSplitId);
     if (!split) return;
@@ -484,7 +509,7 @@ function closeEditTemplateView() {
 // SPLIT SELECTION MODAL
 // ==========================================
 
-window.openSplitSelectionModal = function() {
+function openSplitSelectionModal() {
     const modal = document.getElementById("splitSelectionModal");
     const content = document.getElementById("splitSelectionModalContent");
     const list = document.getElementById("split-selection-list");
@@ -549,7 +574,7 @@ window.openSplitSelectionModal = function() {
     }, 10);
 };
 
-window.closeSplitSelectionModal = function() {
+function closeSplitSelectionModal() {
     const modal = document.getElementById("splitSelectionModal");
     const content = document.getElementById("splitSelectionModalContent");
     if(modal && content) {
@@ -572,12 +597,12 @@ function switchView(viewId) {
     if(target) target.classList.remove("hidden");
 }
 
-window.closeExerciseHistory = function() {
+function closeExerciseHistory() {
     switchView('workout');
     renderSplitView(); 
 };
 
-window.openExerciseHistory = async function(triggerExId, exName) {
+async function openExerciseHistory(triggerExId, exName) {
     if(!currentUid) return;
     
     // Switch view
@@ -838,7 +863,7 @@ let currentPickerDayId = null;
 let newSplitId = null;
 
 // Extends the global scope
-window.openSplitEdit = function() {
+function openSplitEdit() {
     // Hide workout home
     document.getElementById('view-workout').classList.add('hidden');
     // Hide all other views just in case
@@ -850,7 +875,7 @@ window.openSplitEdit = function() {
     renderSplitEditView();
 };
 
-window.closeSplitEdit = function() {
+function closeSplitEdit() {
     document.getElementById('view-split-edit').classList.add('hidden');
     document.getElementById('view-workout').classList.remove('hidden');
 };
@@ -923,7 +948,7 @@ function renderSplitEditView() {
         dayCard.innerHTML = `
             <!-- Accordion Header -->
             <button class="accordion-header w-full flex items-center justify-between px-md py-3.5 text-left group transition-colors hover:bg-surface-container-high"
-                    onclick="toggleDayAccordion('${accordionKey}', this)">
+                    data-action="toggleDayAccordion" data-accordion-key="${accordionKey}">
                 <div class="flex items-center gap-2">
                     <span class="material-symbols-outlined text-primary transition-transform duration-200 ${isOpen ? 'rotate-90' : ''}" style="font-size:20px">chevron_right</span>
                     <h3 class="font-title-md text-title-md font-semibold text-on-surface">${day.name}</h3>
@@ -954,7 +979,7 @@ function renderSplitEditView() {
     });
 }
 
-window.toggleDayAccordion = function(key, headerBtn) {
+function toggleDayAccordion(key, headerBtn) {
     const body = headerBtn.closest('.bg-surface-container-lowest').querySelector('.accordion-body');
     const chevron = headerBtn.querySelector('.material-symbols-outlined');
     
@@ -1003,7 +1028,7 @@ function _initExSortable(listEl, splitId, dayIdx) {
 
 // ---------- Split Düzenle – Inline Hareket İşlemleri ----------
 
-window.changeExerciseSets = function(splitId, dayIdx, exIdx, delta) {
+function changeExerciseSets(splitId, dayIdx, exIdx, delta) {
     const split = splits.find(s => s.id === splitId);
     if(!split) return;
     const ex = split.days[dayIdx].exercises[exIdx];
@@ -1015,7 +1040,7 @@ window.changeExerciseSets = function(splitId, dayIdx, exIdx, delta) {
     persistSplitEdit(split);
 };
 
-window.removeExerciseFromSplit = function(splitId, dayIdx, exIdx) {
+function removeExerciseFromSplit(splitId, dayIdx, exIdx) {
     const split = splits.find(s => s.id === splitId);
     if(!split) return;
     split.days[dayIdx].exercises.splice(exIdx, 1);
@@ -1023,7 +1048,7 @@ window.removeExerciseFromSplit = function(splitId, dayIdx, exIdx) {
     renderSplitEditView();
 };
 
-window.openExercisePickerForSplit = function(splitId, dayIdx) {
+function openExercisePickerForSplit(splitId, dayIdx) {
     // "Yeni Split Oluştur" formundaki picker'ı yeniden kullanıyoruz,
     // ama callback'i aktif split'e yazacak şekilde yönlendiriyoruz.
     currentPickerDayId = `__split__${splitId}__day__${dayIdx}`;
@@ -1098,7 +1123,7 @@ async function persistSplitEdit(split) {
     }
 }
 
-window.openCreateSplitView = function() {
+function openCreateSplitView() {
     document.getElementById('view-split-edit').classList.add('hidden');
     document.getElementById('view-create-split').classList.remove('hidden');
     
@@ -1114,12 +1139,12 @@ window.openCreateSplitView = function() {
     document.getElementById('create-split-save-btn').onclick = saveNewSplit;
 };
 
-window.closeCreateSplitView = function() {
+function closeCreateSplitView() {
     document.getElementById('view-create-split').classList.add('hidden');
     document.getElementById('view-split-edit').classList.remove('hidden');
 };
 
-window.addDayToNewSplit = function() {
+function addDayToNewSplit() {
     const dayCount = newSplitDays.length + 1;
     newSplitDays.push({
         id: `d${Date.now()}`,
@@ -1163,7 +1188,7 @@ function renderCreateSplitDays() {
             <div class="mb-3">
                 ${exHtml}
             </div>
-            <button onclick="openExercisePicker('${day.id}')" class="w-full py-2 bg-primary-container/30 text-primary rounded-lg font-label-sm hover:bg-primary-container/50 transition-colors flex items-center justify-center gap-1">
+            <button data-action="openExercisePicker" data-day-id="${day.id}" class="w-full py-2 bg-primary-container/30 text-primary rounded-lg font-label-sm hover:bg-primary-container/50 transition-colors flex items-center justify-center gap-1">
                 <span class="material-symbols-outlined text-[18px]">add</span> Egzersiz Ekle
             </button>
         `;
@@ -1171,21 +1196,21 @@ function renderCreateSplitDays() {
     });
 }
 
-window.updateNewDayName = function(index, val) {
+function updateNewDayName(index, val) {
     newSplitDays[index].name = val;
 };
 
-window.removeDayFromNewSplit = function(index) {
+function removeDayFromNewSplit(index) {
     newSplitDays.splice(index, 1);
     renderCreateSplitDays();
 };
 
-window.removeExerciseFromNewDay = function(dayIndex, exIndex) {
+function removeExerciseFromNewDay(dayIndex, exIndex) {
     newSplitDays[dayIndex].exercises.splice(exIndex, 1);
     renderCreateSplitDays();
 };
 
-window.openExercisePicker = function(dayId) {
+function openExercisePicker(dayId) {
     currentPickerDayId = dayId;
     document.getElementById('modal-exercise-picker').classList.remove('hidden');
     renderExercisePickerList('Tümü');
@@ -1199,12 +1224,12 @@ window.openExercisePicker = function(dayId) {
     }
 };
 
-window.closeExercisePickerModal = function() {
+function closeExercisePickerModal() {
     document.getElementById('modal-exercise-picker').classList.add('hidden');
     currentPickerDayId = null;
 };
 
-window.filterPickerCategory = function(cat, btnElement) {
+function filterPickerCategory(cat, btnElement) {
     const buttons = document.querySelectorAll('#exercise-picker-categories button');
     buttons.forEach(b => {
         b.className = "px-4 py-1.5 rounded-full border border-outline-variant text-on-surface-variant font-label-sm whitespace-nowrap";
@@ -1266,7 +1291,7 @@ function renderExercisePickerList(category, searchTerm = '') {
     });
 }
 
-window.saveNewSplit = async function() {
+async function saveNewSplit() {
     const nameInput = document.getElementById('create-split-name-input').value.trim();
     if(!nameInput) {
         alert("Lütfen split adı girin.");
@@ -1324,7 +1349,7 @@ window.saveNewSplit = async function() {
     }
 };
 
-window.openSplitModal = function() {
+function openSplitModal() {
     const modal = document.getElementById('modal-split-change');
     const optionsContainer = document.getElementById('split-modal-options');
     
@@ -1339,7 +1364,7 @@ window.openSplitModal = function() {
         div.className = `flex flex-col p-4 rounded-xl border ${isAct ? 'border-primary bg-primary-container/10' : 'border-outline-variant bg-surface'} cursor-pointer hover:bg-surface-container-high transition-colors`;
         
         div.innerHTML = `
-            <div class="flex items-center justify-between mb-2" onclick="selectSplit('${split.id}')">
+            <div class="flex items-center justify-between mb-2" data-action="selectSplit" data-split-id="${split.id}">
                 <div>
                     <div class="font-title-md text-on-surface font-bold">${split.name}</div>
                     <div class="font-label-sm text-on-surface-variant">${split.days ? split.days.length : 0} Gün</div>
@@ -1347,10 +1372,10 @@ window.openSplitModal = function() {
                 ${isAct ? '<span class="material-symbols-outlined text-primary">check_circle</span>' : '<span class="material-symbols-outlined text-outline">radio_button_unchecked</span>'}
             </div>
             <div class="flex justify-end gap-2 mt-2 pt-2 border-t border-outline-variant/30">
-                <button onclick="event.stopPropagation(); openEditSplitView('${split.id}')" class="p-2 rounded-full text-primary hover:bg-primary-container/20 transition-colors flex items-center justify-center">
+                <button data-action="openEditSplitView" data-split-id="${split.id}" class="p-2 rounded-full text-primary hover:bg-primary-container/20 transition-colors flex items-center justify-center">
                     <span class="material-symbols-outlined text-sm">edit</span>
                 </button>
-                <button onclick="event.stopPropagation(); deleteSplit('${split.id}')" class="p-2 rounded-full text-error hover:bg-error-container/20 transition-colors flex items-center justify-center">
+                <button data-action="deleteSplit" data-split-id="${split.id}" class="p-2 rounded-full text-error hover:bg-error-container/20 transition-colors flex items-center justify-center">
                     <span class="material-symbols-outlined text-sm">delete</span>
                 </button>
             </div>
@@ -1361,13 +1386,13 @@ window.openSplitModal = function() {
     modal.classList.remove('hidden');
 };
 
-window.closeSplitModal = function() {
+function closeSplitModal() {
     const modal = document.getElementById('modal-split-change');
     if(modal) modal.classList.add('hidden');
 };
 
 let tempSelectedSplitId = null;
-window.selectSplit = function(splitId) {
+function selectSplit(splitId) {
     tempSelectedSplitId = splitId;
     const optionsContainer = document.getElementById('split-modal-options');
     Array.from(optionsContainer.children).forEach((child, index) => {
@@ -1382,7 +1407,7 @@ window.selectSplit = function(splitId) {
     });
 };
 
-window.applySplitSelection = async function() {
+async function applySplitSelection() {
     if(!tempSelectedSplitId) return;
     activeSplitId = tempSelectedSplitId;
     
@@ -1402,7 +1427,7 @@ window.applySplitSelection = async function() {
     }
 };
 
-window.openEditSplitView = function(splitId) {
+function openEditSplitView(splitId) {
     const split = splits.find(s => s.id === splitId);
     if(!split) return;
     
@@ -1423,7 +1448,7 @@ window.openEditSplitView = function(splitId) {
     document.getElementById('create-split-save-btn').onclick = saveNewSplit;
 };
 
-window.deleteSplit = async function(splitId) {
+async function deleteSplit(splitId) {
     if(!confirm("Bu split'i silmek istediğinize emin misiniz?")) return;
     
     try {
