@@ -27,6 +27,8 @@ onAuthStateChanged(auth, async (user) => {
             authScreen.classList.add("hidden");
             authScreen.classList.remove("flex");
             appScreen.classList.remove("hidden");
+            window.currentUid = user.uid;
+            localStorage.setItem('uid', user.uid);
             
             // Eğer isimsiz (anonim) girişse test kullanıcısı yaz, yoksa normal adı al
             const name = user.isAnonymous ? "Test Kullanıcısı" : (user.displayName || (user.email ? user.email.split('@')[0] : "Kullanıcı"));

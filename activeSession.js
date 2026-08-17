@@ -52,19 +52,20 @@ export async function openActiveSession(uid, splitId, dayId, dayObj) {
     const titleEl = document.getElementById('session-day-title');
     if (titleEl) titleEl.textContent = dayObj.name;
 
-    // Try to resume an existing in-progress session for today
-    const todayStr = new Date().toLocaleDateString('en-CA');
-    const existingId = `${splitId}_${dayId}_${todayStr}`;
-    const existingRef = doc(db, 'users', uid, 'workout_logs', existingId);
-    const existingSnap = await getDoc(existingRef);
+    // Try to resume an existing in-progress session for this specific day
+    const logsRef = collection(db, 'users', uid, 'workout_logs');
+    const q = query(logsRef, where('status', '==', 'in_progress'), where('dayId', '==', dayId));
+    const querySnap = await getDocs(q);
 
-    if (existingSnap.exists() && existingSnap.data().status === 'in_progress') {
-        _sessionId = existingId;
-        _sessionDoc = existingSnap.data();
+    if (!querySnap.empty) {
+        const docSnap = querySnap.docs[0];
+        _sessionId = docSnap.id;
+        _sessionDoc = docSnap.data();
         _sessionStartTs = _sessionDoc.startedAt?.toDate?.() || new Date();
     } else {
-        // Create a fresh session document
-        _sessionId = existingId;
+        // Create a fresh session document with a unique ID so we don't overwrite completed ones
+        const todayStr = new Date().toLocaleDateString('en-CA');
+        _sessionId = `${splitId}_${dayId}_${todayStr}_${Date.now()}`;
         _sessionDoc = {
             splitId,
             dayId,
@@ -73,11 +74,11 @@ export async function openActiveSession(uid, splitId, dayId, dayObj) {
             startedAt: serverTimestamp(),
             exercises: {}
         };
-        await setDoc(existingRef, _sessionDoc, { merge: true });
-        // Re-fetch to get server timestamp
-        const freshSnap = await getDoc(existingRef);
-        _sessionStartTs = freshSnap.data().startedAt?.toDate?.() || new Date();
-        _sessionDoc = freshSnap.data();
+        const newRef = doc(db, 'users', uid, 'workout_logs', _sessionId);
+        await setDoc(newRef, _sessionDoc);
+        
+        // Reset timer explicitly to now
+        _sessionStartTs = new Date();
     }
 
     // Load previous session data for delta calculations
