@@ -1,8 +1,8 @@
 # PROJECT_CONTEXT
 
 1. **DOSYA YAPISI**
-   - `index.html`: Uygulamanın ana iskeleti, Tailwind konfigürasyonu ve DOM şablonları.
-   - `app.js`: Ana kontrolcü, auth durumu yönetimi ve sekme/modül geçişlerini koordine eden dosya.
+   - `index.html`: Uygulamanın ana iskeleti, Tailwind konfigürasyonu ve DOM şablonları. Tüm `view` section'ları `#app-container` div'i içinde bulunmalı (split-screen hatasını önlemek için).
+   - `app.js`: Ana kontrolcü, auth durumu yönetimi ve sekme/modül geçişlerini koordine eden dosya. `window.currentUid` ve `localStorage uid` burada set ediliyor.
    - `style.css`: Özel animasyonlar, gizli scrollbar ayarları ve genel UI stilleri.
    - `firebase-config.js`: Firebase bağlantı ve başlatma ayarları.
    - `api-config.js`: Dış servis (CollectAPI) anahtarları.
@@ -10,27 +10,35 @@
    - `listenerManager.js`: Firebase dinleyicilerini (onSnapshot) merkezi yöneten ve temizleyen araç.
    - `auth.js`: Giriş ekranı ve kimlik doğrulama işlemleri.
    - `dashboard.js`: Ana özet ekranının yönetimi.
-   - `books.js`, `calories.js`, `finance.js`, `movies.js`, `shopping.js`, `water.js`, `workout.js`, `history.js`, `profile.js`: İlgili özelliklerin UI ve veritabanı işlemlerini yürüten ayrık modül dosyaları.
-   - `firestore.rules`: Veritabanı okuma/yazma güvenlik izinleri.
+   - `books.js`, `calories.js`, `finance.js`, `movies.js`, `shopping.js`, `water.js`, `history.js`, `profile.js`: İlgili özelliklerin UI ve veritabanı işlemlerini yürüten ayrık modül dosyaları.
+   - `workout.js`: Antrenman programları (splits), aktif seans navigasyonu ve ilerleme sayfası bağlantısı. `window.openProgressView` burada global'e açılıyor.
+   - `activeSession.js`: **[YENİ]** Aktif antrenman seansının tüm state yönetimi, set tamamlama, RPE seçimi, zamanlayıcı ve Firestore yazma işlemleri. (workout.js'ten ayrıştırıldı)
+   - `progressView.js`: **[YENİ]** İlerleme sayfası: `exercise_progress` koleksiyonundan egzersiz başına son ağırlık/tekrar, e1RM ve trend verisi (≥2 seans) render eder. Bölgelere göre gruplar, sparkline çizer.
+   - `progressiveOverload.js`: **[YENİ]** `calculateE1RM`, `calculateE1RMDelta`, `detectProgressStatus`, `getSuggestionText` fonksiyonlarını export eden shared utility.
+   - `assets/exercises/muscle-map.js`: Egzersiz adı → kas grubu eşlemesi (`window.EXERCISE_MUSCLE_MAPPING`).
+   - `firestore.rules`: Veritabanı okuma/yazma güvenlik izinleri. `match /users/{userId}/{document=**}` ile tüm alt koleksiyonlar kapsanıyor.
 
 2. **TEKNOLOJİ YIĞINI**
    - **Frontend**: Vanilla JavaScript (ES Modules), HTML5, CSS3.
    - **Framework/Kütüphaneler**: Tailwind CSS (CDN üzerinden), Sortable.js (sürükle-bırak için), Material Symbols.
-   - **Backend / Veritabanı**: Firebase v10 CDN (Authentication, Firestore, Storage).
-   - **Harici API**: CollectAPI (Finans modülünde kur/metal verisi için kullanılıyor olabilir).
-   - **Build/Deploy**: Herhangi bir build aracı (Vite, Webpack vb.) kullanılmıyor. Doğrudan `main` branch üzerinden GitHub Pages ile manuel barındırılıyor.
+   - **Backend / Veritabanı**: Firebase v10 CDN (Authentication, Firestore).
+   - **Harici API**: CollectAPI (Finans modülünde kur/metal verisi için).
+   - **Build/Deploy**: Herhangi bir build aracı kullanılmıyor. `main` branch üzerinden GitHub Pages ile doğrudan barındırılıyor.
+   - **Cache Busting**: JS modüllerine `?v=N` query string eklenerek tarayıcı önbellekleme zorla kırılıyor (`workout.js?v=4`, `progressView.js?v=5`, vb.).
 
 3. **MODÜL / ÖZELLİK ENVANTERİ**
    - **Dashboard**: Diğer modüllerden verileri çekip ana sayfada gösterir. (Tamamlandı)
-   - **Auth**: E-posta/Şifre veya anonim giriş sağlar. (Tamamlandı)
+   - **Auth**: E-posta/Şifre veya Google giriş sağlar. (Tamamlandı)
    - **Books**: Okunan/okunacak kitaplar ve sayfa okuma logları. (Tamamlandı)
    - **Calories**: Hedef kalori takibi, besin kütüphanesi ve öğün logları. (Tamamlandı)
    - **Finance**: Gelir/Gider işlemleri, kategoriler, ödeme yöntemleri ve bakiye hesabı. (Tamamlandı)
    - **Shopping**: Alışveriş listesi yönetimi (ekle/çiz/sil). (Tamamlandı)
    - **Water**: Günlük hedefli su tüketim takibi. (Tamamlandı)
-   - **Workout**: Antrenman programları (splits) ve idman geçmişi. (Tamamlandı)
    - **Movies**: Film izleme listesi. (Tamamlandı)
    - **History**: Diğer modüllerdeki son aktivitelerin ortak listesi. (Tamamlandı)
+   - **Workout / Egzersiz Kütüphanesi**: Split oluşturma, gün bazlı egzersiz seçimi, SVG kas haritası. (Tamamlandı)
+   - **Aktif Antrenman Seansı** (`activeSession.js`): Akordiyon egzersiz kartları, ağırlık/tekrar stepper, RPE seçici (6–10), e1RM hesaplama, zamanlayıcı, otomatik taslak kayıt (400ms debounce), seti tamamlama. (Tamamlandı)
+   - **İlerleme Sayfası** (`progressView.js`): Egzersiz bazında son ağırlık/tekrar, e1RM, trend durumu (İlerliyor/Platoda/Dikkat), sparkline grafik, bölgeye göre gruplandırma. (Tamamlandı — veri akışı aktif)
 
 4. **VERİ MODELİ**
    - Tüm veriler Firestore'da izolasyon için `users/{userId}` path'i altında tutuluyor.
@@ -40,24 +48,38 @@
      - `shoppingList` (Alışveriş)
      - `waterLogs` (Su)
      - `books`, `book_logs` (Kitap)
-     - `splits`, `workout_logs` (Spor)
+     - `splits` (Antrenman programları — gün ve egzersiz listesiyle)
+     - `workout_logs` (Seans kayıtları: `status: in_progress | completed`, `exercises: { [exId]: { sets: [...] } }`)
+     - `exercise_progress/{exId}` — **[YENİ]** Her egzersiz için: `lastWeight`, `lastReps`, `currentE1RM`, `personalRecordE1RM`, `personalRecordDate`, `last5SetsRPE`, `recentSessionSummaries[]`, `lastUpdated`
      - `movies` (Sinema)
-   - **Dokümanlar**: Global ayarlar `users/{userId}/settings/` altında doküman olarak tutulur (Örn: `settings/calories`, `settings/water`).
+   - **Dokümanlar**: Global ayarlar `users/{userId}/settings/` altında tutulur.
+   - **Seans ID formatı**: `${splitId}_${dayId}_${dateStr}_${Date.now()}` — tekil, tamamlanan seansların üzerine yazılmaz.
 
 5. **TASARIM KARARLARI VE KISITLAR**
-   - **Tasarım Sistemi**: `index.html` içinde Tailwind Play CDN ile yapılandırılmış; Ana renkler (`#7EA18D`, `#A4784A`), Inter fontu, Dark mode desteği ve yuvarlatılmış (card) tasarımlar tercih edilmiş.
-   - **Vanilla JS & Firebase CDN Kullanımı**: Build süreci ile uğraşmadan "tak-çalıştır" şeklinde, herhangi bir statik sunucuda veya GitHub Pages'te hemen çalışması için seçilmiş.
-   - **Listener Yönetimi**: Modüler yapıda bellek sızıntısını ve yetki hatalarını (özellikle logout anında) önlemek için merkezi bir `listenerManager.js` kurulmuş.
-   - **Kısıtlar**: Tailwind Play CDN kullanımı development amaçlıdır, production için ağırdır ancak kişisel/minimal proje scope'u nedeniyle bilinçli olarak bırakılmış.
+   - **Mobil-first layout**: `#app-container` (`max-w-[420px]`) tüm `view` section'larını sarmalıyor. Bu div dışında kalan herhangi bir `view`, masaüstünde split-screen görünümüne yol açar — kritik kısıt.
+   - **Tasarım Sistemi**: Tailwind Play CDN ile yapılandırılmış; ana renkler (`#446554` primary, `#7d562b` secondary), Inter fontu, Material Symbols ikonlar.
+   - **Vanilla JS & Firebase CDN**: Build süreci olmaksızın GitHub Pages'te doğrudan çalışacak şekilde tasarlandı.
+   - **Listener Yönetimi**: `listenerManager.js` üzerinden merkezi kayıt — logout'ta bellek sızıntısını önler.
+   - **Global State**: `window.currentUid` ve `localStorage('uid')` ile uid, tüm modüller arası paylaşılıyor. `app.js`'de auth callback'te ve `workout.js`'de `initWorkout`'ta set ediliyor.
+   - **Cache Busting**: Modül dosyalarına `?v=N` ekleniyor; production'da CDN'i zorla günceller.
+   - **window.openProgressView bağımlılığı**: `onclick` içinde hem `window.openProgressView()` (birincil) hem de `import('./progressView.js?v=5').then(...)` (fallback) bulunuyor — modül yüklenemese bile sayfa açılıyor.
 
 6. **BİLİNEN SORUNLAR / YARIM KALANLAR**
-   - Teknik Borç: Uygulamanın büyüklüğüne rağmen state management'ın global değişkenler ve event listener'lar ile manuel yapılıyor olması. Tailwind'in tarayıcıda derlenmesi (CDN üzerinden).
-   - Yarım Kalan / Planlanan: Finans işlemleri için grafik/pasta dilimi görünümü, notlarda arama/filtreleme, görevlere kategori ekleme ve anlık bildirim sistemi projede henüz tam uygulanmamış (README'de "sonraki adımlar" olarak listeli).
+   - **İlerleme sayfası verisi**: Sayfa, `exercise_progress` koleksiyonunu okur. Bu koleksiyon **yalnızca "Seti Tamamla" butonuna basıldığında** dolduruluyor. Hiç set tamamlanmamışsa sayfa "İlk antrenmanını bekliyor" mesajını gösterir — bu beklenen davranış.
+   - **Firestore index**: `activeSession.js`'deki yeni seans sorgusu (`where('status','==','in_progress') + where('dayId','==', dayId)`) bileşik bir Firestore indeksi gerektirebilir — console'da "index required" hatası görülürse Firebase konsolundan ilgili indeksin oluşturulması gerekiyor.
+   - **Teknik Borç**: Global değişkenler ve event listener'larla manuel state yönetimi. Tailwind CDN'in tarayıcıda derlenmesi (production için ağır, bilinçli olarak bırakılmış).
+   - **Yarım Kalan / Planlanan**: Finans için grafik/pasta dilimi, notlarda arama, görevlere kategori.
 
-7. **SON DURUM**
-   - Projenin temel yaşam takip modüllerinin (finans, kalori, su, antrenman, kitap, alışveriş) hepsi aktif olarak yazılmış ve birleştirilmiş.
-   - Kullanılabilir, stabil bir SPA (Single Page Application) versiyonuna ulaşılmış.
-   - Sonraki potansiyel adımlar, mevcut verilerin analiz edilip grafikleştirilmesi (Chart.js entegrasyonu).
+7. **SON DURUM** *(Güncelleme: 17 Ağustos 2026)*
+   - **Bu oturumda tamamlananlar:**
+     - `#app-container` kapanış etiketi eksikliği düzeltildi → split-screen layout sorunu çözüldü.
+     - Aktif antrenman seansında ağırlık/tekrar değişiklikleri artık otomatik kaydediliyor (debounced Firestore write).
+     - "Antrenman Bitir" sonrası zamanlayıcı sıfırlanıyor; aynı gün tekrar girildiğinde yeni seans sıfırdan başlıyor.
+     - `window.currentUid` ve `localStorage uid` tüm modüllere güvenilir şekilde yayılıyor.
+     - `progressView.js` tamamen yeniden yazıldı: boş-durum (empty state) görünümü, ≥1 seans olan egzersizler için kart render, sparkline grafik.
+     - İlerleme sayfası navigasyonu `window.openProgressView?.()` yerine doğrudan DOM gösterme + dinamik import fallback'e geçirildi.
+   - **Mevcut durum:** Tüm temel modüller çalışıyor. İlerleme sayfası deploy'da yayında; `exercise_progress` verisini okuyup gösteriyor. En az bir seti tamamlanmış kullanıcılar için ilerleme kartları görünmeli.
+   - **Sonraki potansiyel adım:** İlerleme sayfasında antrenman geçmişi detayına tıklama akışını (`openProgressExHistory`) test etmek; Firestore bileşik indeks uyarısını izlemek.
 
 8. **TERCİHLER / ÇALIŞMA TARZI NOTLARI**
    - Gereksiz dolgu metinleri ve uzatılmış açıklamalardan kaçınılmalı.
