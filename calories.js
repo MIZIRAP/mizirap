@@ -204,9 +204,8 @@ function bindEvents() {
                     dailyCalorieGoal: g, proteinGoal: p, karbGoal: k, yagGoal: y
                 }, { merge: true });
             } catch(err) {
-                console.error("Test Modu:", err);
-                dailyCalorieGoal = g; proteinGoal = p; karbGoal = k; yagGoal = y;
-                updateUIState();
+                console.error(err);
+                alert('Kaydedilirken hata oluştu: ' + err.message);
             }
             closeCaloriesGoalModal();
         };
@@ -241,11 +240,8 @@ function bindEvents() {
             try {
                 await addDoc(collection(db, "users", currentUid, "foodLibrary"), newFood);
             } catch(err) {
-                console.error("Test Modu:", err);
-                newFood.id = "temp-" + Date.now();
-                newFood.createdAt = { toDate: () => new Date() };
-                libraryFoods.unshift(newFood);
-                renderLibraryFoods();
+                console.error(err);
+                alert('Kaydedilirken hata oluştu: ' + err.message);
             }
             
             newFoodNameInput.value = '';
@@ -324,6 +320,7 @@ function bindEvents() {
                 }
             } catch(err) {
                 console.error("Kayıt Hatası:", err);
+                alert('Kaydedilirken hata oluştu: ' + err.message);
             } finally {
                 currentEditLogId = null;
                 closeAddPortionModal();
@@ -485,9 +482,8 @@ function renderLogs() {
                 try {
                     await deleteDoc(doc(db, "users", currentUid, "calorieLogs", log.id));
                 } catch(err) {
-                    dailyLogs = dailyLogs.filter(l => l.id !== log.id);
-                    renderLogs();
-                    updateUIState();
+                    console.error(err);
+                    alert('Silinirken hata oluştu: ' + err.message);
                 }
             };
 
@@ -553,8 +549,8 @@ function renderLibraryFoods() {
             try {
                 await deleteDoc(doc(db, "users", currentUid, "foodLibrary", food.id));
             } catch(err) {
-                libraryFoods = libraryFoods.filter(f => f.id !== food.id);
-                renderLibraryFoods();
+                console.error(err);
+                alert('Silinirken hata oluştu: ' + err.message);
             }
         };
 

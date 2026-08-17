@@ -192,14 +192,8 @@ export function initBooks(uid, onChangeCallback) {
                 await addDoc(booksRef, newBook);
                 closeAddModal();
             } catch(err) {
-                console.error("Kitap eklerken hata (Test Modu olabilir):", err);
-                
-                // Hata alsa bile (misafir girişi kısıtlaması vb.) test edebilmek için lokal listeye ekleyip arayüzü güncelleyelim.
-                newBook.id = "temp-" + Date.now();
-                currentBooks.unshift(newBook);
-                renderBooks(uid);
-                if (onChangeCb) onChangeCb(currentBooks);
-                closeAddModal();
+                console.error(err);
+                alert('Kaydedilirken hata oluştu: ' + err.message);
             } finally {
                 addSaveBtn.textContent = originalText;
             }
@@ -263,15 +257,8 @@ export function initBooks(uid, onChangeCallback) {
                 await updateDoc(docRef, updateData);
                 closeEditModal();
             } catch(err) {
-                console.error("Kitap güncellerken hata (Test Modu olabilir):", err);
-                // Test Modu Fallback
-                const bIndex = currentBooks.findIndex(b => b.id === currentEditId);
-                if(bIndex !== -1) {
-                    currentBooks[bIndex] = { ...currentBooks[bIndex], ...updateData };
-                }
-                renderBooks(uid);
-                if(onChangeCb) onChangeCb(currentBooks);
-                closeEditModal();
+                console.error(err);
+                alert('Kaydedilirken hata oluştu: ' + err.message);
             } finally {
                 editSaveBtn.textContent = originalText;
             }
@@ -291,12 +278,8 @@ export function initBooks(uid, onChangeCallback) {
                 await deleteDoc(docRef);
                 closeEditModal();
             } catch(err) {
-                console.error("Kitap silerken hata (Test Modu olabilir):", err);
-                // Test Modu Fallback
-                currentBooks = currentBooks.filter(b => b.id !== currentEditId);
-                renderBooks(uid);
-                if(onChangeCb) onChangeCb(currentBooks);
-                closeEditModal();
+                console.error(err);
+                alert('Silinirken hata oluştu: ' + err.message);
             } finally {
                 editDeleteBtn.innerHTML = originalHTML;
             }
@@ -489,17 +472,7 @@ function renderBooks(uid) {
                         }
                     } catch(err) {
                         console.error(err);
-                        
-                        // Test Modu Fallback
-                        const bIndex = currentBooks.findIndex(b => b.id === id);
-                        if(bIndex !== -1) {
-                            currentBooks[bIndex].readPages = newPages;
-                            if (newPages >= currentBooks[bIndex].totalPages) {
-                                currentBooks[bIndex].status = "finished";
-                            }
-                        }
-                        renderBooks(uid);
-                        if(onChangeCb) onChangeCb(currentBooks);
+                        alert('Güncellenirken hata oluştu: ' + err.message);
                     } finally {
                         btn.textContent = "Güncelle";
                     }
@@ -650,11 +623,8 @@ function renderViewAllList() {
                 const docRef = doc(db, "users", currentUid, "books", id);
                 await deleteDoc(docRef);
             } catch(err) {
-                console.error("Kitap silerken hata (Test Modu olabilir):", err);
-                currentBooks = currentBooks.filter(b => b.id !== id);
-                renderBooks(currentUid);
-                renderViewAllList();
-                if(onChangeCb) onChangeCb(currentBooks);
+                console.error(err);
+                alert('Silinirken hata oluştu: ' + err.message);
             } finally {
                 el.innerHTML = originalHTML;
             }
