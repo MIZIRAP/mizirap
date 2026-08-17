@@ -24,6 +24,10 @@ document.addEventListener('click', (e) => {
 
     if (action === 'openSplitEdit') openSplitEdit();
     else if (action === 'closeSplitEdit') closeSplitEdit();
+    else if (action === 'openStretchingView') openStretchingView();
+    else if (action === 'closeStretchingView') closeStretchingView();
+    else if (action === 'openCoreView') openCoreView();
+    else if (action === 'closeCoreView') closeCoreView();
     else if (action === 'closeExerciseHistory') closeExerciseHistory();
     else if (action === 'closeSplitSelectionModal') closeSplitSelectionModal();
     else if (action === 'closeSplitSelectionAndOpenModal') { closeSplitSelectionModal(); setTimeout(openSplitModal, 300); }
@@ -1461,3 +1465,33 @@ async function deleteSplit(splitId) {
         alert("Silme işlemi başarısız.");
     }
 };
+
+// ==========================================
+// STRETCHING & CORE PLACEHOLDER VIEWS
+// ==========================================
+
+function openStretchingView() {
+    document.getElementById('view-workout').classList.add('hidden');
+    document.querySelectorAll('.view').forEach(v => {
+        if(v.id !== 'view-stretching') v.classList.add('hidden');
+    });
+    document.getElementById('view-stretching').classList.remove('hidden');
+}
+
+function closeStretchingView() {
+    document.getElementById('view-stretching').classList.add('hidden');
+    document.getElementById('view-workout').classList.remove('hidden');
+}
+
+function openCoreView() {
+    document.getElementById('view-workout').classList.add('hidden');
+    document.querySelectorAll('.view').forEach(v => {
+        if(v.id !== 'view-core') v.classList.add('hidden');
+    });
+    document.getElementById('view-core').classList.remove('hidden');
+}
+
+function closeCoreView() {
+    document.getElementById('view-core').classList.add('hidden');
+    document.getElementById('view-workout').classList.remove('hidden');
+}

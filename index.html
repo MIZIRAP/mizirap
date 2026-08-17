@@ -439,28 +439,7 @@
             
             <!-- Main Content -->
             <main class="flex-1 px-margin-mobile flex flex-col gap-8 py-8">
-                <!-- Stretching / Esneklik - First Class Citizen -->
-                <section>
-                    <div class="grid grid-cols-2 gap-4">
-                        <button class="bg-primary-container/10 rounded-2xl p-5 flex flex-col gap-3 shadow-sm active:scale-[0.98] transition-transform border border-primary-container/20">
-                            <div class="w-12 h-12 rounded-full bg-primary-container flex items-center justify-center text-white">
-                                <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">self_improvement</span>
-                            </div>
-                            <div class="text-left">
-                                <span class="block font-label-lg text-label-lg font-bold text-on-surface">Esneme Yap</span>
-                            </div>
-                        </button>
-                        <button class="bg-tertiary/10 rounded-2xl p-5 flex flex-col gap-3 shadow-sm active:scale-[0.98] transition-transform border border-tertiary/20">
-                            <div class="w-12 h-12 rounded-full bg-tertiary flex items-center justify-center text-white">
-                                <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">accessibility_new</span>
-                            </div>
-                            <div class="text-left">
-                                <span class="block font-label-lg text-label-lg font-bold text-on-surface">Core Çalışması</span>
-                            </div>
-                        </button>
-                    </div>
-                </section>
-                
+
                 <!-- Navigation Cards -->
                 <section>
                     <div class="grid grid-cols-1 gap-4">
@@ -491,6 +470,26 @@
                             <div class="flex-1">
                                 <h4 class="font-label-lg text-label-lg font-bold text-on-surface">Split Düzenle</h4>
                                 <p class="font-body-md text-body-md text-on-surface-variant mt-0.5">Programını kişiselleştir</p>
+                            </div>
+                            <span class="material-symbols-outlined text-outline">arrow_forward</span>
+                        </a>
+                        <a class="bg-surface-container-lowest rounded-2xl p-5 shadow-sm flex items-center gap-4 hover:shadow-md transition-shadow active:scale-[0.99] border border-surface-variant/30" href="#" data-action="openStretchingView">
+                            <div class="w-12 h-12 rounded-xl bg-surface-container flex items-center justify-center text-on-surface-variant">
+                                <span class="material-symbols-outlined">self_improvement</span>
+                            </div>
+                            <div class="flex-1">
+                                <h4 class="font-label-lg text-label-lg font-bold text-on-surface">Esneme Hareketleri</h4>
+                                <p class="font-body-md text-body-md text-on-surface-variant mt-0.5">Antrenman öncesi ve sonrası</p>
+                            </div>
+                            <span class="material-symbols-outlined text-outline">arrow_forward</span>
+                        </a>
+                        <a class="bg-surface-container-lowest rounded-2xl p-5 shadow-sm flex items-center gap-4 hover:shadow-md transition-shadow active:scale-[0.99] border border-surface-variant/30" href="#" data-action="openCoreView">
+                            <div class="w-12 h-12 rounded-xl bg-surface-container flex items-center justify-center text-on-surface-variant">
+                                <span class="material-symbols-outlined">accessibility_new</span>
+                            </div>
+                            <div class="flex-1">
+                                <h4 class="font-label-lg text-label-lg font-bold text-on-surface">Core Hareketleri</h4>
+                                <p class="font-body-md text-body-md text-on-surface-variant mt-0.5">Merkez bölge çalışmaları</p>
                             </div>
                             <span class="material-symbols-outlined text-outline">arrow_forward</span>
                         </a>
@@ -4160,6 +4159,42 @@
             </div>
         </div>
     </div>
+
+    <!-- STRETCHING VIEW -->
+    <section id="view-stretching" class="view hidden bg-background min-h-[100dvh] text-on-background font-body-md pb-[100px] overflow-y-auto">
+        <header class="w-full top-0 sticky bg-background z-10">
+            <div class="flex items-center justify-between px-margin-mobile h-14 w-full max-w-md mx-auto">
+                <button data-action="closeStretchingView" aria-label="Geri" class="h-12 w-12 flex items-center justify-center text-primary hover:bg-surface-container-high transition-colors active:opacity-70 rounded-full shrink-0">
+                    <span class="material-symbols-outlined" data-icon="arrow_back">arrow_back</span>
+                </button>
+                <h1 class="font-title-lg text-title-lg font-bold text-primary flex-1 text-center truncate">Esneme Hareketleri</h1>
+                <div class="h-12 w-12 shrink-0"></div>
+            </div>
+        </header>
+        <main class="w-full max-w-md mx-auto px-margin-mobile pb-24 pt-4 flex flex-col items-center justify-center min-h-[50vh]">
+            <span class="material-symbols-outlined text-6xl text-surface-variant mb-4" style="font-variation-settings: 'FILL' 1;">self_improvement</span>
+            <h2 class="font-title-lg text-title-lg text-on-surface mb-2">Yakında Tasarlanacak</h2>
+            <p class="font-body-md text-body-md text-on-surface-variant text-center">Bu sayfanın tasarımı yapım aşamasındadır.</p>
+        </main>
+    </section>
+
+    <!-- CORE VIEW -->
+    <section id="view-core" class="view hidden bg-background min-h-[100dvh] text-on-background font-body-md pb-[100px] overflow-y-auto">
+        <header class="w-full top-0 sticky bg-background z-10">
+            <div class="flex items-center justify-between px-margin-mobile h-14 w-full max-w-md mx-auto">
+                <button data-action="closeCoreView" aria-label="Geri" class="h-12 w-12 flex items-center justify-center text-primary hover:bg-surface-container-high transition-colors active:opacity-70 rounded-full shrink-0">
+                    <span class="material-symbols-outlined" data-icon="arrow_back">arrow_back</span>
+                </button>
+                <h1 class="font-title-lg text-title-lg font-bold text-primary flex-1 text-center truncate">Core Hareketleri</h1>
+                <div class="h-12 w-12 shrink-0"></div>
+            </div>
+        </header>
+        <main class="w-full max-w-md mx-auto px-margin-mobile pb-24 pt-4 flex flex-col items-center justify-center min-h-[50vh]">
+            <span class="material-symbols-outlined text-6xl text-surface-variant mb-4" style="font-variation-settings: 'FILL' 1;">accessibility_new</span>
+            <h2 class="font-title-lg text-title-lg text-on-surface mb-2">Yakında Tasarlanacak</h2>
+            <p class="font-body-md text-body-md text-on-surface-variant text-center">Bu sayfanın tasarımı yapım aşamasındadır.</p>
+        </main>
+    </section>
 
 
 
