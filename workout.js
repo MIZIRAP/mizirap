@@ -718,9 +718,7 @@ window.openExerciseHistory = async function(triggerExId, exName) {
             const dateObj = new Date(rec.dateStr);
             const dateFormatted = formatDate(dateObj, { day: 'numeric', month: 'long', year: 'numeric' });
             
-            // Format best set like "4 x 8 x 85.0 kg" -> actually users want "Sets x Reps x Kg". 
-            // In the UI mockup it is "4 x 8 x 85.0 kg". Let's show "Total Sets x Best Reps x Best Kg" or just "Best Set"
-            // We'll show "Total Sets x BestReps x BestWeight kg"
+            // Format best set like "4 x 8 x 85.0 kg" as per UI mockup
             const bestW = rec.bestSet ? parseFloat(rec.bestSet.weight).toFixed(1) : 0;
             const bestR = rec.bestSet ? parseInt(rec.bestSet.reps) : 0;
             
@@ -746,7 +744,7 @@ window.openExerciseHistory = async function(triggerExId, exName) {
                         </div>
                         <div class="flex flex-col">
                             <span class="font-label-sm text-label-sm text-on-surface-variant">${dateFormatted}</span>
-                            <span class="font-body-md text-body-md font-medium text-on-background">${rec.totalSets} set (Max: ${bestR} x ${bestW}kg)</span>
+                            <span class="font-body-md text-body-md font-medium text-on-background">${rec.totalSets} x ${bestR} x ${bestW} kg</span>
                         </div>
                     </div>
                     ${diffBadge}
