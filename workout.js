@@ -21,6 +21,11 @@ let stretches = [];
 let currentStretchImageBase64 = null;
 let editingStretchId = null;
 
+let unsubCores = null;
+let cores = [];
+let currentCoreImageBase64 = null;
+let editingCoreId = null;
+
 document.addEventListener('click', (e) => {
     const actionBtn = e.target.closest('[data-action]');
     if (!actionBtn) return;
@@ -38,6 +43,14 @@ document.addEventListener('click', (e) => {
     else if (action === 'deleteStretch') { e.stopPropagation(); deleteStretch(actionBtn.getAttribute('data-stretch-id')); }
     else if (action === 'editStretch') { e.stopPropagation(); editStretch(actionBtn.getAttribute('data-stretch-id')); }
     else if (action === 'triggerStretchImageUpload') document.getElementById('stretch-image-input').click();
+    
+    else if (action === 'openAddCoreModal') openAddCoreModal();
+    else if (action === 'closeAddCoreModal') closeAddCoreModal();
+    else if (action === 'saveNewCore') saveCore();
+    else if (action === 'deleteCore') { e.stopPropagation(); deleteCore(actionBtn.getAttribute('data-core-id')); }
+    else if (action === 'editCore') { e.stopPropagation(); editCore(actionBtn.getAttribute('data-core-id')); }
+    else if (action === 'triggerCoreImageUpload') document.getElementById('core-image-input').click();
+    
     else if (action === 'closeExerciseHistory') closeExerciseHistory();
     else if (action === 'closeSplitSelectionModal') closeSplitSelectionModal();
     else if (action === 'closeSplitSelectionAndOpenModal') { closeSplitSelectionModal(); setTimeout(openSplitModal, 300); }
@@ -64,7 +77,7 @@ document.addEventListener('click', (e) => {
     else if (action === 'openExercisePickerForSplit') {
         openExercisePickerForSplit(actionBtn.getAttribute('data-split-id'), parseInt(actionBtn.getAttribute('data-day-idx')));
     }
-    else if (action === 'toggleFavorite') {
+    else if (action === 'toggleFav') {
         toggleFavorite(e, actionBtn);
     }
     else if (action === 'removeExerciseFromNewDay') {
@@ -132,10 +145,20 @@ export function initWorkout(uid, onChangeCallback) {
         renderStretches();
     }));
 
+    const coresRef = collection(db, "users", uid, "cores");
+    unsubCores = registerListener(onSnapshot(coresRef, (snap) => {
+        cores = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+        renderCores();
+    }));
+
     // Setup image picker
     const imageInput = document.getElementById('stretch-image-input');
     if (imageInput) {
         imageInput.addEventListener('change', handleStretchImageUpload);
+    }
+    const coreImageInput = document.getElementById('core-image-input');
+    if (coreImageInput) {
+        coreImageInput.addEventListener('change', handleCoreImageUpload);
     }
 
     setupEventListeners();
@@ -145,6 +168,7 @@ export function clearWorkout() {
     if(unsubSplits) unsubSplits();
     if(unsubLogs) unsubLogs();
     if(unsubStretches) unsubStretches();
+    if(unsubCores) unsubCores();
     currentUid = null;
     splits = [];
     activeSplitId = null;
@@ -1715,6 +1739,206 @@ async function deleteStretch(id) {
         await deleteDoc(doc(db, "users", currentUid, "stretches", id));
     } catch (e) {
         console.error("Error deleting stretch: ", e);
+        alert("Hareket silinirken bir hata oluştu.");
+    }
+}
+
+// ==========================================
+// CORE CRUD & RENDERING
+// ==========================================
+
+function openAddCoreModal(isEdit = false) {
+    if (!isEdit) {
+        editingCoreId = null;
+        currentCoreImageBase64 = null;
+        document.getElementById('core-name').value = '';
+        document.getElementById('core-duration').value = '';
+        document.getElementById('core-modal-title').textContent = "Yeni Hareket";
+        
+        const preview = document.getElementById('core-image-preview');
+        const placeholder = document.getElementById('core-image-placeholder');
+        if (preview && placeholder) {
+            preview.src = "";
+            preview.classList.add('hidden');
+            placeholder.classList.remove('hidden');
+        }
+    }
+
+    const modal = document.getElementById('addCoreModal');
+    const content = document.getElementById('addCoreModalContent');
+    modal.classList.remove('hidden');
+    // small delay for transition
+    setTimeout(() => {
+        modal.classList.remove('opacity-0');
+        content.classList.remove('translate-y-full');
+    }, 10);
+}
+
+function closeAddCoreModal() {
+    const modal = document.getElementById('addCoreModal');
+    const content = document.getElementById('addCoreModalContent');
+    
+    modal.classList.add('opacity-0');
+    content.classList.add('translate-y-full');
+    
+    setTimeout(() => {
+        modal.classList.add('hidden');
+    }, 300);
+}
+
+function renderCores() {
+    const container = document.getElementById('core-list-container');
+    if (!container) return;
+    
+    if (cores.length === 0) {
+        container.innerHTML = `<p class="text-center text-on-surface-variant font-body-md mt-4">Henüz hareket eklenmedi.</p>`;
+        return;
+    }
+    
+    let html = '';
+    cores.forEach(core => {
+        html += `
+            <div class="bg-surface-container-low rounded-xl p-md flex items-center gap-md">
+                <div class="w-16 h-16 rounded-full overflow-hidden flex-shrink-0 bg-surface-container-highest">
+                    ${core.imageBase64 ? `<img alt="${escapeHtml(core.name)}" class="w-full h-full object-cover" src="${core.imageBase64}"/>` : ''}
+                </div>
+                <div class="flex-1 flex flex-col justify-center">
+                    <h3 class="font-body-lg text-body-lg font-medium text-on-surface">${escapeHtml(core.name)}</h3>
+                    <div class="flex items-center gap-2 mt-1">
+                        <span class="text-on-surface-variant font-label-sm text-label-sm flex items-center gap-1">
+                            <span class="material-symbols-outlined text-[14px]" data-icon="timer">timer</span> ${core.duration}
+                        </span>
+                    </div>
+                </div>
+                <div class="flex items-center gap-sm flex-shrink-0">
+                    <button data-action="editCore" data-core-id="${core.id}" class="text-on-surface-variant hover:text-primary transition-colors p-1 rounded-full hover:bg-surface-variant">
+                        <span class="material-symbols-outlined" data-icon="edit">edit</span>
+                    </button>
+                    <button data-action="deleteCore" data-core-id="${core.id}" class="text-on-surface-variant hover:text-error transition-colors p-1 rounded-full hover:bg-surface-variant">
+                        <span class="material-symbols-outlined" data-icon="delete">delete</span>
+                    </button>
+                </div>
+            </div>
+        `;
+    });
+    
+    container.innerHTML = html;
+}
+
+function handleCoreImageUpload(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    
+    const reader = new FileReader();
+    reader.onload = function(event) {
+        const img = new Image();
+        img.onload = function() {
+            const canvas = document.createElement('canvas');
+            const MAX_WIDTH = 200;
+            const MAX_HEIGHT = 200;
+            let width = img.width;
+            let height = img.height;
+
+            if (width > height) {
+                if (width > MAX_WIDTH) {
+                    height *= MAX_WIDTH / width;
+                    width = MAX_WIDTH;
+                }
+            } else {
+                if (height > MAX_HEIGHT) {
+                    width *= MAX_HEIGHT / height;
+                    height = MAX_HEIGHT;
+                }
+            }
+            canvas.width = width;
+            canvas.height = height;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0, width, height);
+            
+            currentCoreImageBase64 = canvas.toDataURL('image/jpeg', 0.8);
+            
+            const preview = document.getElementById('core-image-preview');
+            const placeholder = document.getElementById('core-image-placeholder');
+            
+            if (preview && placeholder) {
+                preview.src = currentCoreImageBase64;
+                preview.classList.remove('hidden');
+                placeholder.classList.add('hidden');
+            }
+        };
+        img.src = event.target.result;
+    };
+    reader.readAsDataURL(file);
+}
+
+async function saveCore() {
+    if (!currentUid) return;
+    const nameInput = document.getElementById('core-name').value.trim();
+    const durationInput = document.getElementById('core-duration').value.trim();
+    
+    if (!nameInput || !durationInput) {
+        alert('Lütfen hareket adı ve süresi/tekrarı girin.');
+        return;
+    }
+    
+    const coreData = {
+        name: nameInput,
+        duration: parseInt(durationInput, 10) || 30,
+        imageBase64: currentCoreImageBase64 || null,
+        updatedAt: serverTimestamp()
+    };
+    
+    try {
+        if (editingCoreId) {
+            await updateDoc(doc(db, "users", currentUid, "cores", editingCoreId), coreData);
+        } else {
+            coreData.createdAt = serverTimestamp();
+            await addDoc(collection(db, "users", currentUid, "cores"), coreData);
+        }
+        
+        closeAddCoreModal();
+    } catch (e) {
+        console.error("Error saving core: ", e);
+        alert("Hareket kaydedilirken bir hata oluştu.");
+    }
+}
+
+function editCore(id) {
+    const core = cores.find(s => s.id === id);
+    if (!core) return;
+    
+    editingCoreId = id;
+    
+    document.getElementById('core-name').value = core.name;
+    document.getElementById('core-duration').value = core.duration;
+    
+    currentCoreImageBase64 = core.imageBase64 || null;
+    
+    const preview = document.getElementById('core-image-preview');
+    const placeholder = document.getElementById('core-image-placeholder');
+    
+    if (currentCoreImageBase64) {
+        preview.src = currentCoreImageBase64;
+        preview.classList.remove('hidden');
+        placeholder.classList.add('hidden');
+    } else {
+        preview.src = "";
+        preview.classList.add('hidden');
+        placeholder.classList.remove('hidden');
+    }
+    
+    document.getElementById('core-modal-title').textContent = "Hareketi Düzenle";
+    openAddCoreModal(true);
+}
+
+async function deleteCore(id) {
+    if (!currentUid) return;
+    if (!confirm("Bu hareketi silmek istediğinize emin misiniz?")) return;
+    
+    try {
+        await deleteDoc(doc(db, "users", currentUid, "cores", id));
+    } catch (e) {
+        console.error("Error deleting core: ", e);
         alert("Hareket silinirken bir hata oluştu.");
     }
 }
