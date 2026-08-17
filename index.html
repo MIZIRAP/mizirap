@@ -450,7 +450,7 @@
                                 <span class="block font-label-lg text-label-lg font-bold text-on-surface">Esneme Yap</span>
                             </div>
                         </button>
-                        <button class="bg-tertiary/10 rounded-2xl p-5 flex flex-col gap-3 shadow-sm active:scale-[0.98] transition-transform border border-tertiary/20">
+                        <button data-action="openCorePlayer" class="bg-tertiary/10 rounded-2xl p-5 flex flex-col gap-3 shadow-sm active:scale-[0.98] transition-transform border border-tertiary/20">
                             <div class="w-12 h-12 rounded-full bg-tertiary flex items-center justify-center text-white">
                                 <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">accessibility_new</span>
                             </div>
@@ -4344,27 +4344,55 @@
     <!-- CORE VIEW -->
     <section id="view-core" class="view hidden bg-background min-h-[100dvh] text-on-background flex flex-col font-body-md antialiased pb-lg">
         <!-- Top App Bar -->
-        <header class="bg-background docked full-width top-0 flex justify-between items-center w-full px-margin-mobile py-sm sticky z-10 h-16">
+        <header class="bg-background top-0 flex justify-between items-center w-full px-margin-mobile py-sm sticky z-10 h-16">
             <button data-action="closeCoreView" class="text-primary hover:bg-surface-container-low transition-colors rounded-full p-2 flex items-center justify-center active:scale-95">
                 <span class="material-symbols-outlined" data-icon="arrow_back">arrow_back</span>
             </button>
             <h1 class="font-title-lg text-title-lg font-semibold text-on-background absolute left-1/2 transform -translate-x-1/2">
-                Core Hareketleri
+                Core
             </h1>
             <div class="w-10"></div> <!-- Placeholder for balance -->
         </header>
 
+        <!-- Tab Bar -->
+        <div class="flex px-margin-mobile border-b border-outline-variant/30 bg-background sticky top-16 z-10">
+            <button id="core-tab-movements" data-action="switchCoreTab" data-tab="movements"
+                class="flex-1 py-3 font-label-lg text-label-lg text-primary border-b-2 border-primary transition-colors">
+                Hareketler
+            </button>
+            <button id="core-tab-sessions" data-action="switchCoreTab" data-tab="sessions"
+                class="flex-1 py-3 font-label-lg text-label-lg text-on-surface-variant border-b-2 border-transparent hover:text-on-surface transition-colors">
+                Seanslar
+            </button>
+        </div>
+
         <!-- Main Content Canvas -->
         <main class="flex-1 px-margin-mobile flex flex-col gap-lg mt-md max-w-lg mx-auto w-full pb-[100px]">
-            <!-- Action Button -->
-            <button data-action="openAddCoreModal" class="w-full bg-primary text-on-primary py-4 mt-2 rounded-full font-label-lg text-label-lg flex items-center justify-center gap-2 shadow-sm hover:opacity-90 transition-opacity active:scale-[0.98]">
-                <span class="material-symbols-outlined" data-icon="add">add</span>
-                Hareket Ekle
-            </button>
-            <!-- List Container -->
-            <div class="flex flex-col gap-md mt-4" id="core-list-container">
-                <!-- Cores will be populated by JS -->
+            
+            <!-- MOVEMENTS TAB -->
+            <div id="core-panel-movements">
+                <!-- Action Button -->
+                <button data-action="openAddCoreModal" class="w-full bg-primary text-on-primary py-4 mt-2 rounded-full font-label-lg text-label-lg flex items-center justify-center gap-2 shadow-sm hover:opacity-90 transition-opacity active:scale-[0.98]">
+                    <span class="material-symbols-outlined" data-icon="add">add</span>
+                    Hareket Ekle
+                </button>
+                <!-- List Container -->
+                <div class="flex flex-col gap-md mt-4" id="core-list-container">
+                    <!-- Cores will be populated by JS -->
+                </div>
             </div>
+
+            <!-- SESSIONS TAB -->
+            <div id="core-panel-sessions" class="hidden">
+                <button data-action="openAddCoreSessionModal" class="w-full bg-primary text-on-primary py-4 mt-2 rounded-full font-label-lg text-label-lg flex items-center justify-center gap-2 shadow-sm hover:opacity-90 transition-opacity active:scale-[0.98]">
+                    <span class="material-symbols-outlined" data-icon="add">add</span>
+                    Seans Ekle
+                </button>
+                <div class="flex flex-col gap-md mt-4" id="core-sessions-container">
+                    <!-- Sessions populated by JS -->
+                </div>
+            </div>
+
         </main>
     </section>
 
@@ -4414,6 +4442,59 @@
             <div class="px-lg py-md flex gap-sm bg-surface-container-lowest sticky bottom-0 z-10 border-t border-surface-variant/30">
                 <button data-action="closeAddCoreModal" class="flex-1 min-h-[48px] rounded-full border border-primary text-primary font-label-lg text-label-lg hover:bg-primary/5 transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 active:scale-[0.98]">İptal</button>
                 <button data-action="saveNewCore" class="flex-1 min-h-[48px] rounded-full bg-primary text-on-primary font-label-lg text-label-lg hover:bg-primary/90 shadow-sm transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 flex items-center justify-center gap-xs active:scale-[0.98]">
+                    <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">save</span>
+                    Kaydet
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Core Session Modal -->
+    <div class="fixed inset-0 z-[100] flex items-end sm:items-center justify-center bg-black/40 backdrop-blur-sm hidden opacity-0 transition-opacity duration-300" id="addCoreSessionModal">
+        <div class="relative z-10 w-full max-w-lg bg-surface-container-lowest rounded-t-[28px] sm:rounded-xl shadow-2xl flex flex-col max-h-[92dvh] transform translate-y-full transition-transform duration-300 ease-out" id="addCoreSessionModalContent">
+            <!-- Drag Handle -->
+            <div class="w-full flex justify-center pt-md pb-sm sm:hidden">
+                <div class="w-8 h-1 bg-outline-variant rounded-full"></div>
+            </div>
+            <!-- Header -->
+            <div class="px-lg pt-sm sm:pt-lg pb-md flex justify-between items-center sticky top-0 bg-surface-container-lowest z-10 border-b border-surface-variant/30">
+                <h2 class="font-title-lg text-title-lg text-on-surface" id="core-session-modal-title">Yeni Seans</h2>
+                <button data-action="closeAddCoreSessionModal" class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-variant transition-colors text-on-surface-variant active:scale-95">
+                    <span class="material-symbols-outlined">close</span>
+                </button>
+            </div>
+            <!-- Body -->
+            <div class="overflow-y-auto hide-scrollbar flex flex-col gap-lg px-lg pb-4 flex-1">
+                <!-- Session Name -->
+                <div class="relative mt-4">
+                    <label class="block font-label-lg text-label-lg text-on-surface mb-xs" for="core-session-name">Seans Adı</label>
+                    <input class="block w-full px-0 py-sm bg-transparent border-b border-outline-variant focus:border-primary text-on-surface font-body-lg text-body-lg focus:ring-0 transition-colors placeholder:text-on-surface-variant outline-none" id="core-session-name" placeholder="Örn: Akşam Rutini" type="text"/>
+                </div>
+
+                <!-- Movement Picker -->
+                <div>
+                    <p class="font-label-lg text-label-lg text-on-surface mb-2">Hareketler Seç</p>
+                    <div id="core-session-movement-picker" class="flex flex-col gap-2 max-h-48 overflow-y-auto hide-scrollbar border border-outline-variant/30 rounded-xl p-2">
+                        <!-- populated by JS -->
+                    </div>
+                </div>
+
+                <!-- Selected / Ordered List -->
+                <div>
+                    <div class="flex items-center justify-between mb-2">
+                        <p class="font-label-lg text-label-lg text-on-surface">Seans Sırası</p>
+                        <span id="core-session-total-duration" class="font-label-md text-label-md text-primary bg-primary/10 px-3 py-1 rounded-full">0 dk</span>
+                    </div>
+                    <p class="font-body-sm text-body-sm text-on-surface-variant mb-2">Sürükleyerek sıralayın</p>
+                    <div id="core-session-ordered-list" class="flex flex-col gap-2 min-h-[48px] border border-dashed border-outline-variant/40 rounded-xl p-2">
+                        <p id="core-session-empty-hint" class="text-center text-on-surface-variant font-body-sm py-3">Yukarıdan hareket seçin</p>
+                    </div>
+                </div>
+            </div>
+            <!-- Footer -->
+            <div class="px-lg py-md flex gap-sm bg-surface-container-lowest sticky bottom-0 z-10 border-t border-surface-variant/30">
+                <button data-action="closeAddCoreSessionModal" class="flex-1 min-h-[48px] rounded-full border border-primary text-primary font-label-lg text-label-lg hover:bg-primary/5 transition-colors active:scale-[0.98]">İptal</button>
+                <button data-action="saveCoreSession" class="flex-1 min-h-[48px] rounded-full bg-primary text-on-primary font-label-lg text-label-lg hover:bg-primary/90 shadow-sm transition-colors flex items-center justify-center gap-xs active:scale-[0.98]">
                     <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">save</span>
                     Kaydet
                 </button>
@@ -4496,8 +4577,78 @@
         </button>
     </div>
 </section>
-<!-- Kapanış: #app-screen -->
+<!-- ===================== CORE PLAYER ===================== -->
+<section id="view-core-player" class="view hidden min-h-[100dvh] flex flex-col select-none bg-gradient-to-b from-tertiary to-[#D9B7CE] z-[300] pb-6">
 
+    <!-- Top bar -->
+    <header class="flex items-center justify-between px-5 pt-12 pb-4 flex-shrink-0">
+        <button data-action="closeCorePlayer"
+            class="w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors active:scale-90 text-white">
+            <span class="material-symbols-outlined text-[22px]">close</span>
+        </button>
+        <div class="flex flex-col items-center">
+            <span id="core-player-session-name" class="font-label-md text-label-md text-white/60 max-w-[160px] truncate"></span>
+        </div>
+        <span id="core-player-counter" class="font-label-lg text-label-lg text-white/60 min-w-[40px] text-right">1 / 1</span>
+    </header>
+
+    <!-- Progress strip -->
+    <div id="core-player-progress-strip" class="flex gap-1 px-5 flex-shrink-0">
+        <!-- Dynamically generated dots/bars by JS -->
+    </div>
+
+    <!-- Main content -->
+    <div class="flex-1 flex flex-col items-center justify-center gap-5 px-6 overflow-hidden">
+        <!-- Image -->
+        <div class="relative flex items-center justify-center">
+            <!-- Image circle -->
+            <div class="w-[220px] h-[220px] rounded-full overflow-hidden border-2 border-white/10 shadow-2xl bg-white/5 flex items-center justify-center">
+                <img id="core-player-image" src="" alt="" class="w-full h-full object-cover hidden"/>
+                <span id="core-player-image-placeholder" class="material-symbols-outlined text-[80px] text-white/20" style="font-variation-settings:'FILL' 1;">accessibility_new</span>
+            </div>
+        </div>
+
+        <!-- Name & timer text -->
+        <div class="flex flex-col items-center gap-1 text-center">
+            <h2 id="core-player-name" class="font-headline-sm text-[22px] font-bold text-white leading-tight max-w-[280px]">—</h2>
+            <div class="flex items-baseline gap-1 mt-1">
+                <span id="core-player-time" class="text-[52px] font-black leading-none" style="color:white;">30</span>
+                <span class="font-label-lg text-label-lg text-white/50">sn</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Controls -->
+    <div class="flex flex-col items-center gap-4 px-6 pb-10 flex-shrink-0 mt-auto">
+        <!-- Main control row -->
+        <div class="flex items-center gap-6">
+            <!-- Prev -->
+            <button data-action="corePlayerPrev"
+                class="w-14 h-14 rounded-full bg-white/10 hover:bg-white/15 flex items-center justify-center transition-colors active:scale-90 text-white disabled:opacity-30">
+                <span class="material-symbols-outlined text-[28px]" style="font-variation-settings:'FILL' 1;">skip_previous</span>
+            </button>
+            <!-- Pause / Resume -->
+            <button id="core-player-pause-btn" data-action="corePlayerPauseToggle"
+                class="w-20 h-20 rounded-full flex items-center justify-center shadow-xl active:scale-90 transition-all"
+                style="background: linear-gradient(135deg, var(--tertiary), #9e5b85);">
+                <span id="core-player-pause-icon" class="material-symbols-outlined text-[38px] text-white" style="font-variation-settings:'FILL' 1;">pause</span>
+            </button>
+            <!-- Next / Skip -->
+            <button data-action="corePlayerNext"
+                class="w-14 h-14 rounded-full bg-white/10 hover:bg-white/15 flex items-center justify-center transition-colors active:scale-90 text-white">
+                <span class="material-symbols-outlined text-[28px]" style="font-variation-settings:'FILL' 1;">skip_next</span>
+            </button>
+        </div>
+
+        <!-- End session -->
+        <button data-action="corePlayerEnd"
+            class="w-full max-w-[280px] py-3.5 rounded-full bg-white/8 border border-white/15 text-white font-label-lg text-label-lg hover:bg-white/12 transition-colors active:scale-[0.98] flex items-center justify-center gap-2 mt-4">
+            <span class="material-symbols-outlined text-[18px]">stop_circle</span>
+            Seansı Bitir
+        </button>
+    </div>
+</section>
+<!-- Kapanış: #app-screen -->
 
 </div>
 <!-- Kapanış: #app-container -->

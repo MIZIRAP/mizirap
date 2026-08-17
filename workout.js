@@ -54,9 +54,18 @@ let editingCoreId = null;
 let unsubStretchSessions = null;
 let stretchSessions = [];
 let activeStretchSessionId = localStorage.getItem('activeStretchSessionId') || null;
+
+let unsubCoreSessions = null;
+let coreSessions = [];
+let activeCoreSessionId = localStorage.getItem('activeCoreSessionId') || null;
+
 let sessionDraftMovements = []; // [{id, name, duration, imageBase64}]
 let editingSessionId = null;
 let currentStretchTab = 'movements';
+
+let coreSessionDraftMovements = [];
+let editingCoreSessionId = null;
+let currentCoreTab = 'movements';
 
 document.addEventListener('click', (e) => {
     const actionBtn = e.target.closest('[data-action]');
@@ -93,12 +102,30 @@ document.addEventListener('click', (e) => {
     else if (action === 'toggleSessionMovement') toggleSessionMovement(actionBtn.getAttribute('data-move-id'));
     else if (action === 'removeSessionMovement') { e.stopPropagation(); removeSessionMovement(actionBtn.getAttribute('data-move-id')); }
 
+    else if (action === 'switchCoreTab') switchCoreTab(actionBtn.getAttribute('data-tab'));
+    else if (action === 'openAddCoreSessionModal') openAddCoreSessionModal();
+    else if (action === 'closeAddCoreSessionModal') closeAddCoreSessionModal();
+    else if (action === 'saveCoreSession') saveCoreSession();
+    else if (action === 'deleteCoreSession') { e.stopPropagation(); deleteCoreSession(actionBtn.getAttribute('data-session-id')); }
+    else if (action === 'editCoreSession') { e.stopPropagation(); editCoreSession(actionBtn.getAttribute('data-session-id')); }
+    else if (action === 'setActiveCoreSession') { e.stopPropagation(); setActiveCoreSession(actionBtn.getAttribute('data-session-id')); }
+    else if (action === 'toggleCoreSessionMovement') toggleCoreSessionMovement(actionBtn.getAttribute('data-move-id'));
+    else if (action === 'removeCoreSessionMovement') { e.stopPropagation(); removeCoreSessionMovement(actionBtn.getAttribute('data-move-id')); }
+
     else if (action === 'openStretchPlayer') openStretchPlayer();
     else if (action === 'closeStretchPlayer') closeStretchPlayer();
-    else if (action === 'stretchPlayerPauseToggle') stretchPlayerPauseToggle();
-    else if (action === 'stretchPlayerNext') stretchPlayerGoNext(true);
+    else if (action === 'stretchPlayerPauseToggle') _spPauseToggle();
     else if (action === 'stretchPlayerPrev') stretchPlayerGoPrev();
-    else if (action === 'stretchPlayerEnd') closeStretchPlayer();
+    else if (action === 'stretchPlayerNext') stretchPlayerGoNext(true);
+    else if (action === 'stretchPlayerEnd') stretchPlayerEnd();
+    
+    else if (action === 'openCorePlayer') openCorePlayer();
+    else if (action === 'closeCorePlayer') closeCorePlayer();
+    else if (action === 'corePlayerPauseToggle') _cpPauseToggle();
+    else if (action === 'corePlayerPrev') corePlayerGoPrev();
+    else if (action === 'corePlayerNext') corePlayerGoNext(true);
+    else if (action === 'corePlayerEnd') corePlayerEnd();
+
     else if (action === 'closeExerciseHistory') closeExerciseHistory();
     else if (action === 'closeSplitSelectionModal') closeSplitSelectionModal();
     else if (action === 'closeSplitSelectionAndOpenModal') { closeSplitSelectionModal(); setTimeout(openSplitModal, 300); }
@@ -205,6 +232,12 @@ export function initWorkout(uid, onChangeCallback) {
         renderStretchSessions();
     }));
 
+    const coreSessionsRef = collection(db, "users", uid, "coreSessions");
+    unsubCoreSessions = registerListener(onSnapshot(coreSessionsRef, (snap) => {
+        coreSessions = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+        renderCoreSessions();
+    }));
+
     // Setup image picker
     const imageInput = document.getElementById('stretch-image-input');
     if (imageInput) {
@@ -224,6 +257,7 @@ export function clearWorkout() {
     if(unsubStretches) unsubStretches();
     if(unsubCores) unsubCores();
     if(unsubStretchSessions) unsubStretchSessions();
+    if(unsubCoreSessions) unsubCoreSessions();
     currentUid = null;
     splits = [];
     activeSplitId = null;
@@ -2525,3 +2559,468 @@ function stretchPlayerGoPrev() {
     _spLoadMovement(_spIdx);
     _spStartTimer();
 }
+
+
+// ==========================================
+// CORE SESSIONS & TABS
+// ==========================================
+
+function switchCoreTab(tab) {
+    currentCoreTab = tab;
+    document.getElementById('core-tab-movements').classList.toggle('text-primary', tab === 'movements');
+    document.getElementById('core-tab-movements').classList.toggle('border-primary', tab === 'movements');
+    document.getElementById('core-tab-movements').classList.toggle('text-on-surface-variant', tab !== 'movements');
+    document.getElementById('core-tab-movements').classList.toggle('border-transparent', tab !== 'movements');
+
+    document.getElementById('core-tab-sessions').classList.toggle('text-primary', tab === 'sessions');
+    document.getElementById('core-tab-sessions').classList.toggle('border-primary', tab === 'sessions');
+    document.getElementById('core-tab-sessions').classList.toggle('text-on-surface-variant', tab !== 'sessions');
+    document.getElementById('core-tab-sessions').classList.toggle('border-transparent', tab !== 'sessions');
+
+    if (tab === 'movements') {
+        document.getElementById('core-panel-movements').classList.remove('hidden');
+        document.getElementById('core-panel-sessions').classList.add('hidden');
+    } else {
+        document.getElementById('core-panel-movements').classList.add('hidden');
+        document.getElementById('core-panel-sessions').classList.remove('hidden');
+        renderCoreSessions();
+    }
+}
+
+function renderCoreSessions() {
+    const container = document.getElementById('core-sessions-container');
+    if (!container) return;
+
+    if (coreSessions.length === 0) {
+        container.innerHTML = '<p class="text-center text-on-surface-variant mt-4 font-body-md">Henüz Core seansı eklenmemiş.</p>';
+        return;
+    }
+
+    container.innerHTML = coreSessions.map(session => {
+        const isActive = session.id === activeCoreSessionId;
+        const totalSec = session.movements.reduce((acc, m) => acc + (parseInt(m.duration) || 0), 0);
+        const totalMin = Math.ceil(totalSec / 60);
+
+        return `
+            <div class="bg-surface-container-lowest rounded-2xl p-4 shadow-sm border ${isActive ? 'border-primary' : 'border-surface-variant/30'} flex flex-col gap-3 relative overflow-hidden">
+                ${isActive ? '<div class="absolute top-0 right-0 bg-primary text-on-primary text-[10px] font-bold px-2 py-1 rounded-bl-lg uppercase tracking-wider">Aktif Seans</div>' : ''}
+                <div class="flex items-start justify-between">
+                    <div class="flex-1">
+                        <h3 class="font-title-md text-title-md font-semibold text-on-surface">${escapeHtml(session.name)}</h3>
+                        <p class="font-body-sm text-body-sm text-on-surface-variant mt-1">${session.movements.length} hareket • ${totalMin} dk</p>
+                    </div>
+                </div>
+                
+                <div class="flex gap-2 mt-2">
+                    <button data-action="setActiveCoreSession" data-session-id="${session.id}" 
+                        class="flex-1 py-2 rounded-full font-label-md text-label-md transition-colors ${isActive ? 'bg-primary/20 text-primary' : 'bg-surface-variant text-on-surface-variant hover:bg-surface-container-high'}">
+                        ${isActive ? 'Seçili' : 'Seç'}
+                    </button>
+                    <button data-action="editCoreSession" data-session-id="${session.id}" class="w-10 h-10 rounded-full bg-surface-variant text-on-surface-variant flex items-center justify-center hover:bg-surface-container-high transition-colors">
+                        <span class="material-symbols-outlined text-[20px]">edit</span>
+                    </button>
+                    <button data-action="deleteCoreSession" data-session-id="${session.id}" class="w-10 h-10 rounded-full bg-error/10 text-error flex items-center justify-center hover:bg-error/20 transition-colors">
+                        <span class="material-symbols-outlined text-[20px]">delete</span>
+                    </button>
+                </div>
+            </div>
+        `;
+    }).join('');
+}
+
+function openAddCoreSessionModal() {
+    editingCoreSessionId = null;
+    coreSessionDraftMovements = [];
+    document.getElementById('core-session-name').value = '';
+    document.getElementById('core-session-modal-title').textContent = "Yeni Core Seansı";
+    
+    renderCoreSessionMovementPicker();
+    renderCoreSessionOrderedList();
+
+    const modal = document.getElementById('addCoreSessionModal');
+    const content = document.getElementById('addCoreSessionModalContent');
+    modal.classList.remove('hidden');
+    // small delay for transition
+    setTimeout(() => {
+        modal.classList.remove('opacity-0');
+        content.classList.remove('translate-y-full');
+    }, 10);
+}
+
+function closeAddCoreSessionModal() {
+    const modal = document.getElementById('addCoreSessionModal');
+    const content = document.getElementById('addCoreSessionModalContent');
+    
+    modal.classList.add('opacity-0');
+    content.classList.add('translate-y-full');
+    
+    setTimeout(() => {
+        modal.classList.add('hidden');
+    }, 300);
+}
+
+async function saveCoreSession() {
+    if (!currentUid) return;
+    
+    const name = document.getElementById('core-session-name').value.trim();
+    if (!name) { alert("Lütfen seans adı girin."); return; }
+    if (coreSessionDraftMovements.length === 0) { alert("En az 1 hareket seçmelisiniz."); return; }
+
+    const data = {
+        name,
+        movements: coreSessionDraftMovements
+    };
+
+    try {
+        if (editingCoreSessionId) {
+            await updateDoc(doc(db, "users", currentUid, "coreSessions", editingCoreSessionId), data);
+        } else {
+            data.createdAt = serverTimestamp();
+            await addDoc(collection(db, "users", currentUid, "coreSessions"), data);
+        }
+        closeAddCoreSessionModal();
+    } catch (e) {
+        console.error("Error saving core session: ", e);
+        alert("Kaydedilirken hata oluştu.");
+    }
+}
+
+async function deleteCoreSession(id) {
+    if (!currentUid || !confirm("Bu core seansını silmek istediğinize emin misiniz?")) return;
+    try {
+        await deleteDoc(doc(db, "users", currentUid, "coreSessions", id));
+        if (activeCoreSessionId === id) {
+            activeCoreSessionId = null;
+            localStorage.removeItem('activeCoreSessionId');
+        }
+    } catch (e) {
+        console.error("Error deleting core session: ", e);
+    }
+}
+
+function editCoreSession(id) {
+    const session = coreSessions.find(s => s.id === id);
+    if (!session) return;
+
+    editingCoreSessionId = id;
+    document.getElementById('core-session-name').value = session.name;
+    document.getElementById('core-session-modal-title').textContent = "Seansı Düzenle";
+    coreSessionDraftMovements = JSON.parse(JSON.stringify(session.movements));
+
+    renderCoreSessionMovementPicker();
+    renderCoreSessionOrderedList();
+
+    const modal = document.getElementById('addCoreSessionModal');
+    const content = document.getElementById('addCoreSessionModalContent');
+    modal.classList.remove('hidden');
+    setTimeout(() => {
+        modal.classList.remove('opacity-0');
+        content.classList.remove('translate-y-full');
+    }, 10);
+}
+
+function setActiveCoreSession(id) {
+    activeCoreSessionId = id;
+    localStorage.setItem('activeCoreSessionId', id);
+    renderCoreSessions();
+}
+
+function renderCoreSessionMovementPicker() {
+    const picker = document.getElementById('core-session-movement-picker');
+    if (!picker) return;
+
+    if (cores.length === 0) {
+        picker.innerHTML = '<p class="text-on-surface-variant font-body-sm">Önce Core Hareketleri eklemelisiniz.</p>';
+        return;
+    }
+
+    picker.innerHTML = cores.map(m => {
+        // Can be added multiple times, but we just provide an "Add" button
+        return `
+            <div class="flex items-center justify-between bg-surface-container-lowest border border-outline-variant/30 p-2 rounded-lg">
+                <div class="flex items-center gap-3">
+                    ${m.imageBase64 ? `<img src="${m.imageBase64}" class="w-10 h-10 rounded-md object-cover"/>` : `<div class="w-10 h-10 rounded-md bg-surface-variant flex items-center justify-center"><span class="material-symbols-outlined text-[20px] text-on-surface-variant">accessibility_new</span></div>`}
+                    <div>
+                        <p class="font-body-sm font-medium text-on-surface">${escapeHtml(m.name)}</p>
+                        <p class="text-[12px] text-on-surface-variant">${m.duration}s</p>
+                    </div>
+                </div>
+                <button data-action="toggleCoreSessionMovement" data-move-id="${m.id}" class="w-8 h-8 rounded-full bg-primary/10 text-primary flex items-center justify-center hover:bg-primary/20">
+                    <span class="material-symbols-outlined text-[18px]">add</span>
+                </button>
+            </div>
+        `;
+    }).join('');
+}
+
+function toggleCoreSessionMovement(moveId) {
+    const move = cores.find(m => m.id === moveId);
+    if (!move) return;
+    
+    // Add to draft list
+    coreSessionDraftMovements.push({
+        id: move.id,
+        name: move.name,
+        duration: move.duration,
+        imageBase64: move.imageBase64 || null,
+        uid: Date.now().toString() + Math.random().toString() // unique instance id for reordering
+    });
+    
+    renderCoreSessionOrderedList();
+}
+
+function removeCoreSessionMovement(uid) {
+    coreSessionDraftMovements = coreSessionDraftMovements.filter(m => m.uid !== uid);
+    renderCoreSessionOrderedList();
+}
+
+function renderCoreSessionOrderedList() {
+    const list = document.getElementById('core-session-ordered-list');
+    const totalEl = document.getElementById('core-session-total-duration');
+    if (!list || !totalEl) return;
+
+    if (coreSessionDraftMovements.length === 0) {
+        list.innerHTML = '<p id="core-session-empty-hint" class="text-center text-on-surface-variant font-body-sm py-3">Yukarıdan hareket seçin</p>';
+        totalEl.textContent = '0 dk';
+        return;
+    }
+
+    const totalSec = coreSessionDraftMovements.reduce((acc, m) => acc + (parseInt(m.duration) || 0), 0);
+    const totalMin = Math.ceil(totalSec / 60);
+    totalEl.textContent = totalMin + ' dk';
+
+    list.innerHTML = coreSessionDraftMovements.map((m, index) => `
+        <div class="flex items-center justify-between bg-surface p-2 rounded-lg border border-outline-variant/30 shadow-sm" data-instance-uid="${m.uid}">
+            <div class="flex items-center gap-3">
+                <span class="material-symbols-outlined text-on-surface-variant cursor-grab drag-handle active:cursor-grabbing">drag_indicator</span>
+                <span class="font-body-md font-bold text-on-surface w-4">${index + 1}.</span>
+                <div>
+                    <p class="font-body-sm font-medium text-on-surface">${escapeHtml(m.name)}</p>
+                    <p class="text-[12px] text-on-surface-variant">${m.duration}s</p>
+                </div>
+            </div>
+            <button data-action="removeCoreSessionMovement" data-move-id="${m.uid}" class="w-8 h-8 rounded-full text-error hover:bg-error/10 flex items-center justify-center transition-colors">
+                <span class="material-symbols-outlined text-[18px]">close</span>
+            </button>
+        </div>
+    `).join('');
+
+    initCoreSessionDragAndDrop();
+}
+
+function initCoreSessionDragAndDrop() {
+    const list = document.getElementById('core-session-ordered-list');
+    let draggedItem = null;
+
+    Array.from(list.children).forEach(item => {
+        if(item.id === 'core-session-empty-hint') return;
+
+        item.setAttribute('draggable', true);
+
+        item.addEventListener('dragstart', function(e) {
+            draggedItem = item;
+            setTimeout(() => item.classList.add('opacity-50'), 0);
+        });
+
+        item.addEventListener('dragend', function() {
+            draggedItem.classList.remove('opacity-50');
+            draggedItem = null;
+            
+            // Rebuild array based on new DOM order
+            const newOrder = [];
+            Array.from(list.children).forEach(child => {
+                const uid = child.getAttribute('data-instance-uid');
+                if (uid) {
+                    const match = coreSessionDraftMovements.find(m => m.uid === uid);
+                    if (match) newOrder.push(match);
+                }
+            });
+            coreSessionDraftMovements = newOrder;
+            renderCoreSessionOrderedList();
+        });
+
+        item.addEventListener('dragover', function(e) {
+            e.preventDefault();
+            const afterElement = getDragAfterElement(list, e.clientY);
+            if (afterElement == null) {
+                list.appendChild(draggedItem);
+            } else {
+                list.insertBefore(draggedItem, afterElement);
+            }
+        });
+    });
+}
+
+
+// ==========================================
+// CORE PLAYER ENGINE
+// ==========================================
+
+let _cpMovements = [];
+let _cpIdx = 0;
+let _cpTimeLeft = 0;
+let _cpTotalTime = 0;
+let _cpInterval = null;
+let _cpPaused = false;
+
+function openCorePlayer() {
+    let movements = [];
+    if (activeCoreSessionId) {
+        const session = coreSessions.find(s => s.id === activeCoreSessionId);
+        if (session && session.movements && session.movements.length > 0) {
+            movements = session.movements;
+            const nameEl = document.getElementById('core-player-session-name');
+            if (nameEl) nameEl.textContent = session.name;
+        }
+    }
+    if (movements.length === 0) {
+        movements = cores;
+        const nameEl = document.getElementById('core-player-session-name');
+        if (nameEl) nameEl.textContent = 'Tüm Hareketler';
+    }
+    if (movements.length === 0) {
+        alert('Önce Core Hareketleri ekleyin veya bir seans oluşturun.');
+        return;
+    }
+
+    _cpMovements = movements;
+    _cpIdx = 0;
+    _cpPaused = false;
+
+    // Find the currently active view and hide it
+    const activeView = document.querySelector('.view:not(.hidden)');
+    if (activeView && activeView.id !== 'view-core-player') {
+        window._prevCoreView = activeView.id;
+        activeView.classList.add('hidden');
+    }
+
+    const view = document.getElementById('view-core-player');
+    view.classList.remove('hidden');
+    view.scrollTop = 0;
+
+    _cpLoadMovement(_cpIdx);
+    _cpStartTimer();
+}
+
+function closeCorePlayer() {
+    _cpStopTimer();
+    const view = document.getElementById('view-core-player');
+    view.classList.add('hidden');
+    
+    // Restore the previous view
+    if (window._prevCoreView) {
+        document.getElementById(window._prevCoreView).classList.remove('hidden');
+        window._prevCoreView = null;
+    } else {
+        document.getElementById('view-workout').classList.remove('hidden');
+    }
+}
+
+function _cpLoadMovement(idx) {
+    const move = _cpMovements[idx];
+    if (!move) return;
+
+    _cpTotalTime = parseInt(move.duration) || 30;
+    _cpTimeLeft = _cpTotalTime;
+
+    const imgEl = document.getElementById('core-player-image');
+    const placeholder = document.getElementById('core-player-image-placeholder');
+    if (move.imageBase64) {
+        imgEl.src = move.imageBase64;
+        imgEl.classList.remove('hidden');
+        placeholder.classList.add('hidden');
+    } else {
+        imgEl.classList.add('hidden');
+        imgEl.src = "";
+        placeholder.classList.remove('hidden');
+    }
+
+    document.getElementById('core-player-name').textContent = move.name;
+    document.getElementById('core-player-counter').textContent = `${idx + 1} / ${_cpMovements.length}`;
+    
+    _cpRenderProgressStrip(idx);
+
+    _playBeep(660, 0.15, 0.3);
+    setTimeout(() => _playBeep(784, 0.15, 0.35), 180);
+    setTimeout(() => _playBeep(1046, 0.25, 0.4), 360);
+}
+
+function _cpRenderProgressStrip(currentIdx) {
+    const strip = document.getElementById('core-player-progress-strip');
+    if (!strip) return;
+    strip.innerHTML = _cpMovements.map((_, i) => `
+        <div class="flex-1 h-1 rounded-full transition-all duration-300 ${
+            i < currentIdx ? 'bg-white' :
+            i === currentIdx ? 'bg-white/80' :
+            'bg-white/20'
+        }"></div>
+    `).join('');
+}
+
+function _cpUpdateTimerUI() {
+    const timeEl = document.getElementById('core-player-time');
+    if (timeEl) timeEl.textContent = _cpTimeLeft;
+}
+
+function _cpStartTimer() {
+    _cpStopTimer();
+    _cpPaused = false;
+    const pauseIcon = document.getElementById('core-player-pause-icon');
+    if (pauseIcon) pauseIcon.textContent = 'pause';
+
+    _cpInterval = setInterval(() => {
+        if (_cpPaused) return;
+        _cpTimeLeft--;
+        _cpUpdateTimerUI();
+
+        if (_cpTimeLeft <= 0) {
+            _cpStopTimer();
+            _playFinishBeep();
+            setTimeout(() => corePlayerGoNext(false), 600);
+        }
+    }, 1000);
+}
+
+function _cpStopTimer() {
+    if (_cpInterval) {
+        clearInterval(_cpInterval);
+        _cpInterval = null;
+    }
+}
+
+function _cpPauseToggle() {
+    _cpPaused = !_cpPaused;
+    const pauseIcon = document.getElementById('core-player-pause-icon');
+    if (pauseIcon) pauseIcon.textContent = _cpPaused ? 'play_arrow' : 'pause';
+}
+
+function corePlayerGoNext(userTriggered = true) {
+    if (_cpIdx >= _cpMovements.length - 1) {
+        if (userTriggered) {
+            closeCorePlayer();
+        } else {
+            _playBeep(1046, 0.5, 0.5);
+            setTimeout(closeCorePlayer, 800);
+        }
+        return;
+    }
+    _cpIdx++;
+    _cpStopTimer();
+    _cpPaused = false;
+    _cpLoadMovement(_cpIdx);
+    _cpStartTimer();
+}
+
+function corePlayerGoPrev() {
+    if (_cpIdx <= 0) return;
+    _cpIdx--;
+    _cpStopTimer();
+    _cpPaused = false;
+    _cpLoadMovement(_cpIdx);
+    _cpStartTimer();
+}
+
+function corePlayerEnd() {
+    closeCorePlayer();
+}
+
