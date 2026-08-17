@@ -488,7 +488,7 @@
                             <span class="flex-1 font-body-lg text-body-lg text-on-surface">Egzersiz Kütüphanesi</span>
                             <span class="material-symbols-outlined text-outline">chevron_right</span>
                         </a>
-                        <a class="flex items-center gap-4 p-4 border-b border-surface-variant/50 hover:bg-surface-container-low transition-colors active:bg-surface-container" href="#" onclick="document.getElementById('view-workout').classList.add('hidden'); window.openProgressView?.(); return false;">
+                        <a class="flex items-center gap-4 p-4 border-b border-surface-variant/50 hover:bg-surface-container-low transition-colors active:bg-surface-container" href="#" onclick="document.querySelectorAll('.view').forEach(v=>v.classList.add('hidden')); document.getElementById('view-progress').classList.remove('hidden'); if(typeof window.openProgressView==='function'){window.openProgressView();} else { document.getElementById('progress-summary-text').innerText='Yükleniyor...'; import('./progressView.js?v=5').then(m=>m.openProgressView()); } return false;">
                             <span class="material-symbols-outlined text-on-surface-variant">monitoring</span>
                             <span class="flex-1 font-body-lg text-body-lg text-on-surface">İlerleme</span>
                             <span class="material-symbols-outlined text-outline">chevron_right</span>
