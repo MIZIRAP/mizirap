@@ -4182,22 +4182,172 @@
     </div>
 
     <!-- STRETCHING VIEW -->
-    <section id="view-stretching" class="view hidden bg-background min-h-[100dvh] text-on-background font-body-md pb-[100px] overflow-y-auto">
-        <header class="w-full top-0 sticky bg-background z-10">
-            <div class="flex items-center justify-between px-margin-mobile h-14 w-full max-w-md mx-auto">
-                <button data-action="closeStretchingView" aria-label="Geri" class="h-12 w-12 flex items-center justify-center text-primary hover:bg-surface-container-high transition-colors active:opacity-70 rounded-full shrink-0">
-                    <span class="material-symbols-outlined" data-icon="arrow_back">arrow_back</span>
-                </button>
-                <h1 class="font-title-lg text-title-lg font-bold text-primary flex-1 text-center truncate">Esneme Hareketleri</h1>
-                <div class="h-12 w-12 shrink-0"></div>
-            </div>
+    <section id="view-stretching" class="view hidden bg-background min-h-[100dvh] text-on-background flex flex-col font-body-md antialiased pb-lg">
+        <!-- Top App Bar -->
+        <header class="bg-background docked full-width top-0 flex justify-between items-center w-full px-margin-mobile py-sm sticky z-10 h-16">
+            <button data-action="closeStretchingView" class="text-primary hover:bg-surface-container-low transition-colors rounded-full p-2 flex items-center justify-center active:scale-95">
+                <span class="material-symbols-outlined" data-icon="arrow_back">arrow_back</span>
+            </button>
+            <h1 class="font-title-lg text-title-lg font-semibold text-on-background absolute left-1/2 transform -translate-x-1/2">
+                Esneme Hareketleri
+            </h1>
+            <div class="w-10"></div> <!-- Placeholder for balance -->
         </header>
-        <main class="w-full max-w-md mx-auto px-margin-mobile pb-24 pt-4 flex flex-col items-center justify-center min-h-[50vh]">
-            <span class="material-symbols-outlined text-6xl text-surface-variant mb-4" style="font-variation-settings: 'FILL' 1;">self_improvement</span>
-            <h2 class="font-title-lg text-title-lg text-on-surface mb-2">Yakında Tasarlanacak</h2>
-            <p class="font-body-md text-body-md text-on-surface-variant text-center">Bu sayfanın tasarımı yapım aşamasındadır.</p>
+
+        <!-- Main Content Canvas -->
+        <main class="flex-1 px-margin-mobile flex flex-col gap-lg mt-md max-w-lg mx-auto w-full pb-[100px]">
+            <!-- Action Button -->
+            <button data-action="openAddStretchModal" class="w-full bg-primary text-on-primary py-4 mt-2 rounded-full font-label-lg text-label-lg flex items-center justify-center gap-2 shadow-sm hover:opacity-90 transition-opacity active:scale-[0.98]">
+                <span class="material-symbols-outlined" data-icon="add">add</span>
+                Hareket Ekle
+            </button>
+            <!-- List Container -->
+            <div class="flex flex-col gap-md mt-4" id="stretching-list-container">
+                <!-- Card 1 -->
+                <div class="bg-surface-container-low rounded-xl p-md flex items-center gap-md">
+                    <div class="w-16 h-16 rounded-full overflow-hidden flex-shrink-0 bg-surface-container-highest">
+                        <img alt="Kobra Esnetme" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC4CL5QSQRHj_ByIMCMcrsKwx2a1rT9UlIjYLpfHGMIdYGRJnvK7Y_CaEeV2d4nE9rvtyJdRATjL1l7Wf-G7Gm_DDcSMspqgfDMG966tmCaabid0l9QiXSDQuG0fd8mzRkhQDA_j3lDKItWgoA2juMSW0a6U7tziF3Mv4guMDMg7DfUMmY9m6cahOx3sOb7UonUeNKettrIFuflmRajm5EZNX8tfdneFkKYryE1hh-r1saC4UjK0nav"/>
+                    </div>
+                    <div class="flex-1 flex flex-col justify-center">
+                        <h3 class="font-body-lg text-body-lg font-medium text-on-surface">Kobra Esnetme</h3>
+                        <div class="flex items-center gap-2 mt-1">
+                            <span class="bg-secondary/10 text-secondary px-2 py-0.5 rounded-sm font-label-sm text-label-sm">Sırt</span>
+                            <span class="text-on-surface-variant font-label-sm text-label-sm flex items-center gap-1">
+                                <span class="material-symbols-outlined text-[14px]" data-icon="timer">timer</span> 30 sn
+                            </span>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-sm flex-shrink-0">
+                        <button class="text-on-surface-variant hover:text-primary transition-colors p-1 rounded-full hover:bg-surface-variant">
+                            <span class="material-symbols-outlined" data-icon="edit">edit</span>
+                        </button>
+                        <button class="text-on-surface-variant hover:text-error transition-colors p-1 rounded-full hover:bg-surface-variant">
+                            <span class="material-symbols-outlined" data-icon="delete">delete</span>
+                        </button>
+                    </div>
+                </div>
+                <!-- Card 2 -->
+                <div class="bg-surface-container-low rounded-xl p-md flex items-center gap-md">
+                    <div class="w-16 h-16 rounded-full overflow-hidden flex-shrink-0 bg-surface-container-highest">
+                        <img alt="Öne Eğilme" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDeHki94r1NuIEr7c7VMhkIGM1_YGjX7Sj_9xKHrYqYbOHwkDX8VkRRKb9W9JS0vgRAmVKgjHL7sBj8DOq7tx7cletgcRLz0CxFoDt-r9r8ZhQtcH15IaEqg5YaHwQzOW_atyD5eBiJV9WpLvsGA0CAjEK4PPgS0oxBbKuPwtSPEZTk4YRokubI3YQUPqeCPYV3WbPPrD9yY8b3DmBFVtl7mMwYGCiAsqcaGHKbu3ii7nSgJ_kjW45z"/>
+                    </div>
+                    <div class="flex-1 flex flex-col justify-center">
+                        <h3 class="font-body-lg text-body-lg font-medium text-on-surface">Öne Eğilme</h3>
+                        <div class="flex items-center gap-2 mt-1">
+                            <span class="bg-secondary/10 text-secondary px-2 py-0.5 rounded-sm font-label-sm text-label-sm">Bacak</span>
+                            <span class="text-on-surface-variant font-label-sm text-label-sm flex items-center gap-1">
+                                <span class="material-symbols-outlined text-[14px]" data-icon="timer">timer</span> 45 sn
+                            </span>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-sm flex-shrink-0">
+                        <button class="text-on-surface-variant hover:text-primary transition-colors p-1 rounded-full hover:bg-surface-variant">
+                            <span class="material-symbols-outlined" data-icon="edit">edit</span>
+                        </button>
+                        <button class="text-on-surface-variant hover:text-error transition-colors p-1 rounded-full hover:bg-surface-variant">
+                            <span class="material-symbols-outlined" data-icon="delete">delete</span>
+                        </button>
+                    </div>
+                </div>
+                <!-- Card 3 -->
+                <div class="bg-surface-container-low rounded-xl p-md flex items-center gap-md">
+                    <div class="w-16 h-16 rounded-full overflow-hidden flex-shrink-0 bg-surface-container-highest">
+                        <img alt="Boyun Esnetme" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAebHoDMCFFQqiAL_bDOycfq44O92ZCMmGarpFXvinIbvY-Rk6VH326-B2ivcOAGwxneuFcw1EXPMYPt72e5XsWblmbV7GaMQnLyg5iXshVFoS2_2FDvO9C7PylfuiFS9Tiz0R_al3DImjAiLrcTi04LhfFLFLUl9uH_fbi6M7MYCzQsuU0Trr_DLXXDaSWu4nB3IHgv3OnHxWUft3m0vB8SyVsc7-nB4H9LRf_l54sBfffi2JHHvkJ"/>
+                    </div>
+                    <div class="flex-1 flex flex-col justify-center">
+                        <h3 class="font-body-lg text-body-lg font-medium text-on-surface">Boyun Esnetme</h3>
+                        <div class="flex items-center gap-2 mt-1">
+                            <span class="bg-secondary/10 text-secondary px-2 py-0.5 rounded-sm font-label-sm text-label-sm">Boyun</span>
+                            <span class="text-on-surface-variant font-label-sm text-label-sm flex items-center gap-1">
+                                <span class="material-symbols-outlined text-[14px]" data-icon="timer">timer</span> 20 sn
+                            </span>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-sm flex-shrink-0">
+                        <button class="text-on-surface-variant hover:text-primary transition-colors p-1 rounded-full hover:bg-surface-variant">
+                            <span class="material-symbols-outlined" data-icon="edit">edit</span>
+                        </button>
+                        <button class="text-on-surface-variant hover:text-error transition-colors p-1 rounded-full hover:bg-surface-variant">
+                            <span class="material-symbols-outlined" data-icon="delete">delete</span>
+                        </button>
+                    </div>
+                </div>
+                <!-- Card 4 -->
+                <div class="bg-surface-container-low rounded-xl p-md flex items-center gap-md">
+                    <div class="w-16 h-16 rounded-full overflow-hidden flex-shrink-0 bg-surface-container-highest">
+                        <img alt="Kedi-İnek Esnetmesi" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC6rSdWDTEdS99-ZOEzf0Y9YTqZngULfCxEmY5r-1ZqYwlxqCdSYgPPXFLEGek9eBr_0kePLODUauc090IkjgTqbUJBuoRXE_W27ESatxmO2TkCDDUX0vHbO2ASq2DjAIFtn5MQ-YGEKVgynJCdBB1WP3upuflG3ZVoVzwTj7-G_eIMbbhRWq9YAbRuJJ0gjKrleiJ2wczhktRhrjvST6Fd5zrKGV6FeZWBvGPYuXCtq9ymhN4zR5ua"/>
+                    </div>
+                    <div class="flex-1 flex flex-col justify-center">
+                        <h3 class="font-body-lg text-body-lg font-medium text-on-surface">Kedi-İnek</h3>
+                        <div class="flex items-center gap-2 mt-1">
+                            <span class="bg-secondary/10 text-secondary px-2 py-0.5 rounded-sm font-label-sm text-label-sm">Omurga</span>
+                            <span class="text-on-surface-variant font-label-sm text-label-sm flex items-center gap-1">
+                                <span class="material-symbols-outlined text-[14px]" data-icon="timer">timer</span> 60 sn
+                            </span>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-sm flex-shrink-0">
+                        <button class="text-on-surface-variant hover:text-primary transition-colors p-1 rounded-full hover:bg-surface-variant">
+                            <span class="material-symbols-outlined" data-icon="edit">edit</span>
+                        </button>
+                        <button class="text-on-surface-variant hover:text-error transition-colors p-1 rounded-full hover:bg-surface-variant">
+                            <span class="material-symbols-outlined" data-icon="delete">delete</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
         </main>
     </section>
+
+    <!-- Add Stretch Modal -->
+    <div class="fixed inset-0 z-[100] flex items-end sm:items-center justify-center bg-black/40 backdrop-blur-sm hidden opacity-0 transition-opacity duration-300" id="addStretchModal">
+        <div class="relative z-10 w-full max-w-lg bg-surface-container-lowest rounded-t-[28px] sm:rounded-xl shadow-2xl flex flex-col max-h-[90dvh] transform translate-y-full transition-transform duration-300 ease-out" id="addStretchModalContent">
+            <!-- Drag Handle (Mobile only) -->
+            <div class="w-full flex justify-center pt-md pb-sm sm:hidden cursor-grab active:cursor-grabbing">
+                <div class="w-8 h-1 bg-outline-variant rounded-full"></div>
+            </div>
+            <!-- Header -->
+            <div class="px-lg pt-sm sm:pt-lg pb-md flex justify-between items-center bg-surface-container-lowest sticky top-0 z-10 border-b border-surface-variant/30">
+                <h2 class="font-title-lg text-title-lg text-on-surface" id="modal-title">Yeni Hareket</h2>
+                <button data-action="closeAddStretchModal" aria-label="Kapat" class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-variant transition-colors text-on-surface-variant active:scale-95">
+                    <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">close</span>
+                </button>
+            </div>
+            <!-- Scrollable Body -->
+            <div class="px-lg pb-xl overflow-y-auto hide-scrollbar flex flex-col gap-lg flex-1 mt-4">
+                <!-- Image Picker -->
+                <div class="flex flex-col items-center gap-sm mt-md gap-lg">
+                    <button class="relative group w-32 h-32 rounded-full bg-surface-container-low hover:bg-surface-container-high transition-colors flex flex-col items-center justify-center overflow-hidden focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2">
+                        <span class="material-symbols-outlined text-4xl text-on-surface-variant group-hover:text-primary mb-xs transition-colors" style="font-variation-settings: 'FILL' 0;">add_photo_alternate</span>
+                        <span class="font-label-sm text-label-sm text-on-surface-variant group-hover:text-primary transition-colors">Görsel Seç</span>
+                        <input accept="image/*" class="sr-only" type="file"/>
+                    </button>
+                    <p class="font-body-md text-body-md text-on-surface-variant text-center max-w-[200px]">Esneme hareketini açıklayan net bir görsel yükleyin.</p>
+                </div>
+                <!-- Input Form -->
+                <div class="flex flex-col gap-lg mt-4">
+                    <!-- Hareket Adı -->
+                    <div class="relative">
+                        <label class="block font-label-lg text-label-lg text-on-surface mb-xs" for="stretch-name">Hareket Adı</label>
+                        <input class="block w-full px-0 py-sm bg-transparent border-b border-outline-variant focus:border-primary text-on-surface font-body-lg text-body-lg focus:ring-0 transition-colors placeholder:text-on-surface-variant outline-none" id="stretch-name" placeholder="Örn: Omuz Esnetme" type="text"/>
+                    </div>
+                    <!-- Süre (Saniye) -->
+                    <div class="relative">
+                        <label class="block font-label-lg text-label-lg text-on-surface mb-xs" for="stretch-duration">Süre (Saniye)</label>
+                        <input class="block w-full px-0 py-sm bg-transparent border-b border-outline-variant focus:border-primary text-on-surface font-body-lg text-body-lg focus:ring-0 transition-colors placeholder:text-on-surface-variant outline-none" id="stretch-duration" placeholder="30" type="number"/>
+                    </div>
+                </div>
+            </div>
+            <!-- Footer Actions -->
+            <div class="px-lg py-md flex gap-sm bg-surface-container-lowest sticky bottom-0 z-10 border-t border-surface-variant/30">
+                <button data-action="closeAddStretchModal" class="flex-1 min-h-[48px] rounded-full border border-primary text-primary font-label-lg text-label-lg hover:bg-primary/5 transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 active:scale-[0.98]">İptal</button>
+                <button class="flex-1 min-h-[48px] rounded-full bg-primary text-on-primary font-label-lg text-label-lg hover:bg-primary/90 shadow-sm transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 flex items-center justify-center gap-xs active:scale-[0.98]">
+                    <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">save</span>
+                    Kaydet
+                </button>
+            </div>
+        </div>
+    </div>
 
     <!-- CORE VIEW -->
     <section id="view-core" class="view hidden bg-background min-h-[100dvh] text-on-background font-body-md pb-[100px] overflow-y-auto">

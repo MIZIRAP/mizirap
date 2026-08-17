@@ -28,6 +28,8 @@ document.addEventListener('click', (e) => {
     else if (action === 'closeStretchingView') closeStretchingView();
     else if (action === 'openCoreView') openCoreView();
     else if (action === 'closeCoreView') closeCoreView();
+    else if (action === 'openAddStretchModal') openAddStretchModal();
+    else if (action === 'closeAddStretchModal') closeAddStretchModal();
     else if (action === 'closeExerciseHistory') closeExerciseHistory();
     else if (action === 'closeSplitSelectionModal') closeSplitSelectionModal();
     else if (action === 'closeSplitSelectionAndOpenModal') { closeSplitSelectionModal(); setTimeout(openSplitModal, 300); }
@@ -1494,4 +1496,27 @@ function openCoreView() {
 function closeCoreView() {
     document.getElementById('view-core').classList.add('hidden');
     document.getElementById('view-workout').classList.remove('hidden');
+}
+
+function openAddStretchModal() {
+    const modal = document.getElementById('addStretchModal');
+    const content = document.getElementById('addStretchModalContent');
+    modal.classList.remove('hidden');
+    // small delay for transition
+    setTimeout(() => {
+        modal.classList.remove('opacity-0');
+        content.classList.remove('translate-y-full');
+    }, 10);
+}
+
+function closeAddStretchModal() {
+    const modal = document.getElementById('addStretchModal');
+    const content = document.getElementById('addStretchModalContent');
+    
+    modal.classList.add('opacity-0');
+    content.classList.add('translate-y-full');
+    
+    setTimeout(() => {
+        modal.classList.add('hidden');
+    }, 300);
 }
