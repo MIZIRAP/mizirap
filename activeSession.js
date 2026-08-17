@@ -33,6 +33,7 @@ let _dayId = null;
 let _day = null;           // full day object { id, name, exercises[] }
 let _sessionId = null;     // Firestore doc id under workout_logs
 let _sessionDocRef = null;
+let _sessionDoc = null;
 
 document.addEventListener('click', (e) => {
     const actionBtn = e.target.closest('[data-action]');
