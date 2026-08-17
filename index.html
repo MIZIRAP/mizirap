@@ -4427,8 +4427,8 @@
 
 <!-- ===================== STRETCH PLAYER ===================== -->
 <div id="view-stretch-player"
-    class="hidden fixed inset-0 z-[300] flex flex-col select-none"
-    style="background: linear-gradient(160deg, #1a2e26 0%, #0f1a16 60%, #0a120f 100%);">
+    class="hidden fixed inset-0 z-[300] flex flex-col select-none bg-gradient-to-b from-primary-container to-[#B7D0C1]">
+
 
     <!-- Top bar -->
     <header class="flex items-center justify-between px-5 pt-12 pb-4 flex-shrink-0">
@@ -4450,22 +4450,8 @@
     <!-- Main content -->
     <div class="flex-1 flex flex-col items-center justify-center gap-5 px-6 overflow-hidden">
 
-        <!-- Image ring + SVG timer -->
+        <!-- Image -->
         <div class="relative flex items-center justify-center">
-            <!-- SVG timer ring -->
-            <svg id="stretch-player-svg" class="absolute inset-0" viewBox="0 0 260 260" style="width:260px;height:260px;">
-                <circle cx="130" cy="130" r="120" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="6"/>
-                <circle id="stretch-player-timer-ring" cx="130" cy="130" r="120" fill="none"
-                    stroke="url(#timerGrad)" stroke-width="6" stroke-linecap="round"
-                    stroke-dasharray="753.98" stroke-dashoffset="0"
-                    transform="rotate(-90 130 130)"/>
-                <defs>
-                    <linearGradient id="timerGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-                        <stop offset="0%" stop-color="#7CE8B2"/>
-                        <stop offset="100%" stop-color="#34C97A"/>
-                    </linearGradient>
-                </defs>
-            </svg>
             <!-- Image circle -->
             <div class="w-[220px] h-[220px] rounded-full overflow-hidden border-2 border-white/10 shadow-2xl bg-white/5 flex items-center justify-center">
                 <img id="stretch-player-image" src="" alt="" class="w-full h-full object-cover hidden"/>

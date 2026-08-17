@@ -2446,15 +2446,7 @@ function _spRenderProgressStrip(currentIdx) {
 
 function _spUpdateTimerUI() {
     const timeEl = document.getElementById('stretch-player-time');
-    const ring = document.getElementById('stretch-player-timer-ring');
-
     if (timeEl) timeEl.textContent = _spTimeLeft;
-
-    if (ring) {
-        const progress = _spTotalTime > 0 ? _spTimeLeft / _spTotalTime : 0;
-        const offset = CIRCUMFERENCE * (1 - progress);
-        ring.style.strokeDashoffset = offset;
-    }
 }
 
 function _spStartTimer() {
