@@ -18,6 +18,14 @@ import {
     serverTimestamp, deleteDoc
 } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js';
 
+// ─── Utilities ─────────────────────────────────────────────────────────────
+function calculateE1RM(weight, reps, rpe) {
+    if (!weight || !reps) return 0;
+    const rir = rpe !== null ? (10 - rpe) : 0;
+    const estimatedMaxReps = reps + rir;
+    return Math.round(weight * (1 + estimatedMaxReps / 30) * 10) / 10;
+}
+
 // ─── Module state ──────────────────────────────────────────────────────────
 let _uid = null;
 let _splitId = null;
@@ -176,7 +184,7 @@ function _buildExState() {
                 weight: draft?.weight ?? fallbackPrevSet?.weight ?? 60,
                 reps:   draft?.reps   ?? fallbackPrevSet?.reps   ?? 8,
                 rpe:    draft?.rpe    ?? null,
-                status: draft?.status ?? 'pending'   // 'pending' | 'draft' | 'completed'
+                
             });
         }
 
@@ -228,7 +236,6 @@ function _renderSessionExercises() {
         if (!state) return;
 
         const isOpen = _openExAccordions.has(ex.id);
-        const completedCount = state.sets.filter(s => s.status === 'completed').length;
         const totalSets = state.sets.length;
         const prevLine = (state.prevBestWeight !== null)
             ? `Son antrenman: ${state.prevBestWeight}kg × ${state.prevBestReps} reps`
@@ -250,7 +257,7 @@ function _renderSessionExercises() {
                     <p class="font-body-md text-body-md text-on-surface-variant">${prevLine}</p>
                 </div>
                 <div class="flex items-center gap-2 shrink-0">
-                    <span class="font-label-sm text-label-sm ${completedCount === totalSets && completedCount > 0 ? 'text-tertiary' : 'text-on-surface-variant'}">${completedCount}/${totalSets}</span>
+                    <span class=\"font-label-sm text-label-sm text-on-surface-variant\">${totalSets} Set</span>
                     <span class="material-symbols-outlined text-on-surface-variant transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}" style="font-size:20px" id="chevron-${ex.id}">expand_more</span>
                 </div>
             </button>
@@ -280,21 +287,8 @@ function _renderSets(exId) {
     state.sets.forEach((set, setIdx) => {
         const setEl = document.createElement('div');
         setEl.id = `set-row-${exId}-${setIdx}`;
-
-        if (set.status === 'completed') {
-            setEl.className = 'flex items-center gap-sm px-md py-2.5 border-t border-surface-container-high bg-surface-container/30';
-            setEl.innerHTML = _completedSetHTML(exId, setIdx, set);
-        } else {
-            const isActive = state.sets.slice(0, setIdx).every(s => s.status === 'completed');
-            if (isActive) {
-                setEl.className = 'flex flex-col gap-md px-md py-md border-t border-surface-container-high bg-surface-container-low/40 border-l-4 border-l-primary';
-                setEl.innerHTML = _activeSetHTML(exId, setIdx, set);
-            } else {
-                setEl.className = 'flex items-center gap-sm px-md py-2.5 border-t border-surface-container-high opacity-40';
-                setEl.innerHTML = _pendingSetHTML(setIdx, set);
-            }
-        }
-
+        setEl.className = 'flex flex-col gap-md px-md py-md border-t border-surface-container-high bg-surface-container-low/40 border-l-4 border-l-primary';
+        setEl.innerHTML = _activeSetHTML(exId, setIdx, set);
         container.appendChild(setEl);
     });
 
@@ -304,26 +298,13 @@ function _renderSets(exId) {
 
 // ─── HTML templates ────────────────────────────────────────────────────────
 
-function _completedSetHTML(exId, setIdx, set) {
-    const rpeTag = set.rpe !== null
-        ? `<span class="w-7 h-7 rounded-full bg-primary text-on-primary flex items-center justify-center font-label-sm text-label-sm">${set.rpe}</span>`
-        : '';
-
-    return `
-        <span class="font-label-lg text-label-lg text-on-surface-variant w-5 shrink-0">${setIdx + 1}</span>
-        <div class="flex-1 min-w-0">
-            <div class="font-label-lg text-label-lg text-on-surface">${set.weight}kg × ${set.reps} reps</div>
-            <div class="flex items-center gap-2 flex-wrap mt-0.5">
-            </div>
-        </div>
-        <div class="flex items-center gap-1.5 shrink-0">
-            ${rpeTag}
-            <span class="material-symbols-outlined text-primary">check_circle</span>
-        </div>
-    `;
-}
-
 function _activeSetHTML(exId, setIdx, set) {
+    const currentE1RM = calculateE1RM(set.weight, set.reps, set.rpe);
+    const isRoughEstimate = set.rpe === null;
+    const e1rmDisplay = isRoughEstimate
+        ? `<span class="italic text-on-surface-variant/60">~${currentE1RM}kg</span>`
+        : `<span>${currentE1RM}kg</span>`;
+
     const rpeButtons = [6, 7, 8, 9, 10].map(r => {
         const isSelected = set.rpe === r;
         return `<button onclick="sessionSetRPE('${exId}', ${setIdx}, ${r})"
@@ -374,20 +355,10 @@ function _activeSetHTML(exId, setIdx, set) {
         <div class="flex flex-col gap-2">
             <span class="font-label-sm text-label-sm text-on-surface-variant">RPE (Zorluk) — opsiyonel</span>
             <div class="rpe-btn-group flex justify-between items-center">${rpeButtons}</div>
+            <p class="text-center font-body-md text-body-md text-on-surface-variant mt-1" id="e1rm-display-${exId}-${setIdx}">
+                Tahmini e1RM: ${e1rmDisplay}
+            </p>
         </div>
-        <!-- Complete Button -->
-        <button onclick="sessionCompleteSet('${exId}', ${setIdx})"
-            class="w-full h-12 bg-primary text-on-primary rounded-full font-label-lg text-label-lg flex items-center justify-center gap-2 hover:opacity-90 active:scale-[0.98] transition-all shadow-sm">
-            <span class="material-symbols-outlined">check</span>
-            Seti Tamamla
-        </button>
-    `;
-}
-
-function _pendingSetHTML(setIdx, set) {
-    return `
-        <span class="font-label-lg text-label-lg text-on-surface-variant w-5 shrink-0">${setIdx + 1}</span>
-        <span class="flex-1 font-body-md text-body-md text-on-surface-variant">${set.weight}kg × ${set.reps} reps</span>
     `;
 }
 
@@ -412,41 +383,31 @@ window.sessionToggleExAccordion = function(exId, headerBtn) {
 
 window.sessionStepWeight = function(exId, setIdx, delta) {
     const set = _exState[exId]?.sets[setIdx];
-    if (!set || set.status === 'completed') return;
+    if (!set) return;
     set.weight = Math.max(0, Math.round((set.weight + delta) * 10) / 10);
     _refreshWeightRepsDisplay(exId, setIdx, set);
-    _debounceSaveDraft(exId, setIdx);
+    _refreshE1RMDisplay(exId, setIdx, set);
+    _debounceSaveSet(exId, setIdx);
 };
 
 window.sessionStepReps = function(exId, setIdx, delta) {
     const set = _exState[exId]?.sets[setIdx];
-    if (!set || set.status === 'completed') return;
+    if (!set) return;
     set.reps = Math.max(1, set.reps + delta);
     _refreshWeightRepsDisplay(exId, setIdx, set);
-    _debounceSaveDraft(exId, setIdx);
+    _refreshE1RMDisplay(exId, setIdx, set);
+    _debounceSaveSet(exId, setIdx);
 };
 
 window.sessionSetRPE = function(exId, setIdx, rpe) {
     const set = _exState[exId]?.sets[setIdx];
-    if (!set || set.status === 'completed') return;
+    if (!set) return;
     set.rpe = set.rpe === rpe ? null : rpe;
     _refreshRPEButtons(exId, setIdx, set);
-    _debounceSaveDraft(exId, setIdx);
+    _refreshE1RMDisplay(exId, setIdx, set);
+    _debounceSaveSet(exId, setIdx);
 };
 
-window.sessionCompleteSet = async function(exId, setIdx) {
-    const state = _exState[exId];
-    const set = state?.sets[setIdx];
-    if (!set || set.status === 'completed') return;
-
-    set.status = 'completed';
-
-    // Re-render this exercise card
-    _renderSets(exId);
-
-    // Persist as completed
-    await _persistSet(exId, setIdx, set, 'completed');
-};
 
 window.sessionAddSet = function(exId) {
     const state = _exState[exId];
@@ -455,8 +416,7 @@ window.sessionAddSet = function(exId) {
     state.sets.push({
         weight: lastSet.weight,
         reps:   lastSet.reps,
-        rpe:    null,
-        status: 'pending'
+        rpe:    null
     });
     _renderSets(exId);
 };
@@ -477,20 +437,14 @@ window.finishSession = async function() {
                 const state = _exState[ex.id];
                 if (!state) continue;
                 
-                // Auto-complete pending sets
-                for (const set of state.sets) {
-                    if (set.status !== 'completed') {
-                        set.status = 'completed';
-                    }
-                }
+                
 
                 exercises[ex.id] = {
                     name: ex.name,
                     sets: state.sets.map(s => ({
                         weight: s.weight,
                         reps:   s.reps,
-                        rpe:    s.rpe,
-                        status: s.status
+                        rpe:    s.rpe
                     }))
                 };
             }
@@ -530,14 +484,13 @@ window.finishSession = async function() {
 function _updateExAccordionHeader(exId) {
     const state = _exState[exId];
     if (!state) return;
-    const completedCount = state.sets.filter(s => s.status === 'completed').length;
     const totalSets = state.sets.length;
     const card = document.getElementById(`session-card-${exId}`);
     if (!card) return;
     const counterEl = card.querySelector('.shrink-0 .font-label-sm');
     if (counterEl) {
-        counterEl.textContent = `${completedCount}/${totalSets}`;
-        counterEl.className = `font-label-sm text-label-sm ${completedCount === totalSets && completedCount > 0 ? 'text-tertiary' : 'text-on-surface-variant'}`;
+        counterEl.textContent = `${totalSets} Set`;
+        counterEl.className = `font-label-sm text-label-sm text-on-surface-variant`;
     }
 }
 
@@ -551,6 +504,16 @@ function _refreshWeightRepsDisplay(exId, setIdx, set) {
     if (valueSpans[1]) valueSpans[1].textContent = set.reps;
 }
 
+
+function _refreshE1RMDisplay(exId, setIdx, set) {
+    const el = document.getElementById(`e1rm-display-${exId}-${setIdx}`);
+    if (!el) return;
+    const isRough = set.rpe === null;
+    const val = calculateE1RM(set.weight, set.reps, set.rpe);
+    el.innerHTML = isRough
+        ? `Tahmini e1RM: <span class="italic text-on-surface-variant/60">~${val}kg</span>`
+        : `Tahmini e1RM: <span>${val}kg</span>`;
+}
 
 function _refreshRPEButtons(exId, setIdx, set) {
     const row = document.getElementById(`set-row-${exId}-${setIdx}`);
@@ -570,19 +533,19 @@ function _refreshRPEButtons(exId, setIdx, set) {
 
 // ─── Firestore persistence ─────────────────────────────────────────────────
 
-function _debounceSaveDraft(exId, setIdx) {
+function _debounceSaveSet(exId, setIdx) {
     const key = `${exId}_${setIdx}`;
     if (_debounceTimers[key]) clearTimeout(_debounceTimers[key]);
     _debounceTimers[key] = setTimeout(() => {
         const set = _exState[exId]?.sets[setIdx];
-        if (set && set.status !== 'completed') {
-            _persistSet(exId, setIdx, set, 'draft');
+        if (set) {
+            _persistSet(exId, setIdx, set);
         }
         delete _debounceTimers[key];
     }, 400);
 }
 
-async function _persistSet(exId, setIdx, set, status) {
+async function _persistSet(exId, setIdx, set) {
     if (!_uid || !_sessionId) return;
     try {
         const sessionRef = doc(db, 'users', _uid, 'workout_logs', _sessionId);
@@ -594,8 +557,7 @@ async function _persistSet(exId, setIdx, set, status) {
         const setsData = state.sets.map(s => ({
             weight: s.weight,
             reps:   s.reps,
-            rpe:    s.rpe ?? null,
-            status: s.status
+            rpe:    s.rpe ?? null
         }));
 
         await setDoc(sessionRef, {
