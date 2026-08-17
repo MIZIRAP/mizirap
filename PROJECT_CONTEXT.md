@@ -1,78 +1,63 @@
-# PROJECT_CONTEXT
+# PROJECT CONTEXT & MEMORY
 
-1. **DOSYA YAPISI**
-   - `index.html`: Uygulamanın ana iskeleti, Tailwind konfigürasyonu ve DOM şablonları. Tüm `view` section'ları `#app-container` div'i içinde bulunmalı (split-screen hatasını önlemek için).
-   - `app.js`: Ana kontrolcü, auth durumu yönetimi ve sekme/modül geçişlerini koordine eden dosya. `window.currentUid` ve `localStorage uid` burada set ediliyor.
-   - `style.css`: Özel animasyonlar, gizli scrollbar ayarları ve genel UI stilleri.
-   - `firebase-config.js`: Firebase bağlantı ve başlatma ayarları.
-   - `api-config.js`: Dış servis (CollectAPI) anahtarları.
-   - `utils.js`: Tarih formatlama, DOM güvenliği vb. yardımcı fonksiyonlar.
-   - `listenerManager.js`: Firebase dinleyicilerini (onSnapshot) merkezi yöneten ve temizleyen araç.
-   - `auth.js`: Giriş ekranı ve kimlik doğrulama işlemleri.
-   - `dashboard.js`: Ana özet ekranının yönetimi.
-   - `books.js`, `calories.js`, `finance.js`, `movies.js`, `shopping.js`, `water.js`, `history.js`, `profile.js`: İlgili özelliklerin UI ve veritabanı işlemlerini yürüten ayrık modül dosyaları.
-   - `workout.js`: Antrenman programları (splits) ve aktif seans navigasyonu.
-   - `activeSession.js`: **[YENİ]** Aktif antrenman seansının tüm state yönetimi, set tamamlama, RPE seçimi, zamanlayıcı ve Firestore yazma işlemleri. (workout.js'ten ayrıştırıldı)
-   - `assets/exercises/muscle-map.js`: Egzersiz adı → kas grubu eşlemesi (`window.EXERCISE_MUSCLE_MAPPING`).
-   - `firestore.rules`: Veritabanı okuma/yazma güvenlik izinleri. `match /users/{userId}/{document=**}` ile tüm alt koleksiyonlar kapsanıyor.
+Bu dosya, projenin tamamını tek bakışta anlamak ve gelecekteki geliştirmelerde bağlamı kaybetmemek için oluşturulmuş kalıcı bir hafıza dokümanıdır. Lütfen projenin mimarisi, tasarım kararları veya çalışma tarzı ile ilgili güncellemeler oldukça bu dosyayı da güncelleyin.
 
-2. **TEKNOLOJİ YIĞINI**
-   - **Frontend**: Vanilla JavaScript (ES Modules), HTML5, CSS3.
-   - **Framework/Kütüphaneler**: Tailwind CSS (CDN üzerinden), Sortable.js (sürükle-bırak için), Material Symbols.
-   - **Backend / Veritabanı**: Firebase v10 CDN (Authentication, Firestore).
-   - **Harici API**: CollectAPI (Finans modülünde kur/metal verisi için).
-   - **Build/Deploy**: Herhangi bir build aracı kullanılmıyor. `main` branch üzerinden GitHub Pages ile doğrudan barındırılıyor.
-   - **Cache Busting**: JS modüllerine `?v=N` query string eklenerek tarayıcı önbellekleme zorla kırılıyor (`workout.js?v=4`, vb.).
+## 1. DOSYA YAPISI
+Tüm frontend kodu ve mantığı root dizininde yer almaktadır. Uygulama Vanilla JS modüllerine ayrılmıştır.
 
-3. **MODÜL / ÖZELLİK ENVANTERİ**
-   - **Dashboard**: Diğer modüllerden verileri çekip ana sayfada gösterir. (Tamamlandı)
-   - **Auth**: E-posta/Şifre veya Google giriş sağlar. (Tamamlandı)
-   - **Books**: Okunan/okunacak kitaplar ve sayfa okuma logları. (Tamamlandı)
-   - **Calories**: Hedef kalori takibi, besin kütüphanesi ve öğün logları. (Tamamlandı)
-   - **Finance**: Gelir/Gider işlemleri, kategoriler, ödeme yöntemleri ve bakiye hesabı. (Tamamlandı)
-   - **Shopping**: Alışveriş listesi yönetimi (ekle/çiz/sil). (Tamamlandı)
-   - **Water**: Günlük hedefli su tüketim takibi. (Tamamlandı)
-   - **Movies**: Film izleme listesi. (Tamamlandı)
-   - **History**: Diğer modüllerdeki son aktivitelerin ortak listesi. (Tamamlandı)
-   - **Workout / Egzersiz Kütüphanesi**: Split oluşturma, gün bazlı egzersiz seçimi, SVG kas haritası. (Tamamlandı)
-   - **Aktif Antrenman Seansı** (`activeSession.js`): Akordiyon egzersiz kartları, ağırlık/tekrar stepper, RPE seçici (6–10), e1RM hesaplama, zamanlayıcı, otomatik taslak kayıt (400ms debounce), seti tamamlama. (Tamamlandı)
+- **`index.html`**: Uygulamanın tek sayfa (SPA) yapısını oluşturan, tüm view'ların (görünümlerin) ve modalların barındığı ana DOM iskeleti.
+- **`app.js`**: Uygulamanın giriş noktası (entry-point). Diğer modülleri import eder, route/sayfa geçişlerini yönetir ve auth kontrolünü başlatır.
+- **`firebase-config.js`**: Firebase bağlantı ve başlatma (init) ayarları.
+- **`auth.js`**: E-posta/Şifre ve Google ile giriş/kayıt işlemlerini (Firebase Auth) yönetir.
+- **`workout.js` & `activeSession.js`**: Spor split'leri, antrenman kütüphanesi, gün rotasyonları ve canlı antrenman (set, ağırlık, süre) takibi mantığı.
+- **`finance.js`**: Gelir-gider yönetimi, Chart.js grafik çizimi, işlemler listesi.
+- **`calories.js` & `water.js`**: Günlük kalori ve su takibi özellikleri.
+- **`books.js` & `movies.js`**: Okuma ve izleme listesi (CRUD) işlemleri.
+- **`shopping.js`**: Alışveriş listesi özellikleri.
+- **`profile.js` & `history.js`**: Kullanıcı profili ve genel geçmiş takibi.
+- **`dashboard.js`**: Diğer tüm modüllerden özet verileri toplayıp ana ekranda (Özet) gösteren merkez modül.
+- **`utils.js` & `listenerManager.js`**: Ortak yardımcı fonksiyonlar ve event yönetimi araçları.
+- **`style.css`**: Tailwind ile yönetilemeyen spesifik ve küçük UI override'ları.
+- **Scratch / Python Dosyaları** (`fix_divs.py`, `find_unmatched_div.py` vb.): Geliştirme aşamasında DOM hatalarını bulmak için kullanılmış tek seferlik araçlar, projenin canlı haline ait değiller.
 
+## 2. TEKNOLOJİ YIĞINI
+- **Frontend**: Vanilla JavaScript (ES6 Modules), HTML5.
+- **Stil & Tasarım**: CDN üzerinden dahil edilen **TailwindCSS** (Kullanılan pluginler: `forms`, `container-queries`). Tasarım tamamen mobil öncelikli.
+- **Veritabanı & Auth**: **Firebase** (Sürüm 10.14.1) Firestore ve Firebase Authentication.
+- **Grafikler**: Chart.js (CDN).
+- **Build & Deploy**: Node.js tabanlı bir build aracı (Webpack, Vite vb.) **kullanılmıyor**. Modüller CDN ve tarayıcı içi ES Modules (`type="module"`) ile çalışıyor. Cache busting manuel olarak URL parametreleriyle yapılıyor (`?v=102` gibi).
 
-4. **VERİ MODELİ**
-   - Tüm veriler Firestore'da izolasyon için `users/{userId}` path'i altında tutuluyor.
-   - **Koleksiyonlar**:
-     - `finance_categories`, `finance_payment_methods`, `finance_transactions` (Finans)
-     - `calorieLogs`, `foodLibrary` (Kalori)
-     - `shoppingList` (Alışveriş)
-     - `waterLogs` (Su)
-     - `books`, `book_logs` (Kitap)
-     - `splits` (Antrenman programları — gün ve egzersiz listesiyle)
-     - `workout_logs` (Seans kayıtları: `status: in_progress | completed`, `exercises: { [exId]: { sets: [...] } }`)
-     - `movies` (Sinema)
-   - **Dokümanlar**: Global ayarlar `users/{userId}/settings/` altında tutulur.
-   - **Seans ID formatı**: `${splitId}_${dayId}_${dateStr}_${Date.now()}` — tekil, tamamlanan seansların üzerine yazılmaz.
+## 3. MODÜL / ÖZELLİK ENVANTERİ
+- **Auth (Tamamlandı)**: Kullanıcı girişi, kayıt. State: `window.currentUid` ve Firebase onAuthStateChanged üzerinden.
+- **Dashboard (Tamamlandı)**: Modüllerden toplanan verileri (su, bütçe, spor) birleştirip gösterir.
+- **Workout (Tamamlandı)**: Split (Push/Pull/Legs) oluşturma, gün içindeki egzersizlerin `localStorage` favori sistemi, Firestore üzerinden aktif canlı antrenman kaydı (timer, setler, ağırlık). Yakın zamanda global objelerden `data-action` tabanlı event delegation yapısına taşındı.
+- **Finance (Tamamlandı)**: Gelir, Gider ekleme, Firestore üzerinde bakiye tutma ve ay sonu grafiği.
+- **Kitap & Film (Kısmen Tamamlandı)**: Ekleme/Silme/Okundu işaretleme. State Firestore üzerinde diziler veya sub-collection olarak tutuluyor.
+- **Kalori & Su (Kısmen Tamamlandı / Çalışıyor)**: Günlük kalori kotası ve bardak/su takibi.
 
-5. **TASARIM KARARLARI VE KISITLAR**
-   - **Mobil-first layout**: `#app-container` (`max-w-[420px]`) tüm `view` section'larını sarmalıyor. Bu div dışında kalan herhangi bir `view`, masaüstünde split-screen görünümüne yol açar — kritik kısıt.
-   - **Tasarım Sistemi**: Tailwind Play CDN ile yapılandırılmış; ana renkler (`#446554` primary, `#7d562b` secondary), Inter fontu, Material Symbols ikonlar.
-   - **Vanilla JS & Firebase CDN**: Build süreci olmaksızın GitHub Pages'te doğrudan çalışacak şekilde tasarlandı.
-   - **Listener Yönetimi**: `listenerManager.js` üzerinden merkezi kayıt — logout'ta bellek sızıntısını önler.
-   - **Global State**: `window.*` atamaları tamamen temizlendi. UI olayları (tıklamalar vb.) Event Delegation (olay devri) ile `data-action` etiketleri üzerinden yönetiliyor.
-   - **Cache Busting**: Modül dosyalarına `?v=N` ekleniyor; production'da CDN'i zorla günceller.
+## 4. VERİ MODELİ
+Veri yapısı Firebase Firestore üzerinde kullanıcıya (`uid`) bağımlı olarak kurgulanmıştır.
+- `users/{uid}`: Kullanıcının temel ayarları ve dashboard metrikleri.
+- `users/{uid}/workout_logs`: Aktif ve bitmiş antrenman seansları. İçerisinde `status: "in_progress"` veya `"completed"` state'leri bulunur.
+- `users/{uid}/workout_templates`: Kullanıcının oluşturduğu split ve gün şemaları.
+- `users/{uid}/transactions`: Finance modülü gelir/gider listesi. Her kayıt `amount`, `type`, `date` vb. içerir.
+- **Yerel Depolama (LocalStorage)**: Örneğin egzersiz favori sistemi (`miz_fav_exercises_{uid}`) cihazın kendi hafızasında tutulur.
 
-6. **BİLİNEN SORUNLAR / YARIM KALANLAR**
-   - **Firestore index**: `activeSession.js`'deki yeni seans sorgusu (`where('status','==','in_progress') + where('dayId','==', dayId)`) bileşik bir Firestore indeksi gerektirebilir — console'da "index required" hatası görülürse Firebase konsolundan ilgili indeksin oluşturulması gerekiyor.
-   - **Teknik Borç**: Global değişkenler ve event listener'larla manuel state yönetimi. Tailwind CDN'in tarayıcıda derlenmesi (production için ağır, bilinçli olarak bırakılmış).
-   - **Yarım Kalan / Planlanan**: Notlarda arama, görevlere kategori.
+## 5. TASARIM KARARLARI VE KISITLAR
+- **Mobil Görünüm (Kısıtlayıcı Konteyner)**: Tasarım masaüstünde de bir telefon gibi görünmek zorundadır. Bu sebeple tüm uygulama `<div id="app-container" class="max-w-[420px] mx-auto ...">` içerisine hapsedilmiştir. **DİKKAT:** Eklenen tüm yeni görünümler (`view`) ve sayfalar `#app-screen` isimli DOM elementinin **içinde** yer almak zorundadır. Dışına taşan section'lar masaüstünde sayfa düzenini yıkar, sağa sola kayar veya 100vh aşağıya itilerek boş ekran gösterir.
+- **Event Delegation (data-action)**: ES Modülleri kullandığımız için fonksiyonlar otomatik olarak `window` (global) objesine geçmez. Bu sebeple `onclick="function()"` kullanmak yerine butonlara `data-action="functionName"` verilir ve her modül `document.addEventListener('click', ...)` ile bu action'ları yakalar.
+- **Modülerlik**: Build tool olmadığı için modül içi importlar dosya ismine `.js?v=XX` eklenerek yapılır.
 
-7. **SON DURUM** *(Güncelleme: 17 Ağustos 2026)*
-   - **Bu oturumda tamamlananlar:**
-     - **Z-Index/Overlay Düzeltmeleri**: `activeSession`, `split-edit` ve `create-split` görünümlerindeki modal yapıları kaldırılarak diğer sayfa görünümleriyle aynı standart `view` hiyerarşisine geçirildi.
-     - **Global Scope Temizliği**: `window.currentUid`, `window.initWorkout` ve tüm HTML satıriçi `onclick` çağrıları Vanilla JS Event Delegation (olay devri) modeline taşındı.
-     - **Hata Yönetimi (activeSession.js)**: Firestore kayıt işlemleri (`_persistSet`) ve yükleme işlemlerindeki sessiz `catch` bloklarına, kullanıcı bildirimleri (alerts) eklendi.
-   - **Mevcut durum:** Tespit edilen mimari tutarsızlıklar ve sessiz hatalar başarıyla giderildi, tüm modüller daha izole ve güvenilir hale geldi.
+## 6. BİLİNEN SORUNLAR / YARIM KALANLAR
+- **Modül Refactor İhtiyacı**: `workout.js` ve `activeSession.js` tamamen `data-action` mantığına geçirildi ve düzeltildi. Ancak `finance.js`, `books.js`, `movies.js` gibi modüller `index.html` üzerinde hala inline `onclick` çağrıları taşıyor olabilir. Eğer bu modüllerde butona tıklandığında hata (ReferenceError) alınırsa, sebep `onclick` kullanımlarıdır; `data-action` sistemine dönüştürülmelidirler.
+- **Cache Busting**: Versiyon parametreleri (`?v=102`) manuel artırıldığı için kod değişiklikleri tarayıcıda hemen yansımayabilir.
+- **E1RM Formülü (Workout)**: `activeSession.js` içindeki e1rm (Estimated 1 Rep Max) hesaplamaları daha kompleks formüllere (Brzycki vb.) güncellenmek üzere basit tutulmuştur.
 
-8. **TERCİHLER / ÇALIŞMA TARZI NOTLARI**
-   - Gereksiz dolgu metinleri ve uzatılmış açıklamalardan kaçınılmalı.
-   - Kararlar rasyonel temellere (neden/sonuç) oturtularak, doğrudan amaca yönelik kısa cevaplarla ve kod/dosya odaklı ilerlenmeli.
-   - Proje için otonom çalışma modundayız. Herhangi bir değişiklik, komut veya build sonrası otomatik olarak `git push` işlemi gerçekleştirilecek, kesinlikle kullanıcıdan izin istenmeyecektir.
+## 7. SON DURUM
+- **En Son Yapılanlar**: DOM yapısındaki `#app-container` ve `#app-screen` hataları (split ve antrenman sayfasının dışarıda kaldığı için boş açılması durumu) düzeltildi. `activeSession.js` içerisindeki `_sessionDoc` ReferenceError hatası onarıldı. Aktif seanstaki geri dönüş butonu `data-action` yapısına taşındı.
+- **Bir Sonraki Adım**: Diğer modüllerin (finans, kitap, film) inline `onclick` sistemlerinin `data-action` yapısına taşınması ve modül bağımsızlıklarının test edilmesi önerilir.
+
+## 8. TERCİHLER / ÇALIŞMA TARZI NOTLARI
+- **Push İzni**: Kullanıcı geliştirmelerin bitiminde **asla** push izni sorulmasını istemiyor. Düzeltmeler tamamlandıktan sonra `git commit` ve `git push` komutları AI tarafından proaktif ve otomatik olarak çalıştırılmalıdır.
+- **Tarayıcı (Browser) Kullanımı YASAK**: Kullanıcı, browser subagent'ının açılıp sisteminde testler (veya navigasyon) yapmasını kesinlikle **istememektedir**. Debug işlemleri statik kod analizi ve statik çıkarım ile yapılmalıdır.
+- **Hatasız İlerleyiş**: Kullanıcı hatalara karşı çok toleranssız ("çalışan şeyi bozdun", "hata istemiyorum"). Değişiklikler (özellikle DOM manipülasyonu) çok dikkatli yapılmalı ve side-effect'ler (örneğin layout kırılması) her zaman göz önünde bulundurulmalıdır.
