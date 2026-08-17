@@ -40,6 +40,25 @@ document.addEventListener('click', (e) => {
     else if (action === 'openEditSplitView') { e.stopPropagation(); openEditSplitView(actionBtn.getAttribute('data-split-id')); }
     else if (action === 'startActiveSession') startActiveSession();
     else if (action === 'deleteSplit') { e.stopPropagation(); deleteSplit(actionBtn.getAttribute('data-split-id')); }
+    else if (action === 'openSplitModal') openSplitModal();
+    else if (action === 'changeExerciseSets') {
+        changeExerciseSets(actionBtn.getAttribute('data-split-id'), parseInt(actionBtn.getAttribute('data-day-idx')), parseInt(actionBtn.getAttribute('data-ex-idx')), parseInt(actionBtn.getAttribute('data-delta')));
+    }
+    else if (action === 'removeExerciseFromSplit') {
+        removeExerciseFromSplit(actionBtn.getAttribute('data-split-id'), parseInt(actionBtn.getAttribute('data-day-idx')), parseInt(actionBtn.getAttribute('data-ex-idx')));
+    }
+    else if (action === 'openExercisePickerForSplit') {
+        openExercisePickerForSplit(actionBtn.getAttribute('data-split-id'), parseInt(actionBtn.getAttribute('data-day-idx')));
+    }
+    else if (action === 'toggleFavorite') {
+        toggleFavorite(e, actionBtn);
+    }
+    else if (action === 'removeExerciseFromNewDay') {
+        removeExerciseFromNewDay(parseInt(actionBtn.getAttribute('data-day-idx')), parseInt(actionBtn.getAttribute('data-ex-idx')));
+    }
+    else if (action === 'removeDayFromNewSplit') {
+        removeDayFromNewSplit(parseInt(actionBtn.getAttribute('data-day-idx')));
+    }
 });
 
 
@@ -115,8 +134,8 @@ function setupEventListeners() {
 }
 
 function renderSplitView() {
-    const titleEl = document.querySelector('#view-workout .font-title-lg.text-title-lg');
-    const descEl = document.querySelector('#view-workout .font-body-md.text-body-md.opacity-90');
+    const titleEl = document.getElementById('workout-split-title');
+    const descEl = document.getElementById('workout-split-desc');
     const dotsContainer = document.getElementById('workout-day-indicator');
     const dashNameEl = document.getElementById('stat-workout-split');
     
@@ -506,6 +525,50 @@ function closeSplitSelectionModal() {
 };
 
 
+function initFavoritesUI() {
+    if(!currentUid) return;
+    const favs = JSON.parse(localStorage.getItem(`miz_fav_exercises_${currentUid}`) || "[]");
+    document.querySelectorAll('.exercise-item').forEach(item => {
+        const title = item.querySelector('h3').innerText;
+        const btn = item.querySelector('.exercise-fav-btn');
+        if(!btn) return;
+        const span = btn.querySelector('span');
+        if (favs.includes(title)) {
+            span.style.fontVariationSettings = "'FILL' 1";
+            btn.classList.remove('text-on-surface-variant');
+            btn.classList.add('text-primary');
+            item.dataset.fav = "true";
+        } else {
+            span.style.fontVariationSettings = "'FILL' 0";
+            btn.classList.add('text-on-surface-variant');
+            btn.classList.remove('text-primary');
+            item.dataset.fav = "false";
+        }
+    });
+}
+
+function toggleFavorite(e, btn) {
+    e.stopPropagation();
+    const exName = btn.closest('.exercise-item').querySelector('h3').innerText;
+    let favs = JSON.parse(localStorage.getItem(`miz_fav_exercises_${currentUid}`) || "[]");
+    
+    if (favs.includes(exName)) {
+        favs = favs.filter(f => f !== exName);
+    } else {
+        favs.push(exName);
+    }
+    localStorage.setItem(`miz_fav_exercises_${currentUid}`, JSON.stringify(favs));
+    initFavoritesUI();
+}
+
+// override to also init favorites
+const _oldFilterExercises = window.filterExercises; // or just write it here
+function _setupFavoritesOnLoad() {
+    // wait for DOM then init
+    setTimeout(initFavoritesUI, 100);
+}
+_setupFavoritesOnLoad();
+
 // ==========================================
 // EXERCISE HISTORY VIEW
 // ==========================================
@@ -848,14 +911,14 @@ function renderSplitEditView() {
                         <span class="flex-1 font-body-md text-on-surface text-sm leading-tight">${ex.name}</span>
                         <!-- Set Sayısı -->
                         <div class="flex items-center gap-1 shrink-0">
-                            <button onclick="changeExerciseSets('${activeSplit.id}', ${dayIdx}, ${exIdx}, -1)"
+                            <button data-action="changeExerciseSets" data-split-id="${activeSplit.id}" data-day-idx="${dayIdx}" data-ex-idx="${exIdx}" data-delta="-1"
                                 class="w-7 h-7 rounded-full bg-surface-container-high flex items-center justify-center hover:bg-primary-container/40 transition-colors text-on-surface font-bold text-lg leading-none">−</button>
                             <span class="font-label-sm text-on-surface w-10 text-center whitespace-nowrap" id="sets-lbl-${activeSplit.id}-${dayIdx}-${exIdx}">${ex.defaultSets || 3} set</span>
-                            <button onclick="changeExerciseSets('${activeSplit.id}', ${dayIdx}, ${exIdx}, 1)"
+                            <button data-action="changeExerciseSets" data-split-id="${activeSplit.id}" data-day-idx="${dayIdx}" data-ex-idx="${exIdx}" data-delta="1"
                                 class="w-7 h-7 rounded-full bg-surface-container-high flex items-center justify-center hover:bg-primary-container/40 transition-colors text-on-surface font-bold text-lg leading-none">+</button>
                         </div>
                         <!-- Sil -->
-                        <button onclick="removeExerciseFromSplit('${activeSplit.id}', ${dayIdx}, ${exIdx})"
+                        <button data-action="removeExerciseFromSplit" data-split-id="${activeSplit.id}" data-day-idx="${dayIdx}" data-ex-idx="${exIdx}"
                             class="shrink-0 w-8 h-8 flex items-center justify-center text-on-surface-variant hover:text-error hover:bg-error-container/20 rounded-full transition-colors">
                             <span class="material-symbols-outlined" style="font-size:18px">delete</span>
                         </button>
@@ -880,7 +943,7 @@ function renderSplitEditView() {
                     ${exRows}
                 </div>
                 <div class="px-md pt-2 pb-md">
-                    <button onclick="openExercisePickerForSplit('${activeSplit.id}', ${dayIdx})"
+                    <button data-action="openExercisePickerForSplit" data-split-id="${activeSplit.id}" data-day-idx="${dayIdx}"
                         class="w-full py-2 bg-primary-container/20 text-primary rounded-lg font-label-sm hover:bg-primary-container/40 transition-colors flex items-center justify-center gap-1">
                         <span class="material-symbols-outlined text-[18px]">add</span> Egzersiz Ekle
                     </button>
@@ -1089,8 +1152,8 @@ function renderCreateSplitDays() {
                 exHtml += `
                     <div class="flex items-center justify-between py-2 border-b border-surface-container-highest last:border-0">
                         <span class="text-body-sm">${ex.name}</span>
-                        <button onclick="removeExerciseFromNewDay(${index}, ${exIdx})" class="text-error/80 hover:text-error p-1">
-                            <span class="material-symbols-outlined text-sm">close</span>
+                        <button data-action="removeExerciseFromNewDay" data-day-idx="${index}" data-ex-idx="${exIdx}" class="text-error/80 hover:text-error p-1">
+                            <span class="material-symbols-outlined" style="font-size: 18px">close</span>
                         </button>
                     </div>
                 `;
@@ -1100,8 +1163,8 @@ function renderCreateSplitDays() {
         div.innerHTML = `
             <div class="flex items-center justify-between mb-sm">
                 <input type="text" value="${day.name}" onchange="updateNewDayName(${index}, this.value)" class="font-title-md text-title-md font-bold text-on-surface bg-transparent outline-none w-3/4 border-b border-transparent focus:border-outline-variant">
-                <button onclick="removeDayFromNewSplit(${index})" class="text-on-surface-variant hover:text-error transition-colors p-1">
-                    <span class="material-symbols-outlined text-[20px]">delete</span>
+                <button data-action="removeDayFromNewSplit" data-day-idx="${index}" class="text-on-surface-variant hover:text-error transition-colors p-1">
+                    <span class="material-symbols-outlined" style="font-size: 20px">delete</span>
                 </button>
             </div>
             <div class="mb-3">
