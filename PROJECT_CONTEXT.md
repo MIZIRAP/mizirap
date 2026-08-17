@@ -75,3 +75,4 @@
 8. **TERCİHLER / ÇALIŞMA TARZI NOTLARI**
    - Gereksiz dolgu metinleri ve uzatılmış açıklamalardan kaçınılmalı.
    - Kararlar rasyonel temellere (neden/sonuç) oturtularak, doğrudan amaca yönelik kısa cevaplarla ve kod/dosya odaklı ilerlenmeli.
+   - Proje için otonom çalışma modundayız. Herhangi bir değişiklik, komut veya build sonrası otomatik olarak `git push` işlemi gerçekleştirilecek, kesinlikle kullanıcıdan izin istenmeyecektir.

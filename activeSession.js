@@ -32,7 +32,21 @@ let _splitId = null;
 let _dayId = null;
 let _day = null;           // full day object { id, name, exercises[] }
 let _sessionId = null;     // Firestore doc id under workout_logs
-let _sessionDoc = null;    // cached session data
+let _sessionDocRef = null;
+
+document.addEventListener('click', (e) => {
+    const actionBtn = e.target.closest('[data-action]');
+    if (!actionBtn) return;
+    const action = actionBtn.getAttribute('data-action');
+
+    if (action === 'sessionGoBack') sessionGoBack();
+    else if (action === 'finishSession') finishSession();
+    else if (action === 'sessionToggleExAccordion') sessionToggleExAccordion(actionBtn.getAttribute('data-ex-id'), actionBtn);
+    else if (action === 'sessionStepWeight') sessionStepWeight(actionBtn.getAttribute('data-ex-id'), parseInt(actionBtn.getAttribute('data-set-idx'), 10), parseFloat(actionBtn.getAttribute('data-delta')));
+    else if (action === 'sessionStepReps') sessionStepReps(actionBtn.getAttribute('data-ex-id'), parseInt(actionBtn.getAttribute('data-set-idx'), 10), parseFloat(actionBtn.getAttribute('data-delta')));
+    else if (action === 'sessionSetRPE') sessionSetRPE(actionBtn.getAttribute('data-ex-id'), parseInt(actionBtn.getAttribute('data-set-idx'), 10), parseInt(actionBtn.getAttribute('data-rpe'), 10));
+});
+
 let _timerInterval = null;
 let _sessionStartTs = null; // JS Date, derived from Firestore startedAt
 
@@ -111,7 +125,7 @@ export function closeActiveSession() {
 }
 
 // Go back without finishing — session stays as in_progress in Firestore
-window.sessionGoBack = function() {
+function sessionGoBack() {
     _stopTimer();
     document.getElementById('view-active-session').classList.add('hidden');
     document.getElementById('view-workout').classList.remove('hidden');
@@ -152,7 +166,8 @@ async function _loadPreviousSessionData() {
             }
         }
     } catch (e) {
-        console.warn('[activeSession] Could not load previous session from memory:', e.message);
+        console.error('[activeSession] Could not load previous session from memory:', e);
+        alert('Aktif seans yüklenirken hata oluştu. İndeks gerekiyor olabilir: ' + e.message);
     }
 }
 
@@ -248,7 +263,7 @@ function _renderSessionExercises() {
         card.innerHTML = `
             <!-- Accordion Header -->
             <button class="w-full flex items-center gap-sm p-md text-left hover:bg-surface-container-low transition-colors"
-                    onclick="sessionToggleExAccordion('${ex.id}', this)">
+                    data-action="sessionToggleExAccordion" data-ex-id="${ex.id}">
                 <div class="w-10 h-10 rounded-full bg-primary-container/20 flex items-center justify-center text-primary shrink-0">
                     <span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1">fitness_center</span>
                 </div>
@@ -307,7 +322,7 @@ function _activeSetHTML(exId, setIdx, set) {
 
     const rpeButtons = [6, 7, 8, 9, 10].map(r => {
         const isSelected = set.rpe === r;
-        return `<button onclick="sessionSetRPE('${exId}', ${setIdx}, ${r})"
+        return `<button data-action="sessionSetRPE" data-ex-id="${exId}" data-set-idx="${setIdx}" data-rpe="${r}"
             class="w-10 h-10 rounded-full border transition-all duration-150 font-label-lg text-label-lg active:scale-95
                 ${isSelected
                     ? 'bg-primary text-on-primary border-transparent shadow-sm scale-110 ring-2 ring-primary/30 ring-offset-1 ring-offset-surface-container-low'
@@ -323,12 +338,12 @@ function _activeSetHTML(exId, setIdx, set) {
                 <div class="flex flex-col items-center gap-1">
                     <span class="font-label-sm text-label-sm text-on-surface-variant">Ağırlık (kg)</span>
                     <div class="flex items-center bg-surface rounded-lg border border-surface-variant/30 w-full justify-between p-0.5">
-                        <button onclick="sessionStepWeight('${exId}', ${setIdx}, -2.5)"
+                        <button data-action="sessionStepWeight" data-ex-id="${exId}" data-set-idx="${setIdx}" data-delta="-2.5"
                             class="w-9 h-9 rounded-lg flex items-center justify-center text-primary hover:bg-primary/5 active:scale-90 transition-all">
                             <span class="material-symbols-outlined">remove</span>
                         </button>
                         <span class="font-title-lg text-title-lg text-on-surface min-w-[3rem] text-center">${set.weight}</span>
-                        <button onclick="sessionStepWeight('${exId}', ${setIdx}, 2.5)"
+                        <button data-action="sessionStepWeight" data-ex-id="${exId}" data-set-idx="${setIdx}" data-delta="2.5"
                             class="w-9 h-9 rounded-lg flex items-center justify-center text-primary hover:bg-primary/5 active:scale-90 transition-all">
                             <span class="material-symbols-outlined">add</span>
                         </button>
@@ -338,12 +353,12 @@ function _activeSetHTML(exId, setIdx, set) {
                 <div class="flex flex-col items-center gap-1">
                     <span class="font-label-sm text-label-sm text-on-surface-variant">Tekrar</span>
                     <div class="flex items-center bg-surface rounded-lg border border-surface-variant/30 w-full justify-between p-0.5">
-                        <button onclick="sessionStepReps('${exId}', ${setIdx}, -1)"
+                        <button data-action="sessionStepReps" data-ex-id="${exId}" data-set-idx="${setIdx}" data-delta="-1"
                             class="w-9 h-9 rounded-lg flex items-center justify-center text-primary hover:bg-primary/5 active:scale-90 transition-all">
                             <span class="material-symbols-outlined">remove</span>
                         </button>
                         <span class="font-title-lg text-title-lg text-on-surface min-w-[2rem] text-center">${set.reps}</span>
-                        <button onclick="sessionStepReps('${exId}', ${setIdx}, 1)"
+                        <button data-action="sessionStepReps" data-ex-id="${exId}" data-set-idx="${setIdx}" data-delta="1"
                             class="w-9 h-9 rounded-lg flex items-center justify-center text-primary hover:bg-primary/5 active:scale-90 transition-all">
                             <span class="material-symbols-outlined">add</span>
                         </button>
@@ -364,7 +379,7 @@ function _activeSetHTML(exId, setIdx, set) {
 
 // ─── User actions (window.* for HTML onclick) ──────────────────────────────
 
-window.sessionToggleExAccordion = function(exId, headerBtn) {
+function sessionToggleExAccordion(exId, headerBtn) {
     const body = document.getElementById(`accordion-body-${exId}`);
     const chevron = document.getElementById(`chevron-${exId}`);
     if (!body) return;
@@ -381,7 +396,7 @@ window.sessionToggleExAccordion = function(exId, headerBtn) {
     }
 };
 
-window.sessionStepWeight = function(exId, setIdx, delta) {
+function sessionStepWeight(exId, setIdx, delta) {
     const set = _exState[exId]?.sets[setIdx];
     if (!set) return;
     set.weight = Math.max(0, Math.round((set.weight + delta) * 10) / 10);
@@ -390,7 +405,7 @@ window.sessionStepWeight = function(exId, setIdx, delta) {
     _debounceSaveSet(exId, setIdx);
 };
 
-window.sessionStepReps = function(exId, setIdx, delta) {
+function sessionStepReps(exId, setIdx, delta) {
     const set = _exState[exId]?.sets[setIdx];
     if (!set) return;
     set.reps = Math.max(1, set.reps + delta);
@@ -399,7 +414,7 @@ window.sessionStepReps = function(exId, setIdx, delta) {
     _debounceSaveSet(exId, setIdx);
 };
 
-window.sessionSetRPE = function(exId, setIdx, rpe) {
+function sessionSetRPE(exId, setIdx, rpe) {
     const set = _exState[exId]?.sets[setIdx];
     if (!set) return;
     set.rpe = set.rpe === rpe ? null : rpe;
@@ -409,7 +424,7 @@ window.sessionSetRPE = function(exId, setIdx, rpe) {
 };
 
 
-window.sessionAddSet = function(exId) {
+function sessionAddSet(exId) {
     const state = _exState[exId];
     if (!state) return;
     const lastSet = state.sets[state.sets.length - 1] || { weight: 60, reps: 8 };
@@ -421,7 +436,7 @@ window.sessionAddSet = function(exId) {
     _renderSets(exId);
 };
 
-window.finishSession = async function() {
+async function finishSession() {
     const btn = document.getElementById('session-finish-btn');
     if (btn) { btn.disabled = true; btn.textContent = 'Kaydediliyor...'; }
 
@@ -566,7 +581,8 @@ async function _persistSet(exId, setIdx, set) {
             }
         }, { merge: true });
     } catch (e) {
-        console.warn('[activeSession] _persistSet error:', e.message);
+        console.error('[activeSession] _persistSet error:', e);
+        alert('Set veritabanına kaydedilemedi (Ağ veya yetki hatası): ' + e.message);
     }
 }
 

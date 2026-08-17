@@ -13,9 +13,24 @@ let financePaymentMethods = [];
 let financeTransactions = [];
 let expenseChartInstance = null;
 
+let currentEditFinanceTxId = null;
+let currentTxType = 'expense';
+
 let unsubCategories = null;
 let unsubPaymentMethods = null;
 let unsubTransactions = null;
+
+document.addEventListener('click', (e) => {
+    const actionBtn = e.target.closest('[data-action]');
+    if (!actionBtn) return;
+    const action = actionBtn.getAttribute('data-action');
+    if (action === 'openAddTransactionModal') openModal('finance-add-tx-modal');
+    else if (action === 'closeAddTransactionModal') closeModal('finance-add-tx-modal');
+    else if (action === 'openAddCategoryModal') openModal('finance-add-category-modal');
+    else if (action === 'closeAddCategoryModal') closeModal('finance-add-category-modal');
+    else if (action === 'openAddPaymentMethodModal') openModal('finance-add-payment-modal');
+    else if (action === 'closeAddPaymentMethodModal') closeModal('finance-add-payment-modal');
+});
 
 export function initFinance(uid, onChangeCallback) {
     currentUid = uid;
@@ -71,15 +86,6 @@ export function clearFinance() {
 }
 
 function setupFinanceModals() {
-    // Expose open/close functions globally for inline onclicks
-    window.openAddTransactionModal = () => openModal('finance-add-tx-modal');
-    window.closeAddTransactionModal = () => closeModal('finance-add-tx-modal');
-    
-    window.openAddCategoryModal = () => openModal('finance-add-category-modal');
-    window.closeAddCategoryModal = () => closeModal('finance-add-category-modal');
-    
-    window.openAddPaymentMethodModal = () => openModal('finance-add-payment-modal');
-    window.closeAddPaymentMethodModal = () => closeModal('finance-add-payment-modal');
     // Payment Icon Selection
     const paymentIcons = document.querySelectorAll('.payment-icon-option');
     paymentIcons.forEach(iconEl => {
@@ -387,7 +393,8 @@ function renderTransactions() {
         editBtn.innerHTML = `<span class="material-symbols-outlined text-sm">edit</span>`;
         editBtn.onclick = (e) => {
             e.stopPropagation();
-            window.currentEditFinanceTxId = tx.id;
+            currentEditFinanceTxId = tx.id;
+            openModal('finance-add-tx-modal');
             const titleEl = document.getElementById('tx-title');
             const amtEl = document.getElementById('tx-amount');
             if (titleEl) titleEl.value = tx.title;
@@ -398,9 +405,9 @@ function renderTransactions() {
             typeRadios.forEach(r => {
                 if(r.value === tx.type) r.checked = true;
             });
-            window.currentTxType = tx.type;
-            if (typeof window.renderCategoryOptions === 'function') {
-                window.renderCategoryOptions();
+            currentTxType = tx.type;
+            if (typeof renderCategoryOptions === 'function') {
+                renderCategoryOptions();
             }
             
             setTimeout(() => {
@@ -426,15 +433,6 @@ function renderTransactions() {
                     o.classList.add('border-surface-variant');
                 }
             });
-
-            const modal = document.getElementById("finance-add-tx-modal");
-            if (modal) {
-                modal.classList.remove("hidden");
-                void modal.offsetWidth;
-                modal.classList.remove("opacity-0");
-                const panel = modal.querySelector("div");
-                if (panel) panel.classList.remove("translate-y-full");
-            }
         };
 
         const delBtn = document.createElement('button');
@@ -468,22 +466,9 @@ function renderTransactions() {
                     <span class="${pmBadgeClass} text-label-sm font-bold badge-outline">${pm.type}</span>
                     <span class="font-label-sm text-label-sm text-on-surface-variant text-label-sm whitespace-nowrap">${dateFormatted}</span>
                 </div>
-                <div class="flex items-center gap-0.5 mt-1.5">
-                    <button class="edit-tx-btn p-1 text-primary hover:bg-primary-container/20 rounded-full active:scale-95 transition-colors" data-id="${tx.id}">
-                        <span class="material-symbols-outlined text-lg">edit</span>
-                    </button>
-                    <button class="del-tx-btn p-1 text-error hover:bg-error-container/20 rounded-full active:scale-95 transition-colors" data-id="${tx.id}">
-                        <span class="material-symbols-outlined text-lg">delete</span>
-                    </button>
-                </div>
             </div>
         `;
-        // Bind inline edit/delete buttons
-        const inlineEdit = div.querySelector('.edit-tx-btn');
-        const inlineDel = div.querySelector('.del-tx-btn');
-        if (inlineEdit) inlineEdit.onclick = editBtn.onclick;
-        if (inlineDel) inlineDel.onclick = delBtn.onclick;
-        
+        div.appendChild(actionsDiv);
         list.appendChild(div);
     });
 }
@@ -687,9 +672,9 @@ async function saveTransaction() {
             updatedAt: serverTimestamp()
         };
 
-        if (window.currentEditFinanceTxId) {
-            await updateDoc(doc(db, "users", currentUid, "finance_transactions", window.currentEditFinanceTxId), txData);
-            window.currentEditFinanceTxId = null;
+        if (currentEditFinanceTxId) {
+            await updateDoc(doc(db, "users", currentUid, "finance_transactions", currentEditFinanceTxId), txData);
+            currentEditFinanceTxId = null;
         } else {
             txData.createdAt = serverTimestamp();
             await addDoc(collection(db, "users", currentUid, "finance_transactions"), txData);
@@ -925,7 +910,6 @@ export function renderFinanceDetail() {
         }
     }
 }
-window.renderFinanceDetail = renderFinanceDetail;
 
 // ==================== METAL PRICES ====================
 

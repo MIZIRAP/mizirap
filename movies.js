@@ -12,6 +12,23 @@ let currentSelectedImageFile = null;
 
 let currentEditingId = null; // null for add, string for edit
 
+document.addEventListener('click', (e) => {
+    const actionBtn = e.target.closest('[data-action]');
+    if (!actionBtn) return;
+    const action = actionBtn.getAttribute('data-action');
+    if (action === 'openMoviesModal') {
+        openMoviesModal(actionBtn.getAttribute('data-movie-id') || null);
+    } else if (action === 'closeMoviesModal') {
+        closeMoviesModal();
+    }
+});
+
+document.addEventListener('change', (e) => {
+    if (e.target.name === 'movies-type') {
+        toggleMovieType();
+    }
+});
+
 export function initMovies(uid, callback) {
     currentUid = uid;
     dashboardCallback = callback;
@@ -35,8 +52,9 @@ function setupUI() {
     // Add Button
     const addBtn = document.getElementById('movies-add-btn');
     if (addBtn) {
-        addBtn.addEventListener('click', () => {
-            window.openMoviesModal(null);
+        addBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            openMoviesModal(null);
         });
     }
 
@@ -86,7 +104,7 @@ function setupUI() {
     }
 }
 
-window.openMoviesModal = function(movieId) {
+function openMoviesModal(movieId) {
     currentEditingId = movieId || null;
     const modal = document.getElementById('movies-modal');
     
@@ -163,7 +181,7 @@ window.openMoviesModal = function(movieId) {
     const imgInput = document.getElementById('movies-modal-image-input');
     if(imgInput) imgInput.value = '';
 
-    window.toggleMovieType();
+    toggleMovieType();
 
     modal.classList.remove("hidden");
     modal.classList.add("flex");
@@ -174,7 +192,7 @@ window.openMoviesModal = function(movieId) {
     });
 };
 
-window.closeMoviesModal = function() {
+function closeMoviesModal() {
     const modal = document.getElementById('movies-modal');
     if (!modal) return;
     modal.classList.add("opacity-0");
@@ -186,7 +204,7 @@ window.closeMoviesModal = function() {
     }, 300);
 };
 
-window.toggleMovieType = function() {
+function toggleMovieType() {
     const isSeries = document.querySelector('input[name="movies-type"][value="series"]').checked;
     const seriesInputs = document.getElementById('movies-series-inputs');
     if (isSeries) {
@@ -282,7 +300,7 @@ async function saveMovie() {
             await addDoc(collection(db, "users", currentUid, "movies"), data);
         }
 
-        window.closeMoviesModal();
+        closeMoviesModal();
     });
 }
 
@@ -292,7 +310,7 @@ async function deleteMovie() {
     if (confirm("Bu içeriği silmek istediğinize emin misiniz?")) {
         try {
             await deleteDoc(doc(db, "users", currentUid, "movies", currentEditingId));
-            window.closeMoviesModal();
+            closeMoviesModal();
         } catch (e) {
             console.error("Dizi/Film silinemedi:", e);
             alert("Silme işlemi başarısız oldu.");
@@ -383,7 +401,7 @@ function renderMovies() {
         }
 
         const html = `
-        <article class="bg-surface-container-lowest rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all active:scale-[0.98] flex flex-col cursor-pointer" onclick="window.openMoviesModal('${item.id}')">
+        <article class="bg-surface-container-lowest rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all active:scale-[0.98] flex flex-col cursor-pointer" data-action="openMoviesModal" data-movie-id="${item.id}">
             <div class="relative aspect-[3/4]">
                 ${coverHtml}
             </div>
