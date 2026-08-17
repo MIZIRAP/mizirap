@@ -442,7 +442,7 @@
                 <!-- Stretching / Esneklik - First Class Citizen -->
                 <section>
                     <div class="grid grid-cols-2 gap-4">
-                        <button class="bg-primary-container/10 rounded-2xl p-5 flex flex-col gap-3 shadow-sm active:scale-[0.98] transition-transform border border-primary-container/20">
+                        <button data-action="openStretchPlayer" class="bg-primary-container/10 rounded-2xl p-5 flex flex-col gap-3 shadow-sm active:scale-[0.98] transition-transform border border-primary-container/20">
                             <div class="w-12 h-12 rounded-full bg-primary-container flex items-center justify-center text-white">
                                 <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">self_improvement</span>
                             </div>
@@ -4423,8 +4423,99 @@
 
 
 
+
+
+<!-- ===================== STRETCH PLAYER ===================== -->
+<div id="view-stretch-player"
+    class="hidden fixed inset-0 z-[300] flex flex-col select-none"
+    style="background: linear-gradient(160deg, #1a2e26 0%, #0f1a16 60%, #0a120f 100%);">
+
+    <!-- Top bar -->
+    <header class="flex items-center justify-between px-5 pt-12 pb-4 flex-shrink-0">
+        <button data-action="closeStretchPlayer"
+            class="w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors active:scale-90 text-white">
+            <span class="material-symbols-outlined text-[22px]">close</span>
+        </button>
+        <div class="flex flex-col items-center">
+            <span id="stretch-player-session-name" class="font-label-md text-label-md text-white/60 max-w-[160px] truncate"></span>
+        </div>
+        <span id="stretch-player-counter" class="font-label-lg text-label-lg text-white/60 min-w-[40px] text-right">1 / 1</span>
+    </header>
+
+    <!-- Progress strip -->
+    <div id="stretch-player-progress-strip" class="flex gap-1 px-5 flex-shrink-0">
+        <!-- Dynamically generated dots/bars by JS -->
+    </div>
+
+    <!-- Main content -->
+    <div class="flex-1 flex flex-col items-center justify-center gap-5 px-6 overflow-hidden">
+
+        <!-- Image ring + SVG timer -->
+        <div class="relative flex items-center justify-center">
+            <!-- SVG timer ring -->
+            <svg id="stretch-player-svg" class="absolute inset-0" viewBox="0 0 260 260" style="width:260px;height:260px;">
+                <circle cx="130" cy="130" r="120" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="6"/>
+                <circle id="stretch-player-timer-ring" cx="130" cy="130" r="120" fill="none"
+                    stroke="url(#timerGrad)" stroke-width="6" stroke-linecap="round"
+                    stroke-dasharray="753.98" stroke-dashoffset="0"
+                    transform="rotate(-90 130 130)"/>
+                <defs>
+                    <linearGradient id="timerGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                        <stop offset="0%" stop-color="#7CE8B2"/>
+                        <stop offset="100%" stop-color="#34C97A"/>
+                    </linearGradient>
+                </defs>
+            </svg>
+            <!-- Image circle -->
+            <div class="w-[220px] h-[220px] rounded-full overflow-hidden border-2 border-white/10 shadow-2xl bg-white/5 flex items-center justify-center">
+                <img id="stretch-player-image" src="" alt="" class="w-full h-full object-cover hidden"/>
+                <span id="stretch-player-image-placeholder" class="material-symbols-outlined text-[80px] text-white/20" style="font-variation-settings:'FILL' 1;">self_improvement</span>
+            </div>
+        </div>
+
+        <!-- Name & timer text -->
+        <div class="flex flex-col items-center gap-1 text-center">
+            <h2 id="stretch-player-name" class="font-headline-sm text-[22px] font-bold text-white leading-tight max-w-[280px]">—</h2>
+            <div class="flex items-baseline gap-1 mt-1">
+                <span id="stretch-player-time" class="text-[52px] font-black leading-none" style="color:#7CE8B2;">30</span>
+                <span class="font-label-lg text-label-lg text-white/50">sn</span>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Controls -->
+    <div class="flex flex-col items-center gap-4 px-6 pb-10 flex-shrink-0">
+        <!-- Main control row -->
+        <div class="flex items-center gap-6">
+            <!-- Prev -->
+            <button data-action="stretchPlayerPrev"
+                class="w-14 h-14 rounded-full bg-white/10 hover:bg-white/15 flex items-center justify-center transition-colors active:scale-90 text-white disabled:opacity-30">
+                <span class="material-symbols-outlined text-[28px]" style="font-variation-settings:'FILL' 1;">skip_previous</span>
+            </button>
+            <!-- Pause / Resume -->
+            <button id="stretch-player-pause-btn" data-action="stretchPlayerPauseToggle"
+                class="w-20 h-20 rounded-full flex items-center justify-center shadow-xl active:scale-90 transition-all"
+                style="background: linear-gradient(135deg, #34C97A, #1a8a52);">
+                <span id="stretch-player-pause-icon" class="material-symbols-outlined text-[38px] text-white" style="font-variation-settings:'FILL' 1;">pause</span>
+            </button>
+            <!-- Next / Skip -->
+            <button data-action="stretchPlayerNext"
+                class="w-14 h-14 rounded-full bg-white/10 hover:bg-white/15 flex items-center justify-center transition-colors active:scale-90 text-white">
+                <span class="material-symbols-outlined text-[28px]" style="font-variation-settings:'FILL' 1;">skip_next</span>
+            </button>
+        </div>
+
+        <!-- End session -->
+        <button data-action="stretchPlayerEnd"
+            class="w-full max-w-[280px] py-3.5 rounded-full bg-white/8 border border-white/15 text-white font-label-lg text-label-lg hover:bg-white/12 transition-colors active:scale-[0.98] flex items-center justify-center gap-2">
+            <span class="material-symbols-outlined text-[18px]">stop_circle</span>
+            Seansı Bitir
+        </button>
+    </div>
 </div>
 <!-- Kapanış: #app-screen -->
+
 
 </div>
 <!-- Kapanış: #app-container -->

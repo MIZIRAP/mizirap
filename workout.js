@@ -92,7 +92,13 @@ document.addEventListener('click', (e) => {
     else if (action === 'setActiveStretchSession') { e.stopPropagation(); setActiveStretchSession(actionBtn.getAttribute('data-session-id')); }
     else if (action === 'toggleSessionMovement') toggleSessionMovement(actionBtn.getAttribute('data-move-id'));
     else if (action === 'removeSessionMovement') { e.stopPropagation(); removeSessionMovement(actionBtn.getAttribute('data-move-id')); }
-    
+
+    else if (action === 'openStretchPlayer') openStretchPlayer();
+    else if (action === 'closeStretchPlayer') closeStretchPlayer();
+    else if (action === 'stretchPlayerPauseToggle') stretchPlayerPauseToggle();
+    else if (action === 'stretchPlayerNext') stretchPlayerGoNext(true);
+    else if (action === 'stretchPlayerPrev') stretchPlayerGoPrev();
+    else if (action === 'stretchPlayerEnd') closeStretchPlayer();
     else if (action === 'closeExerciseHistory') closeExerciseHistory();
     else if (action === 'closeSplitSelectionModal') closeSplitSelectionModal();
     else if (action === 'closeSplitSelectionAndOpenModal') { closeSplitSelectionModal(); setTimeout(openSplitModal, 300); }
@@ -2315,4 +2321,199 @@ function renderStretchSessions() {
             </div>` : ''}
         </div>`;
     }).join('');
+}
+
+// ==========================================
+// STRETCH PLAYER
+// ==========================================
+
+let _spMovements = [];     // current session's movement list
+let _spIdx = 0;            // current movement index
+let _spTimeLeft = 0;       // seconds left for current movement
+let _spTotalTime = 0;      // total duration of current movement
+let _spInterval = null;    // setInterval handle
+let _spPaused = false;
+const CIRCUMFERENCE = 753.98; // 2 * π * 120
+
+function _playBeep(freq = 880, duration = 0.3, vol = 0.4) {
+    try {
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.frequency.value = freq;
+        osc.type = 'sine';
+        gain.gain.setValueAtTime(vol, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
+        osc.start(ctx.currentTime);
+        osc.stop(ctx.currentTime + duration);
+    } catch(e) {}
+}
+
+function _playFinishBeep() {
+    // Triple ascending beep on movement finish
+    _playBeep(660, 0.15, 0.3);
+    setTimeout(() => _playBeep(784, 0.15, 0.35), 180);
+    setTimeout(() => _playBeep(1046, 0.25, 0.4), 360);
+}
+
+function openStretchPlayer() {
+    // Decide which movements to use
+    let movements = [];
+    if (activeStretchSessionId) {
+        const session = stretchSessions.find(s => s.id === activeStretchSessionId);
+        if (session && session.movements && session.movements.length > 0) {
+            movements = session.movements;
+            const nameEl = document.getElementById('stretch-player-session-name');
+            if (nameEl) nameEl.textContent = session.name;
+        }
+    }
+    if (movements.length === 0) {
+        // Fallback: use all visible movements
+        movements = getAllStretchMovements();
+        const nameEl = document.getElementById('stretch-player-session-name');
+        if (nameEl) nameEl.textContent = 'Tüm Hareketler';
+    }
+    if (movements.length === 0) {
+        alert('Önce Esneme Hareketleri sekmesinden hareket ekleyin veya bir seans oluşturun.');
+        return;
+    }
+
+    _spMovements = movements;
+    _spIdx = 0;
+    _spPaused = false;
+
+    const view = document.getElementById('view-stretch-player');
+    view.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+
+    _spLoadMovement(_spIdx);
+    _spStartTimer();
+}
+
+function closeStretchPlayer() {
+    _spStopTimer();
+    const view = document.getElementById('view-stretch-player');
+    view.classList.add('hidden');
+    document.body.style.overflow = '';
+}
+
+function _spLoadMovement(idx) {
+    const m = _spMovements[idx];
+    if (!m) return;
+
+    _spTotalTime = parseInt(m.duration) || 30;
+    _spTimeLeft = _spTotalTime;
+
+    // Image
+    const img = document.getElementById('stretch-player-image');
+    const placeholder = document.getElementById('stretch-player-image-placeholder');
+    if (m.imageBase64) {
+        img.src = m.imageBase64;
+        img.classList.remove('hidden');
+        placeholder.classList.add('hidden');
+    } else {
+        img.src = '';
+        img.classList.add('hidden');
+        placeholder.classList.remove('hidden');
+    }
+
+    // Name
+    document.getElementById('stretch-player-name').textContent = m.name;
+
+    // Counter
+    document.getElementById('stretch-player-counter').textContent = `${idx + 1} / ${_spMovements.length}`;
+
+    // Progress strip
+    _spRenderProgressStrip(idx);
+
+    // Timer display
+    _spUpdateTimerUI();
+}
+
+function _spRenderProgressStrip(currentIdx) {
+    const strip = document.getElementById('stretch-player-progress-strip');
+    if (!strip) return;
+    strip.innerHTML = _spMovements.map((_, i) => `
+        <div class="flex-1 h-1 rounded-full transition-all duration-300 ${
+            i < currentIdx ? 'bg-green-400' :
+            i === currentIdx ? 'bg-green-400/80' :
+            'bg-white/20'
+        }"></div>
+    `).join('');
+}
+
+function _spUpdateTimerUI() {
+    const timeEl = document.getElementById('stretch-player-time');
+    const ring = document.getElementById('stretch-player-timer-ring');
+
+    if (timeEl) timeEl.textContent = _spTimeLeft;
+
+    if (ring) {
+        const progress = _spTotalTime > 0 ? _spTimeLeft / _spTotalTime : 0;
+        const offset = CIRCUMFERENCE * (1 - progress);
+        ring.style.strokeDashoffset = offset;
+    }
+}
+
+function _spStartTimer() {
+    _spStopTimer();
+    _spPaused = false;
+    const pauseIcon = document.getElementById('stretch-player-pause-icon');
+    if (pauseIcon) pauseIcon.textContent = 'pause';
+
+    _spInterval = setInterval(() => {
+        if (_spPaused) return;
+        _spTimeLeft--;
+        _spUpdateTimerUI();
+
+        if (_spTimeLeft <= 0) {
+            _spStopTimer();
+            _playFinishBeep();
+            // Move to next or end session
+            setTimeout(() => stretchPlayerGoNext(false), 600);
+        }
+    }, 1000);
+}
+
+function _spStopTimer() {
+    if (_spInterval) {
+        clearInterval(_spInterval);
+        _spInterval = null;
+    }
+}
+
+function stretchPlayerPauseToggle() {
+    _spPaused = !_spPaused;
+    const pauseIcon = document.getElementById('stretch-player-pause-icon');
+    if (pauseIcon) pauseIcon.textContent = _spPaused ? 'play_arrow' : 'pause';
+}
+
+function stretchPlayerGoNext(userTriggered = true) {
+    if (_spIdx >= _spMovements.length - 1) {
+        // Session complete
+        if (userTriggered) {
+            closeStretchPlayer();
+        } else {
+            // Last movement finished naturally — play success beep and close
+            _playBeep(1046, 0.5, 0.5);
+            setTimeout(closeStretchPlayer, 800);
+        }
+        return;
+    }
+    _spIdx++;
+    _spStopTimer();
+    _spPaused = false;
+    _spLoadMovement(_spIdx);
+    _spStartTimer();
+}
+
+function stretchPlayerGoPrev() {
+    if (_spIdx <= 0) return;
+    _spIdx--;
+    _spStopTimer();
+    _spPaused = false;
+    _spLoadMovement(_spIdx);
+    _spStartTimer();
 }
