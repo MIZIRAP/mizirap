@@ -4,7 +4,7 @@ import { collection, doc, addDoc, setDoc, getDocs, getDoc, query, orderBy, limit
 import { escapeHtml, handleFormSubmit } from "./utils.js";
 import { registerListener } from "./listenerManager.js";
 import { openActiveSession, closeActiveSession } from "./activeSession.js?v=4";
-import { openProgressView } from "./progressView.js?v=2";
+import { openProgressView } from "./progressView.js?v=3";
 
 window.openProgressView = openProgressView;
 
@@ -21,7 +21,10 @@ let unsubSplits = null;
 let unsubLogs = null;
 
 export function initWorkout(uid, onChangeCallback) {
+    if(!uid) return;
     currentUid = uid;
+    window.currentUid = uid;
+    localStorage.setItem('uid', uid);
     callback = onChangeCallback;
     
     const splitsRef = collection(db, "users", uid, "splits");
