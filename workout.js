@@ -20,6 +20,8 @@ let unsubStretches = null;
 let stretches = [];
 let currentStretchImageBase64 = null;
 let editingStretchId = null;
+let editingStretchIsDefault = false;
+let hiddenDefaultStretchIds = new Set(JSON.parse(localStorage.getItem('hiddenDefaultStretches') || '[]'));
 
 const DEFAULT_STRETCHES = [
     { id: 'def_catcow', name: 'Cat-Cow Stretch', duration: 30, imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_a_cat_cow_stretch_fitness_exercise_a/screen.jpg', isDefault: true },
@@ -1623,9 +1625,10 @@ function renderStretches() {
     let html = '';
     
     // Group into defaults and customs for better UI
-    if (DEFAULT_STRETCHES.length > 0) {
+    const visibleDefaults = DEFAULT_STRETCHES.filter(s => !hiddenDefaultStretchIds.has(s.id));
+    if (visibleDefaults.length > 0) {
         html += `<h3 class="font-title-sm text-on-surface-variant mb-2 mt-4 px-2">Temel Hareketler</h3>`;
-        DEFAULT_STRETCHES.forEach(stretch => {
+        visibleDefaults.forEach(stretch => {
             html += generateStretchCard(stretch);
         });
     }
@@ -1654,16 +1657,14 @@ function generateStretchCard(stretch) {
                     </span>
                 </div>
             </div>
-            ${stretch.isDefault ? '' : `
             <div class="flex items-center gap-sm flex-shrink-0">
-                <button data-action="editStretch" data-stretch-id="${stretch.id}" class="text-on-surface-variant hover:text-primary transition-colors p-1 rounded-full hover:bg-surface-variant">
-                    <span class="material-symbols-outlined" data-icon="edit">edit</span>
+                <button data-action="editStretch" data-stretch-id="${stretch.id}" class="text-on-surface-variant hover:text-primary transition-colors p-1 rounded-full hover:bg-surface-variant active:scale-95">
+                    <span class="material-symbols-outlined text-[20px]" data-icon="edit">edit</span>
                 </button>
-                <button data-action="deleteStretch" data-stretch-id="${stretch.id}" class="text-on-surface-variant hover:text-error transition-colors p-1 rounded-full hover:bg-surface-variant">
-                    <span class="material-symbols-outlined" data-icon="delete">delete</span>
+                <button data-action="deleteStretch" data-stretch-id="${stretch.id}" class="text-on-surface-variant hover:text-error transition-colors p-1 rounded-full hover:bg-surface-variant active:scale-95">
+                    <span class="material-symbols-outlined text-[20px]" data-icon="delete">delete</span>
                 </button>
             </div>
-            `}
         </div>
     `;
 }
@@ -1747,10 +1748,18 @@ async function saveStretch() {
 }
 
 function editStretch(id) {
-    const stretch = stretches.find(s => s.id === id);
+    // Check custom stretches first, then defaults
+    let stretch = stretches.find(s => s.id === id);
+    editingStretchIsDefault = false;
+    
+    if (!stretch) {
+        stretch = DEFAULT_STRETCHES.find(s => s.id === id);
+        editingStretchIsDefault = true;
+    }
     if (!stretch) return;
     
-    editingStretchId = id;
+    // For defaults: don't set editingStretchId so it saves as NEW Firestore doc
+    editingStretchId = editingStretchIsDefault ? null : id;
     
     document.getElementById('stretch-name').value = stretch.name;
     document.getElementById('stretch-duration').value = stretch.duration;
@@ -1775,9 +1784,19 @@ function editStretch(id) {
 }
 
 async function deleteStretch(id) {
-    if (!currentUid) return;
     if (!confirm("Bu hareketi silmek istediğinize emin misiniz?")) return;
     
+    const isDefault = DEFAULT_STRETCHES.some(s => s.id === id);
+    
+    if (isDefault) {
+        // Hide default from list via localStorage
+        hiddenDefaultStretchIds.add(id);
+        localStorage.setItem('hiddenDefaultStretches', JSON.stringify([...hiddenDefaultStretchIds]));
+        renderStretches();
+        return;
+    }
+    
+    if (!currentUid) return;
     try {
         await deleteDoc(doc(db, "users", currentUid, "stretches", id));
     } catch (e) {
