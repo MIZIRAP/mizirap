@@ -2606,8 +2606,8 @@ function _spRenderProgressStrip(currentIdx) {
     if (!strip) return;
     strip.innerHTML = _spMovements.map((_, i) => `
         <div class="flex-1 h-1 rounded-full transition-all duration-300 ${
-            i < currentIdx ? 'bg-green-400' :
-            i === currentIdx ? 'bg-green-400/80' :
+            i < currentIdx ? 'bg-white' :
+            i === currentIdx ? 'bg-white/80' :
             'bg-white/20'
         }"></div>
     `).join('');
