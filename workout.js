@@ -2718,31 +2718,47 @@ function renderCoreSessions() {
     container.innerHTML = coreSessions.map(session => {
         const isActive = session.id === activeCoreSessionId;
         const totalSec = session.movements.reduce((acc, m) => acc + (parseInt(m.duration) || 0), 0);
-        const totalMin = Math.ceil(totalSec / 60);
+        const mins = Math.floor(totalSec / 60);
+        const secs = totalSec % 60;
+        const durationStr = mins > 0 ? `${mins} dk ${secs > 0 ? secs + ' sn' : ''}` : `${secs} sn`;
+        const moveCount = (session.movements || []).length;
 
         return `
-            <div class="bg-surface-container-lowest rounded-2xl p-4 shadow-sm border ${isActive ? 'border-primary' : 'border-surface-variant/30'} flex flex-col gap-3 relative overflow-hidden">
-                ${isActive ? '<div class="absolute top-0 right-0 bg-primary text-on-primary text-[10px] font-bold px-2 py-1 rounded-bl-lg uppercase tracking-wider">Aktif Seans</div>' : ''}
-                <div class="flex items-start justify-between">
-                    <div class="flex-1">
-                        <h3 class="font-title-md text-title-md font-semibold text-on-surface">${escapeHtml(session.name)}</h3>
-                        <p class="font-body-sm text-body-sm text-on-surface-variant mt-1">${session.movements.length} hareket • ${totalMin} dk</p>
+        <div class="rounded-2xl p-4 flex flex-col gap-3 border transition-colors ${isActive ? 'bg-primary/8 border-primary/40' : 'bg-surface-container-low border-surface-variant/20'}">
+            <!-- Header row -->
+            <div class="flex items-start justify-between gap-2">
+                <div class="flex-1">
+                    <div class="flex items-center gap-2">
+                        ${isActive ? `<span class="inline-flex items-center gap-1 bg-primary text-on-primary font-label-sm text-label-sm px-2 py-0.5 rounded-full text-[11px]">
+                            <span class="material-symbols-outlined text-[12px]" style="font-variation-settings:'FILL' 1;">check_circle</span> Aktif
+                        </span>` : ''}
+                        <h3 class="font-title-sm text-title-sm font-semibold text-on-surface">${escapeHtml(session.name)}</h3>
+                    </div>
+                    <div class="flex items-center gap-3 mt-1">
+                        <span class="flex items-center gap-1 text-on-surface-variant font-label-sm text-label-sm">
+                            <span class="material-symbols-outlined text-[14px]">timer</span> ${durationStr}
+                        </span>
+                        <span class="flex items-center gap-1 text-on-surface-variant font-label-sm text-label-sm">
+                            <span class="material-symbols-outlined text-[14px]">fitness_center</span> ${moveCount} hareket
+                        </span>
                     </div>
                 </div>
-                
-                <div class="flex gap-2 mt-2">
-                    <button data-action="setActiveCoreSession" data-session-id="${session.id}" 
-                        class="flex-1 py-2 rounded-full font-label-md text-label-md transition-colors ${isActive ? 'bg-primary/20 text-primary' : 'bg-surface-variant text-on-surface-variant hover:bg-surface-container-high'}">
-                        ${isActive ? 'Seçili' : 'Seç'}
-                    </button>
-                    <button data-action="editCoreSession" data-session-id="${session.id}" class="w-10 h-10 rounded-full bg-surface-variant text-on-surface-variant flex items-center justify-center hover:bg-surface-container-high transition-colors">
+                <div class="flex items-center gap-1 flex-shrink-0">
+                    ${!isActive ? `<button data-action="setActiveCoreSession" data-session-id="${session.id}"
+                        class="text-on-surface-variant hover:text-primary transition-colors p-1.5 rounded-full hover:bg-surface-variant active:scale-95" title="Aktif Seans Yap">
+                        <span class="material-symbols-outlined text-[20px]">play_circle</span>
+                    </button>` : ''}
+                    <button data-action="editCoreSession" data-session-id="${session.id}"
+                        class="text-on-surface-variant hover:text-primary transition-colors p-1.5 rounded-full hover:bg-surface-variant active:scale-95">
                         <span class="material-symbols-outlined text-[20px]">edit</span>
                     </button>
-                    <button data-action="deleteCoreSession" data-session-id="${session.id}" class="w-10 h-10 rounded-full bg-error/10 text-error flex items-center justify-center hover:bg-error/20 transition-colors">
+                    <button data-action="deleteCoreSession" data-session-id="${session.id}"
+                        class="text-on-surface-variant hover:text-error transition-colors p-1.5 rounded-full hover:bg-surface-variant active:scale-95">
                         <span class="material-symbols-outlined text-[20px]">delete</span>
                     </button>
                 </div>
             </div>
+        </div>
         `;
     }).join('');
 }
