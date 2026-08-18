@@ -2839,7 +2839,7 @@ function editCoreSession(id) {
 
     editingCoreSessionId = id;
     document.getElementById('core-session-name').value = session.name;
-    document.getElementById('core-session-modal-title').textContent = "Seansı Düzenle";
+    document.getElementById('core-session-modal-title').textContent = "Seans Düzenle";
     coreSessionDraftMovements = JSON.parse(JSON.stringify(session.movements));
 
     renderCoreSessionMovementPicker();
@@ -2863,125 +2863,101 @@ function setActiveCoreSession(id) {
 function renderCoreSessionMovementPicker() {
     const picker = document.getElementById('core-session-movement-picker');
     if (!picker) return;
-
     if (cores.length === 0) {
-        picker.innerHTML = '<p class="text-on-surface-variant font-body-sm">Önce Core Hareketleri eklemelisiniz.</p>';
+        picker.innerHTML = `<p class="text-center text-on-surface-variant font-body-sm py-2">Önce Hareketler sekmesinden hareket ekleyin.</p>`;
         return;
     }
-
     picker.innerHTML = cores.map(m => {
-        // Can be added multiple times, but we just provide an "Add" button
+        const selected = coreSessionDraftMovements.some(d => d.id === m.id);
         return `
-            <div class="flex items-center justify-between bg-surface-container-lowest border border-outline-variant/30 p-2 rounded-lg">
-                <div class="flex items-center gap-3">
-                    ${m.imageBase64 ? `<img src="${m.imageBase64}" class="w-10 h-10 rounded-md object-cover"/>` : `<div class="w-10 h-10 rounded-md bg-surface-variant flex items-center justify-center"><span class="material-symbols-outlined text-[20px] text-on-surface-variant">accessibility_new</span></div>`}
-                    <div>
-                        <p class="font-body-sm font-medium text-on-surface">${escapeHtml(m.name)}</p>
-                        <p class="text-[12px] text-on-surface-variant">${m.duration}s</p>
-                    </div>
-                </div>
-                <button data-action="toggleCoreSessionMovement" data-move-id="${m.id}" class="w-8 h-8 rounded-full bg-primary/10 text-primary flex items-center justify-center hover:bg-primary/20">
-                    <span class="material-symbols-outlined text-[18px]">add</span>
-                </button>
+        <button data-action="toggleCoreSessionMovement" data-move-id="${m.id}"
+            class="flex items-center gap-3 p-2 rounded-lg transition-colors text-left w-full ${selected ? 'bg-primary/10 border border-primary/30' : 'hover:bg-surface-container-low'}">
+            <div class="w-10 h-10 rounded-full overflow-hidden flex-shrink-0 bg-surface-container-highest">
+                ${m.imageBase64 ? `<img src="${m.imageBase64}" class="w-full h-full object-cover" alt="${escapeHtml(m.name)}"/>` : ''}
             </div>
-        `;
+            <span class="flex-1 font-body-md text-body-md text-on-surface truncate">${escapeHtml(m.name)}</span>
+            <span class="material-symbols-outlined text-[18px] ${selected ? 'text-primary' : 'text-outline-variant'}" style="font-variation-settings: 'FILL' ${selected ? 1 : 0};">
+                ${selected ? 'check_circle' : 'radio_button_unchecked'}
+            </span>
+        </button>`;
     }).join('');
 }
 
-function toggleCoreSessionMovement(moveId) {
-    const move = cores.find(m => m.id === moveId);
+function toggleCoreSessionMovement(id) {
+    const move = cores.find(m => m.id === id);
     if (!move) return;
-    
-    // Add to draft list
-    coreSessionDraftMovements.push({
-        id: move.id,
-        name: move.name,
-        duration: move.duration,
-        imageBase64: move.imageBase64 || null,
-        uid: Date.now().toString() + Math.random().toString() // unique instance id for reordering
-    });
-    
+    const idx = coreSessionDraftMovements.findIndex(d => d.id === id);
+    if (idx === -1) {
+        coreSessionDraftMovements.push({ id: move.id, name: move.name, duration: move.duration, imageBase64: move.imageBase64 || null });
+    } else {
+        coreSessionDraftMovements.splice(idx, 1);
+    }
+    renderCoreSessionMovementPicker();
     renderCoreSessionOrderedList();
 }
 
-function removeCoreSessionMovement(uid) {
-    coreSessionDraftMovements = coreSessionDraftMovements.filter(m => m.uid !== uid);
+function removeCoreSessionMovement(id) {
+    coreSessionDraftMovements = coreSessionDraftMovements.filter(d => d.id !== id);
+    renderCoreSessionMovementPicker();
     renderCoreSessionOrderedList();
 }
 
 function renderCoreSessionOrderedList() {
     const list = document.getElementById('core-session-ordered-list');
     const totalEl = document.getElementById('core-session-total-duration');
-    if (!list || !totalEl) return;
+    if (!list) return;
 
     if (coreSessionDraftMovements.length === 0) {
-        list.innerHTML = '<p id="core-session-empty-hint" class="text-center text-on-surface-variant font-body-sm py-3">Yukarıdan hareket seçin</p>';
-        totalEl.textContent = '0 dk';
+        list.innerHTML = `<p id="core-session-empty-hint" class="text-center text-on-surface-variant font-body-sm py-3">Yukarıdan hareket seçin</p>`;
+        if (totalEl) totalEl.textContent = '0 dk';
         return;
     }
 
-    const totalSec = coreSessionDraftMovements.reduce((acc, m) => acc + (parseInt(m.duration) || 0), 0);
-    const totalMin = Math.ceil(totalSec / 60);
-    totalEl.textContent = totalMin + ' dk';
-
-    list.innerHTML = coreSessionDraftMovements.map((m, index) => `
-        <div class="flex items-center justify-between bg-surface p-2 rounded-lg border border-outline-variant/30 shadow-sm" data-instance-uid="${m.uid}">
-            <div class="flex items-center gap-3">
-                <span class="material-symbols-outlined text-on-surface-variant cursor-grab drag-handle active:cursor-grabbing">drag_indicator</span>
-                <span class="font-body-md font-bold text-on-surface w-4">${index + 1}.</span>
-                <div>
-                    <p class="font-body-sm font-medium text-on-surface">${escapeHtml(m.name)}</p>
-                    <p class="text-[12px] text-on-surface-variant">${m.duration}s</p>
-                </div>
+    list.innerHTML = coreSessionDraftMovements.map((m, i) => `
+        <div class="flex items-center gap-3 bg-surface-container-low rounded-lg p-2 cursor-grab active:cursor-grabbing core-session-drag-item"
+            draggable="true" data-drag-idx="${i}">
+            <span class="material-symbols-outlined text-outline text-[20px] select-none">drag_indicator</span>
+            <div class="w-10 h-10 rounded-full overflow-hidden flex-shrink-0 bg-surface-container-highest">
+                ${m.imageBase64 ? `<img src="${m.imageBase64}" class="w-full h-full object-cover" alt="${escapeHtml(m.name)}"/>` : ''}
             </div>
-            <button data-action="removeCoreSessionMovement" data-move-id="${m.uid}" class="w-8 h-8 rounded-full text-error hover:bg-error/10 flex items-center justify-center transition-colors">
+            <span class="flex-1 font-body-md text-body-md text-on-surface truncate">${escapeHtml(m.name)}</span>
+            <span class="font-label-sm text-label-sm text-on-surface-variant">${m.duration}s</span>
+            <button data-action="removeCoreSessionMovement" data-move-id="${m.id}" class="text-on-surface-variant hover:text-error transition-colors p-1 rounded-full">
                 <span class="material-symbols-outlined text-[18px]">close</span>
             </button>
         </div>
     `).join('');
 
-    initCoreSessionDragAndDrop();
+    // Total duration
+    const total = coreSessionDraftMovements.reduce((acc, m) => acc + (parseInt(m.duration) || 0), 0);
+    const mins = Math.floor(total / 60);
+    const secs = total % 60;
+    if (totalEl) totalEl.textContent = mins > 0 ? `${mins} dk ${secs > 0 ? secs + ' sn' : ''}` : `${secs} sn`;
+
+    initCoreSessionDrag(list);
 }
 
-function initCoreSessionDragAndDrop() {
-    const list = document.getElementById('core-session-ordered-list');
-    let draggedItem = null;
-
-    Array.from(list.children).forEach(item => {
-        if(item.id === 'core-session-empty-hint') return;
-
-        item.setAttribute('draggable', true);
-
-        item.addEventListener('dragstart', function(e) {
-            draggedItem = item;
-            setTimeout(() => item.classList.add('opacity-50'), 0);
+function initCoreSessionDrag(list) {
+    let dragIdx = null;
+    list.querySelectorAll('.core-session-drag-item').forEach(item => {
+        item.addEventListener('dragstart', (e) => {
+            dragIdx = parseInt(item.getAttribute('data-drag-idx'));
+            item.classList.add('opacity-50');
+            e.dataTransfer.effectAllowed = 'move';
         });
-
-        item.addEventListener('dragend', function() {
-            draggedItem.classList.remove('opacity-50');
-            draggedItem = null;
-            
-            // Rebuild array based on new DOM order
-            const newOrder = [];
-            Array.from(list.children).forEach(child => {
-                const uid = child.getAttribute('data-instance-uid');
-                if (uid) {
-                    const match = coreSessionDraftMovements.find(m => m.uid === uid);
-                    if (match) newOrder.push(match);
-                }
-            });
-            coreSessionDraftMovements = newOrder;
-            renderCoreSessionOrderedList();
-        });
-
-        item.addEventListener('dragover', function(e) {
+        item.addEventListener('dragend', () => item.classList.remove('opacity-50'));
+        item.addEventListener('dragover', (e) => {
             e.preventDefault();
-            const afterElement = getDragAfterElement(list, e.clientY);
-            if (afterElement == null) {
-                list.appendChild(draggedItem);
-            } else {
-                list.insertBefore(draggedItem, afterElement);
-            }
+            e.dataTransfer.dropEffect = 'move';
+        });
+        item.addEventListener('drop', (e) => {
+            e.preventDefault();
+            const targetIdx = parseInt(item.getAttribute('data-drag-idx'));
+            if (dragIdx === null || dragIdx === targetIdx) return;
+            const moved = coreSessionDraftMovements.splice(dragIdx, 1)[0];
+            coreSessionDraftMovements.splice(targetIdx, 0, moved);
+            dragIdx = null;
+            renderCoreSessionOrderedList();
         });
     });
 }
