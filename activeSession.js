@@ -297,7 +297,14 @@ function _renderSets(exId) {
     state.sets.forEach((set, setIdx) => {
         const setEl = document.createElement('div');
         setEl.id = `set-row-${exId}-${setIdx}`;
-        setEl.className = 'flex flex-col gap-md px-md py-md border-t border-surface-container-high bg-surface-container-low/40 border-l-4 border-l-primary';
+        
+        // ESKİ GÖRÜNÜM (Beğenmezseniz aşağıdaki satırın yorumunu kaldırın ve YENİ GÖRÜNÜM kısmını silin):
+        // setEl.className = 'flex flex-col gap-md px-md py-md border-t border-surface-container-high bg-surface-container-low/40 border-l-4 border-l-primary';
+        
+        // YENİ GÖRÜNÜM: Rakamları ve boşlukları büyütmeden, sadece arka plan tonunu (zebra deseni) ve üst çizgi rengini değiştirerek belirginlik artırıldı.
+        const bgClass = (setIdx % 2 === 0) ? 'bg-surface-container-low/40' : 'bg-surface-container-highest/40';
+        setEl.className = `flex flex-col gap-md px-md py-md border-t border-outline-variant/40 ${bgClass} border-l-4 border-l-primary`;
+        
         setEl.innerHTML = _activeSetHTML(exId, setIdx, set);
         container.appendChild(setEl);
     });
