@@ -452,7 +452,7 @@ function renderLogs() {
         }
         dailyLogs.forEach(log => {
             const newEntry = document.createElement('div');
-            newEntry.className = "flex justify-between items-center p-3 border-b border-surface-container-high last:border-0 relative group";
+            newEntry.className = "flex justify-between items-center p-3 pr-24 border-b border-surface-container-high last:border-0 relative group";
             
             const editBtn = document.createElement('button');
             editBtn.className = "absolute right-12 top-1/2 -translate-y-1/2 p-2 text-primary opacity-0 group-hover:opacity-100 transition-opacity bg-primary-container/20 rounded-full active:scale-95";
@@ -488,11 +488,11 @@ function renderLogs() {
             };
 
             newEntry.innerHTML = `
-            <div class="flex flex-col pr-20">
-            <span class="font-body-md text-body-md text-on-surface font-medium">${escapeHtml(log.name)}</span>
-            <span class="font-label-sm text-label-sm text-on-surface-variant">${log.amount}g</span>
+            <div class="flex flex-col flex-1 min-w-0 pr-4">
+                <span class="font-body-md text-body-md text-on-surface font-medium break-words">${escapeHtml(log.name)}</span>
+                <span class="font-label-sm text-label-sm text-on-surface-variant">${log.amount}g</span>
             </div>
-            <span class="font-body-lg text-body-lg text-on-surface font-bold pr-20">${log.kcal} kcal</span>
+            <span class="font-body-lg text-body-lg text-on-surface font-bold shrink-0 whitespace-nowrap">${log.kcal} kcal</span>
             `;
             newEntry.appendChild(editBtn);
             newEntry.appendChild(delBtn);
