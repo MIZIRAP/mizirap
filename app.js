@@ -1,7 +1,7 @@
 import { auth } from "./firebase-config.js";
 import { onAuthStateChanged, signInAnonymously } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
 import { setupAuthUI } from "./auth.js";
-import { initDashboard, clearDashboard, updateDashboardWorkouts, updateDashboardFinance, updateDashboardWater, updateDashboardBooks, updateDashboardMovies } from "./dashboard.js";
+import { initDashboard, clearDashboard, updateDashboardWorkouts, updateDashboardFinance, updateDashboardWater, updateDashboardBooks, updateDashboardMovies, updateDashboardCalories } from "./dashboard.js";
 import { initShopping, clearShopping } from "./shopping.js";
 import { initWorkout, clearWorkout } from "./workout.js?v=18";
 import { initFinance, clearFinance } from "./finance.js";
@@ -54,7 +54,9 @@ onAuthStateChanged(auth, async (user) => {
             initWater(user.uid, (waterStats) => {
                 updateDashboardWater(waterStats);
             });
-            initCalories(user.uid);
+            initCalories(user.uid, (caloriesStats) => {
+                updateDashboardCalories(caloriesStats);
+            });
             
             initBooks(user.uid, (books) => {
                 updateDashboardBooks(books);

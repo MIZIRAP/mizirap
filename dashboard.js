@@ -6,6 +6,7 @@ import { calcBalance } from "./finance.js";
 let currentWorkouts = [];
 let currentTxs = [];
 let currentWaterStats = { currentAmount: 0, dailyGoal: 2000 };
+let currentCaloriesStats = { consumed: 0, goal: 2000 };
 let currentBooks = [];
 let currentMovies = [];
 
@@ -18,6 +19,7 @@ export function clearDashboard() {
     currentWorkouts = [];
     currentTxs = [];
     currentWaterStats = { currentAmount: 0, dailyGoal: 2000 };
+    currentCaloriesStats = { consumed: 0, goal: 2000 };
     currentBooks = [];
 }
 
@@ -37,6 +39,11 @@ export function updateDashboardWater(stats) {
     renderDashboard();
 }
 
+export function updateDashboardCalories(stats) {
+    currentCaloriesStats = stats;
+    renderDashboard();
+}
+
 export function updateDashboardBooks(books) {
     currentBooks = books;
     renderDashboard();
@@ -48,43 +55,49 @@ export function updateDashboardMovies(movies) {
 }
 
 function renderDashboard() {
+    const circum = 251.2; // 2 * PI * 40 for the SVG circles
+    
     // Su Tüketimi
     const waterText = document.getElementById("dashboard-water-text");
-    const waterProg = document.getElementById("dashboard-water-progress");
+    const waterProg = document.getElementById("dash-prog-water");
     if(waterText && waterProg) {
-        waterText.innerHTML = `${currentWaterStats.currentAmount} <span class="text-label-md font-label-md font-normal text-on-surface/60">/ ${currentWaterStats.dailyGoal} ml</span>`;
+        waterText.innerHTML = `${currentWaterStats.currentAmount}<span class="text-xs font-normal text-on-surface-variant">/${currentWaterStats.dailyGoal}ml</span>`;
         let percent = currentWaterStats.currentAmount / currentWaterStats.dailyGoal * 100;
         if (percent > 100) percent = 100;
-        waterProg.style.width = `${percent}%`;
+        if (isNaN(percent)) percent = 0;
+        waterProg.style.strokeDashoffset = circum - (percent / 100) * circum;
+    }
+    
+    // Kalori Tüketimi
+    const calsText = document.getElementById("dashboard-calories-text");
+    const calsProg = document.getElementById("dash-prog-cals");
+    if(calsText && calsProg) {
+        calsText.innerHTML = `${currentCaloriesStats.totalCaloriesConsumed || 0}<span class="text-xs font-normal text-on-surface-variant">/${currentCaloriesStats.dailyCalorieGoal || 2000}</span>`;
+        let percent = (currentCaloriesStats.totalCaloriesConsumed || 0) / (currentCaloriesStats.dailyCalorieGoal || 2000) * 100;
+        if (percent > 100) percent = 100;
+        if (isNaN(percent)) percent = 0;
+        calsProg.style.strokeDashoffset = circum - (percent / 100) * circum;
     }
 
     // Okuma/Kitaplar
     const dashBooksText = document.getElementById("dashboard-books-text");
-    const dashBooksProg = document.getElementById("dashboard-books-progress");
-    
-    if(dashBooksText && dashBooksProg) {
+    if(dashBooksText) {
         const readingBooks = currentBooks.filter(b => b.status === "reading");
         if(readingBooks.length > 0) {
             const book = readingBooks[0];
             const read = book.readPages || 0;
             const total = book.totalPages || 1;
-            const percent = Math.min(100, Math.round((read / total) * 100));
-            dashBooksText.innerHTML = `${read} <span class="text-label-md font-label-md font-normal text-on-surface/60">/ ${total} sayfa</span>`;
-            dashBooksProg.style.width = `${percent}%`;
+            dashBooksText.innerHTML = `<span class="text-2xl font-bold text-on-surface leading-none">${read}</span><span class="text-xs text-on-surface-variant mb-1">/${total} p.</span>`;
         } else {
-            dashBooksText.innerHTML = `0 <span class="text-label-md font-label-md font-normal text-on-surface/60">/ 0 sayfa</span>`;
-            dashBooksProg.style.width = `0%`;
+            dashBooksText.innerHTML = `<span class="text-2xl font-bold text-on-surface leading-none">0</span><span class="text-xs text-on-surface-variant mb-1">/0 p.</span>`;
         }
     }
     
     // Dizi/Film
     const dashMoviesText = document.getElementById("dashboard-movies-text");
-    const dashMoviesProg = document.getElementById("dashboard-movies-progress");
-    if (dashMoviesText && dashMoviesProg) {
+    if (dashMoviesText) {
         const watchingMovies = currentMovies.filter(m => (m.status || 'watching') === 'watching');
-        dashMoviesText.innerHTML = `${watchingMovies.length} <span class="text-label-md font-label-md font-normal text-on-surface/60">izleniyor</span>`;
-        const percent = watchingMovies.length > 0 ? Math.min(100, watchingMovies.length * 10) : 0;
-        dashMoviesProg.style.width = `${percent}%`;
+        dashMoviesText.innerHTML = `<span class="text-2xl font-bold text-on-surface leading-none">${watchingMovies.length}</span><span class="text-xs text-on-surface-variant mb-1">items</span>`;
     }
 
     // Spor

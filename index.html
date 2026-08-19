@@ -9,85 +9,116 @@
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <script id="tailwind-config">
-        tailwind.config = {
-            darkMode: "class",
-            theme: {
-                extend: {
-                    colors: {
-                        "background": "#F7F9FF",
-                        "surface": "#F7F9FF",
-                        "surface-container": "#F7F9FF",
-                        "surface-container-low": "#F7F9FF",
-                        "surface-container-lowest": "#F7F9FF",
-                        "surface-container-high": "#F7F9FF",
-                        "surface-container-highest": "#F7F9FF",
-                        "on-background": "#64748B",
-                        "on-surface": "#64748B",
-                        "on-surface-variant": "#1E293B",
-                        "primary": "#3B82F6",
-                        "on-primary": "#ffffff",
-                        "primary-container": "#e0e7ff",
-                        "on-primary-container": "#1E293B",
-                        "error": "#ef4444",
-                        "on-error": "#ffffff",
-                        "error-container": "#fee2e2",
-                        "on-error-container": "#991b1b",
-                        "outline": "#D1D9E6",
-                        "outline-variant": "#D1D9E6",
-                        "neon-purple": "#A855F7",
-                        "neon-blue": "#3B82F6",
-                        "neon-green": "#22C55E",
-                    },
-                    boxShadow: {
-                        "neo": "10px 10px 20px #D1D9E6, -10px -10px 20px #FFFFFF",
-                        "neo-inset": "inset 10px 10px 20px #D1D9E6, inset -10px -10px 20px #FFFFFF",
-                        "neo-sm": "5px 5px 10px #D1D9E6, -5px -5px 10px #FFFFFF",
-                        "neo-pressed": "inset 5px 5px 10px #D1D9E6, inset -5px -5px 10px #FFFFFF",
-                    },
-                    borderRadius: { 
-                        "DEFAULT": "0.25rem", 
-                        "lg": "0.5rem", 
-                        "xl": "0.75rem", 
-                        "full": "9999px", 
-                        "2xl": "1.5rem",
-                        "card": "32px",
-                        "neo": "32px"
-                    },
-                    fontFamily: {
-                        "sans": ["'Plus Jakarta Sans'", "sans-serif"],
-                        "body-lg": ["'Plus Jakarta Sans'", "sans-serif"],
-                        "label-sm": ["'Plus Jakarta Sans'", "sans-serif"],
-                        "display-lg": ["'Plus Jakarta Sans'", "sans-serif"],
-                        "body-md": ["'Plus Jakarta Sans'", "sans-serif"],
-                        "label-lg": ["'Plus Jakarta Sans'", "sans-serif"],
-                        "headline-lg-mobile": ["'Plus Jakarta Sans'", "sans-serif"],
-                        "headline-lg": ["'Plus Jakarta Sans'", "sans-serif"],
-                        "title-lg": ["'Plus Jakarta Sans'", "sans-serif"],
-                        "label-md": ["'Plus Jakarta Sans'", "sans-serif"], 
-                        "headline-sm": ["'Plus Jakarta Sans'", "sans-serif"], 
-                        "headline-md": ["'Plus Jakarta Sans'", "sans-serif"]
-                    },
-                    fontSize: {
-                        "display": ["32px", { "lineHeight": "40px", "letterSpacing": "0.01em", "fontWeight": "700" }],
-                        "headline": ["18px", { "lineHeight": "24px", "fontWeight": "600" }],
-                        "title": ["14px", { "lineHeight": "20px", "fontWeight": "600" }],
-                        "label": ["12px", { "lineHeight": "16px", "fontWeight": "500" }],
-                        "body-lg": ["16px", { "lineHeight": "24px", "letterSpacing": "0.5px", "fontWeight": "500" }],
-                        "label-sm": ["11px", { "lineHeight": "16px", "letterSpacing": "0.5px", "fontWeight": "500" }],
-                        "display-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "0.01em", "fontWeight": "700" }],
-                        "body-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0.25px", "fontWeight": "500" }],
-                        "label-lg": ["14px", { "lineHeight": "20px", "letterSpacing": "0.1px", "fontWeight": "500" }],
-                        "headline-lg-mobile": ["28px", { "lineHeight": "36px", "fontWeight": "600" }],
-                        "headline-lg": ["32px", { "lineHeight": "40px", "fontWeight": "700" }],
-                        "title-lg": ["22px", { "lineHeight": "28px", "fontWeight": "600" }],
-                        "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600" }],
-                        "headline-sm": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
-                        "headline-md": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" }]
-                    }
-                }
-            }
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        "colors": {
+                "tertiary-container": "#8a4cfc",
+                "on-secondary-fixed": "#181b28",
+                "on-surface": "#181c20",
+                "on-tertiary": "#ffffff",
+                "surface-light": "#f0f2f8",
+                "accent-blue": "#3b82f6",
+                "surface-bright": "#f7f9ff",
+                "surface-container": "#eceef4",
+                "on-secondary": "#ffffff",
+                "primary-fixed": "#e1e0ff",
+                "surface-container-low": "#f2f3f9",
+                "surface-container-high": "#e6e8ee",
+                "on-error": "#ffffff",
+                "on-primary-fixed-variant": "#2f2ebe",
+                "surface-variant": "#e0e2e8",
+                "primary-container": "#6063ee",
+                "on-tertiary-fixed": "#25005a",
+                "background-base": "#e8eaf0",
+                "on-tertiary-fixed-variant": "#5a00c6",
+                "tertiary": "#712ae2",
+                "inverse-on-surface": "#eff1f7",
+                "on-tertiary-container": "#fffbff",
+                "secondary-container": "#e0e1f4",
+                "error": "#ba1a1a",
+                "inverse-surface": "#2d3135",
+                "on-error-container": "#93000a",
+                "on-primary-fixed": "#07006c",
+                "on-primary": "#ffffff",
+                "primary": "#4648d4",
+                "tertiary-fixed": "#eaddff",
+                "primary-fixed-dim": "#c0c1ff",
+                "surface-dim": "#d8dae0",
+                "outline": "#767586",
+                "surface-dark": "#d4d6dc",
+                "on-background": "#181c20",
+                "inverse-primary": "#c0c1ff",
+                "on-surface-variant": "#464554",
+                "accent-green": "#22c55e",
+                "surface-container-lowest": "#ffffff",
+                "on-secondary-fixed-variant": "#444655",
+                "secondary-fixed-dim": "#c4c5d7",
+                "outline-variant": "#c7c4d7",
+                "on-secondary-container": "#616373",
+                "tertiary-fixed-dim": "#d2bbff",
+                "on-primary-container": "#fffbff",
+                "background": "#f7f9ff",
+                "surface": "#f7f9ff",
+                "error-container": "#ffdad6",
+                "text-primary": "#2e3040",
+                "secondary-fixed": "#e0e1f4",
+                "surface-tint": "#494bd6",
+                "text-secondary": "#585a68",
+                "surface-container-highest": "#e0e2e8",
+                "accent-purple": "#a855f7",
+                "secondary": "#5b5d6d",
+                
+                "neon-purple": "#A855F7",
+                "neon-blue": "#3B82F6",
+                "neon-green": "#22C55E"
+        },
+        "borderRadius": {
+                "DEFAULT": "0.25rem",
+                "lg": "0.5rem",
+                "xl": "0.75rem",
+                "full": "9999px",
+                "card": "32px",
+                "neo": "32px"
+        },
+        "spacing": {
+                "element-gap": "1rem",
+                "container-padding": "1.5rem",
+                "grid-gutter": "1.5rem",
+                "stack-gap": "1.5rem",
+                "section-margin": "2rem"
+        },
+        "fontFamily": {
+                "title-sm": ["Plus Jakarta Sans"],
+                "headline-md": ["Plus Jakarta Sans"],
+                "display-lg": ["Plus Jakarta Sans"],
+                "label-sm": ["Plus Jakarta Sans"],
+                "body-md": ["Plus Jakarta Sans"],
+                "sans": ["'Plus Jakarta Sans'", "sans-serif"],
+                "headline-sm": ["'Plus Jakarta Sans'", "sans-serif"],
+                "label-md": ["'Plus Jakarta Sans'", "sans-serif"]
+        },
+        "fontSize": {
+                "title-sm": ["14px", {"lineHeight": "1.5", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                "headline-md": ["20px", {"lineHeight": "1.3", "fontWeight": "700"}],
+                "display-lg": ["24px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                "label-sm": ["12px", {"lineHeight": "1.4", "fontWeight": "400"}],
+                "body-md": ["16px", {"lineHeight": "1.5", "fontWeight": "500"}],
+                "headline-sm": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+                "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600" }]
+        },
+        boxShadow: {
+            'neo-raised': '6px 6px 12px rgba(0,0,0,0.08), -6px -6px 12px rgba(255,255,255,0.8)',
+            'neo-inset': 'inset 4px 4px 8px rgba(0,0,0,0.06), inset -4px -4px 8px rgba(255,255,255,0.8)',
+            'neo': '6px 6px 12px rgba(0,0,0,0.08), -6px -6px 12px rgba(255,255,255,0.8)',
+            "neo-sm": "5px 5px 10px #D1D9E6, -5px -5px 10px #FFFFFF",
+            "neo-pressed": "inset 5px 5px 10px #D1D9E6, inset -5px -5px 10px #FFFFFF",
         }
-    </script>
+      }
+    }
+  }
+</script>
     <!-- PWA Settings -->
     <link rel="manifest" href="manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -120,6 +151,75 @@
     <script src="https://cdn.jsdelivr.net/npm/@panzoom/panzoom/dist/panzoom.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="assets/exercises/muscle-map.js"></script>
+
+    <style>
+        .neo-surface {
+            background-color: #f0f2f8;
+            box-shadow: 6px 6px 12px rgba(0,0,0,0.08), -6px -6px 12px rgba(255,255,255,0.8);
+            border-radius: 1.5rem;
+        }
+
+        .neo-inset {
+            background-color: #f0f2f8;
+            box-shadow: inset 4px 4px 8px rgba(0,0,0,0.06), inset -4px -4px 8px rgba(255,255,255,0.8);
+            border-radius: 1rem;
+        }
+        
+        .neo-button:active {
+            box-shadow: inset 4px 4px 8px rgba(0,0,0,0.06), inset -4px -4px 8px rgba(255,255,255,0.8);
+        }
+
+        /* Circular Progress Styling */
+        .progress-ring__circle {
+            transition: stroke-dashoffset 0.35s;
+            transform: rotate(-90deg);
+            transform-origin: 50% 50%;
+        }
+
+        /* Neon Border Animations */
+        @keyframes spin-neon {
+            0% { transform: translate(-50%, -50%) rotate(0deg); }
+            100% { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+        
+        .neon-card {
+            position: relative;
+            padding: 3px;
+            border-radius: 1.5rem;
+            box-shadow: 6px 6px 12px rgba(0,0,0,0.08), -6px -6px 12px rgba(255,255,255,0.8);
+            overflow: hidden;
+            z-index: 1;
+        }
+        
+        .neon-card::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(from 0deg, transparent 0%, #a855f7 33%, #22c55e 66%, #3b82f6 100%);
+            animation: spin-neon 4s linear infinite;
+            z-index: -1;
+        }
+        
+        .neon-card-inner {
+            background-color: #f0f2f8;
+            border-radius: calc(1.5rem - 3px);
+            width: 100%;
+            height: 100%;
+        }
+
+        .neon-text-glow {
+            text-shadow: 0 0 10px rgba(138, 76, 252, 0.4);
+        }
+        .neon-icon-glow {
+            filter: drop-shadow(0 0 6px rgba(138, 76, 252, 0.5));
+        }
+        .neon-icon-glow-blue {
+            filter: drop-shadow(0 0 6px rgba(59, 130, 246, 0.5));
+        }
+    </style>
 </head>
 <body class="bg-surface-variant text-on-background font-body-lg antialiased min-h-[100dvh] flex justify-center">
 
@@ -187,49 +287,133 @@
 <div id="app-screen" class="hidden min-h-[100dvh]">
 
     <!-- ================= ÖZET (Dashboard) ================= -->
-    <section id="view-dashboard" class="view active">
+        <section id="view-dashboard" class="view active">
         <!-- TopAppBar -->
-        <header class="w-full top-0 sticky bg-background dark:bg-background flat no shadows transition-opacity duration-200 z-40 max-w-md mx-auto">
-            <div class="flex items-center justify-between px-container-padding py-4 w-full">
-                <div class="flex items-center gap-3">
-                    <h1 class="font-headline-md text-headline-md text-neon-blue dark:text-neon-blue-fixed-dim font-bold tracking-tight">My Life</h1>
+        <header class="w-full top-0 sticky z-40 bg-surface-light flat no shadows transition-opacity duration-200 mx-auto max-w-md">
+            <div class="flex justify-between items-center px-container-padding py-4 w-full px-6">
+                <div class="w-10 h-10 rounded-full neo-surface overflow-hidden flex items-center justify-center p-0.5 nav-tab cursor-pointer" data-target="view-profile">
+                    <img class="user-profile-img w-full h-full rounded-full object-cover" alt="User" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAGmcf3BYQs7OrxSurGxChxVgTwh7scbBwYNeziWaEwEmW9r2HkUTaM1JHCWsPoYOKTNt16j21YeTANmcqge5X64catn_OkN7bBews2QrcnJSNb0H4ClkdMoY65LP4vLqZ0jn26lPBQ8YCdWDI2uxJ3U_tCpV7bzdP5Lklqc5Djl7CEHJ4_spROGZkI8O3Kt60rpWYzZcf0D4tvhqN1JR7sczVF1Ujf67SQN8YTFtvPJ2skU_JRU-_d">
                 </div>
-                <div class="flex items-center gap-2">
-                    <button class="nav-tab p-2 text-neon-blue hover:bg-gradient-to-r from-neon-purple to-neon-blue/10 rounded-full transition-all flex items-center justify-center" data-target="view-history">
-                        <span class="material-symbols-rounded icon-lg">history</span>
-                    </button>
-                    <div class="nav-tab w-10 h-10 rounded-full overflow-hidden bg-background shadow-neo cursor-pointer" data-target="view-profile">
-                        <img alt="User Profile" class="user-profile-img w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD6pbBf1WbDO9xMS_XZVPq3Hat-IK7RVbQRVC5-9p8PWsv7SHG_Yojo0BjpUQAjhbGfBVWyXpGohNDbHg-yOrIOtX0zvzHvWJ0XjCLkLb4jDyzHW1tUnhdG4g69-o5TjKC7k0rOwSaXpzWjKDRZIhOzP1obI9IDh1PtPTw3cqmnIhUiMtmYi4lnBR1JB31WEtk7J5y65lOTNGEai5pKftjSXWP6cklloZAmRN4fheHJAMy0AjKzxoBO">
-                    </div>
-                </div>
+                <h1 class="font-headline-md text-headline-md font-bold text-tertiary-container tracking-tight text-xl neon-text-glow">My Life</h1>
+                <button class="nav-tab w-10 h-10 rounded-full neo-surface flex items-center justify-center text-on-surface-variant hover:bg-surface-variant/50 transition-colors active:scale-95 duration-200" data-target="view-history">
+                    <span class="material-symbols-rounded">history</span>
+                </button>
             </div>
         </header>
 
-        <!-- Main Content Canvas -->
-        <main class="px-container-padding pt-6 pb-24 mx-auto max-w-2xl flex flex-col gap-section-margin">
-            <!-- Date Section -->
-            <div class="px-2 mb-[-8px]">
-                <p class="text-label-md font-label-md font-bold text-on-surface-variant uppercase tracking-wider" id="dashboard-date">14 Ekim 2023, Cumartesi</p>
-            </div>
-
-            <!-- Sport Section -->
-            <section class="nav-tab bg-background shadow-neo rounded-[32px] shadow-sm p-6 relative overflow-hidden group hover:shadow-md transition-all duration-300 cursor-pointer" data-target="view-workout">
-                <div class="absolute right-0 top-0 w-32 h-32 bg-gradient-to-r from-neon-purple to-neon-blue-fixed opacity-50 rounded-bl-full -z-0 pointer-events-none transition-transform group-hover:scale-110"></div>
-                <div class="flex items-center justify-between relative z-10 gap-2">
-                    <div class="flex items-center gap-3 min-w-0">
-                        <div class="w-12 h-12 rounded-full bg-gradient-to-r from-neon-purple to-neon-blue-fixed flex items-center justify-center text-neon-blue shrink-0">
-                            <span class="material-symbols-rounded" style="font-variation-settings: 'FILL' 1;">fitness_center</span>
+        <main class="px-6 py-4 max-w-md mx-auto flex flex-col gap-6">
+            <!-- Featured Workout Card -->
+            <div class="neon-card cursor-pointer nav-tab" data-target="view-workout">
+                <div class="neon-card-inner p-6 flex flex-col gap-4">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <h2 class="text-sm font-semibold text-on-surface-variant uppercase tracking-wider mb-1">Workout</h2>
+                            <h3 class="text-2xl font-bold text-on-surface" id="stat-workout-split">Yapılmadı</h3>
                         </div>
-                        <div class="min-w-0">
-                            <p class="font-label-md text-label-md text-on-surface-variant uppercase truncate">Up Next</p>
-                            <h2 class="font-headline-sm text-headline-sm md:font-headline-md md:text-headline-md text-on-surface truncate" id="stat-workout-split">Yapılmadı</h2>
+                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light">
+                            <span class="material-symbols-rounded text-tertiary-container text-2xl neon-icon-glow" style="font-variation-settings: 'FILL' 1;">fitness_center</span>
                         </div>
                     </div>
-                    <button class="shrink-0 bg-gradient-to-r from-neon-purple to-neon-blue text-white rounded-full px-4 py-2 font-label-md text-label-md hover:opacity-90 transition-opacity flex items-center gap-1">
-                        Start <span class="material-symbols-rounded text-lg">play_arrow</span>
-                    </button>
                 </div>
-            </section>
+            </div>
+
+            <!-- 2x2 Grid -->
+            <div class="grid grid-cols-2 gap-6">
+                <!-- Water -->
+                <div class="neo-surface p-5 flex flex-col items-center justify-center gap-3 aspect-square relative cursor-pointer nav-tab" data-target="view-water">
+                    <h3 class="text-sm font-semibold text-on-surface-variant">Su Takibi</h3>
+                    <div class="relative w-24 h-24 rounded-full flex items-center justify-center">
+                        <svg class="w-20 h-20" viewBox="0 0 100 100">
+                            <defs>
+                                <linearGradient id="neonGradient1" x1="0%" x2="100%" y1="0%" y2="100%">
+                                    <stop offset="0%" stop-color="#8a4cfc"></stop>
+                                    <stop offset="50%" stop-color="#3b82f6"></stop>
+                                    <stop offset="100%" stop-color="#22c55e"></stop>
+                                </linearGradient>
+                            </defs>
+                            <circle class="text-surface-variant stroke-current" cx="50" cy="50" fill="transparent" r="40" stroke-width="8"></circle>
+                            <circle class="progress-ring__circle" id="dash-prog-water" cx="50" cy="50" fill="transparent" r="40" stroke="url(#neonGradient1)" stroke-dasharray="251.2" stroke-dashoffset="251.2" stroke-linecap="round" stroke-width="8"></circle>
+                        </svg>
+                        <div class="absolute inset-0 flex items-center justify-center flex-col">
+                            <span class="material-symbols-rounded text-accent-blue text-xl neon-icon-glow-blue">water_drop</span>
+                        </div>
+                    </div>
+                    <div class="text-center mt-1">
+                        <span class="text-base font-bold text-on-surface block" id="dashboard-water-text">0<span class="text-xs font-normal text-on-surface-variant">/0ml</span></span>
+                    </div>
+                </div>
+
+                <!-- Kcal -->
+                <div class="neo-surface p-5 flex flex-col items-center justify-center gap-3 aspect-square relative cursor-pointer nav-tab" data-target="view-calories">
+                    <h3 class="text-sm font-semibold text-on-surface-variant">Kalori Takibi</h3>
+                    <div class="relative w-24 h-24 rounded-full flex items-center justify-center">
+                        <svg class="w-20 h-20" viewBox="0 0 100 100">
+                            <circle class="text-surface-variant stroke-current" cx="50" cy="50" fill="transparent" r="40" stroke-width="8"></circle>
+                            <circle class="progress-ring__circle" id="dash-prog-cals" cx="50" cy="50" fill="transparent" r="40" stroke="url(#neonGradient1)" stroke-dasharray="251.2" stroke-dashoffset="251.2" stroke-linecap="round" stroke-width="8"></circle>
+                        </svg>
+                        <div class="absolute inset-0 flex items-center justify-center flex-col rounded-full">
+                            <span class="material-symbols-rounded text-tertiary-container text-xl neon-icon-glow">local_dining</span>
+                        </div>
+                    </div>
+                    <div class="text-center mt-1">
+                        <span class="text-base font-bold text-on-surface block" id="dashboard-calories-text">-<span class="text-xs font-normal text-on-surface-variant">/-</span></span>
+                    </div>
+                </div>
+
+                <!-- Reading -->
+                <div class="neo-surface p-5 flex flex-col justify-between aspect-square relative cursor-pointer nav-tab" data-target="view-books">
+                    <div class="flex justify-between items-start w-full relative z-10">
+                        <span class="material-symbols-rounded text-accent-blue bg-surface-light neo-surface rounded-full p-2 neon-icon-glow-blue">menu_book</span>
+                    </div>
+                    <div class="mt-auto relative z-10">
+                        <h3 class="text-sm font-semibold text-on-surface-variant mb-1">Reading</h3>
+                        <div class="flex items-end gap-1" id="dashboard-books-text">
+                            <span class="text-2xl font-bold text-on-surface leading-none">0</span>
+                            <span class="text-xs text-on-surface-variant mb-1">/0 p.</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Watching -->
+                <div class="neo-surface p-5 flex flex-col justify-between aspect-square cursor-pointer nav-tab" data-target="view-movies">
+                    <div class="flex justify-between items-start w-full">
+                        <span class="material-symbols-rounded text-tertiary-container bg-surface-light neo-surface rounded-full p-2 neon-icon-glow">movie</span>
+                    </div>
+                    <div class="mt-auto">
+                        <h3 class="text-sm font-semibold text-on-surface-variant mb-1">Watching</h3>
+                        <div class="flex items-end gap-1" id="dashboard-movies-text">
+                            <span class="text-2xl font-bold text-on-surface leading-none">0</span>
+                            <span class="text-xs text-on-surface-variant mb-1">items</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Finance Card -->
+            <div class="neo-surface p-6 flex items-center justify-between cursor-pointer nav-tab" data-target="view-finance">
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-xl neo-inset flex items-center justify-center bg-surface-light">
+                        <span class="material-symbols-rounded text-accent-blue text-2xl neon-icon-glow-blue">account_balance_wallet</span>
+                    </div>
+                    <div>
+                        <h2 class="text-sm font-semibold text-on-surface-variant mb-1">Total Balance</h2>
+                        <h3 class="text-xl font-bold text-on-surface" id="stat-balance">0 TL</h3>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Shopping List Button -->
+            <button class="neo-surface p-5 w-full flex items-center justify-between neo-button transition-all text-left nav-tab" data-target="view-shopping">
+                <div class="flex items-center gap-4">
+                    <div class="w-10 h-10 rounded-full neo-inset flex items-center justify-center bg-surface-light">
+                        <span class="material-symbols-rounded text-tertiary-container neon-icon-glow">shopping_cart</span>
+                    </div>
+                    <span class="font-semibold text-on-surface text-lg">Shopping List</span>
+                </div>
+                <span class="material-symbols-rounded text-on-surface-variant">chevron_right</span>
+            </button>
+        </main>
+    </section>
 
             <section class="grid grid-cols-2 gap-card-gap">
                 <!-- Water Card -->
