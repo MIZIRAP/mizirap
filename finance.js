@@ -135,7 +135,7 @@ function setupFinanceModals() {
                 el.innerHTML = '';
             });
             colorEl.classList.add('selected', 'ring-4', 'ring-primary-container', 'ring-offset-2', 'ring-offset-surface-container-lowest');
-            colorEl.innerHTML = '<span class="material-symbols-outlined text-white">check</span>';
+            colorEl.innerHTML = '<span class="material-symbols-rounded text-white">check</span>';
         });
     });
 
@@ -185,7 +185,7 @@ async function savePaymentMethod() {
             createdAt: serverTimestamp()
         });
         
-        saveBtn.innerHTML = `<span class="material-symbols-outlined">check_circle</span> Eklendi!`;
+        saveBtn.innerHTML = `<span class="material-symbols-rounded">check_circle</span> Eklendi!`;
         saveBtn.classList.add("bg-gradient-to-r from-neon-purple to-neon-blue-container", "text-white-container");
         
         setTimeout(() => {
@@ -336,17 +336,17 @@ function renderTransactions() {
     if(trendEl) {
         if(currentMonthBalance > 0) {
             trendEl.innerHTML = `
-                <span class="material-symbols-outlined text-neon-blue bg-gradient-to-r from-neon-purple to-neon-blue-container rounded-full p-1 text-sm" style="font-variation-settings: 'FILL' 1;">trending_up</span>
+                <span class="material-symbols-rounded text-neon-blue bg-gradient-to-r from-neon-purple to-neon-blue-container rounded-full p-1 text-sm" style="font-variation-settings: 'FILL' 1;">trending_up</span>
                 <span class="font-body-md text-body-md text-neon-blue">+${formatCurrency(currentMonthBalance)} (Bu Ay)</span>
             `;
         } else if (currentMonthBalance < 0) {
             trendEl.innerHTML = `
-                <span class="material-symbols-outlined text-error bg-error-container rounded-full p-1 text-sm" style="font-variation-settings: 'FILL' 1;">trending_down</span>
+                <span class="material-symbols-rounded text-error bg-error-container rounded-full p-1 text-sm" style="font-variation-settings: 'FILL' 1;">trending_down</span>
                 <span class="font-body-md text-body-md text-error">${formatCurrency(currentMonthBalance)} (Bu Ay)</span>
             `;
         } else {
             trendEl.innerHTML = `
-                <span class="material-symbols-outlined text-outline bg-background shadow-neo-variant rounded-full p-1 text-sm" style="font-variation-settings: 'FILL' 1;">trending_flat</span>
+                <span class="material-symbols-rounded text-outline bg-background shadow-neo-variant rounded-full p-1 text-sm" style="font-variation-settings: 'FILL' 1;">trending_flat</span>
                 <span class="font-body-md text-body-md text-outline">Değişim Yok (Bu Ay)</span>
             `;
         }
@@ -390,7 +390,7 @@ function renderTransactions() {
         
         const editBtn = document.createElement('button');
         editBtn.className = "p-2 text-neon-blue hover:bg-gradient-to-r from-neon-purple to-neon-blue-container/20 rounded-full active:scale-95 transition-colors";
-        editBtn.innerHTML = `<span class="material-symbols-outlined text-sm">edit</span>`;
+        editBtn.innerHTML = `<span class="material-symbols-rounded text-sm">edit</span>`;
         editBtn.onclick = (e) => {
             e.stopPropagation();
             currentEditFinanceTxId = tx.id;
@@ -437,7 +437,7 @@ function renderTransactions() {
 
         const delBtn = document.createElement('button');
         delBtn.className = "p-2 text-error hover:bg-error-container/20 rounded-full active:scale-95 transition-colors";
-        delBtn.innerHTML = `<span class="material-symbols-outlined text-sm">delete</span>`;
+        delBtn.innerHTML = `<span class="material-symbols-rounded text-sm">delete</span>`;
         delBtn.onclick = async (e) => {
             e.stopPropagation();
             try {
@@ -453,7 +453,7 @@ function renderTransactions() {
         div.innerHTML = `
             <div class="flex items-center gap-3 min-w-0 flex-1">
                 <div class="w-11 h-11 shrink-0 rounded-full ${iconBg} flex items-center justify-center">
-                    <span class="material-symbols-outlined ${iconColor} icon-md" style="font-variation-settings: 'FILL' 0;">${cat.icon}</span>
+                    <span class="material-symbols-rounded ${iconColor} icon-md" style="font-variation-settings: 'FILL' 0;">${cat.icon}</span>
                 </div>
                 <div class="flex flex-col min-w-0">
                     <span class="font-label-md text-label-md text-on-surface truncate">${tx.title}</span>
@@ -513,7 +513,7 @@ async function saveCategory() {
             createdAt: serverTimestamp()
         });
         
-        saveBtn.innerHTML = `<span class="material-symbols-outlined">check_circle</span> Eklendi!`;
+        saveBtn.innerHTML = `<span class="material-symbols-rounded">check_circle</span> Eklendi!`;
         saveBtn.classList.add("bg-gradient-to-r from-neon-purple to-neon-blue-container", "text-white-container");
         
         setTimeout(() => {
@@ -545,7 +545,7 @@ export function renderTxModalOptions() {
         } else {
             catContainer.innerHTML = financeCategories.map((c, idx) => `
                 <button class="tx-cat-btn flex items-center gap-2 px-4 py-2 rounded-full ${idx === 0 ? 'bg-gradient-to-r from-neon-purple to-neon-blue-container text-white-container border-transparent' : 'bg-background shadow-neo-high text-on-surface-variant hover:bg-background shadow-neo-variant border-transparent'} shrink-0 snap-start transition-colors active:scale-95 border-2" data-id="${c.id}">
-                    <span class="material-symbols-outlined text-lg">${c.icon || 'category'}</span>
+                    <span class="material-symbols-rounded text-lg">${c.icon || 'category'}</span>
                     <span class="font-label-md text-label-md">${c.name}</span>
                 </button>
             `).join('');
@@ -571,10 +571,10 @@ export function renderTxModalOptions() {
             pmContainer.innerHTML = financePaymentMethods.map((p, idx) => `
                 <div class="tx-pm-btn flex items-center justify-between p-3 rounded-[32px] border-2 ${idx === 0 ? 'border-primary bg-gradient-to-r from-neon-purple to-neon-blue-fixed-dim/10' : 'border-transparent bg-background shadow-neo-high hover:bg-background shadow-neo-variant'} cursor-pointer transition-transform active:scale-95" data-id="${p.id}">
                     <div class="flex items-center gap-2">
-                        <span class="material-symbols-outlined ${idx === 0 ? 'text-neon-blue' : 'text-on-surface-variant'}">${p.icon || 'credit_card'}</span>
+                        <span class="material-symbols-rounded ${idx === 0 ? 'text-neon-blue' : 'text-on-surface-variant'}">${p.icon || 'credit_card'}</span>
                         <span class="font-label-md text-label-md ${idx === 0 ? 'text-on-surface' : 'text-on-surface-variant'}">${p.name}</span>
                     </div>
-                    ${idx === 0 ? '<span class="material-symbols-outlined text-neon-blue text-lg check-icon" style="font-variation-settings: \'FILL\' 1;">check_circle</span>' : ''}
+                    ${idx === 0 ? '<span class="material-symbols-rounded text-neon-blue text-lg check-icon" style="font-variation-settings: \'FILL\' 1;">check_circle</span>' : ''}
                 </div>
             `).join('');
             
@@ -584,7 +584,7 @@ export function renderTxModalOptions() {
                     document.querySelectorAll('.tx-pm-btn').forEach(b => {
                         b.classList.remove('border-primary', 'bg-gradient-to-r from-neon-purple to-neon-blue-fixed-dim/10');
                         b.classList.add('border-transparent', 'bg-background shadow-neo-high', 'text-on-surface-variant');
-                        const icon1 = b.querySelector('.material-symbols-outlined:first-child');
+                        const icon1 = b.querySelector('.material-symbols-rounded:first-child');
                         const text = b.querySelector('.font-label-md');
                         const check = b.querySelector('.check-icon');
                         if (icon1) { icon1.classList.remove('text-neon-blue'); icon1.classList.add('text-on-surface-variant'); }
@@ -594,13 +594,13 @@ export function renderTxModalOptions() {
                     
                     btn.classList.add('border-primary', 'bg-gradient-to-r from-neon-purple to-neon-blue-fixed-dim/10');
                     btn.classList.remove('border-transparent', 'bg-background shadow-neo-high', 'text-on-surface-variant');
-                    const icon1 = btn.querySelector('.material-symbols-outlined:first-child');
+                    const icon1 = btn.querySelector('.material-symbols-rounded:first-child');
                     const text = btn.querySelector('.font-label-md');
                     if (icon1) { icon1.classList.add('text-neon-blue'); icon1.classList.remove('text-on-surface-variant'); }
                     if (text) { text.classList.add('text-on-surface'); text.classList.remove('text-on-surface-variant'); }
                     
                     if (!btn.querySelector('.check-icon')) {
-                        btn.insertAdjacentHTML('beforeend', '<span class="material-symbols-outlined text-neon-blue text-lg check-icon" style="font-variation-settings: \'FILL\' 1;">check_circle</span>');
+                        btn.insertAdjacentHTML('beforeend', '<span class="material-symbols-rounded text-neon-blue text-lg check-icon" style="font-variation-settings: \'FILL\' 1;">check_circle</span>');
                     }
                 });
             });
@@ -680,7 +680,7 @@ async function saveTransaction() {
             await addDoc(collection(db, "users", currentUid, "finance_transactions"), txData);
         }
         
-        saveBtn.innerHTML = `<span class="material-symbols-outlined">check_circle</span> Eklendi!`;
+        saveBtn.innerHTML = `<span class="material-symbols-rounded">check_circle</span> Eklendi!`;
         saveBtn.classList.add("bg-gradient-to-r from-neon-purple to-neon-blue-container", "text-white-container");
         
         setTimeout(() => {
@@ -782,7 +782,7 @@ export function renderFinanceDetail() {
             <div class="bg-background shadow-neo-lowest p-4 rounded-[32px] flex items-center justify-between shadow-sm border-l-4 border-primary mb-3 active:scale-98 transition-transform">
                 <div class="flex items-center gap-4">
                     <div class="w-10 h-10 rounded-[32px] bg-gradient-to-r from-neon-purple to-neon-blue/10 flex items-center justify-center">
-                        <span class="material-symbols-outlined text-neon-blue">${pm.icon}</span>
+                        <span class="material-symbols-rounded text-neon-blue">${pm.icon}</span>
                     </div>
                     <div>
                         <p class="font-body-lg text-body-lg font-semibold">${tx.title}</p>
@@ -826,7 +826,7 @@ export function renderFinanceDetail() {
             <div class="flex items-center justify-between p-3 rounded-[32px] hover:bg-background shadow-neo-low transition-colors active:scale-98">
                 <div class="flex items-center gap-3">
                     <div class="w-10 h-10 rounded-full bg-${cColor}-fixed-dim/30 flex items-center justify-center">
-                        <span class="material-symbols-outlined text-${cColor}">${cat.icon}</span>
+                        <span class="material-symbols-rounded text-${cColor}">${cat.icon}</span>
                     </div>
                     <p class="font-body-lg text-body-lg">${cat.name}</p>
                 </div>
@@ -899,7 +899,7 @@ export function renderFinanceDetail() {
                 <div class="flex items-center justify-between p-3 rounded-[32px] hover:bg-background shadow-neo-low transition-colors active:scale-98">
                     <div class="flex items-center gap-3">
                         <div class="w-10 h-10 rounded-full bg-gradient-to-r from-neon-purple to-neon-blue/10 flex items-center justify-center">
-                            <span class="material-symbols-outlined text-neon-blue">${pm.icon}</span>
+                            <span class="material-symbols-rounded text-neon-blue">${pm.icon}</span>
                         </div>
                         <p class="font-body-lg text-body-lg">${pm.name}</p>
                     </div>

@@ -301,7 +301,7 @@ function updateWaterUI() {
 
                 const delBtn = document.createElement('button');
                 delBtn.className = "absolute right-2 top-1/2 -translate-y-1/2 p-2 text-error opacity-0 group-hover:opacity-100 transition-opacity bg-error-container/20 rounded-full active:scale-95";
-                delBtn.innerHTML = `<span class="material-symbols-outlined text-sm">delete</span>`;
+                delBtn.innerHTML = `<span class="material-symbols-rounded text-sm">delete</span>`;
                 delBtn.onclick = async (e) => {
                     e.stopPropagation();
                     try {
@@ -313,7 +313,7 @@ function updateWaterUI() {
                 
                 const editBtn = document.createElement('button');
                 editBtn.className = "absolute right-12 top-1/2 -translate-y-1/2 p-2 text-neon-blue opacity-0 group-hover:opacity-100 transition-opacity bg-gradient-to-r from-neon-purple to-neon-blue-container/20 rounded-full active:scale-95";
-                editBtn.innerHTML = `<span class="material-symbols-outlined text-sm">edit</span>`;
+                editBtn.innerHTML = `<span class="material-symbols-rounded text-sm">edit</span>`;
                 editBtn.onclick = (e) => {
                     e.stopPropagation();
                     normalView.classList.add('hidden');
@@ -325,7 +325,7 @@ function updateWaterUI() {
                 normalView.innerHTML = `
                     <div class="flex items-center gap-4">
                         <div class="w-10 h-10 rounded-full bg-gradient-to-r from-neon-blue to-neon-green flex items-center justify-center text-neon-purple">
-                            <span class="material-symbols-outlined" data-icon="${log.icon}" data-weight="regular">${escapeHtml(log.icon || 'local_drink')}</span>
+                            <span class="material-symbols-rounded" data-icon="${log.icon}" data-weight="regular">${escapeHtml(log.icon || 'local_drink')}</span>
                         </div>
                         <div class="flex flex-col">
                             <span class="font-body-lg text-body-lg text-on-surface font-medium">${escapeHtml(log.type)}</span>
@@ -338,7 +338,7 @@ function updateWaterUI() {
                 editView.innerHTML = `
                     <div class="flex items-center gap-2 flex-1">
                         <div class="w-8 h-8 rounded-full bg-gradient-to-r from-neon-blue to-neon-green flex items-center justify-center text-neon-purple shrink-0">
-                            <span class="material-symbols-outlined text-sm" data-icon="${log.icon}" data-weight="regular">${escapeHtml(log.icon || 'local_drink')}</span>
+                            <span class="material-symbols-rounded text-sm" data-icon="${log.icon}" data-weight="regular">${escapeHtml(log.icon || 'local_drink')}</span>
                         </div>
                         <input type="number" class="w-full bg-background shadow-neo border-none rounded-lg px-2 py-1 text-sm text-on-surface focus:border-primary focus:ring-1 focus:ring-primary edit-amount-input" value="${log.amount}" min="1">
                         <span class="text-on-surface-variant text-sm">ml</span>

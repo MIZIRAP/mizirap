@@ -260,7 +260,7 @@ function _renderSessionExercises() {
             <button class="w-full flex items-center gap-sm p-md text-left hover:bg-background shadow-neo transition-colors"
                     data-action="sessionToggleExAccordion" data-ex-id="${ex.id}">
                 <div class="w-10 h-10 rounded-full bg-gradient-to-r from-neon-purple to-neon-blue-container/20 flex items-center justify-center text-neon-blue shrink-0">
-                    <span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1">fitness_center</span>
+                    <span class="material-symbols-rounded" style="font-variation-settings:'FILL' 1">fitness_center</span>
                 </div>
                 <div class="flex-1 min-w-0">
                     <h2 class="font-title-lg text-title-lg text-on-surface truncate">${escHtml(ex.name)}</h2>
@@ -268,7 +268,7 @@ function _renderSessionExercises() {
                 </div>
                 <div class="flex items-center gap-2 shrink-0">
                     <span class=\"font-label-sm text-label-sm text-on-surface-variant\">${totalSets} Set</span>
-                    <span class="material-symbols-outlined text-on-surface-variant transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}" style="font-size:20px" id="chevron-${ex.id}">expand_more</span>
+                    <span class="material-symbols-rounded text-on-surface-variant transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}" style="font-size:20px" id="chevron-${ex.id}">expand_more</span>
                 </div>
             </button>
             <!-- Accordion Body -->
@@ -342,12 +342,12 @@ function _activeSetHTML(exId, setIdx, set) {
                     <div class="flex items-center bg-background shadow-neo rounded-lg border-none w-full justify-between p-0.5">
                         <button data-action="sessionStepWeight" data-ex-id="${exId}" data-set-idx="${setIdx}" data-delta="-2.5"
                             class="w-9 h-9 rounded-lg flex items-center justify-center text-neon-blue hover:bg-gradient-to-r from-neon-purple to-neon-blue/5 active:scale-90 transition-all">
-                            <span class="material-symbols-outlined">remove</span>
+                            <span class="material-symbols-rounded">remove</span>
                         </button>
                         <span class="font-title-lg text-title-lg text-on-surface min-w-[3rem] text-center">${set.weight}</span>
                         <button data-action="sessionStepWeight" data-ex-id="${exId}" data-set-idx="${setIdx}" data-delta="2.5"
                             class="w-9 h-9 rounded-lg flex items-center justify-center text-neon-blue hover:bg-gradient-to-r from-neon-purple to-neon-blue/5 active:scale-90 transition-all">
-                            <span class="material-symbols-outlined">add</span>
+                            <span class="material-symbols-rounded">add</span>
                         </button>
                     </div>
                 </div>
@@ -357,12 +357,12 @@ function _activeSetHTML(exId, setIdx, set) {
                     <div class="flex items-center bg-background shadow-neo rounded-lg border-none w-full justify-between p-0.5">
                         <button data-action="sessionStepReps" data-ex-id="${exId}" data-set-idx="${setIdx}" data-delta="-1"
                             class="w-9 h-9 rounded-lg flex items-center justify-center text-neon-blue hover:bg-gradient-to-r from-neon-purple to-neon-blue/5 active:scale-90 transition-all">
-                            <span class="material-symbols-outlined">remove</span>
+                            <span class="material-symbols-rounded">remove</span>
                         </button>
                         <span class="font-title-lg text-title-lg text-on-surface min-w-[2rem] text-center">${set.reps}</span>
                         <button data-action="sessionStepReps" data-ex-id="${exId}" data-set-idx="${setIdx}" data-delta="1"
                             class="w-9 h-9 rounded-lg flex items-center justify-center text-neon-blue hover:bg-gradient-to-r from-neon-purple to-neon-blue/5 active:scale-90 transition-all">
-                            <span class="material-symbols-outlined">add</span>
+                            <span class="material-symbols-rounded">add</span>
                         </button>
                     </div>
                 </div>
@@ -478,7 +478,7 @@ async function finishSession() {
         // Reset button
         if (btn) {
             btn.disabled = false;
-            btn.innerHTML = `<span class="material-symbols-outlined" style="font-size:16px">flag</span> Bitir`;
+            btn.innerHTML = `<span class="material-symbols-rounded" style="font-size:16px">flag</span> Bitir`;
         }
 
         // Navigate back to workout home
@@ -493,7 +493,7 @@ async function finishSession() {
         alert('Antrenman kaydedilemedi: ' + e.message);
         if (btn) {
             btn.disabled = false;
-            btn.innerHTML = `<span class="material-symbols-outlined" style="font-size:16px">flag</span> Bitir`;
+            btn.innerHTML = `<span class="material-symbols-rounded" style="font-size:16px">flag</span> Bitir`;
         }
     }
 };

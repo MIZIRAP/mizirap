@@ -69,7 +69,7 @@ export async function handleFormSubmit(btn, inputs, submitAction) {
     // 3. Disable button
     const originalText = btn.innerHTML;
     btn.disabled = true;
-    btn.innerHTML = `<span class="animate-spin material-symbols-outlined mr-2">sync</span> Bekleniyor...`;
+    btn.innerHTML = `<span class="animate-spin material-symbols-rounded mr-2">sync</span> Bekleniyor...`;
     btn.classList.add('opacity-70', 'cursor-not-allowed');
 
     try {

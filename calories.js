@@ -456,7 +456,7 @@ function renderLogs() {
             
             const editBtn = document.createElement('button');
             editBtn.className = "absolute right-12 top-1/2 -translate-y-1/2 p-2 text-neon-blue opacity-0 group-hover:opacity-100 transition-opacity bg-gradient-to-r from-neon-purple to-neon-blue-container/20 rounded-full active:scale-95";
-            editBtn.innerHTML = `<span class="material-symbols-outlined text-sm">edit</span>`;
+            editBtn.innerHTML = `<span class="material-symbols-rounded text-sm">edit</span>`;
             editBtn.onclick = (e) => {
                 e.stopPropagation();
                 currentEditLogId = log.id;
@@ -476,7 +476,7 @@ function renderLogs() {
 
             const delBtn = document.createElement('button');
             delBtn.className = "absolute right-2 top-1/2 -translate-y-1/2 p-2 text-error opacity-0 group-hover:opacity-100 transition-opacity bg-error-container/20 rounded-full active:scale-95";
-            delBtn.innerHTML = `<span class="material-symbols-outlined text-sm">delete</span>`;
+            delBtn.innerHTML = `<span class="material-symbols-rounded text-sm">delete</span>`;
             delBtn.onclick = async (e) => {
                 e.stopPropagation();
                 try {
@@ -536,7 +536,7 @@ function renderLibraryFoods() {
             </div>
             <!-- Delete Button -->
             <button class="absolute top-4 right-4 w-8 h-8 rounded-full bg-error-container text-on-error-container flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity active:scale-95 z-10 delete-library-btn">
-                <span class="material-symbols-outlined text-lg">delete</span>
+                <span class="material-symbols-rounded text-lg">delete</span>
             </button>
         `;
         

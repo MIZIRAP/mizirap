@@ -549,7 +549,7 @@ async function saveWorkoutSession() {
         await setDoc(doc(db, "users", currentUid, "workout_logs", docId), logData);
         currentWorkoutLog = { id: docId, ...logData };
         
-        saveBtn.innerHTML = `<span class="material-symbols-outlined">check_circle</span> Kaydedildi!`;
+        saveBtn.innerHTML = `<span class="material-symbols-rounded">check_circle</span> Kaydedildi!`;
         saveBtn.classList.add("bg-gradient-to-r from-neon-purple to-neon-blue-container", "text-white-container");
         
         setTimeout(() => {
@@ -617,13 +617,13 @@ function renderEditTemplateList() {
         item.dataset.index = index;
         
         item.innerHTML = `
-            <span class="material-symbols-outlined text-outline-variant drag-handle">drag_handle</span>
+            <span class="material-symbols-rounded text-outline-variant drag-handle">drag_handle</span>
             <div class="flex-1">
                 <h3 class="font-body-lg text-body-lg font-medium text-on-surface">${escapeHtml(ex.name)}</h3>
                 <p class="font-label-sm text-label-sm text-on-surface-variant">Genel • ${ex.defaultSets || 3} Set</p>
             </div>
             <button class="text-error opacity-70 hover:opacity-100 transition-opacity p-2 delete-btn">
-                <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">delete</span>
+                <span class="material-symbols-rounded" style="font-variation-settings: 'FILL' 1;">delete</span>
             </button>
         `;
         
@@ -765,7 +765,7 @@ function openSplitSelectionModal() {
                         <span class="font-label-md text-label-md text-neon-blue">Aktif Program</span>
                     </div>
                     <div class="w-8 h-8 rounded-full bg-gradient-to-r from-neon-purple to-neon-blue flex items-center justify-center z-10">
-                        <span class="material-symbols-outlined text-white icon-md font-bold">check</span>
+                        <span class="material-symbols-rounded text-white icon-md font-bold">check</span>
                     </div>
                     <div class="absolute inset-0 bg-gradient-to-r from-neon-purple to-neon-blue/5 pointer-events-none"></div>
                 `;
@@ -986,26 +986,26 @@ async function openExerciseHistory(triggerExId, exName) {
             const diff = historyRecords[0].maxWeight - historyRecords[1].maxWeight;
             if(diff > 0) {
                 trendBadgeEl.innerHTML = `
-                    <span class="material-symbols-outlined text-neon-blue text-lg" data-icon="trending_up">trending_up</span>
+                    <span class="material-symbols-rounded text-neon-blue text-lg" data-icon="trending_up">trending_up</span>
                     <span class="font-label-sm text-label-sm text-neon-blue inline-block min-w-[48px] text-right">+${diff.toFixed(1)} kg</span>
                 `;
                 trendBadgeEl.className = "bg-gradient-to-r from-neon-purple to-neon-blue-container bg-opacity-20 rounded-full px-3 py-1 flex items-center gap-1";
             } else if (diff < 0) {
                 trendBadgeEl.innerHTML = `
-                    <span class="material-symbols-outlined text-error text-lg" data-icon="trending_down">trending_down</span>
+                    <span class="material-symbols-rounded text-error text-lg" data-icon="trending_down">trending_down</span>
                     <span class="font-label-sm text-label-sm text-error inline-block min-w-[48px] text-right">${diff.toFixed(1)} kg</span>
                 `;
                 trendBadgeEl.className = "bg-error-container bg-opacity-20 rounded-full px-3 py-1 flex items-center gap-1";
             } else {
                 trendBadgeEl.innerHTML = `
-                    <span class="material-symbols-outlined text-outline text-lg" data-icon="trending_flat">trending_flat</span>
+                    <span class="material-symbols-rounded text-outline text-lg" data-icon="trending_flat">trending_flat</span>
                     <span class="font-label-sm text-label-sm text-outline">Değişim Yok</span>
                 `;
                 trendBadgeEl.className = "bg-background shadow-neo-variant bg-opacity-50 rounded-full px-3 py-1 flex items-center gap-1";
             }
         } else {
              trendBadgeEl.innerHTML = `
-                <span class="material-symbols-outlined text-neon-blue text-lg" data-icon="fiber_new">fiber_new</span>
+                <span class="material-symbols-rounded text-neon-blue text-lg" data-icon="fiber_new">fiber_new</span>
                 <span class="font-label-sm text-label-sm text-neon-blue">İlk Kayıt</span>
             `;
              trendBadgeEl.className = "bg-gradient-to-r from-neon-purple to-neon-blue-container bg-opacity-20 rounded-full px-3 py-1 flex items-center gap-1";
@@ -1041,7 +1041,7 @@ async function openExerciseHistory(triggerExId, exName) {
                 <div class="bg-background shadow-neo-lowest rounded-[32px] shadow-sm p-4 flex items-center justify-between interactive-card cursor-pointer ${opacityClass}">
                     <div class="flex items-center gap-4">
                         <div class="w-10 h-10 rounded-lg bg-background shadow-neo flex items-center justify-center text-${idx===0 ? 'primary' : 'secondary'}">
-                            <span class="material-symbols-outlined" data-icon="calendar_today" ${idx===0 ? "style=\"font-variation-settings: 'FILL' 1;\"" : ""}>calendar_today</span>
+                            <span class="material-symbols-rounded" data-icon="calendar_today" ${idx===0 ? "style=\"font-variation-settings: 'FILL' 1;\"" : ""}>calendar_today</span>
                         </div>
                         <div class="flex flex-col">
                             <span class="font-label-sm text-label-sm text-on-surface-variant">${dateFormatted}</span>
@@ -1200,7 +1200,7 @@ function renderSplitEditView() {
                     <div class="ex-drag-item flex items-center gap-2 px-md py-2.5 border-b border-surface-container-highest last:border-0 active:bg-background shadow-neo-high transition-colors"
                          data-ex-idx="${exIdx}" data-split-id="${activeSplit.id}" data-day-idx="${dayIdx}">
                         <!-- Drag Handle -->
-                        <span class="material-symbols-outlined text-on-surface-variant/50 drag-handle select-none shrink-0 cursor-grab active:cursor-grabbing" style="font-size:20px">drag_indicator</span>
+                        <span class="material-symbols-rounded text-on-surface-variant/50 drag-handle select-none shrink-0 cursor-grab active:cursor-grabbing" style="font-size:20px">drag_indicator</span>
                         <!-- Hareket Adı -->
                         <span class="flex-1 font-body-md text-on-surface text-sm leading-tight">${ex.name}</span>
                         <!-- Set Sayısı -->
@@ -1214,7 +1214,7 @@ function renderSplitEditView() {
                         <!-- Sil -->
                         <button data-action="removeExerciseFromSplit" data-split-id="${activeSplit.id}" data-day-idx="${dayIdx}" data-ex-idx="${exIdx}"
                             class="shrink-0 w-8 h-8 flex items-center justify-center text-on-surface-variant hover:text-error hover:bg-error-container/20 rounded-full transition-colors">
-                            <span class="material-symbols-outlined" style="font-size:18px">delete</span>
+                            <span class="material-symbols-rounded" style="font-size:18px">delete</span>
                         </button>
                     </div>
                 `;
@@ -1226,7 +1226,7 @@ function renderSplitEditView() {
             <button class="accordion-header w-full flex items-center justify-between px-md py-3.5 text-left group transition-colors hover:bg-background shadow-neo-high"
                     data-action="toggleDayAccordion" data-accordion-key="${accordionKey}">
                 <div class="flex items-center gap-2">
-                    <span class="material-symbols-outlined text-neon-blue transition-transform duration-200 ${isOpen ? 'rotate-90' : ''}" style="font-size:20px">chevron_right</span>
+                    <span class="material-symbols-rounded text-neon-blue transition-transform duration-200 ${isOpen ? 'rotate-90' : ''}" style="font-size:20px">chevron_right</span>
                     <h3 class="font-title-md text-title-md font-semibold text-on-surface">${day.name}</h3>
                 </div>
                 <span class="font-label-sm text-on-surface-variant">${exCount} hareket</span>
@@ -1239,7 +1239,7 @@ function renderSplitEditView() {
                 <div class="px-md pt-2 pb-md">
                     <button data-action="openExercisePickerForSplit" data-split-id="${activeSplit.id}" data-day-idx="${dayIdx}"
                         class="w-full py-2 bg-gradient-to-r from-neon-purple to-neon-blue-container/20 text-neon-blue rounded-lg font-label-sm hover:bg-gradient-to-r from-neon-purple to-neon-blue-container/40 transition-colors flex items-center justify-center gap-1">
-                        <span class="material-symbols-outlined text-[18px]">add</span> Egzersiz Ekle
+                        <span class="material-symbols-rounded text-[18px]">add</span> Egzersiz Ekle
                     </button>
                 </div>
             </div>
@@ -1257,7 +1257,7 @@ function renderSplitEditView() {
 
 function toggleDayAccordion(key, headerBtn) {
     const body = headerBtn.closest('.bg-background shadow-neo-lowest').querySelector('.accordion-body');
-    const chevron = headerBtn.querySelector('.material-symbols-outlined');
+    const chevron = headerBtn.querySelector('.material-symbols-rounded');
     
     if(_openDayAccordions.has(key)) {
         _openDayAccordions.delete(key);
@@ -1447,7 +1447,7 @@ function renderCreateSplitDays() {
                     <div class="flex items-center justify-between py-2 border-b border-surface-container-highest last:border-0">
                         <span class="text-body-sm">${ex.name}</span>
                         <button data-action="removeExerciseFromNewDay" data-day-idx="${index}" data-ex-idx="${exIdx}" class="text-error/80 hover:text-error p-1">
-                            <span class="material-symbols-outlined" style="font-size: 18px">close</span>
+                            <span class="material-symbols-rounded" style="font-size: 18px">close</span>
                         </button>
                     </div>
                 `;
@@ -1458,14 +1458,14 @@ function renderCreateSplitDays() {
             <div class="flex items-center justify-between mb-sm">
                 <input type="text" value="${day.name}" onchange="updateNewDayName(${index}, this.value)" class="font-title-md text-title-md font-bold text-on-surface bg-transparent outline-none w-3/4 border-b border-transparent focus:border-outline-variant">
                 <button data-action="removeDayFromNewSplit" data-day-idx="${index}" class="text-on-surface-variant hover:text-error transition-colors p-1">
-                    <span class="material-symbols-outlined" style="font-size: 20px">delete</span>
+                    <span class="material-symbols-rounded" style="font-size: 20px">delete</span>
                 </button>
             </div>
             <div class="mb-3">
                 ${exHtml}
             </div>
             <button data-action="openExercisePicker" data-day-id="${day.id}" class="w-full py-2 bg-gradient-to-r from-neon-purple to-neon-blue-container/30 text-neon-blue rounded-lg font-label-sm hover:bg-gradient-to-r from-neon-purple to-neon-blue-container/50 transition-colors flex items-center justify-center gap-1">
-                <span class="material-symbols-outlined text-[18px]">add</span> Egzersiz Ekle
+                <span class="material-symbols-rounded text-[18px]">add</span> Egzersiz Ekle
             </button>
         `;
         container.appendChild(div);
@@ -1560,7 +1560,7 @@ function renderExercisePickerList(category, searchTerm = '') {
         btn.className = "w-full text-left p-3 rounded-[32px] hover:bg-background shadow-neo-high transition-colors flex items-center justify-between border border-transparent hover:border-outline-variant/30";
         btn.innerHTML = `
             <span class="font-body-md text-on-surface">${exName}</span>
-            <span class="material-symbols-outlined text-neon-blue">add_circle</span>
+            <span class="material-symbols-rounded text-neon-blue">add_circle</span>
         `;
         btn.onclick = () => handlePickerSelect(exName);
         list.appendChild(btn);
@@ -1645,14 +1645,14 @@ function openSplitModal() {
                     <div class="font-title-md text-on-surface font-bold">${split.name}</div>
                     <div class="font-label-sm text-on-surface-variant">${split.days ? split.days.length : 0} Gün</div>
                 </div>
-                ${isAct ? '<span class="material-symbols-outlined text-neon-blue">check_circle</span>' : '<span class="material-symbols-outlined text-outline">radio_button_unchecked</span>'}
+                ${isAct ? '<span class="material-symbols-rounded text-neon-blue">check_circle</span>' : '<span class="material-symbols-rounded text-outline">radio_button_unchecked</span>'}
             </div>
             <div class="flex justify-end gap-2 mt-2 pt-2 border-t border-outline-variant/30">
                 <button data-action="openEditSplitView" data-split-id="${split.id}" class="p-2 rounded-full text-neon-blue hover:bg-gradient-to-r from-neon-purple to-neon-blue-container/20 transition-colors flex items-center justify-center">
-                    <span class="material-symbols-outlined text-sm">edit</span>
+                    <span class="material-symbols-rounded text-sm">edit</span>
                 </button>
                 <button data-action="deleteSplit" data-split-id="${split.id}" class="p-2 rounded-full text-error hover:bg-error-container/20 transition-colors flex items-center justify-center">
-                    <span class="material-symbols-outlined text-sm">delete</span>
+                    <span class="material-symbols-rounded text-sm">delete</span>
                 </button>
             </div>
         `;
@@ -1675,9 +1675,9 @@ function selectSplit(splitId) {
         const split = splits[index];
         const isSel = split.id === tempSelectedSplitId;
         child.className = `flex flex-col p-4 rounded-[32px] border ${isSel ? 'border-primary bg-gradient-to-r from-neon-purple to-neon-blue-container/10' : 'border-outline-variant bg-background shadow-neo'} cursor-pointer hover:bg-background shadow-neo-high transition-colors`;
-        const icon = child.querySelector('.material-symbols-outlined.text-neon-blue, .material-symbols-outlined.text-outline');
+        const icon = child.querySelector('.material-symbols-rounded.text-neon-blue, .material-symbols-rounded.text-outline');
         if(icon) {
-            icon.className = `material-symbols-outlined ${isSel ? 'text-neon-blue' : 'text-outline'}`;
+            icon.className = `material-symbols-rounded ${isSel ? 'text-neon-blue' : 'text-outline'}`;
             icon.innerText = isSel ? 'check_circle' : 'radio_button_unchecked';
         }
     });
@@ -1882,16 +1882,16 @@ function generateStretchCard(stretch) {
                 <h3 class="font-body-lg text-body-lg font-medium text-on-surface">${escapeHtml(stretch.name)}</h3>
                 <div class="flex items-center gap-2 mt-1">
                     <span class="text-on-surface-variant font-label-sm text-label-sm flex items-center gap-1">
-                        <span class="material-symbols-outlined text-[14px]" data-icon="timer">timer</span> ${stretch.duration}
+                        <span class="material-symbols-rounded text-[14px]" data-icon="timer">timer</span> ${stretch.duration}
                     </span>
                 </div>
             </div>
             <div class="flex items-center gap-sm flex-shrink-0">
                 <button data-action="editStretch" data-stretch-id="${stretch.id}" class="text-on-surface-variant hover:text-neon-blue transition-colors p-1 rounded-full hover:bg-background shadow-neo-variant active:scale-95">
-                    <span class="material-symbols-outlined text-[20px]" data-icon="edit">edit</span>
+                    <span class="material-symbols-rounded text-[20px]" data-icon="edit">edit</span>
                 </button>
                 <button data-action="deleteStretch" data-stretch-id="${stretch.id}" class="text-on-surface-variant hover:text-error transition-colors p-1 rounded-full hover:bg-background shadow-neo-variant active:scale-95">
-                    <span class="material-symbols-outlined text-[20px]" data-icon="delete">delete</span>
+                    <span class="material-symbols-rounded text-[20px]" data-icon="delete">delete</span>
                 </button>
             </div>
         </div>
@@ -2133,16 +2133,16 @@ function renderCores() {
                     <h3 class="font-body-lg text-body-lg font-medium text-on-surface">${escapeHtml(core.name)}</h3>
                     <div class="flex items-center gap-2 mt-1">
                         <span class="text-on-surface-variant font-label-sm text-label-sm flex items-center gap-1">
-                            <span class="material-symbols-outlined text-[14px]" data-icon="timer">timer</span> ${core.duration}
+                            <span class="material-symbols-rounded text-[14px]" data-icon="timer">timer</span> ${core.duration}
                         </span>
                     </div>
                 </div>
                 <div class="flex items-center gap-sm flex-shrink-0">
                     <button data-action="editCore" data-core-id="${core.id}" class="text-on-surface-variant hover:text-neon-blue transition-colors p-1 rounded-full hover:bg-background shadow-neo-variant">
-                        <span class="material-symbols-outlined" data-icon="edit">edit</span>
+                        <span class="material-symbols-rounded" data-icon="edit">edit</span>
                     </button>
                     <button data-action="deleteCore" data-core-id="${core.id}" class="text-on-surface-variant hover:text-error transition-colors p-1 rounded-full hover:bg-background shadow-neo-variant">
-                        <span class="material-symbols-outlined" data-icon="delete">delete</span>
+                        <span class="material-symbols-rounded" data-icon="delete">delete</span>
                     </button>
                 </div>
             </div>
@@ -2364,7 +2364,7 @@ function renderSessionMovementPicker() {
                 ${m.imageBase64 ? `<img src="${m.imageBase64}" class="w-full h-full object-cover" alt="${escapeHtml(m.name)}"/>` : ''}
             </div>
             <span class="flex-1 font-body-md text-body-md text-on-surface truncate">${escapeHtml(m.name)}</span>
-            <span class="material-symbols-outlined text-[18px] ${selected ? 'text-neon-blue' : 'text-outline-variant'}" style="font-variation-settings: 'FILL' ${selected ? 1 : 0};">
+            <span class="material-symbols-rounded text-[18px] ${selected ? 'text-neon-blue' : 'text-outline-variant'}" style="font-variation-settings: 'FILL' ${selected ? 1 : 0};">
                 ${selected ? 'check_circle' : 'radio_button_unchecked'}
             </span>
         </button>`;
@@ -2406,14 +2406,14 @@ function renderSessionOrderedList() {
     list.innerHTML = sessionDraftMovements.map((m, i) => `
         <div class="flex items-center gap-3 bg-background shadow-neo-low rounded-lg p-2 cursor-grab active:cursor-grabbing session-drag-item"
             draggable="true" data-drag-idx="${i}">
-            <span class="material-symbols-outlined text-outline text-[20px] select-none">drag_indicator</span>
+            <span class="material-symbols-rounded text-outline text-[20px] select-none">drag_indicator</span>
             <div class="w-10 h-10 rounded-full overflow-hidden flex-shrink-0 bg-background shadow-neo-highest">
                 ${m.imageBase64 ? `<img src="${m.imageBase64}" class="w-full h-full object-cover" alt="${escapeHtml(m.name)}"/>` : ''}
             </div>
             <span class="flex-1 font-body-md text-body-md text-on-surface truncate">${escapeHtml(m.name)}</span>
             <span class="font-label-sm text-label-sm text-on-surface-variant">${m.duration}s</span>
             <button data-action="removeSessionMovement" data-move-id="${m.id}" class="text-on-surface-variant hover:text-error transition-colors p-1 rounded-full">
-                <span class="material-symbols-outlined text-[18px]">close</span>
+                <span class="material-symbols-rounded text-[18px]">close</span>
             </button>
         </div>
     `).join('');
@@ -2534,31 +2534,31 @@ function renderStretchSessions() {
                 <div class="flex-1">
                     <div class="flex items-center gap-2">
                         ${isActive ? `<span class="inline-flex items-center gap-1 bg-gradient-to-r from-neon-purple to-neon-blue text-white font-label-sm text-label-sm px-2 py-0.5 rounded-full text-[11px]">
-                            <span class="material-symbols-outlined text-[12px]" style="font-variation-settings:'FILL' 1;">check_circle</span> Aktif
+                            <span class="material-symbols-rounded text-[12px]" style="font-variation-settings:'FILL' 1;">check_circle</span> Aktif
                         </span>` : ''}
                         <h3 class="font-title-sm text-title-sm font-semibold text-on-surface">${escapeHtml(session.name)}</h3>
                     </div>
                     <div class="flex items-center gap-3 mt-1">
                         <span class="flex items-center gap-1 text-on-surface-variant font-label-sm text-label-sm">
-                            <span class="material-symbols-outlined text-[14px]">timer</span> ${durationStr}
+                            <span class="material-symbols-rounded text-[14px]">timer</span> ${durationStr}
                         </span>
                         <span class="flex items-center gap-1 text-on-surface-variant font-label-sm text-label-sm">
-                            <span class="material-symbols-outlined text-[14px]">fitness_center</span> ${moveCount} hareket
+                            <span class="material-symbols-rounded text-[14px]">fitness_center</span> ${moveCount} hareket
                         </span>
                     </div>
                 </div>
                 <div class="flex items-center gap-1 flex-shrink-0">
                     ${!isActive ? `<button data-action="setActiveStretchSession" data-session-id="${session.id}"
                         class="text-on-surface-variant hover:text-neon-blue transition-colors p-1.5 rounded-full hover:bg-background shadow-neo-variant active:scale-95" title="Aktif Seans Yap">
-                        <span class="material-symbols-outlined text-[20px]">play_circle</span>
+                        <span class="material-symbols-rounded text-[20px]">play_circle</span>
                     </button>` : ''}
                     <button data-action="editStretchSession" data-session-id="${session.id}"
                         class="text-on-surface-variant hover:text-neon-blue transition-colors p-1.5 rounded-full hover:bg-background shadow-neo-variant active:scale-95">
-                        <span class="material-symbols-outlined text-[20px]">edit</span>
+                        <span class="material-symbols-rounded text-[20px]">edit</span>
                     </button>
                     <button data-action="deleteStretchSession" data-session-id="${session.id}"
                         class="text-on-surface-variant hover:text-error transition-colors p-1.5 rounded-full hover:bg-background shadow-neo-variant active:scale-95">
-                        <span class="material-symbols-outlined text-[20px]">delete</span>
+                        <span class="material-symbols-rounded text-[20px]">delete</span>
                     </button>
                 </div>
             </div>
@@ -2841,31 +2841,31 @@ function renderCoreSessions() {
                 <div class="flex-1">
                     <div class="flex items-center gap-2">
                         ${isActive ? `<span class="inline-flex items-center gap-1 bg-gradient-to-r from-neon-purple to-neon-blue text-white font-label-sm text-label-sm px-2 py-0.5 rounded-full text-[11px]">
-                            <span class="material-symbols-outlined text-[12px]" style="font-variation-settings:'FILL' 1;">check_circle</span> Aktif
+                            <span class="material-symbols-rounded text-[12px]" style="font-variation-settings:'FILL' 1;">check_circle</span> Aktif
                         </span>` : ''}
                         <h3 class="font-title-sm text-title-sm font-semibold text-on-surface">${escapeHtml(session.name)}</h3>
                     </div>
                     <div class="flex items-center gap-3 mt-1">
                         <span class="flex items-center gap-1 text-on-surface-variant font-label-sm text-label-sm">
-                            <span class="material-symbols-outlined text-[14px]">timer</span> ${durationStr}
+                            <span class="material-symbols-rounded text-[14px]">timer</span> ${durationStr}
                         </span>
                         <span class="flex items-center gap-1 text-on-surface-variant font-label-sm text-label-sm">
-                            <span class="material-symbols-outlined text-[14px]">fitness_center</span> ${moveCount} hareket
+                            <span class="material-symbols-rounded text-[14px]">fitness_center</span> ${moveCount} hareket
                         </span>
                     </div>
                 </div>
                 <div class="flex items-center gap-1 flex-shrink-0">
                     ${!isActive ? `<button data-action="setActiveCoreSession" data-session-id="${session.id}"
                         class="text-on-surface-variant hover:text-neon-blue transition-colors p-1.5 rounded-full hover:bg-background shadow-neo-variant active:scale-95" title="Aktif Seans Yap">
-                        <span class="material-symbols-outlined text-[20px]">play_circle</span>
+                        <span class="material-symbols-rounded text-[20px]">play_circle</span>
                     </button>` : ''}
                     <button data-action="editCoreSession" data-session-id="${session.id}"
                         class="text-on-surface-variant hover:text-neon-blue transition-colors p-1.5 rounded-full hover:bg-background shadow-neo-variant active:scale-95">
-                        <span class="material-symbols-outlined text-[20px]">edit</span>
+                        <span class="material-symbols-rounded text-[20px]">edit</span>
                     </button>
                     <button data-action="deleteCoreSession" data-session-id="${session.id}"
                         class="text-on-surface-variant hover:text-error transition-colors p-1.5 rounded-full hover:bg-background shadow-neo-variant active:scale-95">
-                        <span class="material-symbols-outlined text-[20px]">delete</span>
+                        <span class="material-symbols-rounded text-[20px]">delete</span>
                     </button>
                 </div>
             </div>
@@ -2998,7 +2998,7 @@ function renderCoreSessionMovementPicker() {
                 ${m.imageBase64 ? `<img src="${m.imageBase64}" class="w-full h-full object-cover" alt="${escapeHtml(m.name)}"/>` : ''}
             </div>
             <span class="flex-1 font-body-md text-body-md text-on-surface truncate">${escapeHtml(m.name)}</span>
-            <span class="material-symbols-outlined text-[18px] ${selected ? 'text-neon-blue' : 'text-outline-variant'}" style="font-variation-settings: 'FILL' ${selected ? 1 : 0};">
+            <span class="material-symbols-rounded text-[18px] ${selected ? 'text-neon-blue' : 'text-outline-variant'}" style="font-variation-settings: 'FILL' ${selected ? 1 : 0};">
                 ${selected ? 'check_circle' : 'radio_button_unchecked'}
             </span>
         </button>`;
@@ -3038,14 +3038,14 @@ function renderCoreSessionOrderedList() {
     list.innerHTML = coreSessionDraftMovements.map((m, i) => `
         <div class="flex items-center gap-3 bg-background shadow-neo-low rounded-lg p-2 cursor-grab active:cursor-grabbing core-session-drag-item"
             draggable="true" data-drag-idx="${i}">
-            <span class="material-symbols-outlined text-outline text-[20px] select-none">drag_indicator</span>
+            <span class="material-symbols-rounded text-outline text-[20px] select-none">drag_indicator</span>
             <div class="w-10 h-10 rounded-full overflow-hidden flex-shrink-0 bg-background shadow-neo-highest">
                 ${m.imageBase64 ? `<img src="${m.imageBase64}" class="w-full h-full object-cover" alt="${escapeHtml(m.name)}"/>` : ''}
             </div>
             <span class="flex-1 font-body-md text-body-md text-on-surface truncate">${escapeHtml(m.name)}</span>
             <span class="font-label-sm text-label-sm text-on-surface-variant">${m.duration}s</span>
             <button data-action="removeCoreSessionMovement" data-move-id="${m.id}" class="text-on-surface-variant hover:text-error transition-colors p-1 rounded-full">
-                <span class="material-symbols-outlined text-[18px]">close</span>
+                <span class="material-symbols-rounded text-[18px]">close</span>
             </button>
         </div>
     `).join('');

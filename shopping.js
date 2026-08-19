@@ -78,13 +78,13 @@ function renderShoppingList() {
             <div class="flex items-center justify-between w-full normal-view">
                 <div class="flex items-center gap-4">
                     <button class="toggle-btn w-6 h-6 rounded-md border-2 border-primary flex items-center justify-center transition-colors">
-                        <span class="material-symbols-outlined text-lg text-transparent">check</span>
+                        <span class="material-symbols-rounded text-lg text-transparent">check</span>
                     </button>
                     <span class="font-body-md text-on-surface text-body-md">${escapeHtml(item.title)}</span>
                 </div>
                 <div class="flex items-center gap-1">
-                    <button class="edit-btn material-symbols-outlined text-outline hover:text-neon-blue transition-colors p-1">edit</button>
-                    <button class="delete-btn material-symbols-outlined text-outline hover:text-error transition-colors p-1">delete</button>
+                    <button class="edit-btn material-symbols-rounded text-outline hover:text-neon-blue transition-colors p-1">edit</button>
+                    <button class="delete-btn material-symbols-rounded text-outline hover:text-error transition-colors p-1">delete</button>
                 </div>
             </div>
             <!-- Edit View -->
@@ -135,13 +135,13 @@ function renderShoppingList() {
             <div class="flex items-center justify-between w-full normal-view">
                 <div class="flex items-center gap-4">
                     <button class="toggle-btn w-6 h-6 rounded-md bg-gradient-to-r from-neon-purple to-neon-blue flex items-center justify-center transition-colors">
-                        <span class="material-symbols-outlined text-lg text-white">check</span>
+                        <span class="material-symbols-rounded text-lg text-white">check</span>
                     </button>
                     <span class="font-body-md text-outline checked-item text-body-md">${escapeHtml(item.title)}</span>
                 </div>
                 <div class="flex items-center gap-1">
-                    <button class="edit-btn material-symbols-outlined text-outline hover:text-neon-blue transition-colors p-1">edit</button>
-                    <button class="delete-btn material-symbols-outlined text-outline hover:text-error transition-colors p-1">delete</button>
+                    <button class="edit-btn material-symbols-rounded text-outline hover:text-neon-blue transition-colors p-1">edit</button>
+                    <button class="delete-btn material-symbols-rounded text-outline hover:text-error transition-colors p-1">delete</button>
                 </div>
             </div>
             <!-- Edit View -->

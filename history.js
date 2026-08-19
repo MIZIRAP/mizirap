@@ -142,7 +142,7 @@ function renderHistory() {
         <article class="bg-white rounded-2xl shadow-sm p-6 flex flex-col gap-4 active-scale transition-transform duration-200 cursor-pointer border border-outline-variant/30 ${opacityClass}">
             <div class="flex justify-between items-center w-full border-b border-outline-variant/30 pb-3">
                 <h2 class="text-headline-sm font-headline-sm font-bold text-on-surface">${title}</h2>
-                <span class="material-symbols-outlined text-on-surface/40">chevron_right</span>
+                <span class="material-symbols-rounded text-on-surface/40">chevron_right</span>
             </div>
             <div class="flex justify-between items-center gap-2 overflow-x-auto pb-2">
                 <!-- Calories -->
@@ -152,28 +152,28 @@ function renderHistory() {
                             <path class="text-primary/20 stroke-current" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke-width="3"></path>
                             <path class="text-primary stroke-current" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke-dasharray="${calPercent}, 100" stroke-width="3"></path>
                         </svg>
-                        <span class="material-symbols-outlined absolute text-lg text-primary" style="font-variation-settings: 'FILL' 1;">restaurant</span>
+                        <span class="material-symbols-rounded absolute text-lg text-primary" style="font-variation-settings: 'FILL' 1;">restaurant</span>
                     </div>
                     <span class="text-label-sm text-on-surface font-semibold">${Math.round(data.calories)}</span>
                 </div>
                 <!-- Water -->
                 <div class="flex flex-col items-center gap-1 min-w-[60px]">
                     <div class="w-8 h-8 rounded-full bg-[var(--green)]/10 flex items-center justify-center text-primary">
-                        <span class="material-symbols-outlined text-lg">water_drop</span>
+                        <span class="material-symbols-rounded text-lg">water_drop</span>
                     </div>
                     <span class="text-label-sm text-on-surface font-semibold">${Math.round(data.water)}ml</span>
                 </div>
                 <!-- Reading -->
                 <div class="flex flex-col items-center gap-1 min-w-[60px]">
                     <div class="w-8 h-8 rounded-full bg-[var(--tan)]/20 flex items-center justify-center text-[var(--tan)]">
-                        <span class="material-symbols-outlined text-lg">menu_book</span>
+                        <span class="material-symbols-rounded text-lg">menu_book</span>
                     </div>
                     <span class="text-label-sm text-on-surface font-semibold">${data.books}s</span>
                 </div>
                 <!-- Finance -->
                 <div class="flex flex-col items-center gap-1 min-w-[60px]">
                     <div class="w-8 h-8 rounded-full ${financeBg} flex items-center justify-center text-[${financeColor}]">
-                        <span class="material-symbols-outlined text-lg">account_balance_wallet</span>
+                        <span class="material-symbols-rounded text-lg">account_balance_wallet</span>
                     </div>
                     <span class="text-label-sm text-[${financeColor}] font-semibold">${financeSign}₺${Math.abs(data.finance)}</span>
                 </div>

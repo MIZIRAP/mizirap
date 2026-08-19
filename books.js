@@ -401,11 +401,11 @@ function renderBooks(uid) {
                         <label class="font-label-sm text-label-sm text-on-surface-variant">Kaldığım Sayfa</label>
                         <div class="flex items-center gap-2 bg-background shadow-neo-variant rounded-lg p-1">
                             <button class="w-8 h-8 flex items-center justify-center rounded-full bg-gradient-to-r from-neon-blue to-neon-green text-white hover:bg-secondary-fixed transition-colors active:scale-90 decrease-page-btn" data-id="${book.id}">
-                                <span class="material-symbols-outlined text-body-lg">remove</span>
+                                <span class="material-symbols-rounded text-body-lg">remove</span>
                             </button>
                             <input class="w-full bg-transparent border-none focus:ring-0 text-center text-on-surface font-body-md text-body-md h-8 p-0 page-input" type="number" value="${book.readPages || 0}" data-id="${book.id}">
                             <button class="w-8 h-8 flex items-center justify-center rounded-full bg-gradient-to-r from-neon-blue to-neon-green text-white hover:bg-secondary-fixed transition-colors active:scale-90 increase-page-btn" data-id="${book.id}">
-                                <span class="material-symbols-outlined text-body-lg">add</span>
+                                <span class="material-symbols-rounded text-body-lg">add</span>
                             </button>
                         </div>
                     </div>
@@ -569,7 +569,7 @@ function renderViewAllList() {
             statusHtml = `
                 <div>
                     <span class="inline-flex items-center px-2 py-0.5 rounded text-label-sm font-label-sm bg-background shadow-neo-highest text-on-surface-variant">
-                        <span class="material-symbols-outlined text-lg mr-1" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+                        <span class="material-symbols-rounded text-lg mr-1" style="font-variation-settings: 'FILL' 1;">check_circle</span>
                         Bitti
                     </span>
                 </div>
@@ -587,7 +587,7 @@ function renderViewAllList() {
         card.dataset.id = book.id;
         card.innerHTML = `
             <button class="absolute top-3 right-3 p-1.5 rounded-full text-on-surface-variant/40 hover:text-error hover:bg-error-container/20 transition-colors z-10 delete-book-btn" data-id="${book.id}">
-                <span class="material-symbols-outlined text-lg">delete</span>
+                <span class="material-symbols-rounded text-lg">delete</span>
             </button>
             <div class="w-16 h-24 shrink-0 rounded-lg overflow-hidden bg-background shadow-neo-high relative">
                 <img class="w-full h-full object-cover" src="${safeCover}">

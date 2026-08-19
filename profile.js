@@ -189,7 +189,7 @@ function setupProfileEvents() {
                 }, { merge: true });
 
 
-                saveBtn.innerHTML = `<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">check_circle</span> Kaydedildi!`;
+                saveBtn.innerHTML = `<span class="material-symbols-rounded" style="font-variation-settings: 'FILL' 1;">check_circle</span> Kaydedildi!`;
                 saveBtn.classList.add("bg-gradient-to-r from-neon-purple to-neon-blue-container", "text-white-container");
                 
                 setTimeout(() => {
@@ -270,7 +270,7 @@ function setupProfileEvents() {
             } finally {
                 updatePasswordBtn.disabled = false;
                 updatePasswordBtn.innerHTML = `
-                    <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 0;">update</span>
+                    <span class="material-symbols-rounded text-sm" style="font-variation-settings: 'FILL' 0;">update</span>
                     Şifreyi Güncelle
                 `;
             }
