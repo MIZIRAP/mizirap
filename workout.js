@@ -244,6 +244,8 @@ document.addEventListener('click', (e) => {
     else if (action === 'removeExerciseFromNewDay') removeExerciseFromNewDay(parseInt(actionBtn.getAttribute('data-day-idx'), 10), parseInt(actionBtn.getAttribute('data-ex-idx'), 10));
     else if (action === 'removeDayFromNewSplit') removeDayFromNewSplit(parseInt(actionBtn.getAttribute('data-day-idx'), 10));
     else if (action === 'openExercisePicker') openExercisePicker(actionBtn.getAttribute('data-day-id'));
+    else if (action === 'closeExercisePickerModal') closeExercisePickerModal();
+    else if (action === 'filterPickerCategory') filterPickerCategory(actionBtn.getAttribute('data-category'), actionBtn);
     else if (action === 'selectSplit') selectSplit(actionBtn.getAttribute('data-split-id'));
     else if (action === 'openEditSplitView') { e.stopPropagation(); openEditSplitView(actionBtn.getAttribute('data-split-id')); }
     else if (action === 'startActiveSession') startActiveSession();

@@ -181,13 +181,7 @@ function _buildExState() {
         const draftSets = _sessionDoc?.exercises?.[ex.id]?.sets || [];
         const prevSets = _prevData?.[ex.id]?.sets || [];
         const defaultSets = ex.defaultSets || 3;
-
         let targetSetCount = defaultSets;
-        if (draftSets.length > 0) {
-            targetSetCount = Math.max(defaultSets, draftSets.length);
-        } else if (prevSets.length > 0) {
-            targetSetCount = prevSets.length;
-        }
 
         const sets = [];
         for (let i = 0; i < targetSetCount; i++) {

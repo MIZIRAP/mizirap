@@ -4147,13 +4147,13 @@
 
     <!-- EXERCISE PICKER MODAL -->
     <div id="modal-exercise-picker" class="hidden fixed inset-0 z-[70] flex items-center justify-center font-body-md">
-        <div class="absolute inset-0 bg-on-background/40 backdrop-blur-sm z-40 transition-opacity duration-300" onclick="closeExercisePickerModal()"></div>
+        <div class="absolute inset-0 bg-on-background/40 backdrop-blur-sm z-40 transition-opacity duration-300" data-action="closeExercisePickerModal"></div>
         <div class="relative bg-surface-container-lowest w-full h-[90vh] md:max-w-md mx-auto md:rounded-t-2xl rounded-t-2xl shadow-xl z-50 flex flex-col overflow-hidden mt-auto md:mt-0">
             <!-- Header -->
             <div class="px-lg pt-lg pb-sm flex flex-col gap-2 sticky top-0 bg-surface-container-lowest z-10 border-b border-surface-container-highest">
                 <div class="flex items-center justify-between">
                     <h2 class="font-title-lg text-title-lg text-on-surface">Egzersiz Seç</h2>
-                    <button onclick="closeExercisePickerModal()" class="text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest p-sm rounded-full transition-colors w-10 h-10 flex items-center justify-center">
+                    <button data-action="closeExercisePickerModal" class="text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest p-sm rounded-full transition-colors w-10 h-10 flex items-center justify-center">
                         <span class="material-symbols-outlined">close</span>
                     </button>
                 </div>
@@ -4163,14 +4163,14 @@
                 </div>
                 <!-- Categories filter -->
                 <div class="flex gap-2 overflow-x-auto hide-scrollbar py-2" id="exercise-picker-categories">
-                    <button class="px-4 py-1.5 rounded-full bg-primary text-on-primary font-label-sm whitespace-nowrap" onclick="filterPickerCategory('Tümü', this)">Tümü</button>
-                    <button class="px-4 py-1.5 rounded-full border border-outline-variant text-on-surface-variant font-label-sm whitespace-nowrap" onclick="filterPickerCategory('Göğüs', this)">Göğüs</button>
-                    <button class="px-4 py-1.5 rounded-full border border-outline-variant text-on-surface-variant font-label-sm whitespace-nowrap" onclick="filterPickerCategory('Sırt', this)">Sırt</button>
-                    <button class="px-4 py-1.5 rounded-full border border-outline-variant text-on-surface-variant font-label-sm whitespace-nowrap" onclick="filterPickerCategory('Omuz', this)">Omuz</button>
-                    <button class="px-4 py-1.5 rounded-full border border-outline-variant text-on-surface-variant font-label-sm whitespace-nowrap" onclick="filterPickerCategory('Bacak', this)">Bacak</button>
-                    <button class="px-4 py-1.5 rounded-full border border-outline-variant text-on-surface-variant font-label-sm whitespace-nowrap" onclick="filterPickerCategory('Biceps', this)">Biceps</button>
-                    <button class="px-4 py-1.5 rounded-full border border-outline-variant text-on-surface-variant font-label-sm whitespace-nowrap" onclick="filterPickerCategory('Triceps', this)">Triceps</button>
-                    <button class="px-4 py-1.5 rounded-full border border-outline-variant text-on-surface-variant font-label-sm whitespace-nowrap" onclick="filterPickerCategory('Karın', this)">Karın</button>
+                    <button class="px-4 py-1.5 rounded-full bg-primary text-on-primary font-label-sm whitespace-nowrap" data-action="filterPickerCategory" data-category="Tümü">Tümü</button>
+                    <button class="px-4 py-1.5 rounded-full border border-outline-variant text-on-surface-variant font-label-sm whitespace-nowrap" data-action="filterPickerCategory" data-category="Göğüs">Göğüs</button>
+                    <button class="px-4 py-1.5 rounded-full border border-outline-variant text-on-surface-variant font-label-sm whitespace-nowrap" data-action="filterPickerCategory" data-category="Sırt">Sırt</button>
+                    <button class="px-4 py-1.5 rounded-full border border-outline-variant text-on-surface-variant font-label-sm whitespace-nowrap" data-action="filterPickerCategory" data-category="Omuz">Omuz</button>
+                    <button class="px-4 py-1.5 rounded-full border border-outline-variant text-on-surface-variant font-label-sm whitespace-nowrap" data-action="filterPickerCategory" data-category="Bacak">Bacak</button>
+                    <button class="px-4 py-1.5 rounded-full border border-outline-variant text-on-surface-variant font-label-sm whitespace-nowrap" data-action="filterPickerCategory" data-category="Biceps">Biceps</button>
+                    <button class="px-4 py-1.5 rounded-full border border-outline-variant text-on-surface-variant font-label-sm whitespace-nowrap" data-action="filterPickerCategory" data-category="Triceps">Triceps</button>
+                    <button class="px-4 py-1.5 rounded-full border border-outline-variant text-on-surface-variant font-label-sm whitespace-nowrap" data-action="filterPickerCategory" data-category="Karın">Karın</button>
                 </div>
             </div>
 
