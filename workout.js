@@ -1761,6 +1761,7 @@ function openAddStretchModal(isEdit = false) {
     if (!isEdit) {
         editingStretchId = null;
         editingDefaultStretchId = null;
+        editingStretchIsDefault = false;
         currentStretchImageBase64 = null;
         nameInput.value = '';
         document.getElementById('stretch-duration').value = '';
@@ -1777,12 +1778,14 @@ function openAddStretchModal(isEdit = false) {
     
     // Always re-enable for new movements or normal edits (editStretch will disable if needed)
     if (nameInput) {
-        nameInput.disabled = false;
-        nameInput.classList.remove('opacity-50', 'cursor-not-allowed');
+        nameInput.disabled = editingStretchIsDefault;
+        if (editingStretchIsDefault) nameInput.classList.add('opacity-50', 'cursor-not-allowed');
+        else nameInput.classList.remove('opacity-50', 'cursor-not-allowed');
     }
     if (imageBtn) {
-        imageBtn.disabled = false;
-        imageBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+        imageBtn.disabled = editingStretchIsDefault;
+        if (editingStretchIsDefault) imageBtn.classList.add('opacity-50', 'cursor-not-allowed');
+        else imageBtn.classList.remove('opacity-50', 'cursor-not-allowed');
     }
 
     const modal = document.getElementById('addStretchModal');
