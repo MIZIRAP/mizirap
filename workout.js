@@ -157,6 +157,7 @@ let unsubCores = null;
 let cores = [];
 let currentCoreImageBase64 = null;
 let editingCoreId = null;
+let editingCoreIsDefault = false;
 
 let unsubStretchSessions = null;
 let stretchSessions = [];
@@ -2028,10 +2029,14 @@ async function deleteStretch(id) {
 // ==========================================
 
 function openAddCoreModal(isEdit = false) {
+    const nameInput = document.getElementById('core-name');
+    const imageBtn = document.getElementById('core-image-picker-btn');
+
     if (!isEdit) {
         editingCoreId = null;
+        editingCoreIsDefault = false;
         currentCoreImageBase64 = null;
-        document.getElementById('core-name').value = '';
+        nameInput.value = '';
         document.getElementById('core-duration').value = '';
         document.getElementById('core-modal-title').textContent = "Yeni Hareket";
         
@@ -2042,6 +2047,17 @@ function openAddCoreModal(isEdit = false) {
             preview.classList.add('hidden');
             placeholder.classList.remove('hidden');
         }
+    }
+
+    if (nameInput) {
+        nameInput.disabled = editingCoreIsDefault;
+        if (editingCoreIsDefault) nameInput.classList.add('opacity-50', 'cursor-not-allowed');
+        else nameInput.classList.remove('opacity-50', 'cursor-not-allowed');
+    }
+    if (imageBtn) {
+        imageBtn.disabled = editingCoreIsDefault;
+        if (editingCoreIsDefault) imageBtn.classList.add('opacity-50', 'cursor-not-allowed');
+        else imageBtn.classList.remove('opacity-50', 'cursor-not-allowed');
     }
 
     const modal = document.getElementById('addCoreModal');
@@ -2188,14 +2204,33 @@ function editCore(id) {
     if (!core) return;
     
     editingCoreId = id;
+    editingCoreIsDefault = (typeof defaultCores !== 'undefined') && defaultCores.some(dc => dc.name === core.name);
     
-    document.getElementById('core-name').value = core.name;
+    const nameInput = document.getElementById('core-name');
+    nameInput.value = core.name;
     document.getElementById('core-duration').value = core.duration;
     
     currentCoreImageBase64 = core.imageBase64 || null;
     
     const preview = document.getElementById('core-image-preview');
     const placeholder = document.getElementById('core-image-placeholder');
+    const imageBtn = document.getElementById('core-image-picker-btn');
+    
+    if (editingCoreIsDefault) {
+        nameInput.disabled = true;
+        nameInput.classList.add('opacity-50', 'cursor-not-allowed');
+        if (imageBtn) {
+            imageBtn.disabled = true;
+            imageBtn.classList.add('opacity-50', 'cursor-not-allowed');
+        }
+    } else {
+        nameInput.disabled = false;
+        nameInput.classList.remove('opacity-50', 'cursor-not-allowed');
+        if (imageBtn) {
+            imageBtn.disabled = false;
+            imageBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+        }
+    }
     
     if (currentCoreImageBase64) {
         preview.src = currentCoreImageBase64;
