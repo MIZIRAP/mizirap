@@ -298,10 +298,10 @@ function updateWaterUI() {
                 const timeStr = log.createdAt?.toDate ? log.createdAt.toDate().toLocaleTimeString("tr-TR", {hour: '2-digit', minute:'2-digit'}) : "";
                 
                 const wrapper = document.createElement("div");
-                wrapper.className = "relative w-full rounded-2xl bg-red-500 overflow-hidden";
+                wrapper.className = "relative w-full shrink-0";
                 
                 const delBtn = document.createElement("button");
-                delBtn.className = "absolute right-0 top-0 bottom-0 w-[80px] text-white flex items-center justify-center z-0 active:bg-red-600 transition-colors";
+                delBtn.className = "absolute right-0 top-0 bottom-0 w-[80px] bg-red-500 rounded-2xl text-white flex items-center justify-center z-0 active:bg-red-600 transition-colors";
                 delBtn.innerHTML = `<span class="material-symbols-rounded">delete</span>`;
                 delBtn.onclick = async () => {
                     try {
