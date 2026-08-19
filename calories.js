@@ -27,11 +27,24 @@ const addFoodModalTitle = document.getElementById('modalMealTitle');
 const caloriesGoalBtn = document.getElementById('calories-goal-btn');
 const caloriesGoalModal = document.getElementById('calories-goal-modal');
 const caloriesGoalModalContent = document.getElementById('calories-goal-modal-content');
+const caloriesGoalBackdrop = document.getElementById('calories-goal-backdrop');
+
 const caloriesGoalMinus = document.getElementById('calories-goal-minus');
 const caloriesGoalPlus = document.getElementById('calories-goal-plus');
 const caloriesGoalAmountDisplay = document.getElementById('calories-goal-amount-display');
-const caloriesGoalCancel = document.getElementById('calories-goal-cancel');
 const caloriesGoalSave = document.getElementById('calories-goal-save');
+
+const macroProteinMinus = document.getElementById('macro-protein-minus');
+const macroProteinPlus = document.getElementById('macro-protein-plus');
+const macroProteinDisplay = document.getElementById('macro-protein-display');
+
+const macroKarbMinus = document.getElementById('macro-karb-minus');
+const macroKarbPlus = document.getElementById('macro-karb-plus');
+const macroKarbDisplay = document.getElementById('macro-karb-display');
+
+const macroYagMinus = document.getElementById('macro-yag-minus');
+const macroYagPlus = document.getElementById('macro-yag-plus');
+const macroYagDisplay = document.getElementById('macro-yag-display');
 
 const portionModal = document.getElementById('addPortionModal');
 const portionModalContent = document.getElementById('addPortionModalContent');
@@ -55,6 +68,9 @@ const newFoodProteinInput = document.getElementById('new-food-protein');
 const newFoodYagInput = document.getElementById('new-food-yag');
 
 let tempCaloriesGoal = 2000;
+let tempMacroProtein = 150;
+let tempMacroKarb = 250;
+let tempMacroYag = 65;
 let currentKcalPer100g = 0;
 let currentFoodName = "";
 let currentFoodMacros = { karb: 0, protein: 0, yag: 0 };
@@ -151,12 +167,8 @@ function bindEvents() {
 
     // Calories Goal Modal
     if (caloriesGoalBtn) caloriesGoalBtn.onclick = openCaloriesGoalModal;
-    if (caloriesGoalCancel) caloriesGoalCancel.onclick = closeCaloriesGoalModal;
-    
-    if (caloriesGoalModal) {
-        caloriesGoalModal.onclick = (e) => {
-            if (e.target === caloriesGoalModal) closeCaloriesGoalModal();
-        };
+    if (caloriesGoalBackdrop) {
+        caloriesGoalBackdrop.onclick = () => closeCaloriesGoalModal();
     }
 
     if (caloriesGoalMinus) {
@@ -167,47 +179,69 @@ function bindEvents() {
     }
     if (caloriesGoalPlus) {
         caloriesGoalPlus.onclick = () => {
-            tempCaloriesGoal += 100;
+            if (tempCaloriesGoal < 10000) tempCaloriesGoal += 100;
             if(caloriesGoalAmountDisplay) caloriesGoalAmountDisplay.textContent = tempCaloriesGoal;
         };
     }
 
-    document.querySelectorAll('.calories-goal-preset').forEach(btn => {
-        btn.onclick = () => {
-            tempCaloriesGoal = parseInt(btn.dataset.amount);
-            if(caloriesGoalAmountDisplay) caloriesGoalAmountDisplay.textContent = tempCaloriesGoal;
-            document.querySelectorAll('.calories-goal-preset').forEach(b => {
-                b.classList.remove('bg-gradient-to-r from-neon-purple to-neon-blue-container', 'text-white-container', 'font-bold');
-                b.classList.add('bg-background shadow-neo', 'text-on-surface-variant');
-            });
-            btn.classList.add('bg-gradient-to-r from-neon-purple to-neon-blue-container', 'text-white-container', 'font-bold');
-            btn.classList.remove('bg-background shadow-neo', 'text-on-surface-variant');
+    if (macroProteinMinus) {
+        macroProteinMinus.onclick = () => {
+            if (tempMacroProtein > 10) tempMacroProtein -= 5;
+            if(macroProteinDisplay) macroProteinDisplay.textContent = tempMacroProtein;
         };
-    });
+    }
+    if (macroProteinPlus) {
+        macroProteinPlus.onclick = () => {
+            if (tempMacroProtein < 500) tempMacroProtein += 5;
+            if(macroProteinDisplay) macroProteinDisplay.textContent = tempMacroProtein;
+        };
+    }
+
+    if (macroKarbMinus) {
+        macroKarbMinus.onclick = () => {
+            if (tempMacroKarb > 10) tempMacroKarb -= 10;
+            if(macroKarbDisplay) macroKarbDisplay.textContent = tempMacroKarb;
+        };
+    }
+    if (macroKarbPlus) {
+        macroKarbPlus.onclick = () => {
+            if (tempMacroKarb < 1000) tempMacroKarb += 10;
+            if(macroKarbDisplay) macroKarbDisplay.textContent = tempMacroKarb;
+        };
+    }
+
+    if (macroYagMinus) {
+        macroYagMinus.onclick = () => {
+            if (tempMacroYag > 5) tempMacroYag -= 5;
+            if(macroYagDisplay) macroYagDisplay.textContent = tempMacroYag;
+        };
+    }
+    if (macroYagPlus) {
+        macroYagPlus.onclick = () => {
+            if (tempMacroYag < 300) tempMacroYag += 5;
+            if(macroYagDisplay) macroYagDisplay.textContent = tempMacroYag;
+        };
+    }
 
     if (caloriesGoalSave) {
         caloriesGoalSave.onclick = async () => {
-            const amountDisplay = document.getElementById('calories-goal-amount-display');
-            const g = amountDisplay ? parseInt(amountDisplay.textContent) || 2000 : 2000;
-            
-            const karbInput = document.getElementById('macro-goal-karb');
-            const k = karbInput ? parseInt(karbInput.value) || 240 : 240;
-            
-            const proteinInput = document.getElementById('macro-goal-protein');
-            const p = proteinInput ? parseInt(proteinInput.value) || 110 : 110;
-            
-            const yagInput = document.getElementById('macro-goal-yag');
-            const y = yagInput ? parseInt(yagInput.value) || 66 : 66;
-            
+            if(!currentUid) return;
+            caloriesGoalSave.disabled = true;
             try {
                 await setDoc(doc(db, "users", currentUid, "settings", "calories"), {
-                    dailyCalorieGoal: g, proteinGoal: p, karbGoal: k, yagGoal: y
+                    dailyCalorieGoal: tempCaloriesGoal,
+                    proteinGoal: tempMacroProtein,
+                    karbGoal: tempMacroKarb,
+                    yagGoal: tempMacroYag,
+                    updatedAt: serverTimestamp()
                 }, { merge: true });
-            } catch(err) {
-                console.error(err);
-                alert('Kaydedilirken hata oluştu: ' + err.message);
+                closeCaloriesGoalModal();
+            } catch (error) {
+                console.error("Hedef güncellenirken hata:", error);
+                alert("Hedef kaydedilemedi: " + error.message);
+            } finally {
+                caloriesGoalSave.disabled = false;
             }
-            closeCaloriesGoalModal();
         };
     }
 
@@ -345,29 +379,36 @@ function closeAddFoodModal() {
 function openCaloriesGoalModal() {
     if(!caloriesGoalModal) return;
     tempCaloriesGoal = dailyCalorieGoal;
-    if(caloriesGoalAmountDisplay) caloriesGoalAmountDisplay.textContent = tempCaloriesGoal;
-    
-    const karbInput = document.getElementById('macro-goal-karb');
-    if (karbInput) karbInput.value = karbGoal;
-    const proteinInput = document.getElementById('macro-goal-protein');
-    if (proteinInput) proteinInput.value = proteinGoal;
-    const yagInput = document.getElementById('macro-goal-yag');
-    if (yagInput) yagInput.value = yagGoal;
+    tempMacroProtein = proteinGoal;
+    tempMacroKarb = karbGoal;
+    tempMacroYag = yagGoal;
 
+    if(caloriesGoalAmountDisplay) caloriesGoalAmountDisplay.textContent = tempCaloriesGoal;
+    if(macroProteinDisplay) macroProteinDisplay.textContent = tempMacroProtein;
+    if(macroKarbDisplay) macroKarbDisplay.textContent = tempMacroKarb;
+    if(macroYagDisplay) macroYagDisplay.textContent = tempMacroYag;
+    
     caloriesGoalModal.classList.remove('hidden');
+    // small delay for transition
     setTimeout(() => {
-        caloriesGoalModalContent.classList.remove('scale-95', 'opacity-0');
-        caloriesGoalModalContent.classList.add('scale-100', 'opacity-100');
+        if(caloriesGoalBackdrop) caloriesGoalBackdrop.classList.remove('opacity-0');
+        if(caloriesGoalModalContent) {
+            caloriesGoalModalContent.classList.remove('translate-y-full', 'md:translate-y-10', 'md:opacity-0', 'md:scale-95');
+            caloriesGoalModalContent.classList.add('translate-y-0', 'md:translate-y-0', 'md:opacity-100', 'md:scale-100');
+        }
     }, 10);
 }
 
 function closeCaloriesGoalModal() {
     if(!caloriesGoalModal) return;
-    caloriesGoalModalContent.classList.remove('scale-100', 'opacity-100');
-    caloriesGoalModalContent.classList.add('scale-95', 'opacity-0');
+    if(caloriesGoalBackdrop) caloriesGoalBackdrop.classList.add('opacity-0');
+    if(caloriesGoalModalContent) {
+        caloriesGoalModalContent.classList.remove('translate-y-0', 'md:translate-y-0', 'md:opacity-100', 'md:scale-100');
+        caloriesGoalModalContent.classList.add('translate-y-full', 'md:translate-y-10', 'md:opacity-0', 'md:scale-95');
+    }
     setTimeout(() => {
         caloriesGoalModal.classList.add('hidden');
-    }, 200);
+    }, 300);
 }
 
 function openNewFoodModal() {

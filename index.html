@@ -2761,55 +2761,73 @@
     </div>
 
     <!-- ================= KALORİ HEDEFİ MODALI ================= -->
-    <div class="hidden fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm" id="calories-goal-modal">
-        <div class="bg-background shadow-neo w-full max-w-sm rounded-[32px] shadow-lg overflow-hidden flex flex-col scale-95 opacity-0 transition-all duration-200" id="calories-goal-modal-content">
-            <div class="p-6 flex flex-col gap-6">
-                <div class="flex flex-col gap-1">
-                    <h2 class="font-headline-sm text-headline-sm text-on-surface font-semibold">Günlük Kalori Hedefi</h2>
-                    <p class="font-body-md text-body-md text-on-surface-variant">Günlük alman gereken kalori miktarını ayarla.</p>
+    <div class="hidden fixed inset-0 z-[100]" id="calories-goal-modal">
+    <!-- Backdrop -->
+    <div class="absolute inset-0 bg-black/10 backdrop-blur-sm z-10 transition-opacity duration-300 opacity-0" id="calories-goal-backdrop"></div>
+    
+    <!-- Modal Content -->
+    <div class="absolute bottom-0 w-full md:relative md:max-w-sm md:mx-auto md:top-1/2 md:-translate-y-1/2 bg-[#F7F9FF] rounded-t-[32px] md:rounded-[32px] shadow-[0_-8px_30px_rgba(0,0,0,0.05)] md:shadow-[0_10px_40px_rgba(0,0,0,0.08)] p-6 z-20 flex flex-col items-center transform transition-transform duration-300 translate-y-full md:translate-y-10 md:opacity-0 md:scale-95 pb-8 md:pb-6" id="calories-goal-modal-content">
+        <!-- Drag Handle (Mobile) -->
+        <div class="w-12 h-1.5 bg-gray-300 rounded-full mb-6 md:hidden"></div>
+        <div class="w-full text-center mb-6">
+            <h2 class="text-xl font-bold text-gray-800 mb-2">Hedeflerini Güncelle</h2>
+        </div>
+        <!-- Input Area -->
+        <div class="flex items-center justify-between w-full px-4 mb-6">
+            <button id="calories-goal-minus" aria-label="Decrease amount" class="neo-button w-14 h-14 rounded-full flex items-center justify-center bg-[#F7F9FF] text-silk-blue focus:outline-none" style="box-shadow: 6px 6px 12px #e3e6ee, -6px -6px 12px #ffffff;">
+                <span class="material-symbols-rounded font-bold text-2xl" style="font-variation-settings: 'FILL' 1;">remove</span>
+            </button>
+            <div class="flex flex-col items-center justify-center w-32 h-32 rounded-full shadow-neumorphic-inset bg-[#F7F9FF]" style="box-shadow: inset 4px 4px 8px #e3e6ee, inset -4px -4px 8px #ffffff;">
+                <span class="text-3xl font-extrabold text-gray-800" id="calories-goal-amount-display">2000</span>
+                <span class="text-sm font-semibold text-silk-blue mt-1">kcal</span>
+            </div>
+            <button id="calories-goal-plus" aria-label="Increase amount" class="neo-button w-14 h-14 rounded-full flex items-center justify-center bg-[#F7F9FF] text-silk-green focus:outline-none" style="box-shadow: 6px 6px 12px #e3e6ee, -6px -6px 12px #ffffff;">
+                <span class="material-symbols-rounded font-bold text-2xl" style="font-variation-settings: 'FILL' 1;">add</span>
+            </button>
+        </div>
+        
+        <div class="w-full flex flex-col gap-2 mb-6">
+            <!-- Protein -->
+            <div class="flex items-center justify-between bg-[#F7F9FF] p-4 rounded-2xl shadow-neumorphic-inset" style="box-shadow: inset 4px 4px 8px #e3e6ee, inset -4px -4px 8px #ffffff;">
+                <div class="flex flex-col">
+                    <span class="text-xs font-bold text-silk-blue uppercase">Protein</span>
+                    <div class="flex items-center gap-1"><span class="text-lg font-bold text-gray-800" id="macro-protein-display">150</span><span class="text-xs text-gray-500">gr</span></div>
                 </div>
-                <div class="flex items-center justify-center gap-4 py-4">
-                    <button id="calories-goal-minus" class="w-12 h-12 rounded-full bg-background shadow-neo flex items-center justify-center text-neon-blue hover:bg-gradient-to-r from-neon-purple to-neon-blue-container/20 transition-colors active:scale-95">
-                        <span class="material-symbols-rounded">remove</span>
-                    </button>
-                    <div class="flex flex-col items-center min-w-[100px]">
-                        <span id="calories-goal-amount-display" class="text-4xl font-bold text-neon-blue">2000</span>
-                        <span class="text-label-md text-outline uppercase tracking-widest">kcal</span>
-                    </div>
-                    <button id="calories-goal-plus" class="w-12 h-12 rounded-full bg-background shadow-neo flex items-center justify-center text-neon-blue hover:bg-gradient-to-r from-neon-purple to-neon-blue-container/20 transition-colors active:scale-95">
-                        <span class="material-symbols-rounded">add</span>
-                    </button>
-                </div>
-                <div class="flex flex-wrap gap-2 justify-center" id="calories-goal-presets">
-                    <button class="calories-goal-preset px-4 py-2 rounded-full bg-background shadow-neo text-label-md text-on-surface-variant hover:bg-gradient-to-r from-neon-purple to-neon-blue-container/30 transition-colors active:scale-95" data-amount="1500">1500kcal</button>
-                    <button class="calories-goal-preset px-4 py-2 rounded-full bg-gradient-to-r from-neon-purple to-neon-blue-container text-label-md text-white-container font-bold active:scale-95" data-amount="2000">2000kcal</button>
-                    <button class="calories-goal-preset px-4 py-2 rounded-full bg-background shadow-neo text-label-md text-on-surface-variant hover:bg-gradient-to-r from-neon-purple to-neon-blue-container/30 transition-colors active:scale-95" data-amount="2500">2500kcal</button>
-                </div>
-                <div class="flex flex-col gap-3 mt-2 border-t border-outline-variant/30 pt-4">
-                    <h3 class="font-label-md text-label-md text-on-surface-variant uppercase text-center">Makro Hedefleri (g)</h3>
-                    <div class="grid grid-cols-3 gap-2">
-                        <div class="flex flex-col gap-1">
-                            <label class="font-label-sm text-label-sm text-on-surface-variant ml-1 text-center">Karb</label>
-                            <input class="bg-background shadow-neo border border-transparent rounded-[32px] px-2 py-3 font-body-md text-body-md text-center text-on-surface focus:border-primary outline-none w-full transition-colors shadow-neo-inset border-none rounded-xl bg-background " placeholder="240" type="number" min="0" id="macro-goal-karb" value="240">
-                        </div>
-                        <div class="flex flex-col gap-1">
-                            <label class="font-label-sm text-label-sm text-on-surface-variant ml-1 text-center">Protein</label>
-                            <input class="bg-background shadow-neo border border-transparent rounded-[32px] px-2 py-3 font-body-md text-body-md text-center text-on-surface focus:border-primary outline-none w-full transition-colors shadow-neo-inset border-none rounded-xl bg-background " placeholder="110" type="number" min="0" id="macro-goal-protein" value="110">
-                        </div>
-                        <div class="flex flex-col gap-1">
-                            <label class="font-label-sm text-label-sm text-on-surface-variant ml-1 text-center">Yağ</label>
-                            <input class="bg-background shadow-neo border border-transparent rounded-[32px] px-2 py-3 font-body-md text-body-md text-center text-on-surface focus:border-primary outline-none w-full transition-colors shadow-neo-inset border-none rounded-xl bg-background " placeholder="66" type="number" min="0" id="macro-goal-yag" value="66">
-                        </div>
-                    </div>
+                <div class="flex gap-2">
+                    <button id="macro-protein-minus" class="neo-button w-10 h-10 rounded-full flex items-center justify-center bg-[#F7F9FF] text-silk-blue" style="box-shadow: 4px 4px 8px #e3e6ee, -4px -4px 8px #ffffff;"><span class="material-symbols-rounded text-xl">remove</span></button>
+                    <button id="macro-protein-plus" class="neo-button w-10 h-10 rounded-full flex items-center justify-center bg-[#F7F9FF] text-silk-green" style="box-shadow: 4px 4px 8px #e3e6ee, -4px -4px 8px #ffffff;"><span class="material-symbols-rounded text-xl">add</span></button>
                 </div>
             </div>
-            <div class="flex border-t border-outline-variant/30">
-                <button id="calories-goal-cancel" class="flex-1 py-4 font-label-md text-label-md text-on-surface-variant uppercase tracking-wider hover:bg-surface-variant/20 transition-colors">İptal</button>
-                <div class="w-[1px] bg-outline-variant/30"></div>
-                <button id="calories-goal-save" class="flex-1 py-4 font-label-md text-label-md text-neon-blue font-bold uppercase tracking-wider hover:bg-gradient-to-r from-neon-purple to-neon-blue-container/10 transition-colors">Güncelle</button>
+            <!-- Karbonhidrat -->
+            <div class="flex items-center justify-between bg-[#F7F9FF] p-4 rounded-2xl shadow-neumorphic-inset" style="box-shadow: inset 4px 4px 8px #e3e6ee, inset -4px -4px 8px #ffffff;">
+                <div class="flex flex-col">
+                    <span class="text-xs font-bold text-silk-blue uppercase">Karbonhidrat</span>
+                    <div class="flex items-center gap-1"><span class="text-lg font-bold text-gray-800" id="macro-karb-display">250</span><span class="text-xs text-gray-500">gr</span></div>
+                </div>
+                <div class="flex gap-2">
+                    <button id="macro-karb-minus" class="neo-button w-10 h-10 rounded-full flex items-center justify-center bg-[#F7F9FF] text-silk-blue" style="box-shadow: 4px 4px 8px #e3e6ee, -4px -4px 8px #ffffff;"><span class="material-symbols-rounded text-xl">remove</span></button>
+                    <button id="macro-karb-plus" class="neo-button w-10 h-10 rounded-full flex items-center justify-center bg-[#F7F9FF] text-silk-green" style="box-shadow: 4px 4px 8px #e3e6ee, -4px -4px 8px #ffffff;"><span class="material-symbols-rounded text-xl">add</span></button>
+                </div>
+            </div>
+            <!-- Yağ -->
+            <div class="flex items-center justify-between bg-[#F7F9FF] p-4 rounded-2xl shadow-neumorphic-inset" style="box-shadow: inset 4px 4px 8px #e3e6ee, inset -4px -4px 8px #ffffff;">
+                <div class="flex flex-col">
+                    <span class="text-xs font-bold text-silk-blue uppercase">Yağ</span>
+                    <div class="flex items-center gap-1"><span class="text-lg font-bold text-gray-800" id="macro-yag-display">65</span><span class="text-xs text-gray-500">gr</span></div>
+                </div>
+                <div class="flex gap-2">
+                    <button id="macro-yag-minus" class="neo-button w-10 h-10 rounded-full flex items-center justify-center bg-[#F7F9FF] text-silk-blue" style="box-shadow: 4px 4px 8px #e3e6ee, -4px -4px 8px #ffffff;"><span class="material-symbols-rounded text-xl">remove</span></button>
+                    <button id="macro-yag-plus" class="neo-button w-10 h-10 rounded-full flex items-center justify-center bg-[#F7F9FF] text-silk-green" style="box-shadow: 4px 4px 8px #e3e6ee, -4px -4px 8px #ffffff;"><span class="material-symbols-rounded text-xl">add</span></button>
+                </div>
             </div>
         </div>
+        <!-- CTA Button -->
+        <button id="calories-goal-save" class="w-full py-4 px-6 rounded-[32px] font-bold text-lg text-gray-800 shadow-md focus:outline-none active:scale-[0.98] transition-transform flex items-center justify-center gap-2 relative bg-[#F7F9FF] z-10" style="background-clip: padding-box; border: 2px solid transparent;">
+            Hedefi Kaydet <span class="material-symbols-rounded text-silk-blue" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+            <div class="absolute inset-0 z-[-1] rounded-[32px] -m-[2px]" style="background: linear-gradient(to right, #4A90E2, #50E3C2);"></div>
+        </button>
     </div>
+</div>
     <!-- ================= KALORİ TAKİBİ (Calories) ================= -->
         <section id="view-profile" class="view hidden bg-background text-on-background min-h-[100dvh] flex flex-col font-body-lg no-scrollbar">
         <!-- TopAppBar -->
