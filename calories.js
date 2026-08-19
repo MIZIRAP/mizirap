@@ -483,10 +483,10 @@ function renderLogs() {
         let iconHtml = '';
         let colorClass = '';
         if(log.type === "Meal") {
-            iconHtml = `<span class="material-symbols-outlined text-[#3B82F6]">restaurant</span>`;
+            iconHtml = `<span class="material-symbols-rounded text-[#3B82F6]">restaurant</span>`;
             colorClass = "text-[#3B82F6]";
         } else {
-            iconHtml = `<span class="material-symbols-outlined text-[#A855F7]">nutrition</span>`;
+            iconHtml = `<span class="material-symbols-rounded text-[#A855F7]">nutrition</span>`;
             colorClass = "text-[#A855F7]";
         }
 
