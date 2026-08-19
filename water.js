@@ -286,6 +286,7 @@ function updateWaterUI() {
         circle.style.strokeDashoffset = offset;
     }
 
+    
     // 2. Today's Log Render
     const logList = document.getElementById("water-history-list");
     if(logList) {
@@ -295,15 +296,33 @@ function updateWaterUI() {
         } else {
             todaysLogs.forEach(log => {
                 const timeStr = log.createdAt?.toDate ? log.createdAt.toDate().toLocaleTimeString("tr-TR", {hour: '2-digit', minute:'2-digit'}) : "";
-                const div = document.createElement("div");
-                div.className = "flex items-center justify-between p-4 rounded-2xl bg-[#F7F9FF]";
-                div.style.boxShadow = "4px 4px 8px #D1D9E6, -4px -4px 8px #FFFFFF";
+                
+                const wrapper = document.createElement("div");
+                wrapper.className = "relative w-full rounded-2xl bg-red-500 overflow-hidden";
+                
+                const delBtn = document.createElement("button");
+                delBtn.className = "absolute right-0 top-0 bottom-0 w-[80px] text-white flex items-center justify-center z-0 active:bg-red-600 transition-colors";
+                delBtn.innerHTML = `<span class="material-symbols-rounded">delete</span>`;
+                delBtn.onclick = async () => {
+                    try {
+                        await deleteDoc(doc(db, "users", currentUid, "waterLogs", log.id));
+                    } catch(err) {
+                        console.error("Silme Hatası:", err);
+                        // local update for test
+                        waterLogs = waterLogs.filter(l => l.id !== log.id);
+                        updateWaterUI();
+                    }
+                };
+
+                const card = document.createElement("div");
+                card.className = "relative z-10 flex items-center justify-between p-4 rounded-2xl bg-[#F7F9FF] w-full touch-pan-y";
+                card.style.boxShadow = "4px 4px 8px #D1D9E6, -4px -4px 8px #FFFFFF";
                 
                 let iconClass = "text-[#3B82F6]";
                 if(log.icon === "water_bottle") iconClass = "text-[#A855F7]";
                 
-                div.innerHTML = `
-                    <div class="flex items-center gap-4">
+                card.innerHTML = `
+                    <div class="flex items-center gap-4 pointer-events-none">
                         <div class="w-10 h-10 rounded-full bg-[#F7F9FF] flex items-center justify-center" style="box-shadow: inset 2px 2px 5px #D1D9E6, inset -2px -2px 5px #FFFFFF;">
                             <span class="material-symbols-rounded ${iconClass}">${log.icon || 'local_drink'}</span>
                         </div>
@@ -312,9 +331,53 @@ function updateWaterUI() {
                             <p class="text-xs text-[#64748B]">${timeStr}</p>
                         </div>
                     </div>
-                    <span class="font-bold ${iconClass}">+${log.amount}ml</span>
+                    <span class="font-bold ${iconClass} pointer-events-none">+${log.amount}ml</span>
                 `;
-                logList.appendChild(div);
+
+                // Swipe logic
+                let startX = 0;
+                let currentX = 0;
+                let isSwiping = false;
+
+                card.addEventListener('touchstart', (e) => {
+                    startX = e.touches[0].clientX;
+                    isSwiping = true;
+                    card.style.transition = 'none';
+                }, {passive: true});
+
+                card.addEventListener('touchmove', (e) => {
+                    if(!isSwiping) return;
+                    const deltaX = e.touches[0].clientX - startX;
+                    if (deltaX < 0 && deltaX > -100) {
+                        currentX = deltaX;
+                        card.style.transform = `translateX(${currentX}px)`;
+                    } else if (deltaX >= 0) {
+                        currentX = 0;
+                        card.style.transform = `translateX(0px)`;
+                    }
+                }, {passive: true});
+
+                card.addEventListener('touchend', (e) => {
+                    isSwiping = false;
+                    card.style.transition = 'transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1)';
+                    if (currentX < -40) {
+                        card.style.transform = `translateX(-80px)`; // Snap open
+                    } else {
+                        card.style.transform = `translateX(0px)`; // Snap close
+                    }
+                    currentX = 0;
+                });
+                
+                // Close swipe when clicking outside
+                document.addEventListener('touchstart', (e) => {
+                    if(!wrapper.contains(e.target) && card.style.transform === 'translateX(-80px)') {
+                        card.style.transform = `translateX(0px)`;
+                    }
+                }, {passive: true});
+
+                wrapper.appendChild(delBtn);
+                wrapper.appendChild(card);
+                logList.appendChild(wrapper);
             });
         }
     }
