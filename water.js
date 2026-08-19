@@ -80,9 +80,9 @@ export function initWater(uid, onChangeCallback) {
         customPresetBtns.forEach(btn => {
             const amt = parseInt(btn.dataset.amount);
             if(amt === tempCustomAmount) {
-                btn.className = "water-custom-preset flex-1 py-2 rounded-full border-2 border-primary text-primary font-bold text-label-md bg-surface-container-low transition-colors active:scale-95";
+                btn.className = "water-custom-preset flex-1 py-2 rounded-full border-2 border-primary text-neon-blue font-bold text-label-md bg-background shadow-neo-low transition-colors active:scale-95";
             } else {
-                btn.className = "water-custom-preset flex-1 py-2 rounded-full border border-outline-variant text-on-surface-variant font-label-md text-label-md hover:bg-surface-container transition-colors active:scale-95";
+                btn.className = "water-custom-preset flex-1 py-2 rounded-full border-none text-on-surface-variant font-label-md text-label-md hover:bg-background shadow-neo transition-colors active:scale-95";
             }
         });
     }
@@ -174,9 +174,9 @@ export function initWater(uid, onChangeCallback) {
         presetBtns.forEach(btn => {
             const amt = parseInt(btn.dataset.amount);
             if(amt === tempGoal) {
-                btn.className = "water-goal-preset px-4 py-2 rounded-full bg-primary-container text-label-md text-on-primary-container font-bold active:scale-95";
+                btn.className = "water-goal-preset px-4 py-2 rounded-full bg-gradient-to-r from-neon-purple to-neon-blue-container text-label-md text-white-container font-bold active:scale-95";
             } else {
-                btn.className = "water-goal-preset px-4 py-2 rounded-full bg-surface-container text-label-md text-on-surface-variant hover:bg-primary-container/30 transition-colors active:scale-95";
+                btn.className = "water-goal-preset px-4 py-2 rounded-full bg-background shadow-neo text-label-md text-on-surface-variant hover:bg-gradient-to-r from-neon-purple to-neon-blue-container/30 transition-colors active:scale-95";
             }
         });
     }
@@ -312,7 +312,7 @@ function updateWaterUI() {
                 };
                 
                 const editBtn = document.createElement('button');
-                editBtn.className = "absolute right-12 top-1/2 -translate-y-1/2 p-2 text-primary opacity-0 group-hover:opacity-100 transition-opacity bg-primary-container/20 rounded-full active:scale-95";
+                editBtn.className = "absolute right-12 top-1/2 -translate-y-1/2 p-2 text-neon-blue opacity-0 group-hover:opacity-100 transition-opacity bg-gradient-to-r from-neon-purple to-neon-blue-container/20 rounded-full active:scale-95";
                 editBtn.innerHTML = `<span class="material-symbols-outlined text-sm">edit</span>`;
                 editBtn.onclick = (e) => {
                     e.stopPropagation();
@@ -324,7 +324,7 @@ function updateWaterUI() {
 
                 normalView.innerHTML = `
                     <div class="flex items-center gap-4">
-                        <div class="w-10 h-10 rounded-full bg-secondary-container flex items-center justify-center text-secondary">
+                        <div class="w-10 h-10 rounded-full bg-gradient-to-r from-neon-blue to-neon-green flex items-center justify-center text-neon-purple">
                             <span class="material-symbols-outlined" data-icon="${log.icon}" data-weight="regular">${escapeHtml(log.icon || 'local_drink')}</span>
                         </div>
                         <div class="flex flex-col">
@@ -332,18 +332,18 @@ function updateWaterUI() {
                             <span class="font-body-md text-body-md text-on-surface-variant text-sm">${timeStr}</span>
                         </div>
                     </div>
-                    <span class="font-headline-sm text-headline-sm text-primary pr-20">+${log.amount}ml</span>
+                    <span class="font-headline-sm text-headline-sm text-neon-blue pr-20">+${log.amount}ml</span>
                 `;
                 
                 editView.innerHTML = `
                     <div class="flex items-center gap-2 flex-1">
-                        <div class="w-8 h-8 rounded-full bg-secondary-container flex items-center justify-center text-secondary shrink-0">
+                        <div class="w-8 h-8 rounded-full bg-gradient-to-r from-neon-blue to-neon-green flex items-center justify-center text-neon-purple shrink-0">
                             <span class="material-symbols-outlined text-sm" data-icon="${log.icon}" data-weight="regular">${escapeHtml(log.icon || 'local_drink')}</span>
                         </div>
-                        <input type="number" class="w-full bg-surface-container border border-outline-variant rounded-lg px-2 py-1 text-sm text-on-surface focus:border-primary focus:ring-1 focus:ring-primary edit-amount-input" value="${log.amount}" min="1">
+                        <input type="number" class="w-full bg-background shadow-neo border-none rounded-lg px-2 py-1 text-sm text-on-surface focus:border-primary focus:ring-1 focus:ring-primary edit-amount-input" value="${log.amount}" min="1">
                         <span class="text-on-surface-variant text-sm">ml</span>
                     </div>
-                    <button class="bg-primary text-on-primary px-3 py-1 rounded-lg text-sm font-medium shrink-0 edit-save-btn">Kaydet</button>
+                    <button class="bg-gradient-to-r from-neon-purple to-neon-blue text-white px-3 py-1 rounded-lg text-sm font-medium shrink-0 edit-save-btn">Kaydet</button>
                     <button class="text-on-surface-variant px-2 py-1 rounded-lg text-sm shrink-0 edit-cancel-btn">İptal</button>
                 `;
 
@@ -442,22 +442,22 @@ function updateWaterUI() {
             const div = document.createElement("div");
             div.className = "flex flex-col items-center gap-2 w-[14%] group relative";
             
-            let barClass = "bg-primary/70 group-hover:bg-primary/90";
+            let barClass = "bg-gradient-to-r from-neon-purple to-neon-blue/70 group-hover:bg-gradient-to-r from-neon-purple to-neon-blue/90";
             let textClass = "text-outline";
             
             if(day.isToday) {
-                barClass = "bg-primary group-hover:bg-primary/90";
-                textClass = "text-primary font-bold";
+                barClass = "bg-gradient-to-r from-neon-purple to-neon-blue group-hover:bg-gradient-to-r from-neon-purple to-neon-blue/90";
+                textClass = "text-neon-blue font-bold";
             }
             if(day.amount >= dailyGoal && !day.isToday) {
-                barClass = "bg-primary group-hover:opacity-80";
+                barClass = "bg-gradient-to-r from-neon-purple to-neon-blue group-hover:opacity-80";
             }
 
             div.innerHTML = `
-                <div class="absolute -top-6 bg-surface-container-high text-on-surface text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10 pointer-events-none">
+                <div class="absolute -top-6 bg-background shadow-neo-high text-on-surface text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10 pointer-events-none">
                     ${Math.round(day.amount)} ml
                 </div>
-                <div class="w-2 md:w-3 bg-surface-container rounded-full h-24 relative flex items-end overflow-hidden">
+                <div class="w-2 md:w-3 bg-background shadow-neo rounded-full h-24 relative flex items-end overflow-hidden">
                     <div class="w-full rounded-full transition-all duration-500 ${barClass}" style="height: ${percent}%"></div>
                 </div>
             `;

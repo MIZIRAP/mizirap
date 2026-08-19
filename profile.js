@@ -85,10 +85,10 @@ function setupProfileEvents() {
 
             // 2. Loading UI
             const loadingOverlay = document.createElement('div');
-            loadingOverlay.className = "absolute inset-0 bg-surface/70 flex flex-col items-center justify-center z-10 backdrop-blur-sm rounded-full";
+            loadingOverlay.className = "absolute inset-0 bg-background shadow-neo/70 flex flex-col items-center justify-center z-10 backdrop-blur-sm rounded-full";
             loadingOverlay.innerHTML = `
                 <div class="animate-spin rounded-full h-6 w-6 border-2 border-primary border-t-transparent mb-1"></div>
-                <span class="text-label-sm font-medium text-primary">Yükleniyor</span>
+                <span class="text-label-sm font-medium text-neon-blue">Yükleniyor</span>
             `;
             const wrapper = photoInput.closest('.relative') || photoInput.parentElement;
             if(wrapper) wrapper.appendChild(loadingOverlay);
@@ -190,11 +190,11 @@ function setupProfileEvents() {
 
 
                 saveBtn.innerHTML = `<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">check_circle</span> Kaydedildi!`;
-                saveBtn.classList.add("bg-primary-container", "text-on-primary-container");
+                saveBtn.classList.add("bg-gradient-to-r from-neon-purple to-neon-blue-container", "text-white-container");
                 
                 setTimeout(() => {
                     saveBtn.innerHTML = originalText;
-                    saveBtn.classList.remove("bg-primary-container", "text-on-primary-container");
+                    saveBtn.classList.remove("bg-gradient-to-r from-neon-purple to-neon-blue-container", "text-white-container");
                     saveBtn.disabled = false;
                 }, 2000);
             } catch (err) {
@@ -250,7 +250,7 @@ function setupProfileEvents() {
                 await updatePassword(user, newPassword);
                 
                 msgEl.textContent = "Şifreniz başarıyla güncellendi.";
-                msgEl.classList.add("text-primary");
+                msgEl.classList.add("text-neon-blue");
                 
                 // Clear fields
                 document.getElementById('profile-current-password').value = "";

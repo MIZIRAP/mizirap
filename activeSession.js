@@ -252,14 +252,14 @@ function _renderSessionExercises() {
             : 'İlk antrenman';
 
         const card = document.createElement('section');
-        card.className = 'bg-surface-container-lowest rounded-xl shadow-sm border border-surface-variant/20 overflow-hidden';
+        card.className = 'bg-background shadow-neo rounded-[32px] shadow-sm border-none overflow-hidden';
         card.id = `session-card-${ex.id}`;
 
         card.innerHTML = `
             <!-- Accordion Header -->
-            <button class="w-full flex items-center gap-sm p-md text-left hover:bg-surface-container-low transition-colors"
+            <button class="w-full flex items-center gap-sm p-md text-left hover:bg-background shadow-neo transition-colors"
                     data-action="sessionToggleExAccordion" data-ex-id="${ex.id}">
-                <div class="w-10 h-10 rounded-full bg-primary-container/20 flex items-center justify-center text-primary shrink-0">
+                <div class="w-10 h-10 rounded-full bg-gradient-to-r from-neon-purple to-neon-blue-container/20 flex items-center justify-center text-neon-blue shrink-0">
                     <span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1">fitness_center</span>
                 </div>
                 <div class="flex-1 min-w-0">
@@ -299,10 +299,10 @@ function _renderSets(exId) {
         setEl.id = `set-row-${exId}-${setIdx}`;
         
         // ESKİ GÖRÜNÜM (Beğenmezseniz aşağıdaki satırın yorumunu kaldırın ve YENİ GÖRÜNÜM kısmını silin):
-        // setEl.className = 'flex flex-col gap-md px-md py-md border-t border-surface-container-high bg-surface-container-low/40 border-l-4 border-l-primary';
+        // setEl.className = 'flex flex-col gap-md px-md py-md border-t border-surface-container-high bg-background shadow-neo/40 border-l-4 border-l-primary';
         
         // YENİ GÖRÜNÜM: Rakamları ve boşlukları büyütmeden, sadece arka plan tonunu (zebra deseni) ve üst çizgi rengini değiştirerek belirginlik artırıldı.
-        const bgClass = (setIdx % 2 === 0) ? 'bg-surface-container-low/40' : 'bg-surface-container-highest/40';
+        const bgClass = (setIdx % 2 === 0) ? 'bg-background shadow-neo/40' : 'bg-background shadow-neoest/40';
         setEl.className = `flex flex-col gap-md px-md py-md border-t border-outline-variant/40 ${bgClass} border-l-4 border-l-primary`;
         
         setEl.innerHTML = _activeSetHTML(exId, setIdx, set);
@@ -327,8 +327,8 @@ function _activeSetHTML(exId, setIdx, set) {
         return `<button data-action="sessionSetRPE" data-ex-id="${exId}" data-set-idx="${setIdx}" data-rpe="${r}"
             class="w-10 h-10 rounded-full border transition-all duration-150 font-label-lg text-label-lg active:scale-95
                 ${isSelected
-                    ? 'bg-primary text-on-primary border-transparent shadow-sm scale-110 ring-2 ring-primary/30 ring-offset-1 ring-offset-surface-container-low'
-                    : 'bg-surface text-on-surface-variant border-surface-variant hover:border-primary/40'}">${r}</button>`;
+                    ? 'bg-gradient-to-r from-neon-purple to-neon-blue text-white border-transparent shadow-sm scale-110 ring-2 ring-primary/30 ring-offset-1 ring-offset-surface-container-low'
+                    : 'bg-background shadow-neo text-on-surface-variant border-surface-variant hover:border-primary/40'}">${r}</button>`;
     }).join('');
 
     return `
@@ -339,14 +339,14 @@ function _activeSetHTML(exId, setIdx, set) {
                 <!-- Weight -->
                 <div class="flex flex-col items-center gap-1">
                     <span class="font-label-sm text-label-sm text-on-surface-variant">Ağırlık (kg)</span>
-                    <div class="flex items-center bg-surface rounded-lg border border-surface-variant/30 w-full justify-between p-0.5">
+                    <div class="flex items-center bg-background shadow-neo rounded-lg border-none w-full justify-between p-0.5">
                         <button data-action="sessionStepWeight" data-ex-id="${exId}" data-set-idx="${setIdx}" data-delta="-2.5"
-                            class="w-9 h-9 rounded-lg flex items-center justify-center text-primary hover:bg-primary/5 active:scale-90 transition-all">
+                            class="w-9 h-9 rounded-lg flex items-center justify-center text-neon-blue hover:bg-gradient-to-r from-neon-purple to-neon-blue/5 active:scale-90 transition-all">
                             <span class="material-symbols-outlined">remove</span>
                         </button>
                         <span class="font-title-lg text-title-lg text-on-surface min-w-[3rem] text-center">${set.weight}</span>
                         <button data-action="sessionStepWeight" data-ex-id="${exId}" data-set-idx="${setIdx}" data-delta="2.5"
-                            class="w-9 h-9 rounded-lg flex items-center justify-center text-primary hover:bg-primary/5 active:scale-90 transition-all">
+                            class="w-9 h-9 rounded-lg flex items-center justify-center text-neon-blue hover:bg-gradient-to-r from-neon-purple to-neon-blue/5 active:scale-90 transition-all">
                             <span class="material-symbols-outlined">add</span>
                         </button>
                     </div>
@@ -354,14 +354,14 @@ function _activeSetHTML(exId, setIdx, set) {
                 <!-- Reps -->
                 <div class="flex flex-col items-center gap-1">
                     <span class="font-label-sm text-label-sm text-on-surface-variant">Tekrar</span>
-                    <div class="flex items-center bg-surface rounded-lg border border-surface-variant/30 w-full justify-between p-0.5">
+                    <div class="flex items-center bg-background shadow-neo rounded-lg border-none w-full justify-between p-0.5">
                         <button data-action="sessionStepReps" data-ex-id="${exId}" data-set-idx="${setIdx}" data-delta="-1"
-                            class="w-9 h-9 rounded-lg flex items-center justify-center text-primary hover:bg-primary/5 active:scale-90 transition-all">
+                            class="w-9 h-9 rounded-lg flex items-center justify-center text-neon-blue hover:bg-gradient-to-r from-neon-purple to-neon-blue/5 active:scale-90 transition-all">
                             <span class="material-symbols-outlined">remove</span>
                         </button>
                         <span class="font-title-lg text-title-lg text-on-surface min-w-[2rem] text-center">${set.reps}</span>
                         <button data-action="sessionStepReps" data-ex-id="${exId}" data-set-idx="${setIdx}" data-delta="1"
-                            class="w-9 h-9 rounded-lg flex items-center justify-center text-primary hover:bg-primary/5 active:scale-90 transition-all">
+                            class="w-9 h-9 rounded-lg flex items-center justify-center text-neon-blue hover:bg-gradient-to-r from-neon-purple to-neon-blue/5 active:scale-90 transition-all">
                             <span class="material-symbols-outlined">add</span>
                         </button>
                     </div>
@@ -543,8 +543,8 @@ function _refreshRPEButtons(exId, setIdx, set) {
         const isSelected = set.rpe === rpeVal;
         btn.className = `w-10 h-10 rounded-full border transition-all duration-150 font-label-lg text-label-lg active:scale-95
             ${isSelected
-                ? 'bg-primary text-on-primary border-transparent shadow-sm scale-110 ring-2 ring-primary/30 ring-offset-1'
-                : 'bg-surface text-on-surface-variant border-surface-variant hover:border-primary/40'}`;
+                ? 'bg-gradient-to-r from-neon-purple to-neon-blue text-white border-transparent shadow-sm scale-110 ring-2 ring-primary/30 ring-offset-1'
+                : 'bg-background shadow-neo text-on-surface-variant border-surface-variant hover:border-primary/40'}`;
     });
 }
 

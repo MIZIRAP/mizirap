@@ -91,13 +91,13 @@ function setupFinanceModals() {
     paymentIcons.forEach(iconEl => {
         iconEl.addEventListener('click', () => {
             paymentIcons.forEach(el => {
-                el.classList.remove('selected', 'bg-primary', 'text-on-primary', 'shadow-md', 'scale-105');
-                el.classList.add('bg-surface', 'border', 'border-surface-variant', 'text-on-surface-variant', 'hover:bg-surface-container-low');
+                el.classList.remove('selected', 'bg-gradient-to-r from-neon-purple to-neon-blue', 'text-white', 'shadow-md', 'scale-105');
+                el.classList.add('bg-background shadow-neo', 'border', 'border-surface-variant', 'text-on-surface-variant', 'hover:bg-background shadow-neo-low');
                 const span = el.querySelector('span');
                 if(span) span.style.fontVariationSettings = "'FILL' 0";
             });
-            iconEl.classList.add('selected', 'bg-primary', 'text-on-primary', 'shadow-md', 'scale-105');
-            iconEl.classList.remove('bg-surface', 'border', 'border-surface-variant', 'text-on-surface-variant', 'hover:bg-surface-container-low');
+            iconEl.classList.add('selected', 'bg-gradient-to-r from-neon-purple to-neon-blue', 'text-white', 'shadow-md', 'scale-105');
+            iconEl.classList.remove('bg-background shadow-neo', 'border', 'border-surface-variant', 'text-on-surface-variant', 'hover:bg-background shadow-neo-low');
             const span = iconEl.querySelector('span');
             if(span) span.style.fontVariationSettings = "'FILL' 1";
         });
@@ -114,13 +114,13 @@ function setupFinanceModals() {
     categoryIcons.forEach(iconEl => {
         iconEl.addEventListener('click', () => {
             categoryIcons.forEach(el => {
-                el.classList.remove('selected', 'bg-primary', 'text-on-primary', 'shadow-sm');
-                el.classList.add('bg-surface-container', 'text-on-surface', 'hover:bg-surface-container-high');
+                el.classList.remove('selected', 'bg-gradient-to-r from-neon-purple to-neon-blue', 'text-white', 'shadow-sm');
+                el.classList.add('bg-background shadow-neo', 'text-on-surface', 'hover:bg-background shadow-neo-high');
                 const span = el.querySelector('span');
                 if(span) span.style.fontVariationSettings = "'FILL' 0";
             });
-            iconEl.classList.add('selected', 'bg-primary', 'text-on-primary', 'shadow-sm');
-            iconEl.classList.remove('bg-surface-container', 'text-on-surface', 'hover:bg-surface-container-high');
+            iconEl.classList.add('selected', 'bg-gradient-to-r from-neon-purple to-neon-blue', 'text-white', 'shadow-sm');
+            iconEl.classList.remove('bg-background shadow-neo', 'text-on-surface', 'hover:bg-background shadow-neo-high');
             const span = iconEl.querySelector('span');
             if(span) span.style.fontVariationSettings = "'FILL' 1";
         });
@@ -135,7 +135,7 @@ function setupFinanceModals() {
                 el.innerHTML = '';
             });
             colorEl.classList.add('selected', 'ring-4', 'ring-primary-container', 'ring-offset-2', 'ring-offset-surface-container-lowest');
-            colorEl.innerHTML = '<span class="material-symbols-outlined text-on-primary">check</span>';
+            colorEl.innerHTML = '<span class="material-symbols-outlined text-white">check</span>';
         });
     });
 
@@ -186,11 +186,11 @@ async function savePaymentMethod() {
         });
         
         saveBtn.innerHTML = `<span class="material-symbols-outlined">check_circle</span> Eklendi!`;
-        saveBtn.classList.add("bg-primary-container", "text-on-primary-container");
+        saveBtn.classList.add("bg-gradient-to-r from-neon-purple to-neon-blue-container", "text-white-container");
         
         setTimeout(() => {
             saveBtn.innerHTML = originalText;
-            saveBtn.classList.remove("bg-primary-container", "text-on-primary-container");
+            saveBtn.classList.remove("bg-gradient-to-r from-neon-purple to-neon-blue-container", "text-white-container");
             saveBtn.disabled = false;
             
             // Clear inputs
@@ -305,7 +305,7 @@ function renderTransactions() {
             barsContainer.innerHTML = '<div class="text-sm text-outline-variant italic">Henüz harcama yok.</div>';
         } else {
             const sortedCats = Object.keys(categoryExpenses).sort((a, b) => categoryExpenses[b] - categoryExpenses[a]);
-            const colorClasses = ['bg-primary', 'bg-secondary', 'bg-tertiary-container', 'bg-error', 'bg-primary-container'];
+            const colorClasses = ['bg-gradient-to-r from-neon-purple to-neon-blue', 'bg-secondary', 'bg-tertiary-container', 'bg-error', 'bg-gradient-to-r from-neon-purple to-neon-blue-container'];
             
             barsContainer.innerHTML = sortedCats.slice(0, 4).map((catId, index) => {
                 const amount = categoryExpenses[catId];
@@ -319,7 +319,7 @@ function renderTransactions() {
                         <span class="font-label-sm text-label-sm text-on-surface">${catObj.name}</span>
                         <span class="font-label-sm text-label-sm text-on-surface-variant">${percentage}%</span>
                     </div>
-                    <div class="w-full bg-surface-container-high rounded-full h-2">
+                    <div class="w-full bg-background shadow-neo-high rounded-full h-2">
                         <div class="${colorClass} h-2 rounded-full" style="width: ${percentage}%"></div>
                     </div>
                 </div>
@@ -336,8 +336,8 @@ function renderTransactions() {
     if(trendEl) {
         if(currentMonthBalance > 0) {
             trendEl.innerHTML = `
-                <span class="material-symbols-outlined text-primary bg-primary-container rounded-full p-1 text-sm" style="font-variation-settings: 'FILL' 1;">trending_up</span>
-                <span class="font-body-md text-body-md text-primary">+${formatCurrency(currentMonthBalance)} (Bu Ay)</span>
+                <span class="material-symbols-outlined text-neon-blue bg-gradient-to-r from-neon-purple to-neon-blue-container rounded-full p-1 text-sm" style="font-variation-settings: 'FILL' 1;">trending_up</span>
+                <span class="font-body-md text-body-md text-neon-blue">+${formatCurrency(currentMonthBalance)} (Bu Ay)</span>
             `;
         } else if (currentMonthBalance < 0) {
             trendEl.innerHTML = `
@@ -346,7 +346,7 @@ function renderTransactions() {
             `;
         } else {
             trendEl.innerHTML = `
-                <span class="material-symbols-outlined text-outline bg-surface-variant rounded-full p-1 text-sm" style="font-variation-settings: 'FILL' 1;">trending_flat</span>
+                <span class="material-symbols-outlined text-outline bg-background shadow-neo-variant rounded-full p-1 text-sm" style="font-variation-settings: 'FILL' 1;">trending_flat</span>
                 <span class="font-body-md text-body-md text-outline">Değişim Yok (Bu Ay)</span>
             `;
         }
@@ -373,23 +373,23 @@ function renderTransactions() {
         const dateFormatted = formatDate(dateObj, { day: 'numeric', month: 'long' });
         
         // Dynamic colors based on type
-        const iconBg = isIncome ? 'bg-primary-container' : 'bg-surface-container-high';
-        const iconColor = isIncome ? 'text-on-primary-container' : 'text-on-surface-variant';
-        const valColor = isIncome ? 'text-primary' : 'text-on-surface';
+        const iconBg = isIncome ? 'bg-gradient-to-r from-neon-purple to-neon-blue-container' : 'bg-background shadow-neo-high';
+        const iconColor = isIncome ? 'text-white-container' : 'text-on-surface-variant';
+        const valColor = isIncome ? 'text-neon-blue' : 'text-on-surface';
         
         // Payment badge
         const pmBadgeClass = isIncome 
-            ? "bg-primary-container/20 text-primary border-primary/20" 
-            : "bg-surface-container-high text-on-surface-variant border-outline-variant";
+            ? "bg-gradient-to-r from-neon-purple to-neon-blue-container/20 text-neon-blue border-primary/20" 
+            : "bg-background shadow-neo-high text-on-surface-variant border-outline-variant";
             
         const div = document.createElement("div");
-        div.className = "bg-surface-container-lowest shadow-sm rounded-2xl p-4 flex items-center justify-between active:scale-98 transition-transform duration-100 ease-in-out relative group";
+        div.className = "bg-background shadow-neo-lowest shadow-sm rounded-[32px] p-4 flex items-center justify-between active:scale-98 transition-transform duration-100 ease-in-out relative group";
         
         const actionsDiv = document.createElement("div");
-        actionsDiv.className = "absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity bg-surface-container-lowest/90 px-2 py-1 rounded-full shadow-sm";
+        actionsDiv.className = "absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity bg-background shadow-neo-lowest/90 px-2 py-1 rounded-full shadow-sm";
         
         const editBtn = document.createElement('button');
-        editBtn.className = "p-2 text-primary hover:bg-primary-container/20 rounded-full active:scale-95 transition-colors";
+        editBtn.className = "p-2 text-neon-blue hover:bg-gradient-to-r from-neon-purple to-neon-blue-container/20 rounded-full active:scale-95 transition-colors";
         editBtn.innerHTML = `<span class="material-symbols-outlined text-sm">edit</span>`;
         editBtn.onclick = (e) => {
             e.stopPropagation();
@@ -414,11 +414,11 @@ function renderTransactions() {
                 const catOpts = document.querySelectorAll('.tx-cat-btn');
                 catOpts.forEach(o => {
                     if(o.dataset.id === tx.categoryId) {
-                        o.classList.add('bg-primary-container', 'border-primary', 'text-on-primary-container');
-                        o.classList.remove('bg-surface', 'border-surface-variant', 'text-on-surface');
+                        o.classList.add('bg-gradient-to-r from-neon-purple to-neon-blue-container', 'border-primary', 'text-white-container');
+                        o.classList.remove('bg-background shadow-neo', 'border-surface-variant', 'text-on-surface');
                     } else {
-                        o.classList.remove('bg-primary-container', 'border-primary', 'text-on-primary-container');
-                        o.classList.add('bg-surface', 'border-surface-variant', 'text-on-surface');
+                        o.classList.remove('bg-gradient-to-r from-neon-purple to-neon-blue-container', 'border-primary', 'text-white-container');
+                        o.classList.add('bg-background shadow-neo', 'border-surface-variant', 'text-on-surface');
                     }
                 });
             }, 50);
@@ -426,10 +426,10 @@ function renderTransactions() {
             const pmOpts = document.querySelectorAll('.tx-pm-btn');
             pmOpts.forEach(o => {
                 if(o.dataset.id === tx.paymentMethodId) {
-                    o.classList.add('border-primary', 'bg-primary/5');
+                    o.classList.add('border-primary', 'bg-gradient-to-r from-neon-purple to-neon-blue/5');
                     o.classList.remove('border-surface-variant');
                 } else {
-                    o.classList.remove('border-primary', 'bg-primary/5');
+                    o.classList.remove('border-primary', 'bg-gradient-to-r from-neon-purple to-neon-blue/5');
                     o.classList.add('border-surface-variant');
                 }
             });
@@ -514,11 +514,11 @@ async function saveCategory() {
         });
         
         saveBtn.innerHTML = `<span class="material-symbols-outlined">check_circle</span> Eklendi!`;
-        saveBtn.classList.add("bg-primary-container", "text-on-primary-container");
+        saveBtn.classList.add("bg-gradient-to-r from-neon-purple to-neon-blue-container", "text-white-container");
         
         setTimeout(() => {
             saveBtn.innerHTML = originalText;
-            saveBtn.classList.remove("bg-primary-container", "text-on-primary-container");
+            saveBtn.classList.remove("bg-gradient-to-r from-neon-purple to-neon-blue-container", "text-white-container");
             saveBtn.disabled = false;
             
             // Clear inputs
@@ -544,7 +544,7 @@ export function renderTxModalOptions() {
             catContainer.innerHTML = '<div class="text-sm text-outline-variant py-2">Önce kategori ekleyin.</div>';
         } else {
             catContainer.innerHTML = financeCategories.map((c, idx) => `
-                <button class="tx-cat-btn flex items-center gap-2 px-4 py-2 rounded-full ${idx === 0 ? 'bg-primary-container text-on-primary-container border-transparent' : 'bg-surface-container-high text-on-surface-variant hover:bg-surface-variant border-transparent'} shrink-0 snap-start transition-colors active:scale-95 border-2" data-id="${c.id}">
+                <button class="tx-cat-btn flex items-center gap-2 px-4 py-2 rounded-full ${idx === 0 ? 'bg-gradient-to-r from-neon-purple to-neon-blue-container text-white-container border-transparent' : 'bg-background shadow-neo-high text-on-surface-variant hover:bg-background shadow-neo-variant border-transparent'} shrink-0 snap-start transition-colors active:scale-95 border-2" data-id="${c.id}">
                     <span class="material-symbols-outlined text-lg">${c.icon || 'category'}</span>
                     <span class="font-label-md text-label-md">${c.name}</span>
                 </button>
@@ -554,11 +554,11 @@ export function renderTxModalOptions() {
             document.querySelectorAll('.tx-cat-btn').forEach(btn => {
                 btn.addEventListener('click', () => {
                     document.querySelectorAll('.tx-cat-btn').forEach(b => {
-                        b.classList.remove('bg-primary-container', 'text-on-primary-container');
-                        b.classList.add('bg-surface-container-high', 'text-on-surface-variant');
+                        b.classList.remove('bg-gradient-to-r from-neon-purple to-neon-blue-container', 'text-white-container');
+                        b.classList.add('bg-background shadow-neo-high', 'text-on-surface-variant');
                     });
-                    btn.classList.add('bg-primary-container', 'text-on-primary-container');
-                    btn.classList.remove('bg-surface-container-high', 'text-on-surface-variant');
+                    btn.classList.add('bg-gradient-to-r from-neon-purple to-neon-blue-container', 'text-white-container');
+                    btn.classList.remove('bg-background shadow-neo-high', 'text-on-surface-variant');
                 });
             });
         }
@@ -569,12 +569,12 @@ export function renderTxModalOptions() {
             pmContainer.innerHTML = '<div class="text-sm text-outline-variant py-2">Önce ödeme yöntemi ekleyin.</div>';
         } else {
             pmContainer.innerHTML = financePaymentMethods.map((p, idx) => `
-                <div class="tx-pm-btn flex items-center justify-between p-3 rounded-xl border-2 ${idx === 0 ? 'border-primary bg-primary-fixed-dim/10' : 'border-transparent bg-surface-container-high hover:bg-surface-variant'} cursor-pointer transition-transform active:scale-95" data-id="${p.id}">
+                <div class="tx-pm-btn flex items-center justify-between p-3 rounded-[32px] border-2 ${idx === 0 ? 'border-primary bg-gradient-to-r from-neon-purple to-neon-blue-fixed-dim/10' : 'border-transparent bg-background shadow-neo-high hover:bg-background shadow-neo-variant'} cursor-pointer transition-transform active:scale-95" data-id="${p.id}">
                     <div class="flex items-center gap-2">
-                        <span class="material-symbols-outlined ${idx === 0 ? 'text-primary' : 'text-on-surface-variant'}">${p.icon || 'credit_card'}</span>
+                        <span class="material-symbols-outlined ${idx === 0 ? 'text-neon-blue' : 'text-on-surface-variant'}">${p.icon || 'credit_card'}</span>
                         <span class="font-label-md text-label-md ${idx === 0 ? 'text-on-surface' : 'text-on-surface-variant'}">${p.name}</span>
                     </div>
-                    ${idx === 0 ? '<span class="material-symbols-outlined text-primary text-lg check-icon" style="font-variation-settings: \'FILL\' 1;">check_circle</span>' : ''}
+                    ${idx === 0 ? '<span class="material-symbols-outlined text-neon-blue text-lg check-icon" style="font-variation-settings: \'FILL\' 1;">check_circle</span>' : ''}
                 </div>
             `).join('');
             
@@ -582,25 +582,25 @@ export function renderTxModalOptions() {
             document.querySelectorAll('.tx-pm-btn').forEach(btn => {
                 btn.addEventListener('click', () => {
                     document.querySelectorAll('.tx-pm-btn').forEach(b => {
-                        b.classList.remove('border-primary', 'bg-primary-fixed-dim/10');
-                        b.classList.add('border-transparent', 'bg-surface-container-high', 'text-on-surface-variant');
+                        b.classList.remove('border-primary', 'bg-gradient-to-r from-neon-purple to-neon-blue-fixed-dim/10');
+                        b.classList.add('border-transparent', 'bg-background shadow-neo-high', 'text-on-surface-variant');
                         const icon1 = b.querySelector('.material-symbols-outlined:first-child');
                         const text = b.querySelector('.font-label-md');
                         const check = b.querySelector('.check-icon');
-                        if (icon1) { icon1.classList.remove('text-primary'); icon1.classList.add('text-on-surface-variant'); }
+                        if (icon1) { icon1.classList.remove('text-neon-blue'); icon1.classList.add('text-on-surface-variant'); }
                         if (text) { text.classList.remove('text-on-surface'); text.classList.add('text-on-surface-variant'); }
                         if (check) check.remove();
                     });
                     
-                    btn.classList.add('border-primary', 'bg-primary-fixed-dim/10');
-                    btn.classList.remove('border-transparent', 'bg-surface-container-high', 'text-on-surface-variant');
+                    btn.classList.add('border-primary', 'bg-gradient-to-r from-neon-purple to-neon-blue-fixed-dim/10');
+                    btn.classList.remove('border-transparent', 'bg-background shadow-neo-high', 'text-on-surface-variant');
                     const icon1 = btn.querySelector('.material-symbols-outlined:first-child');
                     const text = btn.querySelector('.font-label-md');
-                    if (icon1) { icon1.classList.add('text-primary'); icon1.classList.remove('text-on-surface-variant'); }
+                    if (icon1) { icon1.classList.add('text-neon-blue'); icon1.classList.remove('text-on-surface-variant'); }
                     if (text) { text.classList.add('text-on-surface'); text.classList.remove('text-on-surface-variant'); }
                     
                     if (!btn.querySelector('.check-icon')) {
-                        btn.insertAdjacentHTML('beforeend', '<span class="material-symbols-outlined text-primary text-lg check-icon" style="font-variation-settings: \'FILL\' 1;">check_circle</span>');
+                        btn.insertAdjacentHTML('beforeend', '<span class="material-symbols-outlined text-neon-blue text-lg check-icon" style="font-variation-settings: \'FILL\' 1;">check_circle</span>');
                     }
                 });
             });
@@ -626,7 +626,7 @@ async function saveTransaction() {
     const typeEl = document.querySelector('input[name="tx-type"]:checked');
     const dateEl = document.getElementById('tx-date');
     
-    const activeCat = document.querySelector('.tx-cat-btn.bg-primary-container');
+    const activeCat = document.querySelector('.tx-cat-btn.bg-gradient-to-r from-neon-purple to-neon-blue-container');
     const activePm = document.querySelector('.tx-pm-btn.border-primary');
     
     if(!amountEl || !titleEl || !typeEl || !dateEl) return;
@@ -681,11 +681,11 @@ async function saveTransaction() {
         }
         
         saveBtn.innerHTML = `<span class="material-symbols-outlined">check_circle</span> Eklendi!`;
-        saveBtn.classList.add("bg-primary-container", "text-on-primary-container");
+        saveBtn.classList.add("bg-gradient-to-r from-neon-purple to-neon-blue-container", "text-white-container");
         
         setTimeout(() => {
             saveBtn.innerHTML = originalText;
-            saveBtn.classList.remove("bg-primary-container", "text-on-primary-container");
+            saveBtn.classList.remove("bg-gradient-to-r from-neon-purple to-neon-blue-container", "text-white-container");
             saveBtn.disabled = false;
             
             // Clear inputs
@@ -765,7 +765,7 @@ export function renderFinanceDetail() {
         const tlFormatNoSymbol = new Intl.NumberFormat('tr-TR', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
     
     netTotalEl.textContent = (netTotal >= 0 ? '+' : '') + formatCurrency(netTotal);
-    netTotalEl.className = `font-display-lg text-display-lg ${netTotal >= 0 ? 'text-primary' : 'text-error'}`;
+    netTotalEl.className = `font-display-lg text-display-lg ${netTotal >= 0 ? 'text-neon-blue' : 'text-error'}`;
     
     incomeTotalEl.textContent = tlFormatNoSymbol.format(totalIncome) + ' ₺';
     expenseTotalEl.textContent = tlFormatNoSymbol.format(totalExpense) + ' ₺';
@@ -779,17 +779,17 @@ export function renderFinanceDetail() {
         incomeListEl.innerHTML = incomes.map(tx => {
             const pm = financePaymentMethods.find(p => p.id === tx.paymentMethodId) || { name: 'Genel', icon: 'payments' };
             return `
-            <div class="bg-surface-container-lowest p-4 rounded-2xl flex items-center justify-between shadow-sm border-l-4 border-primary mb-3 active:scale-98 transition-transform">
+            <div class="bg-background shadow-neo-lowest p-4 rounded-[32px] flex items-center justify-between shadow-sm border-l-4 border-primary mb-3 active:scale-98 transition-transform">
                 <div class="flex items-center gap-4">
-                    <div class="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
-                        <span class="material-symbols-outlined text-primary">${pm.icon}</span>
+                    <div class="w-10 h-10 rounded-[32px] bg-gradient-to-r from-neon-purple to-neon-blue/10 flex items-center justify-center">
+                        <span class="material-symbols-outlined text-neon-blue">${pm.icon}</span>
                     </div>
                     <div>
                         <p class="font-body-lg text-body-lg font-semibold">${tx.title}</p>
                         <p class="font-label-sm text-label-sm text-on-surface-variant">${pm.name}</p>
                     </div>
                 </div>
-                <p class="font-headline-sm text-headline-sm text-primary">${formatCurrency(tx.amount)}</p>
+                <p class="font-headline-sm text-headline-sm text-neon-blue">${formatCurrency(tx.amount)}</p>
             </div>
             `;
         }).join('');
@@ -823,7 +823,7 @@ export function renderFinanceDetail() {
             const cat = financeCategories.find(c => c.id === catId) || { name: 'Bilinmiyor', icon: 'more_horiz' };
             const cColor = colors[index % colors.length];
             return `
-            <div class="flex items-center justify-between p-3 rounded-2xl hover:bg-surface-container-low transition-colors active:scale-98">
+            <div class="flex items-center justify-between p-3 rounded-[32px] hover:bg-background shadow-neo-low transition-colors active:scale-98">
                 <div class="flex items-center gap-3">
                     <div class="w-10 h-10 rounded-full bg-${cColor}-fixed-dim/30 flex items-center justify-center">
                         <span class="material-symbols-outlined text-${cColor}">${cat.icon}</span>
@@ -896,10 +896,10 @@ export function renderFinanceDetail() {
                 const amount = pmSums[pmId];
                 const pm = financePaymentMethods.find(p => p.id === pmId) || { name: 'Bilinmiyor', icon: 'payments' };
                 return `
-                <div class="flex items-center justify-between p-3 rounded-2xl hover:bg-surface-container-low transition-colors active:scale-98">
+                <div class="flex items-center justify-between p-3 rounded-[32px] hover:bg-background shadow-neo-low transition-colors active:scale-98">
                     <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
-                            <span class="material-symbols-outlined text-primary">${pm.icon}</span>
+                        <div class="w-10 h-10 rounded-full bg-gradient-to-r from-neon-purple to-neon-blue/10 flex items-center justify-center">
+                            <span class="material-symbols-outlined text-neon-blue">${pm.icon}</span>
                         </div>
                         <p class="font-body-lg text-body-lg">${pm.name}</p>
                     </div>
@@ -1047,7 +1047,7 @@ function renderMetalPrices(gold, silver) {
         const abs = Math.abs(val).toFixed(1);
         if (val > 0) {
             el.textContent = `▲ ${abs}%`;
-            el.className = 'text-label-sm font-label-sm font-bold text-primary';
+            el.className = 'text-label-sm font-label-sm font-bold text-neon-blue';
         } else if (val < 0) {
             el.textContent = `▼ ${abs}%`;
             el.className = 'text-label-sm font-label-sm font-bold text-error';

@@ -177,11 +177,11 @@ function bindEvents() {
             tempCaloriesGoal = parseInt(btn.dataset.amount);
             if(caloriesGoalAmountDisplay) caloriesGoalAmountDisplay.textContent = tempCaloriesGoal;
             document.querySelectorAll('.calories-goal-preset').forEach(b => {
-                b.classList.remove('bg-primary-container', 'text-on-primary-container', 'font-bold');
-                b.classList.add('bg-surface-container', 'text-on-surface-variant');
+                b.classList.remove('bg-gradient-to-r from-neon-purple to-neon-blue-container', 'text-white-container', 'font-bold');
+                b.classList.add('bg-background shadow-neo', 'text-on-surface-variant');
             });
-            btn.classList.add('bg-primary-container', 'text-on-primary-container', 'font-bold');
-            btn.classList.remove('bg-surface-container', 'text-on-surface-variant');
+            btn.classList.add('bg-gradient-to-r from-neon-purple to-neon-blue-container', 'text-white-container', 'font-bold');
+            btn.classList.remove('bg-background shadow-neo', 'text-on-surface-variant');
         };
     });
 
@@ -455,7 +455,7 @@ function renderLogs() {
             newEntry.className = "flex justify-between items-center p-3 pr-24 border-b border-surface-container-high last:border-0 relative group";
             
             const editBtn = document.createElement('button');
-            editBtn.className = "absolute right-12 top-1/2 -translate-y-1/2 p-2 text-primary opacity-0 group-hover:opacity-100 transition-opacity bg-primary-container/20 rounded-full active:scale-95";
+            editBtn.className = "absolute right-12 top-1/2 -translate-y-1/2 p-2 text-neon-blue opacity-0 group-hover:opacity-100 transition-opacity bg-gradient-to-r from-neon-purple to-neon-blue-container/20 rounded-full active:scale-95";
             editBtn.innerHTML = `<span class="material-symbols-outlined text-sm">edit</span>`;
             editBtn.onclick = (e) => {
                 e.stopPropagation();
@@ -512,13 +512,13 @@ function renderLibraryFoods() {
 
     libraryFoods.forEach((food) => {
         const item = document.createElement('div');
-        item.className = "bg-surface-container-lowest rounded-2xl p-4 shadow-sm hover:scale-[0.99] transition-transform relative group";
+        item.className = "bg-background shadow-neo rounded-[32px] p-4 shadow-sm hover:scale-[0.99] transition-transform relative group";
         
         let macrosHtml = '';
         if(food.karb !== null || food.protein !== null || food.yag !== null) {
             macrosHtml = '<div class="flex gap-2">';
-            if(food.karb !== null && !isNaN(food.karb)) macrosHtml += `<span class="font-label-sm text-label-sm bg-tertiary-container/20 text-tertiary rounded-md px-2 py-1">K: ${food.karb}g</span>`;
-            if(food.protein !== null && !isNaN(food.protein)) macrosHtml += `<span class="font-label-sm text-label-sm bg-secondary-container/30 text-secondary rounded-md px-2 py-1">P: ${food.protein}g</span>`;
+            if(food.karb !== null && !isNaN(food.karb)) macrosHtml += `<span class="font-label-sm text-label-sm bg-tertiary-container/20 text-neon-green rounded-md px-2 py-1">K: ${food.karb}g</span>`;
+            if(food.protein !== null && !isNaN(food.protein)) macrosHtml += `<span class="font-label-sm text-label-sm bg-gradient-to-r from-neon-blue to-neon-green/30 text-neon-purple rounded-md px-2 py-1">P: ${food.protein}g</span>`;
             if(food.yag !== null && !isNaN(food.yag)) macrosHtml += `<span class="font-label-sm text-label-sm bg-error-container/40 text-on-error-container rounded-md px-2 py-1">Y: ${food.yag}g</span>`;
             macrosHtml += '</div>';
         }
@@ -527,10 +527,10 @@ function renderLibraryFoods() {
             <div class="cursor-pointer">
                 <div class="flex justify-between items-start mb-2 pr-8">
                     <h3 class="font-headline-sm text-headline-sm text-on-surface truncate">${escapeHtml(food.name)}</h3>
-                    <span class="font-label-md text-label-md text-on-surface-variant bg-surface-container px-2 py-1 rounded-full shrink-0">100g</span>
+                    <span class="font-label-md text-label-md text-on-surface-variant bg-background shadow-neo px-2 py-1 rounded-full shrink-0">100g</span>
                 </div>
                 <div class="flex items-center gap-2 mb-3">
-                    <span class="font-body-lg text-body-lg text-primary font-bold">${food.kcal} kcal</span>
+                    <span class="font-body-lg text-body-lg text-neon-blue font-bold">${food.kcal} kcal</span>
                 </div>
                 ${macrosHtml}
             </div>
@@ -712,19 +712,19 @@ function renderWeeklyChart() {
         const div = document.createElement("div");
         div.className = "flex flex-col items-center gap-2 w-[14%] group relative";
         
-        let barClass = "bg-primary/70 group-hover:bg-primary/90";
+        let barClass = "bg-gradient-to-r from-neon-purple to-neon-blue/70 group-hover:bg-gradient-to-r from-neon-purple to-neon-blue/90";
         let textClass = "text-outline";
         
         if(day.isToday) {
-            barClass = "bg-primary group-hover:bg-primary/90";
-            textClass = "text-primary font-bold";
+            barClass = "bg-gradient-to-r from-neon-purple to-neon-blue group-hover:bg-gradient-to-r from-neon-purple to-neon-blue/90";
+            textClass = "text-neon-blue font-bold";
         }
 
         div.innerHTML = `
-            <div class="absolute -top-6 bg-surface-container-high text-on-surface text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10 pointer-events-none">
+            <div class="absolute -top-6 bg-background shadow-neo text-on-surface text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10 pointer-events-none">
                 ${Math.round(day.amount)} kcal
             </div>
-            <div class="w-2 md:w-3 bg-surface-container rounded-full h-24 relative flex items-end overflow-hidden">
+            <div class="w-2 md:w-3 bg-background shadow-neo rounded-full h-24 relative flex items-end overflow-hidden">
                 <div class="w-full rounded-full transition-all duration-500 ${barClass}" style="height: ${percent}%"></div>
             </div>
         `;

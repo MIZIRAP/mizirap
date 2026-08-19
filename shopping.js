@@ -72,7 +72,7 @@ function renderShoppingList() {
     
     activeItems.forEach(item => {
         const div = document.createElement("div");
-        div.className = "group bg-surface-container-lowest rounded-2xl p-4 shadow-sm flex items-center justify-between transition-all hover:bg-surface-container-low animate-in fade-in slide-in-from-top-2 duration-300";
+        div.className = "group bg-background shadow-neo-lowest rounded-[32px] p-4 shadow-sm flex items-center justify-between transition-all hover:bg-background shadow-neo-low animate-in fade-in slide-in-from-top-2 duration-300";
         div.innerHTML = `
             <!-- Normal View -->
             <div class="flex items-center justify-between w-full normal-view">
@@ -83,14 +83,14 @@ function renderShoppingList() {
                     <span class="font-body-md text-on-surface text-body-md">${escapeHtml(item.title)}</span>
                 </div>
                 <div class="flex items-center gap-1">
-                    <button class="edit-btn material-symbols-outlined text-outline hover:text-primary transition-colors p-1">edit</button>
+                    <button class="edit-btn material-symbols-outlined text-outline hover:text-neon-blue transition-colors p-1">edit</button>
                     <button class="delete-btn material-symbols-outlined text-outline hover:text-error transition-colors p-1">delete</button>
                 </div>
             </div>
             <!-- Edit View -->
             <div class="hidden items-center justify-between w-full gap-2 edit-view">
-                <input type="text" class="w-full bg-surface-container border border-outline-variant rounded-lg px-2 py-1 text-sm text-on-surface focus:border-primary focus:ring-1 focus:ring-primary edit-input" value="${escapeHtml(item.title)}">
-                <button class="bg-primary text-on-primary px-3 py-1 rounded-lg text-sm font-medium shrink-0 save-btn">Kaydet</button>
+                <input type="text" class="w-full bg-background shadow-neo border-none rounded-lg px-2 py-1 text-sm text-on-surface focus:border-primary focus:ring-1 focus:ring-primary edit-input" value="${escapeHtml(item.title)}">
+                <button class="bg-gradient-to-r from-neon-purple to-neon-blue text-white px-3 py-1 rounded-lg text-sm font-medium shrink-0 save-btn">Kaydet</button>
                 <button class="text-on-surface-variant px-2 py-1 rounded-lg text-sm shrink-0 cancel-btn">İptal</button>
             </div>
         `;
@@ -129,25 +129,25 @@ function renderShoppingList() {
     
     completedItems.forEach(item => {
         const div = document.createElement("div");
-        div.className = "bg-surface-dim/40 rounded-2xl p-4 flex items-center justify-between border border-transparent";
+        div.className = "bg-background shadow-neo-dim/40 rounded-[32px] p-4 flex items-center justify-between border border-transparent";
         div.innerHTML = `
             <!-- Normal View -->
             <div class="flex items-center justify-between w-full normal-view">
                 <div class="flex items-center gap-4">
-                    <button class="toggle-btn w-6 h-6 rounded-md bg-primary flex items-center justify-center transition-colors">
-                        <span class="material-symbols-outlined text-lg text-on-primary">check</span>
+                    <button class="toggle-btn w-6 h-6 rounded-md bg-gradient-to-r from-neon-purple to-neon-blue flex items-center justify-center transition-colors">
+                        <span class="material-symbols-outlined text-lg text-white">check</span>
                     </button>
                     <span class="font-body-md text-outline checked-item text-body-md">${escapeHtml(item.title)}</span>
                 </div>
                 <div class="flex items-center gap-1">
-                    <button class="edit-btn material-symbols-outlined text-outline hover:text-primary transition-colors p-1">edit</button>
+                    <button class="edit-btn material-symbols-outlined text-outline hover:text-neon-blue transition-colors p-1">edit</button>
                     <button class="delete-btn material-symbols-outlined text-outline hover:text-error transition-colors p-1">delete</button>
                 </div>
             </div>
             <!-- Edit View -->
             <div class="hidden items-center justify-between w-full gap-2 edit-view">
-                <input type="text" class="w-full bg-surface-container border border-outline-variant rounded-lg px-2 py-1 text-sm text-on-surface focus:border-primary focus:ring-1 focus:ring-primary edit-input" value="${escapeHtml(item.title)}">
-                <button class="bg-primary text-on-primary px-3 py-1 rounded-lg text-sm font-medium shrink-0 save-btn">Kaydet</button>
+                <input type="text" class="w-full bg-background shadow-neo border-none rounded-lg px-2 py-1 text-sm text-on-surface focus:border-primary focus:ring-1 focus:ring-primary edit-input" value="${escapeHtml(item.title)}">
+                <button class="bg-gradient-to-r from-neon-purple to-neon-blue text-white px-3 py-1 rounded-lg text-sm font-medium shrink-0 save-btn">Kaydet</button>
                 <button class="text-on-surface-variant px-2 py-1 rounded-lg text-sm shrink-0 cancel-btn">İptal</button>
             </div>
         `;

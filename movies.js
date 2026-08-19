@@ -323,11 +323,11 @@ function updateTabsUI() {
     tabs.forEach(tab => {
         const status = tab.getAttribute('data-status');
         if (status === currentStatusTab) {
-            tab.classList.remove('text-on-surface-variant', 'hover:text-primary');
-            tab.classList.add('bg-primary', 'text-on-primary');
+            tab.classList.remove('text-on-surface-variant', 'hover:text-neon-blue');
+            tab.classList.add('bg-gradient-to-r from-neon-purple to-neon-blue', 'text-white');
         } else {
-            tab.classList.remove('bg-primary', 'text-on-primary');
-            tab.classList.add('text-on-surface-variant', 'hover:text-primary');
+            tab.classList.remove('bg-gradient-to-r from-neon-purple to-neon-blue', 'text-white');
+            tab.classList.add('text-on-surface-variant', 'hover:text-neon-blue');
         }
     });
 }
@@ -378,12 +378,12 @@ function renderMovies() {
         let subtitleHtml = '';
         if (type === 'series') {
             if (item.season) {
-                subtitleHtml = `<p class="text-caption text-primary">Sezon ${item.season}${item.episode ? ' • ' + item.episode + ' Bölüm' : ''}</p>`;
+                subtitleHtml = `<p class="text-caption text-neon-blue">Sezon ${item.season}${item.episode ? ' • ' + item.episode + ' Bölüm' : ''}</p>`;
             } else if (item.episode) {
-                subtitleHtml = `<p class="text-caption text-primary">Bölüm ${item.episode}</p>`;
+                subtitleHtml = `<p class="text-caption text-neon-blue">Bölüm ${item.episode}</p>`;
             }
         } else {
-            subtitleHtml = `<p class="text-caption text-primary">Film</p>`;
+            subtitleHtml = `<p class="text-caption text-neon-blue">Film</p>`;
         }
 
         let coverHtml = '';
@@ -392,8 +392,8 @@ function renderMovies() {
         } else {
             // Determine random color based on letter code for variety if desired, or use default from design.
             const isDark = coverLetter.charCodeAt(0) % 2 === 0;
-            const bgClass = isDark ? 'bg-primary/10' : 'bg-tertiary-container/20';
-            const textClass = isDark ? 'text-primary' : 'text-tertiary-container';
+            const bgClass = isDark ? 'bg-gradient-to-r from-neon-purple to-neon-blue/10' : 'bg-tertiary-container/20';
+            const textClass = isDark ? 'text-neon-blue' : 'text-neon-green-container';
             coverHtml = `
             <div class="w-full h-full ${bgClass} flex items-center justify-center">
                 <span class="text-3xl font-bold ${textClass} opacity-40 italic">${coverLetter}</span>
@@ -401,7 +401,7 @@ function renderMovies() {
         }
 
         const html = `
-        <article class="bg-surface-container-lowest rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all active:scale-[0.98] flex flex-col cursor-pointer" data-action="openMoviesModal" data-movie-id="${item.id}">
+        <article class="bg-background shadow-neo-lowest rounded-[32px] overflow-hidden shadow-sm hover:shadow-md transition-all active:scale-[0.98] flex flex-col cursor-pointer" data-action="openMoviesModal" data-movie-id="${item.id}">
             <div class="relative aspect-[3/4]">
                 ${coverHtml}
             </div>

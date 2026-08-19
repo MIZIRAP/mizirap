@@ -317,11 +317,11 @@ export function initBooks(uid, onChangeCallback) {
     viewAllTabs.forEach(tab => {
         tab.onclick = () => {
             viewAllTabs.forEach(t => {
-                t.classList.remove("bg-primary-container", "text-on-primary-container");
-                t.classList.add("bg-surface-container-high", "text-on-surface-variant");
+                t.classList.remove("bg-gradient-to-r from-neon-purple to-neon-blue-container", "text-white-container");
+                t.classList.add("bg-background shadow-neo-high", "text-on-surface-variant");
             });
-            tab.classList.remove("bg-surface-container-high", "text-on-surface-variant");
-            tab.classList.add("bg-primary-container", "text-on-primary-container");
+            tab.classList.remove("bg-background shadow-neo-high", "text-on-surface-variant");
+            tab.classList.add("bg-gradient-to-r from-neon-purple to-neon-blue-container", "text-white-container");
             viewAllFilter = tab.dataset.filter;
             renderViewAllList();
         };
@@ -369,11 +369,11 @@ function renderBooks(uid) {
             const safeCover = escapeHtml(book.coverUrl || "");
 
             const card = document.createElement("div");
-            card.className = "bg-surface-container-lowest rounded-xl p-4 ambient-shadow flex flex-col gap-4 card-press";
+            card.className = "bg-background shadow-neo-lowest rounded-[32px] p-4 ambient-shadow flex flex-col gap-4 card-press";
             card.innerHTML = `
                 <div class="flex gap-4 items-start">
                     <!-- Book Cover -->
-                    <div class="w-20 h-28 flex-shrink-0 rounded shadow-sm overflow-hidden bg-surface-container cursor-pointer edit-book-trigger" data-id="${book.id}">
+                    <div class="w-20 h-28 flex-shrink-0 rounded shadow-sm overflow-hidden bg-background shadow-neo cursor-pointer edit-book-trigger" data-id="${book.id}">
                         <img alt="${safeTitle}" class="object-cover w-full h-full" src="${safeCover}">
                     </div>
                     <!-- Book Info -->
@@ -386,10 +386,10 @@ function renderBooks(uid) {
                         <div class="flex flex-col gap-2 mt-auto">
                             <div class="flex justify-between items-end">
                                 <span class="font-label-sm text-label-sm text-on-surface-variant">${book.readPages || 0} / ${book.totalPages} sayfa</span>
-                                <span class="font-label-sm text-label-sm text-primary font-bold">%${percent}</span>
+                                <span class="font-label-sm text-label-sm text-neon-blue font-bold">%${percent}</span>
                             </div>
-                            <div class="w-full h-2 bg-secondary-container rounded-full overflow-hidden">
-                                <div class="h-full bg-primary rounded-full transition-all duration-500" style="width: ${percent}%;"></div>
+                            <div class="w-full h-2 bg-gradient-to-r from-neon-blue to-neon-green rounded-full overflow-hidden">
+                                <div class="h-full bg-gradient-to-r from-neon-purple to-neon-blue rounded-full transition-all duration-500" style="width: ${percent}%;"></div>
                             </div>
                         </div>
                     </div>
@@ -399,17 +399,17 @@ function renderBooks(uid) {
                 <div class="flex items-end gap-3 pt-1">
                     <div class="flex-grow flex flex-col gap-1">
                         <label class="font-label-sm text-label-sm text-on-surface-variant">Kaldığım Sayfa</label>
-                        <div class="flex items-center gap-2 bg-surface-variant rounded-lg p-1">
-                            <button class="w-8 h-8 flex items-center justify-center rounded-full bg-secondary-container text-on-secondary-container hover:bg-secondary-fixed transition-colors active:scale-90 decrease-page-btn" data-id="${book.id}">
+                        <div class="flex items-center gap-2 bg-background shadow-neo-variant rounded-lg p-1">
+                            <button class="w-8 h-8 flex items-center justify-center rounded-full bg-gradient-to-r from-neon-blue to-neon-green text-white hover:bg-secondary-fixed transition-colors active:scale-90 decrease-page-btn" data-id="${book.id}">
                                 <span class="material-symbols-outlined text-body-lg">remove</span>
                             </button>
                             <input class="w-full bg-transparent border-none focus:ring-0 text-center text-on-surface font-body-md text-body-md h-8 p-0 page-input" type="number" value="${book.readPages || 0}" data-id="${book.id}">
-                            <button class="w-8 h-8 flex items-center justify-center rounded-full bg-secondary-container text-on-secondary-container hover:bg-secondary-fixed transition-colors active:scale-90 increase-page-btn" data-id="${book.id}">
+                            <button class="w-8 h-8 flex items-center justify-center rounded-full bg-gradient-to-r from-neon-blue to-neon-green text-white hover:bg-secondary-fixed transition-colors active:scale-90 increase-page-btn" data-id="${book.id}">
                                 <span class="material-symbols-outlined text-body-lg">add</span>
                             </button>
                         </div>
                     </div>
-                    <button class="bg-primary text-on-primary rounded-lg h-10 px-5 font-label-md text-label-md flex items-center justify-center hover:bg-surface-tint active:scale-95 transition-all shadow-sm update-page-btn" data-id="${book.id}">Güncelle</button>
+                    <button class="bg-gradient-to-r from-neon-purple to-neon-blue text-white rounded-lg h-10 px-5 font-label-md text-label-md flex items-center justify-center hover:bg-background shadow-neo-tint active:scale-95 transition-all shadow-sm update-page-btn" data-id="${book.id}">Güncelle</button>
                 </div>
             `;
             readingListEl.appendChild(card);
@@ -492,16 +492,16 @@ function renderBooks(uid) {
             
             let statusBadge = "";
             if(book.status === "finished") {
-                statusBadge = `<div class="absolute top-2 right-2 bg-surface-container-lowest/90 backdrop-blur-sm px-2 py-1 rounded text-label-sm font-bold text-on-surface shadow-sm">Bitti</div>`;
+                statusBadge = `<div class="absolute top-2 right-2 bg-background shadow-neo-lowest/90 backdrop-blur-sm px-2 py-1 rounded text-label-sm font-bold text-on-surface shadow-sm">Bitti</div>`;
             } else if (book.status === "to_read") {
-                statusBadge = `<div class="absolute top-2 right-2 bg-secondary-container/90 backdrop-blur-sm px-2 py-1 rounded text-label-sm font-bold text-on-secondary-container shadow-sm">Okunacak</div>`;
+                statusBadge = `<div class="absolute top-2 right-2 bg-gradient-to-r from-neon-blue to-neon-green/90 backdrop-blur-sm px-2 py-1 rounded text-label-sm font-bold text-white shadow-sm">Okunacak</div>`;
             }
 
             const card = document.createElement("div");
-            card.className = "bg-surface-container-lowest rounded-xl p-3 ambient-shadow flex flex-col gap-3 card-press cursor-pointer edit-book-trigger";
+            card.className = "bg-background shadow-neo-lowest rounded-[32px] p-3 ambient-shadow flex flex-col gap-3 card-press cursor-pointer edit-book-trigger";
             card.dataset.id = book.id;
             card.innerHTML = `
-                <div class="relative w-full aspect-[2/3] rounded overflow-hidden shadow-sm bg-surface-container">
+                <div class="relative w-full aspect-[2/3] rounded overflow-hidden shadow-sm bg-background shadow-neo">
                     <img alt="Book Cover" class="object-cover w-full h-full" src="${safeCover}">
                     ${statusBadge}
                 </div>
@@ -557,18 +557,18 @@ function renderViewAllList() {
             statusHtml = `
                 <div class="flex flex-col gap-2">
                     <div class="flex justify-between items-center">
-                        <span class="inline-flex items-center px-2 py-0.5 rounded text-label-sm font-label-sm bg-primary/10 text-primary">Okuyorum</span>
+                        <span class="inline-flex items-center px-2 py-0.5 rounded text-label-sm font-label-sm bg-gradient-to-r from-neon-purple to-neon-blue/10 text-neon-blue">Okuyorum</span>
                         <span class="font-label-sm text-label-sm text-on-surface-variant">%${percent}</span>
                     </div>
-                    <div class="w-full h-1.5 bg-surface-container-high rounded-full overflow-hidden">
-                        <div class="h-full bg-primary rounded-full" style="width: ${percent}%;"></div>
+                    <div class="w-full h-1.5 bg-background shadow-neo-high rounded-full overflow-hidden">
+                        <div class="h-full bg-gradient-to-r from-neon-purple to-neon-blue rounded-full" style="width: ${percent}%;"></div>
                     </div>
                 </div>
             `;
         } else if (book.status === "finished") {
             statusHtml = `
                 <div>
-                    <span class="inline-flex items-center px-2 py-0.5 rounded text-label-sm font-label-sm bg-surface-container-highest text-on-surface-variant">
+                    <span class="inline-flex items-center px-2 py-0.5 rounded text-label-sm font-label-sm bg-background shadow-neo-highest text-on-surface-variant">
                         <span class="material-symbols-outlined text-lg mr-1" style="font-variation-settings: 'FILL' 1;">check_circle</span>
                         Bitti
                     </span>
@@ -577,19 +577,19 @@ function renderViewAllList() {
         } else {
             statusHtml = `
                 <div>
-                    <span class="inline-flex items-center px-2 py-0.5 rounded text-label-sm font-label-sm bg-tertiary/10 text-tertiary">Okunacak</span>
+                    <span class="inline-flex items-center px-2 py-0.5 rounded text-label-sm font-label-sm bg-tertiary/10 text-neon-green">Okunacak</span>
                 </div>
             `;
         }
         
         const card = document.createElement("div");
-        card.className = "bg-surface-container-lowest rounded-xl p-4 flex gap-4 soft-shadow items-center transition-transform active:scale-[0.98] relative cursor-pointer edit-book-trigger";
+        card.className = "bg-background shadow-neo-lowest rounded-[32px] p-4 flex gap-4 soft-shadow items-center transition-transform active:scale-[0.98] relative cursor-pointer edit-book-trigger";
         card.dataset.id = book.id;
         card.innerHTML = `
             <button class="absolute top-3 right-3 p-1.5 rounded-full text-on-surface-variant/40 hover:text-error hover:bg-error-container/20 transition-colors z-10 delete-book-btn" data-id="${book.id}">
                 <span class="material-symbols-outlined text-lg">delete</span>
             </button>
-            <div class="w-16 h-24 shrink-0 rounded-lg overflow-hidden bg-surface-container-high relative">
+            <div class="w-16 h-24 shrink-0 rounded-lg overflow-hidden bg-background shadow-neo-high relative">
                 <img class="w-full h-full object-cover" src="${safeCover}">
             </div>
             <div class="flex-1 min-w-0 flex flex-col justify-center">

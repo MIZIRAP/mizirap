@@ -467,7 +467,7 @@ function renderSplitView() {
         activeSplit.days.forEach((day, idx) => {
             const isActive = day.id === activeDayId;
             const bar = document.createElement('button');
-            bar.className = `h-1.5 rounded-full transition-all duration-200 cursor-pointer ${isActive ? 'bg-white w-10' : 'bg-white/30 w-8 hover:bg-white/60'}`;
+            bar.className = `h-1.5 rounded-full transition-all duration-200 cursor-pointer ${isActive ? 'bg-background shadow-neo w-10' : 'bg-background shadow-neo/30 w-8 hover:bg-background shadow-neo/60'}`;
             bar.title = day.name;
             bar.onclick = () => selectActiveDay(day.id);
             dotsContainer.appendChild(bar);
@@ -550,11 +550,11 @@ async function saveWorkoutSession() {
         currentWorkoutLog = { id: docId, ...logData };
         
         saveBtn.innerHTML = `<span class="material-symbols-outlined">check_circle</span> Kaydedildi!`;
-        saveBtn.classList.add("bg-primary-container", "text-on-primary-container");
+        saveBtn.classList.add("bg-gradient-to-r from-neon-purple to-neon-blue-container", "text-white-container");
         
         setTimeout(() => {
             saveBtn.innerHTML = originalText;
-            saveBtn.classList.remove("bg-primary-container", "text-on-primary-container");
+            saveBtn.classList.remove("bg-gradient-to-r from-neon-purple to-neon-blue-container", "text-white-container");
             saveBtn.disabled = false;
             
             // RESET STATE
@@ -613,7 +613,7 @@ function renderEditTemplateList() {
     
     editingExercises.forEach((ex, index) => {
         const item = document.createElement("div");
-        item.className = "exercise-item bg-surface-container-lowest rounded-xl p-4 shadow-sm flex items-center gap-4 group";
+        item.className = "exercise-item bg-background shadow-neo-lowest rounded-[32px] p-4 shadow-sm flex items-center gap-4 group";
         item.dataset.index = index;
         
         item.innerHTML = `
@@ -758,19 +758,19 @@ function openSplitSelectionModal() {
             const btn = document.createElement("button");
             
             if (isActive) {
-                btn.className = "w-full text-left bg-surface-container-low border-2 border-primary rounded-xl p-4 flex items-center justify-between group transition-transform active:scale-[0.98] relative overflow-hidden shadow-sm";
+                btn.className = "w-full text-left bg-background shadow-neo-low border-2 border-primary rounded-[32px] p-4 flex items-center justify-between group transition-transform active:scale-[0.98] relative overflow-hidden shadow-sm";
                 btn.innerHTML = `
                     <div class="flex flex-col gap-1 z-10">
                         <span class="font-body-lg text-body-lg text-on-background font-medium">${escapeHtml(split.name)}</span>
-                        <span class="font-label-md text-label-md text-primary">Aktif Program</span>
+                        <span class="font-label-md text-label-md text-neon-blue">Aktif Program</span>
                     </div>
-                    <div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center z-10">
-                        <span class="material-symbols-outlined text-on-primary icon-md font-bold">check</span>
+                    <div class="w-8 h-8 rounded-full bg-gradient-to-r from-neon-purple to-neon-blue flex items-center justify-center z-10">
+                        <span class="material-symbols-outlined text-white icon-md font-bold">check</span>
                     </div>
-                    <div class="absolute inset-0 bg-primary/5 pointer-events-none"></div>
+                    <div class="absolute inset-0 bg-gradient-to-r from-neon-purple to-neon-blue/5 pointer-events-none"></div>
                 `;
             } else {
-                btn.className = "w-full text-left bg-surface-container-lowest border border-outline-variant rounded-xl p-4 flex items-center justify-between hover:bg-surface-container-low transition-colors active:scale-[0.98] shadow-sm";
+                btn.className = "w-full text-left bg-background shadow-neo-lowest border-none rounded-[32px] p-4 flex items-center justify-between hover:bg-background shadow-neo-low transition-colors active:scale-[0.98] shadow-sm";
                 
                 // For subtitle, we could show creation date if available
                 let subTitle = "Kayıtlı Program";
@@ -830,12 +830,12 @@ function initFavoritesUI() {
         if (favs.includes(title)) {
             span.style.fontVariationSettings = "'FILL' 1";
             btn.classList.remove('text-on-surface-variant');
-            btn.classList.add('text-primary');
+            btn.classList.add('text-neon-blue');
             item.dataset.fav = "true";
         } else {
             span.style.fontVariationSettings = "'FILL' 0";
             btn.classList.add('text-on-surface-variant');
-            btn.classList.remove('text-primary');
+            btn.classList.remove('text-neon-blue');
             item.dataset.fav = "false";
         }
     });
@@ -986,10 +986,10 @@ async function openExerciseHistory(triggerExId, exName) {
             const diff = historyRecords[0].maxWeight - historyRecords[1].maxWeight;
             if(diff > 0) {
                 trendBadgeEl.innerHTML = `
-                    <span class="material-symbols-outlined text-primary text-lg" data-icon="trending_up">trending_up</span>
-                    <span class="font-label-sm text-label-sm text-primary inline-block min-w-[48px] text-right">+${diff.toFixed(1)} kg</span>
+                    <span class="material-symbols-outlined text-neon-blue text-lg" data-icon="trending_up">trending_up</span>
+                    <span class="font-label-sm text-label-sm text-neon-blue inline-block min-w-[48px] text-right">+${diff.toFixed(1)} kg</span>
                 `;
-                trendBadgeEl.className = "bg-primary-container bg-opacity-20 rounded-full px-3 py-1 flex items-center gap-1";
+                trendBadgeEl.className = "bg-gradient-to-r from-neon-purple to-neon-blue-container bg-opacity-20 rounded-full px-3 py-1 flex items-center gap-1";
             } else if (diff < 0) {
                 trendBadgeEl.innerHTML = `
                     <span class="material-symbols-outlined text-error text-lg" data-icon="trending_down">trending_down</span>
@@ -1001,14 +1001,14 @@ async function openExerciseHistory(triggerExId, exName) {
                     <span class="material-symbols-outlined text-outline text-lg" data-icon="trending_flat">trending_flat</span>
                     <span class="font-label-sm text-label-sm text-outline">Değişim Yok</span>
                 `;
-                trendBadgeEl.className = "bg-surface-variant bg-opacity-50 rounded-full px-3 py-1 flex items-center gap-1";
+                trendBadgeEl.className = "bg-background shadow-neo-variant bg-opacity-50 rounded-full px-3 py-1 flex items-center gap-1";
             }
         } else {
              trendBadgeEl.innerHTML = `
-                <span class="material-symbols-outlined text-primary text-lg" data-icon="fiber_new">fiber_new</span>
-                <span class="font-label-sm text-label-sm text-primary">İlk Kayıt</span>
+                <span class="material-symbols-outlined text-neon-blue text-lg" data-icon="fiber_new">fiber_new</span>
+                <span class="font-label-sm text-label-sm text-neon-blue">İlk Kayıt</span>
             `;
-             trendBadgeEl.className = "bg-primary-container bg-opacity-20 rounded-full px-3 py-1 flex items-center gap-1";
+             trendBadgeEl.className = "bg-gradient-to-r from-neon-purple to-neon-blue-container bg-opacity-20 rounded-full px-3 py-1 flex items-center gap-1";
         }
         
         // Render List (Only last 3)
@@ -1028,7 +1028,7 @@ async function openExerciseHistory(triggerExId, exName) {
                 const prevRec = historyRecords[idx+1];
                 const diff = rec.maxWeight - prevRec.maxWeight;
                 if(diff > 0) {
-                    diffBadge = `<div class="bg-primary-container bg-opacity-10 text-primary font-label-md text-label-md px-1 py-1 rounded inline-block min-w-[56px] text-center">+${diff.toFixed(1)} kg</div>`;
+                    diffBadge = `<div class="bg-gradient-to-r from-neon-purple to-neon-blue-container bg-opacity-10 text-neon-blue font-label-md text-label-md px-1 py-1 rounded inline-block min-w-[56px] text-center">+${diff.toFixed(1)} kg</div>`;
                 } else if(diff < 0) {
                     diffBadge = `<div class="bg-error-container bg-opacity-10 text-error font-label-md text-label-md px-1 py-1 rounded inline-block min-w-[56px] text-center">${diff.toFixed(1)} kg</div>`;
                 }
@@ -1038,9 +1038,9 @@ async function openExerciseHistory(triggerExId, exName) {
             const opacityClass = idx === 0 ? "opacity-100" : (idx === 1 ? "opacity-90" : "opacity-80");
             
             listContainer.innerHTML += `
-                <div class="bg-surface-container-lowest rounded-xl shadow-sm p-4 flex items-center justify-between interactive-card cursor-pointer ${opacityClass}">
+                <div class="bg-background shadow-neo-lowest rounded-[32px] shadow-sm p-4 flex items-center justify-between interactive-card cursor-pointer ${opacityClass}">
                     <div class="flex items-center gap-4">
-                        <div class="w-10 h-10 rounded-lg bg-surface-container flex items-center justify-center text-${idx===0 ? 'primary' : 'secondary'}">
+                        <div class="w-10 h-10 rounded-lg bg-background shadow-neo flex items-center justify-center text-${idx===0 ? 'primary' : 'secondary'}">
                             <span class="material-symbols-outlined" data-icon="calendar_today" ${idx===0 ? "style=\"font-variation-settings: 'FILL' 1;\"" : ""}>calendar_today</span>
                         </div>
                         <div class="flex flex-col">
@@ -1098,7 +1098,7 @@ async function openExerciseHistory(triggerExId, exName) {
                 if(i === 0) pathD += `M ${x},${y} `;
                 else pathD += `L ${x},${y} `;
                 
-                pointsHtml += `<div class="w-2 h-2 rounded-full bg-primary border-2 border-surface-container-lowest absolute bottom-[${100-y}%] left-[${x}%] transform -translate-x-1/2 translate-y-1/2"></div>`;
+                pointsHtml += `<div class="w-2 h-2 rounded-full bg-gradient-to-r from-neon-purple to-neon-blue border-2 border-surface-container-lowest absolute bottom-[${100-y}%] left-[${x}%] transform -translate-x-1/2 translate-y-1/2"></div>`;
                 
                 const dObj = new Date(d.dateStr);
                 const shortDate = formatDate(dObj, { day: 'numeric', month: 'short' });
@@ -1186,7 +1186,7 @@ function renderSplitEditView() {
         const accordionKey = `${activeSplit.id}-${dayIdx}`;
         
         const dayCard = document.createElement('div');
-        dayCard.className = "bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden";
+        dayCard.className = "bg-background shadow-neo-lowest rounded-[32px] shadow-sm overflow-hidden";
         dayCard.dataset.dayIdx = dayIdx;
         dayCard.dataset.splitId = activeSplit.id;
         
@@ -1197,7 +1197,7 @@ function renderSplitEditView() {
         } else {
             day.exercises.forEach((ex, exIdx) => {
                 exRows += `
-                    <div class="ex-drag-item flex items-center gap-2 px-md py-2.5 border-b border-surface-container-highest last:border-0 active:bg-surface-container-high transition-colors"
+                    <div class="ex-drag-item flex items-center gap-2 px-md py-2.5 border-b border-surface-container-highest last:border-0 active:bg-background shadow-neo-high transition-colors"
                          data-ex-idx="${exIdx}" data-split-id="${activeSplit.id}" data-day-idx="${dayIdx}">
                         <!-- Drag Handle -->
                         <span class="material-symbols-outlined text-on-surface-variant/50 drag-handle select-none shrink-0 cursor-grab active:cursor-grabbing" style="font-size:20px">drag_indicator</span>
@@ -1206,10 +1206,10 @@ function renderSplitEditView() {
                         <!-- Set Sayısı -->
                         <div class="flex items-center gap-1 shrink-0">
                             <button data-action="changeExerciseSets" data-split-id="${activeSplit.id}" data-day-idx="${dayIdx}" data-ex-idx="${exIdx}" data-delta="-1"
-                                class="w-7 h-7 rounded-full bg-surface-container-high flex items-center justify-center hover:bg-primary-container/40 transition-colors text-on-surface font-bold text-lg leading-none">−</button>
+                                class="w-7 h-7 rounded-full bg-background shadow-neo-high flex items-center justify-center hover:bg-gradient-to-r from-neon-purple to-neon-blue-container/40 transition-colors text-on-surface font-bold text-lg leading-none">−</button>
                             <span class="font-label-sm text-on-surface w-10 text-center whitespace-nowrap" id="sets-lbl-${activeSplit.id}-${dayIdx}-${exIdx}">${ex.defaultSets || 3} set</span>
                             <button data-action="changeExerciseSets" data-split-id="${activeSplit.id}" data-day-idx="${dayIdx}" data-ex-idx="${exIdx}" data-delta="1"
-                                class="w-7 h-7 rounded-full bg-surface-container-high flex items-center justify-center hover:bg-primary-container/40 transition-colors text-on-surface font-bold text-lg leading-none">+</button>
+                                class="w-7 h-7 rounded-full bg-background shadow-neo-high flex items-center justify-center hover:bg-gradient-to-r from-neon-purple to-neon-blue-container/40 transition-colors text-on-surface font-bold text-lg leading-none">+</button>
                         </div>
                         <!-- Sil -->
                         <button data-action="removeExerciseFromSplit" data-split-id="${activeSplit.id}" data-day-idx="${dayIdx}" data-ex-idx="${exIdx}"
@@ -1223,10 +1223,10 @@ function renderSplitEditView() {
         
         dayCard.innerHTML = `
             <!-- Accordion Header -->
-            <button class="accordion-header w-full flex items-center justify-between px-md py-3.5 text-left group transition-colors hover:bg-surface-container-high"
+            <button class="accordion-header w-full flex items-center justify-between px-md py-3.5 text-left group transition-colors hover:bg-background shadow-neo-high"
                     data-action="toggleDayAccordion" data-accordion-key="${accordionKey}">
                 <div class="flex items-center gap-2">
-                    <span class="material-symbols-outlined text-primary transition-transform duration-200 ${isOpen ? 'rotate-90' : ''}" style="font-size:20px">chevron_right</span>
+                    <span class="material-symbols-outlined text-neon-blue transition-transform duration-200 ${isOpen ? 'rotate-90' : ''}" style="font-size:20px">chevron_right</span>
                     <h3 class="font-title-md text-title-md font-semibold text-on-surface">${day.name}</h3>
                 </div>
                 <span class="font-label-sm text-on-surface-variant">${exCount} hareket</span>
@@ -1238,7 +1238,7 @@ function renderSplitEditView() {
                 </div>
                 <div class="px-md pt-2 pb-md">
                     <button data-action="openExercisePickerForSplit" data-split-id="${activeSplit.id}" data-day-idx="${dayIdx}"
-                        class="w-full py-2 bg-primary-container/20 text-primary rounded-lg font-label-sm hover:bg-primary-container/40 transition-colors flex items-center justify-center gap-1">
+                        class="w-full py-2 bg-gradient-to-r from-neon-purple to-neon-blue-container/20 text-neon-blue rounded-lg font-label-sm hover:bg-gradient-to-r from-neon-purple to-neon-blue-container/40 transition-colors flex items-center justify-center gap-1">
                         <span class="material-symbols-outlined text-[18px]">add</span> Egzersiz Ekle
                     </button>
                 </div>
@@ -1256,7 +1256,7 @@ function renderSplitEditView() {
 }
 
 function toggleDayAccordion(key, headerBtn) {
-    const body = headerBtn.closest('.bg-surface-container-lowest').querySelector('.accordion-body');
+    const body = headerBtn.closest('.bg-background shadow-neo-lowest').querySelector('.accordion-body');
     const chevron = headerBtn.querySelector('.material-symbols-outlined');
     
     if(_openDayAccordions.has(key)) {
@@ -1288,7 +1288,7 @@ function _initExSortable(listEl, splitId, dayIdx) {
         handle: '.drag-handle',
         animation: 150,
         ghostClass: 'opacity-30',
-        chosenClass: 'bg-primary-container/10',
+        chosenClass: 'bg-gradient-to-r from-neon-purple to-neon-blue-container/10',
         onEnd: function(evt) {
             const split = splits.find(s => s.id === splitId);
             if(!split) return;
@@ -1436,7 +1436,7 @@ function renderCreateSplitDays() {
     
     newSplitDays.forEach((day, index) => {
         const div = document.createElement('div');
-        div.className = "bg-surface-container-lowest rounded-xl p-md shadow-sm relative";
+        div.className = "bg-background shadow-neo-lowest rounded-[32px] p-md shadow-sm relative";
         
         let exHtml = '';
         if(day.exercises.length === 0) {
@@ -1464,7 +1464,7 @@ function renderCreateSplitDays() {
             <div class="mb-3">
                 ${exHtml}
             </div>
-            <button data-action="openExercisePicker" data-day-id="${day.id}" class="w-full py-2 bg-primary-container/30 text-primary rounded-lg font-label-sm hover:bg-primary-container/50 transition-colors flex items-center justify-center gap-1">
+            <button data-action="openExercisePicker" data-day-id="${day.id}" class="w-full py-2 bg-gradient-to-r from-neon-purple to-neon-blue-container/30 text-neon-blue rounded-lg font-label-sm hover:bg-gradient-to-r from-neon-purple to-neon-blue-container/50 transition-colors flex items-center justify-center gap-1">
                 <span class="material-symbols-outlined text-[18px]">add</span> Egzersiz Ekle
             </button>
         `;
@@ -1508,9 +1508,9 @@ function closeExercisePickerModal() {
 function filterPickerCategory(cat, btnElement) {
     const buttons = document.querySelectorAll('#exercise-picker-categories button');
     buttons.forEach(b => {
-        b.className = "px-4 py-1.5 rounded-full border border-outline-variant text-on-surface-variant font-label-sm whitespace-nowrap";
+        b.className = "px-4 py-1.5 rounded-full border-none text-on-surface-variant font-label-sm whitespace-nowrap";
     });
-    if(btnElement) btnElement.className = "px-4 py-1.5 rounded-full bg-primary text-on-primary font-label-sm whitespace-nowrap";
+    if(btnElement) btnElement.className = "px-4 py-1.5 rounded-full bg-gradient-to-r from-neon-purple to-neon-blue text-white font-label-sm whitespace-nowrap";
     
     const searchInput = document.getElementById('exercise-picker-search');
     renderExercisePickerList(cat, searchInput ? searchInput.value : '');
@@ -1557,10 +1557,10 @@ function renderExercisePickerList(category, searchTerm = '') {
     
     filtered.forEach(exName => {
         const btn = document.createElement('button');
-        btn.className = "w-full text-left p-3 rounded-xl hover:bg-surface-container-high transition-colors flex items-center justify-between border border-transparent hover:border-outline-variant/30";
+        btn.className = "w-full text-left p-3 rounded-[32px] hover:bg-background shadow-neo-high transition-colors flex items-center justify-between border border-transparent hover:border-outline-variant/30";
         btn.innerHTML = `
             <span class="font-body-md text-on-surface">${exName}</span>
-            <span class="material-symbols-outlined text-primary">add_circle</span>
+            <span class="material-symbols-outlined text-neon-blue">add_circle</span>
         `;
         btn.onclick = () => handlePickerSelect(exName);
         list.appendChild(btn);
@@ -1637,7 +1637,7 @@ function openSplitModal() {
     splits.forEach(split => {
         const isAct = split.id === activeSplitId;
         const div = document.createElement('div');
-        div.className = `flex flex-col p-4 rounded-xl border ${isAct ? 'border-primary bg-primary-container/10' : 'border-outline-variant bg-surface'} cursor-pointer hover:bg-surface-container-high transition-colors`;
+        div.className = `flex flex-col p-4 rounded-[32px] border ${isAct ? 'border-primary bg-gradient-to-r from-neon-purple to-neon-blue-container/10' : 'border-outline-variant bg-background shadow-neo'} cursor-pointer hover:bg-background shadow-neo-high transition-colors`;
         
         div.innerHTML = `
             <div class="flex items-center justify-between mb-2" data-action="selectSplit" data-split-id="${split.id}">
@@ -1645,10 +1645,10 @@ function openSplitModal() {
                     <div class="font-title-md text-on-surface font-bold">${split.name}</div>
                     <div class="font-label-sm text-on-surface-variant">${split.days ? split.days.length : 0} Gün</div>
                 </div>
-                ${isAct ? '<span class="material-symbols-outlined text-primary">check_circle</span>' : '<span class="material-symbols-outlined text-outline">radio_button_unchecked</span>'}
+                ${isAct ? '<span class="material-symbols-outlined text-neon-blue">check_circle</span>' : '<span class="material-symbols-outlined text-outline">radio_button_unchecked</span>'}
             </div>
             <div class="flex justify-end gap-2 mt-2 pt-2 border-t border-outline-variant/30">
-                <button data-action="openEditSplitView" data-split-id="${split.id}" class="p-2 rounded-full text-primary hover:bg-primary-container/20 transition-colors flex items-center justify-center">
+                <button data-action="openEditSplitView" data-split-id="${split.id}" class="p-2 rounded-full text-neon-blue hover:bg-gradient-to-r from-neon-purple to-neon-blue-container/20 transition-colors flex items-center justify-center">
                     <span class="material-symbols-outlined text-sm">edit</span>
                 </button>
                 <button data-action="deleteSplit" data-split-id="${split.id}" class="p-2 rounded-full text-error hover:bg-error-container/20 transition-colors flex items-center justify-center">
@@ -1674,10 +1674,10 @@ function selectSplit(splitId) {
     Array.from(optionsContainer.children).forEach((child, index) => {
         const split = splits[index];
         const isSel = split.id === tempSelectedSplitId;
-        child.className = `flex flex-col p-4 rounded-xl border ${isSel ? 'border-primary bg-primary-container/10' : 'border-outline-variant bg-surface'} cursor-pointer hover:bg-surface-container-high transition-colors`;
-        const icon = child.querySelector('.material-symbols-outlined.text-primary, .material-symbols-outlined.text-outline');
+        child.className = `flex flex-col p-4 rounded-[32px] border ${isSel ? 'border-primary bg-gradient-to-r from-neon-purple to-neon-blue-container/10' : 'border-outline-variant bg-background shadow-neo'} cursor-pointer hover:bg-background shadow-neo-high transition-colors`;
+        const icon = child.querySelector('.material-symbols-outlined.text-neon-blue, .material-symbols-outlined.text-outline');
         if(icon) {
-            icon.className = `material-symbols-outlined ${isSel ? 'text-primary' : 'text-outline'}`;
+            icon.className = `material-symbols-outlined ${isSel ? 'text-neon-blue' : 'text-outline'}`;
             icon.innerText = isSel ? 'check_circle' : 'radio_button_unchecked';
         }
     });
@@ -1874,8 +1874,8 @@ function renderStretches() {
 
 function generateStretchCard(stretch) {
     return `
-        <div class="bg-surface-container-low rounded-xl p-md flex items-center gap-md">
-            <div class="w-16 h-16 rounded-full overflow-hidden flex-shrink-0 bg-surface-container-highest">
+        <div class="bg-background shadow-neo-low rounded-[32px] p-md flex items-center gap-md">
+            <div class="w-16 h-16 rounded-full overflow-hidden flex-shrink-0 bg-background shadow-neo-highest">
                 ${stretch.imageBase64 ? `<img alt="${escapeHtml(stretch.name)}" class="w-full h-full object-cover" src="${stretch.imageBase64}"/>` : ''}
             </div>
             <div class="flex-1 flex flex-col justify-center">
@@ -1887,10 +1887,10 @@ function generateStretchCard(stretch) {
                 </div>
             </div>
             <div class="flex items-center gap-sm flex-shrink-0">
-                <button data-action="editStretch" data-stretch-id="${stretch.id}" class="text-on-surface-variant hover:text-primary transition-colors p-1 rounded-full hover:bg-surface-variant active:scale-95">
+                <button data-action="editStretch" data-stretch-id="${stretch.id}" class="text-on-surface-variant hover:text-neon-blue transition-colors p-1 rounded-full hover:bg-background shadow-neo-variant active:scale-95">
                     <span class="material-symbols-outlined text-[20px]" data-icon="edit">edit</span>
                 </button>
-                <button data-action="deleteStretch" data-stretch-id="${stretch.id}" class="text-on-surface-variant hover:text-error transition-colors p-1 rounded-full hover:bg-surface-variant active:scale-95">
+                <button data-action="deleteStretch" data-stretch-id="${stretch.id}" class="text-on-surface-variant hover:text-error transition-colors p-1 rounded-full hover:bg-background shadow-neo-variant active:scale-95">
                     <span class="material-symbols-outlined text-[20px]" data-icon="delete">delete</span>
                 </button>
             </div>
@@ -2125,8 +2125,8 @@ function renderCores() {
     let html = '';
     cores.forEach(core => {
         html += `
-            <div class="bg-surface-container-low rounded-xl p-md flex items-center gap-md">
-                <div class="w-16 h-16 rounded-full overflow-hidden flex-shrink-0 bg-surface-container-highest">
+            <div class="bg-background shadow-neo-low rounded-[32px] p-md flex items-center gap-md">
+                <div class="w-16 h-16 rounded-full overflow-hidden flex-shrink-0 bg-background shadow-neo-highest">
                     ${core.imageBase64 ? `<img alt="${escapeHtml(core.name)}" class="w-full h-full object-cover" src="${core.imageBase64}"/>` : ''}
                 </div>
                 <div class="flex-1 flex flex-col justify-center">
@@ -2138,10 +2138,10 @@ function renderCores() {
                     </div>
                 </div>
                 <div class="flex items-center gap-sm flex-shrink-0">
-                    <button data-action="editCore" data-core-id="${core.id}" class="text-on-surface-variant hover:text-primary transition-colors p-1 rounded-full hover:bg-surface-variant">
+                    <button data-action="editCore" data-core-id="${core.id}" class="text-on-surface-variant hover:text-neon-blue transition-colors p-1 rounded-full hover:bg-background shadow-neo-variant">
                         <span class="material-symbols-outlined" data-icon="edit">edit</span>
                     </button>
-                    <button data-action="deleteCore" data-core-id="${core.id}" class="text-on-surface-variant hover:text-error transition-colors p-1 rounded-full hover:bg-surface-variant">
+                    <button data-action="deleteCore" data-core-id="${core.id}" class="text-on-surface-variant hover:text-error transition-colors p-1 rounded-full hover:bg-background shadow-neo-variant">
                         <span class="material-symbols-outlined" data-icon="delete">delete</span>
                     </button>
                 </div>
@@ -2304,13 +2304,13 @@ function switchStretchTab(tab) {
     if (tab === 'movements') {
         movements.classList.remove('hidden');
         sessions.classList.add('hidden');
-        tabMovements.className = 'flex-1 py-3 font-label-lg text-label-lg text-primary border-b-2 border-primary transition-colors';
+        tabMovements.className = 'flex-1 py-3 font-label-lg text-label-lg text-neon-blue border-b-2 border-primary transition-colors';
         tabSessions.className = 'flex-1 py-3 font-label-lg text-label-lg text-on-surface-variant border-b-2 border-transparent hover:text-on-surface transition-colors';
     } else {
         movements.classList.add('hidden');
         sessions.classList.remove('hidden');
         tabMovements.className = 'flex-1 py-3 font-label-lg text-label-lg text-on-surface-variant border-b-2 border-transparent hover:text-on-surface transition-colors';
-        tabSessions.className = 'flex-1 py-3 font-label-lg text-label-lg text-primary border-b-2 border-primary transition-colors';
+        tabSessions.className = 'flex-1 py-3 font-label-lg text-label-lg text-neon-blue border-b-2 border-primary transition-colors';
         renderStretchSessions();
     }
 }
@@ -2359,12 +2359,12 @@ function renderSessionMovementPicker() {
         const selected = sessionDraftMovements.some(d => d.id === m.id);
         return `
         <button data-action="toggleSessionMovement" data-move-id="${m.id}"
-            class="flex items-center gap-3 p-2 rounded-lg transition-colors text-left w-full ${selected ? 'bg-primary/10 border border-primary/30' : 'hover:bg-surface-container-low'}">
-            <div class="w-10 h-10 rounded-full overflow-hidden flex-shrink-0 bg-surface-container-highest">
+            class="flex items-center gap-3 p-2 rounded-lg transition-colors text-left w-full ${selected ? 'bg-gradient-to-r from-neon-purple to-neon-blue/10 border border-primary/30' : 'hover:bg-background shadow-neo-low'}">
+            <div class="w-10 h-10 rounded-full overflow-hidden flex-shrink-0 bg-background shadow-neo-highest">
                 ${m.imageBase64 ? `<img src="${m.imageBase64}" class="w-full h-full object-cover" alt="${escapeHtml(m.name)}"/>` : ''}
             </div>
             <span class="flex-1 font-body-md text-body-md text-on-surface truncate">${escapeHtml(m.name)}</span>
-            <span class="material-symbols-outlined text-[18px] ${selected ? 'text-primary' : 'text-outline-variant'}" style="font-variation-settings: 'FILL' ${selected ? 1 : 0};">
+            <span class="material-symbols-outlined text-[18px] ${selected ? 'text-neon-blue' : 'text-outline-variant'}" style="font-variation-settings: 'FILL' ${selected ? 1 : 0};">
                 ${selected ? 'check_circle' : 'radio_button_unchecked'}
             </span>
         </button>`;
@@ -2404,10 +2404,10 @@ function renderSessionOrderedList() {
     }
 
     list.innerHTML = sessionDraftMovements.map((m, i) => `
-        <div class="flex items-center gap-3 bg-surface-container-low rounded-lg p-2 cursor-grab active:cursor-grabbing session-drag-item"
+        <div class="flex items-center gap-3 bg-background shadow-neo-low rounded-lg p-2 cursor-grab active:cursor-grabbing session-drag-item"
             draggable="true" data-drag-idx="${i}">
             <span class="material-symbols-outlined text-outline text-[20px] select-none">drag_indicator</span>
-            <div class="w-10 h-10 rounded-full overflow-hidden flex-shrink-0 bg-surface-container-highest">
+            <div class="w-10 h-10 rounded-full overflow-hidden flex-shrink-0 bg-background shadow-neo-highest">
                 ${m.imageBase64 ? `<img src="${m.imageBase64}" class="w-full h-full object-cover" alt="${escapeHtml(m.name)}"/>` : ''}
             </div>
             <span class="flex-1 font-body-md text-body-md text-on-surface truncate">${escapeHtml(m.name)}</span>
@@ -2528,12 +2528,12 @@ function renderStretchSessions() {
         const moveCount = (session.movements || []).length;
 
         return `
-        <div class="rounded-2xl p-4 flex flex-col gap-3 border transition-colors ${isActive ? 'bg-primary/8 border-primary/40' : 'bg-surface-container-low border-surface-variant/20'}">
+        <div class="rounded-[32px] p-4 flex flex-col gap-3 border transition-colors ${isActive ? 'bg-gradient-to-r from-neon-purple to-neon-blue/8 border-primary/40' : 'bg-background shadow-neo-low border-surface-variant/20'}">
             <!-- Header row -->
             <div class="flex items-start justify-between gap-2">
                 <div class="flex-1">
                     <div class="flex items-center gap-2">
-                        ${isActive ? `<span class="inline-flex items-center gap-1 bg-primary text-on-primary font-label-sm text-label-sm px-2 py-0.5 rounded-full text-[11px]">
+                        ${isActive ? `<span class="inline-flex items-center gap-1 bg-gradient-to-r from-neon-purple to-neon-blue text-white font-label-sm text-label-sm px-2 py-0.5 rounded-full text-[11px]">
                             <span class="material-symbols-outlined text-[12px]" style="font-variation-settings:'FILL' 1;">check_circle</span> Aktif
                         </span>` : ''}
                         <h3 class="font-title-sm text-title-sm font-semibold text-on-surface">${escapeHtml(session.name)}</h3>
@@ -2549,15 +2549,15 @@ function renderStretchSessions() {
                 </div>
                 <div class="flex items-center gap-1 flex-shrink-0">
                     ${!isActive ? `<button data-action="setActiveStretchSession" data-session-id="${session.id}"
-                        class="text-on-surface-variant hover:text-primary transition-colors p-1.5 rounded-full hover:bg-surface-variant active:scale-95" title="Aktif Seans Yap">
+                        class="text-on-surface-variant hover:text-neon-blue transition-colors p-1.5 rounded-full hover:bg-background shadow-neo-variant active:scale-95" title="Aktif Seans Yap">
                         <span class="material-symbols-outlined text-[20px]">play_circle</span>
                     </button>` : ''}
                     <button data-action="editStretchSession" data-session-id="${session.id}"
-                        class="text-on-surface-variant hover:text-primary transition-colors p-1.5 rounded-full hover:bg-surface-variant active:scale-95">
+                        class="text-on-surface-variant hover:text-neon-blue transition-colors p-1.5 rounded-full hover:bg-background shadow-neo-variant active:scale-95">
                         <span class="material-symbols-outlined text-[20px]">edit</span>
                     </button>
                     <button data-action="deleteStretchSession" data-session-id="${session.id}"
-                        class="text-on-surface-variant hover:text-error transition-colors p-1.5 rounded-full hover:bg-surface-variant active:scale-95">
+                        class="text-on-surface-variant hover:text-error transition-colors p-1.5 rounded-full hover:bg-background shadow-neo-variant active:scale-95">
                         <span class="material-symbols-outlined text-[20px]">delete</span>
                     </button>
                 </div>
@@ -2567,7 +2567,7 @@ function renderStretchSessions() {
             <div class="flex gap-1.5 overflow-x-auto hide-scrollbar">
                 ${(session.movements || []).map(m => `
                     <div class="flex-shrink-0 flex flex-col items-center gap-1">
-                        <div class="w-10 h-10 rounded-full overflow-hidden bg-surface-container-highest border border-surface-variant/30">
+                        <div class="w-10 h-10 rounded-full overflow-hidden bg-background shadow-neo-highest border border-surface-variant/30">
                             ${m.imageBase64 ? `<img src="${m.imageBase64}" class="w-full h-full object-cover" alt="${escapeHtml(m.name)}"/>` : ''}
                         </div>
                     </div>
@@ -2717,9 +2717,9 @@ function _spRenderProgressStrip(currentIdx) {
     if (!strip) return;
     strip.innerHTML = _spMovements.map((_, i) => `
         <div class="flex-1 h-1 rounded-full transition-all duration-300 ${
-            i < currentIdx ? 'bg-white' :
-            i === currentIdx ? 'bg-white/80' :
-            'bg-white/20'
+            i < currentIdx ? 'bg-background shadow-neo' :
+            i === currentIdx ? 'bg-background shadow-neo/80' :
+            'bg-background shadow-neo/20'
         }"></div>
     `).join('');
 }
@@ -2797,12 +2797,12 @@ function stretchPlayerGoPrev() {
 
 function switchCoreTab(tab) {
     currentCoreTab = tab;
-    document.getElementById('core-tab-movements').classList.toggle('text-primary', tab === 'movements');
+    document.getElementById('core-tab-movements').classList.toggle('text-neon-blue', tab === 'movements');
     document.getElementById('core-tab-movements').classList.toggle('border-primary', tab === 'movements');
     document.getElementById('core-tab-movements').classList.toggle('text-on-surface-variant', tab !== 'movements');
     document.getElementById('core-tab-movements').classList.toggle('border-transparent', tab !== 'movements');
 
-    document.getElementById('core-tab-sessions').classList.toggle('text-primary', tab === 'sessions');
+    document.getElementById('core-tab-sessions').classList.toggle('text-neon-blue', tab === 'sessions');
     document.getElementById('core-tab-sessions').classList.toggle('border-primary', tab === 'sessions');
     document.getElementById('core-tab-sessions').classList.toggle('text-on-surface-variant', tab !== 'sessions');
     document.getElementById('core-tab-sessions').classList.toggle('border-transparent', tab !== 'sessions');
@@ -2835,12 +2835,12 @@ function renderCoreSessions() {
         const moveCount = (session.movements || []).length;
 
         return `
-        <div class="rounded-2xl p-4 flex flex-col gap-3 border transition-colors ${isActive ? 'bg-primary/8 border-primary/40' : 'bg-surface-container-low border-surface-variant/20'}">
+        <div class="rounded-[32px] p-4 flex flex-col gap-3 border transition-colors ${isActive ? 'bg-gradient-to-r from-neon-purple to-neon-blue/8 border-primary/40' : 'bg-background shadow-neo-low border-surface-variant/20'}">
             <!-- Header row -->
             <div class="flex items-start justify-between gap-2">
                 <div class="flex-1">
                     <div class="flex items-center gap-2">
-                        ${isActive ? `<span class="inline-flex items-center gap-1 bg-primary text-on-primary font-label-sm text-label-sm px-2 py-0.5 rounded-full text-[11px]">
+                        ${isActive ? `<span class="inline-flex items-center gap-1 bg-gradient-to-r from-neon-purple to-neon-blue text-white font-label-sm text-label-sm px-2 py-0.5 rounded-full text-[11px]">
                             <span class="material-symbols-outlined text-[12px]" style="font-variation-settings:'FILL' 1;">check_circle</span> Aktif
                         </span>` : ''}
                         <h3 class="font-title-sm text-title-sm font-semibold text-on-surface">${escapeHtml(session.name)}</h3>
@@ -2856,15 +2856,15 @@ function renderCoreSessions() {
                 </div>
                 <div class="flex items-center gap-1 flex-shrink-0">
                     ${!isActive ? `<button data-action="setActiveCoreSession" data-session-id="${session.id}"
-                        class="text-on-surface-variant hover:text-primary transition-colors p-1.5 rounded-full hover:bg-surface-variant active:scale-95" title="Aktif Seans Yap">
+                        class="text-on-surface-variant hover:text-neon-blue transition-colors p-1.5 rounded-full hover:bg-background shadow-neo-variant active:scale-95" title="Aktif Seans Yap">
                         <span class="material-symbols-outlined text-[20px]">play_circle</span>
                     </button>` : ''}
                     <button data-action="editCoreSession" data-session-id="${session.id}"
-                        class="text-on-surface-variant hover:text-primary transition-colors p-1.5 rounded-full hover:bg-surface-variant active:scale-95">
+                        class="text-on-surface-variant hover:text-neon-blue transition-colors p-1.5 rounded-full hover:bg-background shadow-neo-variant active:scale-95">
                         <span class="material-symbols-outlined text-[20px]">edit</span>
                     </button>
                     <button data-action="deleteCoreSession" data-session-id="${session.id}"
-                        class="text-on-surface-variant hover:text-error transition-colors p-1.5 rounded-full hover:bg-surface-variant active:scale-95">
+                        class="text-on-surface-variant hover:text-error transition-colors p-1.5 rounded-full hover:bg-background shadow-neo-variant active:scale-95">
                         <span class="material-symbols-outlined text-[20px]">delete</span>
                     </button>
                 </div>
@@ -2874,7 +2874,7 @@ function renderCoreSessions() {
             <div class="flex gap-1.5 overflow-x-auto hide-scrollbar">
                 ${(session.movements || []).map(m => `
                     <div class="flex-shrink-0 flex flex-col items-center gap-1">
-                        <div class="w-10 h-10 rounded-full overflow-hidden bg-surface-container-highest border border-surface-variant/30">
+                        <div class="w-10 h-10 rounded-full overflow-hidden bg-background shadow-neo-highest border border-surface-variant/30">
                             ${m.imageBase64 ? `<img src="${m.imageBase64}" class="w-full h-full object-cover" alt="${escapeHtml(m.name)}"/>` : ''}
                         </div>
                     </div>
@@ -2993,12 +2993,12 @@ function renderCoreSessionMovementPicker() {
         const selected = coreSessionDraftMovements.some(d => d.id === m.id);
         return `
         <button data-action="toggleCoreSessionMovement" data-move-id="${m.id}"
-            class="flex items-center gap-3 p-2 rounded-lg transition-colors text-left w-full ${selected ? 'bg-primary/10 border border-primary/30' : 'hover:bg-surface-container-low'}">
-            <div class="w-10 h-10 rounded-full overflow-hidden flex-shrink-0 bg-surface-container-highest">
+            class="flex items-center gap-3 p-2 rounded-lg transition-colors text-left w-full ${selected ? 'bg-gradient-to-r from-neon-purple to-neon-blue/10 border border-primary/30' : 'hover:bg-background shadow-neo-low'}">
+            <div class="w-10 h-10 rounded-full overflow-hidden flex-shrink-0 bg-background shadow-neo-highest">
                 ${m.imageBase64 ? `<img src="${m.imageBase64}" class="w-full h-full object-cover" alt="${escapeHtml(m.name)}"/>` : ''}
             </div>
             <span class="flex-1 font-body-md text-body-md text-on-surface truncate">${escapeHtml(m.name)}</span>
-            <span class="material-symbols-outlined text-[18px] ${selected ? 'text-primary' : 'text-outline-variant'}" style="font-variation-settings: 'FILL' ${selected ? 1 : 0};">
+            <span class="material-symbols-outlined text-[18px] ${selected ? 'text-neon-blue' : 'text-outline-variant'}" style="font-variation-settings: 'FILL' ${selected ? 1 : 0};">
                 ${selected ? 'check_circle' : 'radio_button_unchecked'}
             </span>
         </button>`;
@@ -3036,10 +3036,10 @@ function renderCoreSessionOrderedList() {
     }
 
     list.innerHTML = coreSessionDraftMovements.map((m, i) => `
-        <div class="flex items-center gap-3 bg-surface-container-low rounded-lg p-2 cursor-grab active:cursor-grabbing core-session-drag-item"
+        <div class="flex items-center gap-3 bg-background shadow-neo-low rounded-lg p-2 cursor-grab active:cursor-grabbing core-session-drag-item"
             draggable="true" data-drag-idx="${i}">
             <span class="material-symbols-outlined text-outline text-[20px] select-none">drag_indicator</span>
-            <div class="w-10 h-10 rounded-full overflow-hidden flex-shrink-0 bg-surface-container-highest">
+            <div class="w-10 h-10 rounded-full overflow-hidden flex-shrink-0 bg-background shadow-neo-highest">
                 ${m.imageBase64 ? `<img src="${m.imageBase64}" class="w-full h-full object-cover" alt="${escapeHtml(m.name)}"/>` : ''}
             </div>
             <span class="flex-1 font-body-md text-body-md text-on-surface truncate">${escapeHtml(m.name)}</span>
@@ -3183,9 +3183,9 @@ function _cpRenderProgressStrip(currentIdx) {
     if (!strip) return;
     strip.innerHTML = _cpMovements.map((_, i) => `
         <div class="flex-1 h-1 rounded-full transition-all duration-300 ${
-            i < currentIdx ? 'bg-white' :
-            i === currentIdx ? 'bg-white/80' :
-            'bg-white/20'
+            i < currentIdx ? 'bg-background shadow-neo' :
+            i === currentIdx ? 'bg-background shadow-neo/80' :
+            'bg-background shadow-neo/20'
         }"></div>
     `).join('');
 }
