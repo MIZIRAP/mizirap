@@ -3027,114 +3027,54 @@
     </section>
 
 <section id="view-calories" class="view hidden">
-        <!-- Top App Bar -->
-        <header class="w-full top-0 sticky bg-background dark:bg-background flat no shadows transition-opacity duration-200 z-40 max-w-md mx-auto">
-            <div class="flex items-center justify-between px-container-padding py-4 w-full">
-                <div class="flex items-center gap-3">
-                    <button class="nav-tab hover:opacity-80 p-2 -ml-2 rounded-full focus:outline-none focus:ring-2 focus:ring-primary" data-target="view-dashboard">
-                        <span class="material-symbols-rounded text-neon-blue dark:text-neon-blue-fixed-dim" style="font-variation-settings: \'FILL\' 0;">arrow_back</span>
-                    </button>
-                    <h1 class="font-headline-md text-headline-md text-neon-blue dark:text-neon-blue-fixed-dim font-bold tracking-tight">Kalori Takibi</h1>
-                </div>
-            </div>
-        </header>
-
-        <main class="flex-1 w-full max-w-md mx-auto px-container-padding pb-32 flex flex-col gap-section-margin pt-4">
-            <!-- Circular Progress Section -->
-            <section class="flex flex-col items-center justify-center relative">
-                <div class="relative w-64 h-64 flex items-center justify-center">
-                    <!-- SVG Circle -->
-                    <svg class="absolute inset-0 w-full h-full drop-shadow-md" viewBox="0 0 120 120">
-                        <circle class="text-outline-variant stroke-current" cx="60" cy="60" fill="transparent" r="54" stroke-width="8"></circle>
-                        <circle id="ui-calorie-circle" class="text-neon-blue stroke-current progress-ring__circle transition-all duration-500 ease-out" cx="60" cy="60" fill="transparent" r="54" stroke-dasharray="339.292" stroke-dashoffset="339.292" stroke-linecap="round" stroke-width="8"></circle>
-                    </svg>
-                    <!-- Inner Content -->
-                    <div class="flex flex-col items-center justify-center z-10 text-center">
-                        <h2 id="ui-calorie-consumed" class="font-display-lg text-display-lg text-neon-blue tracking-tight">0</h2>
-                        <p class="font-body-md text-body-md text-on-surface-variant mt-1">of <span id="ui-calorie-goal">2000</span> kcal</p>
-                    </div>
-                </div>
-                <div class="mt-6 flex flex-col items-center gap-3">
-                    <button id="calories-goal-btn" class="flex items-center gap-2 px-4 py-2 bg-background shadow-neo rounded-full shadow-sm hover:scale-95 transition-transform duration-200">
-                        <span class="material-symbols-rounded text-neon-blue text-sm" data-icon="edit" data-weight="regular">edit</span>
-                        <span class="font-label-md text-label-md text-neon-blue uppercase">Daily Goal</span>
-                    </button>
-                    <span id="ui-calorie-remaining" class="font-body-md text-body-md text-on-surface-variant">Kalan: 2000 kcal</span>
-                </div>
-            </section>
-            <!-- Action Section -->
-            <section class="flex flex-col gap-card-gap">
-            <h3 class="font-headline-sm text-headline-sm text-on-surface font-semibold">Yiyecek Ekle</h3>
-            <button class="nav-tab w-full bg-background shadow-neo shadow-sm rounded-full h-14 flex items-center justify-center gap-3 hover:scale-[0.98] transition-transform active:bg-background shadow-neo duration-200" data-target="view-foods">
-            <span class="material-symbols-rounded text-neon-blue icon-lg" data-icon="restaurant" data-weight="regular">restaurant</span>
-            <span class="font-label-md text-body-lg font-body-lg text-on-surface font-semibold">Öğün Ekle</span>
-            </button>
-            </section>
-            <!-- Macros/Stats Section -->
-            <section class="bg-background shadow-neo shadow-sm rounded-[32px] p-6 flex flex-col gap-4">
-            <div class="flex justify-between items-end">
-            <h3 class="font-headline-sm text-headline-sm text-on-surface font-semibold">Makrolar</h3>
-            <span class="font-label-md text-label-md text-on-surface-variant uppercase">Günlük Hedef</span>
-            </div>
-            <div class="grid grid-cols-3 gap-4 pt-2">
-            <!-- Protein -->
-            <div class="flex flex-col gap-2">
-            <div class="flex justify-between items-center">
-            <span class="font-label-md text-label-md text-on-surface-variant uppercase">Protein</span>
-            </div>
-            <div class="font-headline-sm text-headline-sm text-on-surface"><span id="ui-protein-consumed">0</span><span class="font-body-sm text-label-md font-label-md text-on-surface-variant font-normal">g</span></div>
-            <div class="w-full h-1.5 bg-background shadow-neo rounded-full overflow-hidden">
-            <div id="ui-protein-bar" class="h-full bg-gradient-to-r from-neon-purple to-neon-blue rounded-full transition-all duration-500 ease-out" style="width: 0%"></div>
-            </div>
-            <div class="font-label-sm text-label-sm text-on-surface-variant text-right">/ <span id="ui-protein-goal">110</span>g</div>
-            </div>
-            <!-- Karb -->
-            <div class="flex flex-col gap-2">
-            <div class="flex justify-between items-center">
-            <span class="font-label-md text-label-md text-on-surface-variant uppercase">Karb</span>
-            </div>
-            <div class="font-headline-sm text-headline-sm text-on-surface"><span id="ui-karb-consumed">0</span><span class="font-body-sm text-label-md font-label-md text-on-surface-variant font-normal">g</span></div>
-            <div class="w-full h-1.5 bg-background shadow-neo rounded-full overflow-hidden">
-            <div id="ui-karb-bar" class="h-full bg-gradient-to-r from-neon-purple to-neon-blue rounded-full transition-all duration-500 ease-out" style="width: 0%"></div>
-            </div>
-            <div class="font-label-sm text-label-sm text-on-surface-variant text-right">/ <span id="ui-karb-goal">240</span>g</div>
-            </div>
-            <!-- Yağ -->
-            <div class="flex flex-col gap-2">
-            <div class="flex justify-between items-center">
-            <span class="font-label-md text-label-md text-on-surface-variant uppercase">Yağ</span>
-            </div>
-            <div class="font-headline-sm text-headline-sm text-on-surface"><span id="ui-yag-consumed">0</span><span class="font-body-sm text-label-md font-label-md text-on-surface-variant font-normal">g</span></div>
-            <div class="w-full h-1.5 bg-background shadow-neo rounded-full overflow-hidden">
-            <div id="ui-yag-bar" class="h-full bg-gradient-to-r from-neon-purple to-neon-blue rounded-full transition-all duration-500 ease-out" style="width: 0%"></div>
-            </div>
-            <div class="font-label-sm text-label-sm text-on-surface-variant text-right">/ <span id="ui-yag-goal">66</span>g</div>
-            </div>
-            </div>
-            </section>
-            <!-- Weekly Chart Section -->
-            <section class="bg-background shadow-neo rounded-[32px] p-6 shadow-sm mt-4 flex flex-col gap-2">
-                <div class="flex justify-between items-end">
-                    <span class="font-label-md text-label-md text-on-surface-variant uppercase">Haftalık Kalori</span>
-                    <span class="font-headline-sm text-headline-sm text-neon-blue" id="calories-avg-text">Avg: 0 kcal</span>
-                </div>
-                <div id="calories-chart-container" class="h-40 flex items-end justify-between pt-4 pb-2 border-b border-outline-variant/30">
-                    <!-- Dinamik Grafik Çubukları -->
-                </div>
-                <div class="flex justify-between w-full mt-2" id="calories-chart-labels">
-                    <!-- Dinamik Etiketler -->
-                </div>
-            </section>
-            <!-- History Log -->
-            <section class="mt-4 bg-background shadow-neo rounded-[32px] p-4 shadow-sm">
-            <h3 class="font-headline-sm text-body-lg font-body-lg font-semibold text-on-surface mb-3 px-2">Günün Kayıtları</h3>
-            <div class="flex flex-col" id="daily-log-list">
-                    <div class="flex justify-center items-center py-8"><div class="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div></div>
-                
-            </div>
-            </section>
-        </main>
-    </section>
+<!-- Top App Bar -->
+<header class="w-full top-0 sticky z-40 max-w-md mx-auto px-container-padding py-4"><div class="flex items-center justify-between w-full"><button class="nav-tab w-10 h-10 flex items-center justify-center rounded-full bg-[#F7F9FF]" style="box-shadow: rgb(209, 217, 230) 4px 4px 8px, rgb(255, 255, 255) -4px -4px 8px;" data-target="view-dashboard"><span class="material-symbols-rounded text-[#1E293B]">arrow_back</span></button><h1 class="text-h1 font-bold text-[#1E293B]">Kalori &nbsp;Takibi</h1><button class="w-10 h-10 flex items-center justify-center rounded-full bg-[#F7F9FF]" style="box-shadow: rgb(209, 217, 230) 4px 4px 8px, rgb(255, 255, 255) -4px -4px 8px;"><span class="material-symbols-rounded text-[#1E293B]">settings</span></button></div></header>
+<!-- Main Content Container -->
+<main class="flex-1 w-full max-w-md mx-auto px-container-padding pb-32 flex flex-col gap-section-margin pt-4">
+<!-- Circular Progress Section -->
+<section class="flex flex-col items-center justify-center relative"><div class="relative w-64 h-64 flex items-center justify-center rounded-full bg-[#F7F9FF]" style="box-shadow: 10px 10px 20px #D1D9E6, -10px -10px 20px #FFFFFF;"><svg class="absolute inset-0 w-full h-full" viewBox="0 0 120 120"><defs><linearGradient id="neonGradientCal" x1="0%" x2="100%" y1="0%" y2="100%"><stop offset="0%" style="stop-color:#A855F7"></stop><stop offset="50%" style="stop-color:#3B82F6"></stop><stop offset="100%" style="stop-color:#22C55E"></stop></linearGradient></defs><circle cx="60" cy="60" fill="transparent" r="50" stroke="#E0E5EC" stroke-width="8"></circle><circle id="ui-calorie-circle" cx="60" cy="60" fill="transparent" r="50" stroke="url(#neonGradientCal)" stroke-dasharray="314.159" stroke-dashoffset="314.159" stroke-linecap="round" stroke-width="8" style="filter: drop-shadow(0 0 5px rgba(59, 130, 246, 0.5)); transition: stroke-dashoffset 0.5s ease-out; transform: rotate(-90deg); transform-origin: 50% 50%;"></circle></svg><div class="flex flex-col items-center z-10"><h2 id="ui-calorie-consumed" class="text-4xl font-bold text-[#1E293B]">0</h2><p class="text-sm text-[#64748B]">of <span id="ui-calorie-goal">2000</span> kcal</p></div></div><button id="calories-goal-btn" class="mt-8 px-8 py-3 rounded-full bg-[#F7F9FF] text-[#1E293B] font-bold uppercase tracking-wider text-xs active:scale-95 transition-transform" style="box-shadow: rgb(209, 217, 230) 4px 4px 8px, rgb(255, 255, 255) -4px -4px 8px;">Daily Goal</button></section>
+<!-- Quick Add Section -->
+<section class="flex flex-col gap-card-gap"><div class="grid grid-cols-2 gap-6"><button class="nav-tab flex flex-col items-center justify-center gap-3 py-6 rounded-2xl bg-[#F7F9FF] active:scale-95 transition-transform" style="box-shadow: rgb(209, 217, 230) 6px 6px 12px, rgb(255, 255, 255) -6px -6px 12px;" data-target="view-foods"><span class="material-symbols-rounded text-[#3B82F6] text-3xl">restaurant</span><span class="text-xs font-bold text-[#1E293B]">Öğün Ekle</span></button><button id="calories-quick-add-btn" class="flex flex-col items-center justify-center gap-3 py-6 rounded-2xl bg-[#F7F9FF] active:scale-95 transition-transform" style="box-shadow: rgb(209, 217, 230) 6px 6px 12px, rgb(255, 255, 255) -6px -6px 12px;"><span class="material-symbols-rounded text-[#22C55E] text-3xl">add</span><span class="text-xs font-bold text-[#1E293B]">&nbsp;Hızlı Ekle</span></button></div></section><section class="flex flex-col gap-4">
+  <div class="grid grid-cols-3 gap-4">
+    <!-- Protein Card -->
+    <div class="flex flex-col gap-3 p-4 rounded-2xl bg-[#F7F9FF]" style="box-shadow: 6px 6px 12px #D1D9E6, -6px -6px 12px #FFFFFF;">
+      <span class="text-[10px] font-bold text-[#64748B] uppercase tracking-wider">Protein</span>
+      <span class="text-xs font-bold text-[#1E293B]"><span id="ui-protein-consumed">0</span>g / <span id="ui-protein-goal">150</span>g</span>
+      <div class="w-full h-1.5 bg-[#E0E5EC] rounded-full overflow-hidden">
+        <div id="ui-protein-bar" class="h-full bg-[#A855F7] rounded-full transition-all duration-500 ease-out" style="width: 0%;"></div>
+      </div>
+    </div>
+    <!-- Carbs Card -->
+    <div class="flex flex-col gap-3 p-4 rounded-2xl bg-[#F7F9FF]" style="box-shadow: 6px 6px 12px #D1D9E6, -6px -6px 12px #FFFFFF;">
+      <span class="text-[10px] font-bold text-[#64748B] uppercase tracking-wider">Carbs</span>
+      <span class="text-xs font-bold text-[#1E293B]"><span id="ui-karb-consumed">0</span>g / <span id="ui-karb-goal">250</span>g</span>
+      <div class="w-full h-1.5 bg-[#E0E5EC] rounded-full overflow-hidden">
+        <div id="ui-karb-bar" class="h-full bg-[#3B82F6] rounded-full transition-all duration-500 ease-out" style="width: 0%;"></div>
+      </div>
+    </div>
+    <!-- Fat Card -->
+    <div class="flex flex-col gap-3 p-4 rounded-2xl bg-[#F7F9FF]" style="box-shadow: 6px 6px 12px #D1D9E6, -6px -6px 12px #FFFFFF;">
+      <span class="text-[10px] font-bold text-[#64748B] uppercase tracking-wider">Fat</span>
+      <span class="text-xs font-bold text-[#1E293B]"><span id="ui-yag-consumed">0</span>g / <span id="ui-yag-goal">70</span>g</span>
+      <div class="w-full h-1.5 bg-[#E0E5EC] rounded-full overflow-hidden">
+        <div id="ui-yag-bar" class="h-full bg-[#22C55E] rounded-full transition-all duration-500 ease-out" style="width: 0%;"></div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- Weekly Chart Section -->
+<section class="bg-surface-container-lowest shadow-sm rounded-2xl p-6 flex flex-col gap-4" style="background-color: #F7F9FF; box-shadow: 8px 8px 16px #D1D9E6, -8px -8px 16px #FFFFFF; border: none;">
+<div class="flex justify-between items-end mb-2"><h3 class="text-h2 font-bold text-[#1E293B]">Last 7 Days</h3><span id="calories-avg-text" class="text-xs font-bold text-[#64748B] uppercase tracking-wider">Avg: 0 kcal</span></div>
+<div id="calories-chart-wrapper" class="h-40 flex items-end justify-between pt-4 pb-2 border-b border-outline-variant/30">
+<!-- Chart gets generated here -->
+</div>
+</section>
+<!-- History Log -->
+<section class="flex flex-col gap-4"><h3 class="text-h2 font-bold text-[#1E293B]">Today's Log</h3><div class="flex flex-col gap-4 py-4 px-2 -mx-2" id="daily-log-list">
+<!-- Logs injected here -->
+</div></section>
+</main>
+</section>
 
     <!-- ================= BESİNLERİM (Foods Library) ================= -->
     <section id="view-foods" class="view hidden">

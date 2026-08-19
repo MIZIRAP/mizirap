@@ -444,61 +444,108 @@ function adjustAmount(amount) {
 
 // Render Functions
 function renderLogs() {
-    const logList = document.getElementById('daily-log-list');
-    if (logList) {
-        logList.innerHTML = '';
-        if(dailyLogs.length === 0) {
-            logList.innerHTML = `<p class="text-on-surface-variant text-sm p-4 text-center">Bugün henüz yiyecek eklemedin.</p>`;
-        }
-        dailyLogs.forEach(log => {
-            const newEntry = document.createElement('div');
-            newEntry.className = "flex justify-between items-center p-3 pr-24 border-b border-surface-container-high last:border-0 relative group";
-            
-            const editBtn = document.createElement('button');
-            editBtn.className = "absolute right-12 top-1/2 -translate-y-1/2 p-2 text-neon-blue opacity-0 group-hover:opacity-100 transition-opacity bg-gradient-to-r from-neon-purple to-neon-blue-container/20 rounded-full active:scale-95";
-            editBtn.innerHTML = `<span class="material-symbols-rounded text-sm">edit</span>`;
-            editBtn.onclick = (e) => {
-                e.stopPropagation();
-                currentEditLogId = log.id;
-                const baseKcal = (log.kcal / log.amount) * 100;
-                const baseP = log.protein ? (log.protein / log.amount) * 100 : 0;
-                const baseK = log.karb ? (log.karb / log.amount) * 100 : 0;
-                const baseY = log.yag ? (log.yag / log.amount) * 100 : 0;
-                openAddPortionModal(log.name, baseKcal, { protein: baseP, karb: baseK, yag: baseY });
-                setTimeout(() => {
-                    const gramInput = document.getElementById('gram-input');
-                    if (gramInput) {
-                        gramInput.value = log.amount;
-                        updatePortionTotal();
-                    }
-                }, 100);
-            };
-
-            const delBtn = document.createElement('button');
-            delBtn.className = "absolute right-2 top-1/2 -translate-y-1/2 p-2 text-error opacity-0 group-hover:opacity-100 transition-opacity bg-error-container/20 rounded-full active:scale-95";
-            delBtn.innerHTML = `<span class="material-symbols-rounded text-sm">delete</span>`;
-            delBtn.onclick = async (e) => {
-                e.stopPropagation();
-                try {
-                    await deleteDoc(doc(db, "users", currentUid, "calorieLogs", log.id)).catch(e => { console.error('DB Error:', e); alert('Veritabanı işlemi sırasında bir hata oluştu.'); throw e; });
-                } catch(err) {
-                    console.error(err);
-                    alert('Silinirken hata oluştu: ' + err.message);
-                }
-            };
-
-            newEntry.innerHTML = `
-            <div class="flex flex-col flex-1 min-w-0 pr-4">
-                <span class="font-body-md text-body-md text-on-surface font-medium break-words">${escapeHtml(log.name)}</span>
-                <span class="font-label-sm text-label-sm text-on-surface-variant">${log.amount}g</span>
-            </div>
-            <span class="font-body-lg text-body-lg text-on-surface font-bold shrink-0 whitespace-nowrap">${log.kcal} kcal</span>
-            `;
-            newEntry.appendChild(editBtn);
-            newEntry.appendChild(delBtn);
-            logList.appendChild(newEntry);
-        });
+    const list = document.getElementById('daily-log-list');
+    if(!list) return;
+    
+    if(dailyLogs.length === 0) {
+        list.innerHTML = '<div class="text-center py-4 text-[#64748B] text-sm">Henüz kayıt yok.</div>';
+        return;
     }
+
+    list.innerHTML = '';
+    
+    dailyLogs.forEach(log => {
+        let dateObj = log.createdAt ? (log.createdAt.toDate ? log.createdAt.toDate() : new Date(log.createdAt)) : new Date();
+        let timeStr = dateObj.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' }) + ' ' + (dateObj.getHours() >= 12 ? 'PM' : 'AM');
+        
+        const wrapper = document.createElement('div');
+        wrapper.className = "relative w-full shrink-0";
+        
+        // Delete button underneath
+        const delBtn = document.createElement('button');
+        delBtn.className = "absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-red-500 rounded-2xl text-white flex items-center justify-center z-0 active:bg-red-600 transition-colors";
+        delBtn.innerHTML = `<span class="material-symbols-outlined text-xl">delete</span>`;
+        delBtn.onclick = async () => {
+            try {
+                await deleteDoc(doc(db, "users", currentUid, "calorieLogs", log.id));
+            } catch(e) {
+                console.error("Silme Hatası", e);
+                // local update for test
+                dailyLogs = dailyLogs.filter(l => l.id !== log.id);
+                updateUIState();
+            }
+        };
+
+        const item = document.createElement('div');
+        item.className = "relative flex items-center justify-between p-4 rounded-2xl bg-[#F7F9FF] z-10 transition-transform cursor-grab active:cursor-grabbing";
+        item.style.boxShadow = "4px 4px 8px #D1D9E6, -4px -4px 8px #FFFFFF";
+        
+        let iconHtml = '';
+        let colorClass = '';
+        if(log.type === "Meal") {
+            iconHtml = `<span class="material-symbols-outlined text-[#3B82F6]">restaurant</span>`;
+            colorClass = "text-[#3B82F6]";
+        } else {
+            iconHtml = `<span class="material-symbols-outlined text-[#A855F7]">nutrition</span>`;
+            colorClass = "text-[#A855F7]";
+        }
+
+        item.innerHTML = `
+            <div class="flex items-center gap-4 pointer-events-none">
+                <div class="w-10 h-10 rounded-full bg-[#F7F9FF] flex items-center justify-center" style="box-shadow: inset 2px 2px 5px #D1D9E6, inset -2px -2px 5px #FFFFFF;">
+                    ${iconHtml}
+                </div>
+                <div>
+                    <p class="text-sm font-bold text-[#1E293B]">${escapeHtml(log.name || "Bilinmeyen")}</p>
+                    <p class="text-xs text-[#64748B]">${timeStr}</p>
+                </div>
+            </div>
+            <span class="font-bold ${colorClass} pointer-events-none">+${log.kcal}kcal</span>
+        `;
+
+        // Swipe logic
+        let startX = 0;
+        let currentX = 0;
+        let isDragging = false;
+
+        item.addEventListener('touchstart', (e) => {
+            startX = e.touches[0].clientX;
+            isDragging = true;
+            item.style.transition = 'none';
+        }, {passive: true});
+
+        item.addEventListener('touchmove', (e) => {
+            if (!isDragging) return;
+            currentX = e.touches[0].clientX;
+            let diff = currentX - startX;
+            if (diff > 0) diff = 0; // only swipe left
+            if (diff < -80) diff = -80;
+            item.style.transform = `translateX(${diff}px)`;
+        }, {passive: true});
+
+        item.addEventListener('touchend', (e) => {
+            isDragging = false;
+            item.style.transition = 'transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)';
+            let diff = currentX - startX;
+            if (diff < -40) {
+                item.style.transform = `translateX(-80px)`; // stay open to show delete btn
+                setTimeout(() => {
+                    document.addEventListener('touchstart', function closeSwipe(evt) {
+                        if (!wrapper.contains(evt.target)) {
+                            item.style.transform = `translateX(0px)`;
+                            document.removeEventListener('touchstart', closeSwipe);
+                        }
+                    }, {passive: true});
+                }, 100);
+            } else {
+                item.style.transform = `translateX(0px)`;
+            }
+        });
+        
+        wrapper.appendChild(delBtn);
+        wrapper.appendChild(item);
+        list.appendChild(wrapper);
+    });
 }
 
 function renderLibraryFoods() {
@@ -610,7 +657,7 @@ function updateUIState() {
     const circle = document.getElementById('ui-calorie-circle');
     if (circle) {
         let percentage = Math.min(totalCaloriesConsumed / dailyCalorieGoal, 1);
-        let offset = 339.292 - (339.292 * percentage);
+        let offset = 314.159 - (314.159 * percentage);
         circle.style.strokeDashoffset = offset;
     }
     
@@ -648,92 +695,65 @@ export function clearCalories() {
 
 
 function renderWeeklyChart() {
-    const chartContainer = document.getElementById("calories-chart-container");
-    const labelsContainer = document.getElementById("calories-chart-labels");
-    const avgText = document.getElementById("calories-avg-text");
-    
-    if(!chartContainer || !labelsContainer || !avgText) return;
-    
-    chartContainer.innerHTML = "";
-    labelsContainer.innerHTML = "";
-    
-    const days = [];
-    const dayNames = ["Paz", "Pzt", "Sal", "Çar", "Per", "Cum", "Cmt"];
-    let total7Days = 0;
-    
-    // Find Monday of the current week
+    const wrapper = document.getElementById('calories-chart-wrapper');
+    const avgText = document.getElementById('calories-avg-text');
+    if(!wrapper || !avgText) return;
+
+    if(weeklyLogs.length === 0) {
+        wrapper.innerHTML = '<div class="w-full text-center text-[#64748B] text-sm py-8">Veri yok</div>';
+        avgText.textContent = "Avg: 0 kcal";
+        return;
+    }
+
     const today = new Date();
     today.setHours(0,0,0,0);
-    const currentDayOfWeek = today.getDay(); // 0 is Sunday, 1 is Monday
-    const diffToMonday = currentDayOfWeek === 0 ? 6 : currentDayOfWeek - 1;
     
-    const monday = new Date(today);
-    monday.setDate(monday.getDate() - diffToMonday);
-
-    // Generate Monday to Sunday
-    for (let i = 0; i < 7; i++) {
-        const d = new Date(monday);
-        d.setDate(d.getDate() + i);
+    let chartData = [];
+    for(let i=6; i>=0; i--) {
+        let d = new Date(today);
+        d.setDate(d.getDate() - i);
+        let dayStr = d.toISOString().split('T')[0];
         
-        days.push({
+        let sum = 0;
+        weeklyLogs.forEach(l => {
+            let logDate = l.createdAt ? (l.createdAt.toDate ? l.createdAt.toDate() : new Date(l.createdAt)) : new Date();
+            let logDayStr = logDate.toISOString().split('T')[0];
+            if(logDayStr === dayStr) {
+                sum += l.kcal || 0;
+            }
+        });
+        
+        chartData.push({
             date: d,
-            name: dayNames[d.getDay()],
-            amount: 0,
-            isToday: d.getTime() === today.getTime()
+            total: sum,
+            label: d.toLocaleDateString('en-US', { weekday: 'short' })
         });
     }
 
-    const endOfWeek = new Date(monday);
-    endOfWeek.setDate(endOfWeek.getDate() + 6);
-    endOfWeek.setHours(23,59,59,999);
+    let total7Days = chartData.reduce((acc, c) => acc + c.total, 0);
+    let avg = Math.round(total7Days / 7);
+    avgText.textContent = `Avg: ${avg} kcal`;
 
-    weeklyLogs.forEach(log => {
-        if(!log.createdAt || !log.createdAt.toDate) return;
-        const logDate = log.createdAt.toDate();
-        if(logDate >= monday && logDate <= endOfWeek) {
-            const matchingDay = days.find(day => 
-                logDate.getDate() === day.date.getDate() && 
-                logDate.getMonth() === day.date.getMonth()
-            );
-            if(matchingDay) {
-                matchingDay.amount += (log.kcal || 0);
-                total7Days += (log.kcal || 0);
-            }
-        }
-    });
+    let maxVal = Math.max(...chartData.map(c => c.total), dailyCalorieGoal, 1);
 
-    avgText.textContent = `Avg: ${Math.round(total7Days / 7)} kcal`;
-
-    days.forEach(day => {
-        let percent = day.amount / dailyCalorieGoal * 100;
-        if(percent > 100) percent = 100;
-        if(percent < 5 && day.amount > 0) percent = 5;
-
-        const div = document.createElement("div");
-        div.className = "flex flex-col items-center gap-2 w-[14%] group relative";
+    wrapper.innerHTML = '';
+    
+    chartData.forEach((data, index) => {
+        const isToday = index === 6;
+        let percent = Math.min((data.total / maxVal) * 100, 100);
         
-        let barClass = "bg-gradient-to-r from-neon-purple to-neon-blue/70 group-hover:bg-gradient-to-r from-neon-purple to-neon-blue/90";
-        let textClass = "text-outline";
+        // Colors from user design
+        let barColor = isToday ? "bg-[#22C55E]" : (index === 3 ? "bg-[#A855F7]" : "bg-[#3B82F6]");
+        let textColor = isToday ? "font-bold text-[#1E293B]" : "text-[#64748B]";
         
-        if(day.isToday) {
-            barClass = "bg-gradient-to-r from-neon-purple to-neon-blue group-hover:bg-gradient-to-r from-neon-purple to-neon-blue/90";
-            textClass = "text-neon-blue font-bold";
-        }
-
-        div.innerHTML = `
-            <div class="absolute -top-6 bg-background shadow-neo text-on-surface text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10 pointer-events-none">
-                ${Math.round(day.amount)} kcal
+        const col = document.createElement('div');
+        col.className = "flex flex-col items-center gap-2 w-1/7";
+        col.innerHTML = `
+            <div class="w-4 h-32 bg-[#E0E5EC] rounded-full relative overflow-hidden">
+                <div class="absolute bottom-0 w-full ${barColor} rounded-full transition-all duration-500 ease-out" style="height: ${percent}%;"></div>
             </div>
-            <div class="w-2 md:w-3 bg-background shadow-neo rounded-full h-24 relative flex items-end overflow-hidden">
-                <div class="w-full rounded-full transition-all duration-500 ${barClass}" style="height: ${percent}%"></div>
-            </div>
+            <span class="text-[10px] ${textColor}">${data.label}</span>
         `;
-        
-        const labelDiv = document.createElement("div");
-        labelDiv.className = `text-label-sm md:text-xs w-[14%] text-center uppercase tracking-wider ${textClass}`;
-        labelDiv.textContent = day.name;
-
-        chartContainer.appendChild(div);
-        labelsContainer.appendChild(labelDiv);
+        wrapper.appendChild(col);
     });
 }
