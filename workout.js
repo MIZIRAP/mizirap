@@ -220,7 +220,7 @@ document.addEventListener('click', (e) => {
 
     else if (action === 'openStretchPlayer') openStretchPlayer();
     else if (action === 'closeStretchPlayer') closeStretchPlayer();
-    else if (action === 'stretchPlayerPauseToggle') _spPauseToggle();
+    else if (action === 'stretchPlayerPauseToggle') stretchPlayerPauseToggle();
     else if (action === 'stretchPlayerPrev') stretchPlayerGoPrev();
     else if (action === 'stretchPlayerNext') stretchPlayerGoNext(true);
     else if (action === 'stretchPlayerEnd') stretchPlayerEnd();
