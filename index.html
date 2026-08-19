@@ -4240,38 +4240,37 @@
                 </button>
             </div>
             <!-- Scrollable Body -->
-            <div class="px-lg pb-xl overflow-y-auto hide-scrollbar flex flex-col gap-lg flex-1 mt-4">
+            <div class="px-lg pb-xl overflow-y-auto hide-scrollbar flex flex-col flex-1 mt-2">
                 <!-- Image Picker -->
-                <div class="flex flex-col items-center gap-sm mt-md gap-lg relative">
-                    <button id="stretch-image-picker-btn" data-action="triggerStretchImageUpload" class="relative group w-32 h-32 rounded-full bg-surface-container-low hover:bg-surface-container-high transition-colors flex flex-col items-center justify-center overflow-hidden focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2">
+                <div class="flex flex-col items-center mt-md relative">
+                    <button id="stretch-image-picker-btn" data-action="triggerStretchImageUpload" class="relative group w-24 h-24 rounded-2xl bg-surface-container hover:bg-surface-container-high transition-colors flex flex-col items-center justify-center overflow-hidden focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2">
                         <img id="stretch-image-preview" src="" class="absolute inset-0 w-full h-full object-cover hidden" alt="Seçilen Görsel">
-                        <div id="stretch-image-placeholder" class="flex flex-col items-center justify-center relative z-10 bg-surface-container-low/50 w-full h-full">
-                            <span class="material-symbols-outlined text-4xl text-on-surface-variant group-hover:text-primary mb-xs transition-colors" style="font-variation-settings: 'FILL' 0;">add_photo_alternate</span>
-                            <span class="font-label-sm text-label-sm text-on-surface-variant group-hover:text-primary transition-colors">Görsel Seç</span>
+                        <div id="stretch-image-placeholder" class="flex flex-col items-center justify-center relative z-10 w-full h-full text-on-surface-variant group-hover:text-primary transition-colors">
+                            <span class="material-symbols-outlined text-3xl mb-1" style="font-variation-settings: 'FILL' 0;">add_photo_alternate</span>
+                            <span class="font-label-sm text-[10px]">Görsel Seç</span>
                         </div>
                     </button>
                     <input id="stretch-image-input" accept="image/*" class="sr-only" type="file"/>
-                    <p class="font-body-md text-body-md text-on-surface-variant text-center max-w-[200px]">Esneme hareketini açıklayan net bir görsel yükleyin.</p>
                 </div>
                 <!-- Input Form -->
-                <div class="flex flex-col gap-lg mt-4">
+                <div class="flex flex-col gap-md mt-6">
                     <!-- Hareket Adı -->
                     <div class="relative">
-                        <label class="block font-label-lg text-label-lg text-on-surface mb-xs" for="stretch-name">Hareket Adı</label>
-                        <input class="block w-full px-0 py-sm bg-transparent border-b border-outline-variant focus:border-primary text-on-surface font-body-lg text-body-lg focus:ring-0 transition-colors placeholder:text-on-surface-variant outline-none" id="stretch-name" placeholder="Örn: Omuz Esnetme" type="text"/>
+                        <label class="block font-label-sm text-label-sm text-on-surface-variant mb-1" for="stretch-name">Hareket Adı</label>
+                        <input class="block w-full px-0 py-2 bg-transparent border-b border-surface-variant focus:border-primary text-on-surface font-body-lg focus:ring-0 transition-colors placeholder:text-on-surface-variant/50 outline-none" id="stretch-name" placeholder="Örn: Omuz Esnetme" type="text"/>
                     </div>
                     <!-- Süre (Saniye) -->
-                    <div class="relative">
-                        <label class="block font-label-lg text-label-lg text-on-surface mb-xs" for="stretch-duration">Süre (Saniye)</label>
-                        <input class="block w-full px-0 py-sm bg-transparent border-b border-outline-variant focus:border-primary text-on-surface font-body-lg text-body-lg focus:ring-0 transition-colors placeholder:text-on-surface-variant outline-none" id="stretch-duration" placeholder="30" type="number"/>
+                    <div class="relative mt-2">
+                        <label class="block font-label-sm text-label-sm text-on-surface-variant mb-1" for="stretch-duration">Süre (Saniye)</label>
+                        <input class="block w-full px-0 py-2 bg-transparent border-b border-surface-variant focus:border-primary text-on-surface font-body-lg focus:ring-0 transition-colors placeholder:text-on-surface-variant/50 outline-none" id="stretch-duration" placeholder="30" type="number"/>
                     </div>
                 </div>
             </div>
             <!-- Footer Actions -->
-            <div class="px-lg py-md flex gap-sm bg-surface-container-lowest sticky bottom-0 z-10 border-t border-surface-variant/30">
-                <button data-action="closeAddStretchModal" class="flex-1 min-h-[48px] rounded-full border border-primary text-primary font-label-lg text-label-lg hover:bg-primary/5 transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 active:scale-[0.98]">İptal</button>
-                <button data-action="saveNewStretch" class="flex-1 min-h-[48px] rounded-full bg-primary text-on-primary font-label-lg text-label-lg hover:bg-primary/90 shadow-sm transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 flex items-center justify-center gap-xs active:scale-[0.98]">
-                    <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">save</span>
+            <div class="px-lg py-md flex gap-sm bg-surface-container-lowest sticky bottom-0 z-10">
+                <button data-action="closeAddStretchModal" class="flex-1 min-h-[44px] rounded-full text-on-surface-variant font-label-lg hover:bg-surface-variant/50 transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 active:scale-[0.98]">İptal</button>
+                <button data-action="saveNewStretch" class="flex-1 min-h-[44px] rounded-full bg-primary text-on-primary font-label-lg hover:bg-primary/90 shadow-sm transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 flex items-center justify-center gap-xs active:scale-[0.98]">
+                    <span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 0;">save</span>
                     Kaydet
                 </button>
             </div>
@@ -4402,38 +4401,37 @@
                 </button>
             </div>
             <!-- Scrollable Body -->
-            <div class="px-lg pb-xl overflow-y-auto hide-scrollbar flex flex-col gap-lg flex-1 mt-4">
+            <div class="px-lg pb-xl overflow-y-auto hide-scrollbar flex flex-col flex-1 mt-2">
                 <!-- Image Picker -->
-                <div class="flex flex-col items-center gap-sm mt-md gap-lg relative">
-                    <button id="core-image-picker-btn" data-action="triggerCoreImageUpload" class="relative group w-32 h-32 rounded-full bg-surface-container-low hover:bg-surface-container-high transition-colors flex flex-col items-center justify-center overflow-hidden focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2">
+                <div class="flex flex-col items-center mt-md relative">
+                    <button id="core-image-picker-btn" data-action="triggerCoreImageUpload" class="relative group w-24 h-24 rounded-2xl bg-surface-container hover:bg-surface-container-high transition-colors flex flex-col items-center justify-center overflow-hidden focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2">
                         <img id="core-image-preview" src="" class="absolute inset-0 w-full h-full object-cover hidden" alt="Seçilen Görsel">
-                        <div id="core-image-placeholder" class="flex flex-col items-center justify-center relative z-10 bg-surface-container-low/50 w-full h-full">
-                            <span class="material-symbols-outlined text-4xl text-on-surface-variant group-hover:text-primary mb-xs transition-colors" style="font-variation-settings: 'FILL' 0;">add_photo_alternate</span>
-                            <span class="font-label-sm text-label-sm text-on-surface-variant group-hover:text-primary transition-colors">Görsel Seç</span>
+                        <div id="core-image-placeholder" class="flex flex-col items-center justify-center relative z-10 w-full h-full text-on-surface-variant group-hover:text-primary transition-colors">
+                            <span class="material-symbols-outlined text-3xl mb-1" style="font-variation-settings: 'FILL' 0;">add_photo_alternate</span>
+                            <span class="font-label-sm text-[10px]">Görsel Seç</span>
                         </div>
                     </button>
                     <input id="core-image-input" accept="image/*" class="sr-only" type="file"/>
-                    <p class="font-body-md text-body-md text-on-surface-variant text-center max-w-[200px]">Core hareketini açıklayan net bir görsel yükleyin.</p>
                 </div>
                 <!-- Input Form -->
-                <div class="flex flex-col gap-lg mt-4">
+                <div class="flex flex-col gap-md mt-6">
                     <!-- Hareket Adı -->
                     <div class="relative">
-                        <label class="block font-label-lg text-label-lg text-on-surface mb-xs" for="core-name">Hareket Adı</label>
-                        <input class="block w-full px-0 py-sm bg-transparent border-b border-outline-variant focus:border-primary text-on-surface font-body-lg text-body-lg focus:ring-0 transition-colors placeholder:text-on-surface-variant outline-none" id="core-name" placeholder="Örn: Plank" type="text"/>
+                        <label class="block font-label-sm text-label-sm text-on-surface-variant mb-1" for="core-name">Hareket Adı</label>
+                        <input class="block w-full px-0 py-2 bg-transparent border-b border-surface-variant focus:border-primary text-on-surface font-body-lg focus:ring-0 transition-colors placeholder:text-on-surface-variant/50 outline-none" id="core-name" placeholder="Örn: Plank" type="text"/>
                     </div>
                     <!-- Süre (Saniye) -->
-                    <div class="relative">
-                        <label class="block font-label-lg text-label-lg text-on-surface mb-xs" for="core-duration">Süre (Saniye) / Tekrar</label>
-                        <input class="block w-full px-0 py-sm bg-transparent border-b border-outline-variant focus:border-primary text-on-surface font-body-lg text-body-lg focus:ring-0 transition-colors placeholder:text-on-surface-variant outline-none" id="core-duration" placeholder="30" type="number"/>
+                    <div class="relative mt-2">
+                        <label class="block font-label-sm text-label-sm text-on-surface-variant mb-1" for="core-duration">Süre (Saniye) / Tekrar</label>
+                        <input class="block w-full px-0 py-2 bg-transparent border-b border-surface-variant focus:border-primary text-on-surface font-body-lg focus:ring-0 transition-colors placeholder:text-on-surface-variant/50 outline-none" id="core-duration" placeholder="30" type="number"/>
                     </div>
                 </div>
             </div>
             <!-- Footer Actions -->
-            <div class="px-lg py-md flex gap-sm bg-surface-container-lowest sticky bottom-0 z-10 border-t border-surface-variant/30">
-                <button data-action="closeAddCoreModal" class="flex-1 min-h-[48px] rounded-full border border-primary text-primary font-label-lg text-label-lg hover:bg-primary/5 transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 active:scale-[0.98]">İptal</button>
-                <button data-action="saveNewCore" class="flex-1 min-h-[48px] rounded-full bg-primary text-on-primary font-label-lg text-label-lg hover:bg-primary/90 shadow-sm transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 flex items-center justify-center gap-xs active:scale-[0.98]">
-                    <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">save</span>
+            <div class="px-lg py-md flex gap-sm bg-surface-container-lowest sticky bottom-0 z-10">
+                <button data-action="closeAddCoreModal" class="flex-1 min-h-[44px] rounded-full text-on-surface-variant font-label-lg hover:bg-surface-variant/50 transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 active:scale-[0.98]">İptal</button>
+                <button data-action="saveNewCore" class="flex-1 min-h-[44px] rounded-full bg-primary text-on-primary font-label-lg hover:bg-primary/90 shadow-sm transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 flex items-center justify-center gap-xs active:scale-[0.98]">
+                    <span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 0;">save</span>
                     Kaydet
                 </button>
             </div>

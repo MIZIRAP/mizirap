@@ -1809,21 +1809,13 @@ function renderStretches() {
     
     let html = '';
     
-    // Group into defaults and customs for better UI
+    // Combine defaults and customs into a single list
     const visibleDefaults = DEFAULT_STRETCHES.filter(s => !hiddenDefaultStretchIds.has(s.id));
-    if (visibleDefaults.length > 0) {
-        html += `<h3 class="font-title-sm text-on-surface-variant mb-2 mt-4 px-2">Temel Hareketler</h3>`;
-        visibleDefaults.forEach(stretch => {
-            html += generateStretchCard(stretch);
-        });
-    }
+    const allStretches = [...visibleDefaults, ...stretches].sort((a, b) => a.name.localeCompare(b.name, 'tr'));
     
-    if (stretches.length > 0) {
-        html += `<h3 class="font-title-sm text-on-surface-variant mb-2 mt-4 px-2">Senin Eklediklerin</h3>`;
-        stretches.forEach(stretch => {
-            html += generateStretchCard(stretch);
-        });
-    }
+    allStretches.forEach(stretch => {
+        html += generateStretchCard(stretch);
+    });
     
     container.innerHTML = html;
 }
