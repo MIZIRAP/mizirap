@@ -58,37 +58,27 @@ export function initWater(uid, onChangeCallback) {
     if(btnCustom) btnCustom.onclick = openCustomModal;
     if(btnEditGoal) btnEditGoal.onclick = openModal;
 
+    
     // Event Listeners for Custom Add Modal
     const customBtn = document.getElementById("water-custom-btn");
     const customModal = document.getElementById("water-custom-modal");
     const customModalContent = document.getElementById("water-custom-modal-content");
+    const customBackdrop = document.getElementById("water-custom-backdrop");
     const customMinusBtn = document.getElementById("water-custom-minus");
     const customPlusBtn = document.getElementById("water-custom-plus");
-    const customCancelBtn = document.getElementById("water-custom-cancel");
     const customSaveBtn = document.getElementById("water-custom-save");
     const customAmountDisplay = document.getElementById("water-custom-amount-display");
-    const customPresetBtns = document.querySelectorAll(".water-custom-preset");
+    const customCloseHandle = document.getElementById("water-custom-close-handle");
     
     let tempCustomAmount = 250;
 
     function updateCustomModalUI() {
-        if(customAmountDisplay) customAmountDisplay.textContent = tempCustomAmount;
-        // Optionally animate the display text pop
-        customAmountDisplay.classList.remove('scale-105');
-        void customAmountDisplay.offsetWidth; // Trigger reflow
-        customAmountDisplay.classList.add('scale-105', 'transition-transform', 'duration-150');
-        setTimeout(() => {
-            customAmountDisplay.classList.remove('scale-105');
-        }, 150);
-        
-        customPresetBtns.forEach(btn => {
-            const amt = parseInt(btn.dataset.amount);
-            if(amt === tempCustomAmount) {
-                btn.className = "water-custom-preset flex-1 py-2 rounded-full border-2 border-primary text-neon-blue font-bold text-label-md bg-background shadow-neo-low transition-colors active:scale-95";
-            } else {
-                btn.className = "water-custom-preset flex-1 py-2 rounded-full border-none text-on-surface-variant font-label-md text-label-md hover:bg-background shadow-neo transition-colors active:scale-95";
-            }
-        });
+        if(customAmountDisplay) {
+            customAmountDisplay.textContent = tempCustomAmount;
+            customAmountDisplay.style.transform = 'scale(1.1)';
+            customAmountDisplay.style.transition = 'transform 0.15s ease-out';
+            setTimeout(() => customAmountDisplay.style.transform = 'scale(1)', 150);
+        }
     }
 
     function openCustomModal() {
@@ -98,30 +88,31 @@ export function initWater(uid, onChangeCallback) {
         customModal.classList.remove("hidden");
         // Trigger reflow
         void customModal.offsetWidth;
-        customModalContent.classList.remove("opacity-0", "scale-95");
-        customModalContent.classList.add("opacity-100", "scale-100");
+        customModalContent.classList.remove("translate-y-full");
+        customModalContent.classList.add("translate-y-0");
+        if(customBackdrop) {
+            customBackdrop.classList.remove("opacity-0");
+            customBackdrop.classList.add("opacity-100");
+        }
     }
 
     function closeCustomModal() {
         if(!customModal) return;
-        customModalContent.classList.remove("opacity-100", "scale-100");
-        customModalContent.classList.add("opacity-0", "scale-95");
+        customModalContent.classList.remove("translate-y-0");
+        customModalContent.classList.add("translate-y-full");
+        if(customBackdrop) {
+            customBackdrop.classList.remove("opacity-100");
+            customBackdrop.classList.add("opacity-0");
+        }
         setTimeout(() => {
             customModal.classList.add("hidden");
-        }, 200);
-    }
-
-    if(customBtn) {
-        customBtn.onclick = openCustomModal;
+        }, 300);
     }
 
     if(customMinusBtn) {
         customMinusBtn.onclick = () => {
-            if(tempCustomAmount > 10) {
-                tempCustomAmount -= 10;
-                updateCustomModalUI();
-            } else {
-                tempCustomAmount = 0;
+            if(tempCustomAmount > 50) {
+                tempCustomAmount -= 50;
                 updateCustomModalUI();
             }
         };
@@ -129,19 +120,15 @@ export function initWater(uid, onChangeCallback) {
 
     if(customPlusBtn) {
         customPlusBtn.onclick = () => {
-            tempCustomAmount += 10;
-            updateCustomModalUI();
+            if(tempCustomAmount < 2000) {
+                tempCustomAmount += 50;
+                updateCustomModalUI();
+            }
         };
     }
 
-    customPresetBtns.forEach(btn => {
-        btn.onclick = () => {
-            tempCustomAmount = parseInt(btn.dataset.amount);
-            updateCustomModalUI();
-        };
-    });
-
-    if(customCancelBtn) customCancelBtn.onclick = closeCustomModal;
+    if(customCloseHandle) customCloseHandle.onclick = closeCustomModal;
+    if(customBackdrop) customBackdrop.onclick = closeCustomModal;
 
     if(customSaveBtn) {
         customSaveBtn.onclick = async () => {
@@ -160,7 +147,6 @@ export function initWater(uid, onChangeCallback) {
         };
     }
 
-    
     // Event Listener for Daily Goal Modal
     const goalBtn = document.getElementById("water-goal-btn");
     const modal = document.getElementById("water-goal-modal");
