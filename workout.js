@@ -1696,6 +1696,13 @@ async function applySplitSelection() {
         if (typeof renderSplitEditView === 'function') renderSplitEditView();
         if (typeof renderSplitView === 'function') renderSplitView();
         
+        // Notify dashboard of the split change so it doesn't revert
+        if (callback) {
+            const activeSplit = splits.find(s => s.id === activeSplitId);
+            const activeSplitName = activeSplit ? activeSplit.name : "Yapılmadı";
+            callback(window._miz_last_workout_logs || [], activeSplitName);
+        }
+        
         closeSplitModal();
     } catch(e) {
         console.error(e);
