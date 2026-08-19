@@ -48,6 +48,7 @@
 - **Mobil Konteyner Zorunluluğu**: Masaüstünde de bir telefon gibi görünmesi amaçlanmıştır. Her şey `<div id="app-container" class="max-w-[420px] ...">` ve `#app-screen` içinde olmalıdır. Dışına taşan elementler görünümü (layout) bozar.
 - **Event Delegation (data-action) Tercihi**: ES Modüllerinin global function tanımlayamaması sebebiyle (html içinden `onclick="foo()"` çağrılamaz), elementlere `data-action="..."` atayıp global/tepe seviyesindeki bir event listener ile tıklamaların yönetilmesi kararlaştırılmıştır.
 - **Modüler ES6 Yaklaşımı**: Webpack gibi bir toplayıcı kullanılmadığından, Circular Dependency (döngüsel bağımlılık) yaratmamaya özellikle dikkat edilmelidir.
+- **e1RM Formülü (RIR-Düzeltmeli Epley)**: `activeSession.js` içindeki hesaplama (`weight × (1 + (reps + (10-RPE)) / 30)`) kasıtlı ve onaylanmış nihai bir karardır. Brzycki veya başka bir formüle GÜNCELLENMEMELİDİR.
 
 ## 6. BİLİNEN SORUNLAR / YARIM KALANLAR
 - **Event Handler Tutarsızlığı (Teknik Borç)**: `books.js`, `calories.js`, `water.js`, `finance.js` gibi modüllerde halen elementlere JS içinde doğrudan `.onclick = ...` ile atamalar yapılmaktadır. Sistemin tamamının `data-action` tabanlı "Event Delegation" mimarisine geçiş süreci henüz tamamlanmamıştır.
