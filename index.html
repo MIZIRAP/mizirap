@@ -2421,85 +2421,81 @@
     <!-- ================= SU TAKİBİ (Water) ================= -->
     
 <section id="view-water" class="view hidden">
-        <!-- Top App Bar -->
-        <header class="w-full top-0 sticky bg-background dark:bg-background flat no shadows transition-opacity duration-200 z-40 max-w-md mx-auto">
-            <div class="flex items-center justify-between px-container-padding py-4 w-full">
-                <div class="flex items-center gap-3">
-                    <button class="nav-tab hover:opacity-80 p-2 -ml-2 rounded-full focus:outline-none focus:ring-2 focus:ring-primary" data-target="view-dashboard">
-                        <span class="material-symbols-rounded text-neon-blue dark:text-neon-blue-fixed-dim" style="font-variation-settings: 'FILL' 0;">arrow_back</span>
-                    </button>
-                    <h1 class="font-headline-md text-headline-md text-neon-blue dark:text-neon-blue-fixed-dim font-bold tracking-tight">Su Takibi</h1>
+    <!-- Top App Bar -->
+    <header class="w-full top-0 sticky z-40 max-w-md mx-auto px-container-padding py-4">
+        <div class="flex items-center justify-between w-full">
+            <button class="nav-tab w-10 h-10 flex items-center justify-center rounded-full bg-[#F7F9FF]" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px #FFFFFF;" data-target="view-dashboard">
+                <span class="material-symbols-rounded text-[#1E293B]">arrow_back</span>
+            </button>
+            <h1 class="text-h1 font-bold text-[#1E293B]">Su Takibi</h1>
+            <button class="w-10 h-10 flex items-center justify-center rounded-full bg-[#F7F9FF]" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px #FFFFFF;">
+                <span class="material-symbols-rounded text-[#1E293B]">settings</span>
+            </button>
+        </div>
+    </header>
+    
+    <!-- Main Content Container -->
+    <main class="flex-1 w-full max-w-md mx-auto px-container-padding pb-32 flex flex-col gap-section-margin pt-4">
+        <!-- Circular Progress Section -->
+        <div class="flex flex-col items-center justify-center relative">
+            <div class="relative w-64 h-64 flex items-center justify-center rounded-full bg-[#F7F9FF]" style="box-shadow: 10px 10px 20px #D1D9E6, -10px -10px 20px #FFFFFF;">
+                <svg class="absolute inset-0 w-full h-full" viewBox="0 0 120 120">
+                    <defs>
+                        <linearGradient id="neonGradientWater" x1="0%" x2="100%" y1="0%" y2="100%">
+                            <stop offset="0%" style="stop-color:#A855F7"></stop>
+                            <stop offset="50%" style="stop-color:#3B82F6"></stop>
+                            <stop offset="100%" style="stop-color:#22C55E"></stop>
+                        </linearGradient>
+                    </defs>
+                    <circle cx="60" cy="60" fill="transparent" r="50" stroke="#E0E5EC" stroke-width="8"></circle>
+                    <circle id="water-prog-circle" cx="60" cy="60" fill="transparent" r="50" stroke="url(#neonGradientWater)" stroke-dasharray="314.159" stroke-dashoffset="314.159" stroke-linecap="round" stroke-width="8" style="filter: drop-shadow(0 0 5px rgba(59, 130, 246, 0.5)); transition: stroke-dashoffset 0.35s; transform: rotate(-90deg); transform-origin: 50% 50%;"></circle>
+                </svg>
+                <div class="flex flex-col items-center z-10">
+                    <h2 id="water-current-amount" class="text-4xl font-bold text-[#1E293B]">0</h2>
+                    <p id="water-goal-text" class="text-sm text-[#64748B]">of 2000 ml</p>
                 </div>
             </div>
-        </header>
-
-        <!-- Main Content Container -->
-        <main class="flex-1 w-full max-w-md mx-auto px-container-padding pb-32 flex flex-col gap-section-margin pt-4">
-            <!-- Circular Progress Section -->
-            <section class="flex flex-col items-center justify-center relative">
-                <div class="relative w-64 h-64 flex items-center justify-center">
-                    <!-- SVG Circle -->
-                    <svg class="absolute inset-0 w-full h-full drop-shadow-md" viewbox="0 0 120 120">
-                        <circle class="text-outline-variant stroke-current" cx="60" cy="60" fill="transparent" r="54" stroke-width="8"></circle>
-                        <circle id="water-progress-circle" class="text-neon-blue stroke-current progress-ring__circle" cx="60" cy="60" fill="transparent" r="54" stroke-dasharray="339.292" stroke-dashoffset="339.292" stroke-linecap="round" stroke-width="8"></circle>
-                    </svg>
-                    <!-- Inner Content -->
-                    <div class="flex flex-col items-center justify-center z-10 text-center">
-                        <h2 id="water-current-text" class="font-display-lg text-display-lg text-neon-blue tracking-tight">0</h2>
-                        <p class="font-body-md text-body-md text-on-surface-variant mt-1">of <span id="water-goal-text">2000</span> ml</p>
-                    </div>
-                </div>
-                <button id="water-goal-btn" class="mt-6 flex items-center gap-2 px-4 py-2 bg-background shadow-neo rounded-full shadow-sm hover:scale-95 transition-transform duration-200">
-                    <span class="material-symbols-rounded text-neon-blue text-sm" data-icon="edit" data-weight="regular">edit</span>
-                    <span class="font-label-md text-label-md text-neon-blue uppercase">Daily Goal</span>
+            <button id="btn-edit-water-goal" class="mt-8 px-8 py-3 rounded-full bg-[#F7F9FF] text-[#1E293B] font-bold uppercase tracking-wider text-xs" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px #FFFFFF;">Daily Goal</button>
+        </div>
+        
+        <!-- Quick Add Section -->
+        <div class="flex flex-col gap-card-gap">
+            <div class="grid grid-cols-3 gap-6">
+                <button id="btn-water-250" class="flex flex-col items-center justify-center gap-3 py-6 rounded-2xl bg-[#F7F9FF] active:scale-95 transition-transform" style="box-shadow: 6px 6px 12px #D1D9E6, -6px -6px 12px #FFFFFF;">
+                    <span class="material-symbols-rounded text-[#3B82F6] text-3xl">local_drink</span>
+                    <span class="text-xs font-bold text-[#1E293B]">+250ml</span>
                 </button>
-            </section>
-            
-            <!-- Quick Add Section -->
-            <section class="flex flex-col gap-card-gap">
-                <h3 class="font-headline-sm text-headline-sm text-on-surface font-semibold">Quick Add</h3>
-                <div class="grid grid-cols-3 gap-3">
-                    <button class="water-add-btn bg-background shadow-neo shadow-sm rounded-full h-14 flex flex-col items-center justify-center gap-2 hover:scale-[0.98] transition-transform active:bg-background shadow-neo duration-200" data-amount="250" data-type="Glass of Water" data-icon="local_drink">
-                        <span class="material-symbols-rounded text-neon-blue" data-icon="local_drink" data-weight="regular">local_drink</span>
-                        <span class="font-label-md text-label-md text-on-surface">+250ml</span>
-                    </button>
-                    <button class="water-add-btn bg-background shadow-neo shadow-sm rounded-full h-14 flex flex-col items-center justify-center gap-2 hover:scale-[0.98] transition-transform active:bg-background shadow-neo duration-200" data-amount="500" data-type="Water Bottle" data-icon="water_bottle">
-                        <span class="material-symbols-rounded text-neon-blue" data-icon="water_bottle" data-weight="regular">water_bottle</span>
-                        <span class="font-label-md text-label-md text-on-surface">+500ml</span>
-                    </button>
-                    <button id="water-custom-btn" class="bg-background shadow-neo shadow-sm rounded-full h-14 flex flex-col items-center justify-center gap-2 hover:scale-[0.98] transition-transform active:bg-background shadow-neo duration-200">
-                        <span class="material-symbols-rounded text-neon-blue" data-icon="add" data-weight="regular">add</span>
-                        <span class="font-label-md text-label-md text-on-surface">Custom</span>
-                    </button>
-                </div>
-            </section>
-            
-            <!-- Weekly Chart Section -->
-            <section class="bg-background shadow-neo shadow-sm rounded-[32px] p-6 flex flex-col gap-4">
-                <div class="flex justify-between items-end">
-                    <h3 class="font-headline-sm text-headline-sm text-on-surface font-semibold">Bu Hafta</h3>
-                    <span id="water-avg-text" class="font-label-md text-label-md text-on-surface-variant uppercase">Avg: 0ml</span>
-                </div>
-                <div id="water-chart-container" class="h-40 flex items-end justify-between pt-4 pb-2 border-b border-outline-variant/30">
-                    <!-- Dinamik Grafik Çubukları -->
-                </div>
-                <div class="flex justify-between w-full mt-2" id="water-chart-labels">
-                    <!-- Dinamik Etiketler -->
-                </div>
-            </section>
-
-            <!-- History Log -->
-            <section class="flex flex-col gap-4">
-                <h3 class="font-headline-sm text-headline-sm text-on-surface font-semibold">Today's Log</h3>
-                <div id="water-log-list" class="bg-background shadow-neo shadow-sm rounded-[32px] flex flex-col overflow-hidden">
-                    <!-- Dinamik -->
-                </div>
-            </section>
-        </main>
-
-    </section>
-
-    <!-- ================= GEÇMİŞ (History) ================= -->
+                <button id="btn-water-500" class="flex flex-col items-center justify-center gap-3 py-6 rounded-2xl bg-[#F7F9FF] active:scale-95 transition-transform" style="box-shadow: 6px 6px 12px #D1D9E6, -6px -6px 12px #FFFFFF;">
+                    <span class="material-symbols-rounded text-[#A855F7] text-3xl">water_bottle</span>
+                    <span class="text-xs font-bold text-[#1E293B]">+500ml</span>
+                </button>
+                <button id="btn-water-custom" class="flex flex-col items-center justify-center gap-3 py-6 rounded-2xl bg-[#F7F9FF] active:scale-95 transition-transform" style="box-shadow: 6px 6px 12px #D1D9E6, -6px -6px 12px #FFFFFF;">
+                    <span class="material-symbols-rounded text-[#22C55E] text-3xl">add</span>
+                    <span class="text-xs font-bold text-[#1E293B]">Custom</span>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Weekly Chart Section -->
+        <div class="bg-surface-container-lowest shadow-sm rounded-2xl p-6 flex flex-col gap-4" style="background-color: #F7F9FF; box-shadow: 8px 8px 16px #D1D9E6, -8px -8px 16px #FFFFFF; border: none;">
+            <div class="flex justify-between items-end mb-2">
+                <h3 class="text-h2 font-bold text-[#1E293B]">Last 7 Days</h3>
+                <span id="water-avg-text" class="text-xs font-bold text-[#64748B] uppercase tracking-wider">Avg: 0ml</span>
+            </div>
+            <div id="water-chart-wrapper" class="h-40 flex items-end justify-between pt-4 pb-2 border-b border-outline-variant/30">
+                <!-- CHART BARS WILL BE INJECTED HERE -->
+            </div>
+        </div>
+        
+        <!-- History Log -->
+        <div class="flex flex-col gap-4">
+            <h3 class="text-h2 font-bold text-[#1E293B]">Today's Log</h3>
+            <div id="water-history-list" class="flex flex-col gap-4 max-h-64 overflow-y-auto">
+                <!-- HISTORY LOGS WILL BE INJECTED HERE -->
+            </div>
+        </div>
+    </main>
+</section>
     <section id="view-history" class="view hidden bg-paper text-on-surface font-sans antialiased min-h-[100dvh] pb-32" style="--green: #446554; --paper: #f7faf3; --ink: #1a1c18; --coral: #ff8a80; --tan: #d2b48c;">
         <!-- Top App Bar -->
         <header class="w-full top-0 sticky bg-background dark:bg-background flat no shadows transition-opacity duration-200 z-40 max-w-md mx-auto">

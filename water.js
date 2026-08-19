@@ -35,24 +35,28 @@ export function initWater(uid, onChangeCallback) {
         updateWaterUI();
     }));
 
-    // Event Listeners for Quick Add
-    document.querySelectorAll(".water-add-btn").forEach(btn => {
-        btn.onclick = async () => {
-            const amount = parseInt(btn.dataset.amount);
-            const type = btn.dataset.type;
-            const icon = btn.dataset.icon;
-            
-            try {
-                await addDoc(collection(db, "users", uid, "waterLogs"), {
-                    amount, type, icon, createdAt: serverTimestamp()
-                });
-            } catch(err) {
-                console.error("Firestore test hatası:", err);
-                waterLogs.unshift({ amount, type, icon, createdAt: { toDate: () => new Date() } });
-                updateWaterUI();
-            }
-        };
-    });
+    // New bindings for Silk Neon Water UI
+    const btn250 = document.getElementById("btn-water-250");
+    const btn500 = document.getElementById("btn-water-500");
+    const btnCustom = document.getElementById("btn-water-custom");
+    const btnEditGoal = document.getElementById("btn-edit-water-goal");
+
+    const addWaterLog = async (amount, type, icon) => {
+        try {
+            await addDoc(collection(db, "users", uid, "waterLogs"), {
+                amount, type, icon, createdAt: serverTimestamp()
+            });
+        } catch(err) {
+            console.error("Firestore test hatası:", err);
+            waterLogs.unshift({ amount, type, icon, createdAt: { toDate: () => new Date() } });
+            updateWaterUI();
+        }
+    };
+
+    if(btn250) btn250.onclick = () => addWaterLog(250, "Glass of Water", "local_drink");
+    if(btn500) btn500.onclick = () => addWaterLog(500, "Water Bottle", "water_bottle");
+    if(btnCustom) btnCustom.onclick = openCustomModal;
+    if(btnEditGoal) btnEditGoal.onclick = openModal;
 
     // Event Listeners for Custom Add Modal
     const customBtn = document.getElementById("water-custom-btn");
@@ -264,14 +268,16 @@ function updateWaterUI() {
     });
 
     const currentAmount = todaysLogs.reduce((sum, log) => sum + log.amount, 0);
-    const circle = document.getElementById("water-progress-circle");
-    const currentText = document.getElementById("water-current-text");
+    const circle = document.getElementById("water-prog-circle");
+    const currentText = document.getElementById("water-current-amount");
+    const goalText = document.getElementById("water-goal-text");
     
     if(currentText) currentText.textContent = currentAmount;
+    if(goalText) goalText.textContent = `of ${dailyGoal} ml`;
     
     if(circle) {
-        const radius = circle.r.baseVal.value;
-        const circumference = radius * 2 * Math.PI;
+        const radius = circle.r.baseVal.value; // 50
+        const circumference = radius * 2 * Math.PI; // 314.159
         circle.style.strokeDasharray = `${circumference} ${circumference}`;
         
         let percent = currentAmount / dailyGoal;
@@ -281,120 +287,49 @@ function updateWaterUI() {
     }
 
     // 2. Today's Log Render
-    const logList = document.getElementById("water-log-list");
+    const logList = document.getElementById("water-history-list");
     if(logList) {
         logList.innerHTML = "";
         if(todaysLogs.length === 0) {
-            logList.innerHTML = `<div class="p-4 text-center text-on-surface-variant text-sm">Bugün henüz su içilmedi.</div>`;
+            logList.innerHTML = `<div class="p-4 text-center text-[#64748B] text-sm">Bugün henüz su içilmedi.</div>`;
         } else {
-            // Show all today's logs and add a delete button
             todaysLogs.forEach(log => {
                 const timeStr = log.createdAt?.toDate ? log.createdAt.toDate().toLocaleTimeString("tr-TR", {hour: '2-digit', minute:'2-digit'}) : "";
                 const div = document.createElement("div");
-                div.className = "flex items-center justify-between p-4 border-b border-surface-container/50 last:border-0 relative group";
+                div.className = "flex items-center justify-between p-4 rounded-2xl bg-[#F7F9FF]";
+                div.style.boxShadow = "4px 4px 8px #D1D9E6, -4px -4px 8px #FFFFFF";
                 
-                const normalView = document.createElement('div');
-                normalView.className = "flex items-center justify-between w-full";
+                let iconClass = "text-[#3B82F6]";
+                if(log.icon === "water_bottle") iconClass = "text-[#A855F7]";
                 
-                const editView = document.createElement('div');
-                editView.className = "hidden flex items-center justify-between w-full gap-2";
-
-                const delBtn = document.createElement('button');
-                delBtn.className = "absolute right-2 top-1/2 -translate-y-1/2 p-2 text-error opacity-0 group-hover:opacity-100 transition-opacity bg-error-container/20 rounded-full active:scale-95";
-                delBtn.innerHTML = `<span class="material-symbols-rounded text-sm">delete</span>`;
-                delBtn.onclick = async (e) => {
-                    e.stopPropagation();
-                    try {
-                        await deleteDoc(doc(db, "users", currentUid, "waterLogs", log.id)).catch(e => { console.error('DB Error:', e); alert('Veritabanı işlemi sırasında bir hata oluştu.'); throw e; });
-                    } catch(err) {
-                        console.error("Silme Hatası:", err);
-                    }
-                };
-                
-                const editBtn = document.createElement('button');
-                editBtn.className = "absolute right-12 top-1/2 -translate-y-1/2 p-2 text-neon-blue opacity-0 group-hover:opacity-100 transition-opacity bg-gradient-to-r from-neon-purple to-neon-blue-container/20 rounded-full active:scale-95";
-                editBtn.innerHTML = `<span class="material-symbols-rounded text-sm">edit</span>`;
-                editBtn.onclick = (e) => {
-                    e.stopPropagation();
-                    normalView.classList.add('hidden');
-                    editView.classList.remove('hidden');
-                    delBtn.classList.add('hidden');
-                    editBtn.classList.add('hidden');
-                };
-
-                normalView.innerHTML = `
+                div.innerHTML = `
                     <div class="flex items-center gap-4">
-                        <div class="w-10 h-10 rounded-full bg-gradient-to-r from-neon-blue to-neon-green flex items-center justify-center text-neon-purple">
-                            <span class="material-symbols-rounded" data-icon="${log.icon}" data-weight="regular">${escapeHtml(log.icon || 'local_drink')}</span>
+                        <div class="w-10 h-10 rounded-full bg-[#F7F9FF] flex items-center justify-center" style="box-shadow: inset 2px 2px 5px #D1D9E6, inset -2px -2px 5px #FFFFFF;">
+                            <span class="material-symbols-outlined ${iconClass}">${log.icon || 'local_drink'}</span>
                         </div>
-                        <div class="flex flex-col">
-                            <span class="font-body-lg text-body-lg text-on-surface font-medium">${escapeHtml(log.type)}</span>
-                            <span class="font-body-md text-body-md text-on-surface-variant text-sm">${timeStr}</span>
+                        <div>
+                            <p class="text-sm font-bold text-[#1E293B]">${log.type}</p>
+                            <p class="text-xs text-[#64748B]">${timeStr}</p>
                         </div>
                     </div>
-                    <span class="font-headline-sm text-headline-sm text-neon-blue pr-20">+${log.amount}ml</span>
+                    <span class="font-bold ${iconClass}">+${log.amount}ml</span>
                 `;
-                
-                editView.innerHTML = `
-                    <div class="flex items-center gap-2 flex-1">
-                        <div class="w-8 h-8 rounded-full bg-gradient-to-r from-neon-blue to-neon-green flex items-center justify-center text-neon-purple shrink-0">
-                            <span class="material-symbols-rounded text-sm" data-icon="${log.icon}" data-weight="regular">${escapeHtml(log.icon || 'local_drink')}</span>
-                        </div>
-                        <input type="number" class="w-full bg-background shadow-neo border-none rounded-lg px-2 py-1 text-sm text-on-surface focus:border-primary focus:ring-1 focus:ring-primary edit-amount-input" value="${log.amount}" min="1">
-                        <span class="text-on-surface-variant text-sm">ml</span>
-                    </div>
-                    <button class="bg-gradient-to-r from-neon-purple to-neon-blue text-white px-3 py-1 rounded-lg text-sm font-medium shrink-0 edit-save-btn">Kaydet</button>
-                    <button class="text-on-surface-variant px-2 py-1 rounded-lg text-sm shrink-0 edit-cancel-btn">İptal</button>
-                `;
-
-                div.appendChild(normalView);
-                div.appendChild(editView);
-                div.appendChild(editBtn);
-                div.appendChild(delBtn);
-
-                const saveBtn = editView.querySelector('.edit-save-btn');
-                const cancelBtn = editView.querySelector('.edit-cancel-btn');
-                const amountInput = editView.querySelector('.edit-amount-input');
-
-                cancelBtn.onclick = (e) => {
-                    e.stopPropagation();
-                    editView.classList.add('hidden');
-                    normalView.classList.remove('hidden');
-                    delBtn.classList.remove('hidden');
-                    editBtn.classList.remove('hidden');
-                    amountInput.value = log.amount;
-                };
-
-                saveBtn.onclick = async (e) => {
-                    e.stopPropagation();
-                    await handleFormSubmit(saveBtn, [{ el: amountInput, type: 'number', required: true, min: 1 }], async () => {
-                        const newAmount = parseInt(amountInput.value);
-                        await updateDoc(doc(db, "users", currentUid, "waterLogs", log.id), {
-                            amount: newAmount
-                        });
-                    });
-                };
                 logList.appendChild(div);
             });
-            logList.classList.add("max-h-64", "overflow-y-auto");
         }
     }
 
     // 3. Weekly Chart Calculation
-    const chartContainer = document.getElementById("water-chart-container");
-    const labelsContainer = document.getElementById("water-chart-labels");
+    const chartContainer = document.getElementById("water-chart-wrapper");
     const avgText = document.getElementById("water-avg-text");
     
-    if(chartContainer && labelsContainer && avgText) {
+    if(chartContainer && avgText) {
         chartContainer.innerHTML = "";
-        labelsContainer.innerHTML = "";
         
         let total7Days = 0;
         const days = [];
-        const dayNames = ["Paz", "Pzt", "Sal", "Çar", "Per", "Cum", "Cmt"];
+        const dayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]; // Changed to english based on user's HTML
         
-        const today = new Date();
-        today.setHours(0,0,0,0);
         const currentDayOfWeek = today.getDay();
         const diffToMonday = currentDayOfWeek === 0 ? 6 : currentDayOfWeek - 1;
         
@@ -420,7 +355,6 @@ function updateWaterUI() {
             if(!log.createdAt || !log.createdAt.toDate) return;
             const logDate = log.createdAt.toDate();
             if(logDate >= monday && logDate <= endOfWeek) {
-                // Find matching day
                 const matchingDay = days.find(day => 
                     logDate.getDate() === day.date.getDate() && 
                     logDate.getMonth() === day.date.getMonth()
@@ -437,37 +371,28 @@ function updateWaterUI() {
         days.forEach(day => {
             let percent = day.amount / dailyGoal * 100;
             if(percent > 100) percent = 100;
-            if(percent < 5 && day.amount > 0) percent = 5; // Minimum visible bar if > 0
+            if(percent < 5 && day.amount > 0) percent = 5;
 
             const div = document.createElement("div");
-            div.className = "flex flex-col items-center gap-2 w-[14%] group relative";
+            div.className = "flex flex-col items-center gap-2 w-1/7";
             
-            let barClass = "bg-gradient-to-r from-neon-purple to-neon-blue/70 group-hover:bg-gradient-to-r from-neon-purple to-neon-blue/90";
-            let textClass = "text-outline";
-            
+            let color = "#3B82F6"; // default blue
+            let textClass = "text-[#64748B]";
             if(day.isToday) {
-                barClass = "bg-gradient-to-r from-neon-purple to-neon-blue group-hover:bg-gradient-to-r from-neon-purple to-neon-blue/90";
-                textClass = "text-neon-blue font-bold";
+                textClass = "font-bold text-[#1E293B]";
+                color = "#22C55E"; // green for today
+            } else if (day.amount >= dailyGoal) {
+                color = "#A855F7"; // purple for met goal
             }
-            if(day.amount >= dailyGoal && !day.isToday) {
-                barClass = "bg-gradient-to-r from-neon-purple to-neon-blue group-hover:opacity-80";
-            }
-
+            
             div.innerHTML = `
-                <div class="absolute -top-6 bg-background shadow-neo-high text-on-surface text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10 pointer-events-none">
-                    ${Math.round(day.amount)} ml
+                <div class="w-4 h-32 bg-[#E0E5EC] rounded-full relative overflow-hidden">
+                    <div class="absolute bottom-0 w-full rounded-full transition-all duration-500" style="background-color: ${color}; height: ${percent}%;"></div>
                 </div>
-                <div class="w-2 md:w-3 bg-background shadow-neo rounded-full h-24 relative flex items-end overflow-hidden">
-                    <div class="w-full rounded-full transition-all duration-500 ${barClass}" style="height: ${percent}%"></div>
-                </div>
+                <span class="text-[10px] ${textClass}">${day.name}</span>
             `;
             
-            const labelDiv = document.createElement("div");
-            labelDiv.className = `text-label-sm md:text-xs w-[14%] text-center uppercase tracking-wider ${textClass}`;
-            labelDiv.textContent = day.name;
-
             chartContainer.appendChild(div);
-            labelsContainer.appendChild(labelDiv);
         });
     }
 
