@@ -2770,7 +2770,7 @@ function stretchPlayerPauseToggle() {
 }
 
 function stretchPlayerGoNext(userTriggered = true) {
-    playTransitionSound();
+    _playFinishBeep();
     if (_spIdx >= _spMovements.length - 1) {
         // Session complete
         if (userTriggered) {
@@ -3236,7 +3236,7 @@ function _cpPauseToggle() {
 }
 
 function corePlayerGoNext(userTriggered = true) {
-    playTransitionSound();
+    _playFinishBeep();
     if (_cpIdx >= _cpMovements.length - 1) {
         if (userTriggered) {
             closeCorePlayer();
