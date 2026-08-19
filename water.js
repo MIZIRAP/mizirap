@@ -305,7 +305,7 @@ function updateWaterUI() {
                 div.innerHTML = `
                     <div class="flex items-center gap-4">
                         <div class="w-10 h-10 rounded-full bg-[#F7F9FF] flex items-center justify-center" style="box-shadow: inset 2px 2px 5px #D1D9E6, inset -2px -2px 5px #FFFFFF;">
-                            <span class="material-symbols-outlined ${iconClass}">${log.icon || 'local_drink'}</span>
+                            <span class="material-symbols-rounded ${iconClass}">${log.icon || 'local_drink'}</span>
                         </div>
                         <div>
                             <p class="text-sm font-bold text-[#1E293B]">${log.type}</p>
