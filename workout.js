@@ -127,6 +127,7 @@ let stretches = [];
 let currentStretchImageBase64 = null;
 let editingStretchId = null;
 let editingStretchIsDefault = false;
+let editingDefaultStretchId = null;
 let hiddenDefaultStretchIds = new Set(JSON.parse(localStorage.getItem('hiddenDefaultStretches') || '[]'));
 
 const DEFAULT_STRETCHES = [
@@ -1754,10 +1755,14 @@ function closeCoreView() {
 }
 
 function openAddStretchModal(isEdit = false) {
+    const nameInput = document.getElementById('stretch-name');
+    const imageBtn = document.getElementById('stretch-image-picker-btn');
+    
     if (!isEdit) {
         editingStretchId = null;
+        editingDefaultStretchId = null;
         currentStretchImageBase64 = null;
-        document.getElementById('stretch-name').value = '';
+        nameInput.value = '';
         document.getElementById('stretch-duration').value = '';
         document.getElementById('modal-title').textContent = "Yeni Hareket";
         
@@ -1768,6 +1773,16 @@ function openAddStretchModal(isEdit = false) {
             preview.classList.add('hidden');
             placeholder.classList.remove('hidden');
         }
+    }
+    
+    // Always re-enable for new movements or normal edits (editStretch will disable if needed)
+    if (nameInput) {
+        nameInput.disabled = false;
+        nameInput.classList.remove('opacity-50', 'cursor-not-allowed');
+    }
+    if (imageBtn) {
+        imageBtn.disabled = false;
+        imageBtn.classList.remove('opacity-50', 'cursor-not-allowed');
     }
 
     const modal = document.getElementById('addStretchModal');
@@ -1917,6 +1932,12 @@ async function saveStretch() {
         } else {
             stretchData.createdAt = serverTimestamp();
             await addDoc(collection(db, "users", currentUid, "stretches"), stretchData);
+            
+            // Eğer default hareketi editleyerek yeni hareket oluşturduysak, eski defaultu gizle
+            if (editingDefaultStretchId) {
+                hiddenDefaultStretchIds.add(editingDefaultStretchId);
+                localStorage.setItem('hiddenDefaultStretches', JSON.stringify([...hiddenDefaultStretchIds]));
+            }
         }
         
         closeAddStretchModal();
@@ -1939,14 +1960,29 @@ function editStretch(id) {
     
     // For defaults: don't set editingStretchId so it saves as NEW Firestore doc
     editingStretchId = editingStretchIsDefault ? null : id;
+    editingDefaultStretchId = editingStretchIsDefault ? id : null;
     
-    document.getElementById('stretch-name').value = stretch.name;
+    const nameInput = document.getElementById('stretch-name');
+    nameInput.value = stretch.name;
     document.getElementById('stretch-duration').value = stretch.duration;
     
     currentStretchImageBase64 = stretch.imageBase64 || null;
     
     const preview = document.getElementById('stretch-image-preview');
     const placeholder = document.getElementById('stretch-image-placeholder');
+    const imageBtn = document.getElementById('stretch-image-picker-btn');
+    
+    if (editingStretchIsDefault) {
+        nameInput.disabled = true;
+        nameInput.classList.add('opacity-50', 'cursor-not-allowed');
+        imageBtn.disabled = true;
+        imageBtn.classList.add('opacity-50', 'cursor-not-allowed');
+    } else {
+        nameInput.disabled = false;
+        nameInput.classList.remove('opacity-50', 'cursor-not-allowed');
+        imageBtn.disabled = false;
+        imageBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+    }
     
     if (currentStretchImageBase64) {
         preview.src = currentStretchImageBase64;
@@ -2764,6 +2800,17 @@ function renderCoreSessions() {
                     </button>
                 </div>
             </div>
+            <!-- Movement Preview Strip -->
+            ${moveCount > 0 ? `
+            <div class="flex gap-1.5 overflow-x-auto hide-scrollbar">
+                ${(session.movements || []).map(m => `
+                    <div class="flex-shrink-0 flex flex-col items-center gap-1">
+                        <div class="w-10 h-10 rounded-full overflow-hidden bg-surface-container-highest border border-surface-variant/30">
+                            ${m.imageBase64 ? `<img src="${m.imageBase64}" class="w-full h-full object-cover" alt="${escapeHtml(m.name)}"/>` : ''}
+                        </div>
+                    </div>
+                `).join('')}
+            </div>` : ''}
         </div>
         `;
     }).join('');
