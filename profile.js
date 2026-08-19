@@ -25,7 +25,7 @@ async function loadProfile() {
 
     try {
         const docRef = doc(db, "users", currentUid, "profile", "data");
-        const docSnap = await getDoc(docRef);
+        const docSnap = await getDoc(docRef).catch(e => { console.error('DB Error:', e); alert('Veritabanı işlemi sırasında bir hata oluştu.'); throw e; });
         
         
         if (docSnap.exists()) {

@@ -101,10 +101,10 @@ function renderShoppingList() {
         const saveBtn = div.querySelector('.save-btn');
         
         div.querySelector(".toggle-btn").addEventListener("click", () => {
-            updateDoc(doc(db, "users", auth.currentUser.uid, "shoppingList", item.id), { done: true });
+            updateDoc(doc(db, "users", auth.currentUser.uid, "shoppingList", item.id), { done: true }).catch(e => { console.error(e); alert("Hata oluştu"); });
         });
         div.querySelector(".delete-btn").addEventListener("click", () => {
-            deleteDoc(doc(db, "users", auth.currentUser.uid, "shoppingList", item.id));
+            deleteDoc(doc(db, "users", auth.currentUser.uid, "shoppingList", item.id)).catch(e => { console.error(e); alert("Hata oluştu"); });
         });
         div.querySelector(".edit-btn").addEventListener("click", () => {
             normalView.classList.add('hidden');
@@ -121,7 +121,7 @@ function renderShoppingList() {
         saveBtn.addEventListener("click", async () => {
             await handleFormSubmit(saveBtn, [{ el: editInput, type: 'text', required: true }], async () => {
                 const newTitle = editInput.value.trim();
-                await updateDoc(doc(db, "users", auth.currentUser.uid, "shoppingList", item.id), { title: newTitle });
+try {                 await updateDoc(doc(db, "users", auth.currentUser.uid, "shoppingList", item.id), { title: newTitle }).catch(e => { console.error('DB Error:', e); alert('Veritabanı işlemi sırasında bir hata oluştu.'); throw e; }); } catch(e) { console.error(e); alert("İşlem başarısız."); }
             });
         });
         activeList.appendChild(div);
@@ -158,10 +158,10 @@ function renderShoppingList() {
         const saveBtn = div.querySelector('.save-btn');
 
         div.querySelector(".toggle-btn").addEventListener("click", () => {
-            updateDoc(doc(db, "users", auth.currentUser.uid, "shoppingList", item.id), { done: false });
+            updateDoc(doc(db, "users", auth.currentUser.uid, "shoppingList", item.id), { done: false }).catch(e => { console.error(e); alert("Hata oluştu"); });
         });
         div.querySelector(".delete-btn").addEventListener("click", () => {
-            deleteDoc(doc(db, "users", auth.currentUser.uid, "shoppingList", item.id));
+            deleteDoc(doc(db, "users", auth.currentUser.uid, "shoppingList", item.id)).catch(e => { console.error(e); alert("Hata oluştu"); });
         });
         div.querySelector(".edit-btn").addEventListener("click", () => {
             normalView.classList.add('hidden');
@@ -178,7 +178,7 @@ function renderShoppingList() {
         saveBtn.addEventListener("click", async () => {
             await handleFormSubmit(saveBtn, [{ el: editInput, type: 'text', required: true }], async () => {
                 const newTitle = editInput.value.trim();
-                await updateDoc(doc(db, "users", auth.currentUser.uid, "shoppingList", item.id), { title: newTitle });
+try {                 await updateDoc(doc(db, "users", auth.currentUser.uid, "shoppingList", item.id), { title: newTitle }).catch(e => { console.error('DB Error:', e); alert('Veritabanı işlemi sırasında bir hata oluştu.'); throw e; }); } catch(e) { console.error(e); alert("İşlem başarısız."); }
             });
         });
         completedList.appendChild(div);

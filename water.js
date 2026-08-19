@@ -234,7 +234,7 @@ export function initWater(uid, onChangeCallback) {
         saveBtn.onclick = async () => {
             if(tempGoal > 0) {
                 try {
-                    await setDoc(doc(db, "users", uid, "settings", "water"), { dailyGoal: tempGoal }, { merge: true });
+                    await setDoc(doc(db, "users", uid, "settings", "water"), { dailyGoal: tempGoal }, { merge: true }).catch(e => { console.error('DB Error:', e); alert('Veritabanı işlemi sırasında bir hata oluştu.'); throw e; });
                 } catch (err) {
                     console.error("Firestore kaydetme hatası (Test modunda normaldir):", err);
                     // Test modu için yerel olarak güncelle
@@ -305,7 +305,7 @@ function updateWaterUI() {
                 delBtn.onclick = async (e) => {
                     e.stopPropagation();
                     try {
-                        await deleteDoc(doc(db, "users", currentUid, "waterLogs", log.id));
+                        await deleteDoc(doc(db, "users", currentUid, "waterLogs", log.id)).catch(e => { console.error('DB Error:', e); alert('Veritabanı işlemi sırasında bir hata oluştu.'); throw e; });
                     } catch(err) {
                         console.error("Silme Hatası:", err);
                     }

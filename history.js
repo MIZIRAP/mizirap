@@ -139,8 +139,8 @@ function renderHistory() {
         const calPercent = Math.min((data.calories / 2500) * 100, 100);
 
         const html = `
-        <article class="bg-white rounded-2xl shadow-sm p-6 flex flex-col gap-4 active-scale transition-transform duration-200 cursor-pointer border border-outline-variant/30 ${opacityClass}">
-            <div class="flex justify-between items-center w-full border-b border-outline-variant/30 pb-3">
+        <article class="bg-background rounded-[32px] shadow-neo p-6 flex flex-col gap-4 active-scale transition-transform duration-200 cursor-pointer border-none ${opacityClass}">
+            <div class="flex justify-between items-center w-full shadow-neo-inset rounded-xl p-2 pb-3">
                 <h2 class="text-headline-sm font-headline-sm font-bold text-on-surface">${title}</h2>
                 <span class="material-symbols-rounded text-on-surface/40">chevron_right</span>
             </div>

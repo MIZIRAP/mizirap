@@ -546,7 +546,7 @@ async function saveWorkoutSession() {
         // Always update or create a log for this specific split, day, and date
         logData.completed = true;
         const docId = `${activeSplitId}_${activeDayId}_${todayStr}`;
-        await setDoc(doc(db, "users", currentUid, "workout_logs", docId), logData);
+        await setDoc(doc(db, "users", currentUid, "workout_logs", docId), logData).catch(e => { console.error('DB Error:', e); alert('Veritabanı işlemi sırasında bir hata oluştu.'); throw e; });
         currentWorkoutLog = { id: docId, ...logData };
         
         saveBtn.innerHTML = `<span class="material-symbols-rounded">check_circle</span> Kaydedildi!`;
@@ -711,7 +711,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     saveBtn.style.opacity = '0.5';
                     saveBtn.disabled = true;
                     
-                    await setDoc(doc(db, "users", currentUid, "splits", activeSplitId), updatedSplit);
+                    await setDoc(doc(db, "users", currentUid, "splits", activeSplitId), updatedSplit).catch(e => { console.error('DB Error:', e); alert('Veritabanı işlemi sırasında bir hata oluştu.'); throw e; });
                     
                     saveBtn.style.opacity = '1';
                     saveBtn.disabled = false;
@@ -917,7 +917,7 @@ async function openExerciseHistory(triggerExId, exName) {
             collection(db, "users", currentUid, "workout_logs"),
             orderBy("dateStr", "desc") // Fetching all and filtering in memory, limits could be applied if >1000 logs, but ok for now
         );
-        const snap = await getDocs(q);
+        const snap = await getDocs(q).catch(e => { console.error('DB Error:', e); alert('Veritabanı işlemi sırasında bir hata oluştu.'); throw e; });
         
         let historyRecords = []; // Array to store matching logs
         let overallMaxWeight = 0;
@@ -1390,7 +1390,7 @@ function patchPickerListClick() {
 
 async function persistSplitEdit(split) {
     try {
-        await setDoc(doc(db, "users", currentUid, "splits", split.id), split);
+        await setDoc(doc(db, "users", currentUid, "splits", split.id), split).catch(e => { console.error('DB Error:', e); alert('Veritabanı işlemi sırasında bir hata oluştu.'); throw e; });
         // Yerel listeyi de güncelle
         const idx = splits.findIndex(s => s.id === split.id);
         if(idx !== -1) splits[idx] = split;
@@ -1456,7 +1456,7 @@ function renderCreateSplitDays() {
         
         div.innerHTML = `
             <div class="flex items-center justify-between mb-sm">
-                <input type="text" value="${day.name}" onchange="updateNewDayName(${index}, this.value)" class="font-title-md text-title-md font-bold text-on-surface bg-transparent outline-none w-3/4 border-b border-transparent focus:border-outline-variant">
+                <input type="text" value="${day.name}" onchange="updateNewDayName(${index}, this.value)" class="font-title-md text-title-md font-bold text-on-surface bg-transparent outline-none w-3/4 border-b border-transparent focus:border-none focus:shadow-neo-inset rounded">
                 <button data-action="removeDayFromNewSplit" data-day-idx="${index}" class="text-on-surface-variant hover:text-error transition-colors p-1">
                     <span class="material-symbols-rounded" style="font-size: 20px">delete</span>
                 </button>
@@ -1557,7 +1557,7 @@ function renderExercisePickerList(category, searchTerm = '') {
     
     filtered.forEach(exName => {
         const btn = document.createElement('button');
-        btn.className = "w-full text-left p-3 rounded-[32px] hover:bg-background shadow-neo-high transition-colors flex items-center justify-between border border-transparent hover:border-outline-variant/30";
+        btn.className = "w-full text-left p-3 rounded-[32px] hover:bg-background shadow-neo-high transition-colors flex items-center justify-between border-none hover:border-none shadow-neo-inset p-2 rounded";
         btn.innerHTML = `
             <span class="font-body-md text-on-surface">${exName}</span>
             <span class="material-symbols-rounded text-neon-blue">add_circle</span>
@@ -1592,7 +1592,7 @@ async function saveNewSplit() {
             createdAt: new Date().toISOString()
         };
         
-        await setDoc(doc(db, "users", currentUid, "splits", newSplitId), newSplit);
+        await setDoc(doc(db, "users", currentUid, "splits", newSplitId), newSplit).catch(e => { console.error('DB Error:', e); alert('Veritabanı işlemi sırasında bir hata oluştu.'); throw e; });
         
         const existingIdx = splits.findIndex(s => s.id === newSplitId);
         if (existingIdx !== -1) {
@@ -1637,7 +1637,7 @@ function openSplitModal() {
     splits.forEach(split => {
         const isAct = split.id === activeSplitId;
         const div = document.createElement('div');
-        div.className = `flex flex-col p-4 rounded-[32px] border ${isAct ? 'border-primary bg-gradient-to-r from-neon-purple to-neon-blue-container/10' : 'border-outline-variant bg-background shadow-neo'} cursor-pointer hover:bg-background shadow-neo-high transition-colors`;
+        div.className = `flex flex-col p-4 rounded-[32px] border ${isAct ? 'border-none shadow-neo-inset bg-gradient-to-r from-neon-purple to-neon-blue-container/10' : 'border-none bg-background shadow-neo'} cursor-pointer hover:bg-background shadow-neo-high transition-colors`;
         
         div.innerHTML = `
             <div class="flex items-center justify-between mb-2" data-action="selectSplit" data-split-id="${split.id}">
@@ -1647,7 +1647,7 @@ function openSplitModal() {
                 </div>
                 ${isAct ? '<span class="material-symbols-rounded text-neon-blue">check_circle</span>' : '<span class="material-symbols-rounded text-outline">radio_button_unchecked</span>'}
             </div>
-            <div class="flex justify-end gap-2 mt-2 pt-2 border-t border-outline-variant/30">
+            <div class="flex justify-end gap-2 mt-2 pt-2 border-t border-none shadow-neo-inset p-2 rounded">
                 <button data-action="openEditSplitView" data-split-id="${split.id}" class="p-2 rounded-full text-neon-blue hover:bg-gradient-to-r from-neon-purple to-neon-blue-container/20 transition-colors flex items-center justify-center">
                     <span class="material-symbols-rounded text-sm">edit</span>
                 </button>
@@ -1674,7 +1674,7 @@ function selectSplit(splitId) {
     Array.from(optionsContainer.children).forEach((child, index) => {
         const split = splits[index];
         const isSel = split.id === tempSelectedSplitId;
-        child.className = `flex flex-col p-4 rounded-[32px] border ${isSel ? 'border-primary bg-gradient-to-r from-neon-purple to-neon-blue-container/10' : 'border-outline-variant bg-background shadow-neo'} cursor-pointer hover:bg-background shadow-neo-high transition-colors`;
+        child.className = `flex flex-col p-4 rounded-[32px] border ${isSel ? 'border-none shadow-neo-inset bg-gradient-to-r from-neon-purple to-neon-blue-container/10' : 'border-none bg-background shadow-neo'} cursor-pointer hover:bg-background shadow-neo-high transition-colors`;
         const icon = child.querySelector('.material-symbols-rounded.text-neon-blue, .material-symbols-rounded.text-outline');
         if(icon) {
             icon.className = `material-symbols-rounded ${isSel ? 'text-neon-blue' : 'text-outline'}`;
@@ -1728,16 +1728,16 @@ async function deleteSplit(splitId) {
     if(!confirm("Bu split'i silmek istediğinize emin misiniz?")) return;
     
     try {
-        await deleteDoc(doc(db, "users", currentUid, "splits", splitId));
+        await deleteDoc(doc(db, "users", currentUid, "splits", splitId)).catch(e => { console.error('DB Error:', e); alert('Veritabanı işlemi sırasında bir hata oluştu.'); throw e; });
         splits = splits.filter(s => s.id !== splitId);
         
         if(activeSplitId === splitId) {
             activeSplitId = splits.length > 0 ? splits[0].id : null;
             if(activeSplitId) {
-                await setDoc(doc(db, "users", currentUid), { activeSplitId }, { merge: true });
+                await setDoc(doc(db, "users", currentUid), { activeSplitId }, { merge: true }).catch(e => { console.error('DB Error:', e); alert('Veritabanı işlemi sırasında bir hata oluştu.'); throw e; });
                 localStorage.setItem(`miz_activeSplit_${currentUid}`, activeSplitId);
             } else {
-                await setDoc(doc(db, "users", currentUid), { activeSplitId: deleteField() }, { merge: true });
+                await setDoc(doc(db, "users", currentUid), { activeSplitId: deleteField() }, { merge: true }).catch(e => { console.error('DB Error:', e); alert('Veritabanı işlemi sırasında bir hata oluştu.'); throw e; });
                 localStorage.removeItem(`miz_activeSplit_${currentUid}`);
             }
         }
@@ -1963,10 +1963,10 @@ async function saveStretch() {
     
     try {
         if (editingStretchId) {
-            await updateDoc(doc(db, "users", currentUid, "stretches", editingStretchId), stretchData);
+            await updateDoc(doc(db, "users", currentUid, "stretches", editingStretchId), stretchData).catch(e => { console.error('DB Error:', e); alert('Veritabanı işlemi sırasında bir hata oluştu.'); throw e; });
         } else {
             stretchData.createdAt = serverTimestamp();
-            await addDoc(collection(db, "users", currentUid, "stretches"), stretchData);
+            await addDoc(collection(db, "users", currentUid, "stretches"), stretchData).catch(e => { console.error('DB Error:', e); alert('Veritabanı işlemi sırasında bir hata oluştu.'); throw e; });
             
             // Eğer default hareketi editleyerek yeni hareket oluşturduysak, eski defaultu gizle
             if (editingDefaultStretchId) {
@@ -2048,7 +2048,7 @@ async function deleteStretch(id) {
     
     if (!currentUid) return;
     try {
-        await deleteDoc(doc(db, "users", currentUid, "stretches", id));
+        await deleteDoc(doc(db, "users", currentUid, "stretches", id)).catch(e => { console.error('DB Error:', e); alert('Veritabanı işlemi sırasında bir hata oluştu.'); throw e; });
     } catch (e) {
         console.error("Error deleting stretch: ", e);
         alert("Hareket silinirken bir hata oluştu.");
@@ -2217,10 +2217,10 @@ async function saveCore() {
     
     try {
         if (editingCoreId) {
-            await updateDoc(doc(db, "users", currentUid, "cores", editingCoreId), coreData);
+            await updateDoc(doc(db, "users", currentUid, "cores", editingCoreId), coreData).catch(e => { console.error('DB Error:', e); alert('Veritabanı işlemi sırasında bir hata oluştu.'); throw e; });
         } else {
             coreData.createdAt = serverTimestamp();
-            await addDoc(collection(db, "users", currentUid, "cores"), coreData);
+            await addDoc(collection(db, "users", currentUid, "cores"), coreData).catch(e => { console.error('DB Error:', e); alert('Veritabanı işlemi sırasında bir hata oluştu.'); throw e; });
         }
         
         closeAddCoreModal();
@@ -2282,7 +2282,7 @@ async function deleteCore(id) {
     if (!confirm("Bu hareketi silmek istediğinize emin misiniz?")) return;
     
     try {
-        await deleteDoc(doc(db, "users", currentUid, "cores", id));
+        await deleteDoc(doc(db, "users", currentUid, "cores", id)).catch(e => { console.error('DB Error:', e); alert('Veritabanı işlemi sırasında bir hata oluştu.'); throw e; });
     } catch (e) {
         console.error("Error deleting core: ", e);
         alert("Hareket silinirken bir hata oluştu.");
@@ -2468,10 +2468,10 @@ async function saveStretchSession() {
 
     try {
         if (editingSessionId) {
-            await updateDoc(doc(db, "users", currentUid, "stretchSessions", editingSessionId), data);
+            await updateDoc(doc(db, "users", currentUid, "stretchSessions", editingSessionId), data).catch(e => { console.error('DB Error:', e); alert('Veritabanı işlemi sırasında bir hata oluştu.'); throw e; });
         } else {
             data.createdAt = serverTimestamp();
-            await addDoc(collection(db, "users", currentUid, "stretchSessions"), data);
+            await addDoc(collection(db, "users", currentUid, "stretchSessions"), data).catch(e => { console.error('DB Error:', e); alert('Veritabanı işlemi sırasında bir hata oluştu.'); throw e; });
         }
         closeAddSessionModal();
     } catch (e) {
@@ -2494,7 +2494,7 @@ async function deleteStretchSession(id) {
     if (!currentUid) return;
     if (!confirm("Bu seansı silmek istediğinize emin misiniz?")) return;
     try {
-        await deleteDoc(doc(db, "users", currentUid, "stretchSessions", id));
+        await deleteDoc(doc(db, "users", currentUid, "stretchSessions", id)).catch(e => { console.error('DB Error:', e); alert('Veritabanı işlemi sırasında bir hata oluştu.'); throw e; });
         if (activeStretchSessionId === id) {
             activeStretchSessionId = null;
             localStorage.removeItem('activeStretchSessionId');
@@ -2930,10 +2930,10 @@ async function saveCoreSession() {
 
     try {
         if (editingCoreSessionId) {
-            await updateDoc(doc(db, "users", currentUid, "coreSessions", editingCoreSessionId), data);
+            await updateDoc(doc(db, "users", currentUid, "coreSessions", editingCoreSessionId), data).catch(e => { console.error('DB Error:', e); alert('Veritabanı işlemi sırasında bir hata oluştu.'); throw e; });
         } else {
             data.createdAt = serverTimestamp();
-            await addDoc(collection(db, "users", currentUid, "coreSessions"), data);
+            await addDoc(collection(db, "users", currentUid, "coreSessions"), data).catch(e => { console.error('DB Error:', e); alert('Veritabanı işlemi sırasında bir hata oluştu.'); throw e; });
         }
         closeAddCoreSessionModal();
     } catch (e) {
@@ -2945,7 +2945,7 @@ async function saveCoreSession() {
 async function deleteCoreSession(id) {
     if (!currentUid || !confirm("Bu core seansını silmek istediğinize emin misiniz?")) return;
     try {
-        await deleteDoc(doc(db, "users", currentUid, "coreSessions", id));
+        await deleteDoc(doc(db, "users", currentUid, "coreSessions", id)).catch(e => { console.error('DB Error:', e); alert('Veritabanı işlemi sırasında bir hata oluştu.'); throw e; });
         if (activeCoreSessionId === id) {
             activeCoreSessionId = null;
             localStorage.removeItem('activeCoreSessionId');

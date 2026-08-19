@@ -238,7 +238,7 @@ function bindEvents() {
             };
             
             try {
-                await addDoc(collection(db, "users", currentUid, "foodLibrary"), newFood);
+                await addDoc(collection(db, "users", currentUid, "foodLibrary"), newFood).catch(e => { console.error('DB Error:', e); alert('Veritabanı işlemi sırasında bir hata oluştu.'); throw e; });
             } catch(err) {
                 console.error(err);
                 alert('Kaydedilirken hata oluştu: ' + err.message);
@@ -316,7 +316,7 @@ function bindEvents() {
                         yag: y,
                         createdAt: serverTimestamp()
                     };
-                    await addDoc(collection(db, "users", currentUid, "calorieLogs"), logEntry);
+                    await addDoc(collection(db, "users", currentUid, "calorieLogs"), logEntry).catch(e => { console.error('DB Error:', e); alert('Veritabanı işlemi sırasında bir hata oluştu.'); throw e; });
                 }
             } catch(err) {
                 console.error("Kayıt Hatası:", err);
@@ -480,7 +480,7 @@ function renderLogs() {
             delBtn.onclick = async (e) => {
                 e.stopPropagation();
                 try {
-                    await deleteDoc(doc(db, "users", currentUid, "calorieLogs", log.id));
+                    await deleteDoc(doc(db, "users", currentUid, "calorieLogs", log.id)).catch(e => { console.error('DB Error:', e); alert('Veritabanı işlemi sırasında bir hata oluştu.'); throw e; });
                 } catch(err) {
                     console.error(err);
                     alert('Silinirken hata oluştu: ' + err.message);
@@ -547,7 +547,7 @@ function renderLibraryFoods() {
         item.querySelector('.delete-library-btn').onclick = async (e) => {
             e.stopPropagation();
             try {
-                await deleteDoc(doc(db, "users", currentUid, "foodLibrary", food.id));
+                await deleteDoc(doc(db, "users", currentUid, "foodLibrary", food.id)).catch(e => { console.error('DB Error:', e); alert('Veritabanı işlemi sırasında bir hata oluştu.'); throw e; });
             } catch(err) {
                 console.error(err);
                 alert('Silinirken hata oluştu: ' + err.message);

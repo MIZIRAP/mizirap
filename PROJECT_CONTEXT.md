@@ -52,12 +52,17 @@
 
 ## 6. BİLİNEN SORUNLAR / YARIM KALANLAR
 - **Event Handler Tutarsızlığı (Teknik Borç)**: `books.js`, `calories.js`, `water.js`, `finance.js` gibi modüllerde halen elementlere JS içinde doğrudan `.onclick = ...` ile atamalar yapılmaktadır. Sistemin tamamının `data-action` tabanlı "Event Delegation" mimarisine geçiş süreci henüz tamamlanmamıştır.
+- **Antrenman/Split Senkronizasyonu (Açık)**: "Split Düzenle" yapıldığında, değişikliklerin "Antrenman" (Workout) ana ekranına yansımaması sorunu devam ediyor.
+- **Sesli Geri Bildirim (Audio Loop) (Açık)**: Core ve Esneme seanslarında hareket geçişlerinde ses çalınması özelliği başlanmamış (TODO).
 - **Cache Busting Unutulması**: Build aracı olmadığı için `.js` dosyalarında yapılan güncellemelerin tarayıcıda hemen geçerli olması adına HTML dosyasındaki (veya import satırlarındaki) `?v=...` sürüm numarasının güncellenmesi gerekir, bu geliştirme sırasında sıkça unutulur.
 
 ## 7. SON DURUM
 - **Genel Yapı**: Tüm modüllerin arayüzleri, Firestore bağlantıları ve mantıksal döngüleri Vanilla JS ile SPA yapısında çalışır vaziyettedir.
-- **Son Çalışmalar**: Modüllerin tek elden (`listenerManager.js` ve delegation) yönetimi için refactor çalışmaları başladı, Dashboard ve History tam entegre edildi.
-- **Planlanan Adım**: Kalan `onclick` kullanımlarının tamamen temizlenip `data-action` tabanlı yapıya geçilmesi, teknik borcun eritilmesi.
+- **Son Çalışmalar**: 
+  - Tamamı Silk Neon tasarım sistemine geçirildi. Javascript dosyaları içindeki dinamik şablonlarda kalan eski tasarım sınıfları (bg-white, border vb.) tamamen temizlendi (Tamamlandı).
+  - Veritabanı (Firestore) çağrılarında (addDoc, deleteDoc, updateDoc vb.) eksik olan hata yakalama (try/catch / promise.catch) mekanizmaları tüm dosyalara eklendi (Tamamlandı).
+  - Modüllerin tek elden (`listenerManager.js` ve delegation) yönetimi için refactor çalışmaları başladı, Dashboard ve History tam entegre edildi.
+- **Planlanan Adım**: Antrenman/Split senkronizasyonu bug'ının giderilmesi, ardından kalan `onclick` kullanımlarının tamamen temizlenip `data-action` tabanlı yapıya geçilmesi.
 
 ## 8. TERCİHLER / ÇALIŞMA TARZI NOTLARI
 - **Otomatik Git Push**: Geliştirmelerden ve fixlerden sonra AI'ın kullanıcıya sormadan `git push` yapması (varsayılan) istenir.

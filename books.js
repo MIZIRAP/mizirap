@@ -189,7 +189,7 @@ export function initBooks(uid, onChangeCallback) {
             try {
                 addSaveBtn.textContent = "...";
                 const booksRef = collection(db, "users", uid, "books");
-                await addDoc(booksRef, newBook);
+                await addDoc(booksRef, newBook).catch(e => { console.error('DB Error:', e); alert('Veritabanı işlemi sırasında bir hata oluştu.'); throw e; });
                 closeAddModal();
             } catch(err) {
                 console.error(err);
@@ -254,7 +254,7 @@ export function initBooks(uid, onChangeCallback) {
             try {
                 editSaveBtn.textContent = "...";
                 const docRef = doc(db, "users", uid, "books", currentEditId);
-                await updateDoc(docRef, updateData);
+                await updateDoc(docRef, updateData).catch(e => { console.error('DB Error:', e); alert('Veritabanı işlemi sırasında bir hata oluştu.'); throw e; });
                 closeEditModal();
             } catch(err) {
                 console.error(err);
@@ -275,7 +275,7 @@ export function initBooks(uid, onChangeCallback) {
             try {
                 editDeleteBtn.innerHTML = "...";
                 const docRef = doc(db, "users", uid, "books", currentEditId);
-                await deleteDoc(docRef);
+                await deleteDoc(docRef).catch(e => { console.error('DB Error:', e); alert('Veritabanı işlemi sırasında bir hata oluştu.'); throw e; });
                 closeEditModal();
             } catch(err) {
                 console.error(err);
@@ -455,7 +455,7 @@ function renderBooks(uid) {
                         const diff = newPages - oldPages;
                         
                         // Update the book document
-                        await updateDoc(doc(db, "users", uid, "books", id), { readPages: newPages });
+                        await updateDoc(doc(db, "users", uid, "books", id), { readPages: newPages }).catch(e => { console.error('DB Error:', e); alert('Veritabanı işlemi sırasında bir hata oluştu.'); throw e; });
                         
                         // Log the reading session if progress was made
                         if (diff > 0) {
@@ -468,7 +468,7 @@ function renderBooks(uid) {
                         
                         // Update status to finished if completed
                         if (book && newPages >= book.totalPages) {
-                            await updateDoc(doc(db, "users", uid, "books", id), { status: "finished" });
+                            await updateDoc(doc(db, "users", uid, "books", id), { status: "finished" }).catch(e => { console.error('DB Error:', e); alert('Veritabanı işlemi sırasında bir hata oluştu.'); throw e; });
                         }
                     } catch(err) {
                         console.error(err);
@@ -621,7 +621,7 @@ function renderViewAllList() {
             try {
                 el.innerHTML = "...";
                 const docRef = doc(db, "users", currentUid, "books", id);
-                await deleteDoc(docRef);
+                await deleteDoc(docRef).catch(e => { console.error('DB Error:', e); alert('Veritabanı işlemi sırasında bir hata oluştu.'); throw e; });
             } catch(err) {
                 console.error(err);
                 alert('Silinirken hata oluştu: ' + err.message);

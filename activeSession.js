@@ -77,7 +77,7 @@ export async function openActiveSession(uid, splitId, dayId, dayObj) {
     // Try to resume an existing in-progress session for this specific day
     const logsRef = collection(db, 'users', uid, 'workout_logs');
     const q = query(logsRef, where('status', '==', 'in_progress'), where('dayId', '==', dayId));
-    const querySnap = await getDocs(q);
+    const querySnap = await getDocs(q).catch(e => { console.error('DB Error:', e); alert('Veritabanı işlemi sırasında bir hata oluştu.'); throw e; });
 
     if (!querySnap.empty) {
         const docSnap = querySnap.docs[0];
@@ -97,7 +97,7 @@ export async function openActiveSession(uid, splitId, dayId, dayObj) {
             exercises: {}
         };
         const newRef = doc(db, 'users', uid, 'workout_logs', _sessionId);
-        await setDoc(newRef, _sessionDoc);
+        await setDoc(newRef, _sessionDoc).catch(e => { console.error('DB Error:', e); alert('Veritabanı işlemi sırasında bir hata oluştu.'); throw e; });
         
         // Reset timer explicitly to now
         _sessionStartTs = new Date();
@@ -303,7 +303,7 @@ function _renderSets(exId) {
         
         // YENİ GÖRÜNÜM: Rakamları ve boşlukları büyütmeden, sadece arka plan tonunu (zebra deseni) ve üst çizgi rengini değiştirerek belirginlik artırıldı.
         const bgClass = (setIdx % 2 === 0) ? 'bg-background shadow-neo/40' : 'bg-background shadow-neoest/40';
-        setEl.className = `flex flex-col gap-md px-md py-md border-t border-outline-variant/40 ${bgClass} border-l-4 border-l-primary`;
+        setEl.className = `flex flex-col gap-md px-md py-md border-none shadow-neo-inset rounded-xl mt-2 ${bgClass} border-l-4 border-l-primary`;
         
         setEl.innerHTML = _activeSetHTML(exId, setIdx, set);
         container.appendChild(setEl);

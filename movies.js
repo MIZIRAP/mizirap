@@ -294,10 +294,10 @@ async function saveMovie() {
         }
 
         if (currentEditingId) {
-            await updateDoc(doc(db, "users", currentUid, "movies", currentEditingId), data);
+            await updateDoc(doc(db, "users", currentUid, "movies", currentEditingId), data).catch(e => { console.error('DB Error:', e); alert('Veritabanı işlemi sırasında bir hata oluştu.'); throw e; });
         } else {
             data.createdAt = serverTimestamp();
-            await addDoc(collection(db, "users", currentUid, "movies"), data);
+            await addDoc(collection(db, "users", currentUid, "movies"), data).catch(e => { console.error('DB Error:', e); alert('Veritabanı işlemi sırasında bir hata oluştu.'); throw e; });
         }
 
         closeMoviesModal();
@@ -309,7 +309,7 @@ async function deleteMovie() {
     
     if (confirm("Bu içeriği silmek istediğinize emin misiniz?")) {
         try {
-            await deleteDoc(doc(db, "users", currentUid, "movies", currentEditingId));
+            await deleteDoc(doc(db, "users", currentUid, "movies", currentEditingId)).catch(e => { console.error('DB Error:', e); alert('Veritabanı işlemi sırasında bir hata oluştu.'); throw e; });
             closeMoviesModal();
         } catch (e) {
             console.error("Dizi/Film silinemedi:", e);

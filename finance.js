@@ -380,7 +380,7 @@ function renderTransactions() {
         // Payment badge
         const pmBadgeClass = isIncome 
             ? "bg-gradient-to-r from-neon-purple to-neon-blue-container/20 text-neon-blue border-primary/20" 
-            : "bg-background shadow-neo-high text-on-surface-variant border-outline-variant";
+            : "bg-background shadow-neo-high text-on-surface-variant border-none";
             
         const div = document.createElement("div");
         div.className = "bg-background shadow-neo-lowest shadow-sm rounded-[32px] p-4 flex items-center justify-between active:scale-98 transition-transform duration-100 ease-in-out relative group";
@@ -441,7 +441,7 @@ function renderTransactions() {
         delBtn.onclick = async (e) => {
             e.stopPropagation();
             try {
-                await deleteDoc(doc(db, "users", currentUid, "finance_transactions", tx.id));
+                await deleteDoc(doc(db, "users", currentUid, "finance_transactions", tx.id)).catch(e => { console.error('DB Error:', e); alert('Veritabanı işlemi sırasında bir hata oluştu.'); throw e; });
             } catch(err) {
                 console.error("Silme Hatası:", err);
             }
@@ -673,11 +673,11 @@ async function saveTransaction() {
         };
 
         if (currentEditFinanceTxId) {
-            await updateDoc(doc(db, "users", currentUid, "finance_transactions", currentEditFinanceTxId), txData);
+            await updateDoc(doc(db, "users", currentUid, "finance_transactions", currentEditFinanceTxId), txData).catch(e => { console.error('DB Error:', e); alert('Veritabanı işlemi sırasında bir hata oluştu.'); throw e; });
             currentEditFinanceTxId = null;
         } else {
             txData.createdAt = serverTimestamp();
-            await addDoc(collection(db, "users", currentUid, "finance_transactions"), txData);
+            await addDoc(collection(db, "users", currentUid, "finance_transactions"), txData).catch(e => { console.error('DB Error:', e); alert('Veritabanı işlemi sırasında bir hata oluştu.'); throw e; });
         }
         
         saveBtn.innerHTML = `<span class="material-symbols-rounded">check_circle</span> Eklendi!`;
@@ -928,7 +928,7 @@ async function fetchMetalPrices() {
     try {
         // 1. Check Firestore cache first
         const cacheRef = doc(db, 'app', 'metalPrices');
-        const cacheSnap = await getDoc(cacheRef);
+        const cacheSnap = await getDoc(cacheRef).catch(e => { console.error('DB Error:', e); alert('Veritabanı işlemi sırasında bir hata oluştu.'); throw e; });
 
         if (cacheSnap.exists()) {
             const cached = cacheSnap.data();
