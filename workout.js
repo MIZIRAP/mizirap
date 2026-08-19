@@ -2601,6 +2601,10 @@ function _spLoadMovement(idx) {
 
     // Timer display
     _spUpdateTimerUI();
+
+    _playBeep(660, 0.15, 0.3);
+    setTimeout(() => _playBeep(784, 0.15, 0.35), 180);
+    setTimeout(() => _playBeep(1046, 0.25, 0.4), 360);
 }
 
 function _spRenderProgressStrip(currentIdx) {
