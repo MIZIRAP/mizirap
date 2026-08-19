@@ -2490,19 +2490,25 @@ let _spInterval = null;    // setInterval handle
 let _spPaused = false;
 const CIRCUMFERENCE = 753.98; // 2 * π * 120
 
+let _audioCtx = null;
 function _playBeep(freq = 880, duration = 0.3, vol = 0.4) {
     try {
-        const ctx = new (window.AudioContext || window.webkitAudioContext)();
-        const osc = ctx.createOscillator();
-        const gain = ctx.createGain();
+        if (!_audioCtx) {
+            _audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        }
+        if (_audioCtx.state === 'suspended') {
+            _audioCtx.resume();
+        }
+        const osc = _audioCtx.createOscillator();
+        const gain = _audioCtx.createGain();
         osc.connect(gain);
-        gain.connect(ctx.destination);
+        gain.connect(_audioCtx.destination);
         osc.frequency.value = freq;
         osc.type = 'sine';
-        gain.gain.setValueAtTime(vol, ctx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
-        osc.start(ctx.currentTime);
-        osc.stop(ctx.currentTime + duration);
+        gain.gain.setValueAtTime(vol, _audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, _audioCtx.currentTime + duration);
+        osc.start(_audioCtx.currentTime);
+        osc.stop(_audioCtx.currentTime + duration);
     } catch(e) {}
 }
 
