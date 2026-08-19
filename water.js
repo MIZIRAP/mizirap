@@ -160,29 +160,29 @@ export function initWater(uid, onChangeCallback) {
         };
     }
 
+    
     // Event Listener for Daily Goal Modal
     const goalBtn = document.getElementById("water-goal-btn");
     const modal = document.getElementById("water-goal-modal");
     const modalContent = document.getElementById("water-goal-modal-content");
+    const backdrop = document.getElementById("water-goal-backdrop");
     const minusBtn = document.getElementById("water-goal-minus");
     const plusBtn = document.getElementById("water-goal-plus");
     const cancelBtn = document.getElementById("water-goal-cancel");
     const saveBtn = document.getElementById("water-goal-save");
     const amountDisplay = document.getElementById("water-goal-amount-display");
+    const closeHandle = document.getElementById("water-goal-close-handle");
     const presetBtns = document.querySelectorAll(".water-goal-preset");
     
     let tempGoal = dailyGoal;
 
     function updateModalUI() {
-        if(amountDisplay) amountDisplay.textContent = tempGoal;
-        presetBtns.forEach(btn => {
-            const amt = parseInt(btn.dataset.amount);
-            if(amt === tempGoal) {
-                btn.className = "water-goal-preset px-4 py-2 rounded-full bg-gradient-to-r from-neon-purple to-neon-blue-container text-label-md text-white-container font-bold active:scale-95";
-            } else {
-                btn.className = "water-goal-preset px-4 py-2 rounded-full bg-background shadow-neo text-label-md text-on-surface-variant hover:bg-gradient-to-r from-neon-purple to-neon-blue-container/30 transition-colors active:scale-95";
-            }
-        });
+        if(amountDisplay) {
+            amountDisplay.textContent = tempGoal;
+            amountDisplay.style.transform = 'scale(1.1)';
+            amountDisplay.style.transition = 'transform 0.15s ease-out';
+            setTimeout(() => amountDisplay.style.transform = 'scale(1)', 150);
+        }
     }
 
     function openModal() {
@@ -192,27 +192,31 @@ export function initWater(uid, onChangeCallback) {
         modal.classList.remove("hidden");
         // Trigger reflow
         void modal.offsetWidth;
-        modalContent.classList.remove("opacity-0", "scale-95");
-        modalContent.classList.add("opacity-100", "scale-100");
+        modalContent.classList.remove("translate-y-full");
+        modalContent.classList.add("translate-y-0");
+        if(backdrop) {
+            backdrop.classList.remove("opacity-0");
+            backdrop.classList.add("opacity-100");
+        }
     }
 
     function closeModal() {
         if(!modal) return;
-        modalContent.classList.remove("opacity-100", "scale-100");
-        modalContent.classList.add("opacity-0", "scale-95");
+        modalContent.classList.remove("translate-y-0");
+        modalContent.classList.add("translate-y-full");
+        if(backdrop) {
+            backdrop.classList.remove("opacity-100");
+            backdrop.classList.add("opacity-0");
+        }
         setTimeout(() => {
             modal.classList.add("hidden");
-        }, 200);
-    }
-
-    if(goalBtn) {
-        goalBtn.onclick = openModal;
+        }, 300);
     }
 
     if(minusBtn) {
         minusBtn.onclick = () => {
-            if(tempGoal > 100) {
-                tempGoal -= 100;
+            if(tempGoal > 500) {
+                tempGoal -= 250;
                 updateModalUI();
             }
         };
@@ -220,19 +224,16 @@ export function initWater(uid, onChangeCallback) {
 
     if(plusBtn) {
         plusBtn.onclick = () => {
-            tempGoal += 100;
-            updateModalUI();
+            if(tempGoal < 5000) {
+                tempGoal += 250;
+                updateModalUI();
+            }
         };
     }
 
-    presetBtns.forEach(btn => {
-        btn.onclick = () => {
-            tempGoal = parseInt(btn.dataset.amount);
-            updateModalUI();
-        };
-    });
-
     if(cancelBtn) cancelBtn.onclick = closeModal;
+    if(closeHandle) closeHandle.onclick = closeModal;
+    if(backdrop) backdrop.onclick = closeModal;
 
     if(saveBtn) {
         saveBtn.onclick = async () => {
