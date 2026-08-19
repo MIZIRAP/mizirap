@@ -301,8 +301,8 @@ function updateWaterUI() {
                 wrapper.className = "relative w-full shrink-0";
                 
                 const delBtn = document.createElement("button");
-                delBtn.className = "absolute right-0 top-0 bottom-0 w-[80px] bg-red-500 rounded-2xl text-white flex items-center justify-center z-0 active:bg-red-600 transition-colors";
-                delBtn.innerHTML = `<span class="material-symbols-rounded">delete</span>`;
+                delBtn.className = "absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-red-500 rounded-2xl text-white flex items-center justify-center z-0 active:bg-red-600 transition-colors";
+                delBtn.innerHTML = `<span class="material-symbols-rounded text-xl">delete</span>`;
                 delBtn.onclick = async () => {
                     try {
                         await deleteDoc(doc(db, "users", currentUid, "waterLogs", log.id));
@@ -360,8 +360,8 @@ function updateWaterUI() {
                 card.addEventListener('touchend', (e) => {
                     isSwiping = false;
                     card.style.transition = 'transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1)';
-                    if (currentX < -40) {
-                        card.style.transform = `translateX(-80px)`; // Snap open
+                    if (currentX < -30) {
+                        card.style.transform = `translateX(-72px)`; // Snap open
                     } else {
                         card.style.transform = `translateX(0px)`; // Snap close
                     }
@@ -370,7 +370,7 @@ function updateWaterUI() {
                 
                 // Close swipe when clicking outside
                 document.addEventListener('touchstart', (e) => {
-                    if(!wrapper.contains(e.target) && card.style.transform === 'translateX(-80px)') {
+                    if(!wrapper.contains(e.target) && card.style.transform === 'translateX(-72px)') {
                         card.style.transform = `translateX(0px)`;
                     }
                 }, {passive: true});
