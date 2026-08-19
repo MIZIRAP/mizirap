@@ -1800,7 +1800,13 @@ function renderStretches() {
     const container = document.getElementById('stretching-list-container');
     if (!container) return;
     
-    const allStretches = [...DEFAULT_STRETCHES, ...stretches];
+    // Combine defaults and customs into a single list
+    const visibleDefaults = DEFAULT_STRETCHES.filter(s => !hiddenDefaultStretchIds.has(s.id));
+    const allStretches = [...visibleDefaults, ...stretches].sort((a, b) => {
+        const nameA = a.name || '';
+        const nameB = b.name || '';
+        return nameA.localeCompare(nameB, 'tr');
+    });
     
     if (allStretches.length === 0) {
         container.innerHTML = `<p class="text-center text-on-surface-variant font-body-md mt-4">Henüz hareket eklenmedi.</p>`;
@@ -1808,10 +1814,6 @@ function renderStretches() {
     }
     
     let html = '';
-    
-    // Combine defaults and customs into a single list
-    const visibleDefaults = DEFAULT_STRETCHES.filter(s => !hiddenDefaultStretchIds.has(s.id));
-    const allStretches = [...visibleDefaults, ...stretches].sort((a, b) => a.name.localeCompare(b.name, 'tr'));
     
     allStretches.forEach(stretch => {
         html += generateStretchCard(stretch);
