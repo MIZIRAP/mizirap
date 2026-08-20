@@ -3227,52 +3227,6 @@
         </button>
     </div>
 </div>
-<div class="flex items-center justify-between px-container-padding py-element-spacing border-b border-surface-variant/50">
-<h2 class="font-headline-sm text-headline-sm text-on-surface">Porsiyon Ekle</h2>
-<button aria-label="Close" class="p-2 -mr-2 rounded-full hover:bg-surface-container-low transition-colors text-on-surface-variant" id="portion-close-btn">
-<span class="material-symbols-rounded" data-icon="close">close</span>
-</button>
-</div>
-<div class="p-container-padding flex flex-col gap-section-margin overflow-y-auto no-scrollbar">
-<div class="flex flex-col mb-2">
-<h3 class="font-headline-md text-headline-md text-on-surface font-bold tracking-tight" id="portion-food-name">Yulaf Ezmesi</h3>
-<p class="font-body-md text-body-md text-on-surface-variant mt-1" id="portion-food-kcal-text">389 kcal / 100g</p>
-</div>
-<div class="flex flex-col items-center gap-6 py-4">
-<p class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Miktar (Gram)</p>
-<div class="flex items-center justify-center gap-4 w-full max-w-[280px]">
-<button class="w-12 h-12 rounded-full bg-surface-container-low text-neon-blue flex items-center justify-center hover:bg-background shadow-neo transition-colors shrink-0 active:scale-95 shadow-sm" id="portion-minus-btn">
-<span class="material-symbols-rounded" data-icon="remove">remove</span>
-</button>
-<div class="relative flex-1 group">
-<input class="w-full bg-background shadow-neo border-2 border-transparent focus:border-primary text-center font-display-lg text-display-lg text-on-surface py-3 rounded-lg focus:ring-0 transition-colors appearance-none shadow-neo-inset border-none rounded-xl bg-background " id="gram-input"  type="number" min="0" value="100"/>
-<div class="absolute bottom-1 w-full text-center font-label-sm text-label-sm text-outline group-focus-within:text-neon-blue transition-colors">g</div>
-</div>
-<button class="w-12 h-12 rounded-full bg-surface-container-low text-neon-blue flex items-center justify-center hover:bg-background shadow-neo transition-colors shrink-0 active:scale-95 shadow-sm" id="portion-plus-btn">
-<span class="material-symbols-rounded" data-icon="add">add</span>
-</button>
-</div>
-</div>
-<div class="bg-surface-container-low rounded-[32px] p-4 flex flex-col items-center justify-center border border-surface-variant/30">
-<span class="font-body-md text-body-md text-on-surface-variant mb-1">Toplam Enerji</span>
-<div class="flex items-baseline gap-1 text-neon-blue">
-<span class="font-display-lg text-display-lg font-bold" id="total-kcal">389</span>
-<span class="font-label-md text-label-md">kcal</span>
-</div>
-<div class="w-full mt-4 h-1.5 bg-surface-variant rounded-full overflow-hidden">
-<div class="h-full bg-gradient-to-r from-neon-purple to-neon-blue rounded-full transition-all duration-300" style="width: 35%;"></div>
-</div>
-</div>
-</div>
-<div class="p-container-padding pb-8 sm:pb-container-padding bg-background shadow-neo mt-auto pt-2">
-<button class="w-full h-[56px] bg-gradient-to-r from-neon-purple to-neon-blue text-white rounded-full flex items-center justify-center gap-2 hover:opacity-95 active:scale-[0.98] transition-all shadow-sm font-label-md text-label-md tracking-wide" id="add-food-to-log-btn">
-<span class="material-symbols-rounded" data-icon="check">check</span>
-                Ekle
-            </button>
-</div>
-</div>
-</div>
-
 <!-- Modal for Adding New Food to Library (Hidden by default) -->
 <div class="hidden fixed inset-0 z-[100]" id="newFoodModal">
     <!-- Backdrop -->
