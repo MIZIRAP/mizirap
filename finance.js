@@ -970,6 +970,7 @@ export function renderFinanceDetail() {
     const netTotal = totalIncome - totalExpense;
     
     // Format helpers
+    const formatTL = (val) => '₺' + new Intl.NumberFormat('tr-TR', { maximumFractionDigits: 0 }).format(val);
     const formatK = (val) => {
         if(val >= 1000) return (val/1000).toFixed(1).replace('.0', '') + 'k';
         return val.toString();
@@ -1005,7 +1006,7 @@ export function renderFinanceDetail() {
             <div class="flex flex-col gap-2">
                 <div class="flex justify-between items-center">
                     <span class="text-sm font-bold text-[#1E293B]">${cat.name}</span>
-                    <span class="text-sm font-bold ${tc}">${percentage}%</span>
+                    <span class="text-sm font-bold ${tc}">${formatTL(amount)}</span>
                 </div>
                 <div class="h-2 w-full bg-[#E0E5EC] rounded-full relative overflow-hidden" style="box-shadow: inset 2px 2px 4px #D1D9E6, inset -2px -2px 4px #FFFFFF;">
                     <div class="absolute inset-y-0 left-0 rounded-full" style="width: ${percentage}%; background: ${bg};"></div>
@@ -1024,7 +1025,7 @@ export function renderFinanceDetail() {
         <div class="flex flex-col gap-2">
             <div class="flex justify-between items-center">
                 <span class="text-sm font-bold text-[#1E293B]">Gelir</span>
-                <span class="text-sm font-bold text-[#22C55E]">${formatK(totalIncome)}</span>
+                <span class="text-sm font-bold text-[#22C55E]">${formatTL(totalIncome)}</span>
             </div>
             <div class="h-2 w-full bg-[#E0E5EC] rounded-full relative overflow-hidden" style="box-shadow: inset 2px 2px 4px #D1D9E6, inset -2px -2px 4px #FFFFFF;">
                 <div class="absolute inset-y-0 left-0 rounded-full" style="width: ${incomePct}%; background: linear-gradient(to right, #22C55E, #3B82F6);"></div>
@@ -1033,7 +1034,7 @@ export function renderFinanceDetail() {
         <div class="flex flex-col gap-2">
             <div class="flex justify-between items-center">
                 <span class="text-sm font-bold text-[#1E293B]">Gider</span>
-                <span class="text-sm font-bold text-[#A855F7]">${formatK(totalExpense)}</span>
+                <span class="text-sm font-bold text-[#A855F7]">${formatTL(totalExpense)}</span>
             </div>
             <div class="h-2 w-full bg-[#E0E5EC] rounded-full relative overflow-hidden" style="box-shadow: inset 2px 2px 4px #D1D9E6, inset -2px -2px 4px #FFFFFF;">
                 <div class="absolute inset-y-0 left-0 rounded-full" style="width: ${expensePct}%; background: linear-gradient(to right, #A855F7, #3B82F6);"></div>
@@ -1042,7 +1043,7 @@ export function renderFinanceDetail() {
         <div class="flex flex-col gap-2">
             <div class="flex justify-between items-center">
                 <span class="text-sm font-bold text-[#1E293B]">Net</span>
-                <span class="text-sm font-bold ${netTotal >= 0 ? 'text-[#3B82F6]' : 'text-red-500'}">${formatK(netTotal)}</span>
+                <span class="text-sm font-bold ${netTotal >= 0 ? 'text-[#3B82F6]' : 'text-red-500'}">${formatTL(netTotal)}</span>
             </div>
             <div class="h-2 w-full bg-[#E0E5EC] rounded-full relative overflow-hidden" style="box-shadow: inset 2px 2px 4px #D1D9E6, inset -2px -2px 4px #FFFFFF;">
                 <div class="absolute inset-y-0 left-0 rounded-full" style="width: ${netPct}%; background: linear-gradient(to right, #3B82F6, #A855F7);"></div>
@@ -1071,7 +1072,7 @@ export function renderFinanceDetail() {
             <div class="flex flex-col gap-2">
                 <div class="flex justify-between items-center">
                     <span class="text-sm font-bold text-[#1E293B]">${pm.name}</span>
-                    <span class="text-sm font-bold ${tc}">${percentage}%</span>
+                    <span class="text-sm font-bold ${tc}">${formatTL(amount)}</span>
                 </div>
                 <div class="h-2 w-full bg-[#E0E5EC] rounded-full relative overflow-hidden" style="box-shadow: inset 2px 2px 4px #D1D9E6, inset -2px -2px 4px #FFFFFF;">
                     <div class="absolute inset-y-0 left-0 rounded-full" style="width: ${percentage}%; background: ${bg};"></div>

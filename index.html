@@ -2717,14 +2717,16 @@
 <section class="flex flex-col gap-card-gap"><div class="grid grid-cols-2 gap-6"><button class="flex flex-col items-center justify-center gap-3 py-6 rounded-2xl bg-[#F7F9FF]" style="box-shadow: rgb(209, 217, 230) 6px 6px 12px, rgb(255, 255, 255) -6px -6px 12px;"><div class="flex flex-col items-center"><span class="text-xs font-bold text-[#1E293B]">Gram Altın</span><span class="text-[10px] font-medium text-[#64748B]" id="metal-gold-price">-- TL</span></div></button><button class="flex flex-col items-center justify-center gap-3 py-6 rounded-2xl bg-[#F7F9FF]" style="box-shadow: rgb(209, 217, 230) 6px 6px 12px, rgb(255, 255, 255) -6px -6px 12px;"><div class="flex flex-col items-center"><span class="text-xs font-bold text-[#1E293B]">Gram Gümüş</span><span class="text-[10px] font-medium text-[#64748B]" id="metal-silver-price">-- TL</span></div></button></div></section>
 
 <!-- Weekly Chart Section -->
-<section class="bg-[#F7F9FF] rounded-2xl p-6 flex flex-col gap-6 cursor-pointer active:scale-[0.99] transition-transform" style="box-shadow: rgb(209, 217, 230) 8px 8px 16px, rgb(255, 255, 255) -8px -8px 16px; border: medium;" onclick="document.getElementById('view-finance').classList.add('hidden'); document.getElementById('view-finance-detail').classList.remove('hidden'); renderFinanceDetail();">
-<div class="flex justify-between items-center">
-<h3 class="text-h2 font-bold text-[#1E293B]">Harcama Dağılımı</h3>
-</div>
-<div class="flex flex-col gap-6" id="finance-expense-bars">
-    <!-- Injected by JS -->
-    <div class="text-sm text-outline-variant italic">Yükleniyor...</div>
-</div>
+<section class="flex flex-col gap-card-gap">
+    <button class="w-full py-4 rounded-2xl bg-[#F7F9FF] flex justify-between items-center px-6 active:scale-[0.98] transition-transform" style="box-shadow: 6px 6px 12px #D1D9E6, -6px -6px 12px #FFFFFF;" onclick="document.getElementById('view-finance').classList.add('hidden'); document.getElementById('view-finance-detail').classList.remove('hidden'); renderFinanceDetail();">
+        <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-full bg-[#F7F9FF] flex items-center justify-center" style="box-shadow: inset 2px 2px 5px #D1D9E6, inset -2px -2px 5px #FFFFFF;">
+                <span class="material-symbols-rounded text-[#3B82F6]">analytics</span>
+            </div>
+            <span class="font-bold text-[#1E293B] text-lg">Aylık Analiz</span>
+        </div>
+        <span class="material-symbols-rounded text-[#64748B]">chevron_right</span>
+    </button>
 </section>
 
 <!-- History Log -->
