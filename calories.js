@@ -48,14 +48,15 @@ const macroYagDisplay = document.getElementById('macro-yag-display');
 
 const portionModal = document.getElementById('addPortionModal');
 const portionModalContent = document.getElementById('addPortionModalContent');
-const portionCloseBtn = document.getElementById('portion-close-btn');
-const portionFoodName = document.getElementById('portion-food-name');
-const portionFoodKcalText = document.getElementById('portion-food-kcal-text');
-const gramInput = document.getElementById('gram-input');
-const totalKcalEl = document.getElementById('total-kcal');
+const portionBackdrop = document.getElementById('add-portion-backdrop');
+const portionModalTitle = document.getElementById('portion-modal-title');
+const portionGramDisplay = document.getElementById('portion-gram-display');
+const portionKcalDisplay = document.getElementById('portion-kcal-display');
 const addFoodToLogBtn = document.getElementById('add-food-to-log-btn');
 const portionMinusBtn = document.getElementById('portion-minus-btn');
 const portionPlusBtn = document.getElementById('portion-plus-btn');
+
+let tempPortionAmount = 100;
 
 const newFoodModal = document.getElementById('newFoodModal');
 const newFoodModalContent = document.getElementById('newFoodModalContent');
