@@ -1119,10 +1119,10 @@ async function fetchMetalPrices() {
 
     } catch (err) {
         console.warn('Metal prices fetch failed:', err.message);
-        goldPriceEl.textContent = 'Alınamıyor';
-        silverPriceEl.textContent = 'Alınamıyor';
-        goldChangeEl.textContent = '';
-        silverChangeEl.textContent = '';
+        if (goldPriceEl) goldPriceEl.textContent = 'Alınamıyor';
+        if (silverPriceEl) silverPriceEl.textContent = 'Alınamıyor';
+        if (goldChangeEl) goldChangeEl.textContent = '';
+        if (silverChangeEl) silverChangeEl.textContent = '';
     }
 }
 
@@ -1145,6 +1145,7 @@ function renderMetalPrices(gold, silver) {
 
     // Format change percentages
     const formatChange = (el, val) => {
+        if (!el) return;
         if (val === undefined || val === null || isNaN(val)) {
             el.textContent = '';
             return;
