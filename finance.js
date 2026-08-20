@@ -30,6 +30,7 @@ document.addEventListener('click', (e) => {
     else if (action === 'closeAddCategoryModal') closeModal('finance-add-category-modal');
     else if (action === 'openAddPaymentMethodModal') openModal('finance-add-payment-modal');
     else if (action === 'closeAddPaymentMethodModal') closeModal('finance-add-payment-modal');
+    else if (action === 'resetFinanceData') resetFinanceData();
 });
 
 export function initFinance(uid, onChangeCallback) {
@@ -225,17 +226,25 @@ function openModal(id) {
     el.classList.add("flex");
     requestAnimationFrame(() => {
         el.classList.remove("opacity-0");
-        const panel = el.querySelector("div");
+        const panel = el.querySelector("div.transform") || el.querySelector("div");
         if(panel) panel.classList.remove("translate-y-full");
+        
+        const backdrop = el.querySelector("[id$='-backdrop']");
+        if (backdrop) backdrop.classList.remove("opacity-0");
     });
 }
 
 function closeModal(id) {
     const el = document.getElementById(id);
     if (!el) return;
-    el.classList.add("opacity-0");
-    const panel = el.querySelector("div");
+    
+    const panel = el.querySelector("div.transform") || el.querySelector("div");
     if(panel) panel.classList.add("translate-y-full");
+    
+    const backdrop = el.querySelector("[id$='-backdrop']");
+    if (backdrop) backdrop.classList.add("opacity-0");
+    
+    el.classList.add("opacity-0");
     setTimeout(() => {
         el.classList.remove("flex");
         el.classList.add("hidden");
@@ -1177,4 +1186,35 @@ function renderMetalPrices(gold, silver) {
 
     formatChange(goldChangeEl, gold.change);
     formatChange(silverChangeEl, silver.change);
+}
+
+async function resetFinanceData() {
+    if (!currentUid) return;
+    if (!confirm('Tüm finans verileriniz (kategoriler, ödeme yöntemleri ve işlemler) kalıcı olarak silinecektir. Emin misiniz?')) return;
+    
+    try {
+        const batch = writeBatch(db);
+        
+        // Delete all transactions
+        const txsRef = collection(db, "users", currentUid, "finance_transactions");
+        const txsSnap = await getDocs(txsRef);
+        txsSnap.forEach(docSnap => batch.delete(docSnap.ref));
+        
+        // Delete all payment methods
+        const methodsRef = collection(db, "users", currentUid, "finance_payment_methods");
+        const methodsSnap = await getDocs(methodsRef);
+        methodsSnap.forEach(docSnap => batch.delete(docSnap.ref));
+        
+        // Delete all categories
+        const catsRef = collection(db, "users", currentUid, "finance_categories");
+        const catsSnap = await getDocs(catsRef);
+        catsSnap.forEach(docSnap => batch.delete(docSnap.ref));
+        
+        await batch.commit();
+        alert('Finans verileriniz başarıyla sıfırlandı.');
+        // After deletion, the onSnapshot listeners will automatically trigger an empty render
+    } catch(err) {
+        console.error('Reset error:', err);
+        alert('Sıfırlama işlemi sırasında bir hata oluştu.');
+    }
 }
