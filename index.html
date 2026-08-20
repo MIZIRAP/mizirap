@@ -2700,109 +2700,40 @@
 
 <!-- ================= FİNANS ================= -->
 
-<section id="view-finance" class="view hidden px-container-padding py-6">
-        <!-- Top App Bar -->
-        <header class="w-full top-0 sticky bg-background dark:bg-background flat no shadows transition-opacity duration-200 z-40 max-w-md mx-auto">
-            <div class="flex items-center justify-between px-container-padding py-4 w-full">
-                <div class="flex items-center gap-3">
-                    <button class="nav-tab hover:opacity-80 p-2 -ml-2 rounded-full focus:outline-none focus:ring-2 focus:ring-primary" data-target="view-dashboard">
-                        <span class="material-symbols-rounded text-neon-blue dark:text-neon-blue-fixed-dim" style="font-variation-settings: 'FILL' 0;">arrow_back</span>
-                    </button>
-                    <h1 class="font-headline-md text-headline-md text-neon-blue dark:text-neon-blue-fixed-dim font-bold tracking-tight">Finans Takibi</h1>
-                </div>
-            </div>
-        </header>
+<section id="view-finance" class="view hidden bg-background text-on-background min-h-[100dvh] flex flex-col font-inter">
+<header class="w-full top-0 sticky z-40 max-w-md mx-auto px-container-padding py-4"><div class="flex items-center justify-between w-full"><button class="nav-tab w-10 h-10 flex items-center justify-center rounded-full bg-[#F7F9FF] active:scale-[0.98] transition-transform" style="box-shadow: rgb(209, 217, 230) 4px 4px 8px, rgb(255, 255, 255) -4px -4px 8px;" data-target="view-dashboard"><span class="material-symbols-outlined text-[#1E293B]">arrow_back</span></button><h1 class="text-h1 font-bold text-[#1E293B]">Finans </h1><button class="w-10 h-10 flex items-center justify-center rounded-full bg-[#F7F9FF]" style="box-shadow: rgb(209, 217, 230) 4px 4px 8px, rgb(255, 255, 255) -4px -4px 8px;"><span class="material-symbols-outlined text-[#1E293B]">settings</span></button></div></header>
+<main class="flex-1 w-full max-w-md mx-auto px-container-padding pb-32 flex flex-col gap-section-margin pt-4">
 
-        <!-- Main Canvas -->
-        <main class="flex-1 overflow-y-auto px-container-padding max-w-md mx-auto w-full flex flex-col gap-section-margin pb-[140px] pt-4">
-            
-            <!-- Month/Year Selector -->
-            <div class="flex items-center justify-between bg-background shadow-neo rounded-full px-4 py-2 shadow-sm">
-                <button class="w-10 h-10 rounded-full flex items-center justify-center hover:bg-surface-container-low transition-colors" id="finance-prev-month">
-                    <span class="material-symbols-rounded text-neon-blue">chevron_left</span>
-                </button>
-                <div class="text-center">
-                    <p class="font-headline-sm text-headline-sm text-on-surface" id="finance-month-label">Temmuz 2026</p>
-                </div>
-                <button class="w-10 h-10 rounded-full flex items-center justify-center hover:bg-surface-container-low transition-colors" id="finance-next-month">
-                    <span class="material-symbols-rounded text-neon-blue">chevron_right</span>
-                </button>
-            </div>
+<!-- Circular Progress Section -->
+<div class="w-full overflow-hidden pb-2 relative">
+    <div class="absolute left-0 top-0 bottom-0 w-8 bg-gradient-to-r from-[#F7F9FF] to-transparent z-10 pointer-events-none"></div>
+    <div class="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-[#F7F9FF] to-transparent z-10 pointer-events-none"></div>
+    <div class="flex w-full snap-x snap-mandatory overflow-x-auto hide-scrollbar scroll-smooth" id="finance-month-carousel" style="scroll-behavior: smooth;">
+        <!-- Months injected dynamically -->
+    </div>
+</div>
 
-            <!-- Balance Overview -->
-            <section class="flex flex-col gap-element-spacing">
-                <div class="bg-background shadow-neo shadow-sm rounded-[32px] p-6 active:scale-98 transition-transform duration-100 ease-in-out cursor-pointer">
-                    <p class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider mb-2">Toplam Bakiye</p>
-                    <h2 class="font-display-lg text-display-lg text-on-surface" id="finance-total-balance">₺0,00</h2>
-                    <div class="mt-4 flex items-center gap-2" id="finance-monthly-trend">
-                        <span class="material-symbols-rounded text-neon-blue bg-gradient-to-r from-neon-purple to-neon-blue-container rounded-full p-1 text-sm" style="font-variation-settings: 'FILL' 1;">trending_up</span>
-                        <span class="font-body-md text-body-md text-neon-blue">+₺0 (Bu Ay)</span>
-                    </div>
-                </div>
+<section class="flex flex-col items-center justify-center relative"><div class="relative w-64 h-64 flex items-center justify-center rounded-full bg-[#F7F9FF]" style="box-shadow: 10px 10px 20px #D1D9E6, -10px -10px 20px #FFFFFF;"><svg class="absolute inset-0 w-full h-full" viewbox="0 0 120 120"><defs><lineargradient id="neonFinanceGradient" x1="0%" x2="100%" y1="0%" y2="100%"><stop offset="0%" style="stop-color:#A855F7"></stop><stop offset="50%" style="stop-color:#3B82F6"></stop><stop offset="100%" style="stop-color:#22C55E"></stop></lineargradient></defs><circle cx="60" cy="60" fill="transparent" r="50" stroke="#E0E5EC" stroke-width="8"></circle><circle cx="60" cy="60" fill="transparent" r="50" stroke="url(#neonFinanceGradient)" stroke-dasharray="314.159" stroke-dashoffset="117.8" stroke-linecap="round" stroke-width="8" style="filter: drop-shadow(0 0 5px rgba(59, 130, 246, 0.5)); transition: stroke-dashoffset 1s ease-in-out;" id="finance-balance-ring"></circle></svg><div class="flex flex-col items-center z-10"><p class="text-[10px] font-bold uppercase tracking-wider text-[#64748B] mb-1">TOPLAM BAKİYE</p><h2 class="text-3xl font-bold text-[#1E293B]" id="finance-total-balance">₺0,00</h2><div class="mt-2 flex items-center gap-1 px-2 py-0.5 rounded-full bg-[#22C55E]/10"><span class="text-[10px] font-bold text-[#22C55E]" id="finance-monthly-trend">▲ +₺0 Bu Ay</span></div></div></div><button class="mt-8 px-8 py-3 rounded-full bg-[#F7F9FF] text-[#1E293B] font-bold uppercase tracking-wider text-xs active:scale-[0.98] transition-transform flex items-center gap-2" style="box-shadow: rgb(209, 217, 230) 4px 4px 8px, rgb(255, 255, 255) -4px -4px 8px;" data-action="openAddTransactionModal"><span class="material-symbols-outlined text-lg">add_circle</span> İşlem GİR</button></section>
 
-                <div class="bg-background shadow-neo shadow-sm rounded-[32px] p-6 mt-4 active:scale-98 transition-transform duration-100 ease-in-out cursor-pointer" onclick="document.getElementById('view-finance').classList.add('hidden'); document.getElementById('view-finance-detail').classList.remove('hidden'); renderFinanceDetail();">
-                    <p class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider mb-4">Harcama Dağılımı</p>
-                    <div class="flex flex-col gap-4" id="finance-expense-bars">
-                        <!-- Bars injected dynamically -->
-                        <div class="text-sm text-outline-variant italic">Yükleniyor...</div>
-                    </div>
-                </div>
+<!-- Quick Add Section -->
+<section class="flex flex-col gap-card-gap"><div class="grid grid-cols-2 gap-6"><button class="flex flex-col items-center justify-center gap-3 py-6 rounded-2xl bg-[#F7F9FF] active:scale-[0.98] transition-transform" style="box-shadow: rgb(209, 217, 230) 6px 6px 12px, rgb(255, 255, 255) -6px -6px 12px;" data-action="openAddPaymentMethodModal"><span class="material-symbols-outlined text-[#3B82F6] text-3xl">credit_card</span><span class="text-xs font-bold text-[#1E293B] text-center">Ödeme Yöntemi<br/>Ekle</span></button><button class="flex flex-col items-center justify-center gap-3 py-6 rounded-2xl bg-[#F7F9FF] active:scale-[0.98] transition-transform" style="box-shadow: rgb(209, 217, 230) 6px 6px 12px, rgb(255, 255, 255) -6px -6px 12px;" data-action="openAddCategoryModal"><span class="material-symbols-outlined text-[#22C55E] text-3xl">category</span><span class="text-xs font-bold text-[#1E293B] text-center">Harcama Türü<br/>Ekle</span></button><button class="flex flex-col items-center justify-center gap-3 py-6 rounded-2xl bg-[#F7F9FF]" style="box-shadow: rgb(209, 217, 230) 6px 6px 12px, rgb(255, 255, 255) -6px -6px 12px;"><div class="flex flex-col items-center"><span class="text-xs font-bold text-[#1E293B]">Gram Altın</span><span class="text-[10px] font-medium text-[#64748B]" id="metal-gold-price">-- TL</span></div></button><button class="flex flex-col items-center justify-center gap-3 py-6 rounded-2xl bg-[#F7F9FF]" style="box-shadow: rgb(209, 217, 230) 6px 6px 12px, rgb(255, 255, 255) -6px -6px 12px;"><div class="flex flex-col items-center"><span class="text-xs font-bold text-[#1E293B]">Gram Gümüş</span><span class="text-[10px] font-medium text-[#64748B]" id="metal-silver-price">-- TL</span></div></button></div></section>
 
-                <!-- Metal Prices Widget -->
-                <section id="metal-prices-widget" class="bg-background shadow-neo shadow-sm rounded-[32px] px-4 py-3 flex items-center justify-between">
-                    <div class="flex-1 flex items-center justify-center">
-                        <div class="flex flex-col">
-                            <span class="text-label-sm font-label-sm text-on-surface-variant">Gram Altın</span>
-                            <div class="flex items-center gap-1">
-                                <span class="text-body-md font-body-md font-bold text-on-surface" id="metal-gold-price">—</span>
-                                <span class="text-label-sm font-label-sm font-bold" id="metal-gold-change"></span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="w-px h-8 bg-surface-container-high"></div>
-                    <div class="flex-1 flex items-center justify-center">
-                        <div class="flex flex-col">
-                            <span class="text-label-sm font-label-sm text-on-surface-variant">Gram Gümüş</span>
-                            <div class="flex items-center gap-1">
-                                <span class="text-body-md font-body-md font-bold text-on-surface" id="metal-silver-price">—</span>
-                                <span class="text-label-sm font-label-sm font-bold" id="metal-silver-change"></span>
-                            </div>
-                        </div>
-                    </div>
-                </section>
+<!-- Weekly Chart Section -->
+<section class="bg-[#F7F9FF] rounded-2xl p-6 flex flex-col gap-6 cursor-pointer active:scale-[0.99] transition-transform" style="box-shadow: rgb(209, 217, 230) 8px 8px 16px, rgb(255, 255, 255) -8px -8px 16px; border: medium;" onclick="document.getElementById('view-finance').classList.add('hidden'); document.getElementById('view-finance-detail').classList.remove('hidden'); renderFinanceDetail();">
+<div class="flex justify-between items-center">
+<h3 class="text-h2 font-bold text-[#1E293B]">Harcama Dağılımı</h3>
+</div>
+<div class="flex flex-col gap-6" id="finance-expense-bars">
+    <!-- Injected by JS -->
+    <div class="text-sm text-outline-variant italic">Yükleniyor...</div>
+</div>
+</section>
 
-                <button class="flex items-center justify-center gap-2 bg-surface-container-high hover:bg-surface-variant transition-colors rounded-[32px] py-4 text-neon-blue font-label-md text-label-md uppercase tracking-wider active:scale-98 transition-transform duration-100 ease-in-out" data-action="openAddTransactionModal">
-                    <span class="material-symbols-rounded" style="font-variation-settings: 'FILL' 0;">add_circle</span>
-                    İşlem Gir
-                </button>
-            </section>
-
-            <!-- Configuration Section (Categories & Types) -->
-            <section class="flex gap-4">
-                <button class="flex-1 flex flex-col items-center justify-center gap-2 bg-background shadow-neo shadow-sm rounded-[32px] p-4 active:scale-98 transition-transform duration-100 ease-in-out group" data-action="openAddPaymentMethodModal">
-                    <div class="w-10 h-10 rounded-full bg-gradient-to-r from-neon-blue to-neon-green flex items-center justify-center group-hover:scale-110 transition-transform">
-                        <span class="material-symbols-rounded text-white" style="font-variation-settings: 'FILL' 0;">add_card</span>
-                    </div>
-                    <span class="font-label-sm text-label-sm text-on-surface text-center">Ödeme Yöntemi Ekle</span>
-                </button>
-                <button class="flex-1 flex flex-col items-center justify-center gap-2 bg-background shadow-neo shadow-sm rounded-[32px] p-4 active:scale-98 transition-transform duration-100 ease-in-out group" data-action="openAddCategoryModal">
-                    <div class="w-10 h-10 rounded-full bg-tertiary-container flex items-center justify-center group-hover:scale-110 transition-transform">
-                        <span class="material-symbols-rounded text-on-tertiary-container" style="font-variation-settings: 'FILL' 0;">receipt_long</span>
-                    </div>
-                    <span class="font-label-sm text-label-sm text-on-surface text-center">Harcama Türü Ekle</span>
-                </button>
-            </section>
-
-            <!-- Recent Activity -->
-            <section class="flex flex-col gap-card-gap">
-                <h3 class="font-headline-sm text-headline-sm text-on-surface">Son İşlemler</h3>
-                <div class="flex flex-col gap-element-spacing" id="finance-recent-transactions">
-                    <div class="flex justify-center items-center py-8"><div class="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div></div>
-                
-                    <div class="text-center text-outline text-sm py-4">İşlemler yükleniyor...</div>
-                </div>
-            </section>
-        </main>
+<!-- History Log -->
+<section class="flex flex-col gap-4"><h3 class="text-h2 font-bold text-[#1E293B]">Son İşlemler</h3><div class="flex flex-col gap-4" id="finance-recent-transactions">
+    <div class="flex justify-center items-center py-8"><div class="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div></div>
+</div></section>
+</main>
 </section>
 
     <!-- ================= SU HEDEFİ MODALI ================= -->
@@ -3495,7 +3426,7 @@
     </section>
 
 
-    <script type="module" src="app.js?v=118"></script>
+    <script type="module" src="app.js?v=119"></script>
 
 <!-- ================= FINANCE MODALS ================= -->
 <!-- Add Transaction Modal -->

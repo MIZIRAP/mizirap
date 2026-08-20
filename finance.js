@@ -233,40 +233,109 @@ function closeModal(id) {
 
 let currentMainFinanceMonth = new Date();
 
+let isMonthCarouselScrolling = false;
+let financeMonthScrollTimeout = null;
+
+function renderMonthCarousel() {
+    const carousel = document.getElementById("finance-month-carousel");
+    if (!carousel || carousel.hasAttribute("data-initialized")) return;
+    carousel.setAttribute("data-initialized", "true");
+    
+    const today = new Date();
+    const startYear = today.getFullYear() - 1;
+    const endYear = today.getFullYear() + 1;
+    
+    let html = '';
+    const monthNames = ["Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran", "Temmuz", "Ağustos", "Eylül", "Ekim", "Kasım", "Aralık"];
+    
+    let targetIndex = -1;
+    let currentIndex = 0;
+    
+    for (let y = startYear; y <= endYear; y++) {
+        for (let m = 0; m < 12; m++) {
+            if (y === currentMainFinanceMonth.getFullYear() && m === currentMainFinanceMonth.getMonth()) {
+                targetIndex = currentIndex;
+            }
+            html += `
+            <div class="min-w-full flex justify-center items-center py-3 snap-center month-snap-item" data-year="${y}" data-month="${m}">
+                <button class="month-btn px-6 py-2 rounded-full bg-[#F7F9FF] text-xs font-bold text-[#64748B] transition-all" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px #FFFFFF;">
+                    ${monthNames[m]} ${y !== today.getFullYear() ? y : ''}
+                </button>
+            </div>
+            `;
+            currentIndex++;
+        }
+    }
+    
+    carousel.innerHTML = html;
+    
+    // Intersection Observer to detect active month
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting && entry.intersectionRatio >= 0.6) {
+                const year = parseInt(entry.target.getAttribute("data-year"));
+                const month = parseInt(entry.target.getAttribute("data-month"));
+                
+                if (currentMainFinanceMonth.getFullYear() !== year || currentMainFinanceMonth.getMonth() !== month) {
+                    currentMainFinanceMonth.setFullYear(year, month, 1);
+                    updateMonthStyles();
+                    renderTransactions();
+                }
+            }
+        });
+    }, {
+        root: carousel,
+        threshold: 0.6
+    });
+    
+    const items = carousel.querySelectorAll('.month-snap-item');
+    items.forEach(item => observer.observe(item));
+    
+    updateMonthStyles();
+    
+    // Scroll to current month initially
+    if (targetIndex !== -1) {
+        setTimeout(() => {
+            items[targetIndex].scrollIntoView({ behavior: 'auto', block: 'nearest', inline: 'center' });
+        }, 50);
+    }
+}
+
+function updateMonthStyles() {
+    const carousel = document.getElementById("finance-month-carousel");
+    if (!carousel) return;
+    
+    const items = carousel.querySelectorAll('.month-snap-item');
+    const targetY = currentMainFinanceMonth.getFullYear();
+    const targetM = currentMainFinanceMonth.getMonth();
+    
+    items.forEach(item => {
+        const btn = item.querySelector('.month-btn');
+        const y = parseInt(item.getAttribute("data-year"));
+        const m = parseInt(item.getAttribute("data-month"));
+        
+        if (y === targetY && m === targetM) {
+            btn.classList.remove('text-[#64748B]');
+            btn.classList.add('text-[#3B82F6]');
+            btn.style.boxShadow = "inset 2px 2px 5px #D1D9E6, inset -2px -2px 5px #FFFFFF";
+        } else {
+            btn.classList.add('text-[#64748B]');
+            btn.classList.remove('text-[#3B82F6]');
+            btn.style.boxShadow = "4px 4px 8px #D1D9E6, -4px -4px 8px #FFFFFF";
+        }
+    });
+}
+
 function renderTransactions() {
+    renderMonthCarousel();
+    
     const list = document.getElementById("finance-recent-transactions");
     const balanceEl = document.getElementById("finance-total-balance");
     const trendEl = document.getElementById("finance-monthly-trend");
-    
-    // Main Page Month Selector
-    const mainMonthLabel = document.getElementById('finance-month-label');
-    const mainPrevBtn = document.getElementById('finance-prev-month');
-    const mainNextBtn = document.getElementById('finance-next-month');
-    
-    if (mainMonthLabel) {
-        if (mainPrevBtn && !mainPrevBtn.hasAttribute('data-listener')) {
-            mainPrevBtn.addEventListener('click', () => {
-                currentMainFinanceMonth.setMonth(currentMainFinanceMonth.getMonth() - 1);
-                renderTransactions();
-            });
-            mainPrevBtn.setAttribute('data-listener', 'true');
-        }
-        if (mainNextBtn && !mainNextBtn.hasAttribute('data-listener')) {
-            mainNextBtn.addEventListener('click', () => {
-                currentMainFinanceMonth.setMonth(currentMainFinanceMonth.getMonth() + 1);
-                renderTransactions();
-            });
-            mainNextBtn.setAttribute('data-listener', 'true');
-        }
-        
-        const monthOptions = { month: 'long', year: 'numeric' };
-        const dateStrFormatted = currentMainFinanceMonth.toLocaleDateString('tr-TR', monthOptions);
-        mainMonthLabel.textContent = dateStrFormatted.charAt(0).toUpperCase() + dateStrFormatted.slice(1);
-    }
+    const ringEl = document.getElementById("finance-balance-ring");
     
     if(!list) return;
     
-    // Filter transactions for current selected month
     const targetMonth = currentMainFinanceMonth.getMonth();
     const targetYear = currentMainFinanceMonth.getFullYear();
     
@@ -275,13 +344,13 @@ function renderTransactions() {
         return d.getMonth() === targetMonth && d.getFullYear() === targetYear;
     });
     
-    // Calculate balances
     let totalBalance = 0;
-    let currentMonthBalance = 0; // Same as total for the view
+    let currentMonthBalance = 0; 
+    let currentMonthIncome = 0;
+    let currentMonthExpense = 0;
     
     const barsContainer = document.getElementById("finance-expense-bars");
     let categoryExpenses = {};
-    let totalExpense = 0;
 
     monthTxs.forEach(tx => {
         const val = parseFloat(tx.amount) || 0;
@@ -290,37 +359,41 @@ function renderTransactions() {
         currentMonthBalance += change;
 
         if (tx.type === 'expense') {
-            totalExpense += val;
-            if (!categoryExpenses[tx.categoryId]) {
-                categoryExpenses[tx.categoryId] = 0;
-            }
+            currentMonthExpense += val;
+            if (!categoryExpenses[tx.categoryId]) categoryExpenses[tx.categoryId] = 0;
             categoryExpenses[tx.categoryId] += val;
+        } else {
+            currentMonthIncome += val;
         }
     });
 
-    
-    
     if (barsContainer) {
-        if (totalExpense === 0) {
-            barsContainer.innerHTML = '<div class="text-sm text-outline-variant italic">Henüz harcama yok.</div>';
+        if (currentMonthExpense === 0) {
+            barsContainer.innerHTML = '<div class="text-sm text-[#64748B] italic">Henüz harcama yok.</div>';
         } else {
             const sortedCats = Object.keys(categoryExpenses).sort((a, b) => categoryExpenses[b] - categoryExpenses[a]);
-            const colorClasses = ['bg-gradient-to-r from-neon-purple to-neon-blue', 'bg-secondary', 'bg-tertiary-container', 'bg-error', 'bg-gradient-to-r from-neon-purple to-neon-blue-container'];
+            const colorClasses = [
+                'linear-gradient(to right, #A855F7, #3B82F6)', 
+                'linear-gradient(to right, #3B82F6, #22C55E)', 
+                'linear-gradient(to right, #A855F7, #22C55E)'
+            ];
+            const textColors = ['text-[#A855F7]', 'text-[#3B82F6]', 'text-[#22C55E]'];
             
             barsContainer.innerHTML = sortedCats.slice(0, 4).map((catId, index) => {
                 const amount = categoryExpenses[catId];
-                const percentage = Math.round((amount / totalExpense) * 100);
+                const percentage = Math.round((amount / currentMonthExpense) * 100);
                 const catObj = financeCategories.find(c => c.id === catId) || { name: 'Genel' };
-                const colorClass = colorClasses[index % colorClasses.length];
+                const bg = colorClasses[index % colorClasses.length];
+                const txtCol = textColors[index % textColors.length];
                 
                 return `
-                <div class="flex flex-col gap-1">
+                <div class="flex flex-col gap-2">
                     <div class="flex justify-between items-center">
-                        <span class="font-label-sm text-label-sm text-on-surface">${catObj.name}</span>
-                        <span class="font-label-sm text-label-sm text-on-surface-variant">${percentage}%</span>
+                        <span class="text-sm font-bold text-[#1E293B]">${catObj.name}</span>
+                        <span class="text-sm font-bold ${txtCol}">${percentage}%</span>
                     </div>
-                    <div class="w-full bg-background shadow-neo-high rounded-full h-2">
-                        <div class="${colorClass} h-2 rounded-full" style="width: ${percentage}%"></div>
+                    <div class="h-2 w-full bg-[#E0E5EC] rounded-full relative overflow-hidden" style="box-shadow: inset 2px 2px 4px #D1D9E6, inset -2px -2px 4px #FFFFFF;">
+                        <div class="absolute inset-y-0 left-0 rounded-full" style="width: ${percentage}%; background: ${bg};"></div>
                     </div>
                 </div>
                 `;
@@ -328,41 +401,53 @@ function renderTransactions() {
         }
     }
 
-    // Format balance
-        if(balanceEl) {
+    if(balanceEl) {
         balanceEl.textContent = formatCurrency(totalBalance);
     }
     
     if(trendEl) {
         if(currentMonthBalance > 0) {
-            trendEl.innerHTML = `
-                <span class="material-symbols-rounded text-neon-blue bg-gradient-to-r from-neon-purple to-neon-blue-container rounded-full p-1 text-sm" style="font-variation-settings: 'FILL' 1;">trending_up</span>
-                <span class="font-body-md text-body-md text-neon-blue">+${formatCurrency(currentMonthBalance)} (Bu Ay)</span>
-            `;
+            trendEl.innerHTML = `▲ +${formatCurrency(currentMonthBalance)} Bu Ay`;
+            trendEl.className = "text-[10px] font-bold text-[#22C55E]";
+            trendEl.parentElement.className = "mt-2 flex items-center gap-1 px-2 py-0.5 rounded-full bg-[#22C55E]/10";
         } else if (currentMonthBalance < 0) {
-            trendEl.innerHTML = `
-                <span class="material-symbols-rounded text-error bg-error-container rounded-full p-1 text-sm" style="font-variation-settings: 'FILL' 1;">trending_down</span>
-                <span class="font-body-md text-body-md text-error">${formatCurrency(currentMonthBalance)} (Bu Ay)</span>
-            `;
+            trendEl.innerHTML = `▼ ${formatCurrency(currentMonthBalance)} Bu Ay`;
+            trendEl.className = "text-[10px] font-bold text-red-500";
+            trendEl.parentElement.className = "mt-2 flex items-center gap-1 px-2 py-0.5 rounded-full bg-red-500/10";
         } else {
-            trendEl.innerHTML = `
-                <span class="material-symbols-rounded text-outline bg-background shadow-neo-variant rounded-full p-1 text-sm" style="font-variation-settings: 'FILL' 1;">trending_flat</span>
-                <span class="font-body-md text-body-md text-outline">Değişim Yok (Bu Ay)</span>
-            `;
+            trendEl.innerHTML = `Değişim Yok`;
+            trendEl.className = "text-[10px] font-bold text-[#64748B]";
+            trendEl.parentElement.className = "mt-2 flex items-center gap-1 px-2 py-0.5 rounded-full bg-[#64748B]/10";
         }
+    }
+
+    if (ringEl) {
+        // Circumference is 314.159. offset 0 = full, 314.159 = empty
+        // Let's make it represent income vs expense ratio. 
+        // If expenses > income, it gets emptier.
+        let ratio = 1;
+        if (currentMonthIncome > 0) {
+            ratio = Math.max(0, 1 - (currentMonthExpense / currentMonthIncome));
+        } else if (currentMonthExpense > 0) {
+            ratio = 0;
+        }
+        // minimum 5% to always show a bit if there's any activity
+        if (currentMonthIncome > 0 || currentMonthExpense > 0) ratio = Math.max(0.05, ratio);
+        
+        const offset = 314.159 - (ratio * 314.159);
+        ringEl.style.strokeDashoffset = offset;
     }
     
     if(monthTxs.length === 0) {
-        list.innerHTML = `<div class="text-center text-outline text-sm py-4">Henüz bir işlem bulunmuyor.</div>`;
+        list.innerHTML = `<div class="text-center text-[#64748B] text-sm py-4 font-medium">Henüz bir işlem bulunmuyor.</div>`;
         return;
     }
     
     list.innerHTML = "";
-    // Only show last 5 in recent activity
     const recent = monthTxs.slice(0, 5);
     
     recent.forEach(tx => {
-        const cat = financeCategories.find(c => c.id === tx.categoryId) || { name: 'Genel', icon: 'payments', type: tx.type, color: 'surface-container-high' };
+        const cat = financeCategories.find(c => c.id === tx.categoryId) || { name: 'Genel', icon: 'payments', type: tx.type };
         const pm = financePaymentMethods.find(p => p.id === tx.paymentMethodId) || { name: 'Bilinmiyor', type: 'Nakit' };
         
         const isIncome = tx.type === 'income';
@@ -370,27 +455,22 @@ function renderTransactions() {
         const valStr = formatCurrency(tx.amount);
         
         const dateObj = new Date(tx.dateStr);
-        const dateFormatted = formatDate(dateObj, { day: 'numeric', month: 'long' });
+        const dateFormatted = dateObj.getDate() + ' ' + ["Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran", "Temmuz", "Ağustos", "Eylül", "Ekim", "Kasım", "Aralık"][dateObj.getMonth()];
         
-        // Dynamic colors based on type
-        const iconBg = isIncome ? 'bg-gradient-to-r from-neon-purple to-neon-blue-container' : 'bg-background shadow-neo-high';
-        const iconColor = isIncome ? 'text-white-container' : 'text-on-surface-variant';
-        const valColor = isIncome ? 'text-neon-blue' : 'text-on-surface';
+        const iconColor = isIncome ? 'text-[#22C55E]' : 'text-[#3B82F6]';
+        const valColor = isIncome ? 'text-[#22C55E]' : 'text-[#3B82F6]';
         
-        // Payment badge
-        const pmBadgeClass = isIncome 
-            ? "bg-gradient-to-r from-neon-purple to-neon-blue-container/20 text-neon-blue border-primary/20" 
-            : "bg-background shadow-neo-high text-on-surface-variant border-none";
-            
         const div = document.createElement("div");
-        div.className = "bg-background shadow-neo-lowest shadow-sm rounded-[32px] p-4 flex items-center justify-between active:scale-98 transition-transform duration-100 ease-in-out relative group";
+        div.className = "flex items-center justify-between p-4 rounded-2xl bg-[#F7F9FF] group relative active:scale-[0.99] transition-transform cursor-pointer";
+        div.style.boxShadow = "4px 4px 8px #D1D9E6, -4px -4px 8px #FFFFFF";
         
         const actionsDiv = document.createElement("div");
-        actionsDiv.className = "absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity bg-background shadow-neo-lowest/90 px-2 py-1 rounded-full shadow-sm";
+        actionsDiv.className = "absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity bg-[#F7F9FF] px-2 py-1 rounded-full shadow-sm z-10";
+        actionsDiv.style.boxShadow = "inset 2px 2px 5px #D1D9E6, inset -2px -2px 5px #FFFFFF";
         
         const editBtn = document.createElement('button');
-        editBtn.className = "p-2 text-neon-blue hover:bg-gradient-to-r from-neon-purple to-neon-blue-container/20 rounded-full active:scale-95 transition-colors";
-        editBtn.innerHTML = `<span class="material-symbols-rounded text-sm">edit</span>`;
+        editBtn.className = "p-2 text-[#3B82F6] rounded-full active:scale-95 transition-colors";
+        editBtn.innerHTML = `<span class="material-symbols-outlined text-sm">edit</span>`;
         editBtn.onclick = (e) => {
             e.stopPropagation();
             currentEditFinanceTxId = tx.id;
@@ -400,7 +480,6 @@ function renderTransactions() {
             if (titleEl) titleEl.value = tx.title;
             if (amtEl) amtEl.value = tx.amount;
             
-            // set type
             const typeRadios = document.querySelectorAll('input[name="tx-type"]');
             typeRadios.forEach(r => {
                 if(r.value === tx.type) r.checked = true;
@@ -414,11 +493,11 @@ function renderTransactions() {
                 const catOpts = document.querySelectorAll('.tx-cat-btn');
                 catOpts.forEach(o => {
                     if(o.dataset.id === tx.categoryId) {
-                        o.classList.add('bg-gradient-to-r from-neon-purple to-neon-blue-container', 'border-primary', 'text-white-container');
-                        o.classList.remove('bg-background shadow-neo', 'border-surface-variant', 'text-on-surface');
+                        o.classList.add('bg-gradient-to-r', 'from-neon-purple', 'to-neon-blue-container', 'border-primary', 'text-white-container');
+                        o.classList.remove('bg-background', 'shadow-neo', 'border-surface-variant', 'text-on-surface');
                     } else {
-                        o.classList.remove('bg-gradient-to-r from-neon-purple to-neon-blue-container', 'border-primary', 'text-white-container');
-                        o.classList.add('bg-background shadow-neo', 'border-surface-variant', 'text-on-surface');
+                        o.classList.remove('bg-gradient-to-r', 'from-neon-purple', 'to-neon-blue-container', 'border-primary', 'text-white-container');
+                        o.classList.add('bg-background', 'shadow-neo', 'border-surface-variant', 'text-on-surface');
                     }
                 });
             }, 50);
@@ -426,18 +505,18 @@ function renderTransactions() {
             const pmOpts = document.querySelectorAll('.tx-pm-btn');
             pmOpts.forEach(o => {
                 if(o.dataset.id === tx.paymentMethodId) {
-                    o.classList.add('border-primary', 'bg-gradient-to-r from-neon-purple to-neon-blue/5');
+                    o.classList.add('border-primary', 'bg-gradient-to-r', 'from-neon-purple', 'to-neon-blue/5');
                     o.classList.remove('border-surface-variant');
                 } else {
-                    o.classList.remove('border-primary', 'bg-gradient-to-r from-neon-purple to-neon-blue/5');
+                    o.classList.remove('border-primary', 'bg-gradient-to-r', 'from-neon-purple', 'to-neon-blue/5');
                     o.classList.add('border-surface-variant');
                 }
             });
         };
 
         const delBtn = document.createElement('button');
-        delBtn.className = "p-2 text-error hover:bg-error-container/20 rounded-full active:scale-95 transition-colors";
-        delBtn.innerHTML = `<span class="material-symbols-rounded text-sm">delete</span>`;
+        delBtn.className = "p-2 text-red-500 rounded-full active:scale-95 transition-colors";
+        delBtn.innerHTML = `<span class="material-symbols-outlined text-sm">delete</span>`;
         delBtn.onclick = async (e) => {
             e.stopPropagation();
             try {
@@ -451,22 +530,19 @@ function renderTransactions() {
         actionsDiv.appendChild(delBtn);
 
         div.innerHTML = `
-            <div class="flex items-center gap-3 min-w-0 flex-1">
-                <div class="w-11 h-11 shrink-0 rounded-full ${iconBg} flex items-center justify-center">
-                    <span class="material-symbols-rounded ${iconColor} icon-md" style="font-variation-settings: 'FILL' 0;">${cat.icon}</span>
+            <div class="flex items-center gap-4 min-w-0">
+                <div class="w-10 h-10 rounded-full bg-[#F7F9FF] flex items-center justify-center shrink-0" style="box-shadow: inset 2px 2px 5px #D1D9E6, inset -2px -2px 5px #FFFFFF;">
+                    <span class="material-symbols-outlined ${iconColor}">${cat.icon}</span>
                 </div>
                 <div class="flex flex-col min-w-0">
-                    <span class="font-label-md text-label-md text-on-surface truncate">${tx.title}</span>
-                    <span class="font-body-md text-body-md text-on-surface-variant text-label-sm mt-0.5 truncate">${cat.name}</span>
+                    <p class="text-sm font-bold text-[#1E293B] truncate">${tx.title}</p>
+                    <div class="flex items-center gap-2">
+                        <p class="text-xs text-[#64748B] whitespace-nowrap">${dateFormatted}</p>
+                        <span class="text-[10px] px-1.5 py-0.5 rounded bg-[#E0E5EC] text-[#64748B] font-medium truncate max-w-[80px]">${pm.name}</span>
+                    </div>
                 </div>
             </div>
-            <div class="flex flex-col items-end shrink-0 ml-2">
-                <span class="font-label-md text-label-md ${valColor} whitespace-nowrap">${sign}${valStr}</span>
-                <div class="flex items-center gap-1.5 mt-1">
-                    <span class="${pmBadgeClass} text-label-sm font-bold badge-outline">${pm.type}</span>
-                    <span class="font-label-sm text-label-sm text-on-surface-variant text-label-sm whitespace-nowrap">${dateFormatted}</span>
-                </div>
-            </div>
+            <span class="font-bold ${valColor} whitespace-nowrap ml-2">${sign}${valStr}</span>
         `;
         div.appendChild(actionsDiv);
         list.appendChild(div);
