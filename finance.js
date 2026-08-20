@@ -83,6 +83,18 @@ export function clearFinance() {
     if(list) list.innerHTML = "";
     const balance = document.getElementById("finance-total-balance");
     if(balance) balance.textContent = "₺0,00";
+    
+    // Reset the carousel so it re-initializes for the next session
+    const carousel = document.getElementById("finance-month-carousel");
+    if(carousel) {
+        carousel.removeAttribute("data-initialized");
+        carousel.innerHTML = "";
+    }
+    if(financeCarouselObserver) {
+        financeCarouselObserver.disconnect();
+        financeCarouselObserver = null;
+    }
+    currentMainFinanceMonth = new Date();
 }
 
 function setupFinanceModals() {

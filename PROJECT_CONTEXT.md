@@ -51,7 +51,7 @@
 - **e1RM Formülü (RIR-Düzeltmeli Epley)**: `activeSession.js` içindeki hesaplama (`weight × (1 + (reps + (10-RPE)) / 30)`) kasıtlı ve onaylanmış nihai bir karardır. Brzycki veya başka bir formüle GÜNCELLENMEMELİDİR.
 
 ## 6. BİLİNEN SORUNLAR / YARIM KALANLAR
-- **Event Handler Tutarsızlığı (Teknik Borç)**: `books.js`, `calories.js`, `water.js`, `finance.js` gibi modüllerde halen elementlere JS içinde doğrudan `.onclick = ...` ile atamalar yapılmaktadır. Sistemin tamamının `data-action` tabanlı "Event Delegation" mimarisine geçiş süreci henüz tamamlanmamıştır.
+- **Event Handler Tutarsızlığı (Teknik Borç)**: `calories.js`, `water.js`, `finance.js` gibi modüllerde halen elementlere JS içinde doğrudan `.onclick = ...` ile atamalar yapılmaktadır. Sistemin tamamının `data-action` tabanlı "Event Delegation" mimarisine geçiş süreci henüz tamamlanmamıştır.
 - **Cache Busting Unutulması**: Build aracı olmadığı için `.js` dosyalarında yapılan güncellemelerin tarayıcıda hemen geçerli olması adına HTML dosyasındaki (veya import satırlarındaki) `?v=...` sürüm numarasının güncellenmesi gerekir, bu geliştirme sırasında sıkça unutulur.
 
 ## 7. SON DURUM
@@ -64,6 +64,7 @@
   - Kalori ve Su modüllerindeki tüm popup'lar (modallar) mobilde ve masaüstünde standart 'Bottom Sheet' (alttan kayan) yapıya geçirildi, arka plan blur (backdrop-blur) ve tıklayarak kapanma özellikleri eklendi (Tamamlandı).
   - Tailwind config dosyasındaki mükerrer `boxShadow` tanımları birleştirilerek, 'Porsiyon Ekle' ve 'Kalori Hedefi' modallarında derinlik veren `shadow-neumorphic-inset` sınıfı işlevsel hale getirildi (Tamamlandı).
   - Material Symbols ikonlarında yaşanan (ikon yerine yazı görünmesi) font uyumsuzluğu `material-symbols-rounded` kullanılarak çözüldü (Tamamlandı).
+  - **Kitap Takibi (Books)** modülü bütünüyle yeniden tasarlandı. Kapak yükleme sistemi kaldırılarak liste tamamen ikon tabanlı tek kolona geçirildi. Dairesel okuma ilerlemesi animasyonu (ring progress) ve hızlı sayfa ekle-çıkar yapısı `index.html` ve `books.js` bazında kuruldu (Tamamlandı).
   - Modüllerin tek elden (`listenerManager.js` ve delegation) yönetimi için refactor çalışmaları başladı, Dashboard ve History tam entegre edildi.
 - **Planlanan Adım**: Kalan `onclick` kullanımlarının tamamen temizlenip `data-action` tabanlı yapıya geçilmesi.
 
