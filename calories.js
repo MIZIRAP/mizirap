@@ -274,7 +274,6 @@ if (caloriesGoalBackdrop) {
         btn.onclick = openNewFoodModal;
     });
 
-    if (newFoodCloseBtn) newFoodCloseBtn.onclick = closeNewFoodModal;
     
     if (newFoodBackdrop) {
         newFoodBackdrop.onclick = () => closeNewFoodModal();
