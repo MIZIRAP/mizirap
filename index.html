@@ -2260,223 +2260,164 @@
 
     <section id="view-books" class="view hidden">
         <!-- Top App Bar -->
-        <header class="w-full top-0 sticky bg-background dark:bg-background flat no shadows transition-opacity duration-200 z-40 max-w-md mx-auto">
-            <div class="flex items-center justify-between px-container-padding py-4 w-full">
-                <div class="flex items-center gap-3">
-                    <button class="nav-tab hover:opacity-80 p-2 -ml-2 rounded-full focus:outline-none focus:ring-2 focus:ring-primary" data-target="view-dashboard">
-                        <span class="material-symbols-rounded text-neon-blue dark:text-neon-blue-fixed-dim" style="font-variation-settings: 'FILL' 0;">arrow_back</span>
-                    </button>
-                    <h1 class="font-headline-md text-headline-md text-neon-blue dark:text-neon-blue-fixed-dim font-bold tracking-tight">Kitap Takibi</h1>
-                </div>
-                <button class="hover:opacity-80 p-2 -mr-2 rounded-full focus:outline-none focus:ring-2 focus:ring-primary" id="add-book-btn">
-                    <span class="material-symbols-rounded text-neon-blue dark:text-neon-blue-fixed-dim" data-icon="add" data-weight="regular">add</span>
+        <header class="w-full top-0 sticky z-40 max-w-md mx-auto px-container-padding py-4">
+            <div class="flex items-center justify-between w-full">
+                <button class="nav-tab w-10 h-10 flex items-center justify-center rounded-full bg-[#F7F9FF]" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px #FFFFFF;" data-target="view-dashboard">
+                    <span class="material-symbols-rounded text-[#1E293B]">arrow_back</span>
+                </button>
+                <h1 class="text-h1 font-bold text-[#1E293B]">Kitap Takibi</h1>
+                <button class="w-10 h-10 flex items-center justify-center rounded-full bg-[#F7F9FF]" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px #FFFFFF;">
+                    <span class="material-symbols-rounded text-[#1E293B]">settings</span>
                 </button>
             </div>
         </header>
 
         <!-- Main Content Container -->
         <main class="flex-1 w-full max-w-md mx-auto px-container-padding pb-32 flex flex-col gap-section-margin pt-4">
-            <!-- Section 1: Şu An Okuyorum -->
-            <section class="flex flex-col gap-element-spacing">
-                <h2 class="font-headline-sm text-headline-sm text-on-surface">Şu An Okuyorum</h2>
-                <div id="books-reading-list" class="flex flex-col gap-element-spacing">
-                    <div class="flex justify-center items-center py-8"><div class="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div></div>
-                
-                    <!-- Dinamik -->
+            <!-- Circular Progress Section -->
+            <section class="flex flex-col items-center justify-center relative">
+                <div class="relative w-64 h-64 flex items-center justify-center rounded-full bg-[#F7F9FF]" style="box-shadow: 10px 10px 20px #D1D9E6, -10px -10px 20px #FFFFFF;">
+                    <svg class="absolute inset-0 w-full h-full" viewBox="0 0 120 120">
+                        <defs>
+                            <linearGradient id="neonGradientBooks" x1="0%" x2="100%" y1="0%" y2="100%">
+                                <stop offset="0%" style="stop-color:#A855F7"></stop>
+                                <stop offset="50%" style="stop-color:#3B82F6"></stop>
+                                <stop offset="100%" style="stop-color:#22C55E"></stop>
+                            </linearGradient>
+                        </defs>
+                        <circle cx="60" cy="60" fill="transparent" r="50" stroke="#E0E5EC" stroke-width="8"></circle>
+                        <circle id="book-progress-circle" cx="60" cy="60" fill="transparent" r="50" stroke="url(#neonGradientBooks)" stroke-dasharray="314.159" stroke-dashoffset="314.159" stroke-linecap="round" stroke-width="8" style="filter: drop-shadow(0 0 5px rgba(59, 130, 246, 0.5)); transition: stroke-dashoffset 0.5s ease;"></circle>
+                    </svg>
+                    <div class="flex flex-col items-center z-10">
+                        <h2 class="text-4xl font-bold text-[#1E293B]" id="book-active-pages">0</h2>
+                        <p class="text-sm text-[#64748B]" id="book-active-total">of 0 sayfa</p>
+                    </div>
+                </div>
+                <div class="flex gap-6 mt-8">
+                    <button id="book-active-minus" class="w-12 h-12 flex items-center justify-center rounded-2xl bg-[#F7F9FF] text-[#1E293B] font-bold text-xl active:scale-95 transition-transform focus:outline-none" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px #FFFFFF;">
+                        <span class="material-symbols-rounded">remove</span>
+                    </button>
+                    <button id="book-active-plus" class="w-12 h-12 flex items-center justify-center rounded-2xl bg-[#F7F9FF] text-[#1E293B] font-bold text-xl active:scale-95 transition-transform focus:outline-none" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px #FFFFFF;">
+                        <span class="material-symbols-rounded">add</span>
+                    </button>
+                </div>
+                <button id="book-active-title" class="px-8 py-3 rounded-full bg-[#F7F9FF] text-[#1E293B] font-bold uppercase tracking-wider text-xs mt-4 truncate max-w-full focus:outline-none" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px #FFFFFF;">
+                    Aktif Kitap Yok
+                </button>
+            </section>
+            
+            <!-- Quick Add Section -->
+            <section class="flex flex-col gap-4">
+                <div class="grid grid-cols-2 gap-6">
+                    <button id="add-book-btn-new" class="flex flex-col items-center justify-center gap-3 py-6 rounded-2xl bg-[#F7F9FF] col-span-2 active:scale-95 transition-transform focus:outline-none" style="box-shadow: 6px 6px 12px #D1D9E6, -6px -6px 12px #FFFFFF;">
+                        <span class="material-symbols-rounded text-[#3B82F6] text-3xl">auto_stories</span>
+                        <span class="text-xs font-bold text-[#1E293B]">Kitap Ekle</span>
+                    </button>
                 </div>
             </section>
 
-            <!-- Section 2: Kitaplarım -->
-            <section class="flex flex-col gap-element-spacing">
-                <div class="flex justify-between items-end">
-                    <h2 class="font-headline-sm text-headline-sm text-on-surface">Kitaplarım</h2>
-                    <button id="books-view-all-btn" class="font-label-md text-label-md text-neon-blue hover:text-surface-tint transition-colors">Tümünü Gör</button>
-                </div>
-                <div id="books-all-grid" class="grid grid-cols-2 gap-card-gap">
-                    <!-- Dinamik -->
-                </div>
-            </section>
-        </main>
+            <!-- History Log -->
+            <section class="flex flex-col gap-4">
+                <h3 class="text-h2 font-bold text-[#1E293B] px-2">Kitaplarım</h3>
+                <div id="books-all-list-new" class="flex flex-col gap-4">
+                    <div class="flex justify-center items-center py-8">
         <!-- Add Book Modal -->
-        <div class="hidden fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm" id="book-add-modal">
-            <div class="bg-background shadow-neo w-full max-w-md rounded-[32px] shadow-2xl flex flex-col p-6 gap-6 scale-95 opacity-0 transition-all duration-200 overflow-y-auto max-h-[90dvh]" id="book-add-modal-content">
-                <!-- Header -->
-                <div class="flex items-center justify-between">
-                    <h2 class="font-headline-sm text-headline-sm text-on-surface" id="modal-title">Yeni Kitap Ekle</h2>
-                    <button id="book-add-close" class="text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high rounded-full p-2 transition-colors focus:outline-none focus:ring-2 focus:ring-primary">
-                        <span class="material-symbols-rounded icon-lg">close</span>
-                    </button>
-                </div>
-                <!-- Form Fields -->
+        <div class="hidden fixed inset-0 z-[100] flex flex-col justify-end" id="book-add-modal">
+            <div class="absolute inset-0 bg-black/40 backdrop-blur-sm opacity-0 transition-opacity duration-300" id="book-add-backdrop"></div>
+            <div class="bg-[#F7F9FF] w-full max-w-md mx-auto rounded-t-[32px] p-6 flex flex-col gap-6 translate-y-full transition-transform duration-300 z-10" id="book-add-modal-content">
+                <div class="w-12 h-1.5 bg-gray-300 rounded-full mx-auto cursor-pointer" id="close-book-add-handle"></div>
+                <h2 class="text-2xl font-bold text-[#1E293B] text-center" id="modal-title">Yeni Kitap Ekle</h2>
+                
                 <div class="flex flex-col gap-4">
-                    <!-- Book Cover Upload Section -->
-                    <div class="flex flex-col gap-1">
-                        <label class="font-label-md text-label-md text-on-surface-variant">Kitap Kapağı Ekle</label>
-                        <div class="relative group cursor-pointer" id="book-add-cover-container">
-                            <div class="w-full h-32 bg-surface-dim border-2 border-dashed border-outline-variant rounded-[32px] flex flex-col items-center justify-center gap-2 transition-all hover:bg-surface-container-high hover:border-primary group-focus-within:ring-2 group-focus-within:ring-primary overflow-hidden" id="book-add-cover-preview-box">
-                                <span class="material-symbols-rounded text-outline icon-lg group-hover:text-neon-blue transition-colors" id="book-add-cover-icon">add_photo_alternate</span>
-                                <span class="font-label-md text-label-md text-outline-variant group-hover:text-on-surface-variant transition-colors" id="book-add-cover-text">Görsel Seç veya Sürükle</span>
-                                <img id="book-add-cover-preview" class="hidden object-cover w-full h-full absolute inset-0 z-10" />
-                            </div>
-                            <input id="book-add-cover-input" aria-label="Kitap kapağı yükle" class="absolute inset-0 opacity-0 cursor-pointer z-20 shadow-neo-inset border-none rounded-xl bg-background " type="file" accept="image/*"/>
-                        </div>
+                    <div class="relative">
+                        <span class="material-symbols-rounded absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">title</span>
+                        <input id="book-add-title" class="w-full bg-white border-none rounded-2xl py-4 pl-12 pr-4 text-[#1E293B] focus:ring-2 focus:ring-[#3B82F6] shadow-sm" placeholder="Kitap adını girin" type="text"/>
                     </div>
-                    <!-- Book Title -->
-                    <div class="flex flex-col gap-1">
-                        <label class="font-label-md text-label-md text-on-surface-variant" for="book-add-title">Kitap Adı</label>
-                        <div class="relative">
-                            <span class="material-symbols-rounded absolute left-3 top-1/2 -translate-y-1/2 text-outline icon-md">book</span>
-                            <input id="book-add-title" class="w-full bg-surface-dim border-none rounded-lg py-3 pl-10 pr-4 font-body-md text-body-md text-on-surface placeholder:text-outline-variant focus:ring-2 focus:ring-primary focus:bg-background shadow-neo transition-colors shadow-neo-inset border-none rounded-xl bg-background " placeholder="Kitap adını girin" type="text"/>
-                        </div>
+                    <div class="relative">
+                        <span class="material-symbols-rounded absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">person</span>
+                        <input id="book-add-author" class="w-full bg-white border-none rounded-2xl py-4 pl-12 pr-4 text-[#1E293B] focus:ring-2 focus:ring-[#3B82F6] shadow-sm" placeholder="Yazar adını girin" type="text"/>
                     </div>
-                    <!-- Author -->
-                    <div class="flex flex-col gap-1">
-                        <label class="font-label-md text-label-md text-on-surface-variant" for="book-add-author">Yazar</label>
-                        <div class="relative">
-                            <span class="material-symbols-rounded absolute left-3 top-1/2 -translate-y-1/2 text-outline icon-md">person</span>
-                            <input id="book-add-author" class="w-full bg-surface-dim border-none rounded-lg py-3 pl-10 pr-4 font-body-md text-body-md text-on-surface placeholder:text-outline-variant focus:ring-2 focus:ring-primary focus:bg-background shadow-neo transition-colors shadow-neo-inset border-none rounded-xl bg-background " placeholder="Yazar adını girin" type="text"/>
-                        </div>
+                    <div class="relative">
+                        <span class="material-symbols-rounded absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">numbers</span>
+                        <input id="book-add-pages" class="w-full bg-white border-none rounded-2xl py-4 pl-12 pr-4 text-[#1E293B] focus:ring-2 focus:ring-[#3B82F6] shadow-sm" min="1" placeholder="Toplam sayfa" type="number"/>
                     </div>
-                    <!-- Total Pages -->
-                    <div class="flex flex-col gap-1">
-                        <label class="font-label-md text-label-md text-on-surface-variant" for="book-add-pages">Toplam Sayfa Sayısı</label>
-                        <div class="relative">
-                            <span class="material-symbols-rounded absolute left-3 top-1/2 -translate-y-1/2 text-outline icon-md">format_list_numbered</span>
-                            <input id="book-add-pages" class="w-full bg-surface-dim border-none rounded-lg py-3 pl-10 pr-4 font-body-md text-body-md text-on-surface placeholder:text-outline-variant focus:ring-2 focus:ring-primary focus:bg-background shadow-neo transition-colors shadow-neo-inset border-none rounded-xl bg-background " min="1" placeholder="Sayfa sayısı" type="number"/>
-                        </div>
-                    </div>
+                    
                     <div class="flex flex-col gap-2">
-                        <label class="font-label-md text-label-md text-on-surface-variant mb-1">Okuma Durumu</label>
-                        <div class="flex gap-3 flex-wrap">
-                            <label class="flex items-center gap-2 font-body-md text-on-surface cursor-pointer">
-                                <input class="accent-primary w-[18px] h-[18px] cursor-pointer book-add-status-radio shadow-neo-inset border-none rounded-xl bg-background " name="book-add-status" value="to_read" type="radio" checked/>
+                        <label class="text-sm font-semibold text-gray-600">Okuma Durumu</label>
+                        <div class="flex gap-4 flex-wrap">
+                            <label class="flex items-center gap-2 text-[#1E293B] cursor-pointer">
+                                <input class="accent-[#3B82F6] w-5 h-5 cursor-pointer book-add-status-radio" name="book-add-status" value="to_read" type="radio" checked/>
                                 Okunacak
                             </label>
-                            <label class="flex items-center gap-2 font-body-md text-on-surface cursor-pointer">
-                                <input class="accent-primary w-[18px] h-[18px] cursor-pointer book-add-status-radio shadow-neo-inset border-none rounded-xl bg-background " name="book-add-status" value="reading" type="radio"/>
-                                Okuyor
+                            <label class="flex items-center gap-2 text-[#1E293B] cursor-pointer">
+                                <input class="accent-[#3B82F6] w-5 h-5 cursor-pointer book-add-status-radio" name="book-add-status" value="reading" type="radio"/>
+                                Okuyorum
                             </label>
-                            <label class="flex items-center gap-2 font-body-md text-on-surface cursor-pointer">
-                                <input class="accent-primary w-[18px] h-[18px] cursor-pointer book-add-status-radio shadow-neo-inset border-none rounded-xl bg-background " name="book-add-status" value="finished" type="radio"/>
+                            <label class="flex items-center gap-2 text-[#1E293B] cursor-pointer">
+                                <input class="accent-[#3B82F6] w-5 h-5 cursor-pointer book-add-status-radio" name="book-add-status" value="finished" type="radio"/>
                                 Bitti
                             </label>
                         </div>
                     </div>
                 </div>
-                <!-- Action Buttons -->
-                <div class="flex items-center justify-between gap-3 mt-4">
-                    <button id="book-add-cancel" class="flex-1 bg-surface-container-low text-neon-blue font-headline-sm text-body-lg py-4 rounded-[32px] transition-all active:scale-[0.98] hover:bg-surface-container-high flex items-center justify-center gap-2" type="button">
-                        İptal
-                    </button>
-                    <button id="book-add-save" class="flex-1 bg-gradient-to-r from-neon-purple to-neon-blue text-white font-headline-sm text-body-lg py-4 rounded-[32px] shadow-sm hover:shadow-md transition-all active:scale-[0.98] flex items-center justify-center gap-2" type="button">
-                        Ekle
-                    </button>
-                </div>
+
+                <button id="book-add-save" class="w-full py-4 rounded-full font-bold text-lg text-gray-800 shadow-md active:scale-95 transition-transform" style="background: linear-gradient(145deg, #e6e6e6, #ffffff); box-shadow:  5px 5px 10px #D1D9E6, -5px -5px 10px #FFFFFF;">
+                    Ekle
+                </button>
             </div>
         </div>
 
         <!-- Edit Book Modal -->
-        <div class="hidden fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm" id="book-edit-modal">
-            <div class="bg-background shadow-neo w-full max-w-md rounded-[32px] shadow-sm p-6 flex flex-col gap-6 scale-95 opacity-0 transition-all duration-200 overflow-y-auto max-h-[90dvh]" id="book-edit-modal-content">
-                <!-- Header -->
-                <div class="flex justify-between items-center mb-2">
-                    <h1 class="font-headline-sm text-headline-sm text-on-surface">Kitabı Düzenle</h1>
-                    <button id="book-edit-close" aria-label="Close" class="text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high rounded-full p-2 transition-colors">
-                        <span class="material-symbols-rounded icon-lg">close</span>
+        <div class="hidden fixed inset-0 z-[100] flex flex-col justify-end" id="book-edit-modal">
+            <div class="absolute inset-0 bg-black/40 backdrop-blur-sm opacity-0 transition-opacity duration-300" id="book-edit-backdrop"></div>
+            <div class="bg-[#F7F9FF] w-full max-w-md mx-auto rounded-t-[32px] p-6 flex flex-col gap-6 translate-y-full transition-transform duration-300 z-10" id="book-edit-modal-content">
+                <div class="w-12 h-1.5 bg-gray-300 rounded-full mx-auto cursor-pointer" id="close-book-edit-handle"></div>
+                <h2 class="text-2xl font-bold text-[#1E293B] text-center">Kitabı Düzenle</h2>
+                
+                <div class="flex flex-col gap-4">
+                    <div class="relative">
+                        <span class="material-symbols-rounded absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">title</span>
+                        <input id="book-edit-title" class="w-full bg-white border-none rounded-2xl py-4 pl-12 pr-4 text-[#1E293B] focus:ring-2 focus:ring-[#3B82F6] shadow-sm" placeholder="Kitap adını girin" type="text"/>
+                    </div>
+                    <div class="relative">
+                        <span class="material-symbols-rounded absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">person</span>
+                        <input id="book-edit-author" class="w-full bg-white border-none rounded-2xl py-4 pl-12 pr-4 text-[#1E293B] focus:ring-2 focus:ring-[#3B82F6] shadow-sm" placeholder="Yazar adını girin" type="text"/>
+                    </div>
+                    <div class="relative">
+                        <span class="material-symbols-rounded absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">numbers</span>
+                        <input id="book-edit-pages" class="w-full bg-white border-none rounded-2xl py-4 pl-12 pr-4 text-[#1E293B] focus:ring-2 focus:ring-[#3B82F6] shadow-sm" min="1" placeholder="Toplam sayfa" type="number"/>
+                    </div>
+                    
+                    <div class="flex flex-col gap-2">
+                        <label class="text-sm font-semibold text-gray-600">Okuma Durumu</label>
+                        <div class="flex gap-4 flex-wrap">
+                            <label class="flex items-center gap-2 text-[#1E293B] cursor-pointer">
+                                <input class="accent-[#3B82F6] w-5 h-5 cursor-pointer book-edit-status-radio" name="book-edit-status" value="to_read" type="radio"/>
+                                Okunacak
+                            </label>
+                            <label class="flex items-center gap-2 text-[#1E293B] cursor-pointer">
+                                <input class="accent-[#3B82F6] w-5 h-5 cursor-pointer book-edit-status-radio" name="book-edit-status" value="reading" type="radio"/>
+                                Okuyorum
+                            </label>
+                            <label class="flex items-center gap-2 text-[#1E293B] cursor-pointer">
+                                <input class="accent-[#3B82F6] w-5 h-5 cursor-pointer book-edit-status-radio" name="book-edit-status" value="finished" type="radio"/>
+                                Bitti
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex flex-col gap-3">
+                    <button id="book-edit-save" class="w-full py-4 rounded-full font-bold text-lg text-gray-800 shadow-md active:scale-95 transition-transform" style="background: linear-gradient(145deg, #e6e6e6, #ffffff); box-shadow:  5px 5px 10px #D1D9E6, -5px -5px 10px #FFFFFF;">
+                        Güncelle
                     </button>
-                </div>
-                <!-- Cover & Name/Author Row -->
-                <div class="flex gap-4 items-start">
-                    <div class="w-20 h-[110px] bg-surface-container-high rounded-lg flex items-center justify-center overflow-hidden shrink-0 border border-dashed border-outline-variant relative cursor-pointer group">
-                        <img id="book-edit-cover-preview" class="w-full h-full object-cover absolute inset-0 z-10" src=""/>
-                        <div class="absolute inset-0 bg-black/30 z-20 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                            <span class="material-symbols-rounded text-white">edit</span>
-                        </div>
-                        <input id="book-edit-cover-input" class="absolute inset-0 opacity-0 cursor-pointer z-30 shadow-neo-inset border-none rounded-xl bg-background " type="file" accept="image/*"/>
-                    </div>
-                    <div class="flex-1 flex flex-col gap-4">
-                        <div>
-                            <label class="font-label-md text-label-md text-on-surface-variant mb-1 block" for="book-edit-title">Kitap Adı</label>
-                            <input class="bg-background shadow-neo border border-transparent rounded-lg py-2.5 px-3 font-body-md text-on-surface focus:outline-none focus:border-primary transition-colors w-full shadow-neo-inset border-none rounded-xl bg-background " id="book-edit-title" type="text" />
-                        </div>
-                        <div>
-                            <label class="font-label-md text-label-md text-on-surface-variant mb-1 block" for="book-edit-author">Yazar</label>
-                            <input class="bg-background shadow-neo border border-transparent rounded-lg py-2.5 px-3 font-body-md text-on-surface focus:outline-none focus:border-primary transition-colors w-full shadow-neo-inset border-none rounded-xl bg-background " id="book-edit-author" type="text" />
-                        </div>
-                    </div>
-                </div>
-                <!-- Total Pages -->
-                <div>
-                    <label class="font-label-md text-label-md text-on-surface-variant mb-1 block" for="book-edit-pages">Toplam Sayfa</label>
-                    <input class="bg-background shadow-neo border border-transparent rounded-lg py-2.5 px-3 font-body-md text-on-surface focus:outline-none focus:border-primary transition-colors w-32 shadow-neo-inset border-none rounded-xl bg-background " id="book-edit-pages" type="number" min="0" />
-                </div>
-                <!-- Reading Status -->
-                <div>
-                    <label class="font-label-md text-label-md text-on-surface-variant mb-2 block">Okuma Durumu</label>
-                    <div class="flex gap-3 flex-wrap">
-                        <label class="flex items-center gap-2 font-body-md text-on-surface cursor-pointer">
-                            <input class="accent-primary w-[18px] h-[18px] cursor-pointer book-edit-status-radio shadow-neo-inset border-none rounded-xl bg-background " name="book-edit-status" value="to_read" type="radio"/>
-                            Okunacak
-                        </label>
-                        <label class="flex items-center gap-2 font-body-md text-on-surface cursor-pointer">
-                            <input class="accent-primary w-[18px] h-[18px] cursor-pointer book-edit-status-radio shadow-neo-inset border-none rounded-xl bg-background " name="book-edit-status" value="reading" type="radio"/>
-                            Okuyor
-                        </label>
-                        <label class="flex items-center gap-2 font-body-md text-on-surface cursor-pointer">
-                            <input class="accent-primary w-[18px] h-[18px] cursor-pointer book-edit-status-radio shadow-neo-inset border-none rounded-xl bg-background " name="book-edit-status" value="finished" type="radio"/>
-                            Bitti
-                        </label>
-                    </div>
-                </div>
-                <!-- Actions -->
-                <div class="flex flex-col gap-3 mt-4">
-                    <button id="book-edit-save" class="w-full bg-gradient-to-r from-neon-purple to-neon-blue text-white font-headline-sm text-body-lg py-4 rounded-[32px] shadow-sm hover:shadow-md transition-all active:scale-[0.98] flex items-center justify-center gap-2">Güncelle</button>
-                    <button id="book-edit-delete" class="w-full bg-transparent text-error border border-error-container font-headline-sm text-body-lg py-4 rounded-[32px] transition-all active:scale-[0.98] hover:bg-error-container flex items-center justify-center gap-2">
+                    <button id="book-edit-delete" class="w-full py-4 rounded-full font-bold text-lg text-red-500 bg-transparent border-2 border-red-500/20 active:scale-95 transition-transform flex items-center justify-center gap-2">
                         <span class="material-symbols-rounded text-lg">delete</span>
                         Sil
                     </button>
                 </div>
             </div>
-        </div>
 
-        <!-- Tüm Kitaplarım Modal -->
-        <div class="hidden fixed inset-0 z-[110] bg-background flex flex-col h-full w-full max-w-md mx-auto sm:border-x sm:border-surface-variant shadow-2xl transition-transform duration-300 translate-y-full" id="books-all-modal">
-            <!-- Header -->
-            <header class="flex items-center justify-between px-container-padding py-4 shrink-0 bg-background/95 backdrop-blur-md sticky top-0 z-10">
-                <h1 class="font-headline-md text-headline-md text-on-surface">Tüm Kitaplarım</h1>
-                <button id="books-all-close" class="p-2 rounded-full hover:bg-surface-container-low transition-colors text-on-surface-variant flex items-center justify-center">
-                    <span class="material-symbols-rounded" style="font-variation-settings: 'FILL' 0;">close</span>
-                </button>
-            </header>
-            <!-- Search Bar -->
-            <div class="px-container-padding pb-2 pt-1 shrink-0">
-                <div class="flex items-center bg-surface-container-low rounded-[32px] px-4 py-3 border border-transparent focus-within:border-primary transition-colors">
-                    <span class="material-symbols-rounded text-on-surface-variant mr-3" style="font-variation-settings: 'FILL' 0;">search</span>
-                    <input id="books-all-search" class="bg-transparent border-none outline-none w-full text-body-md font-body-md text-on-surface placeholder:text-on-surface-variant p-0 focus:ring-0 shadow-neo-inset border-none rounded-xl bg-background " placeholder="Kitap veya yazar ara..." type="text">
-                </div>
-            </div>
-            <!-- Categories / Tabs -->
-            <div class="px-container-padding py-3 shrink-0 overflow-x-auto no-scrollbar flex gap-2 border-b border-surface-container-highest">
-                <button class="books-all-tab shrink-0 px-5 py-2 rounded-full bg-gradient-to-r from-neon-purple to-neon-blue-container text-white-container font-label-md text-label-md transition-transform active:scale-[0.98]" data-filter="all">
-                    Hepsi
-                </button>
-                <button class="books-all-tab shrink-0 px-5 py-2 rounded-full bg-surface-container-high text-on-surface-variant hover:bg-surface-container-highest font-label-md text-label-md transition-colors active:scale-[0.98]" data-filter="reading">
-                    Okuyorum
-                </button>
-                <button class="books-all-tab shrink-0 px-5 py-2 rounded-full bg-surface-container-high text-on-surface-variant hover:bg-surface-container-highest font-label-md text-label-md transition-colors active:scale-[0.98]" data-filter="to_read">
-                    Okunacak
-                </button>
-                <button class="books-all-tab shrink-0 px-5 py-2 rounded-full bg-surface-container-high text-on-surface-variant hover:bg-surface-container-highest font-label-md text-label-md transition-colors active:scale-[0.98]" data-filter="finished">
-                    Bitti
-                </button>
-            </div>
-            <!-- Content List -->
-            <div id="books-all-list" class="flex-1 overflow-y-auto px-container-padding py-4 space-y-4 pb-20 overscroll-y-contain">
-                    <div class="flex justify-center items-center py-8"><div class="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div></div>
-                
-                <!-- Dinamik Listelenecek -->
-            </div>
-        </div>
 
     </section>
 
