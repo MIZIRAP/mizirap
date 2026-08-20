@@ -320,6 +320,7 @@ function updateActiveBookUI() {
     activePlusBtn.style.opacity = read >= total ? "0.5" : "1";
 }
 
+
 function renderAllBooksList() {
     if(!allListEl) return;
     
@@ -345,28 +346,173 @@ function renderAllBooksList() {
             statusText = "Bitti";
         }
         
-        const card = document.createElement("div");
-        card.className = "bg-[#F7F9FF] rounded-2xl p-4 flex gap-4 items-center cursor-pointer active:scale-[0.98] transition-transform";
-        card.style.boxShadow = "4px 4px 8px #D1D9E6, -4px -4px 8px #FFFFFF";
+        const wrapper = document.createElement("div");
+        wrapper.className = "relative w-full overflow-hidden rounded-2xl mb-4";
+        wrapper.style.boxShadow = "4px 4px 8px #D1D9E6, -4px -4px 8px #FFFFFF";
         
-        card.innerHTML = `
-            <div class="w-12 h-12 shrink-0 rounded-xl bg-white flex items-center justify-center shadow-sm">
-                <span class="material-symbols-rounded text-[#3B82F6] text-2xl">menu_book</span>
-            </div>
-            <div class="flex-1 min-w-0">
-                <h4 class="font-bold text-[#1E293B] truncate">${safeTitle}</h4>
-                <p class="text-xs text-[#64748B] truncate">${safeAuthor}</p>
-            </div>
-            <div class="shrink-0 flex flex-col items-end gap-1">
-                <span class="text-xs font-bold ${statusColor}">${statusText}</span>
-                <span class="text-xs font-semibold text-[#1E293B]">${book.readPages || 0} / ${book.totalPages || 0}</span>
+        // Background Actions (Edit & Delete)
+        const actionsHtml = `
+            <div class="absolute inset-y-0 right-0 flex items-center justify-end px-3 gap-3 bg-gray-100 w-full z-0">
+                <button class="edit-book-btn w-10 h-10 rounded-full bg-silk-blue text-white flex items-center justify-center shadow-md active:scale-95 transition-transform" data-id="${book.id}">
+                    <span class="material-symbols-rounded text-lg">edit</span>
+                </button>
+                <button class="delete-book-btn w-10 h-10 rounded-full bg-red-500 text-white flex items-center justify-center shadow-md active:scale-95 transition-transform" data-id="${book.id}">
+                    <span class="material-symbols-rounded text-lg">delete</span>
+                </button>
             </div>
         `;
         
-        // Open Edit Modal on click
-        card.onclick = () => openEditModal(book);
+        // Foreground Card
+        const cardHtml = `
+            <div class="card-content relative z-10 bg-[#F7F9FF] rounded-2xl p-4 flex gap-4 items-center cursor-pointer transition-transform duration-300" style="touch-action: pan-y;">
+                <div class="w-12 h-12 shrink-0 rounded-xl bg-white flex items-center justify-center shadow-sm">
+                    <span class="material-symbols-rounded text-[#3B82F6] text-2xl">menu_book</span>
+                </div>
+                <div class="flex-1 min-w-0">
+                    <h4 class="font-bold text-[#1E293B] truncate">${safeTitle}</h4>
+                    <p class="text-xs text-[#64748B] truncate">${safeAuthor}</p>
+                </div>
+                <div class="shrink-0 flex flex-col items-end gap-1">
+                    <span class="text-xs font-bold ${statusColor}">${statusText}</span>
+                    <span class="text-xs font-semibold text-[#1E293B]">${book.readPages || 0} / ${book.totalPages || 0}</span>
+                </div>
+            </div>
+        `;
         
-        allListEl.appendChild(card);
+        wrapper.innerHTML = actionsHtml + cardHtml;
+        
+        const cardContent = wrapper.querySelector('.card-content');
+        const editBtn = wrapper.querySelector('.edit-book-btn');
+        const deleteBtn = wrapper.querySelector('.delete-book-btn');
+        
+        // --- Swipe Logic ---
+        let startX = 0;
+        let currentX = 0;
+        let isDragging = false;
+        const threshold = -80; // Slide left by 80px to show buttons
+        let isSwiped = false;
+        
+        cardContent.addEventListener('touchstart', (e) => {
+            startX = e.touches[0].clientX;
+            isDragging = true;
+            cardContent.style.transition = 'none';
+        }, { passive: true });
+        
+        cardContent.addEventListener('touchmove', (e) => {
+            if (!isDragging) return;
+            currentX = e.touches[0].clientX;
+            let diffX = currentX - startX;
+            
+            // Allow swiping left (negative diff) and right (if already swiped)
+            if (!isSwiped && diffX < 0) {
+                // Dragging left from neutral
+                const moveX = Math.max(diffX, -100); 
+                cardContent.style.transform = `translateX(${moveX}px)`;
+            } else if (isSwiped && diffX > 0) {
+                // Dragging right from swiped
+                const moveX = Math.min(threshold + diffX, 0);
+                cardContent.style.transform = `translateX(${moveX}px)`;
+            }
+        }, { passive: true });
+        
+        cardContent.addEventListener('touchend', (e) => {
+            if (!isDragging) return;
+            isDragging = false;
+            cardContent.style.transition = 'transform 0.3s ease-out';
+            
+            let diffX = currentX - startX;
+            if (!isSwiped && diffX < -30) {
+                // Trigger swipe open
+                isSwiped = true;
+                cardContent.style.transform = `translateX(${threshold}px)`;
+            } else if (isSwiped && diffX > 30) {
+                // Trigger swipe close
+                isSwiped = false;
+                cardContent.style.transform = 'translateX(0px)';
+            } else {
+                // Snap back to current state
+                cardContent.style.transform = isSwiped ? `translateX(${threshold}px)` : 'translateX(0px)';
+                
+                // If it was a tap (very small movement), trigger click
+                if (Math.abs(diffX) < 10) {
+                    // Set as active book
+                    activeBook = book;
+                    updateActiveBookUI();
+                    
+                    // Close any open swipes
+                    document.querySelectorAll('.card-content').forEach(el => {
+                        el.style.transform = 'translateX(0px)';
+                    });
+                    isSwiped = false;
+                }
+            }
+        });
+        
+        // Desktop click fallback (if touch is not used)
+        cardContent.addEventListener('mousedown', (e) => {
+            startX = e.clientX;
+            isDragging = true;
+            cardContent.style.transition = 'none';
+        });
+        cardContent.addEventListener('mousemove', (e) => {
+            if (!isDragging) return;
+            currentX = e.clientX;
+            let diffX = currentX - startX;
+            if (!isSwiped && diffX < 0) {
+                cardContent.style.transform = `translateX(${Math.max(diffX, -100)}px)`;
+            } else if (isSwiped && diffX > 0) {
+                cardContent.style.transform = `translateX(${Math.min(threshold + diffX, 0)}px)`;
+            }
+        });
+        cardContent.addEventListener('mouseup', (e) => {
+            if (!isDragging) return;
+            isDragging = false;
+            cardContent.style.transition = 'transform 0.3s ease-out';
+            let diffX = currentX - startX;
+            if (!isSwiped && diffX < -30) {
+                isSwiped = true;
+                cardContent.style.transform = `translateX(${threshold}px)`;
+            } else if (isSwiped && diffX > 30) {
+                isSwiped = false;
+                cardContent.style.transform = 'translateX(0px)';
+            } else {
+                cardContent.style.transform = isSwiped ? `translateX(${threshold}px)` : 'translateX(0px)';
+                if (Math.abs(diffX) < 10) {
+                    activeBook = book;
+                    updateActiveBookUI();
+                    document.querySelectorAll('.card-content').forEach(el => {
+                        el.style.transform = 'translateX(0px)';
+                    });
+                    isSwiped = false;
+                }
+            }
+        });
+        cardContent.addEventListener('mouseleave', () => {
+             if(isDragging) {
+                isDragging = false;
+                cardContent.style.transition = 'transform 0.3s ease-out';
+                cardContent.style.transform = isSwiped ? `translateX(${threshold}px)` : 'translateX(0px)';
+             }
+        });
+        
+        // Actions
+        editBtn.onclick = () => {
+            openEditModal(book);
+            cardContent.style.transform = 'translateX(0px)';
+            isSwiped = false;
+        };
+        
+        deleteBtn.onclick = async () => {
+            if(!confirm("Bu kitabı silmek istediğinize emin misiniz?")) return;
+            try {
+                const docRef = doc(db, "users", currentUid, "books", book.id);
+                await deleteDoc(docRef);
+            } catch (e) {
+                console.error(e);
+            }
+        };
+        
+        allListEl.appendChild(wrapper);
     });
 }
 

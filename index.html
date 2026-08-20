@@ -2322,102 +2322,103 @@
                 <div id="books-all-list-new" class="flex flex-col gap-4">
                     <div class="flex justify-center items-center py-8">
         <!-- Add Book Modal -->
-        <div class="hidden fixed inset-0 z-[100] flex flex-col justify-end" id="book-add-modal">
-            <div class="absolute inset-0 bg-black/40 backdrop-blur-sm opacity-0 transition-opacity duration-300" id="book-add-backdrop"></div>
-            <div class="bg-[#F7F9FF] w-full max-w-md mx-auto rounded-t-[32px] p-6 flex flex-col gap-6 translate-y-full transition-transform duration-300 z-10" id="book-add-modal-content">
-                <div class="w-12 h-1.5 bg-gray-300 rounded-full mx-auto cursor-pointer" id="close-book-add-handle"></div>
-                <h2 class="text-2xl font-bold text-[#1E293B] text-center" id="modal-title">Yeni Kitap Ekle</h2>
-                
-                <div class="flex flex-col gap-4">
-                    <div class="relative">
-                        <span class="material-symbols-rounded absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">title</span>
-                        <input id="book-add-title" class="w-full bg-white border-none rounded-2xl py-4 pl-12 pr-4 text-[#1E293B] focus:ring-2 focus:ring-[#3B82F6] shadow-sm" placeholder="Kitap adını girin" type="text"/>
+        <div class="hidden fixed inset-0 z-[100] flex flex-col justify-end items-center md:p-4" id="book-add-modal">
+            <div class="absolute inset-0 bg-black/10 backdrop-blur-sm opacity-0 transition-opacity duration-300" id="book-add-backdrop"></div>
+            <div class="bg-[#F7F9FF] w-full max-w-sm mx-auto rounded-t-[32px] md:rounded-[32px] shadow-[0_-8px_30px_rgba(0,0,0,0.05)] md:shadow-[0_10px_40px_rgba(0,0,0,0.08)] p-6 flex flex-col items-center transform transition-transform duration-300 translate-y-full z-10 pb-8 md:pb-6" id="book-add-modal-content">
+                <!-- Drag Handle (Mobile) -->
+                <div class="w-12 h-1.5 bg-gray-300 rounded-full mb-6 md:hidden cursor-pointer" id="close-book-add-handle"></div>
+                <div class="w-full text-center mb-6">
+                    <h2 class="text-xl font-bold text-gray-800 mb-2">Yeni Kitap Ekle</h2>
+                </div>
+                <!-- Input Area -->
+                <div class="w-full flex flex-col gap-4 mb-6 px-2">
+                    <div class="flex flex-col gap-1">
+                        <label class="text-xs font-bold text-silk-blue uppercase px-2">Kitap Adı</label>
+                        <input id="book-add-title" class="w-full p-4 rounded-2xl shadow-neumorphic-inset bg-[#F7F9FF] border-none focus:ring-2 focus:ring-silk-blue/20 text-gray-800 placeholder:text-gray-400" placeholder="Örn: Suç ve Ceza" type="text">
                     </div>
-                    <div class="relative">
-                        <span class="material-symbols-rounded absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">person</span>
-                        <input id="book-add-author" class="w-full bg-white border-none rounded-2xl py-4 pl-12 pr-4 text-[#1E293B] focus:ring-2 focus:ring-[#3B82F6] shadow-sm" placeholder="Yazar adını girin" type="text"/>
+                    <div class="flex flex-col gap-1">
+                        <label class="text-xs font-bold text-silk-blue uppercase px-2">Yazar</label>
+                        <input id="book-add-author" class="w-full p-4 rounded-2xl shadow-neumorphic-inset bg-[#F7F9FF] border-none focus:ring-2 focus:ring-silk-blue/20 text-gray-800 placeholder:text-gray-400" placeholder="Örn: Dostoyevski" type="text">
                     </div>
-                    <div class="relative">
-                        <span class="material-symbols-rounded absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">numbers</span>
-                        <input id="book-add-pages" class="w-full bg-white border-none rounded-2xl py-4 pl-12 pr-4 text-[#1E293B] focus:ring-2 focus:ring-[#3B82F6] shadow-sm" min="1" placeholder="Toplam sayfa" type="number"/>
+                    <div class="flex flex-col gap-1">
+                        <label class="text-xs font-bold text-silk-blue uppercase px-2">Toplam Sayfa</label>
+                        <input id="book-add-pages" class="w-full p-4 rounded-2xl shadow-neumorphic-inset bg-[#F7F9FF] border-none focus:ring-2 focus:ring-silk-blue/20 text-gray-800 placeholder:text-gray-400" placeholder="5" type="number" style="appearance: textfield;">
                     </div>
-                    
-                    <div class="flex flex-col gap-2">
-                        <label class="text-sm font-semibold text-gray-600">Okuma Durumu</label>
-                        <div class="flex gap-4 flex-wrap">
-                            <label class="flex items-center gap-2 text-[#1E293B] cursor-pointer">
-                                <input class="accent-[#3B82F6] w-5 h-5 cursor-pointer book-add-status-radio" name="book-add-status" value="to_read" type="radio" checked/>
+                    <div class="flex flex-col gap-1">
+                        <label class="text-xs font-bold text-silk-blue uppercase px-2">Okuma Durumu</label>
+                        <div class="flex gap-4 px-2">
+                            <label class="flex items-center gap-2 text-xs font-bold text-gray-600 cursor-pointer">
+                                <input class="accent-silk-blue w-4 h-4 cursor-pointer book-add-status-radio" name="book-add-status" value="to_read" type="radio" checked/>
                                 Okunacak
                             </label>
-                            <label class="flex items-center gap-2 text-[#1E293B] cursor-pointer">
-                                <input class="accent-[#3B82F6] w-5 h-5 cursor-pointer book-add-status-radio" name="book-add-status" value="reading" type="radio"/>
+                            <label class="flex items-center gap-2 text-xs font-bold text-gray-600 cursor-pointer">
+                                <input class="accent-silk-blue w-4 h-4 cursor-pointer book-add-status-radio" name="book-add-status" value="reading" type="radio"/>
                                 Okuyorum
                             </label>
-                            <label class="flex items-center gap-2 text-[#1E293B] cursor-pointer">
-                                <input class="accent-[#3B82F6] w-5 h-5 cursor-pointer book-add-status-radio" name="book-add-status" value="finished" type="radio"/>
+                            <label class="flex items-center gap-2 text-xs font-bold text-gray-600 cursor-pointer">
+                                <input class="accent-silk-blue w-4 h-4 cursor-pointer book-add-status-radio" name="book-add-status" value="finished" type="radio"/>
                                 Bitti
                             </label>
                         </div>
                     </div>
                 </div>
-
-                <button id="book-add-save" class="w-full py-4 rounded-full font-bold text-lg text-gray-800 shadow-md active:scale-95 transition-transform" style="background: linear-gradient(145deg, #e6e6e6, #ffffff); box-shadow:  5px 5px 10px #D1D9E6, -5px -5px 10px #FFFFFF;">
-                    Ekle
+                <!-- CTA Button -->
+                <button id="book-add-save" class="w-full py-4 px-6 rounded-full font-bold text-lg text-gray-800 gradient-border shadow-md focus:outline-none active:scale-[0.98] transition-transform flex items-center justify-center gap-2">
+                    Kitabı Ekle <span class="material-symbols-rounded text-silk-blue" style="font-variation-settings: 'FILL' 1;">auto_stories</span>
                 </button>
             </div>
         </div>
 
         <!-- Edit Book Modal -->
-        <div class="hidden fixed inset-0 z-[100] flex flex-col justify-end" id="book-edit-modal">
-            <div class="absolute inset-0 bg-black/40 backdrop-blur-sm opacity-0 transition-opacity duration-300" id="book-edit-backdrop"></div>
-            <div class="bg-[#F7F9FF] w-full max-w-md mx-auto rounded-t-[32px] p-6 flex flex-col gap-6 translate-y-full transition-transform duration-300 z-10" id="book-edit-modal-content">
-                <div class="w-12 h-1.5 bg-gray-300 rounded-full mx-auto cursor-pointer" id="close-book-edit-handle"></div>
-                <h2 class="text-2xl font-bold text-[#1E293B] text-center">Kitabı Düzenle</h2>
-                
-                <div class="flex flex-col gap-4">
-                    <div class="relative">
-                        <span class="material-symbols-rounded absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">title</span>
-                        <input id="book-edit-title" class="w-full bg-white border-none rounded-2xl py-4 pl-12 pr-4 text-[#1E293B] focus:ring-2 focus:ring-[#3B82F6] shadow-sm" placeholder="Kitap adını girin" type="text"/>
+        <div class="hidden fixed inset-0 z-[100] flex flex-col justify-end items-center md:p-4" id="book-edit-modal">
+            <div class="absolute inset-0 bg-black/10 backdrop-blur-sm opacity-0 transition-opacity duration-300" id="book-edit-backdrop"></div>
+            <div class="bg-[#F7F9FF] w-full max-w-sm mx-auto rounded-t-[32px] md:rounded-[32px] shadow-[0_-8px_30px_rgba(0,0,0,0.05)] md:shadow-[0_10px_40px_rgba(0,0,0,0.08)] p-6 flex flex-col items-center transform transition-transform duration-300 translate-y-full z-10 pb-8 md:pb-6" id="book-edit-modal-content">
+                <!-- Drag Handle (Mobile) -->
+                <div class="w-12 h-1.5 bg-gray-300 rounded-full mb-6 md:hidden cursor-pointer" id="close-book-edit-handle"></div>
+                <div class="w-full text-center mb-6">
+                    <h2 class="text-xl font-bold text-gray-800 mb-2">Kitabı Düzenle</h2>
+                </div>
+                <!-- Input Area -->
+                <div class="w-full flex flex-col gap-4 mb-6 px-2">
+                    <div class="flex flex-col gap-1">
+                        <label class="text-xs font-bold text-silk-blue uppercase px-2">Kitap Adı</label>
+                        <input id="book-edit-title" class="w-full p-4 rounded-2xl shadow-neumorphic-inset bg-[#F7F9FF] border-none focus:ring-2 focus:ring-silk-blue/20 text-gray-800 placeholder:text-gray-400" placeholder="Örn: Suç ve Ceza" type="text">
                     </div>
-                    <div class="relative">
-                        <span class="material-symbols-rounded absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">person</span>
-                        <input id="book-edit-author" class="w-full bg-white border-none rounded-2xl py-4 pl-12 pr-4 text-[#1E293B] focus:ring-2 focus:ring-[#3B82F6] shadow-sm" placeholder="Yazar adını girin" type="text"/>
+                    <div class="flex flex-col gap-1">
+                        <label class="text-xs font-bold text-silk-blue uppercase px-2">Yazar</label>
+                        <input id="book-edit-author" class="w-full p-4 rounded-2xl shadow-neumorphic-inset bg-[#F7F9FF] border-none focus:ring-2 focus:ring-silk-blue/20 text-gray-800 placeholder:text-gray-400" placeholder="Örn: Dostoyevski" type="text">
                     </div>
-                    <div class="relative">
-                        <span class="material-symbols-rounded absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">numbers</span>
-                        <input id="book-edit-pages" class="w-full bg-white border-none rounded-2xl py-4 pl-12 pr-4 text-[#1E293B] focus:ring-2 focus:ring-[#3B82F6] shadow-sm" min="1" placeholder="Toplam sayfa" type="number"/>
+                    <div class="flex flex-col gap-1">
+                        <label class="text-xs font-bold text-silk-blue uppercase px-2">Toplam Sayfa</label>
+                        <input id="book-edit-pages" class="w-full p-4 rounded-2xl shadow-neumorphic-inset bg-[#F7F9FF] border-none focus:ring-2 focus:ring-silk-blue/20 text-gray-800 placeholder:text-gray-400" placeholder="5" type="number" style="appearance: textfield;">
                     </div>
-                    
-                    <div class="flex flex-col gap-2">
-                        <label class="text-sm font-semibold text-gray-600">Okuma Durumu</label>
-                        <div class="flex gap-4 flex-wrap">
-                            <label class="flex items-center gap-2 text-[#1E293B] cursor-pointer">
-                                <input class="accent-[#3B82F6] w-5 h-5 cursor-pointer book-edit-status-radio" name="book-edit-status" value="to_read" type="radio"/>
+                    <div class="flex flex-col gap-1">
+                        <label class="text-xs font-bold text-silk-blue uppercase px-2">Okuma Durumu</label>
+                        <div class="flex gap-4 px-2">
+                            <label class="flex items-center gap-2 text-xs font-bold text-gray-600 cursor-pointer">
+                                <input class="accent-silk-blue w-4 h-4 cursor-pointer book-edit-status-radio" name="book-edit-status" value="to_read" type="radio"/>
                                 Okunacak
                             </label>
-                            <label class="flex items-center gap-2 text-[#1E293B] cursor-pointer">
-                                <input class="accent-[#3B82F6] w-5 h-5 cursor-pointer book-edit-status-radio" name="book-edit-status" value="reading" type="radio"/>
+                            <label class="flex items-center gap-2 text-xs font-bold text-gray-600 cursor-pointer">
+                                <input class="accent-silk-blue w-4 h-4 cursor-pointer book-edit-status-radio" name="book-edit-status" value="reading" type="radio"/>
                                 Okuyorum
                             </label>
-                            <label class="flex items-center gap-2 text-[#1E293B] cursor-pointer">
-                                <input class="accent-[#3B82F6] w-5 h-5 cursor-pointer book-edit-status-radio" name="book-edit-status" value="finished" type="radio"/>
+                            <label class="flex items-center gap-2 text-xs font-bold text-gray-600 cursor-pointer">
+                                <input class="accent-silk-blue w-4 h-4 cursor-pointer book-edit-status-radio" name="book-edit-status" value="finished" type="radio"/>
                                 Bitti
                             </label>
                         </div>
                     </div>
                 </div>
-
-                <div class="flex flex-col gap-3">
-                    <button id="book-edit-save" class="w-full py-4 rounded-full font-bold text-lg text-gray-800 shadow-md active:scale-95 transition-transform" style="background: linear-gradient(145deg, #e6e6e6, #ffffff); box-shadow:  5px 5px 10px #D1D9E6, -5px -5px 10px #FFFFFF;">
-                        Güncelle
-                    </button>
-                    <button id="book-edit-delete" class="w-full py-4 rounded-full font-bold text-lg text-red-500 bg-transparent border-2 border-red-500/20 active:scale-95 transition-transform flex items-center justify-center gap-2">
-                        <span class="material-symbols-rounded text-lg">delete</span>
-                        Sil
-                    </button>
-                </div>
+                <!-- CTA Buttons -->
+                <button id="book-edit-save" class="w-full py-4 px-6 rounded-full font-bold text-lg text-gray-800 gradient-border shadow-md focus:outline-none active:scale-[0.98] transition-transform flex items-center justify-center gap-2 mb-3">
+                    Güncelle <span class="material-symbols-rounded text-silk-blue" style="font-variation-settings: 'FILL' 1;">done</span>
+                </button>
+                <button id="book-edit-delete" class="w-full py-4 px-6 rounded-full font-bold text-lg text-red-500 bg-transparent border-2 border-red-500/20 shadow-sm focus:outline-none active:scale-[0.98] transition-transform flex items-center justify-center gap-2">
+                    Sil <span class="material-symbols-rounded">delete</span>
+                </button>
             </div>
-
+        </div>
 
     </section>
 
