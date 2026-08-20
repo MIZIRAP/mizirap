@@ -7,6 +7,7 @@ let booksUnsubscribe = null;
 let currentBooks = [];
 let currentUid = null;
 let activeBook = null;
+let onChangeCb = null;
 
 // DOM Elements - Main Screen
 const activePagesEl = document.getElementById("book-active-pages");
@@ -88,6 +89,7 @@ function openEditModal(book) {
 
 export function initBooks(uid, onChangeCallback) {
     currentUid = uid;
+    onChangeCb = onChangeCallback;
     
     // Bind Add Quick Button
     if(addBookBtn) addBookBtn.onclick = openAddModal;

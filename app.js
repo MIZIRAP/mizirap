@@ -6,7 +6,7 @@ import { initShopping, clearShopping } from "./shopping.js";
 import { initWorkout, clearWorkout } from "./workout.js?v=18";
 import { initFinance, clearFinance } from "./finance.js";
 import { initWater, clearWater } from "./water.js";
-import { initBooks, clearBooks } from "./books.js?v=22";
+import { initBooks, clearBooks } from "./books.js?v=23";
 import { initMovies, clearMovies } from "./movies.js";
 import { initProfile, clearProfile } from "./profile.js";
 import { initCalories, clearCalories } from "./calories.js";
