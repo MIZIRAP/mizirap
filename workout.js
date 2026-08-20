@@ -2723,11 +2723,13 @@ function _spRenderProgressStrip(currentIdx) {
     const strip = document.getElementById('stretch-player-progress-strip');
     if (!strip) return;
     strip.innerHTML = _spMovements.map((_, i) => `
-        <div class="flex-1 h-1 rounded-full transition-all duration-300 ${
-            i < currentIdx ? 'bg-background shadow-neo' :
-            i === currentIdx ? 'bg-background shadow-neo/80' :
-            'bg-background shadow-neo/20'
-        }"></div>
+        <div class="flex-1 h-1 rounded-full overflow-hidden" style="background:#E0E5EC;">
+            <div class="h-full rounded-full transition-all duration-300" style="${
+                i < currentIdx ? 'width:100%; background: linear-gradient(to right, #4648d4, #8a4cfc);' :
+                i === currentIdx ? 'width:100%; background: linear-gradient(to right, #4648d4, #8a4cfc);' :
+                'width:0%;'
+            }"></div>
+        </div>
     `).join('');
 }
 
@@ -3190,11 +3192,13 @@ function _cpRenderProgressStrip(currentIdx) {
     const strip = document.getElementById('core-player-progress-strip');
     if (!strip) return;
     strip.innerHTML = _cpMovements.map((_, i) => `
-        <div class="flex-1 h-1 rounded-full transition-all duration-300 ${
-            i < currentIdx ? 'bg-background shadow-neo' :
-            i === currentIdx ? 'bg-background shadow-neo/80' :
-            'bg-background shadow-neo/20'
-        }"></div>
+        <div class="flex-1 h-1 rounded-full overflow-hidden" style="background:#E0E5EC;">
+            <div class="h-full rounded-full transition-all duration-300" style="${
+                i < currentIdx ? 'width:100%; background: linear-gradient(to right, #4648d4, #22C55E);' :
+                i === currentIdx ? 'width:100%; background: linear-gradient(to right, #4648d4, #22C55E);' :
+                'width:0%;'
+            }"></div>
+        </div>
     `).join('');
 }
 
