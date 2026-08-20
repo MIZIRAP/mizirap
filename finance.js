@@ -233,72 +233,96 @@ function closeModal(id) {
 
 let currentMainFinanceMonth = new Date();
 
-let isMonthCarouselScrolling = false;
 let financeMonthScrollTimeout = null;
+let financeCarouselObserver = null;
 
 function renderMonthCarousel() {
     const carousel = document.getElementById("finance-month-carousel");
-    if (!carousel || carousel.hasAttribute("data-initialized")) return;
-    carousel.setAttribute("data-initialized", "true");
+    if (!carousel) return;
     
-    const today = new Date();
-    const startYear = today.getFullYear() - 1;
-    const endYear = today.getFullYear() + 1;
-    
-    let html = '';
-    const monthNames = ["Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran", "Temmuz", "Ağustos", "Eylül", "Ekim", "Kasım", "Aralık"];
-    
-    let targetIndex = -1;
-    let currentIndex = 0;
-    
-    for (let y = startYear; y <= endYear; y++) {
-        for (let m = 0; m < 12; m++) {
-            if (y === currentMainFinanceMonth.getFullYear() && m === currentMainFinanceMonth.getMonth()) {
-                targetIndex = currentIndex;
+    // Only generate HTML if not initialized
+    if (!carousel.hasAttribute("data-initialized")) {
+        carousel.setAttribute("data-initialized", "true");
+        
+        const today = new Date();
+        const startYear = today.getFullYear() - 1;
+        const endYear = today.getFullYear() + 1;
+        
+        let html = '';
+        const monthNames = ["Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran", "Temmuz", "Ağustos", "Eylül", "Ekim", "Kasım", "Aralık"];
+        
+        for (let y = startYear; y <= endYear; y++) {
+            for (let m = 0; m < 12; m++) {
+                // Change min-w-full to min-w-[120px] to allow swiping to see parts of adjacent months
+                html += `
+                <div class="min-w-[120px] shrink-0 flex justify-center items-center py-3 snap-center month-snap-item cursor-pointer" data-year="${y}" data-month="${m}">
+                    <button class="month-btn px-6 py-2 rounded-full bg-[#F7F9FF] text-xs font-bold text-[#64748B] transition-all" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px #FFFFFF;">
+                        ${monthNames[m]} ${y !== today.getFullYear() ? y : ''}
+                    </button>
+                </div>
+                `;
             }
-            html += `
-            <div class="min-w-full flex justify-center items-center py-3 snap-center month-snap-item" data-year="${y}" data-month="${m}">
-                <button class="month-btn px-6 py-2 rounded-full bg-[#F7F9FF] text-xs font-bold text-[#64748B] transition-all" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px #FFFFFF;">
-                    ${monthNames[m]} ${y !== today.getFullYear() ? y : ''}
-                </button>
-            </div>
-            `;
-            currentIndex++;
+        }
+        
+        carousel.innerHTML = html;
+
+        // Click to scroll
+        const items = carousel.querySelectorAll('.month-snap-item');
+        items.forEach(item => {
+            item.addEventListener('click', () => {
+                item.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+            });
+        });
+
+        // Scroll listener to detect active center item
+        carousel.addEventListener('scroll', () => {
+            clearTimeout(financeMonthScrollTimeout);
+            financeMonthScrollTimeout = setTimeout(() => {
+                const carouselCenter = carousel.getBoundingClientRect().left + carousel.clientWidth / 2;
+                let closestItem = null;
+                let minDistance = Infinity;
+
+                const currentItems = carousel.querySelectorAll('.month-snap-item');
+                currentItems.forEach(item => {
+                    const rect = item.getBoundingClientRect();
+                    const itemCenter = rect.left + rect.width / 2;
+                    const distance = Math.abs(carouselCenter - itemCenter);
+                    if (distance < minDistance) {
+                        minDistance = distance;
+                        closestItem = item;
+                    }
+                });
+
+                if (closestItem) {
+                    const year = parseInt(closestItem.getAttribute("data-year"));
+                    const month = parseInt(closestItem.getAttribute("data-month"));
+                    
+                    if (currentMainFinanceMonth.getFullYear() !== year || currentMainFinanceMonth.getMonth() !== month) {
+                        currentMainFinanceMonth.setFullYear(year, month, 1);
+                        updateMonthStyles();
+                        renderTransactions(true); // Re-render transactions on month change
+                    }
+                }
+            }, 100);
+        });
+        
+        // Ensure it scrolls to current month when it becomes visible
+        if (!financeCarouselObserver) {
+            financeCarouselObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const target = carousel.querySelector(`.month-snap-item[data-year="${currentMainFinanceMonth.getFullYear()}"][data-month="${currentMainFinanceMonth.getMonth()}"]`);
+                        if (target) {
+                            target.scrollIntoView({ behavior: 'auto', block: 'nearest', inline: 'center' });
+                        }
+                    }
+                });
+            }, { threshold: 0.1 });
+            financeCarouselObserver.observe(carousel);
         }
     }
     
-    carousel.innerHTML = html;
-    
-    // Intersection Observer to detect active month
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting && entry.intersectionRatio >= 0.6) {
-                const year = parseInt(entry.target.getAttribute("data-year"));
-                const month = parseInt(entry.target.getAttribute("data-month"));
-                
-                if (currentMainFinanceMonth.getFullYear() !== year || currentMainFinanceMonth.getMonth() !== month) {
-                    currentMainFinanceMonth.setFullYear(year, month, 1);
-                    updateMonthStyles();
-                    renderTransactions();
-                }
-            }
-        });
-    }, {
-        root: carousel,
-        threshold: 0.6
-    });
-    
-    const items = carousel.querySelectorAll('.month-snap-item');
-    items.forEach(item => observer.observe(item));
-    
     updateMonthStyles();
-    
-    // Scroll to current month initially
-    if (targetIndex !== -1) {
-        setTimeout(() => {
-            items[targetIndex].scrollIntoView({ behavior: 'auto', block: 'nearest', inline: 'center' });
-        }, 50);
-    }
 }
 
 function updateMonthStyles() {
@@ -326,8 +350,8 @@ function updateMonthStyles() {
     });
 }
 
-function renderTransactions() {
-    renderMonthCarousel();
+function renderTransactions(isFromScroll = false) {
+    if (!isFromScroll) renderMonthCarousel();
     
     const list = document.getElementById("finance-recent-transactions");
     const balanceEl = document.getElementById("finance-total-balance");
