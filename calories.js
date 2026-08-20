@@ -31,20 +31,20 @@ const caloriesGoalBackdrop = document.getElementById('calories-goal-backdrop');
 
 const caloriesGoalMinus = document.getElementById('calories-goal-minus');
 const caloriesGoalPlus = document.getElementById('calories-goal-plus');
-const caloriesGoalAmountDisplay = document.getElementById('calories-goal-amount-display');
-const caloriesGoalSave = document.getElementById('calories-goal-save');
+const caloriesGoalAmountDisplay = document.getElementById('calories-goal-display');
+const caloriesGoalSave = document.getElementById('save-calories-goal-btn');
 
-const macroProteinMinus = document.getElementById('macro-protein-minus');
-const macroProteinPlus = document.getElementById('macro-protein-plus');
-const macroProteinDisplay = document.getElementById('macro-protein-display');
+const macroProteinMinus = document.getElementById('calories-goal-protein-minus');
+const macroProteinPlus = document.getElementById('calories-goal-protein-plus');
+const macroProteinDisplay = document.getElementById('calories-goal-protein-display');
 
-const macroKarbMinus = document.getElementById('macro-karb-minus');
-const macroKarbPlus = document.getElementById('macro-karb-plus');
-const macroKarbDisplay = document.getElementById('macro-karb-display');
+const macroKarbMinus = document.getElementById('calories-goal-karb-minus');
+const macroKarbPlus = document.getElementById('calories-goal-karb-plus');
+const macroKarbDisplay = document.getElementById('calories-goal-karb-display');
 
-const macroYagMinus = document.getElementById('macro-yag-minus');
-const macroYagPlus = document.getElementById('macro-yag-plus');
-const macroYagDisplay = document.getElementById('macro-yag-display');
+const macroYagMinus = document.getElementById('calories-goal-yag-minus');
+const macroYagPlus = document.getElementById('calories-goal-yag-plus');
+const macroYagDisplay = document.getElementById('calories-goal-yag-display');
 
 const portionModal = document.getElementById('addPortionModal');
 const portionModalContent = document.getElementById('addPortionModalContent');
@@ -165,6 +165,10 @@ function bindEvents() {
         btn.onclick = () => {
             const mealName = btn.dataset.meal || "Öğün";
             if(addFoodModalTitle) addFoodModalTitle.innerText = `${mealName} - Yiyecek Ekle`;
+            if (foodSearchInput) {
+                foodSearchInput.value = '';
+                renderLibraryFoods(); // refresh list to show all
+            }
             addFoodModal.classList.remove('hidden');
             addFoodModal.classList.add('flex');
             setTimeout(() => {
@@ -613,6 +617,61 @@ function renderLogs() {
         wrapper.appendChild(item);
         list.appendChild(wrapper);
     });
+}
+
+window.openAddPortionModal = function(name, kcal100, macros) {
+    currentFoodName = name;
+    currentKcalPer100g = kcal100;
+    currentFoodMacros = macros || {karb: 0, protein: 0, yag: 0};
+    
+    if(portionModalTitle) portionModalTitle.textContent = `${name} - Öğün Ekle`;
+    tempPortionAmount = 100;
+    if(portionGramDisplay) portionGramDisplay.textContent = tempPortionAmount;
+    updatePortionTotal();
+    
+    if(portionModal) {
+        portionModal.classList.remove('hidden');
+        setTimeout(() => {
+            if(portionBackdrop) portionBackdrop.classList.remove('opacity-0');
+            if(portionModalContent) {
+                portionModalContent.classList.remove('translate-y-full', 'md:translate-y-10', 'md:opacity-0', 'md:scale-95');
+                portionModalContent.classList.add('translate-y-0', 'md:translate-y-0', 'md:opacity-100', 'md:scale-100');
+            }
+        }, 10);
+    }
+};
+
+window.closeAddPortionModal = function() {
+    if(portionModal) {
+        if(portionBackdrop) portionBackdrop.classList.add('opacity-0');
+        if(portionModalContent) {
+            portionModalContent.classList.remove('translate-y-0', 'md:translate-y-0', 'md:opacity-100', 'md:scale-100');
+            portionModalContent.classList.add('translate-y-full', 'md:translate-y-10', 'md:opacity-0', 'md:scale-95');
+        }
+        setTimeout(() => {
+            portionModal.classList.add('hidden');
+        }, 300);
+    }
+};
+
+function updatePortionTotal() {
+    if(portionGramDisplay && portionKcalDisplay) {
+        let grams = tempPortionAmount;
+        if (isNaN(grams) || grams < 0) grams = 0;
+        const total = Math.round((grams / 100) * currentKcalPer100g);
+        portionKcalDisplay.textContent = `${total} kcal`;
+    }
+}
+
+function adjustAmount(amount) {
+    tempPortionAmount += amount;
+    if (tempPortionAmount < 0) tempPortionAmount = 0;
+    if(portionGramDisplay) {
+        portionGramDisplay.textContent = tempPortionAmount;
+        portionGramDisplay.style.transform = 'scale(1.1)';
+        setTimeout(() => portionGramDisplay.style.transform = 'scale(1)', 150);
+    }
+    updatePortionTotal();
 }
 
 function renderLibraryFoods() {
