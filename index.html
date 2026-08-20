@@ -2526,54 +2526,155 @@
     </section>
 
     <!-- ================= DİZİ / FİLM ================= -->
-    <section id="view-movies" class="view hidden bg-paper text-on-surface font-sans antialiased min-h-[100dvh] pb-32" style="--green: #446554; --paper: #f7faf3; --ink: #1a1c18; --coral: #ff8a80; --tan: #d2b48c;">
-        <!-- Top App Bar -->
-        <header class="w-full top-0 sticky bg-background dark:bg-background flat no shadows transition-opacity duration-200 z-40 max-w-md mx-auto">
-            <div class="flex items-center justify-between px-container-padding py-4 w-full">
-                <div class="flex items-center gap-3">
-                    <button class="nav-tab hover:opacity-80 p-2 -ml-2 rounded-full focus:outline-none focus:ring-2 focus:ring-primary" data-target="view-dashboard">
-                        <span class="material-symbols-rounded text-neon-blue dark:text-neon-blue-fixed-dim" style="font-variation-settings: 'FILL' 0;">arrow_back</span>
-                    </button>
-                    <h1 class="font-headline-md text-headline-md text-neon-blue dark:text-neon-blue-fixed-dim font-bold tracking-tight">Dizi / Film</h1>
+    <section id="view-movies" class="view hidden">
+    <!-- Top App Bar -->
+    <header class="w-full top-0 sticky z-40 max-w-md mx-auto px-container-padding py-4"><div class="flex items-center justify-between w-full"><button class="nav-tab w-10 h-10 flex items-center justify-center rounded-full bg-[#F7F9FF]" style="box-shadow: rgb(209, 217, 230) 4px 4px 8px, rgb(255, 255, 255) -4px -4px 8px;" data-target="view-dashboard"><span class="material-symbols-rounded text-[#1E293B]">arrow_back</span></button><h1 class="text-h1 font-bold text-[#1E293B]">Film Dizi Takibi</h1><button class="w-10 h-10 flex items-center justify-center rounded-full bg-[#F7F9FF]" style="box-shadow: rgb(209, 217, 230) 4px 4px 8px, rgb(255, 255, 255) -4px -4px 8px;"><span class="material-symbols-rounded text-[#1E293B]">settings</span></button></div></header>
+    <!-- Main Content Container -->
+    <main class="flex-1 w-full max-w-md mx-auto px-container-padding pb-32 flex flex-col gap-section-margin pt-4">
+        <!-- Circular Progress Section -->
+        <section class="flex flex-col items-center justify-center relative"><div class="relative w-64 h-64 flex items-center justify-center rounded-full bg-[#F7F9FF]" style="box-shadow: 10px 10px 20px #D1D9E6, -10px -10px 20px #FFFFFF;"><svg class="absolute inset-0 w-full h-full" viewBox="0 0 120 120"><path d="M 10 60 Q 30 10 60 10 Q 90 10 110 60 Q 90 110 60 110 Q 30 110 10 60" fill="none" stroke="#E0E5EC" stroke-width="0.5" stroke-dasharray="2 2" opacity="0.3"></path><defs><linearGradient id="neonGradientMovies" x1="0%" x2="100%" y1="0%" y2="100%"><stop offset="0%" style="stop-color: rgb(168, 85, 247);"></stop><stop offset="100%" style="stop-color: rgb(59, 130, 246);"></stop></linearGradient></defs><circle cx="60" cy="60" fill="transparent" r="50" stroke="#E0E5EC" stroke-width="8"></circle><circle id="movie-progress-circle" cx="60" cy="60" fill="transparent" r="50" stroke="url(#neonGradientMovies)" stroke-dasharray="314.159" stroke-dashoffset="117.8" stroke-linecap="round" stroke-width="8" style="transition: stroke-dashoffset 0.3s ease; filter: drop-shadow(rgba(168, 85, 247, 0.6) 0px 0px 8px) drop-shadow(rgba(59, 130, 246, 0.4) 0px 0px 12px);" class="-rotate-90 origin-center"></circle></svg><div class="flex flex-col items-center z-10"><span id="movie-active-season" class="text-xs font-bold text-[#3B82F6] uppercase tracking-widest mb-1">Sezon 01</span><h2 id="movie-active-episode" class="text-4xl font-bold text-[#1E293B]">B06</h2></div></div><div class="flex gap-6 mt-8">
+        <button id="movie-active-minus" class="w-12 h-12 flex items-center justify-center rounded-2xl bg-[#F7F9FF] text-[#1E293B] font-bold text-xl active:scale-95 transition-transform" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px #FFFFFF;">
+            <span class="material-symbols-rounded">remove</span>
+        </button>
+        <button id="movie-active-plus" class="w-12 h-12 flex items-center justify-center rounded-2xl bg-[#F7F9FF] text-[#1E293B] font-bold text-xl active:scale-95 transition-transform" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px #FFFFFF;">
+            <span class="material-symbols-rounded">add</span>
+        </button>
+        </div><button id="movie-active-title" class="px-8 py-3 rounded-full bg-[#F7F9FF] text-[#1E293B] font-bold uppercase tracking-wider text-xs mt-4 truncate max-w-full" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px #FFFFFF;">İçerik Seçin</button>
+        </section>
+        
+        <!-- Quick Add Section -->
+        <section class="flex flex-col gap-4"><div class="grid grid-cols-2 gap-6"><button id="add-movie-btn-new" class="flex flex-col items-center justify-center gap-3 py-6 rounded-2xl bg-[#F7F9FF] col-span-2 active:scale-95 transition-transform" style="box-shadow: 6px 6px 12px #D1D9E6, -6px -6px 12px #FFFFFF;"><span class="material-symbols-rounded text-[#3B82F6] text-3xl">movie</span><span class="text-xs font-bold text-[#1E293B]">İçerik Ekle</span></button></div></section>
+
+        <!-- History Log -->
+        <section class="flex flex-col gap-4">
+            <h3 class="text-h2 font-bold text-[#1E293B] px-2">İzleme Listem</h3>
+            <div id="movies-all-list-new" class="flex flex-col gap-4">
+                <!-- Items will be injected here -->
+            </div>
+        </section>
+    </main>
+    
+    <!-- Add Movie Modal -->
+    <div class="hidden fixed inset-0 z-[100] flex flex-col justify-end items-center md:p-4" id="movie-add-modal">
+        <div class="absolute inset-0 bg-black/10 backdrop-blur-sm opacity-0 transition-opacity duration-300" id="movie-add-backdrop"></div>
+        <div class="bg-[#F7F9FF] w-full max-w-sm mx-auto rounded-t-[32px] md:rounded-[32px] shadow-[0_-8px_30px_rgba(0,0,0,0.05)] md:shadow-[0_10px_40px_rgba(0,0,0,0.08)] p-6 flex flex-col items-center transform transition-transform duration-300 translate-y-full z-10 pb-8 md:pb-6" id="movie-add-modal-content">
+            <!-- Drag Handle -->
+            <div class="w-12 h-1.5 bg-gray-300 rounded-full mb-6 md:hidden cursor-pointer" id="close-movie-add-handle"></div>
+            <div class="w-full text-center mb-6">
+                <h2 class="text-xl font-bold text-gray-800 mb-2">Yeni İçerik Ekle</h2>
+            </div>
+            <!-- Input Area -->
+            <div class="w-full flex flex-col gap-4 mb-6 px-2">
+                <div class="flex flex-col gap-1">
+                    <label class="text-xs font-bold text-gray-500 uppercase tracking-wider ml-2">Tür</label>
+                    <select id="movie-add-type" class="w-full bg-[#F7F9FF] border-none rounded-2xl py-4 px-4 text-gray-800 font-medium focus:ring-2 focus:ring-silk-blue outline-none" style="box-shadow: inset 2px 2px 5px #D1D9E6, inset -2px -2px 5px #FFFFFF;">
+                        <option value="series">Dizi</option>
+                        <option value="movie">Film</option>
+                    </select>
+                </div>
+                <div class="flex flex-col gap-1">
+                    <label class="text-xs font-bold text-gray-500 uppercase tracking-wider ml-2">İçerik Adı</label>
+                    <input id="movie-add-title" type="text" placeholder="Örn: The Last of Us" class="w-full bg-[#F7F9FF] border-none rounded-2xl py-4 px-4 text-gray-800 font-medium focus:ring-2 focus:ring-silk-blue outline-none placeholder:text-gray-400" style="box-shadow: inset 2px 2px 5px #D1D9E6, inset -2px -2px 5px #FFFFFF;" />
+                </div>
+                <div id="movie-add-series-fields" class="grid grid-cols-2 gap-4">
+                    <div class="flex flex-col gap-1">
+                        <label class="text-xs font-bold text-gray-500 uppercase tracking-wider ml-2">Sezon</label>
+                        <input id="movie-add-season" type="number" placeholder="1" value="1" class="w-full bg-[#F7F9FF] border-none rounded-2xl py-4 px-4 text-gray-800 font-medium focus:ring-2 focus:ring-silk-blue outline-none placeholder:text-gray-400" style="box-shadow: inset 2px 2px 5px #D1D9E6, inset -2px -2px 5px #FFFFFF;" />
+                    </div>
+                    <div class="flex flex-col gap-1">
+                        <label class="text-xs font-bold text-gray-500 uppercase tracking-wider ml-2">Bölüm</label>
+                        <input id="movie-add-episode" type="number" placeholder="1" value="1" class="w-full bg-[#F7F9FF] border-none rounded-2xl py-4 px-4 text-gray-800 font-medium focus:ring-2 focus:ring-silk-blue outline-none placeholder:text-gray-400" style="box-shadow: inset 2px 2px 5px #D1D9E6, inset -2px -2px 5px #FFFFFF;" />
+                    </div>
+                </div>
+                
+                <div class="flex flex-col gap-2 mt-2">
+                    <label class="text-xs font-bold text-gray-500 uppercase tracking-wider ml-2">Durum</label>
+                    <div class="flex gap-4 px-2">
+                        <label class="flex items-center gap-2 text-xs font-bold text-gray-600 cursor-pointer">
+                            <input class="accent-silk-blue w-4 h-4 cursor-pointer movie-add-status-radio" name="movie-add-status" value="watchlist" type="radio"/>
+                            İstek
+                        </label>
+                        <label class="flex items-center gap-2 text-xs font-bold text-gray-600 cursor-pointer">
+                            <input class="accent-silk-blue w-4 h-4 cursor-pointer movie-add-status-radio" name="movie-add-status" value="watching" type="radio" checked/>
+                            İzliyorum
+                        </label>
+                        <label class="flex items-center gap-2 text-xs font-bold text-gray-600 cursor-pointer">
+                            <input class="accent-silk-blue w-4 h-4 cursor-pointer movie-add-status-radio" name="movie-add-status" value="completed" type="radio"/>
+                            Bitti
+                        </label>
+                    </div>
                 </div>
             </div>
-        </header>
+            <!-- CTA Button -->
+            <button id="movie-add-save" class="w-full py-4 px-6 rounded-full font-bold text-lg text-white shadow-md focus:outline-none active:scale-[0.98] transition-transform flex items-center justify-center gap-2 mb-4" style="background: linear-gradient(135deg, #A855F7 0%, #3B82F6 100%);">
+                Ekle <span class="material-symbols-rounded">check_circle</span>
+            </button>
+        </div>
+    </div>
 
-        <main class="px-5 mt-4 max-w-md mx-auto">
-            <!-- Title & Quick Add -->
-            <section class="mb-6 flex flex-col gap-6">
-                <div class="flex justify-between items-center px-1">
-                    <h2 class="text-headline-sm font-headline-sm text-on-surface font-bold">İçerikler</h2>
-                    <button class="flex items-center gap-1.5 bg-gradient-to-r from-neon-purple to-neon-blue text-white rounded-full px-4 py-2 text-label-md font-label-md shadow-sm active:scale-95 transition-transform" id="movies-add-btn">
-                        <span class="material-symbols-rounded text-lg">add</span>
-                        İçerik Ekle
-                    </button>
+    <!-- Edit Movie Modal -->
+    <div class="hidden fixed inset-0 z-[100] flex flex-col justify-end items-center md:p-4" id="movie-edit-modal">
+        <div class="absolute inset-0 bg-black/10 backdrop-blur-sm opacity-0 transition-opacity duration-300" id="movie-edit-backdrop"></div>
+        <div class="bg-[#F7F9FF] w-full max-w-sm mx-auto rounded-t-[32px] md:rounded-[32px] shadow-[0_-8px_30px_rgba(0,0,0,0.05)] md:shadow-[0_10px_40px_rgba(0,0,0,0.08)] p-6 flex flex-col items-center transform transition-transform duration-300 translate-y-full z-10 pb-8 md:pb-6" id="movie-edit-modal-content">
+            <!-- Drag Handle -->
+            <div class="w-12 h-1.5 bg-gray-300 rounded-full mb-6 md:hidden cursor-pointer" id="close-movie-edit-handle"></div>
+            <div class="w-full text-center mb-6">
+                <h2 class="text-xl font-bold text-gray-800 mb-2">İçeriği Düzenle</h2>
+            </div>
+            <!-- Input Area -->
+            <div class="w-full flex flex-col gap-4 mb-6 px-2">
+                <div class="flex flex-col gap-1">
+                    <label class="text-xs font-bold text-gray-500 uppercase tracking-wider ml-2">Tür</label>
+                    <select id="movie-edit-type" class="w-full bg-[#F7F9FF] border-none rounded-2xl py-4 px-4 text-gray-800 font-medium focus:ring-2 focus:ring-silk-blue outline-none" style="box-shadow: inset 2px 2px 5px #D1D9E6, inset -2px -2px 5px #FFFFFF;">
+                        <option value="series">Dizi</option>
+                        <option value="movie">Film</option>
+                    </select>
                 </div>
-
-                <!-- Segmented Control -->
-                <div class="bg-surface-container-high p-1 rounded-full flex items-center shadow-inner">
-                    <button class="movies-tab flex-1 py-1.5 px-2 rounded-full bg-gradient-to-r from-neon-purple to-neon-blue text-white text-label-sm font-label-sm font-medium transition-all" data-status="watching">
-                        Devam Ediyor
-                    </button>
-                    <button class="movies-tab flex-1 py-1.5 px-2 rounded-full text-on-surface-variant hover:text-neon-blue text-label-sm font-label-sm font-medium transition-all" data-status="watchlist">
-                        İstek Listesi
-                    </button>
-                    <button class="movies-tab flex-1 py-1.5 px-2 rounded-full text-on-surface-variant hover:text-neon-blue text-label-sm font-label-sm font-medium transition-all" data-status="completed">
-                        Tamamlandı
-                    </button>
+                <div class="flex flex-col gap-1">
+                    <label class="text-xs font-bold text-gray-500 uppercase tracking-wider ml-2">İçerik Adı</label>
+                    <input id="movie-edit-title" type="text" class="w-full bg-[#F7F9FF] border-none rounded-2xl py-4 px-4 text-gray-800 font-medium focus:ring-2 focus:ring-silk-blue outline-none" style="box-shadow: inset 2px 2px 5px #D1D9E6, inset -2px -2px 5px #FFFFFF;" />
                 </div>
-            </section>
-
-            <!-- Compact Grid List -->
-            <section class="grid grid-cols-2 gap-3" id="movies-list-container">
-                    <div class="flex justify-center items-center py-8"><div class="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div></div>
+                <div id="movie-edit-series-fields" class="grid grid-cols-2 gap-4">
+                    <div class="flex flex-col gap-1">
+                        <label class="text-xs font-bold text-gray-500 uppercase tracking-wider ml-2">Sezon</label>
+                        <input id="movie-edit-season" type="number" class="w-full bg-[#F7F9FF] border-none rounded-2xl py-4 px-4 text-gray-800 font-medium focus:ring-2 focus:ring-silk-blue outline-none" style="box-shadow: inset 2px 2px 5px #D1D9E6, inset -2px -2px 5px #FFFFFF;" />
+                    </div>
+                    <div class="flex flex-col gap-1">
+                        <label class="text-xs font-bold text-gray-500 uppercase tracking-wider ml-2">Bölüm</label>
+                        <input id="movie-edit-episode" type="number" class="w-full bg-[#F7F9FF] border-none rounded-2xl py-4 px-4 text-gray-800 font-medium focus:ring-2 focus:ring-silk-blue outline-none" style="box-shadow: inset 2px 2px 5px #D1D9E6, inset -2px -2px 5px #FFFFFF;" />
+                    </div>
+                </div>
                 
-                <!-- Javascript will populate this based on Firebase -->
-            </section>
-        </main>
-    </section>
+                <div class="flex flex-col gap-2 mt-2">
+                    <label class="text-xs font-bold text-gray-500 uppercase tracking-wider ml-2">Durum</label>
+                    <div class="flex gap-4 px-2">
+                        <label class="flex items-center gap-2 text-xs font-bold text-gray-600 cursor-pointer">
+                            <input class="accent-silk-blue w-4 h-4 cursor-pointer movie-edit-status-radio" name="movie-edit-status" value="watchlist" type="radio"/>
+                            İstek
+                        </label>
+                        <label class="flex items-center gap-2 text-xs font-bold text-gray-600 cursor-pointer">
+                            <input class="accent-silk-blue w-4 h-4 cursor-pointer movie-edit-status-radio" name="movie-edit-status" value="watching" type="radio"/>
+                            İzliyorum
+                        </label>
+                        <label class="flex items-center gap-2 text-xs font-bold text-gray-600 cursor-pointer">
+                            <input class="accent-silk-blue w-4 h-4 cursor-pointer movie-edit-status-radio" name="movie-edit-status" value="completed" type="radio"/>
+                            Bitti
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <!-- CTA Buttons -->
+            <button id="movie-edit-save" class="w-full py-4 px-6 rounded-full font-bold text-lg text-gray-800 gradient-border shadow-md focus:outline-none active:scale-[0.98] transition-transform flex items-center justify-center gap-2 mb-3">
+                Güncelle <span class="material-symbols-rounded text-silk-blue" style="font-variation-settings: 'FILL' 1;">done</span>
+            </button>
+            <button id="movie-edit-delete" class="w-full py-4 px-6 rounded-full font-bold text-lg text-red-500 bg-transparent border-2 border-red-500/20 shadow-sm focus:outline-none active:scale-[0.98] transition-transform flex items-center justify-center gap-2">
+                Sil <span class="material-symbols-rounded">delete</span>
+            </button>
+        </div>
+    </div>
+</section>
 
-    <!-- ================= FİNANS ================= -->
+<!-- ================= FİNANS ================= -->
 
 <section id="view-finance" class="view hidden px-container-padding py-6">
         <!-- Top App Bar -->
@@ -3370,7 +3471,7 @@
     </section>
 
 
-    <script type="module" src="app.js?v=115"></script>
+    <script type="module" src="app.js?v=116"></script>
 
 <!-- ================= FINANCE MODALS ================= -->
 <!-- Add Transaction Modal -->

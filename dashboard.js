@@ -95,8 +95,16 @@ function renderDashboard() {
     // Dizi/Film
     const dashMoviesText = document.getElementById("dashboard-movies-text");
     if (dashMoviesText) {
-        const watchingMovies = currentMovies.filter(m => (m.status || 'watching') === 'watching');
-        dashMoviesText.innerHTML = `<span class="text-2xl font-bold text-on-surface leading-none">${watchingMovies.length}</span><span class="text-xs text-on-surface-variant mb-1">items</span>`;
+        if (currentMovies && currentMovies.length > 0) {
+            const activeMovie = currentMovies[0]; // because we sort the active one to index 0 in movies.js
+            if (activeMovie.type === 'series') {
+                dashMoviesText.innerHTML = `<span class="text-sm font-bold text-on-surface">S${activeMovie.season || 1} B${activeMovie.episode || 1}</span>`;
+            } else {
+                dashMoviesText.innerHTML = `<span class="text-sm font-bold text-on-surface">Film</span>`;
+            }
+        } else {
+            dashMoviesText.innerHTML = `<span class="text-sm font-bold text-on-surface">YOK</span>`;
+        }
     }
 
     // Spor

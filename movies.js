@@ -1,425 +1,573 @@
 import { db } from "./firebase-config.js";
-import { collection, doc, addDoc, updateDoc, deleteDoc, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
-import { escapeHtml, handleFormSubmit } from "./utils.js";
+import { collection, onSnapshot, serverTimestamp, doc, updateDoc, writeBatch, addDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+import { escapeHtml } from "./utils.js";
 import { registerListener } from "./listenerManager.js";
 
+let moviesUnsubscribe = null;
+let currentMovies = [];
 let currentUid = null;
-let currentStatusTab = 'watching'; // watching, watchlist, completed
-let movies = [];
-let unsubMovies = null;
-let dashboardCallback = null;
-let currentSelectedImageFile = null;
+let activeMovie = null;
+let onChangeCb = null;
 
-let currentEditingId = null; // null for add, string for edit
+let currentEditingId = null; // for edit modal
 
-document.addEventListener('click', (e) => {
-    const actionBtn = e.target.closest('[data-action]');
-    if (!actionBtn) return;
-    const action = actionBtn.getAttribute('data-action');
-    if (action === 'openMoviesModal') {
-        openMoviesModal(actionBtn.getAttribute('data-movie-id') || null);
-    } else if (action === 'closeMoviesModal') {
-        closeMoviesModal();
-    }
-});
+// DOM Elements - Main Screen
+const activeSeasonEl = document.getElementById("movie-active-season");
+const activeEpisodeEl = document.getElementById("movie-active-episode");
+const activeMinusBtn = document.getElementById("movie-active-minus");
+const activePlusBtn = document.getElementById("movie-active-plus");
+const progressCircle = document.getElementById("movie-progress-circle");
+const activeTitleEl = document.getElementById("movie-active-title");
 
-document.addEventListener('change', (e) => {
-    if (e.target.name === 'movies-type') {
-        toggleMovieType();
-    }
-});
+const addMovieBtn = document.getElementById("add-movie-btn-new");
+const allListEl = document.getElementById("movies-all-list-new");
 
-export function initMovies(uid, callback) {
+// DOM Elements - Add Modal
+const addModal = document.getElementById("movie-add-modal");
+const addBackdrop = document.getElementById("movie-add-backdrop");
+const addContent = document.getElementById("movie-add-modal-content");
+const addCloseHandle = document.getElementById("close-movie-add-handle");
+const addType = document.getElementById("movie-add-type");
+const addTitle = document.getElementById("movie-add-title");
+const addSeason = document.getElementById("movie-add-season");
+const addEpisode = document.getElementById("movie-add-episode");
+const addSeriesFields = document.getElementById("movie-add-series-fields");
+const addSaveBtn = document.getElementById("movie-add-save");
+
+// DOM Elements - Edit Modal
+const editModal = document.getElementById("movie-edit-modal");
+const editBackdrop = document.getElementById("movie-edit-backdrop");
+const editContent = document.getElementById("movie-edit-modal-content");
+const editCloseHandle = document.getElementById("close-movie-edit-handle");
+const editType = document.getElementById("movie-edit-type");
+const editTitle = document.getElementById("movie-edit-title");
+const editSeason = document.getElementById("movie-edit-season");
+const editEpisode = document.getElementById("movie-edit-episode");
+const editSeriesFields = document.getElementById("movie-edit-series-fields");
+const editSaveBtn = document.getElementById("movie-edit-save");
+const editDeleteBtn = document.getElementById("movie-edit-delete");
+
+
+export function initMovies(uid, onChangeCallback) {
     currentUid = uid;
-    dashboardCallback = callback;
-
-    setupUI();
-    listenToMovies();
-}
-
-function setupUI() {
-    // Tabs
-    const tabs = document.querySelectorAll('.movies-tab');
-    tabs.forEach(tab => {
-        tab.addEventListener('click', (e) => {
-            const status = e.currentTarget.getAttribute('data-status');
-            currentStatusTab = status;
-            updateTabsUI();
-            renderMovies();
-        });
-    });
-
-    // Add Button
-    const addBtn = document.getElementById('movies-add-btn');
-    if (addBtn) {
-        addBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            openMoviesModal(null);
-        });
-    }
-
-    // Modal Title Input updates Cover Letter
-    const titleInput = document.getElementById('movies-modal-input-title');
-    if (titleInput) {
-        titleInput.addEventListener('input', (e) => {
-            const letterEl = document.getElementById('movies-modal-cover-letter');
-            if (letterEl) {
-                const val = e.target.value.trim();
-                letterEl.textContent = val.length > 0 ? val.charAt(0).toUpperCase() : 'D';
-            }
-        });
-    }
-
-    // Save Button
-    const saveBtn = document.getElementById('movies-modal-save-btn');
-    if (saveBtn) {
-        saveBtn.addEventListener('click', saveMovie);
-    }
-
-    // Delete Button
-    const deleteBtn = document.getElementById('movies-modal-delete-btn');
-    if (deleteBtn) {
-        deleteBtn.addEventListener('click', deleteMovie);
-    }
-
-    // Image Input
-    const imgInput = document.getElementById('movies-modal-image-input');
-    if (imgInput) {
-        imgInput.addEventListener('change', (e) => {
-            const file = e.target.files[0];
-            if (file) {
-                currentSelectedImageFile = file;
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const cover = document.getElementById('movies-modal-cover');
-                    cover.style.backgroundImage = `url('${e.target.result}')`;
-                    cover.style.backgroundSize = 'cover';
-                    cover.style.backgroundPosition = 'center';
-                    const letter = document.getElementById('movies-modal-cover-letter');
-                    if(letter) letter.style.display = 'none';
-                };
-                reader.readAsDataURL(file);
-            }
-        });
-    }
-}
-
-function openMoviesModal(movieId) {
-    currentEditingId = movieId || null;
-    const modal = document.getElementById('movies-modal');
+    onChangeCb = onChangeCallback;
     
-    // UI Elements
-    const titleInput = document.getElementById('movies-modal-input-title');
-    const typeMovie = document.querySelector('input[name="movies-type"][value="movie"]');
-    const typeSeries = document.querySelector('input[name="movies-type"][value="series"]');
-    const statusWatching = document.querySelector('input[name="movies-status"][value="watching"]');
-    const statusWishlist = document.querySelector('input[name="movies-status"][value="watchlist"]');
-    const statusCompleted = document.querySelector('input[name="movies-status"][value="completed"]');
-    const seasonInput = document.getElementById('movies-modal-season');
-    const episodeInput = document.getElementById('movies-modal-episode');
-    const subtitle = document.getElementById('movies-modal-subtitle');
-    const saveText = document.getElementById('movies-modal-save-text');
-    const deleteBtn = document.getElementById('movies-modal-delete-btn');
-    const coverLetter = document.getElementById('movies-modal-cover-letter');
-    const searchInput = document.getElementById('movies-search-input'); // quick add input
-
-    if (currentEditingId) {
-        // Edit Mode
-        const item = movies.find(m => m.id === currentEditingId);
-        if (item) {
-            titleInput.value = item.title || '';
-            coverLetter.textContent = item.coverLetter || (item.title ? item.title.charAt(0).toUpperCase() : 'D');
-            
-            const coverEl = document.getElementById('movies-modal-cover');
-            if (item.imageUrl) {
-                coverEl.style.backgroundImage = `url('${item.imageUrl}')`;
-                coverEl.style.backgroundSize = 'cover';
-                coverEl.style.backgroundPosition = 'center';
-                coverLetter.style.display = 'none';
-            } else {
-                coverEl.style.backgroundImage = 'none';
-                coverLetter.style.display = 'block';
-            }
-            
-            if (item.type === 'movie') typeMovie.checked = true;
-            else typeSeries.checked = true;
-
-            if (item.status === 'watchlist') statusWishlist.checked = true;
-            else if (item.status === 'completed') statusCompleted.checked = true;
-            else statusWatching.checked = true;
-
-            seasonInput.value = item.season || 1;
-            episodeInput.value = item.episode || 1;
-
-            subtitle.textContent = "Düzenleniyor";
-            saveText.textContent = "Güncelle";
-            deleteBtn.style.display = 'flex';
-        }
-    } else {
-        // Add Mode
-        let defaultTitle = searchInput && searchInput.value ? searchInput.value : '';
-        titleInput.value = defaultTitle;
-        coverLetter.textContent = defaultTitle ? defaultTitle.charAt(0).toUpperCase() : 'D';
-        coverLetter.style.display = 'block';
-        
-        const coverEl = document.getElementById('movies-modal-cover');
-        coverEl.style.backgroundImage = 'none';
-        typeSeries.checked = true; // default
-        statusWatching.checked = true;
-        seasonInput.value = 1;
-        episodeInput.value = 1;
-
-        subtitle.textContent = "Yeni İçerik Ekle";
-        saveText.textContent = "Kaydet";
-        deleteBtn.style.display = 'none';
-        
-        // Clear search input for convenience
-        if (searchInput) searchInput.value = '';
-    }
-
-    currentSelectedImageFile = null;
-    const imgInput = document.getElementById('movies-modal-image-input');
-    if(imgInput) imgInput.value = '';
-
-    toggleMovieType();
-
-    modal.classList.remove("hidden");
-    modal.classList.add("flex");
-    requestAnimationFrame(() => {
-        modal.classList.remove("opacity-0");
-        const panel = modal.querySelector("div[role='dialog']");
-        if(panel) panel.classList.remove("translate-y-full");
-    });
-};
-
-function closeMoviesModal() {
-    const modal = document.getElementById('movies-modal');
-    if (!modal) return;
-    modal.classList.add("opacity-0");
-    const panel = modal.querySelector("div[role='dialog']");
-    if(panel) panel.classList.add("translate-y-full");
-    setTimeout(() => {
-        modal.classList.remove("flex");
-        modal.classList.add("hidden");
-    }, 300);
-};
-
-function toggleMovieType() {
-    const isSeries = document.querySelector('input[name="movies-type"][value="series"]').checked;
-    const seriesInputs = document.getElementById('movies-series-inputs');
-    if (isSeries) {
-        seriesInputs.classList.remove('hidden');
-        seriesInputs.classList.add('flex');
-    } else {
-        seriesInputs.classList.remove('flex');
-        seriesInputs.classList.add('hidden');
-    }
-};
-
-async function saveMovie() {
-    if (!currentUid) return;
-
-    const titleInput = document.getElementById('movies-modal-input-title');
-    const type = document.querySelector('input[name="movies-type"]:checked').value;
-    const status = document.querySelector('input[name="movies-status"]:checked').value;
-    const seasonInput = document.getElementById('movies-modal-season');
-    const episodeInput = document.getElementById('movies-modal-episode');
-    const saveBtn = document.getElementById('movies-modal-save-btn');
-
-    const inputsToValidate = [{ el: titleInput, type: 'text', required: true }];
-    if (type === 'series') {
-        inputsToValidate.push({ el: seasonInput, type: 'number', required: true, min: 0 });
-        inputsToValidate.push({ el: episodeInput, type: 'number', required: true, min: 0 });
-    }
-
-    await handleFormSubmit(saveBtn, inputsToValidate, async () => {
-        const title = titleInput.value.trim();
-        const season = seasonInput.value;
-        const episode = episodeInput.value;
-
-        const data = {
-            title: title,
-            type: type,
-            status: status,
-            coverLetter: title.charAt(0).toUpperCase()
+    // Bind Add Quick Button
+    if(addMovieBtn) addMovieBtn.onclick = openAddModal;
+    
+    // Bind Modal Closers
+    if(addBackdrop) addBackdrop.onclick = closeAddModal;
+    if(addCloseHandle) addCloseHandle.onclick = closeAddModal;
+    if(editBackdrop) editBackdrop.onclick = closeEditModal;
+    if(editCloseHandle) editCloseHandle.onclick = closeEditModal;
+    
+    // Bind Type Toggles
+    if(addType) {
+        addType.onchange = () => {
+            if(addType.value === 'series') addSeriesFields.style.display = 'grid';
+            else addSeriesFields.style.display = 'none';
         };
-
-        if (type === 'series') {
-            data.season = parseInt(season) || 1;
-            data.episode = parseInt(episode) || 1;
-        }
-
-        // Upload image if selected (Resize and save as Base64 Data URL)
-        if (currentSelectedImageFile) {
-            saveBtn.innerHTML = "Görsel İşleniyor...";
-            
-            // Resize image using Canvas
-            const base64Image = await new Promise((resolve, reject) => {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const img = new Image();
-                    img.onload = function() {
-                        const canvas = document.createElement('canvas');
-                        const MAX_WIDTH = 400;
-                        const MAX_HEIGHT = 600;
-                        let width = img.width;
-                        let height = img.height;
-
-                        if (width > height) {
-                            if (width > MAX_WIDTH) {
-                                height *= MAX_WIDTH / width;
-                                width = MAX_WIDTH;
-                            }
-                        } else {
-                            if (height > MAX_HEIGHT) {
-                                width *= MAX_HEIGHT / height;
-                                height = MAX_HEIGHT;
-                            }
-                        }
-                        
-                        canvas.width = width;
-                        canvas.height = height;
-                        const ctx = canvas.getContext('2d');
-                        ctx.drawImage(img, 0, 0, width, height);
-                        resolve(canvas.toDataURL('image/jpeg', 0.8)); // compress to 80% quality JPEG
-                    };
-                    img.onerror = reject;
-                    img.src = e.target.result;
-                };
-                reader.onerror = reject;
-                reader.readAsDataURL(currentSelectedImageFile);
-            });
-            
-            data.imageUrl = base64Image;
-        }
-
-        if (currentEditingId) {
-            await updateDoc(doc(db, "users", currentUid, "movies", currentEditingId), data).catch(e => { console.error('DB Error:', e); alert('Veritabanı işlemi sırasında bir hata oluştu.'); throw e; });
-        } else {
-            data.createdAt = serverTimestamp();
-            await addDoc(collection(db, "users", currentUid, "movies"), data).catch(e => { console.error('DB Error:', e); alert('Veritabanı işlemi sırasında bir hata oluştu.'); throw e; });
-        }
-
-        closeMoviesModal();
-    });
-}
-
-async function deleteMovie() {
-    if (!currentUid || !currentEditingId) return;
-    
-    if (confirm("Bu içeriği silmek istediğinize emin misiniz?")) {
-        try {
-            await deleteDoc(doc(db, "users", currentUid, "movies", currentEditingId)).catch(e => { console.error('DB Error:', e); alert('Veritabanı işlemi sırasında bir hata oluştu.'); throw e; });
-            closeMoviesModal();
-        } catch (e) {
-            console.error("Dizi/Film silinemedi:", e);
-            alert("Silme işlemi başarısız oldu.");
-        }
     }
-}
+    if(editType) {
+        editType.onchange = () => {
+            if(editType.value === 'series') editSeriesFields.style.display = 'grid';
+            else editSeriesFields.style.display = 'none';
+        };
+    }
 
-function updateTabsUI() {
-    const tabs = document.querySelectorAll('.movies-tab');
-    tabs.forEach(tab => {
-        const status = tab.getAttribute('data-status');
-        if (status === currentStatusTab) {
-            tab.classList.remove('text-on-surface-variant', 'hover:text-neon-blue');
-            tab.classList.add('bg-gradient-to-r from-neon-purple to-neon-blue', 'text-white');
-        } else {
-            tab.classList.remove('bg-gradient-to-r from-neon-purple to-neon-blue', 'text-white');
-            tab.classList.add('text-on-surface-variant', 'hover:text-neon-blue');
-        }
-    });
-}
+    // Bind Saves
+    if(addSaveBtn) addSaveBtn.onclick = saveAddMovie;
+    if(editSaveBtn) editSaveBtn.onclick = saveEditMovie;
+    if(editDeleteBtn) editDeleteBtn.onclick = deleteMovie;
 
-function listenToMovies() {
-    if (!currentUid) return;
+    // Bind Active Controls
+    if(activeMinusBtn) activeMinusBtn.onclick = handleActiveMinus;
+    if(activePlusBtn) activePlusBtn.onclick = handleActivePlus;
 
-    const moviesRef = collection(db, "users", currentUid, "movies");
+    // Load active movie from local storage
+    const storedActive = localStorage.getItem(`activeMovie_${uid}`);
+    if (storedActive) {
+        activeMovie = JSON.parse(storedActive);
+    }
+
+    const moviesRef = collection(db, "users", uid, "movies");
     
-    if (unsubMovies) unsubMovies();
-
-    unsubMovies = registerListener(onSnapshot(moviesRef, (snapshot) => {
-        movies = [];
-        snapshot.forEach(doc => {
-            movies.push({ id: doc.id, ...doc.data() });
+    moviesUnsubscribe = onSnapshot(moviesRef, (snapshot) => {
+        currentMovies = [];
+        snapshot.forEach(docSnap => {
+            currentMovies.push({ id: docSnap.id, ...docSnap.data() });
         });
         
-        // Notify dashboard
-        if (dashboardCallback) {
-            dashboardCallback(movies);
+        // Sort: activeMovie always first, then by updatedAt descending
+        currentMovies.sort((a, b) => {
+            if (activeMovie && a.id === activeMovie.id) return -1;
+            if (activeMovie && b.id === activeMovie.id) return 1;
+            
+            const timeA = a.updatedAt ? a.updatedAt.toMillis() : 0;
+            const timeB = b.updatedAt ? b.updatedAt.toMillis() : 0;
+            return timeB - timeA;
+        });
+        
+        // Ensure activeMovie is valid
+        if (currentMovies.length > 0) {
+            const foundActive = activeMovie ? currentMovies.find(m => m.id === activeMovie.id) : null;
+            if (foundActive) {
+                activeMovie = foundActive;
+            } else {
+                activeMovie = currentMovies[0];
+                localStorage.setItem(`activeMovie_${currentUid}`, JSON.stringify(activeMovie));
+            }
+        } else {
+            activeMovie = null;
+            localStorage.removeItem(`activeMovie_${currentUid}`);
         }
-
-        renderMovies();
+        
+        renderMoviesView();
+        
+        if (onChangeCb) onChangeCb(currentMovies);
     }, (error) => {
-        console.error("Dizi/Film verisi çekilemedi:", error);
-    }));
+        console.error("Filmler çekilemedi:", error);
+    });
+    
+    registerListener(moviesUnsubscribe);
 }
 
-function renderMovies() {
-    const container = document.getElementById('movies-list-container');
-    if (!container) return;
-
-    container.innerHTML = '';
-
-    const filtered = movies.filter(m => (m.status || 'watching') === currentStatusTab);
-
-    if (filtered.length === 0) {
-        container.innerHTML = `<div class="col-span-2 text-center text-on-surface-variant/60 py-10">Bu listede henüz içerik yok.</div>`;
+function updateActiveMovieUI() {
+    if (!activeMovie) {
+        if(activeTitleEl) activeTitleEl.textContent = "İçerik Seçin";
+        if(activeSeasonEl) activeSeasonEl.textContent = "FİLM / DİZİ";
+        if(activeEpisodeEl) activeEpisodeEl.textContent = "--";
+        if(progressCircle) progressCircle.style.strokeDashoffset = 314.159;
         return;
     }
 
-    filtered.forEach(item => {
-        const type = item.type || 'series'; // 'movie' or 'series'
-        const title = escapeHtml(item.title || 'İsimsiz');
-        const coverLetter = item.coverLetter ? escapeHtml(item.coverLetter) : title.charAt(0).toUpperCase();
-        const imageUrl = item.imageUrl || null;
+    if(activeTitleEl) activeTitleEl.textContent = activeMovie.title || "İsimsiz";
+
+    let percentage = 0;
+    if (activeMovie.type === 'movie') {
+        if(activeSeasonEl) activeSeasonEl.textContent = "FİLM";
+        if(activeMovie.status === 'completed') {
+            if(activeEpisodeEl) activeEpisodeEl.textContent = "BİTTİ";
+            percentage = 100;
+        } else if (activeMovie.status === 'watchlist') {
+            if(activeEpisodeEl) activeEpisodeEl.textContent = "BEKLİYOR";
+            percentage = 0;
+        } else {
+            if(activeEpisodeEl) activeEpisodeEl.textContent = "İZLİYOR";
+            percentage = 50;
+        }
+    } else {
+        // Series
+        const season = activeMovie.season || 1;
+        const episode = activeMovie.episode || 1;
+        if(activeSeasonEl) activeSeasonEl.textContent = `SEZON ${season.toString().padStart(2, '0')}`;
+        if(activeEpisodeEl) activeEpisodeEl.textContent = `B${episode.toString().padStart(2, '0')}`;
         
-        let subtitleHtml = '';
+        // Mock progress for series (e.g. wraps around every 20 episodes)
+        percentage = Math.min((episode % 20) * 5, 100);
+        if(episode > 0 && percentage === 0) percentage = 100; // if exactly multiple of 20
+    }
+
+    if(progressCircle) {
+        const circumference = 314.159; // 2 * pi * 50
+        const offset = circumference - (percentage / 100) * circumference;
+        progressCircle.style.strokeDashoffset = offset;
+    }
+}
+
+async function handleActiveMinus() {
+    if(!activeMovie || !currentUid) return;
+    
+    let updates = {};
+    if (activeMovie.type === 'series') {
+        let ep = (activeMovie.episode || 1) - 1;
+        if (ep < 0) ep = 0;
+        updates = { episode: ep, updatedAt: serverTimestamp() };
+    } else {
+        // Movie: cycle status down
+        let newStatus = 'watchlist';
+        if (activeMovie.status === 'completed') newStatus = 'watching';
+        else if (activeMovie.status === 'watching') newStatus = 'watchlist';
+        updates = { status: newStatus, updatedAt: serverTimestamp() };
+    }
+
+    // Optimistic UI update
+    activeMovie = { ...activeMovie, ...updates };
+    if(activeMovie.updatedAt) delete activeMovie.updatedAt; // Don't break sync logic if missing
+    updateActiveMovieUI();
+
+    try {
+        await updateDoc(doc(db, "users", currentUid, "movies", activeMovie.id), updates);
+    } catch(e) {
+        console.error(e);
+    }
+}
+
+async function handleActivePlus() {
+    if(!activeMovie || !currentUid) return;
+    
+    let updates = {};
+    if (activeMovie.type === 'series') {
+        let ep = (activeMovie.episode || 0) + 1;
+        updates = { episode: ep, updatedAt: serverTimestamp() };
+    } else {
+        // Movie: cycle status up
+        let newStatus = 'completed';
+        if (activeMovie.status === 'watchlist') newStatus = 'watching';
+        else if (activeMovie.status === 'watching') newStatus = 'completed';
+        updates = { status: newStatus, updatedAt: serverTimestamp() };
+    }
+
+    // Optimistic UI update
+    activeMovie = { ...activeMovie, ...updates };
+    if(activeMovie.updatedAt) delete activeMovie.updatedAt;
+    updateActiveMovieUI();
+
+    try {
+        await updateDoc(doc(db, "users", currentUid, "movies", activeMovie.id), updates);
+    } catch(e) {
+        console.error(e);
+    }
+}
+
+
+function renderMoviesView() {
+    updateActiveMovieUI();
+    if (!allListEl) return;
+    
+    allListEl.innerHTML = '';
+    
+    if (currentMovies.length === 0) {
+        allListEl.innerHTML = `<p class="text-center text-[#64748B] py-8 text-sm">Henüz eklenmiş bir içerik yok.</p>`;
+        return;
+    }
+    
+    currentMovies.forEach(movie => {
+        const type = movie.type || 'series';
+        const title = escapeHtml(movie.title || 'İsimsiz');
+        
+        let subtitleText = '';
         if (type === 'series') {
-            if (item.season) {
-                subtitleHtml = `<p class="text-caption text-neon-blue">Sezon ${item.season}${item.episode ? ' • ' + item.episode + ' Bölüm' : ''}</p>`;
-            } else if (item.episode) {
-                subtitleHtml = `<p class="text-caption text-neon-blue">Bölüm ${item.episode}</p>`;
-            }
+            subtitleText = `Sezon ${movie.season || 1} • Bölüm ${movie.episode || 1}`;
         } else {
-            subtitleHtml = `<p class="text-caption text-neon-blue">Film</p>`;
+            subtitleText = `Film`;
         }
-
-        let coverHtml = '';
-        if (imageUrl) {
-            coverHtml = `<img alt="${title}" class="w-full h-full object-cover" src="${escapeHtml(imageUrl)}"/>`;
-        } else {
-            // Determine random color based on letter code for variety if desired, or use default from design.
-            const isDark = coverLetter.charCodeAt(0) % 2 === 0;
-            const bgClass = isDark ? 'bg-gradient-to-r from-neon-purple to-neon-blue/10' : 'bg-tertiary-container/20';
-            const textClass = isDark ? 'text-neon-blue' : 'text-neon-green-container';
-            coverHtml = `
-            <div class="w-full h-full ${bgClass} flex items-center justify-center">
-                <span class="text-3xl font-bold ${textClass} opacity-40 italic">${coverLetter}</span>
-            </div>`;
-        }
-
-        const html = `
-        <article class="bg-background shadow-neo-lowest rounded-[32px] overflow-hidden shadow-sm hover:shadow-md transition-all active:scale-[0.98] flex flex-col cursor-pointer" data-action="openMoviesModal" data-movie-id="${item.id}">
-            <div class="relative aspect-[3/4]">
-                ${coverHtml}
-            </div>
-            <div class="p-3">
-                <h3 class="text-body font-semibold text-on-background line-clamp-1 mb-0.5">${title}</h3>
-                ${subtitleHtml}
-            </div>
-        </article>`;
         
-        container.insertAdjacentHTML('beforeend', html);
+        let statusText = "";
+        let statusColor = "text-[#64748B]";
+        if (movie.status === 'watchlist') {
+            statusText = "İstek Listesi";
+            statusColor = "text-[#F59E0B]";
+        } else if (movie.status === 'completed') {
+            statusText = "Bitti";
+            statusColor = "text-[#22C55E]";
+        } else {
+            statusText = "İzliyorum";
+            statusColor = "text-[#3B82F6]";
+        }
+
+        const iconStr = type === 'movie' ? 'movie' : 'live_tv';
+        const isActive = activeMovie && activeMovie.id === movie.id;
+        
+        const wrapper = document.createElement("div");
+        wrapper.className = "relative w-full overflow-hidden rounded-2xl mb-4";
+        
+        // Background Actions (Edit)
+        const actionsHtml = `
+            <div class="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-2 z-0">
+                <button class="edit-movie-btn w-12 h-12 rounded-2xl bg-silk-blue text-white flex items-center justify-center active:bg-blue-600 transition-colors" data-id="${movie.id}">
+                    <span class="material-symbols-rounded text-xl">edit</span>
+                </button>
+            </div>
+        `;
+        
+        // Foreground Card
+        const cardHtml = `
+            <div class="card-content relative z-10 bg-[#F7F9FF] rounded-2xl p-4 flex gap-4 items-center cursor-pointer transition-transform ${isActive ? 'border-2 border-silk-blue' : ''}" style="touch-action: pan-y; box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px #FFFFFF;" data-swiped="false">
+                <div class="w-12 h-12 shrink-0 rounded-xl bg-white flex items-center justify-center shadow-sm">
+                    <span class="material-symbols-rounded text-[#3B82F6] text-2xl">${iconStr}</span>
+                </div>
+                <div class="flex flex-col flex-1 min-w-0">
+                    <span class="text-sm font-bold text-[#1E293B] truncate">${title}</span>
+                    <div class="flex items-center gap-2">
+                        <span class="text-xs text-[#64748B] truncate">${subtitleText}</span>
+                        <span class="text-[10px] ${statusColor} font-bold ml-auto">${statusText}</span>
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        wrapper.innerHTML = actionsHtml + cardHtml;
+        
+        const cardContent = wrapper.querySelector('.card-content');
+        const editBtn = wrapper.querySelector('.edit-movie-btn');
+        
+        // --- Swipe Logic ---
+        let startX = 0;
+        let currentX = 0;
+        let isDragging = false;
+        const threshold = -80; // One button of 48px + gap
+        let isSwiped = false;
+        
+        cardContent.addEventListener('touchstart', (e) => {
+            startX = e.touches[0].clientX;
+            isDragging = true;
+            cardContent.style.transition = 'none';
+        }, {passive: true});
+        
+        cardContent.addEventListener('touchmove', (e) => {
+            if (!isDragging) return;
+            currentX = e.touches[0].clientX;
+            let diffX = currentX - startX;
+            
+            if (isSwiped) diffX += threshold;
+            if (diffX > 0) diffX = 0; 
+            if (diffX < threshold - 20) diffX = threshold - 20; 
+            
+            cardContent.style.transform = `translateX(${diffX}px)`;
+        }, {passive: true});
+        
+        cardContent.addEventListener('touchend', (e) => {
+            if (!isDragging) return;
+            isDragging = false;
+            cardContent.style.transition = 'transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)';
+            
+            let diffX = currentX - startX;
+            if (!isSwiped && diffX < -40) {
+                isSwiped = true;
+                cardContent.style.transform = `translateX(${threshold}px)`;
+            } else if (isSwiped && diffX > 40) {
+                isSwiped = false;
+                cardContent.style.transform = 'translateX(0px)';
+            } else {
+                cardContent.style.transform = isSwiped ? `translateX(${threshold}px)` : 'translateX(0px)';
+            }
+        });
+        
+        // Mouse Fallbacks
+        cardContent.addEventListener('mousedown', (e) => {
+            startX = e.clientX;
+            isDragging = true;
+            cardContent.style.transition = 'none';
+        });
+        
+        cardContent.addEventListener('mousemove', (e) => {
+            if (!isDragging) return;
+            currentX = e.clientX;
+            let diffX = currentX - startX;
+            if (isSwiped) diffX += threshold;
+            if (diffX > 0) diffX = 0;
+            if (diffX < threshold - 20) diffX = threshold - 20;
+            cardContent.style.transform = `translateX(${diffX}px)`;
+        });
+        
+        cardContent.addEventListener('mouseup', (e) => {
+            if (!isDragging) return;
+            isDragging = false;
+            cardContent.style.transition = 'transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)';
+            let diffX = currentX - startX;
+            if (!isSwiped && diffX < -40) {
+                isSwiped = true;
+                cardContent.style.transform = `translateX(${threshold}px)`;
+            } else if (isSwiped && diffX > 40) {
+                isSwiped = false;
+                cardContent.style.transform = 'translateX(0px)';
+            } else {
+                cardContent.style.transform = isSwiped ? `translateX(${threshold}px)` : 'translateX(0px)';
+            }
+        });
+        
+        cardContent.addEventListener('mouseleave', () => {
+             if(isDragging) {
+                isDragging = false;
+                cardContent.style.transition = 'transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)';
+                cardContent.style.transform = isSwiped ? `translateX(${threshold}px)` : 'translateX(0px)';
+             }
+        });
+
+        // Set as active on click (if not swiped)
+        cardContent.addEventListener('click', (e) => {
+            if (Math.abs(currentX - startX) < 5 && !isSwiped) {
+                activeMovie = movie;
+                localStorage.setItem(`activeMovie_${currentUid}`, JSON.stringify(activeMovie));
+                
+                // Re-sort and re-render
+                currentMovies.sort((a, b) => {
+                    if (a.id === activeMovie.id) return -1;
+                    if (b.id === activeMovie.id) return 1;
+                    const timeA = a.updatedAt ? a.updatedAt.toMillis() : 0;
+                    const timeB = b.updatedAt ? b.updatedAt.toMillis() : 0;
+                    return timeB - timeA;
+                });
+                renderMoviesView();
+                
+                // Notify dashboard right away
+                if (onChangeCb) onChangeCb(currentMovies);
+            }
+        });
+
+        // Actions
+        editBtn.onclick = () => {
+            openEditModal(movie);
+            cardContent.style.transform = 'translateX(0px)';
+            isSwiped = false;
+        };
+        
+        allListEl.appendChild(wrapper);
     });
 }
 
+// --- ADD MODAL ---
+function openAddModal() {
+    if(!addModal) return;
+    addType.value = 'series';
+    addTitle.value = '';
+    addSeason.value = 1;
+    addEpisode.value = 1;
+    addSeriesFields.style.display = 'grid';
+    document.querySelector('input[name="movie-add-status"][value="watching"]').checked = true;
+
+    addModal.classList.remove('hidden');
+    setTimeout(() => {
+        if(addBackdrop) addBackdrop.classList.remove('opacity-0');
+        if(addContent) {
+            addContent.classList.remove('translate-y-full');
+            addContent.classList.add('translate-y-0');
+        }
+    }, 10);
+}
+
+function closeAddModal() {
+    if(addBackdrop) addBackdrop.classList.add('opacity-0');
+    if(addContent) {
+        addContent.classList.remove('translate-y-0');
+        addContent.classList.add('translate-y-full');
+    }
+    setTimeout(() => {
+        if(addModal) addModal.classList.add('hidden');
+    }, 300);
+}
+
+async function saveAddMovie() {
+    if(!currentUid) return;
+    const title = addTitle.value.trim();
+    if(!title) return alert("Lütfen içerik adını giriniz.");
+    
+    const type = addType.value;
+    const status = document.querySelector('input[name="movie-add-status"]:checked').value;
+    
+    const data = {
+        title,
+        type,
+        status,
+        createdAt: serverTimestamp(),
+        updatedAt: serverTimestamp()
+    };
+    
+    if (type === 'series') {
+        data.season = parseInt(addSeason.value) || 1;
+        data.episode = parseInt(addEpisode.value) || 1;
+    }
+    
+    try {
+        await addDoc(collection(db, "users", currentUid, "movies"), data);
+        closeAddModal();
+    } catch(e) {
+        console.error(e);
+        alert("Eklenirken hata oluştu.");
+    }
+}
+
+// --- EDIT MODAL ---
+function openEditModal(movie) {
+    if(!editModal) return;
+    currentEditingId = movie.id;
+    
+    editType.value = movie.type || 'series';
+    editTitle.value = movie.title || '';
+    if (editType.value === 'series') {
+        editSeriesFields.style.display = 'grid';
+        editSeason.value = movie.season || 1;
+        editEpisode.value = movie.episode || 1;
+    } else {
+        editSeriesFields.style.display = 'none';
+        editSeason.value = 1;
+        editEpisode.value = 1;
+    }
+    
+    const s = movie.status || 'watching';
+    const rb = document.querySelector(`input[name="movie-edit-status"][value="${s}"]`);
+    if(rb) rb.checked = true;
+    
+    editModal.classList.remove('hidden');
+    setTimeout(() => {
+        if(editBackdrop) editBackdrop.classList.remove('opacity-0');
+        if(editContent) {
+            editContent.classList.remove('translate-y-full');
+            editContent.classList.add('translate-y-0');
+        }
+    }, 10);
+}
+
+function closeEditModal() {
+    if(editBackdrop) editBackdrop.classList.add('opacity-0');
+    if(editContent) {
+        editContent.classList.remove('translate-y-0');
+        editContent.classList.add('translate-y-full');
+    }
+    setTimeout(() => {
+        if(editModal) editModal.classList.add('hidden');
+        currentEditingId = null;
+    }, 300);
+}
+
+async function saveEditMovie() {
+    if(!currentUid || !currentEditingId) return;
+    const title = editTitle.value.trim();
+    if(!title) return alert("Lütfen içerik adını giriniz.");
+    
+    const type = editType.value;
+    const status = document.querySelector('input[name="movie-edit-status"]:checked').value;
+    
+    const data = {
+        title,
+        type,
+        status,
+        updatedAt: serverTimestamp()
+    };
+    
+    if (type === 'series') {
+        data.season = parseInt(editSeason.value) || 1;
+        data.episode = parseInt(editEpisode.value) || 1;
+    }
+    
+    try {
+        await updateDoc(doc(db, "users", currentUid, "movies", currentEditingId), data);
+        closeEditModal();
+    } catch(e) {
+        console.error(e);
+        alert("Güncellenirken hata oluştu.");
+    }
+}
+
+async function deleteMovie() {
+    if(!currentUid || !currentEditingId) return;
+    if(!confirm("Bu içeriği silmek istediğinize emin misiniz?")) return;
+    
+    try {
+        await deleteDoc(doc(db, "users", currentUid, "movies", currentEditingId));
+        closeEditModal();
+    } catch(e) {
+        console.error(e);
+        alert("Silinirken hata oluştu.");
+    }
+}
+
 export function clearMovies() {
-    if(unsubMovies) unsubMovies();
+    if(moviesUnsubscribe) moviesUnsubscribe();
     currentUid = null;
-    movies = [];
-    currentStatusTab = 'watching';
+    currentMovies = [];
+    activeMovie = null;
     currentEditingId = null;
-    currentSelectedImageFile = null;
+    onChangeCb = null;
 }
