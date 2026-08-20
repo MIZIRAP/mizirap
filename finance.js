@@ -922,46 +922,37 @@ async function saveTransaction() {
 let currentDetailDate = new Date();
 
 export function renderFinanceDetail() {
-    // Labels & Buttons
-    const monthLabel = document.getElementById('fd-month-label');
-    const prevBtn = document.getElementById('fd-prev-month');
-    const nextBtn = document.getElementById('fd-next-month');
-    
-    // Stats
-    const netTotalEl = document.getElementById('fd-net-total');
-    const incomeTotalEl = document.getElementById('fd-total-income');
-    const expenseTotalEl = document.getElementById('fd-total-expense');
-    const incomeCountEl = document.getElementById('fd-income-count');
-    const expenseCountEl = document.getElementById('fd-expense-count');
-    
-    // Lists
+    const monthSelectorEl = document.getElementById('fd-month-selector');
+    const catDistributionEl = document.getElementById('fd-category-distribution');
+    const monthlyStatusEl = document.getElementById('fd-monthly-status');
+    const paymentMethodsEl = document.getElementById('fd-payment-methods');
     const incomeListEl = document.getElementById('fd-income-list');
     const expenseListEl = document.getElementById('fd-expense-list');
-    const insightTextEl = document.getElementById('fd-insight-text');
     
-    if(!monthLabel) return;
+    if(!monthSelectorEl) return;
     
-    // Setup listeners if not already
-    if (!prevBtn.hasAttribute('data-listener')) {
-        prevBtn.addEventListener('click', () => {
-            currentDetailDate.setMonth(currentDetailDate.getMonth() - 1);
-            renderFinanceDetail();
-        });
-        prevBtn.setAttribute('data-listener', 'true');
+    // Setup Month Selector
+    const monthNames = ["Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran", "Temmuz", "Ağustos", "Eylül", "Ekim", "Kasım", "Aralık"];
+    
+    // We will render Previous Month, Current Month, Next Month
+    let selectorHtml = '';
+    for(let i = -1; i <= 1; i++) {
+        const d = new Date(currentDetailDate.getFullYear(), currentDetailDate.getMonth() + i, 1);
+        const mName = monthNames[d.getMonth()];
+        const dir = i;
+        
+        if(i === 0) {
+            selectorHtml += `<div class="px-2 flex justify-center items-center py-3 snap-center">
+                <button class="px-6 py-2 rounded-full bg-[#F7F9FF] text-xs font-bold text-[#3B82F6]" style="box-shadow: inset 2px 2px 5px #D1D9E6, inset -2px -2px 5px #FFFFFF;">${mName}</button>
+            </div>`;
+        } else {
+            selectorHtml += `<div class="px-2 flex justify-center items-center py-3 snap-center cursor-pointer" onclick="window.changeDetailMonth(${dir})">
+                <button class="px-6 py-2 rounded-full bg-[#F7F9FF] text-xs font-bold text-[#64748B]" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px #FFFFFF;">${mName}</button>
+            </div>`;
+        }
     }
-    if (!nextBtn.hasAttribute('data-listener')) {
-        nextBtn.addEventListener('click', () => {
-            currentDetailDate.setMonth(currentDetailDate.getMonth() + 1);
-            renderFinanceDetail();
-        });
-        nextBtn.setAttribute('data-listener', 'true');
-    }
+    monthSelectorEl.innerHTML = selectorHtml;
 
-    // Format current month
-    const monthOptions = { month: 'long', year: 'numeric' };
-    const dateStrFormatted = currentDetailDate.toLocaleDateString('tr-TR', monthOptions);
-    monthLabel.textContent = dateStrFormatted.charAt(0).toUpperCase() + dateStrFormatted.slice(1);
-    
     // Filter transactions for this month
     const targetMonth = currentDetailDate.getMonth();
     const targetYear = currentDetailDate.getFullYear();
@@ -978,154 +969,182 @@ export function renderFinanceDetail() {
     const totalExpense = expenses.reduce((sum, tx) => sum + parseFloat(tx.amount || 0), 0);
     const netTotal = totalIncome - totalExpense;
     
-        const tlFormatNoSymbol = new Intl.NumberFormat('tr-TR', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
-    
-    netTotalEl.textContent = (netTotal >= 0 ? '+' : '') + formatCurrency(netTotal);
-    netTotalEl.className = `font-display-lg text-display-lg ${netTotal >= 0 ? 'text-neon-blue' : 'text-error'}`;
-    
-    incomeTotalEl.textContent = tlFormatNoSymbol.format(totalIncome) + ' ₺';
-    expenseTotalEl.textContent = tlFormatNoSymbol.format(totalExpense) + ' ₺';
-    
-    incomeCountEl.textContent = `${incomes.length} Kayıt`;
-    
-    // Render Incomes
-    if(incomes.length === 0) {
-        incomeListEl.innerHTML = '<div class="text-center text-sm text-on-surface-variant italic py-2">Henüz gelir yok</div>';
-    } else {
-        incomeListEl.innerHTML = incomes.map(tx => {
-            const pm = financePaymentMethods.find(p => p.id === tx.paymentMethodId) || { name: 'Genel', icon: 'payments' };
-            return `
-            <div class="bg-background shadow-neo-lowest p-4 rounded-[32px] flex items-center justify-between shadow-sm border-l-4 border-primary mb-3 active:scale-98 transition-transform">
-                <div class="flex items-center gap-4">
-                    <div class="w-10 h-10 rounded-[32px] bg-gradient-to-r from-neon-purple to-neon-blue/10 flex items-center justify-center">
-                        <span class="material-symbols-rounded text-neon-blue">${pm.icon}</span>
-                    </div>
-                    <div>
-                        <p class="font-body-lg text-body-lg font-semibold">${tx.title}</p>
-                        <p class="font-label-sm text-label-sm text-on-surface-variant">${pm.name}</p>
-                    </div>
-                </div>
-                <p class="font-headline-sm text-headline-sm text-neon-blue">${formatCurrency(tx.amount)}</p>
-            </div>
-            `;
-        }).join('');
-    }
-    
-    // Group Expenses by Category
+    // Format helpers
+    const formatK = (val) => {
+        if(val >= 1000) return (val/1000).toFixed(1).replace('.0', '') + 'k';
+        return val.toString();
+    };
+
+    const gradientColors = [
+        "linear-gradient(to right, #A855F7, #3B82F6)",
+        "linear-gradient(to right, #3B82F6, #22C55E)",
+        "linear-gradient(to right, #A855F7, #22C55E)",
+        "linear-gradient(to right, #3B82F6, #A855F7)",
+        "linear-gradient(to right, #22C55E, #3B82F6)"
+    ];
+    const textColors = ["text-[#A855F7]", "text-[#3B82F6]", "text-[#22C55E]", "text-[#A855F7]", "text-[#3B82F6]"];
+
+    // 1. Harcama Dağılımı (Expense Categories)
     let categorySums = {};
     expenses.forEach(tx => {
         if(!categorySums[tx.categoryId]) categorySums[tx.categoryId] = 0;
         categorySums[tx.categoryId] += parseFloat(tx.amount || 0);
     });
-    
     const sortedCatIds = Object.keys(categorySums).sort((a,b) => categorySums[b] - categorySums[a]);
-    expenseCountEl.textContent = `${sortedCatIds.length} Kategori`;
     
     if(sortedCatIds.length === 0) {
-        expenseListEl.innerHTML = '<div class="text-center text-sm text-on-surface-variant italic py-2">Henüz gider yok</div>';
-        insightTextEl.textContent = 'Harika, hiç harcamanız yok!';
+        catDistributionEl.innerHTML = '<div class="text-center text-sm text-[#64748B] italic">Harcama bulunmuyor.</div>';
     } else {
-        const topCatId = sortedCatIds[0];
-        const topCat = financeCategories.find(c => c.id === topCatId) || { name: 'Genel', icon: 'receipt_long' };
-        const topAmount = categorySums[topCatId];
-        const topPercentage = Math.round((topAmount / totalExpense) * 100);
-        
-        insightTextEl.textContent = `${topCat.name}, toplam harcamalarınızın %${topPercentage}'ini oluşturuyor.`;
-        
-        const colors = ['tertiary', 'secondary', 'primary', 'error'];
-        
-        expenseListEl.innerHTML = sortedCatIds.map((catId, index) => {
+        catDistributionEl.innerHTML = sortedCatIds.slice(0,5).map((catId, index) => {
             const amount = categorySums[catId];
-            const cat = financeCategories.find(c => c.id === catId) || { name: 'Bilinmiyor', icon: 'more_horiz' };
-            const cColor = colors[index % colors.length];
+            const cat = financeCategories.find(c => c.id === catId) || { name: 'Genel' };
+            const percentage = totalExpense > 0 ? Math.round((amount / totalExpense) * 100) : 0;
+            const bg = gradientColors[index % gradientColors.length];
+            const tc = textColors[index % textColors.length];
             return `
-            <div class="flex items-center justify-between p-3 rounded-[32px] hover:bg-background shadow-neo-low transition-colors active:scale-98">
-                <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-full bg-${cColor}-fixed-dim/30 flex items-center justify-center">
-                        <span class="material-symbols-rounded text-${cColor}">${cat.icon}</span>
-                    </div>
-                    <p class="font-body-lg text-body-lg">${cat.name}</p>
+            <div class="flex flex-col gap-2">
+                <div class="flex justify-between items-center">
+                    <span class="text-sm font-bold text-[#1E293B]">${cat.name}</span>
+                    <span class="text-sm font-bold ${tc}">${percentage}%</span>
                 </div>
-                <p class="font-body-lg text-body-lg font-bold">${formatCurrency(amount)}</p>
-            </div>
-            `;
+                <div class="h-2 w-full bg-[#E0E5EC] rounded-full relative overflow-hidden" style="box-shadow: inset 2px 2px 4px #D1D9E6, inset -2px -2px 4px #FFFFFF;">
+                    <div class="absolute inset-y-0 left-0 rounded-full" style="width: ${percentage}%; background: ${bg};"></div>
+                </div>
+            </div>`;
         }).join('');
     }
 
-    // Chart.js render logic
-    const chartCanvas = document.getElementById('finance-expense-chart');
-    if (chartCanvas && typeof Chart !== 'undefined') {
-        if (expenseChartInstance) {
-            expenseChartInstance.destroy();
-        }
-        if (sortedCatIds.length > 0) {
-            const chartLabels = sortedCatIds.map(id => {
-                const cat = financeCategories.find(c => c.id === id);
-                return cat ? cat.name : 'Bilinmiyor';
-            });
-            const chartData = sortedCatIds.map(id => categorySums[id]);
-            const chartColors = ['#446554', '#ff8a80', '#d2b48c', '#a8e6cf', '#ffb7b2', '#ffcc80', '#b39ddb'];
+    // 2. Aylık Durum (Monthly Status)
+    const totalMax = Math.max(totalIncome, totalExpense, Math.abs(netTotal), 1); // avoid / 0
+    const incomePct = Math.round((totalIncome / totalMax) * 100);
+    const expensePct = Math.round((totalExpense / totalMax) * 100);
+    const netPct = Math.round((Math.abs(netTotal) / totalMax) * 100);
+    
+    monthlyStatusEl.innerHTML = `
+        <div class="flex flex-col gap-2">
+            <div class="flex justify-between items-center">
+                <span class="text-sm font-bold text-[#1E293B]">Gelir</span>
+                <span class="text-sm font-bold text-[#22C55E]">${formatK(totalIncome)}</span>
+            </div>
+            <div class="h-2 w-full bg-[#E0E5EC] rounded-full relative overflow-hidden" style="box-shadow: inset 2px 2px 4px #D1D9E6, inset -2px -2px 4px #FFFFFF;">
+                <div class="absolute inset-y-0 left-0 rounded-full" style="width: ${incomePct}%; background: linear-gradient(to right, #22C55E, #3B82F6);"></div>
+            </div>
+        </div>
+        <div class="flex flex-col gap-2">
+            <div class="flex justify-between items-center">
+                <span class="text-sm font-bold text-[#1E293B]">Gider</span>
+                <span class="text-sm font-bold text-[#A855F7]">${formatK(totalExpense)}</span>
+            </div>
+            <div class="h-2 w-full bg-[#E0E5EC] rounded-full relative overflow-hidden" style="box-shadow: inset 2px 2px 4px #D1D9E6, inset -2px -2px 4px #FFFFFF;">
+                <div class="absolute inset-y-0 left-0 rounded-full" style="width: ${expensePct}%; background: linear-gradient(to right, #A855F7, #3B82F6);"></div>
+            </div>
+        </div>
+        <div class="flex flex-col gap-2">
+            <div class="flex justify-between items-center">
+                <span class="text-sm font-bold text-[#1E293B]">Net</span>
+                <span class="text-sm font-bold ${netTotal >= 0 ? 'text-[#3B82F6]' : 'text-red-500'}">${formatK(netTotal)}</span>
+            </div>
+            <div class="h-2 w-full bg-[#E0E5EC] rounded-full relative overflow-hidden" style="box-shadow: inset 2px 2px 4px #D1D9E6, inset -2px -2px 4px #FFFFFF;">
+                <div class="absolute inset-y-0 left-0 rounded-full" style="width: ${netPct}%; background: linear-gradient(to right, #3B82F6, #A855F7);"></div>
+            </div>
+        </div>
+    `;
 
-            expenseChartInstance = new Chart(chartCanvas, {
-                type: 'doughnut',
-                data: {
-                    labels: chartLabels,
-                    datasets: [{
-                        data: chartData,
-                        backgroundColor: chartColors.slice(0, chartLabels.length),
-                        borderWidth: 0
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    cutout: '70%',
-                    plugins: {
-                        legend: { display: false },
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    return ' ' + context.label + ': ' + formatCurrency(context.raw);
-                                }
-                            }
-                        }
-                    }
-                }
-            });
-        }
+    // 3. Ödeme Yöntemleri
+    let pmSums = {};
+    expenses.forEach(tx => {
+        if(!pmSums[tx.paymentMethodId]) pmSums[tx.paymentMethodId] = 0;
+        pmSums[tx.paymentMethodId] += parseFloat(tx.amount || 0);
+    });
+    const sortedPmIds = Object.keys(pmSums).sort((a,b) => pmSums[b] - pmSums[a]);
+    
+    if(sortedPmIds.length === 0) {
+        paymentMethodsEl.innerHTML = '<div class="text-center text-sm text-[#64748B] italic">Harcama bulunmuyor.</div>';
+    } else {
+        paymentMethodsEl.innerHTML = sortedPmIds.slice(0,4).map((pmId, index) => {
+            const amount = pmSums[pmId];
+            const pm = financePaymentMethods.find(p => p.id === pmId) || { name: 'Genel' };
+            const percentage = totalExpense > 0 ? Math.round((amount / totalExpense) * 100) : 0;
+            const bg = gradientColors[index % gradientColors.length];
+            const tc = textColors[index % textColors.length];
+            return `
+            <div class="flex flex-col gap-2">
+                <div class="flex justify-between items-center">
+                    <span class="text-sm font-bold text-[#1E293B]">${pm.name}</span>
+                    <span class="text-sm font-bold ${tc}">${percentage}%</span>
+                </div>
+                <div class="h-2 w-full bg-[#E0E5EC] rounded-full relative overflow-hidden" style="box-shadow: inset 2px 2px 4px #D1D9E6, inset -2px -2px 4px #FFFFFF;">
+                    <div class="absolute inset-y-0 left-0 rounded-full" style="width: ${percentage}%; background: ${bg};"></div>
+                </div>
+            </div>`;
+        }).join('');
     }
 
-    // Group Expenses by Payment Method
-    const paymentListEl = document.getElementById('fd-payment-list');
-    if (paymentListEl) {
-        let pmSums = {};
-        expenses.forEach(tx => {
-            if(!pmSums[tx.paymentMethodId]) pmSums[tx.paymentMethodId] = 0;
-            pmSums[tx.paymentMethodId] += parseFloat(tx.amount || 0);
-        });
-        
-        const sortedPmIds = Object.keys(pmSums).sort((a,b) => pmSums[b] - pmSums[a]);
-        
-        if (sortedPmIds.length === 0) {
-            paymentListEl.innerHTML = '<div class="text-center text-sm text-on-surface-variant italic py-2">Veri yok</div>';
-        } else {
-            paymentListEl.innerHTML = sortedPmIds.map((pmId) => {
-                const amount = pmSums[pmId];
-                const pm = financePaymentMethods.find(p => p.id === pmId) || { name: 'Bilinmiyor', icon: 'payments' };
-                return `
-                <div class="flex items-center justify-between p-3 rounded-[32px] hover:bg-background shadow-neo-low transition-colors active:scale-98">
-                    <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 rounded-full bg-gradient-to-r from-neon-purple to-neon-blue/10 flex items-center justify-center">
-                            <span class="material-symbols-rounded text-neon-blue">${pm.icon}</span>
-                        </div>
-                        <p class="font-body-lg text-body-lg">${pm.name}</p>
+    // 4. Gelirlerim Listesi
+    if(incomes.length === 0) {
+        incomeListEl.innerHTML = '<div class="text-center text-sm text-[#64748B] italic">Kayıt yok.</div>';
+    } else {
+        incomeListEl.innerHTML = incomes.map(tx => {
+            const pm = financePaymentMethods.find(p => p.id === tx.paymentMethodId) || { name: 'Genel' };
+            const cat = financeCategories.find(c => c.id === tx.categoryId) || { name: 'Genel', icon: 'payments' };
+            const d = new Date(tx.dateStr);
+            const dateStr = d.getDate() + ' ' + monthNames[d.getMonth()] + ' ' + d.getFullYear();
+            
+            return `
+            <div class="flex items-center justify-between p-4 rounded-2xl bg-[#F7F9FF]" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px #FFFFFF;">
+                <div class="flex items-center gap-4">
+                    <div class="w-10 h-10 rounded-full bg-[#F7F9FF] flex items-center justify-center" style="box-shadow: inset 2px 2px 5px #D1D9E6, inset -2px -2px 5px #FFFFFF;">
+                        <span class="material-symbols-rounded text-[#22C55E]">${cat.icon}</span>
                     </div>
-                    <p class="font-body-lg text-body-lg font-bold">${formatCurrency(amount)}</p>
+                    <div>
+                        <p class="text-sm font-bold text-[#1E293B]">${tx.title}</p>
+                        <div class="flex items-center gap-2">
+                            <p class="text-xs text-[#64748B]">${dateStr}</p>
+                            <span class="text-[10px] px-1.5 py-0.5 rounded bg-[#E0E5EC] text-[#64748B] font-medium">${pm.name}</span>
+                        </div>
+                    </div>
                 </div>
-                `;
-            }).join('');
-        }
+                <span class="font-bold text-[#22C55E]">+${formatCurrency(tx.amount)}</span>
+            </div>`;
+        }).join('');
+    }
+
+    // 5. Giderlerim Listesi
+    if(expenses.length === 0) {
+        expenseListEl.innerHTML = '<div class="text-center text-sm text-[#64748B] italic">Kayıt yok.</div>';
+    } else {
+        const expenseColors = ["text-[#3B82F6]", "text-[#A855F7]"];
+        expenseListEl.innerHTML = expenses.map((tx, idx) => {
+            const pm = financePaymentMethods.find(p => p.id === tx.paymentMethodId) || { name: 'Genel' };
+            const cat = financeCategories.find(c => c.id === tx.categoryId) || { name: 'Genel', icon: 'shopping_basket' };
+            const d = new Date(tx.dateStr);
+            const dateStr = d.getDate() + ' ' + monthNames[d.getMonth()];
+            const color = expenseColors[idx % expenseColors.length];
+            
+            return `
+            <div class="flex items-center justify-between p-4 rounded-2xl bg-[#F7F9FF]" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px #FFFFFF;">
+                <div class="flex items-center gap-4">
+                    <div class="w-10 h-10 rounded-full bg-[#F7F9FF] flex items-center justify-center" style="box-shadow: inset 2px 2px 5px #D1D9E6, inset -2px -2px 5px #FFFFFF;">
+                        <span class="material-symbols-rounded ${color}">${cat.icon}</span>
+                    </div>
+                    <div>
+                        <p class="text-sm font-bold text-[#1E293B]">${tx.title}</p>
+                        <div class="flex items-center gap-2">
+                            <p class="text-xs text-[#64748B]">${dateStr}</p>
+                            <span class="text-[10px] px-1.5 py-0.5 rounded bg-[#E0E5EC] text-[#64748B] font-medium">${pm.name}</span>
+                        </div>
+                    </div>
+                </div>
+                <span class="font-bold ${color}">-${formatCurrency(tx.amount)}</span>
+            </div>`;
+        }).join('');
     }
 }
+window.changeDetailMonth = function(dir) {
+    currentDetailDate.setMonth(currentDetailDate.getMonth() + dir);
+    renderFinanceDetail();
+};
+
 
 // ==================== METAL PRICES ====================
 

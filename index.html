@@ -2969,107 +2969,76 @@
         </main>
     </section>
 <section id="view-finance-detail" class="view hidden bg-background text-on-surface min-h-[100dvh] pb-32">
-        <!-- TopAppBar -->
-        <nav class="bg-background dark:bg-background w-full top-0 sticky z-50">
-            <div class="flex justify-between items-center px-container-padding py-4 w-full max-w-7xl mx-auto">
-                <button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container-high/50 transition-colors active:scale-95 duration-200" onclick="document.getElementById('view-finance').classList.remove('hidden'); document.getElementById('view-finance-detail').classList.add('hidden');">
-                    <span class="material-symbols-rounded text-neon-blue">arrow_back</span>
-                </button>
-                <h1 class="font-headline-md text-headline-md font-bold text-neon-blue dark:text-neon-blue-fixed-dim">Aylık Analiz</h1>
-                <div class="w-10 h-10"></div>
-            </div>
-        </nav>
-        
-        <main class="px-container-padding max-w-lg mx-auto">
-            <!-- Month/Year Selector -->
-            <div class="flex items-center justify-between mt-6 mb-8 bg-background shadow-neo rounded-full px-4 py-2 shadow-sm">
-                <button class="w-10 h-10 rounded-full flex items-center justify-center hover:bg-surface-container-low transition-colors" id="fd-prev-month">
-                    <span class="material-symbols-rounded text-neon-blue">chevron_left</span>
-                </button>
-                <div class="text-center">
-                    <p class="font-headline-sm text-headline-sm text-on-surface" id="fd-month-label">Temmuz 2026</p>
-                </div>
-                <button class="w-10 h-10 rounded-full flex items-center justify-center hover:bg-surface-container-low transition-colors" id="fd-next-month">
-                    <span class="material-symbols-rounded text-neon-blue">chevron_right</span>
-                </button>
-            </div>
-
-            <!-- Net Total Card -->
-            <div class="bg-gradient-to-r from-neon-purple to-neon-blue-container/20 rounded-[32px] p-6 mb-8 border border-primary/10 flex flex-col items-center justify-center text-center">
-                <p class="font-label-md text-label-md text-neon-blue uppercase tracking-widest mb-1">Aylık Toplam Net</p>
-                <h2 class="font-display-lg text-display-lg text-neon-blue-container text-white-container" id="fd-net-total">+0,00 ₺</h2>
-                
-                <div class="mt-4 flex gap-4 w-full">
-                    <div class="flex-1 bg-surface-container-lowest/50 rounded-[32px] py-2 px-3 text-center">
-                        <p class="font-label-sm text-label-sm text-on-surface-variant">Gelir</p>
-                        <p class="font-headline-sm text-headline-sm text-neon-blue" id="fd-total-income">0 ₺</p>
-                    </div>
-                    <div class="flex-1 bg-surface-container-lowest/50 rounded-[32px] py-2 px-3 text-center">
-                        <p class="font-label-sm text-label-sm text-on-surface-variant">Gider</p>
-                        <p class="font-headline-sm text-headline-sm text-neon-green" id="fd-total-expense">0 ₺</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Asymmetric Analysis Layout -->
-            <div class="space-y-8">
-                <!-- Gelirler Section -->
-                <section>
-                    <div class="flex items-center justify-between mb-4">
-                        <h3 class="font-headline-sm text-headline-sm text-on-surface flex items-center gap-2">
-                            <span class="material-symbols-rounded text-neon-blue">account_balance_wallet</span>
-                            Gelirler
-                        </h3>
-                        <span class="font-label-md text-label-md px-3 py-1 bg-gradient-to-r from-neon-purple to-neon-blue/10 text-neon-blue rounded-full" id="fd-income-count">0 Kayıt</span>
-                    </div>
-                    
-                    <div class="space-y-3" id="fd-income-list">
-                        <!-- Dynamic income records will go here -->
-                        <div class="text-center text-sm text-on-surface-variant italic py-2">Henüz gelir yok</div>
-                    </div>
-                </section>
-
-                <!-- Giderler Section -->
-                <section>
-                    <div class="flex items-center justify-between mb-4">
-                        <h3 class="font-headline-sm text-headline-sm text-on-surface flex items-center gap-2">
-                            <span class="material-symbols-rounded text-neon-green">receipt_long</span>
-                            Giderler
-                        </h3>
-                        <span class="font-label-md text-label-md px-3 py-1 bg-tertiary/10 text-neon-green rounded-full" id="fd-expense-count">0 Kategori</span>
-                    </div>
-                    
-                    <div class="bg-background shadow-neo rounded-[32px] p-4 shadow-sm space-y-2" id="fd-expense-list">
-                        <!-- Dynamic expense records will go here -->
-                        <div class="text-center text-sm text-on-surface-variant italic py-2">Henüz gider yok</div>
-                    </div>
-                </section>
-                
-                
-                <!-- Odeme Yontemleri Section -->
-                <section>
-                    <div class="flex items-center justify-between mb-4">
-                        <h3 class="font-headline-sm text-headline-sm text-on-surface flex items-center gap-2">
-                            <span class="material-symbols-rounded text-neon-blue">payments</span>
-                            Ödeme Yöntemleri
-                        </h3>
-                    </div>
-                    <div class="bg-background shadow-neo rounded-[32px] p-4 shadow-sm space-y-2" id="fd-payment-list">
-                        <!-- Dynamic payment methods will go here -->
-                        <div class="text-center text-sm text-on-surface-variant italic py-2">Veri yok</div>
-                    </div>
-                </section>
-                <!-- Visual Insight -->
-                <div class="bg-background shadow-neo rounded-[32px] p-4 shadow-sm group flex flex-col items-center">
-                    <h3 class="font-headline-sm text-headline-sm text-on-surface w-full mb-4">Harcama Dağılımı</h3>
-                    <div class="w-full max-w-[250px] aspect-square relative flex items-center justify-center">
-                        <canvas id="finance-expense-chart"></canvas>
-                    </div>
-                    <p class="text-on-surface-variant font-body-sm mt-6 text-center italic" id="fd-insight-text">Veri bekleniyor...</p>
-                </div>
-            </div>
-        </main>
+<!-- Top App Bar -->
+<header class="w-full top-0 sticky z-40 max-w-md mx-auto px-container-padding py-4">
+    <div class="flex items-center justify-between w-full">
+        <button class="w-10 h-10 flex items-center justify-center rounded-full bg-[#F7F9FF] active:scale-95 transition-transform" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px #FFFFFF;" onclick="document.getElementById('view-finance').classList.remove('hidden'); document.getElementById('view-finance-detail').classList.add('hidden');">
+            <span class="material-symbols-rounded text-[#1E293B]">arrow_back</span>
+        </button>
+        <h1 class="text-h1 font-bold text-[#1E293B]">Finans &nbsp;Detayı</h1>
+        <button class="w-10 h-10 flex items-center justify-center rounded-full bg-[#F7F9FF]" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px #FFFFFF; visibility: hidden;">
+            <span class="material-symbols-rounded text-[#1E293B]">settings</span>
+        </button>
+    </div>
+</header>
+<!-- Main Content Container -->
+<main class="flex-1 w-full max-w-md mx-auto px-container-padding pb-32 flex flex-col gap-8 pt-4">
+    <!-- Month Selector -->
+    <div class="w-full overflow-hidden pb-2 relative">
+        <div class="absolute left-0 top-0 bottom-0 w-8 bg-gradient-to-r from-background to-transparent z-10 pointer-events-none"></div>
+        <div class="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-background to-transparent z-10 pointer-events-none"></div>
+        <div class="flex w-full snap-x snap-mandatory overflow-x-auto scrollbar-hide items-center justify-between" id="fd-month-selector" style="-ms-overflow-style: none; scrollbar-width: none;">
+            <!-- Dynamically populated in JS -->
+        </div>
+    </div>
+    
+    <!-- Card 1: Harcama Dağılımı -->
+    <section class="bg-[#F7F9FF] shadow-sm rounded-[32px] p-6 flex flex-col gap-6" style="box-shadow: 8px 8px 16px #D1D9E6, -8px -8px 16px #FFFFFF;">
+        <div class="flex justify-between items-center">
+            <h3 class="text-h2 font-bold text-[#1E293B]">Harcama Dağılımı</h3>
+        </div>
+        <div class="flex flex-col gap-6" id="fd-category-distribution">
+            <!-- Dynamic Category Distribution -->
+        </div>
     </section>
+
+    <!-- Card 2: Aylık Durum -->
+    <section class="bg-[#F7F9FF] shadow-sm rounded-[32px] p-6 flex flex-col gap-6" style="box-shadow: 8px 8px 16px #D1D9E6, -8px -8px 16px #FFFFFF;">
+        <div class="flex justify-between items-center">
+            <h3 class="text-h2 font-bold text-[#1E293B]">Aylık Durum</h3>
+        </div>
+        <div class="flex flex-col gap-6" id="fd-monthly-status">
+            <!-- Dynamic Monthly Status -->
+        </div>
+    </section>
+
+    <!-- Card 3: Ödeme Yöntemleri -->
+    <section class="bg-[#F7F9FF] shadow-sm rounded-[32px] p-6 flex flex-col gap-6" style="box-shadow: 8px 8px 16px #D1D9E6, -8px -8px 16px #FFFFFF;">
+        <div class="flex justify-between items-center">
+            <h3 class="text-h2 font-bold text-[#1E293B]">Ödeme Yöntemleri</h3>
+        </div>
+        <div class="flex flex-col gap-6" id="fd-payment-methods">
+            <!-- Dynamic Payment Methods -->
+        </div>
+    </section>
+
+    <!-- History Log: Gelirlerim -->
+    <section class="flex flex-col gap-4">
+        <h3 class="text-h2 font-bold text-[#1E293B]">Gelirlerim</h3>
+        <div class="flex flex-col gap-4" id="fd-income-list">
+            <!-- Dynamic Income List -->
+        </div>
+    </section>
+
+    <!-- History Log: Giderlerim -->
+    <section class="flex flex-col gap-4">
+        <h3 class="text-h2 font-bold text-[#1E293B]">Giderlerim</h3>
+        <div class="flex flex-col gap-4" id="fd-expense-list">
+            <!-- Dynamic Expense List -->
+        </div>
+    </section>
+</main>
+</section>
 
 <section id="view-calories" class="view hidden">
 <!-- Top App Bar -->
