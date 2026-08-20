@@ -137,6 +137,7 @@ function renderShoppingList() {
 
         // Click to Complete
         itemDiv.addEventListener('click', (e) => {
+            if (itemDiv.style.transform === 'translateX(-80px)') return;
             if (Math.abs(currentX - startX) < 5) {
                 updateDoc(doc(db, "users", auth.currentUser.uid, "shoppingList", item.id), { done: true }).catch(err => console.error(err));
             }
@@ -217,6 +218,7 @@ function renderShoppingList() {
 
         // Click to Undo
         itemDiv.addEventListener('click', (e) => {
+            if (itemDiv.style.transform === 'translateX(-80px)') return;
             if (Math.abs(currentX - startX) < 5) {
                 updateDoc(doc(db, "users", auth.currentUser.uid, "shoppingList", item.id), { done: false }).catch(err => console.error(err));
             }
