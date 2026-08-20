@@ -3426,7 +3426,7 @@
     </section>
 
 
-    <script type="module" src="app.js?v=130"></script>
+    <script type="module" src="app.js?v=131"></script>
 
 <!-- ================= FINANCE MODALS ================= -->
 <!-- Add Transaction Modal -->
@@ -3548,52 +3548,7 @@
                     <input id="category-name" class="w-full bg-transparent border-none focus:ring-0 text-sm font-medium text-[#1E293B] p-0 appearance-none outline-none" placeholder="Tür adı girin" type="text">
                 </div>
             </div>
-<!-- Finance Settings Modal -->
-<div id="finance-settings-modal" class="fixed inset-0 z-[100] hidden flex-col justify-end items-center md:p-4">
-    <div class="absolute inset-0 bg-black/10 backdrop-blur-sm opacity-0 transition-opacity duration-300 cursor-pointer" data-action="closeFinanceSettingsModal" id="finance-settings-backdrop"></div>
-    <div class="bg-[#F7F9FF] w-full max-w-sm mx-auto rounded-t-[32px] md:rounded-[32px] shadow-[0_-8px_30px_rgba(0,0,0,0.05)] md:shadow-[0_10px_40px_rgba(0,0,0,0.08)] p-6 flex flex-col items-center transform transition-transform duration-300 translate-y-full z-10 pb-8 md:pb-6" id="finance-settings-content" style="max-height: 90vh;">
-        <!-- Drag Handle (Mobile) -->
-        <div class="w-12 h-1.5 bg-gray-300 rounded-full mb-6 md:hidden cursor-pointer" data-action="closeFinanceSettingsModal"></div>
-        <div class="w-full flex items-center justify-between mb-6">
-            <h2 class="text-xl font-bold text-[#1E293B]">Finans Ayarları</h2>
-            <button class="w-10 h-10 flex items-center justify-center rounded-full bg-[#F7F9FF] active:scale-[0.98] transition-transform" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px #FFFFFF;" data-action="closeFinanceSettingsModal">
-                <span class="material-symbols-rounded text-[#1E293B]">close</span>
-            </button>
-        </div>
-        
-        <div class="w-full flex-1 overflow-y-auto hide-scrollbar flex flex-col gap-8 pb-4">
-            
-            <!-- Payment Methods Section -->
-            <div class="flex flex-col gap-4">
-                <div class="flex items-center justify-between px-2">
-                    <h3 class="text-xs font-bold text-[#3B82F6] uppercase">Ödeme Yöntemleri</h3>
-                    <button class="flex items-center gap-1 text-[#3B82F6] active:scale-95 transition-transform" data-action="openAddPaymentMethodModal">
-                        <span class="material-symbols-rounded text-lg">add_circle</span>
-                        <span class="text-xs font-bold">Ekle</span>
-                    </button>
-                </div>
-                <!-- Payment Methods List -->
-                <div class="flex flex-col gap-3" id="settings-payment-list">
-                    <!-- Dynamic List with swipe-to-delete -->
-                </div>
-            </div>
 
-            <!-- Categories Section -->
-            <div class="flex flex-col gap-4">
-                <div class="flex items-center justify-between px-2">
-                    <h3 class="text-xs font-bold text-[#3B82F6] uppercase">Harcama Türleri</h3>
-                    <button class="flex items-center gap-1 text-[#22C55E] active:scale-95 transition-transform" data-action="openAddCategoryModal">
-                        <span class="material-symbols-rounded text-lg">add_circle</span>
-                        <span class="text-xs font-bold">Ekle</span>
-                    </button>
-                </div>
-                <!-- Categories List -->
-                <div class="flex flex-col gap-3" id="settings-category-list">
-                    <!-- Dynamic List with swipe-to-delete -->
-                </div>
-            </div>
-
-        </div>
     </div>
 </div>
 
@@ -4666,6 +4621,56 @@
 
 </div>
 <!-- Kapanış: #app-container -->
+
+
+<!-- Finance Settings Modal -->
+<div id="finance-settings-modal" class="fixed inset-0 z-[100] hidden flex-col justify-end items-center md:p-4">
+    <div class="absolute inset-0 bg-black/10 backdrop-blur-sm opacity-0 transition-opacity duration-300 cursor-pointer" data-action="closeFinanceSettingsModal" id="finance-settings-backdrop"></div>
+    <div class="bg-[#F7F9FF] w-full max-w-sm mx-auto rounded-t-[32px] md:rounded-[32px] shadow-[0_-8px_30px_rgba(0,0,0,0.05)] md:shadow-[0_10px_40px_rgba(0,0,0,0.08)] p-6 flex flex-col items-center transform transition-transform duration-300 translate-y-full z-10 pb-8 md:pb-6" id="finance-settings-content" style="max-height: 90vh;">
+        <!-- Drag Handle (Mobile) -->
+        <div class="w-12 h-1.5 bg-gray-300 rounded-full mb-6 md:hidden cursor-pointer" data-action="closeFinanceSettingsModal"></div>
+        <div class="w-full flex items-center justify-between mb-6">
+            <h2 class="text-xl font-bold text-[#1E293B]">Finans Ayarları</h2>
+            <button class="w-10 h-10 flex items-center justify-center rounded-full bg-[#F7F9FF] active:scale-[0.98] transition-transform" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px #FFFFFF;" data-action="closeFinanceSettingsModal">
+                <span class="material-symbols-rounded text-[#1E293B]">close</span>
+            </button>
+        </div>
+        
+        <div class="w-full flex-1 overflow-y-auto hide-scrollbar flex flex-col gap-8 pb-4">
+            
+            <!-- Payment Methods Section -->
+            <div class="flex flex-col gap-4">
+                <div class="flex items-center justify-between px-2">
+                    <h3 class="text-xs font-bold text-[#3B82F6] uppercase">Ödeme Yöntemleri</h3>
+                    <button class="flex items-center gap-1 text-[#3B82F6] active:scale-95 transition-transform" data-action="openAddPaymentMethodModal">
+                        <span class="material-symbols-rounded text-lg">add_circle</span>
+                        <span class="text-xs font-bold">Ekle</span>
+                    </button>
+                </div>
+                <!-- Payment Methods List -->
+                <div class="flex flex-col gap-3" id="settings-payment-list">
+                    <!-- Dynamic List with swipe-to-delete -->
+                </div>
+            </div>
+
+            <!-- Categories Section -->
+            <div class="flex flex-col gap-4">
+                <div class="flex items-center justify-between px-2">
+                    <h3 class="text-xs font-bold text-[#3B82F6] uppercase">Harcama Türleri</h3>
+                    <button class="flex items-center gap-1 text-[#22C55E] active:scale-95 transition-transform" data-action="openAddCategoryModal">
+                        <span class="material-symbols-rounded text-lg">add_circle</span>
+                        <span class="text-xs font-bold">Ekle</span>
+                    </button>
+                </div>
+                <!-- Categories List -->
+                <div class="flex flex-col gap-3" id="settings-category-list">
+                    <!-- Dynamic List with swipe-to-delete -->
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
 
 </body>
 </html>
