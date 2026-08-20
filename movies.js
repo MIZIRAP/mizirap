@@ -29,6 +29,8 @@ const addContent = document.getElementById("movie-add-modal-content");
 const addCloseHandle = document.getElementById("close-movie-add-handle");
 const addType = document.getElementById("movie-add-type");
 const addTitle = document.getElementById("movie-add-title");
+const addTotalSeason = document.getElementById("movie-add-total-season");
+const addTotalEpisode = document.getElementById("movie-add-total-episode");
 const addSeason = document.getElementById("movie-add-season");
 const addEpisode = document.getElementById("movie-add-episode");
 const addSeriesFields = document.getElementById("movie-add-series-fields");
@@ -41,6 +43,8 @@ const editContent = document.getElementById("movie-edit-modal-content");
 const editCloseHandle = document.getElementById("close-movie-edit-handle");
 const editType = document.getElementById("movie-edit-type");
 const editTitle = document.getElementById("movie-edit-title");
+const editTotalSeason = document.getElementById("movie-edit-total-season");
+const editTotalEpisode = document.getElementById("movie-edit-total-episode");
 const editSeason = document.getElementById("movie-edit-season");
 const editEpisode = document.getElementById("movie-edit-episode");
 const editSeriesFields = document.getElementById("movie-edit-series-fields");
@@ -64,13 +68,13 @@ export function initMovies(uid, onChangeCallback) {
     // Bind Type Toggles
     if(addType) {
         addType.onchange = () => {
-            if(addType.value === 'series') addSeriesFields.style.display = 'grid';
+            if(addType.value === 'series') addSeriesFields.style.display = 'flex';
             else addSeriesFields.style.display = 'none';
         };
     }
     if(editType) {
         editType.onchange = () => {
-            if(editType.value === 'series') editSeriesFields.style.display = 'grid';
+            if(editType.value === 'series') editSeriesFields.style.display = 'flex';
             else editSeriesFields.style.display = 'none';
         };
     }
@@ -160,12 +164,19 @@ function updateActiveMovieUI() {
         // Series
         const season = activeMovie.season || 1;
         const episode = activeMovie.episode || 1;
+        const totalSeason = activeMovie.totalSeason || 1;
+        const totalEpisode = activeMovie.totalEpisode || 1;
+        
         if(activeSeasonEl) activeSeasonEl.textContent = `SEZON ${season.toString().padStart(2, '0')}`;
         if(activeEpisodeEl) activeEpisodeEl.textContent = `B${episode.toString().padStart(2, '0')}`;
         
-        // Mock progress for series (e.g. wraps around every 20 episodes)
-        percentage = Math.min((episode % 20) * 5, 100);
-        if(episode > 0 && percentage === 0) percentage = 100; // if exactly multiple of 20
+        // Use total episode for progress if available, otherwise just use a small calculation
+        if (totalEpisode > 1) {
+            percentage = Math.min((episode / totalEpisode) * 100, 100);
+        } else {
+            percentage = Math.min((episode % 20) * 5, 100);
+            if(episode > 0 && percentage === 0) percentage = 100;
+        }
     }
 
     if(progressCircle) {
@@ -248,7 +259,8 @@ function renderMoviesView() {
         
         let subtitleText = '';
         if (type === 'series') {
-            subtitleText = `Sezon ${movie.season || 1} • Bölüm ${movie.episode || 1}`;
+            const tEp = movie.totalEpisode ? ` / ${movie.totalEpisode}` : '';
+            subtitleText = `Sezon ${movie.season || 1} • Bölüm ${movie.episode || 1}${tEp}`;
         } else {
             subtitleText = `Film`;
         }
@@ -422,9 +434,11 @@ function openAddModal() {
     if(!addModal) return;
     addType.value = 'series';
     addTitle.value = '';
+    addTotalSeason.value = 1;
+    addTotalEpisode.value = 10;
     addSeason.value = 1;
     addEpisode.value = 1;
-    addSeriesFields.style.display = 'grid';
+    addSeriesFields.style.display = 'flex';
     document.querySelector('input[name="movie-add-status"][value="watching"]').checked = true;
 
     addModal.classList.remove('hidden');
@@ -465,6 +479,8 @@ async function saveAddMovie() {
     };
     
     if (type === 'series') {
+        data.totalSeason = parseInt(addTotalSeason.value) || 1;
+        data.totalEpisode = parseInt(addTotalEpisode.value) || 1;
         data.season = parseInt(addSeason.value) || 1;
         data.episode = parseInt(addEpisode.value) || 1;
     }
@@ -486,11 +502,15 @@ function openEditModal(movie) {
     editType.value = movie.type || 'series';
     editTitle.value = movie.title || '';
     if (editType.value === 'series') {
-        editSeriesFields.style.display = 'grid';
+        editSeriesFields.style.display = 'flex';
+        editTotalSeason.value = movie.totalSeason || 1;
+        editTotalEpisode.value = movie.totalEpisode || 1;
         editSeason.value = movie.season || 1;
         editEpisode.value = movie.episode || 1;
     } else {
         editSeriesFields.style.display = 'none';
+        editTotalSeason.value = 1;
+        editTotalEpisode.value = 1;
         editSeason.value = 1;
         editEpisode.value = 1;
     }
@@ -537,6 +557,8 @@ async function saveEditMovie() {
     };
     
     if (type === 'series') {
+        data.totalSeason = parseInt(editTotalSeason.value) || 1;
+        data.totalEpisode = parseInt(editTotalEpisode.value) || 1;
         data.season = parseInt(editSeason.value) || 1;
         data.episode = parseInt(editEpisode.value) || 1;
     }
