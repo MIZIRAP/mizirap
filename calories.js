@@ -84,6 +84,8 @@ let tempNewFoodProtein = 0;
 let tempNewFoodKarb = 0;
 let tempNewFoodYag = 0;
 
+const foodSearchInput = document.getElementById('food-search-input');
+
 let tempCaloriesGoal = 2000;
 let tempMacroProtein = 150;
 let tempMacroKarb = 250;
