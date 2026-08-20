@@ -2661,6 +2661,8 @@ function openStretchPlayer() {
     const view = document.getElementById('view-stretch-player');
     view.classList.remove('hidden');
     // Ensure we start at the top of the player
+    const appContainer = document.getElementById('app-container');
+    if(appContainer) appContainer.scrollTop = 0;
     view.scrollTop = 0;
 
     _spLoadMovement(_spIdx);
@@ -3139,6 +3141,9 @@ function openCorePlayer() {
 
     const view = document.getElementById('view-core-player');
     view.classList.remove('hidden');
+    
+    const appContainer = document.getElementById('app-container');
+    if(appContainer) appContainer.scrollTop = 0;
     view.scrollTop = 0;
 
     _cpLoadMovement(_cpIdx);
