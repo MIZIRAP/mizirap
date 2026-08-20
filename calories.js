@@ -23,11 +23,14 @@ let currentEditLogId = null;
 const addFoodModal = document.getElementById('addFoodModal');
 const addFoodModalContent = document.getElementById('addFoodModalContent');
 const addFoodModalTitle = document.getElementById('modalMealTitle');
+const addFoodBackdrop = document.getElementById('add-food-backdrop');
+const addFoodCloseHandle = document.getElementById('close-add-food-handle');
 
 const caloriesGoalBtn = document.getElementById('calories-goal-btn');
 const caloriesGoalModal = document.getElementById('calories-goal-modal');
 const caloriesGoalModalContent = document.getElementById('calories-goal-modal-content');
 const caloriesGoalBackdrop = document.getElementById('calories-goal-backdrop');
+const caloriesGoalCloseHandle = document.getElementById('calories-goal-close-handle');
 
 const caloriesGoalMinus = document.getElementById('calories-goal-minus');
 const caloriesGoalPlus = document.getElementById('calories-goal-plus');
@@ -48,8 +51,9 @@ const macroYagDisplay = document.getElementById('calories-goal-yag-display');
 
 const portionModal = document.getElementById('addPortionModal');
 const portionModalContent = document.getElementById('addPortionModalContent');
-const portionBackdrop = document.getElementById('add-portion-backdrop');
 const portionModalTitle = document.getElementById('portion-modal-title');
+const portionBackdrop = document.getElementById('add-portion-backdrop');
+const portionCloseHandle = document.getElementById('close-portion-handle');
 const portionGramDisplay = document.getElementById('portion-gram-display');
 const portionKcalDisplay = document.getElementById('portion-kcal-display');
 const addFoodToLogBtn = document.getElementById('add-food-to-log-btn');
@@ -61,6 +65,7 @@ let tempPortionAmount = 100;
 const newFoodModal = document.getElementById('newFoodModal');
 const newFoodModalContent = document.getElementById('newFoodModalContent');
 const newFoodBackdrop = document.getElementById('new-food-backdrop');
+const newFoodCloseHandle = document.getElementById('close-new-food-handle');
 const saveNewFoodBtn = document.getElementById('save-new-food-btn');
 
 const newFoodNameInput = document.getElementById('new-food-name');
@@ -170,10 +175,12 @@ function bindEvents() {
                 renderLibraryFoods(); // refresh list to show all
             }
             addFoodModal.classList.remove('hidden');
-            addFoodModal.classList.add('flex');
             setTimeout(() => {
-                addFoodModalContent.classList.remove('translate-y-full');
-                addFoodModalContent.classList.add('translate-y-0');
+                if (addFoodBackdrop) addFoodBackdrop.classList.remove('opacity-0');
+                if (addFoodModalContent) {
+                    addFoodModalContent.classList.remove('translate-y-full');
+                    addFoodModalContent.classList.add('translate-y-0');
+                }
             }, 10);
             document.body.style.overflow = 'hidden';
         };
@@ -183,10 +190,11 @@ function bindEvents() {
         btn.onclick = closeAddFoodModal;
     });
 
-    if (addFoodModal) {
-        addFoodModal.onclick = (e) => {
-            if (e.target === addFoodModal) closeAddFoodModal();
-        };
+    if (addFoodBackdrop) {
+        addFoodBackdrop.onclick = () => closeAddFoodModal();
+    }
+    if (addFoodCloseHandle) {
+        addFoodCloseHandle.onclick = () => closeAddFoodModal();
     }
 
     // Calories Goal Modal
@@ -198,6 +206,9 @@ function bindEvents() {
 }
 if (caloriesGoalBackdrop) {
         caloriesGoalBackdrop.onclick = () => closeCaloriesGoalModal();
+    }
+    if (caloriesGoalCloseHandle) {
+        caloriesGoalCloseHandle.onclick = () => closeCaloriesGoalModal();
     }
 
     if (caloriesGoalMinus) {
@@ -282,6 +293,9 @@ if (caloriesGoalBackdrop) {
     
     if (newFoodBackdrop) {
         newFoodBackdrop.onclick = () => closeNewFoodModal();
+    }
+    if (newFoodCloseHandle) {
+        newFoodCloseHandle.onclick = () => closeNewFoodModal();
     }
 
     if (newFoodKcalMinus) {
@@ -370,6 +384,9 @@ if (caloriesGoalBackdrop) {
     if (portionBackdrop) {
         portionBackdrop.onclick = () => closeAddPortionModal();
     }
+    if (portionCloseHandle) {
+        portionCloseHandle.onclick = () => closeAddPortionModal();
+    }
 
     if (portionMinusBtn) {
         portionMinusBtn.onclick = () => { adjustAmount(-10); };
@@ -432,11 +449,11 @@ if (caloriesGoalBackdrop) {
 // Modal Toggle Functions
 function closeAddFoodModal() {
     if(!addFoodModalContent || !addFoodModal) return;
+    if (addFoodBackdrop) addFoodBackdrop.classList.add('opacity-0');
     addFoodModalContent.classList.remove('translate-y-0');
     addFoodModalContent.classList.add('translate-y-full');
     setTimeout(() => {
         addFoodModal.classList.add('hidden');
-        addFoodModal.classList.remove('flex');
         document.body.style.overflow = 'auto';
     }, 300);
 }
@@ -458,8 +475,8 @@ function openCaloriesGoalModal() {
     setTimeout(() => {
         if(caloriesGoalBackdrop) caloriesGoalBackdrop.classList.remove('opacity-0');
         if(caloriesGoalModalContent) {
-            caloriesGoalModalContent.classList.remove('translate-y-full', 'md:translate-y-10', 'md:opacity-0', 'md:scale-95');
-            caloriesGoalModalContent.classList.add('translate-y-0', 'md:translate-y-0', 'md:opacity-100', 'md:scale-100');
+            caloriesGoalModalContent.classList.remove('translate-y-full');
+            caloriesGoalModalContent.classList.add('translate-y-0');
         }
     }, 10);
 }
@@ -468,8 +485,8 @@ function closeCaloriesGoalModal() {
     if(!caloriesGoalModal) return;
     if(caloriesGoalBackdrop) caloriesGoalBackdrop.classList.add('opacity-0');
     if(caloriesGoalModalContent) {
-        caloriesGoalModalContent.classList.remove('translate-y-0', 'md:translate-y-0', 'md:opacity-100', 'md:scale-100');
-        caloriesGoalModalContent.classList.add('translate-y-full', 'md:translate-y-10', 'md:opacity-0', 'md:scale-95');
+        caloriesGoalModalContent.classList.remove('translate-y-0');
+        caloriesGoalModalContent.classList.add('translate-y-full');
     }
     setTimeout(() => {
         caloriesGoalModal.classList.add('hidden');
@@ -496,8 +513,8 @@ function openNewFoodModal() {
     setTimeout(() => {
         if(newFoodBackdrop) newFoodBackdrop.classList.remove('opacity-0');
         if(newFoodModalContent) {
-            newFoodModalContent.classList.remove('translate-y-full', 'md:translate-y-10', 'md:opacity-0', 'md:scale-95');
-            newFoodModalContent.classList.add('translate-y-0', 'md:translate-y-0', 'md:opacity-100', 'md:scale-100');
+            newFoodModalContent.classList.remove('translate-y-full');
+            newFoodModalContent.classList.add('translate-y-0');
         }
     }, 10);
 }
@@ -506,8 +523,8 @@ function closeNewFoodModal() {
     if(!newFoodModal) return;
     if(newFoodBackdrop) newFoodBackdrop.classList.add('opacity-0');
     if(newFoodModalContent) {
-        newFoodModalContent.classList.remove('translate-y-0', 'md:translate-y-0', 'md:opacity-100', 'md:scale-100');
-        newFoodModalContent.classList.add('translate-y-full', 'md:translate-y-10', 'md:opacity-0', 'md:scale-95');
+        newFoodModalContent.classList.remove('translate-y-0');
+        newFoodModalContent.classList.add('translate-y-full');
     }
     setTimeout(() => {
         newFoodModal.classList.add('hidden');
@@ -634,8 +651,8 @@ window.openAddPortionModal = function(name, kcal100, macros) {
         setTimeout(() => {
             if(portionBackdrop) portionBackdrop.classList.remove('opacity-0');
             if(portionModalContent) {
-                portionModalContent.classList.remove('translate-y-full', 'md:translate-y-10', 'md:opacity-0', 'md:scale-95');
-                portionModalContent.classList.add('translate-y-0', 'md:translate-y-0', 'md:opacity-100', 'md:scale-100');
+                portionModalContent.classList.remove('translate-y-full');
+                portionModalContent.classList.add('translate-y-0');
             }
         }, 10);
     }
@@ -645,8 +662,8 @@ window.closeAddPortionModal = function() {
     if(portionModal) {
         if(portionBackdrop) portionBackdrop.classList.add('opacity-0');
         if(portionModalContent) {
-            portionModalContent.classList.remove('translate-y-0', 'md:translate-y-0', 'md:opacity-100', 'md:scale-100');
-            portionModalContent.classList.add('translate-y-full', 'md:translate-y-10', 'md:opacity-0', 'md:scale-95');
+            portionModalContent.classList.remove('translate-y-0');
+            portionModalContent.classList.add('translate-y-full');
         }
         setTimeout(() => {
             portionModal.classList.add('hidden');

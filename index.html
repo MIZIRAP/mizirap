@@ -2797,14 +2797,14 @@
     </div>
 
     <!-- ================= KALORİ HEDEFİ MODALI ================= -->
-    <div class="hidden fixed inset-0 z-[100]" id="calories-goal-modal">
+    <div class="hidden fixed inset-0 z-[100] flex items-end justify-center" id="calories-goal-modal">
     <!-- Backdrop -->
     <div class="absolute inset-0 bg-black/10 backdrop-blur-sm z-10 transition-opacity duration-300 opacity-0" id="calories-goal-backdrop"></div>
     
     <!-- Modal Content -->
-    <div class="absolute bottom-0 md:bottom-auto md:relative w-full max-w-sm md:mx-auto md:top-1/2 md:-translate-y-1/2 bg-[#F7F9FF] rounded-t-[32px] md:rounded-[32px] shadow-[0_-8px_30px_rgba(0,0,0,0.05)] md:shadow-[0_10px_40px_rgba(0,0,0,0.08)] p-6 z-20 flex flex-col items-center transform transition-transform duration-300 translate-y-full md:translate-y-10 md:opacity-0 md:scale-95 pb-8 md:pb-6" id="calories-goal-modal-content">
+    <div class="relative w-full max-w-sm bg-[#F7F9FF] rounded-t-[32px] shadow-[0_-8px_30px_rgba(0,0,0,0.05)] p-6 z-20 flex flex-col items-center transform transition-transform duration-300 translate-y-full pb-8" id="calories-goal-modal-content">
         <!-- Drag Handle (Mobile) -->
-        <div class="w-12 h-1.5 bg-gray-300 rounded-full mb-6 md:hidden"></div>
+        <div class="w-12 h-1.5 bg-gray-300 rounded-full mb-6 cursor-pointer" id="calories-goal-close-handle"></div>
         <div class="w-full text-center mb-6">
             <h2 class="text-xl font-bold text-gray-800 mb-2">Hedeflerini Güncelle</h2>
         </div>
@@ -3148,9 +3148,13 @@
 </section>
 
     <!-- Add Food Modal (Hidden by default) -->
-    <div class="fixed inset-0 bg-on-background/40 backdrop-blur-sm z-[100] hidden flex-col justify-end md:justify-center items-center" id="addFoodModal">
-        <div class="bg-background shadow-neo w-full md:w-[400px] rounded-t-2xl md:rounded-[32px] p-6 pb-12 md:pb-6 shadow-2xl transform translate-y-full transition-transform duration-300 ease-out max-h-[90dvh] overflow-y-auto" id="addFoodModalContent">
-            <div class="w-12 h-1.5 bg-surface-variant rounded-full mx-auto mb-6 md:hidden"></div>
+    <div class="hidden fixed inset-0 z-[100] flex items-end justify-center" id="addFoodModal">
+        <!-- Backdrop -->
+        <div class="absolute inset-0 bg-black/10 backdrop-blur-sm z-10 transition-opacity duration-300 opacity-0" id="add-food-backdrop"></div>
+        <!-- Modal Content -->
+        <div class="relative w-full max-w-sm bg-[#F7F9FF] rounded-t-[32px] shadow-[0_-8px_30px_rgba(0,0,0,0.05)] p-6 z-20 flex flex-col items-center transform transition-transform duration-300 translate-y-full pb-8 max-h-[90dvh] overflow-y-auto" id="addFoodModalContent">
+            <!-- Drag Handle (Mobile) -->
+            <div class="w-12 h-1.5 bg-gray-300 rounded-full mb-6 cursor-pointer" id="close-add-food-handle"></div>
             <div class="flex justify-between items-center mb-6">
                 <h2 class="font-headline-md text-headline-md text-on-surface" id="modalMealTitle">Yiyecek Ekle</h2>
                 <button class="w-8 h-8 flex items-center justify-center bg-background shadow-neo rounded-full text-on-surface-variant hover:bg-surface-container-high transition-colors" class="close-add-food-modal-btn">
@@ -3196,13 +3200,13 @@
 
 
 <!-- Modal for Add Portion (Hidden by default) -->
-<div class="hidden fixed inset-0 z-[100]" id="addPortionModal">
+<div class="hidden fixed inset-0 z-[100] flex items-end justify-center" id="addPortionModal">
     <!-- Backdrop -->
     <div class="absolute inset-0 bg-black/10 backdrop-blur-sm z-10 transition-opacity duration-300 opacity-0" id="add-portion-backdrop"></div>
     <!-- Modal Content -->
-    <div class="absolute bottom-0 md:bottom-auto md:relative w-full max-w-sm md:mx-auto md:top-1/2 md:-translate-y-1/2 bg-[#F7F9FF] rounded-t-[32px] md:rounded-[32px] shadow-[0_-8px_30px_rgba(0,0,0,0.05)] md:shadow-[0_10px_40px_rgba(0,0,0,0.08)] p-6 z-20 flex flex-col items-center transform transition-transform duration-300 translate-y-full md:translate-y-10 md:opacity-0 md:scale-95 pb-8 md:pb-6" id="addPortionModalContent">
+    <div class="relative w-full max-w-sm bg-[#F7F9FF] rounded-t-[32px] shadow-[0_-8px_30px_rgba(0,0,0,0.05)] p-6 z-20 flex flex-col items-center transform transition-transform duration-300 translate-y-full pb-8" id="addPortionModalContent">
         <!-- Drag Handle (Mobile) -->
-        <div class="w-12 h-1.5 bg-gray-300 rounded-full mb-6 md:hidden"></div>
+        <div class="w-12 h-1.5 bg-gray-300 rounded-full mb-6 cursor-pointer" id="close-portion-handle"></div>
         <div class="w-full text-center mb-6">
             <h2 class="text-xl font-bold text-gray-800 mb-2" id="portion-modal-title">Porsiyon Ekle</h2>
         </div>
@@ -3227,14 +3231,14 @@
     </div>
 </div>
 <!-- Modal for Adding New Food to Library (Hidden by default) -->
-<div class="hidden fixed inset-0 z-[100]" id="newFoodModal">
+<div class="hidden fixed inset-0 z-[100] flex items-end justify-center" id="newFoodModal">
     <!-- Backdrop -->
     <div class="absolute inset-0 bg-black/10 backdrop-blur-sm z-10 transition-opacity duration-300 opacity-0" id="new-food-backdrop"></div>
     
     <!-- Modal Content -->
-    <div class="absolute bottom-0 md:bottom-auto md:relative w-full max-w-sm md:mx-auto md:top-1/2 md:-translate-y-1/2 bg-[#F7F9FF] rounded-t-[32px] md:rounded-[32px] shadow-[0_-8px_30px_rgba(0,0,0,0.05)] md:shadow-[0_10px_40px_rgba(0,0,0,0.08)] p-6 z-20 flex flex-col items-center transform transition-transform duration-300 translate-y-full md:translate-y-10 md:opacity-0 md:scale-95 pb-8 md:pb-6" id="newFoodModalContent">
+    <div class="relative w-full max-w-sm bg-[#F7F9FF] rounded-t-[32px] shadow-[0_-8px_30px_rgba(0,0,0,0.05)] p-6 z-20 flex flex-col items-center transform transition-transform duration-300 translate-y-full pb-8" id="newFoodModalContent">
         <!-- Drag Handle (Mobile) -->
-        <div class="w-12 h-1.5 bg-gray-300 rounded-full mb-6 md:hidden"></div>
+        <div class="w-12 h-1.5 bg-gray-300 rounded-full mb-6 cursor-pointer" id="close-new-food-handle"></div>
         <div class="w-full text-center mb-6">
             <h2 class="text-xl font-bold text-gray-800 mb-2">Besin Ekle</h2>
         </div>
