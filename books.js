@@ -375,9 +375,6 @@ function renderAllBooksList() {
                 <button class="edit-book-btn w-12 h-12 rounded-2xl bg-silk-blue text-white flex items-center justify-center active:bg-blue-600 transition-colors" data-id="${book.id}">
                     <span class="material-symbols-rounded text-xl">edit</span>
                 </button>
-                <button class="delete-book-btn w-12 h-12 rounded-2xl bg-red-500 text-white flex items-center justify-center active:bg-red-600 transition-colors" data-id="${book.id}">
-                    <span class="material-symbols-rounded text-xl">delete</span>
-                </button>
             </div>
         `;
         
@@ -402,13 +399,12 @@ function renderAllBooksList() {
         
         const cardContent = wrapper.querySelector('.card-content');
         const editBtn = wrapper.querySelector('.edit-book-btn');
-        const deleteBtn = wrapper.querySelector('.delete-book-btn');
         
         // --- Swipe Logic ---
         let startX = 0;
         let currentX = 0;
         let isDragging = false;
-        const threshold = -140; // Two buttons of 48px + gap
+        const threshold = -80; // One button of 48px + gap
         let isSwiped = false;
         
         cardContent.addEventListener('touchstart', (e) => {
@@ -522,16 +518,6 @@ function renderAllBooksList() {
             openEditModal(book);
             cardContent.style.transform = 'translateX(0px)';
             isSwiped = false;
-        };
-        
-        deleteBtn.onclick = async () => {
-            if(!confirm("Bu kitabı silmek istediğinize emin misiniz?")) return;
-            try {
-                const docRef = doc(db, "users", currentUid, "books", book.id);
-                await deleteDoc(docRef);
-            } catch (e) {
-                console.error(e);
-            }
         };
         
         allListEl.appendChild(wrapper);
