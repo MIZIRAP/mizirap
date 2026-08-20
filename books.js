@@ -274,18 +274,35 @@ async function updateActiveBookPages(newPages) {
 }
 
 function renderBooksView() {
-    // 1. Determine active book
-    // Priorities: 
-    // - Most recently updated book with status 'reading'
-    // - If none, most recently updated book overall that isn't 'finished'
-    
-    let candidates = currentBooks.filter(b => b.status === "reading");
-    if(candidates.length === 0) {
-        candidates = currentBooks.filter(b => b.status === "to_read");
+    let savedId = localStorage.getItem('lastActiveBookId_' + currentUid);
+    if (!activeBook && savedId) {
+        activeBook = currentBooks.find(b => b.id === savedId) || null;
     }
     
-    activeBook = candidates.length > 0 ? candidates[0] : null;
+    if (activeBook) {
+        const found = currentBooks.find(b => b.id === activeBook.id);
+        if (found) activeBook = found;
+        else activeBook = null;
+    }
+
+    if (!activeBook) {
+        let candidates = currentBooks.filter(b => b.status === "reading");
+        if(candidates.length === 0) {
+            candidates = currentBooks.filter(b => b.status === "to_read");
+        }
+        activeBook = candidates.length > 0 ? candidates[0] : null;
+    }
     
+    if (activeBook) {
+        localStorage.setItem('lastActiveBookId_' + currentUid, activeBook.id);
+        
+        currentBooks.sort((a, b) => {
+            if (a.id === activeBook.id) return -1;
+            if (b.id === activeBook.id) return 1;
+            return 0;
+        });
+    }
+
     updateActiveBookUI();
     renderAllBooksList();
 }
@@ -435,11 +452,11 @@ function renderAllBooksList() {
                 
                 // If it was a tap (very small movement), trigger click
                 if (Math.abs(diffX) < 10) {
-                    // Set as active book
                     activeBook = book;
-                    updateActiveBookUI();
+                    localStorage.setItem('lastActiveBookId_' + currentUid, activeBook.id);
+                    renderBooksView();
+                    if (onChangeCb) onChangeCb(currentBooks);
                     
-                    // Close any open swipes
                     document.querySelectorAll('.card-content').forEach(el => {
                         el.style.transform = 'translateX(0px)';
                     });
@@ -479,7 +496,10 @@ function renderAllBooksList() {
                 cardContent.style.transform = isSwiped ? `translateX(${threshold}px)` : 'translateX(0px)';
                 if (Math.abs(diffX) < 10) {
                     activeBook = book;
-                    updateActiveBookUI();
+                    localStorage.setItem('lastActiveBookId_' + currentUid, activeBook.id);
+                    renderBooksView();
+                    if (onChangeCb) onChangeCb(currentBooks);
+                    
                     document.querySelectorAll('.card-content').forEach(el => {
                         el.style.transform = 'translateX(0px)';
                     });

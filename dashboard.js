@@ -82,9 +82,8 @@ function renderDashboard() {
     // Okuma/Kitaplar
     const dashBooksText = document.getElementById("dashboard-books-text");
     if(dashBooksText) {
-        const readingBooks = currentBooks.filter(b => b.status === "reading");
-        if(readingBooks.length > 0) {
-            const book = readingBooks[0];
+        if(currentBooks.length > 0) {
+            const book = currentBooks[0];
             const read = book.readPages || 0;
             const total = book.totalPages || 1;
             dashBooksText.innerHTML = `<span class="text-2xl font-bold text-on-surface leading-none">${read}</span><span class="text-xs text-on-surface-variant mb-1">/${total} p.</span>`;
