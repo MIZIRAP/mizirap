@@ -255,7 +255,11 @@ function openModal(id) {
     requestAnimationFrame(() => {
         el.classList.remove("opacity-0");
         const panel = el.querySelector("div.transform") || el.querySelector("div");
-        if(panel) panel.classList.remove("translate-y-full");
+        if(panel) {
+            panel.classList.remove("translate-y-full");
+            panel.classList.remove("scale-95", "opacity-0");
+            panel.classList.add("scale-100", "opacity-100");
+        }
         
         const backdrop = el.querySelector("[id$='-backdrop']");
         if (backdrop) backdrop.classList.remove("opacity-0");
@@ -267,7 +271,14 @@ function closeModal(id) {
     if (!el) return;
     
     const panel = el.querySelector("div.transform") || el.querySelector("div");
-    if(panel) panel.classList.add("translate-y-full");
+    if(panel) {
+        if (panel.classList.contains("scale-100")) {
+            panel.classList.remove("scale-100", "opacity-100");
+            panel.classList.add("scale-95", "opacity-0");
+        } else {
+            panel.classList.add("translate-y-full");
+        }
+    }
     
     const backdrop = el.querySelector("[id$='-backdrop']");
     if (backdrop) backdrop.classList.add("opacity-0");
@@ -1294,52 +1305,39 @@ export function renderFinanceSettings() {
                 let startX = 0;
                 let currentX = 0;
                 let isDragging = false;
-                let isSwiped = false;
-                const threshold = -60;
 
                 item.addEventListener('touchstart', (e) => {
                     startX = e.touches[0].clientX;
                     isDragging = true;
                     item.style.transition = 'none';
-                });
+                }, {passive: true});
 
                 item.addEventListener('touchmove', (e) => {
                     if (!isDragging) return;
                     currentX = e.touches[0].clientX;
-                    let diffX = currentX - startX;
-                    if (isSwiped) diffX += threshold;
-                    
-                    if (diffX > 0) diffX = 0; // only swipe left
-                    if (diffX < -100) diffX = -100; // max swipe left
-                    
-                    item.style.transform = `translateX(${diffX}px)`;
-                });
+                    let diff = currentX - startX;
+                    if (diff > 0) diff = 0; // only swipe left
+                    if (diff < -80) diff = -80;
+                    item.style.transform = `translateX(${diff}px)`;
+                }, {passive: true});
 
                 item.addEventListener('touchend', (e) => {
                     isDragging = false;
-                    item.style.transition = 'transform 0.3s ease-out';
-                    
-                    let diffX = (currentX || startX) - startX;
-                    if (isSwiped) diffX += threshold;
-
-                    if (!isSwiped && diffX < -40) {
-                        isSwiped = true;
-                        item.style.transform = `translateX(${threshold}px)`;
-                        
-                        document.addEventListener('touchstart', function closeSwipe(evt) {
-                            if (!wrapper.contains(evt.target)) {
-                                isSwiped = false;
-                                item.style.transform = `translateX(0px)`;
-                                document.removeEventListener('touchstart', closeSwipe);
-                            }
-                        });
-                    } else if (isSwiped && diffX > 40) {
-                        isSwiped = false;
-                        item.style.transform = `translateX(0px)`;
+                    item.style.transition = 'transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)';
+                    let diff = currentX - startX;
+                    if (diff < -40) {
+                        item.style.transform = `translateX(-80px)`; // stay open to show delete btn
+                        setTimeout(() => {
+                            document.addEventListener('touchstart', function closeSwipe(evt) {
+                                if (!wrapper.contains(evt.target)) {
+                                    item.style.transform = `translateX(0px)`;
+                                    document.removeEventListener('touchstart', closeSwipe);
+                                }
+                            }, {passive: true});
+                        }, 100);
                     } else {
-                        item.style.transform = isSwiped ? `translateX(${threshold}px)` : 'translateX(0px)';
+                        item.style.transform = `translateX(0px)`;
                     }
-                    currentX = 0;
                 });
 
                 wrapper.appendChild(delBtn);
@@ -1388,52 +1386,39 @@ export function renderFinanceSettings() {
                 let startX = 0;
                 let currentX = 0;
                 let isDragging = false;
-                let isSwiped = false;
-                const threshold = -60;
 
                 item.addEventListener('touchstart', (e) => {
                     startX = e.touches[0].clientX;
                     isDragging = true;
                     item.style.transition = 'none';
-                });
+                }, {passive: true});
 
                 item.addEventListener('touchmove', (e) => {
                     if (!isDragging) return;
                     currentX = e.touches[0].clientX;
-                    let diffX = currentX - startX;
-                    if (isSwiped) diffX += threshold;
-                    
-                    if (diffX > 0) diffX = 0; // only swipe left
-                    if (diffX < -100) diffX = -100; // max swipe left
-                    
-                    item.style.transform = `translateX(${diffX}px)`;
-                });
+                    let diff = currentX - startX;
+                    if (diff > 0) diff = 0; // only swipe left
+                    if (diff < -80) diff = -80;
+                    item.style.transform = `translateX(${diff}px)`;
+                }, {passive: true});
 
                 item.addEventListener('touchend', (e) => {
                     isDragging = false;
-                    item.style.transition = 'transform 0.3s ease-out';
-                    
-                    let diffX = (currentX || startX) - startX;
-                    if (isSwiped) diffX += threshold;
-
-                    if (!isSwiped && diffX < -40) {
-                        isSwiped = true;
-                        item.style.transform = `translateX(${threshold}px)`;
-                        
-                        document.addEventListener('touchstart', function closeSwipe(evt) {
-                            if (!wrapper.contains(evt.target)) {
-                                isSwiped = false;
-                                item.style.transform = `translateX(0px)`;
-                                document.removeEventListener('touchstart', closeSwipe);
-                            }
-                        });
-                    } else if (isSwiped && diffX > 40) {
-                        isSwiped = false;
-                        item.style.transform = `translateX(0px)`;
+                    item.style.transition = 'transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)';
+                    let diff = currentX - startX;
+                    if (diff < -40) {
+                        item.style.transform = `translateX(-80px)`; // stay open to show delete btn
+                        setTimeout(() => {
+                            document.addEventListener('touchstart', function closeSwipe(evt) {
+                                if (!wrapper.contains(evt.target)) {
+                                    item.style.transform = `translateX(0px)`;
+                                    document.removeEventListener('touchstart', closeSwipe);
+                                }
+                            }, {passive: true});
+                        }, 100);
                     } else {
-                        item.style.transform = isSwiped ? `translateX(${threshold}px)` : 'translateX(0px)';
+                        item.style.transform = `translateX(0px)`;
                     }
-                    currentX = 0;
                 });
 
                 wrapper.appendChild(delBtn);
