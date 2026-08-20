@@ -67,6 +67,7 @@ const newFoodKarbInput = document.getElementById('new-food-karb');
 const newFoodProteinInput = document.getElementById('new-food-protein');
 const newFoodYagInput = document.getElementById('new-food-yag');
 
+const foodSearchInput = document.getElementById('food-search-input');
 let tempCaloriesGoal = 2000;
 let tempMacroProtein = 150;
 let tempMacroKarb = 250;
@@ -167,7 +168,12 @@ function bindEvents() {
 
     // Calories Goal Modal
     if (caloriesGoalBtn) caloriesGoalBtn.onclick = openCaloriesGoalModal;
-    if (caloriesGoalBackdrop) {
+    if (foodSearchInput) {
+    foodSearchInput.addEventListener('input', () => {
+        renderLibraryFoods();
+    });
+}
+if (caloriesGoalBackdrop) {
         caloriesGoalBackdrop.onclick = () => closeCaloriesGoalModal();
     }
 
@@ -594,55 +600,102 @@ function renderLibraryFoods() {
     if (!list) return;
     
     list.innerHTML = '';
-    if(libraryFoods.length === 0) {
-        list.innerHTML = `<p class="text-on-surface-variant text-sm text-center col-span-2 py-4">Kütüphanede kayıtlı besin yok.</p>`;
+    
+    let filteredFoods = libraryFoods;
+    if (foodSearchInput && foodSearchInput.value) {
+        const q = foodSearchInput.value.toLowerCase();
+        filteredFoods = libraryFoods.filter(f => (f.name || "").toLowerCase().includes(q));
+    }
+    
+    if(filteredFoods.length === 0) {
+        list.innerHTML = `<p class="text-[#64748B] text-sm text-center py-4">Kayıtlı besin bulunamadı.</p>`;
+        return;
     }
 
-    libraryFoods.forEach((food) => {
-        const item = document.createElement('div');
-        item.className = "bg-background shadow-neo rounded-[32px] p-4 shadow-sm hover:scale-[0.99] transition-transform relative group";
+    filteredFoods.forEach((food) => {
+        const wrapper = document.createElement('div');
+        wrapper.className = "relative w-full shrink-0 overflow-hidden rounded-2xl";
         
-        let macrosHtml = '';
-        if(food.karb !== null || food.protein !== null || food.yag !== null) {
-            macrosHtml = '<div class="flex gap-2">';
-            if(food.karb !== null && !isNaN(food.karb)) macrosHtml += `<span class="font-label-sm text-label-sm bg-tertiary-container/20 text-neon-green rounded-md px-2 py-1">K: ${food.karb}g</span>`;
-            if(food.protein !== null && !isNaN(food.protein)) macrosHtml += `<span class="font-label-sm text-label-sm bg-gradient-to-r from-neon-blue to-neon-green/30 text-neon-purple rounded-md px-2 py-1">P: ${food.protein}g</span>`;
-            if(food.yag !== null && !isNaN(food.yag)) macrosHtml += `<span class="font-label-sm text-label-sm bg-error-container/40 text-on-error-container rounded-md px-2 py-1">Y: ${food.yag}g</span>`;
-            macrosHtml += '</div>';
-        }
-
-        item.innerHTML = `
-            <div class="cursor-pointer">
-                <div class="flex justify-between items-start mb-2 pr-8">
-                    <h3 class="font-headline-sm text-headline-sm text-on-surface truncate">${escapeHtml(food.name)}</h3>
-                    <span class="font-label-md text-label-md text-on-surface-variant bg-background shadow-neo px-2 py-1 rounded-full shrink-0">100g</span>
-                </div>
-                <div class="flex items-center gap-2 mb-3">
-                    <span class="font-body-lg text-body-lg text-neon-blue font-bold">${food.kcal} kcal</span>
-                </div>
-                ${macrosHtml}
-            </div>
-            <!-- Delete Button -->
-            <button class="absolute top-4 right-4 w-8 h-8 rounded-full bg-error-container text-on-error-container flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity active:scale-95 z-10 delete-library-btn">
-                <span class="material-symbols-rounded text-lg">delete</span>
-            </button>
-        `;
-        
-        // Bind portion modal opening to the content
-        item.firstElementChild.onclick = () => openAddPortionModal(food.name, food.kcal, {karb: food.karb, protein: food.protein, yag: food.yag});
-        
-        // Bind delete
-        item.querySelector('.delete-library-btn').onclick = async (e) => {
-            e.stopPropagation();
+        // Delete button underneath
+        const delBtn = document.createElement('button');
+        delBtn.className = "absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-red-500 rounded-2xl text-white flex items-center justify-center z-0 active:bg-red-600 transition-colors";
+        delBtn.innerHTML = `<span class="material-symbols-rounded text-xl">delete</span>`;
+        delBtn.onclick = async () => {
             try {
-                await deleteDoc(doc(db, "users", currentUid, "foodLibrary", food.id)).catch(e => { console.error('DB Error:', e); alert('Veritabanı işlemi sırasında bir hata oluştu.'); throw e; });
-            } catch(err) {
-                console.error(err);
-                alert('Silinirken hata oluştu: ' + err.message);
+                await deleteDoc(doc(db, "users", currentUid, "foodLibrary", food.id));
+            } catch(e) {
+                console.error("Silme Hatası", e);
+                alert('Silinirken hata oluştu: ' + e.message);
             }
         };
 
-        list.appendChild(item);
+        const item = document.createElement('div');
+        item.className = "flex items-center justify-between p-4 rounded-2xl bg-[#F7F9FF] relative z-10 transition-transform cursor-pointer";
+        item.style.boxShadow = "4px 4px 8px #D1D9E6, -4px -4px 8px #FFFFFF";
+        
+        let p = food.protein || 0;
+        let k = food.karb || 0;
+        let y = food.yag || 0;
+
+        item.innerHTML = `
+            <div class="flex items-center gap-4 pointer-events-none">
+                <div class="w-10 h-10 rounded-full bg-[#F7F9FF] flex items-center justify-center shrink-0" style="box-shadow: inset 2px 2px 5px #D1D9E6, inset -2px -2px 5px #FFFFFF;">
+                    <span class="material-symbols-rounded text-[#3B82F6]">restaurant</span>
+                </div>
+                <div class="flex-1 min-w-0 pr-2">
+                    <p class="text-sm font-bold text-[#1E293B] truncate">${escapeHtml(food.name || "İsimsiz")}</p>
+                    <p class="text-[10px] text-[#64748B] mt-1 truncate">P:${p}g • K:${k}g • Y:${y}g</p>
+                </div>
+            </div>
+            <span class="font-bold text-[#3B82F6] pointer-events-none whitespace-nowrap shrink-0">${food.kcal} kcal</span>
+        `;
+        
+        // Swipe logic
+        let startX = 0;
+        let currentX = 0;
+        let isDragging = false;
+
+        item.addEventListener('touchstart', (e) => {
+            startX = e.touches[0].clientX;
+            isDragging = true;
+            item.style.transition = 'none';
+        }, {passive: true});
+
+        item.addEventListener('touchmove', (e) => {
+            if (!isDragging) return;
+            currentX = e.touches[0].clientX;
+            let diff = currentX - startX;
+            if (diff > 0) diff = 0; // only swipe left
+            if (diff < -80) diff = -80;
+            item.style.transform = `translateX(${diff}px)`;
+        }, {passive: true});
+
+        item.addEventListener('touchend', (e) => {
+            isDragging = false;
+            item.style.transition = 'transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)';
+            let diff = currentX - startX;
+            if (diff < -40) {
+                item.style.transform = `translateX(-80px)`; // stay open to show delete btn
+                setTimeout(() => {
+                    document.addEventListener('touchstart', function closeSwipe(evt) {
+                        if (!wrapper.contains(evt.target)) {
+                            item.style.transform = `translateX(0px)`;
+                            document.removeEventListener('touchstart', closeSwipe);
+                        }
+                    }, {passive: true});
+                }, 100);
+            } else {
+                item.style.transform = `translateX(0px)`;
+                // Trigger tap event if not swiped
+                if (Math.abs(diff) < 5) {
+                    openAddPortionModal(food.name, food.kcal, {karb: food.karb, protein: food.protein, yag: food.yag});
+                }
+            }
+        });
+        
+        wrapper.appendChild(delBtn);
+        wrapper.appendChild(item);
+        list.appendChild(wrapper);
     });
     
     const countEl = document.getElementById('library-food-count');
