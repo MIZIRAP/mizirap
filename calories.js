@@ -706,10 +706,12 @@ function renderLibraryFoods() {
                 }, 100);
             } else {
                 item.style.transform = `translateX(0px)`;
-                // Trigger tap event if not swiped
-                if (Math.abs(diff) < 5) {
-                    openAddPortionModal(food.name, food.kcal, {karb: food.karb, protein: food.protein, yag: food.yag});
-                }
+            }
+        });
+        
+        item.addEventListener('click', (e) => {
+            if (Math.abs(currentX - startX) < 5) {
+                openAddPortionModal(food.name, food.kcal, {karb: food.karb, protein: food.protein, yag: food.yag});
             }
         });
         
