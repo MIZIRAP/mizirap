@@ -364,26 +364,26 @@ function renderAllBooksList() {
             statusColor = "text-[#22C55E]";
             statusText = "Bitti";
         }
-        
+
         const wrapper = document.createElement("div");
         wrapper.className = "relative w-full overflow-hidden rounded-2xl mb-4";
-        wrapper.style.boxShadow = "4px 4px 8px #D1D9E6, -4px -4px 8px #FFFFFF";
+        // removed wrapper box shadow since the card inside has it
         
-        // Background Actions (Edit & Delete)
+        // Background Actions (Edit & Delete) - Matching Calories Style
         const actionsHtml = `
-            <div class="absolute inset-y-0 right-0 flex items-center justify-end px-3 gap-3 bg-gray-120 w-full z-0">
-                <button class="edit-book-btn w-10 h-10 rounded-full bg-silk-blue text-white flex items-center justify-center shadow-md active:scale-95 transition-transform" data-id="${book.id}">
-                    <span class="material-symbols-rounded text-lg">edit</span>
+            <div class="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-2 z-0">
+                <button class="edit-book-btn w-12 h-12 rounded-2xl bg-silk-blue text-white flex items-center justify-center active:bg-blue-600 transition-colors" data-id="${book.id}">
+                    <span class="material-symbols-rounded text-xl">edit</span>
                 </button>
-                <button class="delete-book-btn w-10 h-10 rounded-full bg-red-500 text-white flex items-center justify-center shadow-md active:scale-95 transition-transform" data-id="${book.id}">
-                    <span class="material-symbols-rounded text-lg">delete</span>
+                <button class="delete-book-btn w-12 h-12 rounded-2xl bg-red-500 text-white flex items-center justify-center active:bg-red-600 transition-colors" data-id="${book.id}">
+                    <span class="material-symbols-rounded text-xl">delete</span>
                 </button>
             </div>
         `;
         
         // Foreground Card
         const cardHtml = `
-            <div class="card-content relative z-10 bg-[#F7F9FF] rounded-2xl p-4 flex gap-4 items-center cursor-pointer transition-transform duration-300" style="touch-action: pan-y;">
+            <div class="card-content relative z-10 bg-[#F7F9FF] rounded-2xl p-4 flex gap-4 items-center cursor-pointer transition-transform" style="touch-action: pan-y; box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px #FFFFFF;" data-swiped="false">
                 <div class="w-12 h-12 shrink-0 rounded-xl bg-white flex items-center justify-center shadow-sm">
                     <span class="material-symbols-rounded text-[#3B82F6] text-2xl">menu_book</span>
                 </div>
@@ -408,7 +408,7 @@ function renderAllBooksList() {
         let startX = 0;
         let currentX = 0;
         let isDragging = false;
-        const threshold = -110; // Slide left by 80px to show buttons
+        const threshold = -140; // Two buttons of 48px + gap
         let isSwiped = false;
         
         cardContent.addEventListener('touchstart', (e) => {
@@ -437,14 +437,14 @@ function renderAllBooksList() {
         cardContent.addEventListener('touchend', (e) => {
             if (!isDragging) return;
             isDragging = false;
-            cardContent.style.transition = 'transform 0.3s ease-out';
+            cardContent.style.transition = 'transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)';
             
             let diffX = currentX - startX;
-            if (!isSwiped && diffX < -30) {
+            if (!isSwiped && diffX < -40) {
                 // Trigger swipe open
                 isSwiped = true;
                 cardContent.style.transform = `translateX(${threshold}px)`;
-            } else if (isSwiped && diffX > 30) {
+            } else if (isSwiped && diffX > 40) {
                 // Trigger swipe close
                 isSwiped = false;
                 cardContent.style.transform = 'translateX(0px)';
@@ -486,12 +486,12 @@ function renderAllBooksList() {
         cardContent.addEventListener('mouseup', (e) => {
             if (!isDragging) return;
             isDragging = false;
-            cardContent.style.transition = 'transform 0.3s ease-out';
+            cardContent.style.transition = 'transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)';
             let diffX = currentX - startX;
-            if (!isSwiped && diffX < -30) {
+            if (!isSwiped && diffX < -40) {
                 isSwiped = true;
                 cardContent.style.transform = `translateX(${threshold}px)`;
-            } else if (isSwiped && diffX > 30) {
+            } else if (isSwiped && diffX > 40) {
                 isSwiped = false;
                 cardContent.style.transform = 'translateX(0px)';
             } else {
@@ -512,7 +512,7 @@ function renderAllBooksList() {
         cardContent.addEventListener('mouseleave', () => {
              if(isDragging) {
                 isDragging = false;
-                cardContent.style.transition = 'transform 0.3s ease-out';
+                cardContent.style.transition = 'transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)';
                 cardContent.style.transform = isSwiped ? `translateX(${threshold}px)` : 'translateX(0px)';
              }
         });
