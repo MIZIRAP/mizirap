@@ -520,110 +520,148 @@
 </section>
 
     <!-- ================= SPOR TAKİBİ (Workout) ================= -->
-    <section id="view-workout" class="view hidden bg-background shadow-neo min-h-[100dvh] text-on-surface antialiased font-body-lg pb-[100px]">
-        <div class="max-w-md mx-auto relative min-h-[100dvh] flex flex-col bg-surface">
-            <!-- Immersive Header -->
-            <div class="bg-gradient-to-b from-primary-container to-[#B7D0C1] rounded-b-3xl pt-12 pb-8 px-margin-mobile shadow-sm relative overflow-hidden">
-                <!-- Decorative background elements -->
-                <div class="absolute -right-16 -top-16 w-64 h-64 bg-background shadow-neo opacity-10 rounded-full blur-3xl pointer-events-none"></div>
-                <div class="absolute -left-12 bottom-0 w-48 h-48 bg-background shadow-neo opacity-5 rounded-full blur-2xl pointer-events-none"></div>
-                <header class="pb-6 relative flex items-center justify-center">
-                    <button onclick="document.getElementById('view-workout').classList.add('hidden'); document.getElementById('view-dashboard').classList.remove('hidden');" class="absolute left-0 text-white-container hover:bg-black/10 transition-colors active:scale-95 transition-transform p-2 rounded-full flex items-center justify-center z-10">
-                        <span class="material-symbols-rounded">arrow_back</span>
-                    </button>
-                    <h1 class="font-headline-lg-mobile text-headline-lg-mobile text-white-container tracking-tight">Spor</h1>
-                </header>
-                <div class="flex flex-col gap-4 text-white relative z-10">
-                    <div>
-                        <h2 id="workout-split-title" class="font-headline-lg text-headline-lg font-semibold mb-1">Push Day</h2>
-                        <p id="workout-split-desc" class="font-body-md text-body-md opacity-95">Göğüs, Omuz ve Triceps odaklı antrenman</p>
-                        <!-- Rotation Indicator Container -->
-                        <div id="workout-day-indicator" class="flex gap-2 items-center mt-2 mb-2">
-                        </div>
-                    </div>
-                    <!-- Primary Action -->
-                    <button data-action="startActiveSession" class="w-full bg-background shadow-neo text-neon-blue rounded-full py-4 px-6 font-label-lg text-label-lg font-bold shadow-[0_4px_14px_0_rgba(0,0,0,0.1)] active:scale-[0.98] transition-transform duration-150 mt-2 flex items-center justify-center gap-2">
-                        <span class="material-symbols-rounded" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
-                        Antrenmanı Başlat
-                    </button>
-                    <div class="text-center mt-2">
-                    </div>
+    <section id="view-workout" class="view hidden bg-background text-on-surface min-h-[100dvh] pb-32">
+<!-- Top App Bar -->
+<header class="w-full top-0 sticky z-40 max-w-md mx-auto px-container-padding py-4">
+    <div class="flex items-center justify-between w-full">
+        <button class="w-10 h-10 flex items-center justify-center rounded-full bg-[#F7F9FF] active:scale-95 transition-transform" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px #FFFFFF;" onclick="document.getElementById('view-dashboard').classList.remove('hidden'); document.getElementById('view-workout').classList.add('hidden');">
+            <span class="material-symbols-rounded text-[#1E293B]">arrow_back</span>
+        </button>
+        <h1 class="text-h1 font-bold text-[#1E293B]">Spor</h1>
+        <button class="w-10 h-10 flex items-center justify-center rounded-full bg-[#F7F9FF] active:scale-95 transition-transform" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px #FFFFFF;">
+            <span class="material-symbols-rounded text-[#1E293B]">settings</span>
+        </button>
+    </div>
+</header>
+
+<!-- Main Content Container -->
+<main class="flex-1 w-full max-w-md mx-auto px-container-padding pb-32 flex flex-col gap-6 pt-4">
+
+    <!-- Featured Workout Card -->
+    <section class="flex flex-col gap-4">
+        <div class="bg-[#F7F9FF] rounded-[32px] p-6 flex flex-col gap-4 relative overflow-hidden" style="box-shadow: 8px 8px 16px #D1D9E6, -8px -8px 16px #FFFFFF;">
+            <!-- Blue accent line (optional neon touch) -->
+            <div class="absolute right-0 bottom-0 w-32 h-1 bg-gradient-to-l from-[#3B82F6] to-transparent"></div>
+            <div class="absolute right-0 top-1/2 bottom-12 w-1 bg-gradient-to-t from-[#3B82F6] to-transparent"></div>
+            
+            <div class="flex justify-between items-start">
+                <div>
+                    <h2 class="text-xs font-bold text-[#64748B] uppercase tracking-wider mb-1">WORKOUT</h2>
+                    <h3 class="text-2xl font-bold text-[#1E293B] mb-2" id="workout-split-title">Push Day</h3>
+                    <p class="text-sm font-medium text-[#64748B]" id="workout-split-desc">Göğüs, Omuz ve Triceps odaklı antrenman</p>
+                </div>
+                <div class="w-12 h-12 rounded-full bg-[#F7F9FF] flex items-center justify-center shrink-0" style="box-shadow: inset 4px 4px 8px #D1D9E6, inset -4px -4px 8px #FFFFFF;">
+                    <span class="material-symbols-rounded text-[#1E293B] text-xl">fitness_center</span>
                 </div>
             </div>
             
-            <!-- Main Content -->
-            <main class="flex-1 px-margin-mobile flex flex-col gap-8 py-8">
-                <!-- Stretching / Esneklik - First Class Citizen -->
-                <section>
-                    <div class="grid grid-cols-2 gap-4">
-                        <button data-action="openStretchPlayer" class="bg-gradient-to-r from-neon-purple to-neon-blue-container/10 rounded-[32px] p-5 flex flex-col gap-3 shadow-sm active:scale-[0.98] transition-transform border border-primary-container/20">
-                            <div class="w-12 h-12 rounded-full bg-gradient-to-r from-neon-purple to-neon-blue-container flex items-center justify-center text-white">
-                                <span class="material-symbols-rounded" style="font-variation-settings: 'FILL' 1;">self_improvement</span>
-                            </div>
-                            <div class="text-left">
-                                <span class="block font-label-lg text-label-lg font-bold text-on-surface">Esneme Yap</span>
-                            </div>
-                        </button>
-                        <button data-action="openCorePlayer" class="bg-tertiary/10 rounded-[32px] p-5 flex flex-col gap-3 shadow-sm active:scale-[0.98] transition-transform border border-tertiary/20">
-                            <div class="w-12 h-12 rounded-full bg-tertiary flex items-center justify-center text-white">
-                                <span class="material-symbols-rounded" style="font-variation-settings: 'FILL' 1;">accessibility_new</span>
-                            </div>
-                            <div class="text-left">
-                                <span class="block font-label-lg text-label-lg font-bold text-on-surface">Core Çalışması</span>
-                            </div>
-                        </button>
-                    </div>
-                </section>
-                
-                <!-- Navigation Cards -->
-                <section>
-                    <div class="grid grid-cols-1 gap-4">
-                        <a class="bg-background shadow-neo rounded-[32px] p-5 shadow-sm flex items-center gap-4 hover:shadow-md transition-shadow active:scale-[0.99] border border-surface-variant/30" href="#" onclick="document.getElementById('view-workout').classList.add('hidden'); document.getElementById('view-exercise-library').classList.remove('hidden'); return false;">
-                            <div class="w-12 h-12 rounded-[32px] bg-background shadow-neo flex items-center justify-center text-on-surface-variant">
-                                <span class="material-symbols-rounded">book</span>
-                            </div>
-                            <div class="flex-1">
-                                <h4 class="font-label-lg text-label-lg font-bold text-on-surface">Egzersiz Kütüphanesi</h4>
-                                <p class="font-body-md text-body-md text-on-surface-variant mt-0.5">Tüm hareketler ve detayları</p>
-                            </div>
-                            <span class="material-symbols-rounded text-outline">arrow_forward</span>
-                        </a>
-
-                        <a class="bg-background shadow-neo rounded-[32px] p-5 shadow-sm flex items-center gap-4 hover:shadow-md transition-shadow active:scale-[0.99] border border-surface-variant/30" href="#" data-action="openSplitEdit">
-                            <div class="w-12 h-12 rounded-[32px] bg-background shadow-neo flex items-center justify-center text-on-surface-variant">
-                                <span class="material-symbols-rounded">settings</span>
-                            </div>
-                            <div class="flex-1">
-                                <h4 class="font-label-lg text-label-lg font-bold text-on-surface">Split Düzenle</h4>
-                                <p class="font-body-md text-body-md text-on-surface-variant mt-0.5">Programını kişiselleştir</p>
-                            </div>
-                            <span class="material-symbols-rounded text-outline">arrow_forward</span>
-                        </a>
-                        <a class="bg-background shadow-neo rounded-[32px] p-5 shadow-sm flex items-center gap-4 hover:shadow-md transition-shadow active:scale-[0.99] border border-surface-variant/30" href="#" data-action="openStretchingView">
-                            <div class="w-12 h-12 rounded-[32px] bg-background shadow-neo flex items-center justify-center text-on-surface-variant">
-                                <span class="material-symbols-rounded">self_improvement</span>
-                            </div>
-                            <div class="flex-1">
-                                <h4 class="font-label-lg text-label-lg font-bold text-on-surface">Esneme Hareketleri</h4>
-                                <p class="font-body-md text-body-md text-on-surface-variant mt-0.5">Antrenman öncesi ve sonrası</p>
-                            </div>
-                            <span class="material-symbols-rounded text-outline">arrow_forward</span>
-                        </a>
-                        <a class="bg-background shadow-neo rounded-[32px] p-5 shadow-sm flex items-center gap-4 hover:shadow-md transition-shadow active:scale-[0.99] border border-surface-variant/30" href="#" data-action="openCoreView">
-                            <div class="w-12 h-12 rounded-[32px] bg-background shadow-neo flex items-center justify-center text-on-surface-variant">
-                                <span class="material-symbols-rounded">accessibility_new</span>
-                            </div>
-                            <div class="flex-1">
-                                <h4 class="font-label-lg text-label-lg font-bold text-on-surface">Core Hareketleri</h4>
-                                <p class="font-body-md text-body-md text-on-surface-variant mt-0.5">Merkez bölge çalışmaları</p>
-                            </div>
-                            <span class="material-symbols-rounded text-outline">arrow_forward</span>
-                        </a>
-                    </div>
-                </section>
-            </main>
+            <button data-action="startActiveSession" class="w-full py-4 mt-2 rounded-2xl bg-[#F7F9FF] flex items-center justify-center gap-2 active:scale-[0.98] transition-transform" style="box-shadow: inset 4px 4px 8px #D1D9E6, inset -4px -4px 8px #FFFFFF;">
+                <span class="material-symbols-rounded text-[#1E293B]">play_arrow</span>
+                <span class="font-bold text-[#1E293B]">Antrenmanı Başlat</span>
+            </button>
+            
+            <div class="text-center mt-2">
+                <a href="#" class="text-xs font-medium text-[#64748B] hover:text-[#1E293B] transition-colors">Farklı bir program seç</a>
+            </div>
         </div>
     </section>
+
+    <!-- Stretching / Esneklik - First Class Citizen -->
+    <section>
+        <div class="grid grid-cols-2 gap-6">
+            <button data-action="openStretchPlayer" class="bg-[#F7F9FF] p-5 rounded-[24px] flex flex-col gap-3 active:scale-[0.98] transition-transform text-left" style="box-shadow: 6px 6px 12px #D1D9E6, -6px -6px 12px #FFFFFF;">
+                <div class="w-10 h-10 rounded-full bg-[#F7F9FF] flex items-center justify-center" style="box-shadow: inset 2px 2px 5px #D1D9E6, inset -2px -2px 5px #FFFFFF;">
+                    <span class="material-symbols-rounded text-[#3B82F6]">self_improvement</span>
+                </div>
+                <div class="mt-2">
+                    <span class="block font-bold text-sm text-[#1E293B]">Esneme Yap</span>
+                    <span class="block text-xs font-medium text-[#64748B] mt-1">Günün stresi</span>
+                </div>
+            </button>
+            
+            <button data-action="openCorePlayer" class="bg-[#F7F9FF] p-5 rounded-[24px] flex flex-col gap-3 active:scale-[0.98] transition-transform text-left" style="box-shadow: 6px 6px 12px #D1D9E6, -6px -6px 12px #FFFFFF;">
+                <div class="w-10 h-10 rounded-full bg-[#F7F9FF] flex items-center justify-center" style="box-shadow: inset 2px 2px 5px #D1D9E6, inset -2px -2px 5px #FFFFFF;">
+                    <span class="material-symbols-rounded text-[#22C55E]">accessibility_new</span>
+                </div>
+                <div class="mt-2">
+                    <span class="block font-bold text-sm text-[#1E293B]">Core Çalışması</span>
+                    <span class="block text-xs font-medium text-[#64748B] mt-1">10 dakikalık rutin</span>
+                </div>
+            </button>
+        </div>
+    </section>
+
+    <!-- Navigation Cards -->
+    <section>
+        <div class="flex flex-col gap-4">
+            <a href="#" class="bg-[#F7F9FF] p-4 rounded-2xl flex items-center justify-between active:scale-[0.99] transition-transform" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px #FFFFFF;" onclick="document.getElementById('view-workout').classList.add('hidden'); document.getElementById('view-exercise-library').classList.remove('hidden'); return false;">
+                <div class="flex items-center gap-4">
+                    <div class="w-10 h-10 rounded-full bg-[#F7F9FF] flex items-center justify-center" style="box-shadow: inset 2px 2px 5px #D1D9E6, inset -2px -2px 5px #FFFFFF;">
+                        <span class="material-symbols-rounded text-[#1E293B]">book</span>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-sm text-[#1E293B]">Egzersiz Kütüphanesi</h4>
+                        <p class="text-xs font-medium text-[#64748B] mt-0.5">Tüm hareketler ve detayları</p>
+                    </div>
+                </div>
+                <span class="material-symbols-rounded text-[#1E293B]">chevron_right</span>
+            </a>
+            
+            <a href="#" class="bg-[#F7F9FF] p-4 rounded-2xl flex items-center justify-between active:scale-[0.99] transition-transform" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px #FFFFFF;">
+                <div class="flex items-center gap-4">
+                    <div class="w-10 h-10 rounded-full bg-[#F7F9FF] flex items-center justify-center" style="box-shadow: inset 2px 2px 5px #D1D9E6, inset -2px -2px 5px #FFFFFF;">
+                        <span class="material-symbols-rounded text-[#1E293B]">history</span>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-sm text-[#1E293B]">Geçmiş Antrenmanlar</h4>
+                        <p class="text-xs font-medium text-[#64748B] mt-0.5">İlerlemeni takip et</p>
+                    </div>
+                </div>
+                <span class="material-symbols-rounded text-[#1E293B]">chevron_right</span>
+            </a>
+            
+            <a href="#" class="bg-[#F7F9FF] p-4 rounded-2xl flex items-center justify-between active:scale-[0.99] transition-transform" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px #FFFFFF;">
+                <div class="flex items-center gap-4">
+                    <div class="w-10 h-10 rounded-full bg-[#F7F9FF] flex items-center justify-center" style="box-shadow: inset 2px 2px 5px #D1D9E6, inset -2px -2px 5px #FFFFFF;">
+                        <span class="material-symbols-rounded text-[#1E293B]">settings</span>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-sm text-[#1E293B]">Split Düzenle</h4>
+                        <p class="text-xs font-medium text-[#64748B] mt-0.5">Programını kişiselleştir</p>
+                    </div>
+                </div>
+                <span class="material-symbols-rounded text-[#1E293B]">chevron_right</span>
+            </a>
+            
+            <a href="#" class="bg-[#F7F9FF] p-4 rounded-2xl flex items-center justify-between active:scale-[0.99] transition-transform" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px #FFFFFF;">
+                <div class="flex items-center gap-4">
+                    <div class="w-10 h-10 rounded-full bg-[#F7F9FF] flex items-center justify-center" style="box-shadow: inset 2px 2px 5px #D1D9E6, inset -2px -2px 5px #FFFFFF;">
+                        <span class="material-symbols-rounded text-[#1E293B]">self_improvement</span>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-sm text-[#1E293B]">Esneme Hareketleri</h4>
+                        <p class="text-xs font-medium text-[#64748B] mt-0.5">Esneklik ve toparlanma seansları</p>
+                    </div>
+                </div>
+                <span class="material-symbols-rounded text-[#1E293B]">chevron_right</span>
+            </a>
+            
+            <a href="#" class="bg-[#F7F9FF] p-4 rounded-2xl flex items-center justify-between active:scale-[0.99] transition-transform" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px #FFFFFF;">
+                <div class="flex items-center gap-4">
+                    <div class="w-10 h-10 rounded-full bg-[#F7F9FF] flex items-center justify-center" style="box-shadow: inset 2px 2px 5px #D1D9E6, inset -2px -2px 5px #FFFFFF;">
+                        <span class="material-symbols-rounded text-[#1E293B]">accessibility_new</span>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-sm text-[#1E293B]">Core Çalışması</h4>
+                        <p class="text-xs font-medium text-[#64748B] mt-0.5">Merkez bölgesi ve stabilite rutini</p>
+                    </div>
+                </div>
+                <span class="material-symbols-rounded text-[#1E293B]">chevron_right</span>
+            </a>
+        </div>
+    </section>
+</main>
+</section>
 
     <!-- Edit Workout Template View -->
     
