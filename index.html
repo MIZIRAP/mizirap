@@ -3426,7 +3426,7 @@
     </section>
 
 
-    <script type="module" src="app.js?v=125"></script>
+    <script type="module" src="app.js?v=126"></script>
 
 <!-- ================= FINANCE MODALS ================= -->
 <!-- Add Transaction Modal -->
@@ -3511,97 +3511,64 @@
 </div>
 
 <!-- Add Category Modal -->
-<div id="finance-add-category-modal" class="fixed inset-0 z-50 hidden items-end justify-center bg-inverse-surface/40 backdrop-blur-sm transition-opacity duration-300 opacity-0">
-    <div class="bg-background shadow-neo w-full max-w-md rounded-t-2xl p-container-padding pb-[calc(20px+env(safe-area-inset-bottom))] transform translate-y-full transition-transform duration-300">
-        <div class="w-12 h-1.5 bg-outline-variant/50 rounded-full mx-auto mb-6"></div>
-        <!-- Header -->
-        <div class="flex items-center justify-between mb-6">
-            <h2 class="font-headline-md text-headline-md text-on-surface">Harcama Türü Ekle</h2>
-            <button aria-label="Close" class="w-10 h-10 rounded-full flex items-center justify-center bg-background shadow-neo hover:bg-surface-container-high transition-colors text-on-surface-variant active:scale-95" data-action="closeAddCategoryModal">
-                <span class="material-symbols-rounded" style="font-variation-settings: 'FILL' 0;">close</span>
-            </button>
+<!-- Add Category Modal -->
+<div id="finance-add-category-modal" class="fixed inset-0 z-[100] hidden flex-col justify-end items-center md:p-4">
+    <div class="absolute inset-0 bg-black/10 backdrop-blur-sm opacity-0 transition-opacity duration-300 cursor-pointer" data-action="closeAddCategoryModal" id="finance-add-category-backdrop"></div>
+    <div class="bg-[#F7F9FF] w-full max-w-sm mx-auto rounded-t-[32px] md:rounded-[32px] shadow-[0_-8px_30px_rgba(0,0,0,0.05)] md:shadow-[0_10px_40px_rgba(0,0,0,0.08)] p-6 flex flex-col items-center transform transition-transform duration-300 translate-y-full z-10 pb-8 md:pb-6" id="finance-add-category-content">
+        <!-- Drag Handle (Mobile) -->
+        <div class="w-12 h-1.5 bg-gray-300 rounded-full mb-6 md:hidden cursor-pointer" data-action="closeAddCategoryModal"></div>
+        <div class="w-full text-center mb-6">
+            <h2 class="text-xl font-bold text-[#1E293B] mb-2">Harcama Türü Ekle</h2>
         </div>
-        
-        <!-- Scrollable Content -->
-        <div class="flex-1 overflow-y-auto space-y-section-margin">
-            <!-- Input Field -->
-            <div class="space-y-element-spacing">
-                <label class="block font-label-md text-label-md text-on-surface-variant uppercase">Tür Adı</label>
-                <input id="category-name" class="w-full bg-background shadow-neo text-on-surface font-body-lg text-body-lg rounded-[32px] px-4 py-4 border-none focus:ring-2 focus:ring-primary focus:bg-background shadow-neo transition-all placeholder:text-outline-variant outline-none shadow-neo-inset border-none rounded-xl bg-background " placeholder="Örn: Market, Fatura, Eğlence" type="text">
+        <!-- Input Area -->
+        <div class="w-full flex flex-col gap-4 mb-6">
+            <!-- Name Input -->
+            <div class="flex flex-col gap-1">
+                <label class="text-xs font-bold text-[#3B82F6] uppercase px-2">HARCAMA ADI</label>
+                <div class="flex items-center rounded-2xl p-4 bg-[#F7F9FF]" style="box-shadow: inset 4px 4px 8px #e3e6ee, inset -4px -4px 8px #ffffff;">
+                    <input id="category-name" class="w-full bg-transparent border-none focus:ring-0 text-sm font-medium text-[#1E293B] p-0 appearance-none outline-none" placeholder="Tür adı girin" type="text">
+                </div>
             </div>
-            
             <!-- Icon Selection -->
-            <div class="space-y-element-spacing">
-                <label class="block font-label-md text-label-md text-on-surface-variant uppercase">İkon Seçimi</label>
-                <div class="grid grid-cols-4 gap-4" id="category-icon-container">
-                    <!-- Icon Options -->
-                    <button class="category-icon-option selected aspect-square rounded-[32px] flex items-center justify-center bg-gradient-to-r from-neon-purple to-neon-blue text-white shadow-sm transition-transform active:scale-95" data-icon="shopping_cart">
-                        <span class="material-symbols-rounded text-2xl" style="font-variation-settings: 'FILL' 1;">shopping_cart</span>
+            <div class="flex flex-col gap-1">
+                <label class="text-xs font-bold text-[#3B82F6] uppercase px-2">İKON SEÇİMİ</label>
+                <div class="grid grid-cols-3 gap-4 p-4 justify-items-center" id="category-icon-container">
+                    <button class="category-icon-option w-12 h-12 rounded-full flex items-center justify-center bg-[#F7F9FF] text-[#3B82F6] selected active:scale-[0.98] transition-transform" style="box-shadow: 6px 6px 12px #e3e6ee, -6px -6px 12px #ffffff;" data-icon="shopping_cart">
+                        <span class="material-symbols-rounded">shopping_cart</span>
                     </button>
-                    <button class="category-icon-option aspect-square rounded-[32px] flex items-center justify-center bg-background shadow-neo hover:bg-surface-container-high text-on-surface transition-transform active:scale-95" data-icon="receipt_long">
-                        <span class="material-symbols-rounded text-2xl" style="font-variation-settings: 'FILL' 0;">receipt_long</span>
+                    <button class="category-icon-option w-12 h-12 rounded-full flex items-center justify-center bg-[#F7F9FF] text-[#64748B] active:scale-[0.98] transition-transform" style="box-shadow: inset 4px 4px 8px #e3e6ee, inset -4px -4px 8px #ffffff;" data-icon="receipt_long">
+                        <span class="material-symbols-rounded">receipt_long</span>
                     </button>
-                    <button class="category-icon-option aspect-square rounded-[32px] flex items-center justify-center bg-background shadow-neo hover:bg-surface-container-high text-on-surface transition-transform active:scale-95" data-icon="restaurant">
-                        <span class="material-symbols-rounded text-2xl" style="font-variation-settings: 'FILL' 0;">restaurant</span>
+                    <button class="category-icon-option w-12 h-12 rounded-full flex items-center justify-center bg-[#F7F9FF] text-[#64748B] active:scale-[0.98] transition-transform" style="box-shadow: inset 4px 4px 8px #e3e6ee, inset -4px -4px 8px #ffffff;" data-icon="directions_car">
+                        <span class="material-symbols-rounded">directions_car</span>
                     </button>
-                    <button class="category-icon-option aspect-square rounded-[32px] flex items-center justify-center bg-background shadow-neo hover:bg-surface-container-high text-on-surface transition-transform active:scale-95" data-icon="local_cafe">
-                        <span class="material-symbols-rounded text-2xl" style="font-variation-settings: 'FILL' 0;">local_cafe</span>
+                    <button class="category-icon-option w-12 h-12 rounded-full flex items-center justify-center bg-[#F7F9FF] text-[#64748B] active:scale-[0.98] transition-transform" style="box-shadow: inset 4px 4px 8px #e3e6ee, inset -4px -4px 8px #ffffff;" data-icon="medical_services">
+                        <span class="material-symbols-rounded">medical_services</span>
                     </button>
-                    <button class="category-icon-option aspect-square rounded-[32px] flex items-center justify-center bg-background shadow-neo hover:bg-surface-container-high text-on-surface transition-transform active:scale-95" data-icon="directions_car">
-                        <span class="material-symbols-rounded text-2xl" style="font-variation-settings: 'FILL' 0;">directions_car</span>
+                    <button class="category-icon-option w-12 h-12 rounded-full flex items-center justify-center bg-[#F7F9FF] text-[#64748B] active:scale-[0.98] transition-transform" style="box-shadow: inset 4px 4px 8px #e3e6ee, inset -4px -4px 8px #ffffff;" data-icon="school">
+                        <span class="material-symbols-rounded">school</span>
                     </button>
-                    <button class="category-icon-option aspect-square rounded-[32px] flex items-center justify-center bg-background shadow-neo hover:bg-surface-container-high text-on-surface transition-transform active:scale-95" data-icon="train">
-                        <span class="material-symbols-rounded text-2xl" style="font-variation-settings: 'FILL' 0;">train</span>
+                    <button class="category-icon-option w-12 h-12 rounded-full flex items-center justify-center bg-[#F7F9FF] text-[#64748B] active:scale-[0.98] transition-transform" style="box-shadow: inset 4px 4px 8px #e3e6ee, inset -4px -4px 8px #ffffff;" data-icon="sports_esports">
+                        <span class="material-symbols-rounded">sports_esports</span>
                     </button>
-                    <button class="category-icon-option aspect-square rounded-[32px] flex items-center justify-center bg-background shadow-neo hover:bg-surface-container-high text-on-surface transition-transform active:scale-95" data-icon="home">
-                        <span class="material-symbols-rounded text-2xl" style="font-variation-settings: 'FILL' 0;">home</span>
+                    <button class="category-icon-option w-12 h-12 rounded-full flex items-center justify-center bg-[#F7F9FF] text-[#64748B] active:scale-[0.98] transition-transform" style="box-shadow: inset 4px 4px 8px #e3e6ee, inset -4px -4px 8px #ffffff;" data-icon="restaurant">
+                        <span class="material-symbols-rounded">restaurant</span>
                     </button>
-                    <button class="category-icon-option aspect-square rounded-[32px] flex items-center justify-center bg-background shadow-neo hover:bg-surface-container-high text-on-surface transition-transform active:scale-95" data-icon="health_and_safety">
-                        <span class="material-symbols-rounded text-2xl" style="font-variation-settings: 'FILL' 0;">health_and_safety</span>
+                    <button class="category-icon-option w-12 h-12 rounded-full flex items-center justify-center bg-[#F7F9FF] text-[#64748B] active:scale-[0.98] transition-transform" style="box-shadow: inset 4px 4px 8px #e3e6ee, inset -4px -4px 8px #ffffff;" data-icon="home">
+                        <span class="material-symbols-rounded">home</span>
                     </button>
-                    <button class="category-icon-option aspect-square rounded-[32px] flex items-center justify-center bg-background shadow-neo hover:bg-surface-container-high text-on-surface transition-transform active:scale-95" data-icon="school">
-                        <span class="material-symbols-rounded text-2xl" style="font-variation-settings: 'FILL' 0;">school</span>
-                    </button>
-                    <button class="category-icon-option aspect-square rounded-[32px] flex items-center justify-center bg-background shadow-neo hover:bg-surface-container-high text-on-surface transition-transform active:scale-95" data-icon="movie">
-                        <span class="material-symbols-rounded text-2xl" style="font-variation-settings: 'FILL' 0;">movie</span>
-                    </button>
-                    <button class="category-icon-option aspect-square rounded-[32px] flex items-center justify-center bg-background shadow-neo hover:bg-surface-container-high text-on-surface transition-transform active:scale-95" data-icon="pets">
-                        <span class="material-symbols-rounded text-2xl" style="font-variation-settings: 'FILL' 0;">pets</span>
-                    </button>
-                    <button class="category-icon-option aspect-square rounded-[32px] flex items-center justify-center bg-background shadow-neo hover:bg-surface-container-high text-on-surface transition-transform active:scale-95" data-icon="checkroom">
-                        <span class="material-symbols-rounded text-2xl" style="font-variation-settings: 'FILL' 0;">checkroom</span>
+                    <button class="category-icon-option w-12 h-12 rounded-full flex items-center justify-center bg-[#F7F9FF] text-[#64748B] active:scale-[0.98] transition-transform" style="box-shadow: inset 4px 4px 8px #e3e6ee, inset -4px -4px 8px #ffffff;" data-icon="category">
+                        <span class="material-symbols-rounded">category</span>
                     </button>
                 </div>
             </div>
-            
-            <!-- Color Picker -->
-            <div class="space-y-element-spacing pb-6">
-                <label class="block font-label-md text-label-md text-on-surface-variant uppercase">Renk Etiketi</label>
-                <div class="flex gap-4 overflow-x-auto pb-2 snap-x no-scrollbar" id="category-color-container">
-                    <!-- Selected Color -->
-                    <button class="category-color-option selected flex-shrink-0 w-12 h-12 rounded-full bg-gradient-to-r from-neon-purple to-neon-blue flex items-center justify-center snap-center ring-4 ring-primary-container ring-offset-2 ring-offset-surface-container-lowest transition-transform active:scale-95" data-color="primary">
-                        <span class="material-symbols-rounded text-white">check</span>
-                    </button>
-                    <!-- Unselected Colors -->
-                    <button class="category-color-option flex-shrink-0 w-12 h-12 rounded-full bg-tertiary-container snap-center transition-transform active:scale-95 hover:scale-105" data-color="tertiary-container"></button>
-                    <button class="category-color-option flex-shrink-0 w-12 h-12 rounded-full bg-error-container snap-center transition-transform active:scale-95 hover:scale-105" data-color="error-container"></button>
-                    <button class="category-color-option flex-shrink-0 w-12 h-12 rounded-full bg-[#E5E7EB] snap-center transition-transform active:scale-95 hover:scale-105" data-color="gray-200"></button>
-                    <button class="category-color-option flex-shrink-0 w-12 h-12 rounded-full bg-[#FDE68A] snap-center transition-transform active:scale-95 hover:scale-105" data-color="yellow-200"></button>
-                    <button class="category-color-option flex-shrink-0 w-12 h-12 rounded-full bg-[#BFDBFE] snap-center transition-transform active:scale-95 hover:scale-105" data-color="blue-200"></button>
-                    <button class="category-color-option flex-shrink-0 w-12 h-12 rounded-full bg-[#FBCFE8] snap-center transition-transform active:scale-95 hover:scale-105" data-color="pink-200"></button>
-                </div>
-            </div>
         </div>
-        
-        <!-- Sticky Bottom Action -->
-        <div class="mt-4 pt-4 border-t border-surface-container-high">
-            <button class="w-full bg-gradient-to-r from-neon-purple to-neon-blue text-white font-headline-sm text-headline-sm py-4 rounded-full shadow-md active:scale-98 transition-transform duration-200 flex items-center justify-center gap-2" id="finance-save-category-btn">
-                <span class="material-symbols-rounded" style="font-variation-settings: 'FILL' 1;">check</span>
-                Kaydet
-            </button>
-        </div>
-
-</div>
+        <!-- CTA Button -->
+        <button id="finance-save-category-btn" class="w-full py-4 px-6 rounded-full font-bold text-lg text-[#1E293B] shadow-md focus:outline-none active:scale-[0.98] transition-transform flex items-center justify-center gap-2" style="box-shadow: 6px 6px 12px #e3e6ee, -6px -6px 12px #ffffff; border: 2px solid transparent; background: linear-gradient(#F7F9FF, #F7F9FF) padding-box, linear-gradient(to right, #4A90E2, #50E3C2) border-box;">
+            Kaydet 
+            <span class="material-symbols-rounded text-[#3B82F6]" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+        </button>
+    </div>
 </div>
 
 <!-- Add Payment Method Modal -->
@@ -3675,18 +3642,6 @@
 </div>
 
             </div>
-            <!-- Action Area -->
-            <div class="mt-8">
-                <button class="w-full h-[56px] bg-gradient-to-r from-neon-purple to-neon-blue text-white rounded-full flex items-center justify-center gap-2 hover:opacity-95 active:scale-[0.98] transition-all shadow-sm font-label-md text-label-md tracking-wide" id="finance-save-payment-btn">
-                    <span class="material-symbols-rounded" style="font-variation-settings: 'FILL' 1;">check</span>
-                    Kaydet
-                </button>
-            </div>
-        </div>
-
-
-</div>
-</div>
 
 
 <!-- Dizi/Film Modal -->

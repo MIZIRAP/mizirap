@@ -127,14 +127,18 @@ function setupFinanceModals() {
     categoryIcons.forEach(iconEl => {
         iconEl.addEventListener('click', () => {
             categoryIcons.forEach(el => {
-                el.classList.remove('selected', 'bg-gradient-to-r from-neon-purple to-neon-blue', 'text-white', 'shadow-sm');
-                el.classList.add('bg-background shadow-neo', 'text-on-surface', 'hover:bg-background shadow-neo-high');
-                const span = el.querySelector('span');
+                el.classList.remove('selected');
+                el.classList.remove('text-[#3B82F6]');
+                el.classList.add('text-[#64748B]');
+                el.style.boxShadow = 'inset 4px 4px 8px #e3e6ee, inset -4px -4px 8px #ffffff';
+                const span = el.querySelector('.material-symbols-rounded');
                 if(span) span.style.fontVariationSettings = "'FILL' 0";
             });
-            iconEl.classList.add('selected', 'bg-gradient-to-r from-neon-purple to-neon-blue', 'text-white', 'shadow-sm');
-            iconEl.classList.remove('bg-background shadow-neo', 'text-on-surface', 'hover:bg-background shadow-neo-high');
-            const span = iconEl.querySelector('span');
+            iconEl.classList.add('selected');
+            iconEl.classList.remove('text-[#64748B]');
+            iconEl.classList.add('text-[#3B82F6]');
+            iconEl.style.boxShadow = '6px 6px 12px #e3e6ee, -6px -6px 12px #ffffff';
+            const span = iconEl.querySelector('.material-symbols-rounded');
             if(span) span.style.fontVariationSettings = "'FILL' 1";
         });
     });
@@ -610,7 +614,7 @@ async function saveCategory() {
     const iconEl = document.querySelector('.category-icon-option.selected');
     const colorEl = document.querySelector('.category-color-option.selected');
     
-    if(!nameEl || !iconEl || !colorEl) return;
+    if(!nameEl || !iconEl) return;
     
     const name = nameEl.value.trim();
     if(!name) {
@@ -619,7 +623,7 @@ async function saveCategory() {
     }
     
     const icon = iconEl.dataset.icon || 'receipt_long';
-    const color = colorEl.dataset.color || 'primary';
+    const color = colorEl?.dataset?.color || "primary";
     
     const saveBtn = document.getElementById('finance-save-category-btn');
     const originalText = saveBtn.innerHTML;
