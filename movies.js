@@ -442,23 +442,27 @@ function openAddModal() {
     document.querySelector('input[name="movie-add-status"][value="watching"]').checked = true;
 
     addModal.classList.remove('hidden');
-    setTimeout(() => {
+    addModal.classList.add('flex');
+    requestAnimationFrame(() => {
         if(addBackdrop) addBackdrop.classList.remove('opacity-0');
         if(addContent) {
-            addContent.classList.remove('translate-y-full');
-            addContent.classList.add('translate-y-0');
+            addContent.classList.remove('scale-95', 'opacity-0');
+            addContent.classList.add('scale-100', 'opacity-100');
         }
-    }, 10);
+    });
 }
 
 function closeAddModal() {
     if(addBackdrop) addBackdrop.classList.add('opacity-0');
     if(addContent) {
-        addContent.classList.remove('translate-y-0');
-        addContent.classList.add('translate-y-full');
+        addContent.classList.remove('scale-100', 'opacity-100');
+        addContent.classList.add('scale-95', 'opacity-0');
     }
     setTimeout(() => {
-        if(addModal) addModal.classList.add('hidden');
+        if(addModal) {
+            addModal.classList.remove('flex');
+            addModal.classList.add('hidden');
+        }
     }, 300);
 }
 
@@ -520,23 +524,27 @@ function openEditModal(movie) {
     if(rb) rb.checked = true;
     
     editModal.classList.remove('hidden');
-    setTimeout(() => {
+    editModal.classList.add('flex');
+    requestAnimationFrame(() => {
         if(editBackdrop) editBackdrop.classList.remove('opacity-0');
         if(editContent) {
-            editContent.classList.remove('translate-y-full');
-            editContent.classList.add('translate-y-0');
+            editContent.classList.remove('scale-95', 'opacity-0');
+            editContent.classList.add('scale-100', 'opacity-100');
         }
-    }, 10);
+    });
 }
 
 function closeEditModal() {
     if(editBackdrop) editBackdrop.classList.add('opacity-0');
     if(editContent) {
-        editContent.classList.remove('translate-y-0');
-        editContent.classList.add('translate-y-full');
+        editContent.classList.remove('scale-100', 'opacity-100');
+        editContent.classList.add('scale-95', 'opacity-0');
     }
     setTimeout(() => {
-        if(editModal) editModal.classList.add('hidden');
+        if(editModal) {
+            editModal.classList.remove('flex');
+            editModal.classList.add('hidden');
+        }
         currentEditingId = null;
     }, 300);
 }
