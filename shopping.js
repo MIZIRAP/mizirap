@@ -55,7 +55,6 @@ export function clearShopping() {
 function renderShoppingList() {
     const activeList = document.getElementById("active-shopping-list");
     const completedList = document.getElementById("completed-shopping-list");
-    const countLabel = document.getElementById("active-shopping-count");
     
     if(!activeList || !completedList) return;
     
@@ -65,122 +64,166 @@ function renderShoppingList() {
     const activeItems = allShopping.filter(i => !i.done);
     const completedItems = allShopping.filter(i => i.done);
     
-    if(countLabel) countLabel.textContent = `${activeItems.length} Ürün`;
-    
     const dashboardCountLabel = document.getElementById("dashboard-shopping-count");
     if(dashboardCountLabel) dashboardCountLabel.textContent = `${activeItems.length} Ürün`;
     
+    // ACTIVE ITEMS
     activeItems.forEach(item => {
-        const div = document.createElement("div");
-        div.className = "group bg-background shadow-neo-lowest rounded-[32px] p-4 shadow-sm flex items-center justify-between transition-all hover:bg-background shadow-neo-low animate-in fade-in slide-in-from-top-2 duration-300";
-        div.innerHTML = `
-            <!-- Normal View -->
-            <div class="flex items-center justify-between w-full normal-view">
-                <div class="flex items-center gap-4">
-                    <button class="toggle-btn w-6 h-6 rounded-md border-2 border-primary flex items-center justify-center transition-colors">
-                        <span class="material-symbols-rounded text-lg text-transparent">check</span>
-                    </button>
-                    <span class="font-body-md text-on-surface text-body-md">${escapeHtml(item.title)}</span>
+        const wrapper = document.createElement('div');
+        wrapper.className = "relative w-full shrink-0 mb-4";
+        
+        const delBtn = document.createElement('button');
+        delBtn.className = "absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-red-500 rounded-2xl text-white flex items-center justify-center z-0 active:bg-red-600 transition-colors";
+        delBtn.innerHTML = `<span class="material-symbols-rounded text-xl">delete</span>`;
+        delBtn.onclick = async (e) => {
+            e.stopPropagation();
+            try {
+                await deleteDoc(doc(db, "users", auth.currentUser.uid, "shoppingList", item.id));
+            } catch(err) {
+                console.error("Silme Hatası:", err);
+            }
+        };
+
+        const itemDiv = document.createElement('div');
+        itemDiv.className = "relative flex items-center justify-between p-4 rounded-2xl bg-[#F7F9FF] z-10 transition-transform cursor-pointer active:scale-[0.99]";
+        itemDiv.style.boxShadow = "4px 4px 8px #D1D9E6, -4px -4px 8px #FFFFFF";
+        itemDiv.innerHTML = `
+            <div class="flex items-center gap-4 pointer-events-none">
+                <div class="w-10 h-10 rounded-full bg-[#F7F9FF] flex items-center justify-center" style="box-shadow: inset 2px 2px 5px #D1D9E6, inset -2px -2px 5px #FFFFFF;">
+                    <span class="material-symbols-rounded text-[#3B82F6]">shopping_basket</span>
                 </div>
-                <div class="flex items-center gap-1">
-                    <button class="edit-btn material-symbols-rounded text-outline hover:text-neon-blue transition-colors p-1">edit</button>
-                    <button class="delete-btn material-symbols-rounded text-outline hover:text-error transition-colors p-1">delete</button>
-                </div>
-            </div>
-            <!-- Edit View -->
-            <div class="hidden items-center justify-between w-full gap-2 edit-view">
-                <input type="text" class="w-full bg-background shadow-neo border-none rounded-lg px-2 py-1 text-sm text-on-surface focus:border-primary focus:ring-1 focus:ring-primary edit-input" value="${escapeHtml(item.title)}">
-                <button class="bg-gradient-to-r from-neon-purple to-neon-blue text-white px-3 py-1 rounded-lg text-sm font-medium shrink-0 save-btn">Kaydet</button>
-                <button class="text-on-surface-variant px-2 py-1 rounded-lg text-sm shrink-0 cancel-btn">İptal</button>
+                <div><p class="text-sm font-bold text-[#1E293B]">${escapeHtml(item.title)}</p></div>
             </div>
         `;
         
-        const normalView = div.querySelector('.normal-view');
-        const editView = div.querySelector('.edit-view');
-        const editInput = div.querySelector('.edit-input');
-        const saveBtn = div.querySelector('.save-btn');
-        
-        div.querySelector(".toggle-btn").addEventListener("click", () => {
-            updateDoc(doc(db, "users", auth.currentUser.uid, "shoppingList", item.id), { done: true }).catch(e => { console.error(e); alert("Hata oluştu"); });
+        let startX = 0;
+        let currentX = 0;
+        let isDragging = false;
+
+        itemDiv.addEventListener('touchstart', (e) => {
+            startX = e.touches[0].clientX;
+            isDragging = true;
+            itemDiv.style.transition = 'none';
+        }, {passive: true});
+
+        itemDiv.addEventListener('touchmove', (e) => {
+            if (!isDragging) return;
+            currentX = e.touches[0].clientX;
+            let diff = currentX - startX;
+            if (diff > 0) diff = 0; 
+            if (diff < -80) diff = -80;
+            itemDiv.style.transform = `translateX(${diff}px)`;
+        }, {passive: true});
+
+        itemDiv.addEventListener('touchend', (e) => {
+            if (!isDragging) return;
+            isDragging = false;
+            itemDiv.style.transition = 'transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)';
+            let diff = currentX - startX;
+            if (diff < -40) {
+                itemDiv.style.transform = `translateX(-80px)`; 
+                setTimeout(() => {
+                    document.addEventListener('touchstart', function closeSwipe(evt) {
+                        if (!wrapper.contains(evt.target)) {
+                            itemDiv.style.transform = `translateX(0px)`;
+                            document.removeEventListener('touchstart', closeSwipe);
+                        }
+                    }, {passive: true});
+                }, 100);
+            } else {
+                itemDiv.style.transform = `translateX(0px)`;
+            }
         });
-        div.querySelector(".delete-btn").addEventListener("click", () => {
-            deleteDoc(doc(db, "users", auth.currentUser.uid, "shoppingList", item.id)).catch(e => { console.error(e); alert("Hata oluştu"); });
+
+        // Click to Complete
+        itemDiv.addEventListener('click', (e) => {
+            if (Math.abs(currentX - startX) < 5) {
+                updateDoc(doc(db, "users", auth.currentUser.uid, "shoppingList", item.id), { done: true }).catch(err => console.error(err));
+            }
         });
-        div.querySelector(".edit-btn").addEventListener("click", () => {
-            normalView.classList.add('hidden');
-            editView.classList.remove('hidden');
-            editView.classList.add('flex');
-            editInput.focus();
-        });
-        div.querySelector(".cancel-btn").addEventListener("click", () => {
-            editView.classList.add('hidden');
-            editView.classList.remove('flex');
-            normalView.classList.remove('hidden');
-            editInput.value = item.title;
-        });
-        saveBtn.addEventListener("click", async () => {
-            await handleFormSubmit(saveBtn, [{ el: editInput, type: 'text', required: true }], async () => {
-                const newTitle = editInput.value.trim();
-try {                 await updateDoc(doc(db, "users", auth.currentUser.uid, "shoppingList", item.id), { title: newTitle }).catch(e => { console.error('DB Error:', e); alert('Veritabanı işlemi sırasında bir hata oluştu.'); throw e; }); } catch(e) { console.error(e); alert("İşlem başarısız."); }
-            });
-        });
-        activeList.appendChild(div);
+
+        wrapper.appendChild(delBtn);
+        wrapper.appendChild(itemDiv);
+        activeList.appendChild(wrapper);
     });
     
+    // COMPLETED ITEMS
     completedItems.forEach(item => {
-        const div = document.createElement("div");
-        div.className = "bg-background shadow-neo-dim/40 rounded-[32px] p-4 flex items-center justify-between border border-transparent";
-        div.innerHTML = `
-            <!-- Normal View -->
-            <div class="flex items-center justify-between w-full normal-view">
-                <div class="flex items-center gap-4">
-                    <button class="toggle-btn w-6 h-6 rounded-md bg-gradient-to-r from-neon-purple to-neon-blue flex items-center justify-center transition-colors">
-                        <span class="material-symbols-rounded text-lg text-white">check</span>
-                    </button>
-                    <span class="font-body-md text-outline checked-item text-body-md">${escapeHtml(item.title)}</span>
+        const wrapper = document.createElement('div');
+        wrapper.className = "relative w-full shrink-0 mb-4";
+        
+        const delBtn = document.createElement('button');
+        delBtn.className = "absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-red-500 rounded-2xl text-white flex items-center justify-center z-0 active:bg-red-600 transition-colors";
+        delBtn.innerHTML = `<span class="material-symbols-rounded text-xl">delete</span>`;
+        delBtn.onclick = async (e) => {
+            e.stopPropagation();
+            try {
+                await deleteDoc(doc(db, "users", auth.currentUser.uid, "shoppingList", item.id));
+            } catch(err) {
+                console.error("Silme Hatası:", err);
+            }
+        };
+
+        const itemDiv = document.createElement('div');
+        itemDiv.className = "relative flex items-center justify-between p-4 rounded-2xl bg-[#F7F9FF] opacity-70 z-10 transition-transform cursor-pointer active:scale-[0.99]";
+        itemDiv.style.boxShadow = "4px 4px 8px #D1D9E6, -4px -4px 8px #FFFFFF";
+        itemDiv.innerHTML = `
+            <div class="flex items-center gap-4 pointer-events-none">
+                <div class="w-10 h-10 rounded-full bg-[#F7F9FF] flex items-center justify-center" style="box-shadow: inset 2px 2px 5px #D1D9E6, inset -2px -2px 5px #FFFFFF;">
+                    <span class="material-symbols-rounded text-[#64748B]">check</span>
                 </div>
-                <div class="flex items-center gap-1">
-                    <button class="edit-btn material-symbols-rounded text-outline hover:text-neon-blue transition-colors p-1">edit</button>
-                    <button class="delete-btn material-symbols-rounded text-outline hover:text-error transition-colors p-1">delete</button>
-                </div>
-            </div>
-            <!-- Edit View -->
-            <div class="hidden items-center justify-between w-full gap-2 edit-view">
-                <input type="text" class="w-full bg-background shadow-neo border-none rounded-lg px-2 py-1 text-sm text-on-surface focus:border-primary focus:ring-1 focus:ring-primary edit-input" value="${escapeHtml(item.title)}">
-                <button class="bg-gradient-to-r from-neon-purple to-neon-blue text-white px-3 py-1 rounded-lg text-sm font-medium shrink-0 save-btn">Kaydet</button>
-                <button class="text-on-surface-variant px-2 py-1 rounded-lg text-sm shrink-0 cancel-btn">İptal</button>
+                <div><p class="text-sm font-bold text-[#64748B] line-through">${escapeHtml(item.title)}</p></div>
             </div>
         `;
-        
-        const normalView = div.querySelector('.normal-view');
-        const editView = div.querySelector('.edit-view');
-        const editInput = div.querySelector('.edit-input');
-        const saveBtn = div.querySelector('.save-btn');
 
-        div.querySelector(".toggle-btn").addEventListener("click", () => {
-            updateDoc(doc(db, "users", auth.currentUser.uid, "shoppingList", item.id), { done: false }).catch(e => { console.error(e); alert("Hata oluştu"); });
+        let startX = 0;
+        let currentX = 0;
+        let isDragging = false;
+
+        itemDiv.addEventListener('touchstart', (e) => {
+            startX = e.touches[0].clientX;
+            isDragging = true;
+            itemDiv.style.transition = 'none';
+        }, {passive: true});
+
+        itemDiv.addEventListener('touchmove', (e) => {
+            if (!isDragging) return;
+            currentX = e.touches[0].clientX;
+            let diff = currentX - startX;
+            if (diff > 0) diff = 0; 
+            if (diff < -80) diff = -80;
+            itemDiv.style.transform = `translateX(${diff}px)`;
+        }, {passive: true});
+
+        itemDiv.addEventListener('touchend', (e) => {
+            if (!isDragging) return;
+            isDragging = false;
+            itemDiv.style.transition = 'transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)';
+            let diff = currentX - startX;
+            if (diff < -40) {
+                itemDiv.style.transform = `translateX(-80px)`; 
+                setTimeout(() => {
+                    document.addEventListener('touchstart', function closeSwipe(evt) {
+                        if (!wrapper.contains(evt.target)) {
+                            itemDiv.style.transform = `translateX(0px)`;
+                            document.removeEventListener('touchstart', closeSwipe);
+                        }
+                    }, {passive: true});
+                }, 100);
+            } else {
+                itemDiv.style.transform = `translateX(0px)`;
+            }
         });
-        div.querySelector(".delete-btn").addEventListener("click", () => {
-            deleteDoc(doc(db, "users", auth.currentUser.uid, "shoppingList", item.id)).catch(e => { console.error(e); alert("Hata oluştu"); });
+
+        // Click to Undo
+        itemDiv.addEventListener('click', (e) => {
+            if (Math.abs(currentX - startX) < 5) {
+                updateDoc(doc(db, "users", auth.currentUser.uid, "shoppingList", item.id), { done: false }).catch(err => console.error(err));
+            }
         });
-        div.querySelector(".edit-btn").addEventListener("click", () => {
-            normalView.classList.add('hidden');
-            editView.classList.remove('hidden');
-            editView.classList.add('flex');
-            editInput.focus();
-        });
-        div.querySelector(".cancel-btn").addEventListener("click", () => {
-            editView.classList.add('hidden');
-            editView.classList.remove('flex');
-            normalView.classList.remove('hidden');
-            editInput.value = item.title;
-        });
-        saveBtn.addEventListener("click", async () => {
-            await handleFormSubmit(saveBtn, [{ el: editInput, type: 'text', required: true }], async () => {
-                const newTitle = editInput.value.trim();
-try {                 await updateDoc(doc(db, "users", auth.currentUser.uid, "shoppingList", item.id), { title: newTitle }).catch(e => { console.error('DB Error:', e); alert('Veritabanı işlemi sırasında bir hata oluştu.'); throw e; }); } catch(e) { console.error(e); alert("İşlem başarısız."); }
-            });
-        });
-        completedList.appendChild(div);
+
+        wrapper.appendChild(delBtn);
+        wrapper.appendChild(itemDiv);
+        completedList.appendChild(wrapper);
     });
 }
