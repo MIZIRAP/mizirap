@@ -1028,9 +1028,14 @@ async function fetchMetalPrices() {
     try {
         // 1. Check Firestore cache first
         const cacheRef = doc(db, 'app', 'metalPrices');
-        const cacheSnap = await getDoc(cacheRef).catch(e => { console.error('DB Error:', e); alert('Veritabanı işlemi sırasında bir hata oluştu.'); throw e; });
+        let cacheSnap = null;
+        try {
+            cacheSnap = await getDoc(cacheRef);
+        } catch(e) {
+            console.warn('Firestore cache read error, falling back to API:', e);
+        }
 
-        if (cacheSnap.exists()) {
+        if (cacheSnap && cacheSnap.exists()) {
             const cached = cacheSnap.data();
             const cachedAt = cached.updatedAt?.toDate ? cached.updatedAt.toDate() : new Date(cached.updatedAt);
             const now = new Date();
