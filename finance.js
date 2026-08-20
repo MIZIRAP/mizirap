@@ -103,15 +103,15 @@ function setupFinanceModals() {
     paymentIcons.forEach(iconEl => {
         iconEl.addEventListener('click', () => {
             paymentIcons.forEach(el => {
-                el.classList.remove('selected', 'bg-gradient-to-r from-neon-purple to-neon-blue', 'text-white', 'shadow-md', 'scale-105');
-                el.classList.add('bg-background shadow-neo', 'border', 'border-surface-variant', 'text-on-surface-variant', 'hover:bg-background shadow-neo-low');
-                const span = el.querySelector('span');
-                if(span) span.style.fontVariationSettings = "'FILL' 0";
+                el.classList.remove('selected');
+                el.classList.remove('text-[#3B82F6]');
+                el.classList.add('text-[#64748B]');
+                el.style.boxShadow = 'inset 4px 4px 8px #e3e6ee, inset -4px -4px 8px #ffffff';
             });
-            iconEl.classList.add('selected', 'bg-gradient-to-r from-neon-purple to-neon-blue', 'text-white', 'shadow-md', 'scale-105');
-            iconEl.classList.remove('bg-background shadow-neo', 'border', 'border-surface-variant', 'text-on-surface-variant', 'hover:bg-background shadow-neo-low');
-            const span = iconEl.querySelector('span');
-            if(span) span.style.fontVariationSettings = "'FILL' 1";
+            iconEl.classList.add('selected');
+            iconEl.classList.remove('text-[#64748B]');
+            iconEl.classList.add('text-[#3B82F6]');
+            iconEl.style.boxShadow = '6px 6px 12px #e3e6ee, -6px -6px 12px #ffffff';
         });
     });
 
