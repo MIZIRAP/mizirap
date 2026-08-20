@@ -242,7 +242,7 @@ export function initBooks(uid, onChangeCallback) {
         
         renderBooksView();
         
-        if (onChangeCb) onChangeCb();
+        if (onChangeCb) onChangeCb(currentBooks);
     }, (error) => {
         console.error("Books Snapshot Error:", error);
     });
@@ -352,7 +352,7 @@ function renderAllBooksList() {
         
         // Background Actions (Edit & Delete)
         const actionsHtml = `
-            <div class="absolute inset-y-0 right-0 flex items-center justify-end px-3 gap-3 bg-gray-100 w-full z-0">
+            <div class="absolute inset-y-0 right-0 flex items-center justify-end px-3 gap-3 bg-gray-120 w-full z-0">
                 <button class="edit-book-btn w-10 h-10 rounded-full bg-silk-blue text-white flex items-center justify-center shadow-md active:scale-95 transition-transform" data-id="${book.id}">
                     <span class="material-symbols-rounded text-lg">edit</span>
                 </button>
@@ -389,7 +389,7 @@ function renderAllBooksList() {
         let startX = 0;
         let currentX = 0;
         let isDragging = false;
-        const threshold = -80; // Slide left by 80px to show buttons
+        const threshold = -110; // Slide left by 80px to show buttons
         let isSwiped = false;
         
         cardContent.addEventListener('touchstart', (e) => {
@@ -406,7 +406,7 @@ function renderAllBooksList() {
             // Allow swiping left (negative diff) and right (if already swiped)
             if (!isSwiped && diffX < 0) {
                 // Dragging left from neutral
-                const moveX = Math.max(diffX, -100); 
+                const moveX = Math.max(diffX, -120); 
                 cardContent.style.transform = `translateX(${moveX}px)`;
             } else if (isSwiped && diffX > 0) {
                 // Dragging right from swiped
@@ -459,7 +459,7 @@ function renderAllBooksList() {
             currentX = e.clientX;
             let diffX = currentX - startX;
             if (!isSwiped && diffX < 0) {
-                cardContent.style.transform = `translateX(${Math.max(diffX, -100)}px)`;
+                cardContent.style.transform = `translateX(${Math.max(diffX, -120)}px)`;
             } else if (isSwiped && diffX > 0) {
                 cardContent.style.transform = `translateX(${Math.min(threshold + diffX, 0)}px)`;
             }
