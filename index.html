@@ -3426,79 +3426,98 @@
     </section>
 
 
-    <script type="module" src="app.js?v=127"></script>
+    <script type="module" src="app.js?v=128"></script>
 
 <!-- ================= FINANCE MODALS ================= -->
 <!-- Add Transaction Modal -->
-<div id="finance-add-tx-modal" class="fixed inset-0 z-50 hidden items-end justify-center bg-inverse-surface/40 backdrop-blur-sm transition-opacity duration-300 opacity-0">
-    <div class="bg-background shadow-neo w-full max-w-md rounded-t-2xl p-container-padding pb-[calc(20px+env(safe-area-inset-bottom))] transform translate-y-full transition-transform duration-300">
-        <div class="w-12 h-1.5 bg-outline-variant/50 rounded-full mx-auto mb-6"></div>
-        <!-- Modal Header -->
-        <div class="flex items-center justify-between mb-6">
-            <h2 class="font-headline-sm text-headline-sm text-on-surface">İşlem Gir</h2>
-            <button aria-label="Close" class="w-10 h-10 rounded-full flex items-center justify-center bg-background shadow-neo hover:bg-surface-container-high transition-colors text-on-surface-variant active:scale-95" data-action="closeAddTransactionModal">
-                <span class="material-symbols-rounded" style="font-variation-settings: 'FILL' 0;">close</span>
-            </button>
+<!-- Add Transaction Modal -->
+<div id="finance-add-tx-modal" class="fixed inset-0 z-[100] hidden flex-col justify-end items-center md:p-4">
+    <div class="absolute inset-0 bg-black/10 backdrop-blur-sm opacity-0 transition-opacity duration-300 cursor-pointer" data-action="closeAddTransactionModal" id="finance-add-tx-backdrop"></div>
+    <div class="bg-[#F7F9FF] w-full max-w-sm mx-auto rounded-t-[32px] md:rounded-[32px] shadow-[0_-8px_30px_rgba(0,0,0,0.05)] md:shadow-[0_10px_40px_rgba(0,0,0,0.08)] p-6 flex flex-col items-center transform transition-transform duration-300 translate-y-full z-10 pb-8 md:pb-6" id="finance-add-tx-content">
+        <!-- Drag Handle (Mobile) -->
+        <div class="w-12 h-1.5 bg-gray-300 rounded-full mb-6 md:hidden cursor-pointer" data-action="closeAddTransactionModal"></div>
+        <div class="w-full text-center mb-6">
+            <h2 class="text-xl font-bold text-[#1E293B] mb-2">İşlem Gir</h2>
         </div>
-        <!-- Modal Content (Scrollable) -->
-        <div class="flex-1 overflow-y-auto pb-section-margin flex flex-col gap-card-gap">
-            <!-- Amount Input -->
-            <div class="flex flex-col items-center justify-center py-4">
-                <span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest mb-2">Tutar</span>
-                <div class="flex items-center text-neon-blue">
-                    <span class="font-display-lg text-display-lg mr-1">₺</span>
-                    <input id="tx-amount" class="bg-transparent border-none outline-none font-display-lg text-display-lg text-center w-full max-w-[200px] text-neon-blue focus:ring-0 p-0 placeholder-primary/30 shadow-neo-inset border-none rounded-xl bg-background " placeholder="0" type="number" min="0" step="0.01">
+        
+        <!-- Type Selection -->
+        <div class="flex w-full mb-6 bg-[#F7F9FF] p-1 rounded-full" style="box-shadow: inset 4px 4px 8px #e3e6ee, inset -4px -4px 8px #ffffff;">
+            <label class="flex-1 cursor-pointer">
+                <input type="radio" name="tx-type" value="expense" class="peer sr-only" checked>
+                <div class="py-2 text-center rounded-full text-sm font-semibold text-[#64748B] transition-all peer-checked:text-[#EF4444] peer-checked:bg-[#F7F9FF]" style="box-shadow: none;">Gider</div>
+            </label>
+            <label class="flex-1 cursor-pointer">
+                <input type="radio" name="tx-type" value="income" class="peer sr-only">
+                <div class="py-2 text-center rounded-full text-sm font-semibold text-[#64748B] transition-all peer-checked:text-[#22c55e] peer-checked:bg-[#F7F9FF]" style="box-shadow: none;">Gelir</div>
+            </label>
+            <style>
+                input[name="tx-type"]:checked + div {
+                    box-shadow: 6px 6px 12px #e3e6ee, -6px -6px 12px #ffffff !important;
+                }
+            </style>
+        </div>
+
+        <!-- Input Area -->
+        <div class="w-full flex flex-col gap-4 mb-6">
+            
+            <!-- Amount -->
+            <div class="flex flex-col items-center gap-4 mb-2">
+                <div class="flex items-center justify-between w-full px-6 py-4 rounded-full bg-[#F7F9FF]" style="box-shadow: inset 4px 4px 8px #e3e6ee, inset -4px -4px 8px #ffffff;">
+                    <button id="tx-amount-minus" class="w-10 h-10 rounded-full bg-[#F7F9FF] flex items-center justify-center active:scale-[0.98] transition-transform" style="box-shadow: 6px 6px 12px #e3e6ee, -6px -6px 12px #ffffff;">
+                        <span class="material-symbols-rounded text-[#3B82F6] font-bold">remove</span>
+                    </button>
+                    <div class="flex flex-col items-center justify-center -space-y-1">
+                        <input id="tx-amount" class="w-24 bg-transparent border-none outline-none font-bold text-2xl text-center text-[#1E293B] focus:ring-0 p-0" placeholder="0" type="number" min="0" step="0.01">
+                        <span class="text-[10px] font-bold text-[#64748B] uppercase">Tutar (₺)</span>
+                    </div>
+                    <button id="tx-amount-plus" class="w-10 h-10 rounded-full bg-[#F7F9FF] flex items-center justify-center active:scale-[0.98] transition-transform" style="box-shadow: 6px 6px 12px #e3e6ee, -6px -6px 12px #ffffff;">
+                        <span class="material-symbols-rounded text-[#3B82F6] font-bold">add</span>
+                    </button>
                 </div>
             </div>
-            <!-- Transaction Type -->
-            <div>
-                <label class="block font-label-md text-label-md text-on-surface-variant mb-unit">İşlem Yönü</label>
-                <div class="grid grid-cols-2 gap-3" id="tx-type-container">
-                    <label class="cursor-pointer relative">
-                        <input checked class="peer sr-only shadow-neo-inset border-none rounded-xl bg-background " name="tx-type" type="radio" value="expense">
-                        <div class="flex items-center justify-center gap-2 p-3 rounded-[32px] border border-surface-variant bg-background shadow-neo peer-checked:bg-error-container peer-checked:border-error peer-checked:text-on-error-container transition-all">
-                            <span class="material-symbols-rounded icon-md" style="font-variation-settings: 'FILL' 0;">arrow_downward</span>
-                            <span class="font-label-md text-label-md">Gider</span>
-                        </div>
-                    </label>
-                    <label class="cursor-pointer relative">
-                        <input class="peer sr-only shadow-neo-inset border-none rounded-xl bg-background " name="tx-type" type="radio" value="income">
-                        <div class="flex items-center justify-center gap-2 p-3 rounded-[32px] border border-surface-variant bg-background shadow-neo peer-checked:bg-gradient-to-r from-neon-purple to-neon-blue-container peer-checked:border-primary peer-checked:text-white-container transition-all">
-                            <span class="material-symbols-rounded icon-md" style="font-variation-settings: 'FILL' 0;">arrow_upward</span>
-                            <span class="font-label-md text-label-md">Gelir</span>
-                        </div>
-                    </label>
-                </div>
-            </div>
+
             <!-- Transaction Title -->
-            <div>
-                <label class="block font-label-md text-label-md text-on-surface-variant mb-unit">İşlem Adı</label>
-                <input id="tx-title" class="w-full bg-background shadow-neo border border-transparent focus:border-primary focus:ring-1 focus:ring-primary rounded-[32px] px-4 py-3 font-body-md text-body-md text-on-surface outline-none transition-colors placeholder-on-surface-variant/50 shadow-neo-inset border-none rounded-xl bg-background " placeholder="Örn: Market Alışverişi, Maaş" type="text">
+            <div class="flex flex-col gap-1">
+                <label class="text-xs font-bold text-[#3B82F6] uppercase px-2">AÇIKLAMA</label>
+                <div class="flex items-center rounded-2xl p-4 bg-[#F7F9FF]" style="box-shadow: inset 4px 4px 8px #e3e6ee, inset -4px -4px 8px #ffffff;">
+                    <input id="tx-title" class="w-full bg-transparent border-none focus:ring-0 text-sm font-medium text-[#1E293B] p-0 appearance-none outline-none" placeholder="Örn: Market, Kahve" type="text">
+                </div>
             </div>
-            <!-- Category Selection (Horizontal Scroll Chips) -->
-            <div>
-                <label class="block font-label-md text-label-md text-on-surface-variant mb-unit">Kategori</label>
-                <div class="flex overflow-x-auto gap-2 pb-2 -mx-container-padding px-container-padding snap-x no-scrollbar" id="tx-category-container">
+
+            <!-- Spending Type (Category) -->
+            <div class="flex flex-col gap-1">
+                <label class="text-xs font-bold text-[#3B82F6] uppercase px-2">KATEGORİ</label>
+                <div class="flex gap-4 py-2 overflow-x-auto no-scrollbar snap-x px-2 -mx-2" id="tx-category-container">
                     <!-- Dynamic Categories will be injected here -->
-                    <div class="text-sm text-outline-variant italic">Kategori yükleniyor...</div>
+                    <div class="text-sm text-[#64748B] italic w-full text-center py-2">Kategori yükleniyor...</div>
                 </div>
             </div>
-            <!-- Payment Method (Grid) -->
-            <div>
-                <label class="block font-label-md text-label-md text-on-surface-variant mb-unit">Ödeme Yöntemi</label>
-                <div class="grid grid-cols-2 gap-3" id="tx-payment-container">
+
+            <!-- Payment Method -->
+            <div class="flex flex-col gap-1">
+                <label class="text-xs font-bold text-[#3B82F6] uppercase px-2">ÖDEME YÖNTEMİ</label>
+                <div class="flex gap-4 py-2 overflow-x-auto no-scrollbar snap-x px-2 -mx-2" id="tx-payment-container">
                     <!-- Dynamic Payment Methods will be injected here -->
-                    <div class="text-sm text-outline-variant italic">Ödeme yöntemleri yükleniyor...</div>
+                    <div class="text-sm text-[#64748B] italic w-full text-center py-2">Ödeme yöntemleri yükleniyor...</div>
                 </div>
             </div>
-            <!-- Date Selection -->
-            <div>
-                <label class="block font-label-md text-label-md text-on-surface-variant mb-unit">Tarih</label>
-                <div class="relative">
-                    <input id="tx-date" class="w-full bg-background shadow-neo border border-transparent focus:border-primary focus:ring-1 focus:ring-primary rounded-[32px] px-4 py-3 font-body-md text-body-md text-on-surface outline-none transition-colors appearance-none shadow-neo-inset border-none rounded-xl bg-background " type="date">
+
+            <!-- Date -->
+            <div class="flex flex-col gap-1">
+                <label class="text-xs font-bold text-[#3B82F6] uppercase px-2">TARİH</label>
+                <div class="flex items-center rounded-2xl p-4 bg-[#F7F9FF]" style="box-shadow: inset 4px 4px 8px #e3e6ee, inset -4px -4px 8px #ffffff;">
+                    <input id="tx-date" class="w-full bg-transparent border-none focus:ring-0 text-sm font-medium text-[#1E293B] p-0 appearance-none outline-none" type="date"/>
                 </div>
             </div>
         </div>
+
+        <!-- CTA Button -->
+        <button id="finance-save-tx-btn" class="w-full py-4 px-6 rounded-full font-bold text-lg text-[#1E293B] shadow-md focus:outline-none active:scale-[0.98] transition-transform flex items-center justify-center gap-2" style="box-shadow: 6px 6px 12px #e3e6ee, -6px -6px 12px #ffffff; border: 2px solid transparent; background: linear-gradient(#F7F9FF, #F7F9FF) padding-box, linear-gradient(to right, #4A90E2, #50E3C2) border-box;">
+            Kaydet 
+            <span class="material-symbols-rounded text-[#3B82F6]" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+        </button>
+    </div>
+</div>
         <!-- Modal Footer (Sticky Bottom Action) -->
         <div class="mt-4 pt-4 border-t border-surface-container-high">
             <button class="w-full h-[56px] bg-gradient-to-r from-neon-purple to-neon-blue text-white rounded-full flex items-center justify-center gap-2 hover:opacity-95 active:scale-[0.98] transition-all shadow-sm font-label-md text-label-md tracking-wide" id="finance-save-tx-btn">

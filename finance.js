@@ -99,6 +99,25 @@ export function clearFinance() {
 }
 
 function setupFinanceModals() {
+    // TX Amount Plus/Minus Buttons
+    const amtMinus = document.getElementById('tx-amount-minus');
+    const amtPlus = document.getElementById('tx-amount-plus');
+    const amtInput = document.getElementById('tx-amount');
+    
+    if (amtMinus && amtPlus && amtInput) {
+        amtMinus.addEventListener('click', () => {
+            let val = parseFloat(amtInput.value) || 0;
+            if (val >= 10) val -= 10;
+            else if (val > 0) val = 0;
+            amtInput.value = val;
+        });
+        amtPlus.addEventListener('click', () => {
+            let val = parseFloat(amtInput.value) || 0;
+            val += 10;
+            amtInput.value = val;
+        });
+    }
+
     // Payment Icon Selection
     const paymentIcons = document.querySelectorAll('.payment-icon-option');
     paymentIcons.forEach(iconEl => {
@@ -664,14 +683,19 @@ export function renderTxModalOptions() {
     const catContainer = document.getElementById('tx-category-container');
     const pmContainer = document.getElementById('tx-payment-container');
     
+    const unselectedShadow = '6px 6px 12px #e3e6ee, -6px -6px 12px #ffffff';
+    const selectedShadow = 'inset 4px 4px 8px #e3e6ee, inset -4px -4px 8px #ffffff';
+    
     if (catContainer) {
         if (financeCategories.length === 0) {
-            catContainer.innerHTML = '<div class="text-sm text-outline-variant py-2">Önce kategori ekleyin.</div>';
+            catContainer.innerHTML = '<div class="text-sm text-[#64748B] py-2 italic w-full text-center">Önce harcama türü ekleyin.</div>';
         } else {
             catContainer.innerHTML = financeCategories.map((c, idx) => `
-                <button class="tx-cat-btn flex items-center gap-2 px-4 py-2 rounded-full ${idx === 0 ? 'bg-gradient-to-r from-neon-purple to-neon-blue-container text-white-container border-transparent' : 'bg-background shadow-neo-high text-on-surface-variant hover:bg-background shadow-neo-variant border-transparent'} shrink-0 snap-start transition-colors active:scale-95 border-2" data-id="${c.id}">
-                    <span class="material-symbols-rounded text-lg">${c.icon || 'category'}</span>
-                    <span class="font-label-md text-label-md">${c.name}</span>
+                <button class="tx-cat-btn flex flex-col items-center gap-2 p-4 rounded-2xl transition-all min-w-[80px] snap-center bg-[#F7F9FF] ${idx === 0 ? 'selected' : ''}" 
+                        style="box-shadow: ${idx === 0 ? selectedShadow : unselectedShadow};" 
+                        data-id="${c.id}">
+                    <span class="material-symbols-rounded ${idx === 0 ? 'text-[#22c55e]' : 'text-[#3B82F6]'}">${c.icon || 'category'}</span>
+                    <span class="text-xs font-bold ${idx === 0 ? 'text-[#1E293B]' : 'text-[#64748B]'} whitespace-nowrap">${c.name}</span>
                 </button>
             `).join('');
             
@@ -679,11 +703,19 @@ export function renderTxModalOptions() {
             document.querySelectorAll('.tx-cat-btn').forEach(btn => {
                 btn.addEventListener('click', () => {
                     document.querySelectorAll('.tx-cat-btn').forEach(b => {
-                        b.classList.remove('bg-gradient-to-r from-neon-purple to-neon-blue-container', 'text-white-container');
-                        b.classList.add('bg-background shadow-neo-high', 'text-on-surface-variant');
+                        b.classList.remove('selected');
+                        b.style.boxShadow = unselectedShadow;
+                        b.querySelector('.material-symbols-rounded').classList.remove('text-[#22c55e]');
+                        b.querySelector('.material-symbols-rounded').classList.add('text-[#3B82F6]');
+                        b.querySelector('span:last-child').classList.remove('text-[#1E293B]');
+                        b.querySelector('span:last-child').classList.add('text-[#64748B]');
                     });
-                    btn.classList.add('bg-gradient-to-r from-neon-purple to-neon-blue-container', 'text-white-container');
-                    btn.classList.remove('bg-background shadow-neo-high', 'text-on-surface-variant');
+                    btn.classList.add('selected');
+                    btn.style.boxShadow = selectedShadow;
+                    btn.querySelector('.material-symbols-rounded').classList.remove('text-[#3B82F6]');
+                    btn.querySelector('.material-symbols-rounded').classList.add('text-[#22c55e]');
+                    btn.querySelector('span:last-child').classList.remove('text-[#64748B]');
+                    btn.querySelector('span:last-child').classList.add('text-[#1E293B]');
                 });
             });
         }
@@ -691,48 +723,39 @@ export function renderTxModalOptions() {
     
     if (pmContainer) {
         if (financePaymentMethods.length === 0) {
-            pmContainer.innerHTML = '<div class="text-sm text-outline-variant py-2">Önce ödeme yöntemi ekleyin.</div>';
+            pmContainer.innerHTML = '<div class="text-sm text-[#64748B] py-2 italic w-full text-center">Önce ödeme yöntemi ekleyin.</div>';
         } else {
             pmContainer.innerHTML = financePaymentMethods.map((p, idx) => `
-                <div class="tx-pm-btn flex items-center justify-between p-3 rounded-[32px] border-2 ${idx === 0 ? 'border-primary bg-gradient-to-r from-neon-purple to-neon-blue-fixed-dim/10' : 'border-transparent bg-background shadow-neo-high hover:bg-background shadow-neo-variant'} cursor-pointer transition-transform active:scale-95" data-id="${p.id}">
-                    <div class="flex items-center gap-2">
-                        <span class="material-symbols-rounded ${idx === 0 ? 'text-neon-blue' : 'text-on-surface-variant'}">${p.icon || 'credit_card'}</span>
-                        <span class="font-label-md text-label-md ${idx === 0 ? 'text-on-surface' : 'text-on-surface-variant'}">${p.name}</span>
-                    </div>
-                    ${idx === 0 ? '<span class="material-symbols-rounded text-neon-blue text-lg check-icon" style="font-variation-settings: \'FILL\' 1;">check_circle</span>' : ''}
-                </div>
+                <button class="tx-pm-btn flex flex-col items-center gap-2 p-4 rounded-2xl transition-all min-w-[100px] snap-center bg-[#F7F9FF] ${idx === 0 ? 'selected' : ''}" 
+                        style="box-shadow: ${idx === 0 ? selectedShadow : unselectedShadow};" 
+                        data-id="${p.id}">
+                    <span class="material-symbols-rounded ${idx === 0 ? 'text-[#22c55e]' : 'text-[#3B82F6]'}">${p.icon || 'credit_card'}</span>
+                    <span class="text-xs font-bold ${idx === 0 ? 'text-[#1E293B]' : 'text-[#64748B]'} whitespace-nowrap">${p.name}</span>
+                </button>
             `).join('');
             
             // Add Listeners
             document.querySelectorAll('.tx-pm-btn').forEach(btn => {
                 btn.addEventListener('click', () => {
                     document.querySelectorAll('.tx-pm-btn').forEach(b => {
-                        b.classList.remove('border-primary', 'bg-gradient-to-r from-neon-purple to-neon-blue-fixed-dim/10');
-                        b.classList.add('border-transparent', 'bg-background shadow-neo-high', 'text-on-surface-variant');
-                        const icon1 = b.querySelector('.material-symbols-rounded:first-child');
-                        const text = b.querySelector('.font-label-md');
-                        const check = b.querySelector('.check-icon');
-                        if (icon1) { icon1.classList.remove('text-neon-blue'); icon1.classList.add('text-on-surface-variant'); }
-                        if (text) { text.classList.remove('text-on-surface'); text.classList.add('text-on-surface-variant'); }
-                        if (check) check.remove();
+                        b.classList.remove('selected');
+                        b.style.boxShadow = unselectedShadow;
+                        b.querySelector('.material-symbols-rounded').classList.remove('text-[#22c55e]');
+                        b.querySelector('.material-symbols-rounded').classList.add('text-[#3B82F6]');
+                        b.querySelector('span:last-child').classList.remove('text-[#1E293B]');
+                        b.querySelector('span:last-child').classList.add('text-[#64748B]');
                     });
-                    
-                    btn.classList.add('border-primary', 'bg-gradient-to-r from-neon-purple to-neon-blue-fixed-dim/10');
-                    btn.classList.remove('border-transparent', 'bg-background shadow-neo-high', 'text-on-surface-variant');
-                    const icon1 = btn.querySelector('.material-symbols-rounded:first-child');
-                    const text = btn.querySelector('.font-label-md');
-                    if (icon1) { icon1.classList.add('text-neon-blue'); icon1.classList.remove('text-on-surface-variant'); }
-                    if (text) { text.classList.add('text-on-surface'); text.classList.remove('text-on-surface-variant'); }
-                    
-                    if (!btn.querySelector('.check-icon')) {
-                        btn.insertAdjacentHTML('beforeend', '<span class="material-symbols-rounded text-neon-blue text-lg check-icon" style="font-variation-settings: \'FILL\' 1;">check_circle</span>');
-                    }
+                    btn.classList.add('selected');
+                    btn.style.boxShadow = selectedShadow;
+                    btn.querySelector('.material-symbols-rounded').classList.remove('text-[#3B82F6]');
+                    btn.querySelector('.material-symbols-rounded').classList.add('text-[#22c55e]');
+                    btn.querySelector('span:last-child').classList.remove('text-[#64748B]');
+                    btn.querySelector('span:last-child').classList.add('text-[#1E293B]');
                 });
             });
         }
     }
     
-    // Set default date
     const dateInput = document.getElementById('tx-date');
     if(dateInput && !dateInput.value) {
         const today = new Date();
