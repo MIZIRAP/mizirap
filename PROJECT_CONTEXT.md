@@ -61,6 +61,9 @@
   - Veritabanı (Firestore) çağrılarında (addDoc, deleteDoc, updateDoc vb.) eksik olan hata yakalama (try/catch / promise.catch) mekanizmaları tüm dosyalara eklendi (Tamamlandı).
   - Split değiştirildiğinde Ana Ekrandaki (Dashboard) Antrenman adının senkronize olmama sorunu çözüldü (Tamamlandı).
   - Esneme ve Core egzersiz seanslarında hareket arası geçişlere sesli (BEEP) bildirim eklendi (Tamamlandı).
+  - Kalori ve Su modüllerindeki tüm popup'lar (modallar) mobilde ve masaüstünde standart 'Bottom Sheet' (alttan kayan) yapıya geçirildi, arka plan blur (backdrop-blur) ve tıklayarak kapanma özellikleri eklendi (Tamamlandı).
+  - Tailwind config dosyasındaki mükerrer `boxShadow` tanımları birleştirilerek, 'Porsiyon Ekle' ve 'Kalori Hedefi' modallarında derinlik veren `shadow-neumorphic-inset` sınıfı işlevsel hale getirildi (Tamamlandı).
+  - Material Symbols ikonlarında yaşanan (ikon yerine yazı görünmesi) font uyumsuzluğu `material-symbols-rounded` kullanılarak çözüldü (Tamamlandı).
   - Modüllerin tek elden (`listenerManager.js` ve delegation) yönetimi için refactor çalışmaları başladı, Dashboard ve History tam entegre edildi.
 - **Planlanan Adım**: Kalan `onclick` kullanımlarının tamamen temizlenip `data-action` tabanlı yapıya geçilmesi.
 
