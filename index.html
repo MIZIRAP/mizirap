@@ -3196,10 +3196,36 @@
 
 
 <!-- Modal for Add Portion (Hidden by default) -->
-<div class="fixed inset-0 z-[100] flex items-end sm:items-center justify-center bg-black/40 backdrop-blur-sm hidden opacity-0 transition-opacity duration-300" id="addPortionModal">
-<div class="bg-background shadow-neo w-full rounded-t-2xl sm:rounded-[32px] sm:max-w-md sm:mb-8 shadow-2xl z-20 flex flex-col transform transition-transform duration-300 translate-y-full max-h-[90dvh] overflow-y-auto" id="addPortionModalContent">
-<div class="w-full flex justify-center pt-3 pb-1 sm:hidden">
-<div class="w-8 h-1 bg-outline-variant rounded-full"></div>
+<div class="hidden fixed inset-0 z-[100]" id="addPortionModal">
+    <!-- Backdrop -->
+    <div class="absolute inset-0 bg-black/10 backdrop-blur-sm z-10 transition-opacity duration-300 opacity-0" id="add-portion-backdrop"></div>
+    <!-- Modal Content -->
+    <div class="absolute bottom-0 md:bottom-auto md:relative w-full max-w-sm md:mx-auto md:top-1/2 md:-translate-y-1/2 bg-[#F7F9FF] rounded-t-[32px] md:rounded-[32px] shadow-[0_-8px_30px_rgba(0,0,0,0.05)] md:shadow-[0_10px_40px_rgba(0,0,0,0.08)] p-6 z-20 flex flex-col items-center transform transition-transform duration-300 translate-y-full md:translate-y-10 md:opacity-0 md:scale-95 pb-8 md:pb-6" id="addPortionModalContent">
+        <!-- Drag Handle (Mobile) -->
+        <div class="w-12 h-1.5 bg-gray-300 rounded-full mb-6 md:hidden"></div>
+        <div class="w-full text-center mb-6">
+            <h2 class="text-xl font-bold text-gray-800 mb-2" id="portion-modal-title">Öğün Ekle</h2>
+        </div>
+        <!-- Input Area -->
+        <div class="flex items-center justify-between w-full px-4 mb-6">
+            <button aria-label="Decrease amount" class="neo-button w-14 h-14 rounded-full flex items-center justify-center bg-[#F7F9FF] text-silk-blue focus:outline-none" id="portion-minus-btn">
+                <span class="material-symbols-rounded font-bold text-2xl" style="font-variation-settings: 'FILL' 1;">remove</span>
+            </button>
+            <div class="flex flex-col items-center justify-center w-32 h-32 rounded-full shadow-neumorphic-inset bg-[#F7F9FF]">
+                <span class="text-3xl font-extrabold text-gray-800" id="portion-gram-display">100</span>
+                <span class="text-sm font-semibold text-silk-blue mt-1">gr</span>
+                <span class="text-sm font-medium text-gray-800/60 mt-1" id="portion-kcal-display">150 kcal</span>
+            </div>
+            <button aria-label="Increase amount" class="neo-button w-14 h-14 rounded-full flex items-center justify-center bg-[#F7F9FF] text-silk-green focus:outline-none" id="portion-plus-btn">
+                <span class="material-symbols-rounded font-bold text-2xl" style="font-variation-settings: 'FILL' 1;">add</span>
+            </button>
+        </div>
+        <!-- CTA Button -->
+        <button id="add-food-to-log-btn" class="w-full py-4 px-6 rounded-[32px] font-bold text-lg text-gray-800 shadow-md focus:outline-none active:scale-[0.98] transition-transform flex items-center justify-center gap-2 relative bg-[#F7F9FF] z-10" style="background-clip: padding-box; border: 2px solid transparent;">
+            Öğün Ekle
+            <div class="absolute inset-0 z-[-1] rounded-[32px] -m-[2px]" style="background: linear-gradient(to right, #4A90E2, #50E3C2);"></div>
+        </button>
+    </div>
 </div>
 <div class="flex items-center justify-between px-container-padding py-element-spacing border-b border-surface-variant/50">
 <h2 class="font-headline-sm text-headline-sm text-on-surface">Porsiyon Ekle</h2>

@@ -362,6 +362,10 @@ if (caloriesGoalBackdrop) {
         };
     }
 
+    if (portionBackdrop) {
+        portionBackdrop.onclick = () => closeAddPortionModal();
+    }
+
     if (portionMinusBtn) {
         portionMinusBtn.onclick = () => { adjustAmount(-10); };
     }
@@ -372,13 +376,10 @@ if (caloriesGoalBackdrop) {
     
     if (addFoodToLogBtn) {
         addFoodToLogBtn.onclick = async () => {
-            let grams = 100;
-            if(gramInput) {
-                if (!validatePositiveNumber(gramInput.value)) {
-                    alert('Lütfen geçerli bir gramaj girin (Sıfırdan büyük olmalıdır).');
-                    return;
-                }
-                grams = parseInt(gramInput.value) || 100;
+            let grams = tempPortionAmount;
+            if (grams <= 0) {
+                alert('Lütfen geçerli bir gramaj girin (Sıfırdan büyük olmalıdır).');
+                return;
             }
             const total = Math.round((grams / 100) * currentKcalPer100g);
             
@@ -388,6 +389,7 @@ if (caloriesGoalBackdrop) {
             if (currentFoodMacros.karb !== null) k = Math.round((grams / 100) * currentFoodMacros.karb);
             if (currentFoodMacros.yag !== null) y = Math.round((grams / 100) * currentFoodMacros.yag);
             
+            addFoodToLogBtn.disabled = true;
             try {
                 if (currentEditLogId) {
                     await updateDoc(doc(db, "users", currentUid, "calorieLogs", currentEditLogId), {
@@ -405,17 +407,18 @@ if (caloriesGoalBackdrop) {
                         protein: p,
                         karb: k,
                         yag: y,
-                        createdAt: serverTimestamp()
+                        createdAt: serverTimestamp(),
+                        type: "Food"
                     };
-                    await addDoc(collection(db, "users", currentUid, "calorieLogs"), logEntry).catch(e => { console.error('DB Error:', e); alert('Veritabanı işlemi sırasında bir hata oluştu.'); throw e; });
+                    await addDoc(collection(db, "users", currentUid, "calorieLogs"), logEntry);
                 }
             } catch(err) {
                 console.error("Kayıt Hatası:", err);
                 alert('Kaydedilirken hata oluştu: ' + err.message);
             } finally {
                 currentEditLogId = null;
+                addFoodToLogBtn.disabled = false;
                 closeAddPortionModal();
-                closeAddFoodModal();
             }
         };
     }
