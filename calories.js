@@ -59,15 +59,31 @@ const portionPlusBtn = document.getElementById('portion-plus-btn');
 
 const newFoodModal = document.getElementById('newFoodModal');
 const newFoodModalContent = document.getElementById('newFoodModalContent');
-const newFoodCloseBtn = document.getElementById('new-food-close-btn');
+const newFoodBackdrop = document.getElementById('new-food-backdrop');
 const saveNewFoodBtn = document.getElementById('save-new-food-btn');
-const newFoodNameInput = document.getElementById('new-food-name');
-const newFoodKcalInput = document.getElementById('new-food-kcal');
-const newFoodKarbInput = document.getElementById('new-food-karb');
-const newFoodProteinInput = document.getElementById('new-food-protein');
-const newFoodYagInput = document.getElementById('new-food-yag');
 
-const foodSearchInput = document.getElementById('food-search-input');
+const newFoodNameInput = document.getElementById('new-food-name');
+const newFoodKcalDisplay = document.getElementById('new-food-kcal-display');
+const newFoodKcalMinus = document.getElementById('new-food-kcal-minus');
+const newFoodKcalPlus = document.getElementById('new-food-kcal-plus');
+
+const newFoodProteinDisplay = document.getElementById('new-food-protein-display');
+const newFoodProteinMinus = document.getElementById('new-food-protein-minus');
+const newFoodProteinPlus = document.getElementById('new-food-protein-plus');
+
+const newFoodKarbDisplay = document.getElementById('new-food-karb-display');
+const newFoodKarbMinus = document.getElementById('new-food-karb-minus');
+const newFoodKarbPlus = document.getElementById('new-food-karb-plus');
+
+const newFoodYagDisplay = document.getElementById('new-food-yag-display');
+const newFoodYagMinus = document.getElementById('new-food-yag-minus');
+const newFoodYagPlus = document.getElementById('new-food-yag-plus');
+
+let tempNewFoodKcal = 100;
+let tempNewFoodProtein = 0;
+let tempNewFoodKarb = 0;
+let tempNewFoodYag = 0;
+
 let tempCaloriesGoal = 2000;
 let tempMacroProtein = 150;
 let tempMacroKarb = 250;
@@ -258,56 +274,90 @@ if (caloriesGoalBackdrop) {
 
     if (newFoodCloseBtn) newFoodCloseBtn.onclick = closeNewFoodModal;
     
-    if (newFoodModal) {
-        newFoodModal.onclick = (e) => {
-            if (e.target === newFoodModal) closeNewFoodModal();
+    if (newFoodBackdrop) {
+        newFoodBackdrop.onclick = () => closeNewFoodModal();
+    }
+
+    if (newFoodKcalMinus) {
+        newFoodKcalMinus.onclick = () => {
+            if (tempNewFoodKcal > 10) tempNewFoodKcal -= 10;
+            if (newFoodKcalDisplay) newFoodKcalDisplay.textContent = tempNewFoodKcal;
         };
     }
-    
-    if (saveNewFoodBtn) {
-        saveNewFoodBtn.onclick = async () => {
-            if (!newFoodNameInput || !newFoodKcalInput || !newFoodNameInput.value || !newFoodKcalInput.value) return; 
-            
-            const newFood = {
-                name: newFoodNameInput.value,
-                kcal: parseInt(newFoodKcalInput.value) || 0,
-                karb: newFoodKarbInput && newFoodKarbInput.value ? parseInt(newFoodKarbInput.value) : null,
-                protein: newFoodProteinInput && newFoodProteinInput.value ? parseInt(newFoodProteinInput.value) : null,
-                yag: newFoodYagInput && newFoodYagInput.value ? parseInt(newFoodYagInput.value) : null,
-                createdAt: serverTimestamp()
-            };
-            
-            try {
-                await addDoc(collection(db, "users", currentUid, "foodLibrary"), newFood).catch(e => { console.error('DB Error:', e); alert('Veritabanı işlemi sırasında bir hata oluştu.'); throw e; });
-            } catch(err) {
-                console.error(err);
-                alert('Kaydedilirken hata oluştu: ' + err.message);
-            }
-            
-            newFoodNameInput.value = '';
-            newFoodKcalInput.value = '';
-            if(newFoodKarbInput) newFoodKarbInput.value = '';
-            if(newFoodProteinInput) newFoodProteinInput.value = '';
-            if(newFoodYagInput) newFoodYagInput.value = '';
-            
-            closeNewFoodModal();
+    if (newFoodKcalPlus) {
+        newFoodKcalPlus.onclick = () => {
+            tempNewFoodKcal += 10;
+            if (newFoodKcalDisplay) newFoodKcalDisplay.textContent = tempNewFoodKcal;
         };
     }
 
-    // Portion Modal Events
-    if (portionCloseBtn) portionCloseBtn.onclick = closeAddPortionModal;
-    if (portionModal) {
-        portionModal.onclick = (e) => {
-            if (e.target === portionModal) closeAddPortionModal();
+    if (newFoodProteinMinus) {
+        newFoodProteinMinus.onclick = () => {
+            if (tempNewFoodProtein > 1) tempNewFoodProtein -= 1;
+            else tempNewFoodProtein = 0;
+            if (newFoodProteinDisplay) newFoodProteinDisplay.textContent = tempNewFoodProtein;
         };
     }
-    
-    if (gramInput) {
-        gramInput.oninput = updatePortionTotal;
-        gramInput.onblur = function() {
-            let val = parseInt(this.value);
-            if (isNaN(val) || val <= 0) this.value = 100;
-            updatePortionTotal();
+    if (newFoodProteinPlus) {
+        newFoodProteinPlus.onclick = () => {
+            tempNewFoodProtein += 1;
+            if (newFoodProteinDisplay) newFoodProteinDisplay.textContent = tempNewFoodProtein;
+        };
+    }
+
+    if (newFoodKarbMinus) {
+        newFoodKarbMinus.onclick = () => {
+            if (tempNewFoodKarb > 1) tempNewFoodKarb -= 1;
+            else tempNewFoodKarb = 0;
+            if (newFoodKarbDisplay) newFoodKarbDisplay.textContent = tempNewFoodKarb;
+        };
+    }
+    if (newFoodKarbPlus) {
+        newFoodKarbPlus.onclick = () => {
+            tempNewFoodKarb += 1;
+            if (newFoodKarbDisplay) newFoodKarbDisplay.textContent = tempNewFoodKarb;
+        };
+    }
+
+    if (newFoodYagMinus) {
+        newFoodYagMinus.onclick = () => {
+            if (tempNewFoodYag > 1) tempNewFoodYag -= 1;
+            else tempNewFoodYag = 0;
+            if (newFoodYagDisplay) newFoodYagDisplay.textContent = tempNewFoodYag;
+        };
+    }
+    if (newFoodYagPlus) {
+        newFoodYagPlus.onclick = () => {
+            tempNewFoodYag += 1;
+            if (newFoodYagDisplay) newFoodYagDisplay.textContent = tempNewFoodYag;
+        };
+    }
+
+    if (saveNewFoodBtn) {
+        saveNewFoodBtn.onclick = async () => {
+            if(!currentUid) return;
+            const name = newFoodNameInput ? newFoodNameInput.value.trim() : "";
+            if (!name) {
+                alert("Lütfen besin adı giriniz.");
+                return;
+            }
+            saveNewFoodBtn.disabled = true;
+            try {
+                await addDoc(collection(db, "users", currentUid, "foodLibrary"), {
+                    name: name,
+                    kcal: tempNewFoodKcal,
+                    protein: tempNewFoodProtein,
+                    karb: tempNewFoodKarb,
+                    yag: tempNewFoodYag,
+                    createdAt: serverTimestamp()
+                });
+                closeNewFoodModal();
+            } catch (error) {
+                console.error("Besin eklerken hata:", error);
+                alert("Kaydedilemedi: " + error.message);
+            } finally {
+                saveNewFoodBtn.disabled = false;
+            }
         };
     }
 
@@ -419,77 +469,42 @@ function closeCaloriesGoalModal() {
 
 function openNewFoodModal() {
     if(!newFoodModal) return;
+    
+    // Reset inputs
+    tempNewFoodKcal = 100;
+    tempNewFoodProtein = 0;
+    tempNewFoodKarb = 0;
+    tempNewFoodYag = 0;
+    
+    if (newFoodNameInput) newFoodNameInput.value = "";
+    if (newFoodKcalDisplay) newFoodKcalDisplay.textContent = tempNewFoodKcal;
+    if (newFoodProteinDisplay) newFoodProteinDisplay.textContent = tempNewFoodProtein;
+    if (newFoodKarbDisplay) newFoodKarbDisplay.textContent = tempNewFoodKarb;
+    if (newFoodYagDisplay) newFoodYagDisplay.textContent = tempNewFoodYag;
+    
     newFoodModal.classList.remove('hidden');
+    // small delay for transition
     setTimeout(() => {
-        newFoodModal.classList.remove('opacity-0');
-        newFoodModalContent.classList.remove('translate-y-full');
+        if(newFoodBackdrop) newFoodBackdrop.classList.remove('opacity-0');
+        if(newFoodModalContent) {
+            newFoodModalContent.classList.remove('translate-y-full', 'md:translate-y-10', 'md:opacity-0', 'md:scale-95');
+            newFoodModalContent.classList.add('translate-y-0', 'md:translate-y-0', 'md:opacity-100', 'md:scale-100');
+        }
     }, 10);
 }
 
 function closeNewFoodModal() {
     if(!newFoodModal) return;
-    newFoodModal.classList.add('opacity-0');
-    newFoodModalContent.classList.add('translate-y-full');
+    if(newFoodBackdrop) newFoodBackdrop.classList.add('opacity-0');
+    if(newFoodModalContent) {
+        newFoodModalContent.classList.remove('translate-y-0', 'md:translate-y-0', 'md:opacity-100', 'md:scale-100');
+        newFoodModalContent.classList.add('translate-y-full', 'md:translate-y-10', 'md:opacity-0', 'md:scale-95');
+    }
     setTimeout(() => {
         newFoodModal.classList.add('hidden');
     }, 300);
 }
 
-function openAddPortionModal(name, kcal100, macros) {
-    currentFoodName = name;
-    currentKcalPer100g = kcal100;
-    currentFoodMacros = macros || {karb: 0, protein: 0, yag: 0};
-    
-    if(portionFoodName) portionFoodName.textContent = name;
-    if(portionFoodKcalText) portionFoodKcalText.textContent = `${kcal100} kcal / 100g`;
-    if(gramInput) gramInput.value = 100;
-    updatePortionTotal();
-    
-    if(portionModal) {
-        portionModal.classList.remove('hidden');
-        setTimeout(() => {
-            portionModal.classList.remove('opacity-0');
-            portionModalContent.classList.remove('translate-y-full');
-        }, 10);
-    }
-}
-
-function closeAddPortionModal() {
-    if(portionModal) {
-        portionModal.classList.add('opacity-0');
-        portionModalContent.classList.add('translate-y-full');
-        setTimeout(() => {
-            portionModal.classList.add('hidden');
-        }, 300);
-    }
-}
-
-function updatePortionTotal() {
-    if(gramInput && totalKcalEl) {
-        let grams = parseInt(gramInput.value);
-        if (isNaN(grams) || grams < 0) grams = 0;
-        const total = Math.round((grams / 100) * currentKcalPer100g);
-        totalKcalEl.textContent = total;
-    }
-}
-
-function adjustAmount(amount) {
-    if(gramInput) {
-        let current = parseInt(gramInput.value);
-        if (isNaN(current)) current = 0;
-        let newValue = current + amount;
-        if (newValue < 0) newValue = 0;
-        gramInput.value = newValue;
-        updatePortionTotal();
-        
-        gramInput.classList.add('scale-105');
-        setTimeout(() => {
-            gramInput.classList.remove('scale-105');
-        }, 150);
-    }
-}
-
-// Render Functions
 function renderLogs() {
     const list = document.getElementById('daily-log-list');
     if(!list) return;
