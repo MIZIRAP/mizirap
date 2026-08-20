@@ -203,11 +203,11 @@ async function savePaymentMethod() {
         });
         
         saveBtn.innerHTML = `<span class="material-symbols-rounded">check_circle</span> Eklendi!`;
-        saveBtn.classList.add("bg-gradient-to-r from-neon-purple to-neon-blue-container", "text-white-container");
+        saveBtn.classList.add("bg-gradient-to-r", "from-neon-purple", "to-neon-blue-container", "text-white-container");
         
         setTimeout(() => {
             saveBtn.innerHTML = originalText;
-            saveBtn.classList.remove("bg-gradient-to-r from-neon-purple to-neon-blue-container", "text-white-container");
+            saveBtn.classList.remove("bg-gradient-to-r", "from-neon-purple", "to-neon-blue-container", "text-white-container");
             saveBtn.disabled = false;
             
             // Clear inputs
@@ -639,11 +639,11 @@ async function saveCategory() {
         });
         
         saveBtn.innerHTML = `<span class="material-symbols-rounded">check_circle</span> Eklendi!`;
-        saveBtn.classList.add("bg-gradient-to-r from-neon-purple to-neon-blue-container", "text-white-container");
+        saveBtn.classList.add("bg-gradient-to-r", "from-neon-purple", "to-neon-blue-container", "text-white-container");
         
         setTimeout(() => {
             saveBtn.innerHTML = originalText;
-            saveBtn.classList.remove("bg-gradient-to-r from-neon-purple to-neon-blue-container", "text-white-container");
+            saveBtn.classList.remove("bg-gradient-to-r", "from-neon-purple", "to-neon-blue-container", "text-white-container");
             saveBtn.disabled = false;
             
             // Clear inputs
@@ -806,11 +806,11 @@ async function saveTransaction() {
         }
         
         saveBtn.innerHTML = `<span class="material-symbols-rounded">check_circle</span> Eklendi!`;
-        saveBtn.classList.add("bg-gradient-to-r from-neon-purple to-neon-blue-container", "text-white-container");
+        saveBtn.classList.add("bg-gradient-to-r", "from-neon-purple", "to-neon-blue-container", "text-white-container");
         
         setTimeout(() => {
             saveBtn.innerHTML = originalText;
-            saveBtn.classList.remove("bg-gradient-to-r from-neon-purple to-neon-blue-container", "text-white-container");
+            saveBtn.classList.remove("bg-gradient-to-r", "from-neon-purple", "to-neon-blue-container", "text-white-container");
             saveBtn.disabled = false;
             
             // Clear inputs
