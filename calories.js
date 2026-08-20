@@ -641,7 +641,7 @@ window.openAddPortionModal = function(name, kcal100, macros) {
     currentKcalPer100g = kcal100;
     currentFoodMacros = macros || {karb: 0, protein: 0, yag: 0};
     
-    if(portionModalTitle) portionModalTitle.textContent = `${name} - Porsiyon Ekle`;
+    if(portionModalTitle) portionModalTitle.textContent = name;
     tempPortionAmount = 100;
     if(portionGramDisplay) portionGramDisplay.textContent = tempPortionAmount;
     updatePortionTotal();
