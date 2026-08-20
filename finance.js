@@ -544,39 +544,123 @@ function renderTransactions(isFromScroll = false) {
         const iconColor = isIncome ? 'text-[#22C55E]' : 'text-[#3B82F6]';
         const valColor = isIncome ? 'text-[#22C55E]' : 'text-[#3B82F6]';
         
-        const div = document.createElement("div");
-        div.className = "flex items-center justify-between p-4 rounded-2xl bg-[#F7F9FF] group relative active:scale-[0.99] transition-transform cursor-pointer";
-        div.style.boxShadow = "4px 4px 8px #D1D9E6, -4px -4px 8px #FFFFFF";
+        const wrapper = document.createElement('div');
+        wrapper.className = "relative w-full shrink-0 mb-4";
         
-        const actionsDiv = document.createElement("div");
-        actionsDiv.className = "absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity bg-[#F7F9FF] px-2 py-1 rounded-full shadow-sm z-10";
-        actionsDiv.style.boxShadow = "inset 2px 2px 5px #D1D9E6, inset -2px -2px 5px #FFFFFF";
-        
-        const editBtn = document.createElement('button');
-        editBtn.className = "p-2 text-[#3B82F6] rounded-full active:scale-95 transition-colors";
-        editBtn.innerHTML = `<span class="material-symbols-rounded text-sm">edit</span>`;
-        editBtn.onclick = (e) => {
+        const delBtn = document.createElement('button');
+        delBtn.className = "absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-red-500 rounded-2xl text-white flex items-center justify-center z-0 active:bg-red-600 transition-colors";
+        delBtn.innerHTML = `<span class="material-symbols-rounded text-xl">delete</span>`;
+        delBtn.onclick = async (e) => {
             e.stopPropagation();
-            currentEditFinanceTxId = tx.id;
-            openModal('finance-add-tx-modal');
-            const titleEl = document.getElementById('tx-title');
-            const amtEl = document.getElementById('tx-amount');
-            if (titleEl) titleEl.value = tx.title;
-            if (amtEl) amtEl.value = tx.amount;
-            
-            const typeRadios = document.querySelectorAll('input[name="tx-type"]');
-            typeRadios.forEach(r => {
-                if(r.value === tx.type) r.checked = true;
-            });
-            currentTxType = tx.type;
-            if (typeof renderCategoryOptions === 'function') {
-                renderCategoryOptions();
+            try {
+                await deleteDoc(doc(db, "users", currentUid, "finance_transactions", tx.id)).catch(e => { console.error('DB Error:', e); alert('Veritabanı işlemi sırasında bir hata oluştu.'); throw e; });
+            } catch(err) {
+                console.error("Silme Hatası:", err);
             }
-            
-            setTimeout(() => {
-                const catOpts = document.querySelectorAll('.tx-cat-btn');
-                catOpts.forEach(o => {
-                    if(o.dataset.id === tx.categoryId) {
+        };
+
+        const item = document.createElement('div');
+        item.className = "relative flex items-center justify-between p-4 rounded-2xl bg-[#F7F9FF] z-10 transition-transform cursor-grab active:cursor-grabbing";
+        item.style.boxShadow = "4px 4px 8px #D1D9E6, -4px -4px 8px #FFFFFF";
+        item.innerHTML = `
+            <div class="flex items-center gap-4 min-w-0 pointer-events-none">
+                <div class="w-10 h-10 rounded-full bg-[#F7F9FF] flex items-center justify-center shrink-0" style="box-shadow: inset 2px 2px 5px #D1D9E6, inset -2px -2px 5px #FFFFFF;">
+                    <span class="material-symbols-rounded ${iconColor}">${cat.icon}</span>
+                </div>
+                <div class="flex flex-col min-w-0">
+                    <p class="text-sm font-bold text-[#1E293B] truncate">${tx.title}</p>
+                    <div class="flex items-center gap-2">
+                        <p class="text-xs text-[#64748B] whitespace-nowrap">${dateFormatted}</p>
+                        <span class="text-[10px] px-1.5 py-0.5 rounded bg-[#E0E5EC] text-[#64748B] font-medium truncate max-w-[80px]">${pm.name}</span>
+                    </div>
+                </div>
+            </div>
+            <span class="font-bold ${valColor} whitespace-nowrap ml-2 pointer-events-none">${sign}${valStr}</span>
+        `;
+        
+        let startX = 0;
+        let currentX = 0;
+        let isDragging = false;
+
+        item.addEventListener('touchstart', (e) => {
+            startX = e.touches[0].clientX;
+            isDragging = true;
+            item.style.transition = 'none';
+        }, {passive: true});
+
+        item.addEventListener('touchmove', (e) => {
+            if (!isDragging) return;
+            currentX = e.touches[0].clientX;
+            let diff = currentX - startX;
+            if (diff > 0) diff = 0; 
+            if (diff < -80) diff = -80;
+            item.style.transform = `translateX(${diff}px)`;
+        }, {passive: true});
+
+        item.addEventListener('touchend', (e) => {
+            if (!isDragging) return;
+            isDragging = false;
+            item.style.transition = 'transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)';
+            let diff = currentX - startX;
+            if (diff < -40) {
+                item.style.transform = `translateX(-80px)`; 
+                setTimeout(() => {
+                    document.addEventListener('touchstart', function closeSwipe(evt) {
+                        if (!wrapper.contains(evt.target)) {
+                            item.style.transform = `translateX(0px)`;
+                            document.removeEventListener('touchstart', closeSwipe);
+                        }
+                    }, {passive: true});
+                }, 100);
+            } else {
+                item.style.transform = `translateX(0px)`;
+            }
+        });
+
+        // Click to Edit
+        item.addEventListener('click', (e) => {
+            if (Math.abs(currentX - startX) < 5) {
+                e.stopPropagation();
+                currentEditFinanceTxId = tx.id;
+                openModal('finance-add-tx-modal');
+                const titleEl = document.getElementById('tx-title');
+                const amtEl = document.getElementById('tx-amount');
+                if (titleEl) titleEl.value = tx.title;
+                if (amtEl) amtEl.value = tx.amount;
+                
+                const typeRadios = document.querySelectorAll('input[name="tx-type"]');
+                typeRadios.forEach(r => {
+                    if(r.value === tx.type) r.checked = true;
+                });
+                currentTxType = tx.type;
+                if (typeof renderCategoryOptions === 'function') {
+                    renderCategoryOptions();
+                }
+                
+                setTimeout(() => {
+                    const catOpts = document.querySelectorAll('.tx-cat-btn');
+                    catOpts.forEach(o => {
+                        if(o.dataset.id === tx.categoryId) {
+                            o.classList.add('selected');
+                            o.style.boxShadow = 'inset 4px 4px 8px #e3e6ee, inset -4px -4px 8px #ffffff';
+                            o.querySelector('.material-symbols-rounded').classList.remove('text-[#3B82F6]');
+                            o.querySelector('.material-symbols-rounded').classList.add('text-[#22c55e]');
+                            o.querySelector('span:last-child').classList.remove('text-[#64748B]');
+                            o.querySelector('span:last-child').classList.add('text-[#1E293B]');
+                        } else {
+                            o.classList.remove('selected');
+                            o.style.boxShadow = '6px 6px 12px #e3e6ee, -6px -6px 12px #ffffff';
+                            o.querySelector('.material-symbols-rounded').classList.add('text-[#3B82F6]');
+                            o.querySelector('.material-symbols-rounded').classList.remove('text-[#22c55e]');
+                            o.querySelector('span:last-child').classList.add('text-[#64748B]');
+                            o.querySelector('span:last-child').classList.remove('text-[#1E293B]');
+                        }
+                    });
+                }, 50);
+
+                const pmOpts = document.querySelectorAll('.tx-pm-btn');
+                pmOpts.forEach(o => {
+                    if(o.dataset.id === tx.paymentMethodId) {
                         o.classList.add('selected');
                         o.style.boxShadow = 'inset 4px 4px 8px #e3e6ee, inset -4px -4px 8px #ffffff';
                         o.querySelector('.material-symbols-rounded').classList.remove('text-[#3B82F6]');
@@ -592,60 +676,12 @@ function renderTransactions(isFromScroll = false) {
                         o.querySelector('span:last-child').classList.remove('text-[#1E293B]');
                     }
                 });
-            }, 50);
-
-            const pmOpts = document.querySelectorAll('.tx-pm-btn');
-            pmOpts.forEach(o => {
-                if(o.dataset.id === tx.paymentMethodId) {
-                    o.classList.add('selected');
-                    o.style.boxShadow = 'inset 4px 4px 8px #e3e6ee, inset -4px -4px 8px #ffffff';
-                    o.querySelector('.material-symbols-rounded').classList.remove('text-[#3B82F6]');
-                    o.querySelector('.material-symbols-rounded').classList.add('text-[#22c55e]');
-                    o.querySelector('span:last-child').classList.remove('text-[#64748B]');
-                    o.querySelector('span:last-child').classList.add('text-[#1E293B]');
-                } else {
-                    o.classList.remove('selected');
-                    o.style.boxShadow = '6px 6px 12px #e3e6ee, -6px -6px 12px #ffffff';
-                    o.querySelector('.material-symbols-rounded').classList.add('text-[#3B82F6]');
-                    o.querySelector('.material-symbols-rounded').classList.remove('text-[#22c55e]');
-                    o.querySelector('span:last-child').classList.add('text-[#64748B]');
-                    o.querySelector('span:last-child').classList.remove('text-[#1E293B]');
-                }
-            });
-        };
-
-        const delBtn = document.createElement('button');
-        delBtn.className = "p-2 text-red-500 rounded-full active:scale-95 transition-colors";
-        delBtn.innerHTML = `<span class="material-symbols-rounded text-sm">delete</span>`;
-        delBtn.onclick = async (e) => {
-            e.stopPropagation();
-            try {
-                await deleteDoc(doc(db, "users", currentUid, "finance_transactions", tx.id)).catch(e => { console.error('DB Error:', e); alert('Veritabanı işlemi sırasında bir hata oluştu.'); throw e; });
-            } catch(err) {
-                console.error("Silme Hatası:", err);
             }
-        };
+        });
 
-        actionsDiv.appendChild(editBtn);
-        actionsDiv.appendChild(delBtn);
-
-        div.innerHTML = `
-            <div class="flex items-center gap-4 min-w-0">
-                <div class="w-10 h-10 rounded-full bg-[#F7F9FF] flex items-center justify-center shrink-0" style="box-shadow: inset 2px 2px 5px #D1D9E6, inset -2px -2px 5px #FFFFFF;">
-                    <span class="material-symbols-rounded ${iconColor}">${cat.icon}</span>
-                </div>
-                <div class="flex flex-col min-w-0">
-                    <p class="text-sm font-bold text-[#1E293B] truncate">${tx.title}</p>
-                    <div class="flex items-center gap-2">
-                        <p class="text-xs text-[#64748B] whitespace-nowrap">${dateFormatted}</p>
-                        <span class="text-[10px] px-1.5 py-0.5 rounded bg-[#E0E5EC] text-[#64748B] font-medium truncate max-w-[80px]">${pm.name}</span>
-                    </div>
-                </div>
-            </div>
-            <span class="font-bold ${valColor} whitespace-nowrap ml-2">${sign}${valStr}</span>
-        `;
-        div.appendChild(actionsDiv);
-        list.appendChild(div);
+        wrapper.appendChild(delBtn);
+        wrapper.appendChild(item);
+        list.appendChild(wrapper);
     });
 }
 
