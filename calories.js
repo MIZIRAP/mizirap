@@ -552,7 +552,7 @@ function renderLogs() {
         // Delete button underneath
         const delBtn = document.createElement('button');
         delBtn.className = "absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-red-500 rounded-2xl text-white flex items-center justify-center z-0 active:bg-red-600 transition-colors";
-        delBtn.innerHTML = `<span class="material-symbols-outlined text-xl">delete</span>`;
+        delBtn.innerHTML = `<span class="material-symbols-rounded text-xl">delete</span>`;
         delBtn.onclick = async () => {
             try {
                 await deleteDoc(doc(db, "users", currentUid, "calorieLogs", log.id));

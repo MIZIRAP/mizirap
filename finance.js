@@ -554,7 +554,7 @@ function renderTransactions(isFromScroll = false) {
         
         const editBtn = document.createElement('button');
         editBtn.className = "p-2 text-[#3B82F6] rounded-full active:scale-95 transition-colors";
-        editBtn.innerHTML = `<span class="material-symbols-outlined text-sm">edit</span>`;
+        editBtn.innerHTML = `<span class="material-symbols-rounded text-sm">edit</span>`;
         editBtn.onclick = (e) => {
             e.stopPropagation();
             currentEditFinanceTxId = tx.id;
@@ -616,7 +616,7 @@ function renderTransactions(isFromScroll = false) {
 
         const delBtn = document.createElement('button');
         delBtn.className = "p-2 text-red-500 rounded-full active:scale-95 transition-colors";
-        delBtn.innerHTML = `<span class="material-symbols-outlined text-sm">delete</span>`;
+        delBtn.innerHTML = `<span class="material-symbols-rounded text-sm">delete</span>`;
         delBtn.onclick = async (e) => {
             e.stopPropagation();
             try {
@@ -632,7 +632,7 @@ function renderTransactions(isFromScroll = false) {
         div.innerHTML = `
             <div class="flex items-center gap-4 min-w-0">
                 <div class="w-10 h-10 rounded-full bg-[#F7F9FF] flex items-center justify-center shrink-0" style="box-shadow: inset 2px 2px 5px #D1D9E6, inset -2px -2px 5px #FFFFFF;">
-                    <span class="material-symbols-outlined ${iconColor}">${cat.icon}</span>
+                    <span class="material-symbols-rounded ${iconColor}">${cat.icon}</span>
                 </div>
                 <div class="flex flex-col min-w-0">
                     <p class="text-sm font-bold text-[#1E293B] truncate">${tx.title}</p>
@@ -1294,7 +1294,7 @@ export function renderFinanceSettings() {
                 // Delete button underneath
                 const delBtn = document.createElement('button');
                 delBtn.className = "absolute right-0 top-1/2 -translate-y-1/2 w-12 h-12 bg-red-500 rounded-2xl text-white flex items-center justify-center z-0 active:bg-red-600 transition-colors shadow-[4px_4px_8px_#D1D9E6,-4px_-4px_8px_#FFFFFF]";
-                delBtn.innerHTML = `<span class="material-symbols-outlined text-xl">delete</span>`;
+                delBtn.innerHTML = `<span class="material-symbols-rounded text-xl">delete</span>`;
                 delBtn.onclick = async () => {
                     if (!confirm(`'${cat.name}' harcama türünü silmek istediğinize emin misiniz?`)) return;
                     try {
@@ -1375,7 +1375,7 @@ export function renderFinanceSettings() {
                 // Delete button underneath
                 const delBtn = document.createElement('button');
                 delBtn.className = "absolute right-0 top-1/2 -translate-y-1/2 w-12 h-12 bg-red-500 rounded-2xl text-white flex items-center justify-center z-0 active:bg-red-600 transition-colors shadow-[4px_4px_8px_#D1D9E6,-4px_-4px_8px_#FFFFFF]";
-                delBtn.innerHTML = `<span class="material-symbols-outlined text-xl">delete</span>`;
+                delBtn.innerHTML = `<span class="material-symbols-rounded text-xl">delete</span>`;
                 delBtn.onclick = async () => {
                     if (!confirm(`'${pm.name}' ödeme yöntemini silmek istediğinize emin misiniz?`)) return;
                     try {
