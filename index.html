@@ -4058,20 +4058,22 @@
         let currentExerciseElement = null;
 
         function openExerciseSheet(element, name, imgSrc, legendItems) {
+            const ev = window.event;
+            if (ev && ev.target.closest('.exercise-fav-btn')) return;
             currentExerciseElement = element;
             
             // Sync sheet star state with list item star state
             const listFavBtn = element.querySelector('.exercise-fav-btn');
-            const isFav = listFavBtn.classList.contains('text-neon-blue');
+            const isFav = listFavBtn.classList.contains('text-primary');
             const sheetFavBtn = document.getElementById('sheet-fav-btn');
             const sheetIcon = sheetFavBtn.querySelector('.material-symbols-rounded');
             
             if (isFav) {
-                sheetFavBtn.classList.add('text-neon-blue');
+                sheetFavBtn.classList.add('text-primary');
                 sheetFavBtn.classList.remove('text-on-surface-variant');
                 sheetIcon.style.fontVariationSettings = "'FILL' 1";
             } else {
-                sheetFavBtn.classList.remove('text-neon-blue');
+                sheetFavBtn.classList.remove('text-primary');
                 sheetFavBtn.classList.add('text-on-surface-variant');
                 sheetIcon.style.fontVariationSettings = "'FILL' 0";
             }
@@ -4177,7 +4179,7 @@
                     if (currentExerciseCategory === 'Tümü') {
                         shouldShow = true;
                     } else if (currentExerciseCategory === 'Favoriler') {
-                        const isFav = item.querySelector('.exercise-fav-btn').classList.contains('text-neon-blue');
+                        const isFav = item.querySelector('.exercise-fav-btn').classList.contains('text-primary');
                         shouldShow = isFav;
                     } else {
                         shouldShow = (catName === currentExerciseCategory);
@@ -4185,7 +4187,7 @@
                     
                     // 2. Search Filter
                     if (shouldShow && currentExerciseSearchTerm !== '') {
-                        const exerciseName = item.querySelector('h3').innerText.toLowerCase();
+                        const exerciseName = item.querySelector('h4').innerText.toLowerCase();
                         if (!exerciseName.includes(currentExerciseSearchTerm)) {
                             shouldShow = false;
                         }
@@ -4220,13 +4222,13 @@
             if(currentExerciseCategory === 'Favoriler') { applyExerciseFilters(); }
             
             // Update sheet star visually
-            const isFav = listFavBtn.classList.contains('text-neon-blue');
+            const isFav = listFavBtn.classList.contains('text-primary');
             if (isFav) {
-                sheetFavBtn.classList.add('text-neon-blue');
+                sheetFavBtn.classList.add('text-primary');
                 sheetFavBtn.classList.remove('text-on-surface-variant');
                 sheetIcon.style.fontVariationSettings = "'FILL' 1";
             } else {
-                sheetFavBtn.classList.remove('text-neon-blue');
+                sheetFavBtn.classList.remove('text-primary');
                 sheetFavBtn.classList.add('text-on-surface-variant');
                 sheetIcon.style.fontVariationSettings = "'FILL' 0";
             }
@@ -4235,12 +4237,12 @@
         function toggleFav(event, btn) {
             event.stopPropagation();
             const icon = btn.querySelector('.material-symbols-rounded');
-            if (btn.classList.contains('text-neon-blue')) {
-                btn.classList.remove('text-neon-blue');
+            if (btn.classList.contains('text-primary')) {
+                btn.classList.remove('text-primary');
                 btn.classList.add('text-on-surface-variant');
                 icon.style.fontVariationSettings = "'FILL' 0";
             } else {
-                btn.classList.add('text-neon-blue');
+                btn.classList.add('text-primary');
                 btn.classList.remove('text-on-surface-variant');
                 icon.style.fontVariationSettings = "'FILL' 1";
             }

@@ -828,19 +828,19 @@ function initFavoritesUI() {
     if(!currentUid) return;
     const favs = JSON.parse(localStorage.getItem(`miz_fav_exercises_${currentUid}`) || "[]");
     document.querySelectorAll('.exercise-item').forEach(item => {
-        const title = item.querySelector('h3').innerText;
+        const title = item.querySelector('h4').innerText;
         const btn = item.querySelector('.exercise-fav-btn');
         if(!btn) return;
         const span = btn.querySelector('span');
         if (favs.includes(title)) {
             span.style.fontVariationSettings = "'FILL' 1";
             btn.classList.remove('text-on-surface-variant');
-            btn.classList.add('text-neon-blue');
+            btn.classList.add('text-primary');
             item.dataset.fav = "true";
         } else {
             span.style.fontVariationSettings = "'FILL' 0";
             btn.classList.add('text-on-surface-variant');
-            btn.classList.remove('text-neon-blue');
+            btn.classList.remove('text-primary');
             item.dataset.fav = "false";
         }
     });
@@ -848,7 +848,7 @@ function initFavoritesUI() {
 
 function toggleFavorite(e, btn) {
     e.stopPropagation();
-    const exName = btn.closest('.exercise-item').querySelector('h3').innerText;
+    const exName = btn.closest('.exercise-item').querySelector('h4').innerText;
     let favs = JSON.parse(localStorage.getItem(`miz_fav_exercises_${currentUid}`) || "[]");
     
     if (favs.includes(exName)) {
