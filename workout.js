@@ -467,7 +467,11 @@ function renderSplitView() {
         activeSplit.days.forEach((day, idx) => {
             const isActive = day.id === activeDayId;
             const bar = document.createElement('button');
-            bar.className = `h-1.5 rounded-full transition-all duration-200 cursor-pointer ${isActive ? 'bg-background shadow-neo w-10' : 'bg-background shadow-neo/30 w-8 hover:bg-background shadow-neo/60'}`;
+            const shadowStyle = isActive 
+                ? 'box-shadow: 2px 2px 5px #D1D9E6, -2px -2px 5px #FFFFFF;' 
+                : 'box-shadow: inset 2px 2px 5px #D1D9E6, inset -2px -2px 5px #FFFFFF;';
+            bar.className = `h-2 rounded-full transition-all duration-300 cursor-pointer bg-[#F7F9FF] ${isActive ? 'w-10' : 'w-6 opacity-60 hover:opacity-100'}`;
+            bar.style = shadowStyle;
             bar.title = day.name;
             bar.onclick = () => selectActiveDay(day.id);
             dotsContainer.appendChild(bar);
