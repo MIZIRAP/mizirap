@@ -706,13 +706,13 @@
     <section id="view-exercise-library" class="view hidden bg-surface-light min-h-[100dvh] text-on-surface antialiased font-body-lg pb-[100px]">
         <div class="max-w-md mx-auto relative h-full flex flex-col">
             <!-- Header -->
-            <header class="w-full top-0 sticky z-50 bg-surface-light/70 backdrop-blur-xl border-t border-white/40 px-6 py-4 flex items-center justify-between">
+            <header class="w-full top-0 sticky z-50 bg-white/70 backdrop-blur-xl border-t border-white/40 px-6 py-4 flex items-center justify-between">
                 <button onclick="document.getElementById('view-exercise-library').classList.add('hidden'); document.getElementById('view-workout').classList.remove('hidden');" class="w-10 h-10 rounded-full neo-surface flex items-center justify-center neo-button">
-                    <span class="material-symbols-rounded text-on-surface">arrow_back</span>
+                    <span class="material-symbols-outlined text-on-surface">arrow_back</span>
                 </button>
-                <h1 class="text-lg font-bold text-primary tracking-tight">Egzersiz Kütüphanesi</h1>
+                <h1 class="text-lg font-bold text-on-surface tracking-tight">Egzersiz Kütüphanesi</h1>
                 <button class="w-10 h-10 rounded-full neo-surface flex items-center justify-center neo-button" onclick="openAddExerciseSheet()">
-                    <span class="material-symbols-rounded text-primary">add</span>
+                    <span class="material-symbols-outlined text-on-surface">add</span>
                 </button>
             </header>
 
@@ -720,7 +720,7 @@
                 <!-- Search Box -->
                 <section class="bg-surface-bright pt-2">
                     <div class="neo-inset p-4 flex items-center gap-3">
-                        <span class="material-symbols-rounded text-on-surface-variant">search</span>
+                        <span class="material-symbols-outlined text-on-surface-variant">search</span>
                         <input id="exercise-search-input" oninput="handleExerciseSearch(this.value)" class="bg-transparent border-none focus:ring-0 text-sm w-full p-0 text-on-surface" placeholder="Egzersiz Ara..." type="text"/>
                     </div>
                 </section>
@@ -728,16 +728,16 @@
                 <!-- Filter Chips -->
                 <section class="overflow-x-auto pb-2">
                     <div class="flex gap-4 px-1">
-                        <button onclick="filterExercises('Tümü', this)" class="neo-inset px-5 py-2 rounded-full text-sm font-semibold text-primary whitespace-nowrap filter-chip active">Tümü</button>
-                        <button onclick="filterExercises('Favoriler', this)" class="neo-surface px-5 py-2 rounded-full text-sm font-semibold text-on-surface-variant bg-secondary-container whitespace-nowrap neo-button filter-chip">Favoriler</button>
-                        <button onclick="filterExercises('Göğüs', this)" class="neo-surface px-5 py-2 rounded-full text-sm font-semibold text-on-surface-variant bg-secondary-container whitespace-nowrap neo-button filter-chip">Göğüs</button>
-                        <button onclick="filterExercises('Sırt', this)" class="neo-surface px-5 py-2 rounded-full text-sm font-semibold text-on-surface-variant bg-secondary-container whitespace-nowrap neo-button filter-chip">Sırt</button>
-                        <button onclick="filterExercises('Omuz', this)" class="neo-surface px-5 py-2 rounded-full text-sm font-semibold text-on-surface-variant bg-secondary-container whitespace-nowrap neo-button filter-chip">Omuz</button>
-                        <button onclick="filterExercises('Biceps', this)" class="neo-surface px-5 py-2 rounded-full text-sm font-semibold text-on-surface-variant bg-secondary-container whitespace-nowrap neo-button filter-chip">Biceps</button>
-                        <button onclick="filterExercises('Triceps', this)" class="neo-surface px-5 py-2 rounded-full text-sm font-semibold text-on-surface-variant bg-secondary-container whitespace-nowrap neo-button filter-chip">Triceps</button>
-                        <button onclick="filterExercises('Bacak', this)" class="neo-surface px-5 py-2 rounded-full text-sm font-semibold text-on-surface-variant bg-secondary-container whitespace-nowrap neo-button filter-chip">Bacak</button>
-                        <button onclick="filterExercises('Karın', this)" class="neo-surface px-5 py-2 rounded-full text-sm font-semibold text-on-surface-variant bg-secondary-container whitespace-nowrap neo-button filter-chip">Karın</button>
-                        <button onclick="filterExercises('Kalça', this)" class="neo-surface px-5 py-2 rounded-full text-sm font-semibold text-on-surface-variant bg-secondary-container whitespace-nowrap neo-button filter-chip">Kalça</button>
+                        <button onclick="filterExercises('Tümü', this)" class="neo-inset px-5 py-2 rounded-full text-sm font-semibold text-on-surface whitespace-nowrap filter-chip active">Tümü</button>
+                        <button onclick="filterExercises('Favoriler', this)" class="neo-surface px-5 py-2 rounded-full text-sm font-semibold text-on-surface-variant whitespace-nowrap neo-button filter-chip">Favoriler</button>
+                        <button onclick="filterExercises('Göğüs', this)" class="neo-surface px-5 py-2 rounded-full text-sm font-semibold text-on-surface-variant whitespace-nowrap neo-button filter-chip">Göğüs</button>
+                        <button onclick="filterExercises('Sırt', this)" class="neo-surface px-5 py-2 rounded-full text-sm font-semibold text-on-surface-variant whitespace-nowrap neo-button filter-chip">Sırt</button>
+                        <button onclick="filterExercises('Omuz', this)" class="neo-surface px-5 py-2 rounded-full text-sm font-semibold text-on-surface-variant whitespace-nowrap neo-button filter-chip">Omuz</button>
+                        <button onclick="filterExercises('Biceps', this)" class="neo-surface px-5 py-2 rounded-full text-sm font-semibold text-on-surface-variant whitespace-nowrap neo-button filter-chip">Biceps</button>
+                        <button onclick="filterExercises('Triceps', this)" class="neo-surface px-5 py-2 rounded-full text-sm font-semibold text-on-surface-variant whitespace-nowrap neo-button filter-chip">Triceps</button>
+                        <button onclick="filterExercises('Bacak', this)" class="neo-surface px-5 py-2 rounded-full text-sm font-semibold text-on-surface-variant whitespace-nowrap neo-button filter-chip">Bacak</button>
+                        <button onclick="filterExercises('Karın', this)" class="neo-surface px-5 py-2 rounded-full text-sm font-semibold text-on-surface-variant whitespace-nowrap neo-button filter-chip">Karın</button>
+                        <button onclick="filterExercises('Kalça', this)" class="neo-surface px-5 py-2 rounded-full text-sm font-semibold text-on-surface-variant whitespace-nowrap neo-button filter-chip">Kalça</button>
                     </div>
                 </section>
 
@@ -752,7 +752,7 @@
                     <div class="flex flex-col gap-2">
                         <div onclick="openExerciseSheet(this, 'Flat Barbell Bench Press')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
                     <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-primary font-bold">F</div>
+                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">F</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Flat Barbell Bench Press</h4>
                             <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Chest</p>
@@ -760,14 +760,14 @@
                     </div>
                     <div class="flex items-center gap-2">
                         <button class="p-2 text-on-surface-variant hover:text-primary transition-colors exercise-fav-btn flex items-center justify-center" data-action="toggleFav">
-                            <span class="material-symbols-rounded text-xl">star</span>
+                            <span class="material-symbols-outlined text-xl">star</span>
                         </button>
-                        <span class="material-symbols-rounded text-on-surface-variant">chevron_right</span>
+                        <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
                         <div onclick="openExerciseSheet(this, 'Flat Dumbbell Bench Press')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
                     <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-primary font-bold">F</div>
+                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">F</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Flat Dumbbell Bench Press</h4>
                             <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Chest</p>
@@ -775,14 +775,14 @@
                     </div>
                     <div class="flex items-center gap-2">
                         <button class="p-2 text-on-surface-variant hover:text-primary transition-colors exercise-fav-btn flex items-center justify-center" data-action="toggleFav">
-                            <span class="material-symbols-rounded text-xl">star</span>
+                            <span class="material-symbols-outlined text-xl">star</span>
                         </button>
-                        <span class="material-symbols-rounded text-on-surface-variant">chevron_right</span>
+                        <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
                         <div onclick="openExerciseSheet(this, 'Machine Chest Press')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
                     <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-primary font-bold">M</div>
+                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">M</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Machine Chest Press</h4>
                             <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Chest</p>
@@ -790,14 +790,14 @@
                     </div>
                     <div class="flex items-center gap-2">
                         <button class="p-2 text-on-surface-variant hover:text-primary transition-colors exercise-fav-btn flex items-center justify-center" data-action="toggleFav">
-                            <span class="material-symbols-rounded text-xl">star</span>
+                            <span class="material-symbols-outlined text-xl">star</span>
                         </button>
-                        <span class="material-symbols-rounded text-on-surface-variant">chevron_right</span>
+                        <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
                         <div onclick="openExerciseSheet(this, 'Cable Chest Press')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
                     <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-primary font-bold">C</div>
+                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">C</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Cable Chest Press</h4>
                             <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Chest</p>
@@ -805,14 +805,14 @@
                     </div>
                     <div class="flex items-center gap-2">
                         <button class="p-2 text-on-surface-variant hover:text-primary transition-colors exercise-fav-btn flex items-center justify-center" data-action="toggleFav">
-                            <span class="material-symbols-rounded text-xl">star</span>
+                            <span class="material-symbols-outlined text-xl">star</span>
                         </button>
-                        <span class="material-symbols-rounded text-on-surface-variant">chevron_right</span>
+                        <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
                         <div onclick="openExerciseSheet(this, 'Incline Barbell Bench Press')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
                     <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-primary font-bold">I</div>
+                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">I</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Incline Barbell Bench Press</h4>
                             <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Chest</p>
@@ -820,14 +820,14 @@
                     </div>
                     <div class="flex items-center gap-2">
                         <button class="p-2 text-on-surface-variant hover:text-primary transition-colors exercise-fav-btn flex items-center justify-center" data-action="toggleFav">
-                            <span class="material-symbols-rounded text-xl">star</span>
+                            <span class="material-symbols-outlined text-xl">star</span>
                         </button>
-                        <span class="material-symbols-rounded text-on-surface-variant">chevron_right</span>
+                        <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
                         <div onclick="openExerciseSheet(this, 'Incline Dumbbell Bench Press')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
                     <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-primary font-bold">I</div>
+                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">I</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Incline Dumbbell Bench Press</h4>
                             <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Chest</p>
@@ -835,14 +835,14 @@
                     </div>
                     <div class="flex items-center gap-2">
                         <button class="p-2 text-on-surface-variant hover:text-primary transition-colors exercise-fav-btn flex items-center justify-center" data-action="toggleFav">
-                            <span class="material-symbols-rounded text-xl">star</span>
+                            <span class="material-symbols-outlined text-xl">star</span>
                         </button>
-                        <span class="material-symbols-rounded text-on-surface-variant">chevron_right</span>
+                        <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
                         <div onclick="openExerciseSheet(this, 'Decline Dumbbell Press')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
                     <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-primary font-bold">D</div>
+                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">D</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Decline Dumbbell Press</h4>
                             <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Chest</p>
@@ -850,14 +850,14 @@
                     </div>
                     <div class="flex items-center gap-2">
                         <button class="p-2 text-on-surface-variant hover:text-primary transition-colors exercise-fav-btn flex items-center justify-center" data-action="toggleFav">
-                            <span class="material-symbols-rounded text-xl">star</span>
+                            <span class="material-symbols-outlined text-xl">star</span>
                         </button>
-                        <span class="material-symbols-rounded text-on-surface-variant">chevron_right</span>
+                        <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
                         <div onclick="openExerciseSheet(this, 'Cable Crossover')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
                     <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-primary font-bold">C</div>
+                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">C</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Cable Crossover</h4>
                             <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Chest</p>
@@ -865,14 +865,14 @@
                     </div>
                     <div class="flex items-center gap-2">
                         <button class="p-2 text-on-surface-variant hover:text-primary transition-colors exercise-fav-btn flex items-center justify-center" data-action="toggleFav">
-                            <span class="material-symbols-rounded text-xl">star</span>
+                            <span class="material-symbols-outlined text-xl">star</span>
                         </button>
-                        <span class="material-symbols-rounded text-on-surface-variant">chevron_right</span>
+                        <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
                         <div onclick="openExerciseSheet(this, 'Dumbbell Fly')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
                     <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-primary font-bold">D</div>
+                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">D</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Dumbbell Fly</h4>
                             <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Chest</p>
@@ -880,14 +880,14 @@
                     </div>
                     <div class="flex items-center gap-2">
                         <button class="p-2 text-on-surface-variant hover:text-primary transition-colors exercise-fav-btn flex items-center justify-center" data-action="toggleFav">
-                            <span class="material-symbols-rounded text-xl">star</span>
+                            <span class="material-symbols-outlined text-xl">star</span>
                         </button>
-                        <span class="material-symbols-rounded text-on-surface-variant">chevron_right</span>
+                        <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
                         <div onclick="openExerciseSheet(this, 'Machine Fly (Pec Deck)')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
                     <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-primary font-bold">M</div>
+                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">M</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Machine Fly (Pec Deck)</h4>
                             <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Chest</p>
@@ -895,14 +895,14 @@
                     </div>
                     <div class="flex items-center gap-2">
                         <button class="p-2 text-on-surface-variant hover:text-primary transition-colors exercise-fav-btn flex items-center justify-center" data-action="toggleFav">
-                            <span class="material-symbols-rounded text-xl">star</span>
+                            <span class="material-symbols-outlined text-xl">star</span>
                         </button>
-                        <span class="material-symbols-rounded text-on-surface-variant">chevron_right</span>
+                        <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
                         <div onclick="openExerciseSheet(this, 'Incline Cable Fly')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
                     <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-primary font-bold">I</div>
+                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">I</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Incline Cable Fly</h4>
                             <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Chest</p>
@@ -910,14 +910,14 @@
                     </div>
                     <div class="flex items-center gap-2">
                         <button class="p-2 text-on-surface-variant hover:text-primary transition-colors exercise-fav-btn flex items-center justify-center" data-action="toggleFav">
-                            <span class="material-symbols-rounded text-xl">star</span>
+                            <span class="material-symbols-outlined text-xl">star</span>
                         </button>
-                        <span class="material-symbols-rounded text-on-surface-variant">chevron_right</span>
+                        <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
                         <div onclick="openExerciseSheet(this, 'TRX Push-up (Feet Suspended)')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
                     <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-primary font-bold">T</div>
+                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">T</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">TRX Push-up (Feet Suspended)</h4>
                             <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Chest</p>
@@ -925,14 +925,14 @@
                     </div>
                     <div class="flex items-center gap-2">
                         <button class="p-2 text-on-surface-variant hover:text-primary transition-colors exercise-fav-btn flex items-center justify-center" data-action="toggleFav">
-                            <span class="material-symbols-rounded text-xl">star</span>
+                            <span class="material-symbols-outlined text-xl">star</span>
                         </button>
-                        <span class="material-symbols-rounded text-on-surface-variant">chevron_right</span>
+                        <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
                         <div onclick="openExerciseSheet(this, 'Incline Machine Chest Press')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
                     <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-primary font-bold">I</div>
+                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">I</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Incline Machine Chest Press</h4>
                             <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Chest</p>
@@ -940,9 +940,9 @@
                     </div>
                     <div class="flex items-center gap-2">
                         <button class="p-2 text-on-surface-variant hover:text-primary transition-colors exercise-fav-btn flex items-center justify-center" data-action="toggleFav">
-                            <span class="material-symbols-rounded text-xl">star</span>
+                            <span class="material-symbols-outlined text-xl">star</span>
                         </button>
-                        <span class="material-symbols-rounded text-on-surface-variant">chevron_right</span>
+                        <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
                     </div>
@@ -955,7 +955,7 @@
                     <div class="flex flex-col gap-2">
                         <div onclick="openExerciseSheet(this, 'Barbell Row')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
                     <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-primary font-bold">B</div>
+                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">B</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Barbell Row</h4>
                             <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Upper Back</p>
@@ -963,14 +963,14 @@
                     </div>
                     <div class="flex items-center gap-2">
                         <button class="p-2 text-on-surface-variant hover:text-primary transition-colors exercise-fav-btn flex items-center justify-center" data-action="toggleFav">
-                            <span class="material-symbols-rounded text-xl">star</span>
+                            <span class="material-symbols-outlined text-xl">star</span>
                         </button>
-                        <span class="material-symbols-rounded text-on-surface-variant">chevron_right</span>
+                        <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
                         <div onclick="openExerciseSheet(this, 'Dumbbell Row')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
                     <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-primary font-bold">D</div>
+                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">D</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Dumbbell Row</h4>
                             <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Upper Back</p>
@@ -978,14 +978,14 @@
                     </div>
                     <div class="flex items-center gap-2">
                         <button class="p-2 text-on-surface-variant hover:text-primary transition-colors exercise-fav-btn flex items-center justify-center" data-action="toggleFav">
-                            <span class="material-symbols-rounded text-xl">star</span>
+                            <span class="material-symbols-outlined text-xl">star</span>
                         </button>
-                        <span class="material-symbols-rounded text-on-surface-variant">chevron_right</span>
+                        <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
                         <div onclick="openExerciseSheet(this, 'T-Bar Row')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
                     <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-primary font-bold">T</div>
+                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">T</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">T-Bar Row</h4>
                             <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Upper Back</p>
@@ -993,14 +993,14 @@
                     </div>
                     <div class="flex items-center gap-2">
                         <button class="p-2 text-on-surface-variant hover:text-primary transition-colors exercise-fav-btn flex items-center justify-center" data-action="toggleFav">
-                            <span class="material-symbols-rounded text-xl">star</span>
+                            <span class="material-symbols-outlined text-xl">star</span>
                         </button>
-                        <span class="material-symbols-rounded text-on-surface-variant">chevron_right</span>
+                        <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
                         <div onclick="openExerciseSheet(this, 'Cable Seated Row')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
                     <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-primary font-bold">C</div>
+                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">C</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Cable Seated Row</h4>
                             <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Upper Back</p>
@@ -1008,14 +1008,14 @@
                     </div>
                     <div class="flex items-center gap-2">
                         <button class="p-2 text-on-surface-variant hover:text-primary transition-colors exercise-fav-btn flex items-center justify-center" data-action="toggleFav">
-                            <span class="material-symbols-rounded text-xl">star</span>
+                            <span class="material-symbols-outlined text-xl">star</span>
                         </button>
-                        <span class="material-symbols-rounded text-on-surface-variant">chevron_right</span>
+                        <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
                         <div onclick="openExerciseSheet(this, 'Machine Row')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
                     <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-primary font-bold">M</div>
+                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">M</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Machine Row</h4>
                             <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Upper Back</p>
@@ -1023,14 +1023,14 @@
                     </div>
                     <div class="flex items-center gap-2">
                         <button class="p-2 text-on-surface-variant hover:text-primary transition-colors exercise-fav-btn flex items-center justify-center" data-action="toggleFav">
-                            <span class="material-symbols-rounded text-xl">star</span>
+                            <span class="material-symbols-outlined text-xl">star</span>
                         </button>
-                        <span class="material-symbols-rounded text-on-surface-variant">chevron_right</span>
+                        <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
                         <div onclick="openExerciseSheet(this, 'Lat Pulldown')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
                     <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-primary font-bold">L</div>
+                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">L</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Lat Pulldown</h4>
                             <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Upper Back</p>
@@ -1038,14 +1038,14 @@
                     </div>
                     <div class="flex items-center gap-2">
                         <button class="p-2 text-on-surface-variant hover:text-primary transition-colors exercise-fav-btn flex items-center justify-center" data-action="toggleFav">
-                            <span class="material-symbols-rounded text-xl">star</span>
+                            <span class="material-symbols-outlined text-xl">star</span>
                         </button>
-                        <span class="material-symbols-rounded text-on-surface-variant">chevron_right</span>
+                        <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
                         <div onclick="openExerciseSheet(this, 'Close-Grip Lat Pulldown')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
                     <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-primary font-bold">C</div>
+                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">C</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Close-Grip Lat Pulldown</h4>
                             <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Upper Back</p>
@@ -1053,14 +1053,14 @@
                     </div>
                     <div class="flex items-center gap-2">
                         <button class="p-2 text-on-surface-variant hover:text-primary transition-colors exercise-fav-btn flex items-center justify-center" data-action="toggleFav">
-                            <span class="material-symbols-rounded text-xl">star</span>
+                            <span class="material-symbols-outlined text-xl">star</span>
                         </button>
-                        <span class="material-symbols-rounded text-on-surface-variant">chevron_right</span>
+                        <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
                         <div onclick="openExerciseSheet(this, 'Straight-Arm Cable Pulldown')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
                     <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-primary font-bold">S</div>
+                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">S</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Straight-Arm Cable Pulldown</h4>
                             <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Upper Back</p>
@@ -1068,14 +1068,14 @@
                     </div>
                     <div class="flex items-center gap-2">
                         <button class="p-2 text-on-surface-variant hover:text-primary transition-colors exercise-fav-btn flex items-center justify-center" data-action="toggleFav">
-                            <span class="material-symbols-rounded text-xl">star</span>
+                            <span class="material-symbols-outlined text-xl">star</span>
                         </button>
-                        <span class="material-symbols-rounded text-on-surface-variant">chevron_right</span>
+                        <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
                         <div onclick="openExerciseSheet(this, 'Pull-Up')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
                     <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-primary font-bold">P</div>
+                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">P</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Pull-Up</h4>
                             <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Upper Back</p>
@@ -1083,14 +1083,14 @@
                     </div>
                     <div class="flex items-center gap-2">
                         <button class="p-2 text-on-surface-variant hover:text-primary transition-colors exercise-fav-btn flex items-center justify-center" data-action="toggleFav">
-                            <span class="material-symbols-rounded text-xl">star</span>
+                            <span class="material-symbols-outlined text-xl">star</span>
                         </button>
-                        <span class="material-symbols-rounded text-on-surface-variant">chevron_right</span>
+                        <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
                         <div onclick="openExerciseSheet(this, 'Chin-Up')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
                     <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-primary font-bold">C</div>
+                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">C</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Chin-Up</h4>
                             <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Upper Back, Biceps</p>
@@ -1098,14 +1098,14 @@
                     </div>
                     <div class="flex items-center gap-2">
                         <button class="p-2 text-on-surface-variant hover:text-primary transition-colors exercise-fav-btn flex items-center justify-center" data-action="toggleFav">
-                            <span class="material-symbols-rounded text-xl">star</span>
+                            <span class="material-symbols-outlined text-xl">star</span>
                         </button>
-                        <span class="material-symbols-rounded text-on-surface-variant">chevron_right</span>
+                        <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
                         <div onclick="openExerciseSheet(this, 'Deadlift')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
                     <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-primary font-bold">D</div>
+                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">D</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Deadlift</h4>
                             <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Lower Back, Upper Back</p>
@@ -1113,14 +1113,14 @@
                     </div>
                     <div class="flex items-center gap-2">
                         <button class="p-2 text-on-surface-variant hover:text-primary transition-colors exercise-fav-btn flex items-center justify-center" data-action="toggleFav">
-                            <span class="material-symbols-rounded text-xl">star</span>
+                            <span class="material-symbols-outlined text-xl">star</span>
                         </button>
-                        <span class="material-symbols-rounded text-on-surface-variant">chevron_right</span>
+                        <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
                         <div onclick="openExerciseSheet(this, 'Back Extension')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
                     <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-primary font-bold">B</div>
+                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">B</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Back Extension</h4>
                             <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Lower Back</p>
@@ -1128,14 +1128,14 @@
                     </div>
                     <div class="flex items-center gap-2">
                         <button class="p-2 text-on-surface-variant hover:text-primary transition-colors exercise-fav-btn flex items-center justify-center" data-action="toggleFav">
-                            <span class="material-symbols-rounded text-xl">star</span>
+                            <span class="material-symbols-outlined text-xl">star</span>
                         </button>
-                        <span class="material-symbols-rounded text-on-surface-variant">chevron_right</span>
+                        <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
                         <div onclick="openExerciseSheet(this, 'TRX Inverted Row')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
                     <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-primary font-bold">T</div>
+                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">T</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">TRX Inverted Row</h4>
                             <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Upper Back</p>
@@ -1143,14 +1143,14 @@
                     </div>
                     <div class="flex items-center gap-2">
                         <button class="p-2 text-on-surface-variant hover:text-primary transition-colors exercise-fav-btn flex items-center justify-center" data-action="toggleFav">
-                            <span class="material-symbols-rounded text-xl">star</span>
+                            <span class="material-symbols-outlined text-xl">star</span>
                         </button>
-                        <span class="material-symbols-rounded text-on-surface-variant">chevron_right</span>
+                        <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
                         <div onclick="openExerciseSheet(this, '3-Point Quadripod Exercise (3-PQE)')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
                     <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-primary font-bold">3</div>
+                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">3</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">3-Point Quadripod Exercise (3-PQE)</h4>
                             <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Lower Back</p>
@@ -1158,14 +1158,14 @@
                     </div>
                     <div class="flex items-center gap-2">
                         <button class="p-2 text-on-surface-variant hover:text-primary transition-colors exercise-fav-btn flex items-center justify-center" data-action="toggleFav">
-                            <span class="material-symbols-rounded text-xl">star</span>
+                            <span class="material-symbols-outlined text-xl">star</span>
                         </button>
-                        <span class="material-symbols-rounded text-on-surface-variant">chevron_right</span>
+                        <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
                         <div onclick="openExerciseSheet(this, 'Wide-Grip Lat Pulldown')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
                     <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-primary font-bold">W</div>
+                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">W</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Wide-Grip Lat Pulldown</h4>
                             <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Upper Back</p>
@@ -1173,14 +1173,14 @@
                     </div>
                     <div class="flex items-center gap-2">
                         <button class="p-2 text-on-surface-variant hover:text-primary transition-colors exercise-fav-btn flex items-center justify-center" data-action="toggleFav">
-                            <span class="material-symbols-rounded text-xl">star</span>
+                            <span class="material-symbols-outlined text-xl">star</span>
                         </button>
-                        <span class="material-symbols-rounded text-on-surface-variant">chevron_right</span>
+                        <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
                         <div onclick="openExerciseSheet(this, 'Wide-Grip Cable Row')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
                     <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-primary font-bold">W</div>
+                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">W</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Wide-Grip Cable Row</h4>
                             <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Upper Back</p>
@@ -1188,14 +1188,14 @@
                     </div>
                     <div class="flex items-center gap-2">
                         <button class="p-2 text-on-surface-variant hover:text-primary transition-colors exercise-fav-btn flex items-center justify-center" data-action="toggleFav">
-                            <span class="material-symbols-rounded text-xl">star</span>
+                            <span class="material-symbols-outlined text-xl">star</span>
                         </button>
-                        <span class="material-symbols-rounded text-on-surface-variant">chevron_right</span>
+                        <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
                         <div onclick="openExerciseSheet(this, 'Close-Grip Cable Row')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
                     <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-primary font-bold">C</div>
+                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">C</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Close-Grip Cable Row</h4>
                             <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Upper Back</p>
@@ -1203,9 +1203,9 @@
                     </div>
                     <div class="flex items-center gap-2">
                         <button class="p-2 text-on-surface-variant hover:text-primary transition-colors exercise-fav-btn flex items-center justify-center" data-action="toggleFav">
-                            <span class="material-symbols-rounded text-xl">star</span>
+                            <span class="material-symbols-outlined text-xl">star</span>
                         </button>
-                        <span class="material-symbols-rounded text-on-surface-variant">chevron_right</span>
+                        <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
                     </div>
@@ -1218,7 +1218,7 @@
                     <div class="flex flex-col gap-2">
                         <div onclick="openExerciseSheet(this, 'Barbell Overhead Press')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
                     <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-primary font-bold">B</div>
+                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">B</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Barbell Overhead Press</h4>
                             <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Deltoids</p>
@@ -1226,14 +1226,14 @@
                     </div>
                     <div class="flex items-center gap-2">
                         <button class="p-2 text-on-surface-variant hover:text-primary transition-colors exercise-fav-btn flex items-center justify-center" data-action="toggleFav">
-                            <span class="material-symbols-rounded text-xl">star</span>
+                            <span class="material-symbols-outlined text-xl">star</span>
                         </button>
-                        <span class="material-symbols-rounded text-on-surface-variant">chevron_right</span>
+                        <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
                         <div onclick="openExerciseSheet(this, 'Dumbbell Shoulder Press')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
                     <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-primary font-bold">D</div>
+                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">D</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Dumbbell Shoulder Press</h4>
                             <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Deltoids</p>
@@ -1241,14 +1241,14 @@
                     </div>
                     <div class="flex items-center gap-2">
                         <button class="p-2 text-on-surface-variant hover:text-primary transition-colors exercise-fav-btn flex items-center justify-center" data-action="toggleFav">
-                            <span class="material-symbols-rounded text-xl">star</span>
+                            <span class="material-symbols-outlined text-xl">star</span>
                         </button>
-                        <span class="material-symbols-rounded text-on-surface-variant">chevron_right</span>
+                        <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
                         <div onclick="openExerciseSheet(this, 'Machine Shoulder Press')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
                     <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-primary font-bold">M</div>
+                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">M</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Machine Shoulder Press</h4>
                             <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Deltoids</p>
@@ -1256,14 +1256,14 @@
                     </div>
                     <div class="flex items-center gap-2">
                         <button class="p-2 text-on-surface-variant hover:text-primary transition-colors exercise-fav-btn flex items-center justify-center" data-action="toggleFav">
-                            <span class="material-symbols-rounded text-xl">star</span>
+                            <span class="material-symbols-outlined text-xl">star</span>
                         </button>
-                        <span class="material-symbols-rounded text-on-surface-variant">chevron_right</span>
+                        <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
                         <div onclick="openExerciseSheet(this, 'Cable Shoulder Press')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
                     <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-primary font-bold">C</div>
+                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">C</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Cable Shoulder Press</h4>
                             <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Deltoids</p>
@@ -1271,14 +1271,14 @@
                     </div>
                     <div class="flex items-center gap-2">
                         <button class="p-2 text-on-surface-variant hover:text-primary transition-colors exercise-fav-btn flex items-center justify-center" data-action="toggleFav">
-                            <span class="material-symbols-rounded text-xl">star</span>
+                            <span class="material-symbols-outlined text-xl">star</span>
                         </button>
-                        <span class="material-symbols-rounded text-on-surface-variant">chevron_right</span>
+                        <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
                         <div onclick="openExerciseSheet(this, 'Dumbbell Lateral Raise')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
                     <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-primary font-bold">D</div>
+                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">D</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Dumbbell Lateral Raise</h4>
                             <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Deltoids</p>
@@ -1286,14 +1286,14 @@
                     </div>
                     <div class="flex items-center gap-2">
                         <button class="p-2 text-on-surface-variant hover:text-primary transition-colors exercise-fav-btn flex items-center justify-center" data-action="toggleFav">
-                            <span class="material-symbols-rounded text-xl">star</span>
+                            <span class="material-symbols-outlined text-xl">star</span>
                         </button>
-                        <span class="material-symbols-rounded text-on-surface-variant">chevron_right</span>
+                        <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
                         <div onclick="openExerciseSheet(this, 'Cable Lateral Raise')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
                     <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-primary font-bold">C</div>
+                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">C</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Cable Lateral Raise</h4>
                             <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Deltoids</p>
@@ -1301,14 +1301,14 @@
                     </div>
                     <div class="flex items-center gap-2">
                         <button class="p-2 text-on-surface-variant hover:text-primary transition-colors exercise-fav-btn flex items-center justify-center" data-action="toggleFav">
-                            <span class="material-symbols-rounded text-xl">star</span>
+                            <span class="material-symbols-outlined text-xl">star</span>
                         </button>
-                        <span class="material-symbols-rounded text-on-surface-variant">chevron_right</span>
+                        <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
                         <div onclick="openExerciseSheet(this, 'Machine Lateral Raise')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
                     <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-primary font-bold">M</div>
+                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">M</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Machine Lateral Raise</h4>
                             <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Deltoids</p>
@@ -1316,14 +1316,14 @@
                     </div>
                     <div class="flex items-center gap-2">
                         <button class="p-2 text-on-surface-variant hover:text-primary transition-colors exercise-fav-btn flex items-center justify-center" data-action="toggleFav">
-                            <span class="material-symbols-rounded text-xl">star</span>
+                            <span class="material-symbols-outlined text-xl">star</span>
                         </button>
-                        <span class="material-symbols-rounded text-on-surface-variant">chevron_right</span>
+                        <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
                         <div onclick="openExerciseSheet(this, 'Dumbbell Front Raise')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
                     <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-primary font-bold">D</div>
+                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">D</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Dumbbell Front Raise</h4>
                             <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Deltoids</p>
@@ -1331,14 +1331,14 @@
                     </div>
                     <div class="flex items-center gap-2">
                         <button class="p-2 text-on-surface-variant hover:text-primary transition-colors exercise-fav-btn flex items-center justify-center" data-action="toggleFav">
-                            <span class="material-symbols-rounded text-xl">star</span>
+                            <span class="material-symbols-outlined text-xl">star</span>
                         </button>
-                        <span class="material-symbols-rounded text-on-surface-variant">chevron_right</span>
+                        <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
                         <div onclick="openExerciseSheet(this, 'Reverse Pec Deck Fly')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
                     <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-primary font-bold">R</div>
+                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">R</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Reverse Pec Deck Fly</h4>
                             <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Deltoids, Upper Back</p>
@@ -1346,14 +1346,14 @@
                     </div>
                     <div class="flex items-center gap-2">
                         <button class="p-2 text-on-surface-variant hover:text-primary transition-colors exercise-fav-btn flex items-center justify-center" data-action="toggleFav">
-                            <span class="material-symbols-rounded text-xl">star</span>
+                            <span class="material-symbols-outlined text-xl">star</span>
                         </button>
-                        <span class="material-symbols-rounded text-on-surface-variant">chevron_right</span>
+                        <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
                         <div onclick="openExerciseSheet(this, 'Dumbbell Rear Delt Row')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
                     <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-primary font-bold">D</div>
+                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">D</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Dumbbell Rear Delt Row</h4>
                             <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Deltoids, Upper Back</p>
@@ -1361,14 +1361,14 @@
                     </div>
                     <div class="flex items-center gap-2">
                         <button class="p-2 text-on-surface-variant hover:text-primary transition-colors exercise-fav-btn flex items-center justify-center" data-action="toggleFav">
-                            <span class="material-symbols-rounded text-xl">star</span>
+                            <span class="material-symbols-outlined text-xl">star</span>
                         </button>
-                        <span class="material-symbols-rounded text-on-surface-variant">chevron_right</span>
+                        <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
                         <div onclick="openExerciseSheet(this, 'Cable Face Pull')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
                     <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-primary font-bold">C</div>
+                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">C</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Cable Face Pull</h4>
                             <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Deltoids, Upper Back</p>
@@ -1376,14 +1376,14 @@
                     </div>
                     <div class="flex items-center gap-2">
                         <button class="p-2 text-on-surface-variant hover:text-primary transition-colors exercise-fav-btn flex items-center justify-center" data-action="toggleFav">
-                            <span class="material-symbols-rounded text-xl">star</span>
+                            <span class="material-symbols-outlined text-xl">star</span>
                         </button>
-                        <span class="material-symbols-rounded text-on-surface-variant">chevron_right</span>
+                        <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
                         <div onclick="openExerciseSheet(this, 'Incline Bench I-Y-T Raise')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
                     <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-primary font-bold">I</div>
+                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">I</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Incline Bench I-Y-T Raise</h4>
                             <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Trapezius, Deltoids</p>
@@ -1391,9 +1391,9 @@
                     </div>
                     <div class="flex items-center gap-2">
                         <button class="p-2 text-on-surface-variant hover:text-primary transition-colors exercise-fav-btn flex items-center justify-center" data-action="toggleFav">
-                            <span class="material-symbols-rounded text-xl">star</span>
+                            <span class="material-symbols-outlined text-xl">star</span>
                         </button>
-                        <span class="material-symbols-rounded text-on-surface-variant">chevron_right</span>
+                        <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
                     </div>
@@ -1406,7 +1406,7 @@
                     <div class="flex flex-col gap-2">
                         <div onclick="openExerciseSheet(this, 'Barbell Curl')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
                     <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-primary font-bold">B</div>
+                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">B</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Barbell Curl</h4>
                             <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Biceps</p>
@@ -1414,14 +1414,14 @@
                     </div>
                     <div class="flex items-center gap-2">
                         <button class="p-2 text-on-surface-variant hover:text-primary transition-colors exercise-fav-btn flex items-center justify-center" data-action="toggleFav">
-                            <span class="material-symbols-rounded text-xl">star</span>
+                            <span class="material-symbols-outlined text-xl">star</span>
                         </button>
-                        <span class="material-symbols-rounded text-on-surface-variant">chevron_right</span>
+                        <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
                         <div onclick="openExerciseSheet(this, 'Dumbbell Curl')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
                     <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-primary font-bold">D</div>
+                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">D</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Dumbbell Curl</h4>
                             <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Biceps</p>
@@ -1429,14 +1429,14 @@
                     </div>
                     <div class="flex items-center gap-2">
                         <button class="p-2 text-on-surface-variant hover:text-primary transition-colors exercise-fav-btn flex items-center justify-center" data-action="toggleFav">
-                            <span class="material-symbols-rounded text-xl">star</span>
+                            <span class="material-symbols-outlined text-xl">star</span>
                         </button>
-                        <span class="material-symbols-rounded text-on-surface-variant">chevron_right</span>
+                        <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
                         <div onclick="openExerciseSheet(this, 'Cable Curl')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
                     <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-primary font-bold">C</div>
+                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">C</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Cable Curl</h4>
                             <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Biceps</p>
@@ -1444,14 +1444,14 @@
                     </div>
                     <div class="flex items-center gap-2">
                         <button class="p-2 text-on-surface-variant hover:text-primary transition-colors exercise-fav-btn flex items-center justify-center" data-action="toggleFav">
-                            <span class="material-symbols-rounded text-xl">star</span>
+                            <span class="material-symbols-outlined text-xl">star</span>
                         </button>
-                        <span class="material-symbols-rounded text-on-surface-variant">chevron_right</span>
+                        <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
                         <div onclick="openExerciseSheet(this, 'Machine Preacher Curl')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
                     <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-primary font-bold">M</div>
+                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">M</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Machine Preacher Curl</h4>
                             <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Biceps</p>
@@ -1459,14 +1459,14 @@
                     </div>
                     <div class="flex items-center gap-2">
                         <button class="p-2 text-on-surface-variant hover:text-primary transition-colors exercise-fav-btn flex items-center justify-center" data-action="toggleFav">
-                            <span class="material-symbols-rounded text-xl">star</span>
+                            <span class="material-symbols-outlined text-xl">star</span>
                         </button>
-                        <span class="material-symbols-rounded text-on-surface-variant">chevron_right</span>
+                        <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
                         <div onclick="openExerciseSheet(this, 'EZ-Bar Preacher Curl')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
                     <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-primary font-bold">E</div>
+                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">E</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">EZ-Bar Preacher Curl</h4>
                             <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Biceps</p>
@@ -1474,14 +1474,14 @@
                     </div>
                     <div class="flex items-center gap-2">
                         <button class="p-2 text-on-surface-variant hover:text-primary transition-colors exercise-fav-btn flex items-center justify-center" data-action="toggleFav">
-                            <span class="material-symbols-rounded text-xl">star</span>
+                            <span class="material-symbols-outlined text-xl">star</span>
                         </button>
-                        <span class="material-symbols-rounded text-on-surface-variant">chevron_right</span>
+                        <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
                         <div onclick="openExerciseSheet(this, 'Dumbbell Hammer Curl')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
                     <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-primary font-bold">D</div>
+                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">D</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Dumbbell Hammer Curl</h4>
                             <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Biceps</p>
@@ -1489,14 +1489,14 @@
                     </div>
                     <div class="flex items-center gap-2">
                         <button class="p-2 text-on-surface-variant hover:text-primary transition-colors exercise-fav-btn flex items-center justify-center" data-action="toggleFav">
-                            <span class="material-symbols-rounded text-xl">star</span>
+                            <span class="material-symbols-outlined text-xl">star</span>
                         </button>
-                        <span class="material-symbols-rounded text-on-surface-variant">chevron_right</span>
+                        <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
                         <div onclick="openExerciseSheet(this, 'Cable Hammer Curl')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
                     <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-primary font-bold">C</div>
+                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">C</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Cable Hammer Curl</h4>
                             <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Biceps</p>
@@ -1504,14 +1504,14 @@
                     </div>
                     <div class="flex items-center gap-2">
                         <button class="p-2 text-on-surface-variant hover:text-primary transition-colors exercise-fav-btn flex items-center justify-center" data-action="toggleFav">
-                            <span class="material-symbols-rounded text-xl">star</span>
+                            <span class="material-symbols-outlined text-xl">star</span>
                         </button>
-                        <span class="material-symbols-rounded text-on-surface-variant">chevron_right</span>
+                        <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
                         <div onclick="openExerciseSheet(this, 'Incline Dumbbell Curl')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
                     <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-primary font-bold">I</div>
+                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">I</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Incline Dumbbell Curl</h4>
                             <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Biceps</p>
@@ -1519,14 +1519,14 @@
                     </div>
                     <div class="flex items-center gap-2">
                         <button class="p-2 text-on-surface-variant hover:text-primary transition-colors exercise-fav-btn flex items-center justify-center" data-action="toggleFav">
-                            <span class="material-symbols-rounded text-xl">star</span>
+                            <span class="material-symbols-outlined text-xl">star</span>
                         </button>
-                        <span class="material-symbols-rounded text-on-surface-variant">chevron_right</span>
+                        <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
                         <div onclick="openExerciseSheet(this, 'Concentration Curl')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
                     <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-primary font-bold">C</div>
+                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">C</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Concentration Curl</h4>
                             <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Biceps</p>
@@ -1534,14 +1534,14 @@
                     </div>
                     <div class="flex items-center gap-2">
                         <button class="p-2 text-on-surface-variant hover:text-primary transition-colors exercise-fav-btn flex items-center justify-center" data-action="toggleFav">
-                            <span class="material-symbols-rounded text-xl">star</span>
+                            <span class="material-symbols-outlined text-xl">star</span>
                         </button>
-                        <span class="material-symbols-rounded text-on-surface-variant">chevron_right</span>
+                        <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
                         <div onclick="openExerciseSheet(this, 'High Cable Curl')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
                     <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-primary font-bold">H</div>
+                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">H</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">High Cable Curl</h4>
                             <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Biceps</p>
@@ -1549,14 +1549,14 @@
                     </div>
                     <div class="flex items-center gap-2">
                         <button class="p-2 text-on-surface-variant hover:text-primary transition-colors exercise-fav-btn flex items-center justify-center" data-action="toggleFav">
-                            <span class="material-symbols-rounded text-xl">star</span>
+                            <span class="material-symbols-outlined text-xl">star</span>
                         </button>
-                        <span class="material-symbols-rounded text-on-surface-variant">chevron_right</span>
+                        <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
                         <div onclick="openExerciseSheet(this, 'Reverse Barbell Curl')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
                     <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-primary font-bold">R</div>
+                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">R</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Reverse Barbell Curl</h4>
                             <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Biceps, Forearm</p>
@@ -1564,9 +1564,9 @@
                     </div>
                     <div class="flex items-center gap-2">
                         <button class="p-2 text-on-surface-variant hover:text-primary transition-colors exercise-fav-btn flex items-center justify-center" data-action="toggleFav">
-                            <span class="material-symbols-rounded text-xl">star</span>
+                            <span class="material-symbols-outlined text-xl">star</span>
                         </button>
-                        <span class="material-symbols-rounded text-on-surface-variant">chevron_right</span>
+                        <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
                     </div>
@@ -1579,7 +1579,7 @@
                     <div class="flex flex-col gap-2">
                         <div onclick="openExerciseSheet(this, 'Cable Triceps Pushdown')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
                     <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-primary font-bold">C</div>
+                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">C</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Cable Triceps Pushdown</h4>
                             <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Triceps</p>
@@ -1587,14 +1587,14 @@
                     </div>
                     <div class="flex items-center gap-2">
                         <button class="p-2 text-on-surface-variant hover:text-primary transition-colors exercise-fav-btn flex items-center justify-center" data-action="toggleFav">
-                            <span class="material-symbols-rounded text-xl">star</span>
+                            <span class="material-symbols-outlined text-xl">star</span>
                         </button>
-                        <span class="material-symbols-rounded text-on-surface-variant">chevron_right</span>
+                        <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
                         <div onclick="openExerciseSheet(this, 'Cable Rope Triceps Pushdown')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
                     <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-primary font-bold">C</div>
+                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">C</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Cable Rope Triceps Pushdown</h4>
                             <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Triceps</p>
@@ -1602,14 +1602,14 @@
                     </div>
                     <div class="flex items-center gap-2">
                         <button class="p-2 text-on-surface-variant hover:text-primary transition-colors exercise-fav-btn flex items-center justify-center" data-action="toggleFav">
-                            <span class="material-symbols-rounded text-xl">star</span>
+                            <span class="material-symbols-outlined text-xl">star</span>
                         </button>
-                        <span class="material-symbols-rounded text-on-surface-variant">chevron_right</span>
+                        <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
                         <div onclick="openExerciseSheet(this, 'Overhead Cable Triceps Extension')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
                     <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-primary font-bold">O</div>
+                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">O</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Overhead Cable Triceps Extension</h4>
                             <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Triceps</p>
@@ -1617,14 +1617,14 @@
                     </div>
                     <div class="flex items-center gap-2">
                         <button class="p-2 text-on-surface-variant hover:text-primary transition-colors exercise-fav-btn flex items-center justify-center" data-action="toggleFav">
-                            <span class="material-symbols-rounded text-xl">star</span>
+                            <span class="material-symbols-outlined text-xl">star</span>
                         </button>
-                        <span class="material-symbols-rounded text-on-surface-variant">chevron_right</span>
+                        <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
                         <div onclick="openExerciseSheet(this, 'Dumbbell Overhead Triceps Extension')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
                     <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-primary font-bold">D</div>
+                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">D</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Dumbbell Overhead Triceps Extension</h4>
                             <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Triceps</p>
@@ -1632,14 +1632,14 @@
                     </div>
                     <div class="flex items-center gap-2">
                         <button class="p-2 text-on-surface-variant hover:text-primary transition-colors exercise-fav-btn flex items-center justify-center" data-action="toggleFav">
-                            <span class="material-symbols-rounded text-xl">star</span>
+                            <span class="material-symbols-outlined text-xl">star</span>
                         </button>
-                        <span class="material-symbols-rounded text-on-surface-variant">chevron_right</span>
+                        <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
                         <div onclick="openExerciseSheet(this, 'Skull Crusher (EZ-Bar)')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
                     <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-primary font-bold">S</div>
+                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">S</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Skull Crusher (EZ-Bar)</h4>
                             <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Triceps</p>
@@ -1647,14 +1647,14 @@
                     </div>
                     <div class="flex items-center gap-2">
                         <button class="p-2 text-on-surface-variant hover:text-primary transition-colors exercise-fav-btn flex items-center justify-center" data-action="toggleFav">
-                            <span class="material-symbols-rounded text-xl">star</span>
+                            <span class="material-symbols-outlined text-xl">star</span>
                         </button>
-                        <span class="material-symbols-rounded text-on-surface-variant">chevron_right</span>
+                        <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
                         <div onclick="openExerciseSheet(this, 'Dumbbell Skull Crusher')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
                     <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-primary font-bold">D</div>
+                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">D</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Dumbbell Skull Crusher</h4>
                             <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Triceps</p>
@@ -1662,14 +1662,14 @@
                     </div>
                     <div class="flex items-center gap-2">
                         <button class="p-2 text-on-surface-variant hover:text-primary transition-colors exercise-fav-btn flex items-center justify-center" data-action="toggleFav">
-                            <span class="material-symbols-rounded text-xl">star</span>
+                            <span class="material-symbols-outlined text-xl">star</span>
                         </button>
-                        <span class="material-symbols-rounded text-on-surface-variant">chevron_right</span>
+                        <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
                         <div onclick="openExerciseSheet(this, 'Barbell Close-Grip Bench Press')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
                     <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-primary font-bold">B</div>
+                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">B</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Barbell Close-Grip Bench Press</h4>
                             <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Triceps</p>
@@ -1677,14 +1677,14 @@
                     </div>
                     <div class="flex items-center gap-2">
                         <button class="p-2 text-on-surface-variant hover:text-primary transition-colors exercise-fav-btn flex items-center justify-center" data-action="toggleFav">
-                            <span class="material-symbols-rounded text-xl">star</span>
+                            <span class="material-symbols-outlined text-xl">star</span>
                         </button>
-                        <span class="material-symbols-rounded text-on-surface-variant">chevron_right</span>
+                        <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
                         <div onclick="openExerciseSheet(this, 'Dumbbell Kickback')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
                     <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-primary font-bold">D</div>
+                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">D</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Dumbbell Kickback</h4>
                             <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Triceps</p>
@@ -1692,14 +1692,14 @@
                     </div>
                     <div class="flex items-center gap-2">
                         <button class="p-2 text-on-surface-variant hover:text-primary transition-colors exercise-fav-btn flex items-center justify-center" data-action="toggleFav">
-                            <span class="material-symbols-rounded text-xl">star</span>
+                            <span class="material-symbols-outlined text-xl">star</span>
                         </button>
-                        <span class="material-symbols-rounded text-on-surface-variant">chevron_right</span>
+                        <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
                         <div onclick="openExerciseSheet(this, 'Cable Kickback')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
                     <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-primary font-bold">C</div>
+                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">C</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Cable Kickback</h4>
                             <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Triceps</p>
@@ -1707,14 +1707,14 @@
                     </div>
                     <div class="flex items-center gap-2">
                         <button class="p-2 text-on-surface-variant hover:text-primary transition-colors exercise-fav-btn flex items-center justify-center" data-action="toggleFav">
-                            <span class="material-symbols-rounded text-xl">star</span>
+                            <span class="material-symbols-outlined text-xl">star</span>
                         </button>
-                        <span class="material-symbols-rounded text-on-surface-variant">chevron_right</span>
+                        <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
                         <div onclick="openExerciseSheet(this, 'Machine Triceps Extension')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
                     <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-primary font-bold">M</div>
+                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">M</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Machine Triceps Extension</h4>
                             <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Triceps</p>
@@ -1722,14 +1722,14 @@
                     </div>
                     <div class="flex items-center gap-2">
                         <button class="p-2 text-on-surface-variant hover:text-primary transition-colors exercise-fav-btn flex items-center justify-center" data-action="toggleFav">
-                            <span class="material-symbols-rounded text-xl">star</span>
+                            <span class="material-symbols-outlined text-xl">star</span>
                         </button>
-                        <span class="material-symbols-rounded text-on-surface-variant">chevron_right</span>
+                        <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
                         <div onclick="openExerciseSheet(this, 'Triceps Dips')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
                     <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-primary font-bold">T</div>
+                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">T</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Triceps Dips</h4>
                             <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Triceps</p>
@@ -1737,9 +1737,9 @@
                     </div>
                     <div class="flex items-center gap-2">
                         <button class="p-2 text-on-surface-variant hover:text-primary transition-colors exercise-fav-btn flex items-center justify-center" data-action="toggleFav">
-                            <span class="material-symbols-rounded text-xl">star</span>
+                            <span class="material-symbols-outlined text-xl">star</span>
                         </button>
-                        <span class="material-symbols-rounded text-on-surface-variant">chevron_right</span>
+                        <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
                     </div>
@@ -1752,7 +1752,7 @@
                     <div class="flex flex-col gap-2">
                         <div onclick="openExerciseSheet(this, 'Barbell Squat')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
                     <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-primary font-bold">B</div>
+                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">B</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Barbell Squat</h4>
                             <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Quadriceps</p>
@@ -1760,14 +1760,14 @@
                     </div>
                     <div class="flex items-center gap-2">
                         <button class="p-2 text-on-surface-variant hover:text-primary transition-colors exercise-fav-btn flex items-center justify-center" data-action="toggleFav">
-                            <span class="material-symbols-rounded text-xl">star</span>
+                            <span class="material-symbols-outlined text-xl">star</span>
                         </button>
-                        <span class="material-symbols-rounded text-on-surface-variant">chevron_right</span>
+                        <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
                         <div onclick="openExerciseSheet(this, 'Dumbbell Goblet Squat')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
                     <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-primary font-bold">D</div>
+                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">D</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Dumbbell Goblet Squat</h4>
                             <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Quadriceps</p>
@@ -1775,14 +1775,14 @@
                     </div>
                     <div class="flex items-center gap-2">
                         <button class="p-2 text-on-surface-variant hover:text-primary transition-colors exercise-fav-btn flex items-center justify-center" data-action="toggleFav">
-                            <span class="material-symbols-rounded text-xl">star</span>
+                            <span class="material-symbols-outlined text-xl">star</span>
                         </button>
-                        <span class="material-symbols-rounded text-on-surface-variant">chevron_right</span>
+                        <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
                         <div onclick="openExerciseSheet(this, 'Smith Machine Squat')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
                     <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-primary font-bold">S</div>
+                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">S</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Smith Machine Squat</h4>
                             <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Quadriceps</p>
@@ -1790,14 +1790,14 @@
                     </div>
                     <div class="flex items-center gap-2">
                         <button class="p-2 text-on-surface-variant hover:text-primary transition-colors exercise-fav-btn flex items-center justify-center" data-action="toggleFav">
-                            <span class="material-symbols-rounded text-xl">star</span>
+                            <span class="material-symbols-outlined text-xl">star</span>
                         </button>
-                        <span class="material-symbols-rounded text-on-surface-variant">chevron_right</span>
+                        <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
                         <div onclick="openExerciseSheet(this, 'Leg Press Machine')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
                     <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-primary font-bold">L</div>
+                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">L</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Leg Press Machine</h4>
                             <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Quadriceps</p>
@@ -1805,14 +1805,14 @@
                     </div>
                     <div class="flex items-center gap-2">
                         <button class="p-2 text-on-surface-variant hover:text-primary transition-colors exercise-fav-btn flex items-center justify-center" data-action="toggleFav">
-                            <span class="material-symbols-rounded text-xl">star</span>
+                            <span class="material-symbols-outlined text-xl">star</span>
                         </button>
-                        <span class="material-symbols-rounded text-on-surface-variant">chevron_right</span>
+                        <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
                         <div onclick="openExerciseSheet(this, 'Hack Squat Machine')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
                     <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-primary font-bold">H</div>
+                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">H</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Hack Squat Machine</h4>
                             <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Quadriceps</p>
@@ -1820,14 +1820,14 @@
                     </div>
                     <div class="flex items-center gap-2">
                         <button class="p-2 text-on-surface-variant hover:text-primary transition-colors exercise-fav-btn flex items-center justify-center" data-action="toggleFav">
-                            <span class="material-symbols-rounded text-xl">star</span>
+                            <span class="material-symbols-outlined text-xl">star</span>
                         </button>
-                        <span class="material-symbols-rounded text-on-surface-variant">chevron_right</span>
+                        <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
                         <div onclick="openExerciseSheet(this, 'Barbell Lunge')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
                     <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-primary font-bold">B</div>
+                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">B</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Barbell Lunge</h4>
                             <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Quadriceps, Gluteal</p>
@@ -1835,14 +1835,14 @@
                     </div>
                     <div class="flex items-center gap-2">
                         <button class="p-2 text-on-surface-variant hover:text-primary transition-colors exercise-fav-btn flex items-center justify-center" data-action="toggleFav">
-                            <span class="material-symbols-rounded text-xl">star</span>
+                            <span class="material-symbols-outlined text-xl">star</span>
                         </button>
-                        <span class="material-symbols-rounded text-on-surface-variant">chevron_right</span>
+                        <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
                         <div onclick="openExerciseSheet(this, 'Dumbbell Lunge')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
                     <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-primary font-bold">D</div>
+                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">D</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Dumbbell Lunge</h4>
                             <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Quadriceps, Gluteal</p>
@@ -1850,14 +1850,14 @@
                     </div>
                     <div class="flex items-center gap-2">
                         <button class="p-2 text-on-surface-variant hover:text-primary transition-colors exercise-fav-btn flex items-center justify-center" data-action="toggleFav">
-                            <span class="material-symbols-rounded text-xl">star</span>
+                            <span class="material-symbols-outlined text-xl">star</span>
                         </button>
-                        <span class="material-symbols-rounded text-on-surface-variant">chevron_right</span>
+                        <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
                         <div onclick="openExerciseSheet(this, 'Dumbbell Bulgarian Split Squat')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
                     <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-primary font-bold">D</div>
+                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">D</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Dumbbell Bulgarian Split Squat</h4>
                             <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Quadriceps</p>
@@ -1865,14 +1865,14 @@
                     </div>
                     <div class="flex items-center gap-2">
                         <button class="p-2 text-on-surface-variant hover:text-primary transition-colors exercise-fav-btn flex items-center justify-center" data-action="toggleFav">
-                            <span class="material-symbols-rounded text-xl">star</span>
+                            <span class="material-symbols-outlined text-xl">star</span>
                         </button>
-                        <span class="material-symbols-rounded text-on-surface-variant">chevron_right</span>
+                        <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
                         <div onclick="openExerciseSheet(this, 'Leg Extension Machine')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
                     <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-primary font-bold">L</div>
+                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">L</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Leg Extension Machine</h4>
                             <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Quadriceps</p>
@@ -1880,14 +1880,14 @@
                     </div>
                     <div class="flex items-center gap-2">
                         <button class="p-2 text-on-surface-variant hover:text-primary transition-colors exercise-fav-btn flex items-center justify-center" data-action="toggleFav">
-                            <span class="material-symbols-rounded text-xl">star</span>
+                            <span class="material-symbols-outlined text-xl">star</span>
                         </button>
-                        <span class="material-symbols-rounded text-on-surface-variant">chevron_right</span>
+                        <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
                         <div onclick="openExerciseSheet(this, 'Seated Leg Curl Machine')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
                     <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-primary font-bold">S</div>
+                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">S</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Seated Leg Curl Machine</h4>
                             <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Hamstring</p>
@@ -1895,14 +1895,14 @@
                     </div>
                     <div class="flex items-center gap-2">
                         <button class="p-2 text-on-surface-variant hover:text-primary transition-colors exercise-fav-btn flex items-center justify-center" data-action="toggleFav">
-                            <span class="material-symbols-rounded text-xl">star</span>
+                            <span class="material-symbols-outlined text-xl">star</span>
                         </button>
-                        <span class="material-symbols-rounded text-on-surface-variant">chevron_right</span>
+                        <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
                         <div onclick="openExerciseSheet(this, 'Lying Leg Curl Machine')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
                     <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-primary font-bold">L</div>
+                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">L</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Lying Leg Curl Machine</h4>
                             <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Hamstring</p>
@@ -1910,14 +1910,14 @@
                     </div>
                     <div class="flex items-center gap-2">
                         <button class="p-2 text-on-surface-variant hover:text-primary transition-colors exercise-fav-btn flex items-center justify-center" data-action="toggleFav">
-                            <span class="material-symbols-rounded text-xl">star</span>
+                            <span class="material-symbols-outlined text-xl">star</span>
                         </button>
-                        <span class="material-symbols-rounded text-on-surface-variant">chevron_right</span>
+                        <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
                         <div onclick="openExerciseSheet(this, 'Standing Calf Raise Machine')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
                     <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-primary font-bold">S</div>
+                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">S</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Standing Calf Raise Machine</h4>
                             <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Calves</p>
@@ -1925,14 +1925,14 @@
                     </div>
                     <div class="flex items-center gap-2">
                         <button class="p-2 text-on-surface-variant hover:text-primary transition-colors exercise-fav-btn flex items-center justify-center" data-action="toggleFav">
-                            <span class="material-symbols-rounded text-xl">star</span>
+                            <span class="material-symbols-outlined text-xl">star</span>
                         </button>
-                        <span class="material-symbols-rounded text-on-surface-variant">chevron_right</span>
+                        <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
                         <div onclick="openExerciseSheet(this, 'Seated Calf Raise Machine')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
                     <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-primary font-bold">S</div>
+                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">S</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Seated Calf Raise Machine</h4>
                             <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Calves</p>
@@ -1940,14 +1940,14 @@
                     </div>
                     <div class="flex items-center gap-2">
                         <button class="p-2 text-on-surface-variant hover:text-primary transition-colors exercise-fav-btn flex items-center justify-center" data-action="toggleFav">
-                            <span class="material-symbols-rounded text-xl">star</span>
+                            <span class="material-symbols-outlined text-xl">star</span>
                         </button>
-                        <span class="material-symbols-rounded text-on-surface-variant">chevron_right</span>
+                        <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
                         <div onclick="openExerciseSheet(this, 'Dumbbell Calf Raise')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
                     <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-primary font-bold">D</div>
+                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">D</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Dumbbell Calf Raise</h4>
                             <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Calves</p>
@@ -1955,9 +1955,9 @@
                     </div>
                     <div class="flex items-center gap-2">
                         <button class="p-2 text-on-surface-variant hover:text-primary transition-colors exercise-fav-btn flex items-center justify-center" data-action="toggleFav">
-                            <span class="material-symbols-rounded text-xl">star</span>
+                            <span class="material-symbols-outlined text-xl">star</span>
                         </button>
-                        <span class="material-symbols-rounded text-on-surface-variant">chevron_right</span>
+                        <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
                     </div>
@@ -1970,7 +1970,7 @@
                     <div class="flex flex-col gap-2">
                         <div onclick="openExerciseSheet(this, 'Cable Crunch')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
                     <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-primary font-bold">C</div>
+                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">C</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Cable Crunch</h4>
                             <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Abs</p>
@@ -1978,14 +1978,14 @@
                     </div>
                     <div class="flex items-center gap-2">
                         <button class="p-2 text-on-surface-variant hover:text-primary transition-colors exercise-fav-btn flex items-center justify-center" data-action="toggleFav">
-                            <span class="material-symbols-rounded text-xl">star</span>
+                            <span class="material-symbols-outlined text-xl">star</span>
                         </button>
-                        <span class="material-symbols-rounded text-on-surface-variant">chevron_right</span>
+                        <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
                         <div onclick="openExerciseSheet(this, 'Machine Crunch')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
                     <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-primary font-bold">M</div>
+                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">M</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Machine Crunch</h4>
                             <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Abs</p>
@@ -1993,14 +1993,14 @@
                     </div>
                     <div class="flex items-center gap-2">
                         <button class="p-2 text-on-surface-variant hover:text-primary transition-colors exercise-fav-btn flex items-center justify-center" data-action="toggleFav">
-                            <span class="material-symbols-rounded text-xl">star</span>
+                            <span class="material-symbols-outlined text-xl">star</span>
                         </button>
-                        <span class="material-symbols-rounded text-on-surface-variant">chevron_right</span>
+                        <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
                         <div onclick="openExerciseSheet(this, 'Decline Bench Crunch')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
                     <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-primary font-bold">D</div>
+                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">D</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Decline Bench Crunch</h4>
                             <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Abs</p>
@@ -2008,14 +2008,14 @@
                     </div>
                     <div class="flex items-center gap-2">
                         <button class="p-2 text-on-surface-variant hover:text-primary transition-colors exercise-fav-btn flex items-center justify-center" data-action="toggleFav">
-                            <span class="material-symbols-rounded text-xl">star</span>
+                            <span class="material-symbols-outlined text-xl">star</span>
                         </button>
-                        <span class="material-symbols-rounded text-on-surface-variant">chevron_right</span>
+                        <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
                         <div onclick="openExerciseSheet(this, 'Dumbbell Side Bend')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
                     <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-primary font-bold">D</div>
+                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">D</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Dumbbell Side Bend</h4>
                             <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Obliques</p>
@@ -2023,14 +2023,14 @@
                     </div>
                     <div class="flex items-center gap-2">
                         <button class="p-2 text-on-surface-variant hover:text-primary transition-colors exercise-fav-btn flex items-center justify-center" data-action="toggleFav">
-                            <span class="material-symbols-rounded text-xl">star</span>
+                            <span class="material-symbols-outlined text-xl">star</span>
                         </button>
-                        <span class="material-symbols-rounded text-on-surface-variant">chevron_right</span>
+                        <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
                         <div onclick="openExerciseSheet(this, 'Cable Woodchopper')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
                     <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-primary font-bold">C</div>
+                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">C</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Cable Woodchopper</h4>
                             <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Obliques</p>
@@ -2038,14 +2038,14 @@
                     </div>
                     <div class="flex items-center gap-2">
                         <button class="p-2 text-on-surface-variant hover:text-primary transition-colors exercise-fav-btn flex items-center justify-center" data-action="toggleFav">
-                            <span class="material-symbols-rounded text-xl">star</span>
+                            <span class="material-symbols-outlined text-xl">star</span>
                         </button>
-                        <span class="material-symbols-rounded text-on-surface-variant">chevron_right</span>
+                        <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
                         <div onclick="openExerciseSheet(this, 'Hanging Leg Raise')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
                     <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-primary font-bold">H</div>
+                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">H</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Hanging Leg Raise</h4>
                             <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Abs</p>
@@ -2053,14 +2053,14 @@
                     </div>
                     <div class="flex items-center gap-2">
                         <button class="p-2 text-on-surface-variant hover:text-primary transition-colors exercise-fav-btn flex items-center justify-center" data-action="toggleFav">
-                            <span class="material-symbols-rounded text-xl">star</span>
+                            <span class="material-symbols-outlined text-xl">star</span>
                         </button>
-                        <span class="material-symbols-rounded text-on-surface-variant">chevron_right</span>
+                        <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
                         <div onclick="openExerciseSheet(this, 'Captain\'s Chair Leg Raise')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
                     <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-primary font-bold">C</div>
+                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">C</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Captain's Chair Leg Raise</h4>
                             <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Abs</p>
@@ -2068,14 +2068,14 @@
                     </div>
                     <div class="flex items-center gap-2">
                         <button class="p-2 text-on-surface-variant hover:text-primary transition-colors exercise-fav-btn flex items-center justify-center" data-action="toggleFav">
-                            <span class="material-symbols-rounded text-xl">star</span>
+                            <span class="material-symbols-outlined text-xl">star</span>
                         </button>
-                        <span class="material-symbols-rounded text-on-surface-variant">chevron_right</span>
+                        <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
                         <div onclick="openExerciseSheet(this, 'Lying Leg Raise')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
                     <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-primary font-bold">L</div>
+                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">L</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Lying Leg Raise</h4>
                             <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Abs</p>
@@ -2083,14 +2083,14 @@
                     </div>
                     <div class="flex items-center gap-2">
                         <button class="p-2 text-on-surface-variant hover:text-primary transition-colors exercise-fav-btn flex items-center justify-center" data-action="toggleFav">
-                            <span class="material-symbols-rounded text-xl">star</span>
+                            <span class="material-symbols-outlined text-xl">star</span>
                         </button>
-                        <span class="material-symbols-rounded text-on-surface-variant">chevron_right</span>
+                        <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
                         <div onclick="openExerciseSheet(this, 'Ab Wheel Rollout')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
                     <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-primary font-bold">A</div>
+                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">A</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Ab Wheel Rollout</h4>
                             <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Abs</p>
@@ -2098,14 +2098,14 @@
                     </div>
                     <div class="flex items-center gap-2">
                         <button class="p-2 text-on-surface-variant hover:text-primary transition-colors exercise-fav-btn flex items-center justify-center" data-action="toggleFav">
-                            <span class="material-symbols-rounded text-xl">star</span>
+                            <span class="material-symbols-outlined text-xl">star</span>
                         </button>
-                        <span class="material-symbols-rounded text-on-surface-variant">chevron_right</span>
+                        <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
                         <div onclick="openExerciseSheet(this, 'Russian Twist (with Dumbbell)')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
                     <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-primary font-bold">R</div>
+                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">R</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Russian Twist (with Dumbbell)</h4>
                             <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Obliques, Abs</p>
@@ -2113,14 +2113,14 @@
                     </div>
                     <div class="flex items-center gap-2">
                         <button class="p-2 text-on-surface-variant hover:text-primary transition-colors exercise-fav-btn flex items-center justify-center" data-action="toggleFav">
-                            <span class="material-symbols-rounded text-xl">star</span>
+                            <span class="material-symbols-outlined text-xl">star</span>
                         </button>
-                        <span class="material-symbols-rounded text-on-surface-variant">chevron_right</span>
+                        <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
                         <div onclick="openExerciseSheet(this, 'Stir-the-pot (Swiss Ball)')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
                     <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-primary font-bold">S</div>
+                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">S</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Stir-the-pot (Swiss Ball)</h4>
                             <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Obliques, Abs</p>
@@ -2128,14 +2128,14 @@
                     </div>
                     <div class="flex items-center gap-2">
                         <button class="p-2 text-on-surface-variant hover:text-primary transition-colors exercise-fav-btn flex items-center justify-center" data-action="toggleFav">
-                            <span class="material-symbols-rounded text-xl">star</span>
+                            <span class="material-symbols-outlined text-xl">star</span>
                         </button>
-                        <span class="material-symbols-rounded text-on-surface-variant">chevron_right</span>
+                        <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
                         <div onclick="openExerciseSheet(this, 'Suspended Roll-out Plank')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
                     <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-primary font-bold">S</div>
+                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">S</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Suspended Roll-out Plank</h4>
                             <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Abs</p>
@@ -2143,14 +2143,14 @@
                     </div>
                     <div class="flex items-center gap-2">
                         <button class="p-2 text-on-surface-variant hover:text-primary transition-colors exercise-fav-btn flex items-center justify-center" data-action="toggleFav">
-                            <span class="material-symbols-rounded text-xl">star</span>
+                            <span class="material-symbols-outlined text-xl">star</span>
                         </button>
-                        <span class="material-symbols-rounded text-on-surface-variant">chevron_right</span>
+                        <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
                         <div onclick="openExerciseSheet(this, 'TRX Front Plank')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
                     <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-primary font-bold">T</div>
+                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">T</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">TRX Front Plank</h4>
                             <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Abs, Obliques</p>
@@ -2158,9 +2158,9 @@
                     </div>
                     <div class="flex items-center gap-2">
                         <button class="p-2 text-on-surface-variant hover:text-primary transition-colors exercise-fav-btn flex items-center justify-center" data-action="toggleFav">
-                            <span class="material-symbols-rounded text-xl">star</span>
+                            <span class="material-symbols-outlined text-xl">star</span>
                         </button>
-                        <span class="material-symbols-rounded text-on-surface-variant">chevron_right</span>
+                        <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
                     </div>
@@ -2173,7 +2173,7 @@
                     <div class="flex flex-col gap-2">
                         <div onclick="openExerciseSheet(this, 'Barbell Hip Thrust')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
                     <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-primary font-bold">B</div>
+                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">B</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Barbell Hip Thrust</h4>
                             <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Gluteal</p>
@@ -2181,14 +2181,14 @@
                     </div>
                     <div class="flex items-center gap-2">
                         <button class="p-2 text-on-surface-variant hover:text-primary transition-colors exercise-fav-btn flex items-center justify-center" data-action="toggleFav">
-                            <span class="material-symbols-rounded text-xl">star</span>
+                            <span class="material-symbols-outlined text-xl">star</span>
                         </button>
-                        <span class="material-symbols-rounded text-on-surface-variant">chevron_right</span>
+                        <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
                         <div onclick="openExerciseSheet(this, 'Dumbbell Hip Thrust')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
                     <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-primary font-bold">D</div>
+                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">D</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Dumbbell Hip Thrust</h4>
                             <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Gluteal</p>
@@ -2196,14 +2196,14 @@
                     </div>
                     <div class="flex items-center gap-2">
                         <button class="p-2 text-on-surface-variant hover:text-primary transition-colors exercise-fav-btn flex items-center justify-center" data-action="toggleFav">
-                            <span class="material-symbols-rounded text-xl">star</span>
+                            <span class="material-symbols-outlined text-xl">star</span>
                         </button>
-                        <span class="material-symbols-rounded text-on-surface-variant">chevron_right</span>
+                        <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
                         <div onclick="openExerciseSheet(this, 'Smith Machine Hip Thrust')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
                     <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-primary font-bold">S</div>
+                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">S</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Smith Machine Hip Thrust</h4>
                             <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Gluteal</p>
@@ -2211,14 +2211,14 @@
                     </div>
                     <div class="flex items-center gap-2">
                         <button class="p-2 text-on-surface-variant hover:text-primary transition-colors exercise-fav-btn flex items-center justify-center" data-action="toggleFav">
-                            <span class="material-symbols-rounded text-xl">star</span>
+                            <span class="material-symbols-outlined text-xl">star</span>
                         </button>
-                        <span class="material-symbols-rounded text-on-surface-variant">chevron_right</span>
+                        <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
                         <div onclick="openExerciseSheet(this, 'Machine Glute Kickback')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
                     <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-primary font-bold">M</div>
+                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">M</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Machine Glute Kickback</h4>
                             <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Gluteal</p>
@@ -2226,14 +2226,14 @@
                     </div>
                     <div class="flex items-center gap-2">
                         <button class="p-2 text-on-surface-variant hover:text-primary transition-colors exercise-fav-btn flex items-center justify-center" data-action="toggleFav">
-                            <span class="material-symbols-rounded text-xl">star</span>
+                            <span class="material-symbols-outlined text-xl">star</span>
                         </button>
-                        <span class="material-symbols-rounded text-on-surface-variant">chevron_right</span>
+                        <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
                         <div onclick="openExerciseSheet(this, 'Cable Glute Kickback')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
                     <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-primary font-bold">C</div>
+                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">C</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Cable Glute Kickback</h4>
                             <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Gluteal</p>
@@ -2241,14 +2241,14 @@
                     </div>
                     <div class="flex items-center gap-2">
                         <button class="p-2 text-on-surface-variant hover:text-primary transition-colors exercise-fav-btn flex items-center justify-center" data-action="toggleFav">
-                            <span class="material-symbols-rounded text-xl">star</span>
+                            <span class="material-symbols-outlined text-xl">star</span>
                         </button>
-                        <span class="material-symbols-rounded text-on-surface-variant">chevron_right</span>
+                        <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
                         <div onclick="openExerciseSheet(this, 'Cable Pull-Through')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
                     <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-primary font-bold">C</div>
+                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">C</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Cable Pull-Through</h4>
                             <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Gluteal, Hamstring</p>
@@ -2256,14 +2256,14 @@
                     </div>
                     <div class="flex items-center gap-2">
                         <button class="p-2 text-on-surface-variant hover:text-primary transition-colors exercise-fav-btn flex items-center justify-center" data-action="toggleFav">
-                            <span class="material-symbols-rounded text-xl">star</span>
+                            <span class="material-symbols-outlined text-xl">star</span>
                         </button>
-                        <span class="material-symbols-rounded text-on-surface-variant">chevron_right</span>
+                        <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
                         <div onclick="openExerciseSheet(this, 'Romanian Deadlift')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
                     <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-primary font-bold">R</div>
+                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">R</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Romanian Deadlift</h4>
                             <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Hamstring, Gluteal</p>
@@ -2271,14 +2271,14 @@
                     </div>
                     <div class="flex items-center gap-2">
                         <button class="p-2 text-on-surface-variant hover:text-primary transition-colors exercise-fav-btn flex items-center justify-center" data-action="toggleFav">
-                            <span class="material-symbols-rounded text-xl">star</span>
+                            <span class="material-symbols-outlined text-xl">star</span>
                         </button>
-                        <span class="material-symbols-rounded text-on-surface-variant">chevron_right</span>
+                        <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
                         <div onclick="openExerciseSheet(this, 'Dumbbell Romanian Deadlift')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
                     <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-primary font-bold">D</div>
+                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">D</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Dumbbell Romanian Deadlift</h4>
                             <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Hamstring, Gluteal</p>
@@ -2286,14 +2286,14 @@
                     </div>
                     <div class="flex items-center gap-2">
                         <button class="p-2 text-on-surface-variant hover:text-primary transition-colors exercise-fav-btn flex items-center justify-center" data-action="toggleFav">
-                            <span class="material-symbols-rounded text-xl">star</span>
+                            <span class="material-symbols-outlined text-xl">star</span>
                         </button>
-                        <span class="material-symbols-rounded text-on-surface-variant">chevron_right</span>
+                        <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
                         <div onclick="openExerciseSheet(this, 'Machine Abductor')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
                     <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-primary font-bold">M</div>
+                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">M</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Machine Abductor</h4>
                             <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Adductors</p>
@@ -2301,14 +2301,14 @@
                     </div>
                     <div class="flex items-center gap-2">
                         <button class="p-2 text-on-surface-variant hover:text-primary transition-colors exercise-fav-btn flex items-center justify-center" data-action="toggleFav">
-                            <span class="material-symbols-rounded text-xl">star</span>
+                            <span class="material-symbols-outlined text-xl">star</span>
                         </button>
-                        <span class="material-symbols-rounded text-on-surface-variant">chevron_right</span>
+                        <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
                         <div onclick="openExerciseSheet(this, 'Cable Hip Abduction')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
                     <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-primary font-bold">C</div>
+                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">C</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Cable Hip Abduction</h4>
                             <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Adductors</p>
@@ -2316,14 +2316,14 @@
                     </div>
                     <div class="flex items-center gap-2">
                         <button class="p-2 text-on-surface-variant hover:text-primary transition-colors exercise-fav-btn flex items-center justify-center" data-action="toggleFav">
-                            <span class="material-symbols-rounded text-xl">star</span>
+                            <span class="material-symbols-outlined text-xl">star</span>
                         </button>
-                        <span class="material-symbols-rounded text-on-surface-variant">chevron_right</span>
+                        <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
                         <div onclick="openExerciseSheet(this, 'Kettlebell Swing')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
                     <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-primary font-bold">K</div>
+                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">K</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Kettlebell Swing</h4>
                             <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Gluteal, Hamstring</p>
@@ -2331,14 +2331,14 @@
                     </div>
                     <div class="flex items-center gap-2">
                         <button class="p-2 text-on-surface-variant hover:text-primary transition-colors exercise-fav-btn flex items-center justify-center" data-action="toggleFav">
-                            <span class="material-symbols-rounded text-xl">star</span>
+                            <span class="material-symbols-outlined text-xl">star</span>
                         </button>
-                        <span class="material-symbols-rounded text-on-surface-variant">chevron_right</span>
+                        <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
                         <div onclick="openExerciseSheet(this, 'Glute Bridge')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
                     <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-primary font-bold">G</div>
+                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">G</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Glute Bridge</h4>
                             <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Gluteal</p>
@@ -2346,14 +2346,14 @@
                     </div>
                     <div class="flex items-center gap-2">
                         <button class="p-2 text-on-surface-variant hover:text-primary transition-colors exercise-fav-btn flex items-center justify-center" data-action="toggleFav">
-                            <span class="material-symbols-rounded text-xl">star</span>
+                            <span class="material-symbols-outlined text-xl">star</span>
                         </button>
-                        <span class="material-symbols-rounded text-on-surface-variant">chevron_right</span>
+                        <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
                         <div onclick="openExerciseSheet(this, 'Dumbbell Sumo Squat')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
                     <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-primary font-bold">D</div>
+                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">D</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Dumbbell Sumo Squat</h4>
                             <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Gluteal, Quadriceps</p>
@@ -2361,9 +2361,9 @@
                     </div>
                     <div class="flex items-center gap-2">
                         <button class="p-2 text-on-surface-variant hover:text-primary transition-colors exercise-fav-btn flex items-center justify-center" data-action="toggleFav">
-                            <span class="material-symbols-rounded text-xl">star</span>
+                            <span class="material-symbols-outlined text-xl">star</span>
                         </button>
-                        <span class="material-symbols-rounded text-on-surface-variant">chevron_right</span>
+                        <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
                     </div>
@@ -2384,10 +2384,10 @@
                     <h2 id="sheet-exercise-name" class="font-headline-lg-mobile text-on-surface truncate">Egzersiz Adı</h2>
                     <div class="flex items-center gap-1">
                         <button class="p-2 hover:bg-error-container rounded-full transition-colors flex-shrink-0 text-error/80 hover:text-error" onclick="deleteCurrentExercise()" title="Hareketi Sil">
-                            <span class="material-symbols-rounded text-2xl">delete</span>
+                            <span class="material-symbols-outlined text-2xl">delete</span>
                         </button>
                         <button id="sheet-fav-btn" class="p-2 hover:bg-surface-container-low rounded-full transition-colors flex-shrink-0 text-on-surface-variant" onclick="toggleSheetFav()">
-                            <span class="material-symbols-rounded text-2xl" style="font-variation-settings: 'FILL' 0;">star</span>
+                            <span class="material-symbols-outlined text-2xl" style="font-variation-settings: 'FILL' 0;">star</span>
                         </button>
                     </div>
                 </div>
@@ -2402,9 +2402,9 @@
                         
                         <!-- Zoom Controls -->
                         <div class="absolute bottom-2 right-2 flex flex-col gap-1 bg-surface-container-high/80 backdrop-blur-sm rounded-lg p-1 shadow-sm">
-                            <button id="zoom-in" class="p-1 text-on-surface hover:text-neon-blue active:scale-95 transition-transform"><span class="material-symbols-rounded text-sm">add</span></button>
-                            <button id="zoom-out" class="p-1 text-on-surface hover:text-neon-blue active:scale-95 transition-transform"><span class="material-symbols-rounded text-sm">remove</span></button>
-                            <button id="zoom-reset" class="p-1 text-on-surface hover:text-neon-blue active:scale-95 transition-transform"><span class="material-symbols-rounded text-sm">restart_alt</span></button>
+                            <button id="zoom-in" class="p-1 text-on-surface hover:text-neon-blue active:scale-95 transition-transform"><span class="material-symbols-outlined text-sm">add</span></button>
+                            <button id="zoom-out" class="p-1 text-on-surface hover:text-neon-blue active:scale-95 transition-transform"><span class="material-symbols-outlined text-sm">remove</span></button>
+                            <button id="zoom-reset" class="p-1 text-on-surface hover:text-neon-blue active:scale-95 transition-transform"><span class="material-symbols-outlined text-sm">restart_alt</span></button>
                         </div>
                     </div>
 
@@ -4242,11 +4242,11 @@
             // Update active styling on chips
             const allChips = document.querySelectorAll('.filter-chip');
             allChips.forEach(chip => {
-                chip.className = 'neo-surface px-5 py-2 rounded-full text-sm font-semibold text-on-surface-variant bg-secondary-container whitespace-nowrap neo-button filter-chip';
+                chip.className = 'neo-surface px-5 py-2 rounded-full text-sm font-semibold text-on-surface-variant whitespace-nowrap neo-button filter-chip';
             });
             
             // Set clicked chip to active
-            btnElement.className = 'neo-inset px-5 py-2 rounded-full text-sm font-semibold text-primary whitespace-nowrap filter-chip active';
+            btnElement.className = 'neo-inset px-5 py-2 rounded-full text-sm font-semibold text-on-surface whitespace-nowrap filter-chip active';
 
             applyExerciseFilters();
         }
@@ -4412,7 +4412,7 @@
                 const newExerciseHtml = `
                     <div onclick="openExerciseSheet(this, '${ex.name}')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
                         <div class="flex items-center gap-4">
-                            <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-primary font-bold">${letter}</div>
+                            <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">${letter}</div>
                             <div>
                                 <h4 class="font-semibold text-body-md text-on-surface tracking-tight">${ex.name}</h4>
                                 <p class="text-xs text-on-surface-variant capitalize">Ana Kas: ${ex.muscleGroup}</p>
@@ -4491,7 +4491,7 @@
             const newExerciseHtml = `
                 <div onclick="openExerciseSheet(this, '${name}')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
                     <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-primary font-bold">${letter}</div>
+                        <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">${letter}</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">${name}</h4>
                             <p class="text-xs text-on-surface-variant capitalize">Ana Kas: ${muscleGroup}</p>
