@@ -22,7 +22,7 @@
                 "on-tertiary": "rgba(255, 255, 255, 0.7)",
                 "surface-light": "#f0f2f8",
                 "accent-blue": "#3b82f6",
-                "surface-bright": "#f7f9ff",
+                "surface-bright": "#F0F2F8",
                 "surface-container": "#eceef4",
                 "on-secondary": "rgba(255, 255, 255, 0.7)",
                 "primary-fixed": "#e1e0ff",
@@ -32,7 +32,7 @@
                 "on-primary-fixed-variant": "#2f2ebe",
                 "surface-variant": "#e0e2e8",
                 "primary-container": "#6063ee",
-                "silk-bg": "#F7F9FF",
+                "silk-bg": "#F0F2F8",
                 "silk-blue": "#4A90E2",
                 "silk-green": "#50E3C2",
 
@@ -65,8 +65,8 @@
                 "on-secondary-container": "#616373",
                 "tertiary-fixed-dim": "#d2bbff",
                 "on-primary-container": "#fffbff",
-                "background": "#f7f9ff",
-                "surface": "#f7f9ff",
+                "background": "#F0F2F8",
+                "surface": "#F0F2F8",
                 "error-container": "#ffdad6",
                 "text-primary": "#2e3040",
                 "secondary-fixed": "#e0e1f4",
@@ -214,13 +214,13 @@
 .neo-surface {
             background-color: #f0f2f8;
             box-shadow: 6px 6px 12px rgba(0,0,0,0.08), -6px -6px 12px rgba(255,255,255,0.7);
-            border-radius: 1.5rem;
+            
         }
 
         .neo-inset {
             background-color: #f0f2f8;
             box-shadow: inset 4px 4px 8px rgba(0,0,0,0.06), inset -4px -4px 8px rgba(255,255,255,0.7);
-            border-radius: 1rem;
+            
         }
         
         .neo-button:active {
@@ -248,7 +248,7 @@
         .neon-card {
             position: relative;
             padding: 3px;
-            border-radius: 1.5rem;
+            
             box-shadow: 6px 6px 12px rgba(0,0,0,0.08), -6px -6px 12px rgba(255,255,255,0.7);
             overflow: hidden;
             z-index: 1;
@@ -291,7 +291,7 @@
 
         .gradient-border {
             position: relative;
-            background: #F7F9FF;
+            background: #F0F2F8;
             background-clip: padding-box;
             border: 2px solid transparent;
             border-radius: 32px;
@@ -322,7 +322,7 @@
 
         .gradient-border {
             position: relative;
-            background: #F7F9FF;
+            background: #F0F2F8;
             background-clip: padding-box;
             border: 2px solid transparent;
             border-radius: 32px;
@@ -544,11 +544,11 @@
 <!-- Top App Bar -->
 <header class="w-full top-0 sticky z-40 max-w-md mx-auto px-container-padding py-4">
     <div class="flex items-center justify-between w-full">
-        <button class="w-10 h-10 flex items-center justify-center rounded-full bg-[#F7F9FF] active:scale-95 transition-transform" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);" onclick="document.getElementById('view-dashboard').classList.remove('hidden'); document.getElementById('view-shopping').classList.add('hidden');">
+        <button class="w-10 h-10 flex items-center justify-center rounded-full bg-[#F0F2F8] active:scale-95 transition-transform" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);" onclick="document.getElementById('view-dashboard').classList.remove('hidden'); document.getElementById('view-shopping').classList.add('hidden');">
             <span class="material-symbols-rounded text-[#1E293B]">arrow_back</span>
         </button>
         <h1 class="text-h1 font-bold text-[#1E293B]">Alışveriş Listesi</h1>
-        <button class="w-10 h-10 flex items-center justify-center rounded-full bg-[#F7F9FF] active:scale-95 transition-transform" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);" id="clear-shopping-btn">
+        <button class="w-10 h-10 flex items-center justify-center rounded-full bg-[#F0F2F8] active:scale-95 transition-transform" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);" id="clear-shopping-btn">
             <span class="material-symbols-rounded text-red-500">delete_sweep</span>
         </button>
     </div>
@@ -558,7 +558,7 @@
 
     <!-- Quick Add Section -->
     <section class="flex flex-col gap-4">
-        <form id="shopping-form" class="flex items-center gap-3 p-4 rounded-[24px] bg-[#F7F9FF] w-full" style="box-shadow: 6px 6px 12px #D1D9E6, -6px -6px 12px rgba(255, 255, 255, 0.7);">
+        <form id="shopping-form" class="flex items-center gap-3 p-4 rounded-[24px] bg-[#F0F2F8] w-full" style="box-shadow: 6px 6px 12px #D1D9E6, -6px -6px 12px rgba(255, 255, 255, 0.7);">
             <button type="submit" class="flex items-center justify-center p-1 rounded-full active:scale-95 transition-transform"><span class="material-symbols-rounded text-[#64748B]">add</span></button>
             <input id="shopping-input" type="text" placeholder="Ürün adı girin..." class="bg-transparent border-none outline-none text-sm font-bold text-[#1E293B] w-full placeholder-[#64748B] focus:ring-0">
         </form>
@@ -587,11 +587,11 @@
 <!-- Top App Bar -->
 <header class="w-full top-0 sticky z-40 max-w-md mx-auto px-container-padding py-4">
     <div class="flex items-center justify-between w-full">
-        <button class="w-10 h-10 flex items-center justify-center rounded-full bg-[#F7F9FF] active:scale-95 transition-transform" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);" onclick="document.getElementById('view-dashboard').classList.remove('hidden'); document.getElementById('view-workout').classList.add('hidden');">
+        <button class="w-10 h-10 flex items-center justify-center rounded-full bg-[#F0F2F8] active:scale-95 transition-transform" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);" onclick="document.getElementById('view-dashboard').classList.remove('hidden'); document.getElementById('view-workout').classList.add('hidden');">
             <span class="material-symbols-rounded text-[#1E293B]">arrow_back</span>
         </button>
         <h1 class="text-h1 font-bold text-[#1E293B]">Spor</h1>
-        <button class="w-10 h-10 flex items-center justify-center rounded-full bg-[#F7F9FF] active:scale-95 transition-transform" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);">
+        <button class="w-10 h-10 flex items-center justify-center rounded-full bg-[#F0F2F8] active:scale-95 transition-transform" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);">
             <span class="material-symbols-rounded text-[#1E293B]">settings</span>
         </button>
     </div>
@@ -603,7 +603,7 @@
     <!-- Featured Workout Card -->
     <section class="flex flex-col gap-4">
         <div class="neon-card rounded-[32px]" style="border-radius: 32px;">
-            <div class="neon-card-inner bg-[#F7F9FF] p-6 flex flex-col gap-4 relative overflow-hidden" style="border-radius: 29px; box-shadow: 8px 8px 16px #D1D9E6, -8px -8px 16px rgba(255, 255, 255, 0.7);">
+            <div class="neon-card-inner bg-[#F0F2F8] p-6 flex flex-col gap-4 relative overflow-hidden" style="border-radius: 29px; box-shadow: 8px 8px 16px #D1D9E6, -8px -8px 16px rgba(255, 255, 255, 0.7);">
             
             <div class="flex justify-between items-start">
                 <div>
@@ -612,12 +612,12 @@
                     <p class="text-sm font-medium text-[#64748B]" id="workout-split-desc">Göğüs, Omuz ve Triceps odaklı antrenman</p>
                     <div class="flex items-center gap-2 mt-4" id="workout-day-indicator"></div>
                 </div>
-                <div class="w-12 h-12 rounded-full bg-[#F7F9FF] flex items-center justify-center shrink-0" style="box-shadow: inset 4px 4px 8px #D1D9E6, inset -4px -4px 8px rgba(255, 255, 255, 0.7);">
+                <div class="w-12 h-12 rounded-full bg-[#F0F2F8] flex items-center justify-center shrink-0" style="box-shadow: inset 4px 4px 8px #D1D9E6, inset -4px -4px 8px rgba(255, 255, 255, 0.7);">
                     <span class="material-symbols-rounded text-[#1E293B] text-xl">fitness_center</span>
                 </div>
             </div>
             
-            <button data-action="startActiveSession" class="w-full py-4 mt-2 rounded-2xl bg-[#F7F9FF] flex items-center justify-center gap-2 active:scale-[0.98] transition-transform" style="box-shadow: inset 4px 4px 8px #D1D9E6, inset -4px -4px 8px rgba(255, 255, 255, 0.7);">
+            <button data-action="startActiveSession" class="w-full py-4 mt-2 rounded-2xl bg-[#F0F2F8] flex items-center justify-center gap-2 active:scale-[0.98] transition-transform" style="box-shadow: inset 4px 4px 8px #D1D9E6, inset -4px -4px 8px rgba(255, 255, 255, 0.7);">
                 <span class="material-symbols-rounded text-[#1E293B]">play_arrow</span>
                 <span class="font-bold text-[#1E293B]">Antrenmanı Başlat</span>
             </button>
@@ -631,9 +631,9 @@
 
     <section>
         <div class="flex flex-col gap-4">
-            <a href="#" class="bg-[#F7F9FF] p-4 rounded-2xl flex items-center justify-between active:scale-[0.99] transition-transform" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);" onclick="document.getElementById('view-workout').classList.add('hidden'); document.getElementById('view-exercise-library').classList.remove('hidden'); return false;">
+            <a href="#" class="bg-[#F0F2F8] p-4 rounded-2xl flex items-center justify-between active:scale-[0.99] transition-transform" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);" onclick="document.getElementById('view-workout').classList.add('hidden'); document.getElementById('view-exercise-library').classList.remove('hidden'); return false;">
                 <div class="flex items-center gap-4">
-                    <div class="w-10 h-10 rounded-full bg-[#F7F9FF] flex items-center justify-center" style="box-shadow: inset 2px 2px 5px #D1D9E6, inset -2px -2px 5px rgba(255, 255, 255, 0.7);">
+                    <div class="w-10 h-10 rounded-full bg-[#F0F2F8] flex items-center justify-center" style="box-shadow: inset 2px 2px 5px #D1D9E6, inset -2px -2px 5px rgba(255, 255, 255, 0.7);">
                         <span class="material-symbols-rounded text-[#1E293B]">book</span>
                     </div>
                     <div>
@@ -644,9 +644,9 @@
                 <span class="material-symbols-rounded text-[#1E293B]">chevron_right</span>
             </a>
             
-            <a href="#" class="bg-[#F7F9FF] p-4 rounded-2xl flex items-center justify-between active:scale-[0.99] transition-transform" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);">
+            <a href="#" class="bg-[#F0F2F8] p-4 rounded-2xl flex items-center justify-between active:scale-[0.99] transition-transform" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);">
                 <div class="flex items-center gap-4">
-                    <div class="w-10 h-10 rounded-full bg-[#F7F9FF] flex items-center justify-center" style="box-shadow: inset 2px 2px 5px #D1D9E6, inset -2px -2px 5px rgba(255, 255, 255, 0.7);">
+                    <div class="w-10 h-10 rounded-full bg-[#F0F2F8] flex items-center justify-center" style="box-shadow: inset 2px 2px 5px #D1D9E6, inset -2px -2px 5px rgba(255, 255, 255, 0.7);">
                         <span class="material-symbols-rounded text-[#1E293B]">history</span>
                     </div>
                     <div>
@@ -657,9 +657,9 @@
                 <span class="material-symbols-rounded text-[#1E293B]">chevron_right</span>
             </a>
             
-            <a href="#" class="bg-[#F7F9FF] p-4 rounded-2xl flex items-center justify-between active:scale-[0.99] transition-transform" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);">
+            <a href="#" class="bg-[#F0F2F8] p-4 rounded-2xl flex items-center justify-between active:scale-[0.99] transition-transform" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);">
                 <div class="flex items-center gap-4">
-                    <div class="w-10 h-10 rounded-full bg-[#F7F9FF] flex items-center justify-center" style="box-shadow: inset 2px 2px 5px #D1D9E6, inset -2px -2px 5px rgba(255, 255, 255, 0.7);">
+                    <div class="w-10 h-10 rounded-full bg-[#F0F2F8] flex items-center justify-center" style="box-shadow: inset 2px 2px 5px #D1D9E6, inset -2px -2px 5px rgba(255, 255, 255, 0.7);">
                         <span class="material-symbols-rounded text-[#1E293B]">settings</span>
                     </div>
                     <div>
@@ -670,9 +670,9 @@
                 <span class="material-symbols-rounded text-[#1E293B]">chevron_right</span>
             </a>
             
-            <button data-action="openStretchPlayer" class="w-full bg-[#F7F9FF] p-4 rounded-2xl flex items-center justify-between active:scale-[0.99] transition-transform text-left" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);">
+            <button data-action="openStretchPlayer" class="w-full bg-[#F0F2F8] p-4 rounded-2xl flex items-center justify-between active:scale-[0.99] transition-transform text-left" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);">
                 <div class="flex items-center gap-4">
-                    <div class="w-10 h-10 rounded-full bg-[#F7F9FF] flex items-center justify-center flex-shrink-0" style="box-shadow: inset 2px 2px 5px #D1D9E6, inset -2px -2px 5px rgba(255, 255, 255, 0.7);">
+                    <div class="w-10 h-10 rounded-full bg-[#F0F2F8] flex items-center justify-center flex-shrink-0" style="box-shadow: inset 2px 2px 5px #D1D9E6, inset -2px -2px 5px rgba(255, 255, 255, 0.7);">
                         <span class="material-symbols-rounded text-[#1E293B]">self_improvement</span>
                     </div>
                     <div>
@@ -683,9 +683,9 @@
                 <span class="material-symbols-rounded text-[#1E293B] flex-shrink-0">chevron_right</span>
             </button>
             
-            <button data-action="openCorePlayer" class="w-full bg-[#F7F9FF] p-4 rounded-2xl flex items-center justify-between active:scale-[0.99] transition-transform text-left" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);">
+            <button data-action="openCorePlayer" class="w-full bg-[#F0F2F8] p-4 rounded-2xl flex items-center justify-between active:scale-[0.99] transition-transform text-left" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);">
                 <div class="flex items-center gap-4">
-                    <div class="w-10 h-10 rounded-full bg-[#F7F9FF] flex items-center justify-center flex-shrink-0" style="box-shadow: inset 2px 2px 5px #D1D9E6, inset -2px -2px 5px rgba(255, 255, 255, 0.7);">
+                    <div class="w-10 h-10 rounded-full bg-[#F0F2F8] flex items-center justify-center flex-shrink-0" style="box-shadow: inset 2px 2px 5px #D1D9E6, inset -2px -2px 5px rgba(255, 255, 255, 0.7);">
                         <span class="material-symbols-rounded text-[#1E293B]">accessibility_new</span>
                     </div>
                     <div>
@@ -708,11 +708,11 @@
             <!-- Header -->
             <header class="w-full top-0 sticky z-40 max-w-md mx-auto px-container-padding py-4">
                 <div class="flex items-center justify-between w-full">
-                    <button onclick="document.getElementById('view-exercise-library').classList.add('hidden'); document.getElementById('view-workout').classList.remove('hidden');" class="w-10 h-10 flex items-center justify-center rounded-full bg-[#F7F9FF] active:scale-95 transition-transform" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);">
+                    <button onclick="document.getElementById('view-exercise-library').classList.add('hidden'); document.getElementById('view-workout').classList.remove('hidden');" class="w-10 h-10 flex items-center justify-center rounded-full bg-[#F0F2F8] active:scale-95 transition-transform" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);">
                         <span class="material-symbols-rounded text-[#1E293B]">arrow_back</span>
                     </button>
                     <h1 class="text-h1 font-bold text-[#1E293B]">Egzersiz Kütüphanesi</h1>
-                    <button onclick="openAddExerciseSheet()" class="w-10 h-10 flex items-center justify-center rounded-full bg-[#F7F9FF] active:scale-95 transition-transform" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);">
+                    <button onclick="openAddExerciseSheet()" class="w-10 h-10 flex items-center justify-center rounded-full bg-[#F0F2F8] active:scale-95 transition-transform" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);">
                         <span class="material-symbols-rounded text-[#1E293B]">add</span>
                     </button>
                 </div>
@@ -721,7 +721,7 @@
             <main class="flex-1 px-6 flex flex-col pt-4 gap-6 pb-24">
                 <!-- Search Box -->
                 <section class="pt-2">
-                    <div class="neo-inset p-4 flex items-center gap-3" style="border-radius: 1.5rem;">
+                    <div class="neo-inset p-4 flex items-center gap-3" style="">
                         <span class="material-symbols-outlined text-on-surface-variant">search</span>
                         <input id="exercise-search-input" oninput="handleExerciseSearch(this.value)" class="bg-transparent border-none focus:ring-0 text-sm w-full p-0 text-on-surface" placeholder="Egzersiz Ara..." type="text"/>
                     </div>
@@ -2545,11 +2545,11 @@
         <!-- Top App Bar -->
         <header class="w-full top-0 sticky z-40 max-w-md mx-auto px-container-padding py-4">
             <div class="flex items-center justify-between w-full">
-                <button class="nav-tab w-10 h-10 flex items-center justify-center rounded-full bg-[#F7F9FF]" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);" data-target="view-dashboard">
+                <button class="nav-tab w-10 h-10 flex items-center justify-center rounded-full bg-[#F0F2F8]" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);" data-target="view-dashboard">
                     <span class="material-symbols-rounded text-[#1E293B]">arrow_back</span>
                 </button>
                 <h1 class="text-h1 font-bold text-[#1E293B]">Kitap Takibi</h1>
-                <button class="w-10 h-10 flex items-center justify-center rounded-full bg-[#F7F9FF]" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);">
+                <button class="w-10 h-10 flex items-center justify-center rounded-full bg-[#F0F2F8]" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);">
                     <span class="material-symbols-rounded text-[#1E293B]">settings</span>
                 </button>
             </div>
@@ -2559,7 +2559,7 @@
         <main class="flex-1 w-full max-w-md mx-auto px-container-padding pb-32 flex flex-col gap-section-margin pt-4">
             <!-- Circular Progress Section -->
             <section class="flex flex-col items-center justify-center relative">
-                <div class="relative w-64 h-64 flex items-center justify-center rounded-full bg-[#F7F9FF]" style="box-shadow: 10px 10px 20px #D1D9E6, -10px -10px 20px rgba(255, 255, 255, 0.7);">
+                <div class="relative w-64 h-64 flex items-center justify-center rounded-full bg-[#F0F2F8]" style="box-shadow: 10px 10px 20px #D1D9E6, -10px -10px 20px rgba(255, 255, 255, 0.7);">
                     <svg class="absolute inset-0 w-full h-full" viewBox="0 0 120 120">
                         <defs>
                             <linearGradient id="neonGradientBooks" x1="0%" x2="100%" y1="0%" y2="100%">
@@ -2577,14 +2577,14 @@
                     </div>
                 </div>
                 <div class="flex gap-6 mt-8">
-                    <button id="book-active-minus" class="w-12 h-12 flex items-center justify-center rounded-2xl bg-[#F7F9FF] text-[#1E293B] font-bold text-xl active:scale-95 transition-transform focus:outline-none" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);">
+                    <button id="book-active-minus" class="w-12 h-12 flex items-center justify-center rounded-2xl bg-[#F0F2F8] text-[#1E293B] font-bold text-xl active:scale-95 transition-transform focus:outline-none" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);">
                         <span class="material-symbols-rounded">remove</span>
                     </button>
-                    <button id="book-active-plus" class="w-12 h-12 flex items-center justify-center rounded-2xl bg-[#F7F9FF] text-[#1E293B] font-bold text-xl active:scale-95 transition-transform focus:outline-none" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);">
+                    <button id="book-active-plus" class="w-12 h-12 flex items-center justify-center rounded-2xl bg-[#F0F2F8] text-[#1E293B] font-bold text-xl active:scale-95 transition-transform focus:outline-none" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);">
                         <span class="material-symbols-rounded">add</span>
                     </button>
                 </div>
-                <button id="book-active-title" class="px-8 py-3 rounded-full bg-[#F7F9FF] text-[#1E293B] font-bold uppercase tracking-wider text-xs mt-4 truncate max-w-full focus:outline-none" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);">
+                <button id="book-active-title" class="px-8 py-3 rounded-full bg-[#F0F2F8] text-[#1E293B] font-bold uppercase tracking-wider text-xs mt-4 truncate max-w-full focus:outline-none" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);">
                     Aktif Kitap Yok
                 </button>
             </section>
@@ -2592,7 +2592,7 @@
             <!-- Quick Add Section -->
             <section class="flex flex-col gap-4">
                 <div class="grid grid-cols-2 gap-6">
-                    <button id="add-book-btn-new" class="flex flex-col items-center justify-center gap-3 py-6 rounded-2xl bg-[#F7F9FF] col-span-2 active:scale-95 transition-transform focus:outline-none" style="box-shadow: 6px 6px 12px #D1D9E6, -6px -6px 12px rgba(255, 255, 255, 0.7);">
+                    <button id="add-book-btn-new" class="flex flex-col items-center justify-center gap-3 py-6 rounded-2xl bg-[#F0F2F8] col-span-2 active:scale-95 transition-transform focus:outline-none" style="box-shadow: 6px 6px 12px #D1D9E6, -6px -6px 12px rgba(255, 255, 255, 0.7);">
                         <span class="material-symbols-rounded text-[#3B82F6] text-3xl">auto_stories</span>
                         <span class="text-xs font-bold text-[#1E293B]">Kitap Ekle</span>
                     </button>
@@ -2610,7 +2610,7 @@
         <!-- Add Book Modal -->
         <div class="hidden fixed inset-0 z-[100] flex flex-col justify-end items-center md:p-4" id="book-add-modal">
             <div class="absolute inset-0 bg-black/10 backdrop-blur-sm opacity-0 transition-opacity duration-300" id="book-add-backdrop"></div>
-            <div class="bg-[#F7F9FF] w-full max-w-sm mx-auto rounded-t-[32px] md:rounded-[32px] shadow-[0_-8px_30px_rgba(0,0,0,0.05)] md:shadow-[0_10px_40px_rgba(0,0,0,0.08)] p-6 flex flex-col items-center transform transition-transform duration-300 translate-y-full z-10 pb-8 md:pb-6" id="book-add-modal-content">
+            <div class="bg-[#F0F2F8] w-full max-w-sm mx-auto rounded-t-[32px] md:rounded-[32px] shadow-[0_-8px_30px_rgba(0,0,0,0.05)] md:shadow-[0_10px_40px_rgba(0,0,0,0.08)] p-6 flex flex-col items-center transform transition-transform duration-300 translate-y-full z-10 pb-8 md:pb-6" id="book-add-modal-content">
                 <!-- Drag Handle (Mobile) -->
                 <div class="w-12 h-1.5 bg-gray-300 rounded-full mb-6 md:hidden cursor-pointer" id="close-book-add-handle"></div>
                 <div class="w-full text-center mb-6">
@@ -2620,15 +2620,15 @@
                 <div class="w-full flex flex-col gap-4 mb-6 px-2">
                     <div class="flex flex-col gap-1">
                         <label class="text-xs font-bold text-silk-blue uppercase px-2">Kitap Adı</label>
-                        <input id="book-add-title" class="w-full p-4 rounded-2xl shadow-neumorphic-inset bg-[#F7F9FF] border-none focus:ring-2 focus:ring-silk-blue/20 text-gray-800 placeholder:text-gray-400" placeholder="Örn: Suç ve Ceza" type="text">
+                        <input id="book-add-title" class="w-full p-4 rounded-2xl shadow-neumorphic-inset bg-[#F0F2F8] border-none focus:ring-2 focus:ring-silk-blue/20 text-gray-800 placeholder:text-gray-400" placeholder="Örn: Suç ve Ceza" type="text">
                     </div>
                     <div class="flex flex-col gap-1">
                         <label class="text-xs font-bold text-silk-blue uppercase px-2">Yazar</label>
-                        <input id="book-add-author" class="w-full p-4 rounded-2xl shadow-neumorphic-inset bg-[#F7F9FF] border-none focus:ring-2 focus:ring-silk-blue/20 text-gray-800 placeholder:text-gray-400" placeholder="Örn: Dostoyevski" type="text">
+                        <input id="book-add-author" class="w-full p-4 rounded-2xl shadow-neumorphic-inset bg-[#F0F2F8] border-none focus:ring-2 focus:ring-silk-blue/20 text-gray-800 placeholder:text-gray-400" placeholder="Örn: Dostoyevski" type="text">
                     </div>
                     <div class="flex flex-col gap-1">
                         <label class="text-xs font-bold text-silk-blue uppercase px-2">Toplam Sayfa</label>
-                        <input id="book-add-pages" class="w-full p-4 rounded-2xl shadow-neumorphic-inset bg-[#F7F9FF] border-none focus:ring-2 focus:ring-silk-blue/20 text-gray-800 placeholder:text-gray-400" placeholder="5" type="number" style="appearance: textfield;">
+                        <input id="book-add-pages" class="w-full p-4 rounded-2xl shadow-neumorphic-inset bg-[#F0F2F8] border-none focus:ring-2 focus:ring-silk-blue/20 text-gray-800 placeholder:text-gray-400" placeholder="5" type="number" style="appearance: textfield;">
                     </div>
                     <div class="flex flex-col gap-1">
                         <label class="text-xs font-bold text-silk-blue uppercase px-2">Okuma Durumu</label>
@@ -2658,7 +2658,7 @@
         <!-- Edit Book Modal -->
         <div class="hidden fixed inset-0 z-[100] flex flex-col justify-end items-center md:p-4" id="book-edit-modal">
             <div class="absolute inset-0 bg-black/10 backdrop-blur-sm opacity-0 transition-opacity duration-300" id="book-edit-backdrop"></div>
-            <div class="bg-[#F7F9FF] w-full max-w-sm mx-auto rounded-t-[32px] md:rounded-[32px] shadow-[0_-8px_30px_rgba(0,0,0,0.05)] md:shadow-[0_10px_40px_rgba(0,0,0,0.08)] p-6 flex flex-col items-center transform transition-transform duration-300 translate-y-full z-10 pb-8 md:pb-6" id="book-edit-modal-content">
+            <div class="bg-[#F0F2F8] w-full max-w-sm mx-auto rounded-t-[32px] md:rounded-[32px] shadow-[0_-8px_30px_rgba(0,0,0,0.05)] md:shadow-[0_10px_40px_rgba(0,0,0,0.08)] p-6 flex flex-col items-center transform transition-transform duration-300 translate-y-full z-10 pb-8 md:pb-6" id="book-edit-modal-content">
                 <!-- Drag Handle (Mobile) -->
                 <div class="w-12 h-1.5 bg-gray-300 rounded-full mb-6 md:hidden cursor-pointer" id="close-book-edit-handle"></div>
                 <div class="w-full text-center mb-6">
@@ -2668,15 +2668,15 @@
                 <div class="w-full flex flex-col gap-4 mb-6 px-2">
                     <div class="flex flex-col gap-1">
                         <label class="text-xs font-bold text-silk-blue uppercase px-2">Kitap Adı</label>
-                        <input id="book-edit-title" class="w-full p-4 rounded-2xl shadow-neumorphic-inset bg-[#F7F9FF] border-none focus:ring-2 focus:ring-silk-blue/20 text-gray-800 placeholder:text-gray-400" placeholder="Örn: Suç ve Ceza" type="text">
+                        <input id="book-edit-title" class="w-full p-4 rounded-2xl shadow-neumorphic-inset bg-[#F0F2F8] border-none focus:ring-2 focus:ring-silk-blue/20 text-gray-800 placeholder:text-gray-400" placeholder="Örn: Suç ve Ceza" type="text">
                     </div>
                     <div class="flex flex-col gap-1">
                         <label class="text-xs font-bold text-silk-blue uppercase px-2">Yazar</label>
-                        <input id="book-edit-author" class="w-full p-4 rounded-2xl shadow-neumorphic-inset bg-[#F7F9FF] border-none focus:ring-2 focus:ring-silk-blue/20 text-gray-800 placeholder:text-gray-400" placeholder="Örn: Dostoyevski" type="text">
+                        <input id="book-edit-author" class="w-full p-4 rounded-2xl shadow-neumorphic-inset bg-[#F0F2F8] border-none focus:ring-2 focus:ring-silk-blue/20 text-gray-800 placeholder:text-gray-400" placeholder="Örn: Dostoyevski" type="text">
                     </div>
                     <div class="flex flex-col gap-1">
                         <label class="text-xs font-bold text-silk-blue uppercase px-2">Toplam Sayfa</label>
-                        <input id="book-edit-pages" class="w-full p-4 rounded-2xl shadow-neumorphic-inset bg-[#F7F9FF] border-none focus:ring-2 focus:ring-silk-blue/20 text-gray-800 placeholder:text-gray-400" placeholder="5" type="number" style="appearance: textfield;">
+                        <input id="book-edit-pages" class="w-full p-4 rounded-2xl shadow-neumorphic-inset bg-[#F0F2F8] border-none focus:ring-2 focus:ring-silk-blue/20 text-gray-800 placeholder:text-gray-400" placeholder="5" type="number" style="appearance: textfield;">
                     </div>
                     <div class="flex flex-col gap-1">
                         <label class="text-xs font-bold text-silk-blue uppercase px-2">Okuma Durumu</label>
@@ -2714,11 +2714,11 @@
     <!-- Top App Bar -->
     <header class="w-full top-0 sticky z-40 max-w-md mx-auto px-container-padding py-4">
         <div class="flex items-center justify-between w-full">
-            <button class="nav-tab w-10 h-10 flex items-center justify-center rounded-full bg-[#F7F9FF]" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);" data-target="view-dashboard">
+            <button class="nav-tab w-10 h-10 flex items-center justify-center rounded-full bg-[#F0F2F8]" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);" data-target="view-dashboard">
                 <span class="material-symbols-rounded text-[#1E293B]">arrow_back</span>
             </button>
             <h1 class="text-h1 font-bold text-[#1E293B]">Su Takibi</h1>
-            <button class="w-10 h-10 flex items-center justify-center rounded-full bg-[#F7F9FF]" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);">
+            <button class="w-10 h-10 flex items-center justify-center rounded-full bg-[#F0F2F8]" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);">
                 <span class="material-symbols-rounded text-[#1E293B]">settings</span>
             </button>
         </div>
@@ -2728,7 +2728,7 @@
     <main class="flex-1 w-full max-w-md mx-auto px-container-padding pb-32 flex flex-col gap-section-margin pt-4">
         <!-- Circular Progress Section -->
         <div class="flex flex-col items-center justify-center relative">
-            <div class="relative w-64 h-64 flex items-center justify-center rounded-full bg-[#F7F9FF]" style="box-shadow: 10px 10px 20px #D1D9E6, -10px -10px 20px rgba(255, 255, 255, 0.7);">
+            <div class="relative w-64 h-64 flex items-center justify-center rounded-full bg-[#F0F2F8]" style="box-shadow: 10px 10px 20px #D1D9E6, -10px -10px 20px rgba(255, 255, 255, 0.7);">
                 <svg class="absolute inset-0 w-full h-full" viewBox="0 0 120 120">
                     <defs>
                         <linearGradient id="neonGradientWater" x1="0%" x2="100%" y1="0%" y2="100%">
@@ -2745,21 +2745,21 @@
                     <p id="water-goal-text" class="text-sm text-[#64748B]">of 2000 ml</p>
                 </div>
             </div>
-            <button id="btn-edit-water-goal" class="mt-8 px-8 py-3 rounded-full bg-[#F7F9FF] text-[#1E293B] font-bold uppercase tracking-wider text-xs" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);">Daily Goal</button>
+            <button id="btn-edit-water-goal" class="mt-8 px-8 py-3 rounded-full bg-[#F0F2F8] text-[#1E293B] font-bold uppercase tracking-wider text-xs" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);">Daily Goal</button>
         </div>
         
         <!-- Quick Add Section -->
         <div class="flex flex-col gap-card-gap">
             <div class="grid grid-cols-3 gap-6">
-                <button id="btn-water-250" class="flex flex-col items-center justify-center gap-3 py-6 rounded-2xl bg-[#F7F9FF] active:scale-95 transition-transform" style="box-shadow: 6px 6px 12px #D1D9E6, -6px -6px 12px rgba(255, 255, 255, 0.7);">
+                <button id="btn-water-250" class="flex flex-col items-center justify-center gap-3 py-6 rounded-2xl bg-[#F0F2F8] active:scale-95 transition-transform" style="box-shadow: 6px 6px 12px #D1D9E6, -6px -6px 12px rgba(255, 255, 255, 0.7);">
                     <span class="material-symbols-rounded text-[#3B82F6] text-3xl">local_drink</span>
                     <span class="text-xs font-bold text-[#1E293B]">+250ml</span>
                 </button>
-                <button id="btn-water-500" class="flex flex-col items-center justify-center gap-3 py-6 rounded-2xl bg-[#F7F9FF] active:scale-95 transition-transform" style="box-shadow: 6px 6px 12px #D1D9E6, -6px -6px 12px rgba(255, 255, 255, 0.7);">
+                <button id="btn-water-500" class="flex flex-col items-center justify-center gap-3 py-6 rounded-2xl bg-[#F0F2F8] active:scale-95 transition-transform" style="box-shadow: 6px 6px 12px #D1D9E6, -6px -6px 12px rgba(255, 255, 255, 0.7);">
                     <span class="material-symbols-rounded text-[#A855F7] text-3xl">water_bottle</span>
                     <span class="text-xs font-bold text-[#1E293B]">+500ml</span>
                 </button>
-                <button id="btn-water-custom" class="flex flex-col items-center justify-center gap-3 py-6 rounded-2xl bg-[#F7F9FF] active:scale-95 transition-transform" style="box-shadow: 6px 6px 12px #D1D9E6, -6px -6px 12px rgba(255, 255, 255, 0.7);">
+                <button id="btn-water-custom" class="flex flex-col items-center justify-center gap-3 py-6 rounded-2xl bg-[#F0F2F8] active:scale-95 transition-transform" style="box-shadow: 6px 6px 12px #D1D9E6, -6px -6px 12px rgba(255, 255, 255, 0.7);">
                     <span class="material-symbols-rounded text-[#22C55E] text-3xl">add</span>
                     <span class="text-xs font-bold text-[#1E293B]">Custom</span>
                 </button>
@@ -2767,7 +2767,7 @@
         </div>
         
         <!-- Weekly Chart Section -->
-        <div class="bg-surface-container-lowest shadow-sm rounded-2xl p-6 flex flex-col gap-4" style="background-color: #F7F9FF; box-shadow: 8px 8px 16px #D1D9E6, -8px -8px 16px rgba(255, 255, 255, 0.7); border: none;">
+        <div class="bg-surface-container-lowest shadow-sm rounded-2xl p-6 flex flex-col gap-4" style="background-color: #F0F2F8; box-shadow: 8px 8px 16px #D1D9E6, -8px -8px 16px rgba(255, 255, 255, 0.7); border: none;">
             <div class="flex justify-between items-end mb-2">
                 <h3 class="text-h2 font-bold text-[#1E293B]">Last 7 Days</h3>
                 <span id="water-avg-text" class="text-xs font-bold text-[#64748B] uppercase tracking-wider">Avg: 0ml</span>
@@ -2893,22 +2893,22 @@
 <!-- ================= DİZİ / FİLM ================= -->
     <section id="view-movies" class="view hidden">
     <!-- Top App Bar -->
-    <header class="w-full top-0 sticky z-40 max-w-md mx-auto px-container-padding py-4"><div class="flex items-center justify-between w-full"><button class="nav-tab w-10 h-10 flex items-center justify-center rounded-full bg-[#F7F9FF]" style="box-shadow: rgb(209, 217, 230) 4px 4px 8px, rgb(255, 255, 255) -4px -4px 8px;" data-target="view-dashboard"><span class="material-symbols-rounded text-[#1E293B]">arrow_back</span></button><h1 class="text-h1 font-bold text-[#1E293B]">Film Dizi Takibi</h1><button class="w-10 h-10 flex items-center justify-center rounded-full bg-[#F7F9FF] active:scale-[0.98] transition-transform" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);" title="Ayarlar"><span class="material-symbols-rounded text-[#1E293B]">settings</span></button></div></header>
+    <header class="w-full top-0 sticky z-40 max-w-md mx-auto px-container-padding py-4"><div class="flex items-center justify-between w-full"><button class="nav-tab w-10 h-10 flex items-center justify-center rounded-full bg-[#F0F2F8]" style="box-shadow: rgb(209, 217, 230) 4px 4px 8px, rgb(255, 255, 255) -4px -4px 8px;" data-target="view-dashboard"><span class="material-symbols-rounded text-[#1E293B]">arrow_back</span></button><h1 class="text-h1 font-bold text-[#1E293B]">Film Dizi Takibi</h1><button class="w-10 h-10 flex items-center justify-center rounded-full bg-[#F0F2F8] active:scale-[0.98] transition-transform" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);" title="Ayarlar"><span class="material-symbols-rounded text-[#1E293B]">settings</span></button></div></header>
     <!-- Main Content Container -->
     <main class="flex-1 w-full max-w-md mx-auto px-container-padding pb-32 flex flex-col gap-section-margin pt-4">
         <!-- Circular Progress Section -->
-        <section class="flex flex-col items-center justify-center relative"><div class="relative w-64 h-64 flex items-center justify-center rounded-full bg-[#F7F9FF]" style="box-shadow: 10px 10px 20px #D1D9E6, -10px -10px 20px rgba(255, 255, 255, 0.7);"><svg class="absolute inset-0 w-full h-full" viewBox="0 0 120 120"><path d="M 10 60 Q 30 10 60 10 Q 90 10 110 60 Q 90 110 60 110 Q 30 110 10 60" fill="none" stroke="#E0E5EC" stroke-width="0.5" stroke-dasharray="2 2" opacity="0.3"></path><defs><linearGradient id="neonGradientMovies" x1="0%" x2="100%" y1="0%" y2="100%"><stop offset="0%" style="stop-color: rgb(168, 85, 247);"></stop><stop offset="100%" style="stop-color: rgb(59, 130, 246);"></stop></linearGradient></defs><circle cx="60" cy="60" fill="transparent" r="50" stroke="#E0E5EC" stroke-width="8"></circle><circle id="movie-progress-circle" cx="60" cy="60" fill="transparent" r="50" stroke="url(#neonGradientMovies)" stroke-dasharray="314.159" stroke-dashoffset="117.8" stroke-linecap="round" stroke-width="8" style="transition: stroke-dashoffset 0.3s ease; filter: drop-shadow(rgba(168, 85, 247, 0.6) 0px 0px 8px) drop-shadow(rgba(59, 130, 246, 0.4) 0px 0px 12px);" class="-rotate-90 origin-center"></circle></svg><div class="flex flex-col items-center z-10"><span id="movie-active-season" class="text-xs font-bold text-[#3B82F6] uppercase tracking-widest mb-1">Sezon 01</span><h2 id="movie-active-episode" class="text-4xl font-bold text-[#1E293B]">B06</h2></div></div><div class="flex gap-6 mt-8">
-        <button id="movie-active-minus" class="w-12 h-12 flex items-center justify-center rounded-2xl bg-[#F7F9FF] text-[#1E293B] font-bold text-xl active:scale-95 transition-transform" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);">
+        <section class="flex flex-col items-center justify-center relative"><div class="relative w-64 h-64 flex items-center justify-center rounded-full bg-[#F0F2F8]" style="box-shadow: 10px 10px 20px #D1D9E6, -10px -10px 20px rgba(255, 255, 255, 0.7);"><svg class="absolute inset-0 w-full h-full" viewBox="0 0 120 120"><path d="M 10 60 Q 30 10 60 10 Q 90 10 110 60 Q 90 110 60 110 Q 30 110 10 60" fill="none" stroke="#E0E5EC" stroke-width="0.5" stroke-dasharray="2 2" opacity="0.3"></path><defs><linearGradient id="neonGradientMovies" x1="0%" x2="100%" y1="0%" y2="100%"><stop offset="0%" style="stop-color: rgb(168, 85, 247);"></stop><stop offset="100%" style="stop-color: rgb(59, 130, 246);"></stop></linearGradient></defs><circle cx="60" cy="60" fill="transparent" r="50" stroke="#E0E5EC" stroke-width="8"></circle><circle id="movie-progress-circle" cx="60" cy="60" fill="transparent" r="50" stroke="url(#neonGradientMovies)" stroke-dasharray="314.159" stroke-dashoffset="117.8" stroke-linecap="round" stroke-width="8" style="transition: stroke-dashoffset 0.3s ease; filter: drop-shadow(rgba(168, 85, 247, 0.6) 0px 0px 8px) drop-shadow(rgba(59, 130, 246, 0.4) 0px 0px 12px);" class="-rotate-90 origin-center"></circle></svg><div class="flex flex-col items-center z-10"><span id="movie-active-season" class="text-xs font-bold text-[#3B82F6] uppercase tracking-widest mb-1">Sezon 01</span><h2 id="movie-active-episode" class="text-4xl font-bold text-[#1E293B]">B06</h2></div></div><div class="flex gap-6 mt-8">
+        <button id="movie-active-minus" class="w-12 h-12 flex items-center justify-center rounded-2xl bg-[#F0F2F8] text-[#1E293B] font-bold text-xl active:scale-95 transition-transform" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);">
             <span class="material-symbols-rounded">remove</span>
         </button>
-        <button id="movie-active-plus" class="w-12 h-12 flex items-center justify-center rounded-2xl bg-[#F7F9FF] text-[#1E293B] font-bold text-xl active:scale-95 transition-transform" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);">
+        <button id="movie-active-plus" class="w-12 h-12 flex items-center justify-center rounded-2xl bg-[#F0F2F8] text-[#1E293B] font-bold text-xl active:scale-95 transition-transform" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);">
             <span class="material-symbols-rounded">add</span>
         </button>
-        </div><button id="movie-active-title" class="px-8 py-3 rounded-full bg-[#F7F9FF] text-[#1E293B] font-bold uppercase tracking-wider text-xs mt-4 truncate max-w-full" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);">İçerik Seçin</button>
+        </div><button id="movie-active-title" class="px-8 py-3 rounded-full bg-[#F0F2F8] text-[#1E293B] font-bold uppercase tracking-wider text-xs mt-4 truncate max-w-full" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);">İçerik Seçin</button>
         </section>
         
         <!-- Quick Add Section -->
-        <section class="flex flex-col gap-4"><div class="grid grid-cols-2 gap-6"><button id="add-movie-btn-new" class="flex flex-col items-center justify-center gap-3 py-6 rounded-2xl bg-[#F7F9FF] col-span-2 active:scale-95 transition-transform" style="box-shadow: 6px 6px 12px #D1D9E6, -6px -6px 12px rgba(255, 255, 255, 0.7);"><span class="material-symbols-rounded text-[#3B82F6] text-3xl">movie</span><span class="text-xs font-bold text-[#1E293B]">İçerik Ekle</span></button></div></section>
+        <section class="flex flex-col gap-4"><div class="grid grid-cols-2 gap-6"><button id="add-movie-btn-new" class="flex flex-col items-center justify-center gap-3 py-6 rounded-2xl bg-[#F0F2F8] col-span-2 active:scale-95 transition-transform" style="box-shadow: 6px 6px 12px #D1D9E6, -6px -6px 12px rgba(255, 255, 255, 0.7);"><span class="material-symbols-rounded text-[#3B82F6] text-3xl">movie</span><span class="text-xs font-bold text-[#1E293B]">İçerik Ekle</span></button></div></section>
 
         <!-- History Log -->
         <section class="flex flex-col gap-4">
@@ -2922,7 +2922,7 @@
     <!-- Add Movie Modal -->
     <div class="hidden fixed inset-0 z-[110] flex flex-col justify-center items-center md:p-4 px-4" id="movie-add-modal">
         <div class="absolute inset-0 bg-black/10 backdrop-blur-sm opacity-0 transition-opacity duration-300" id="movie-add-backdrop"></div>
-        <div class="bg-[#F7F9FF] w-full max-w-sm mx-auto rounded-[32px] shadow-[0_10px_40px_rgba(0,0,0,0.08)] p-6 flex flex-col items-center transform transition-all duration-300 scale-95 opacity-0 z-10" id="movie-add-modal-content">
+        <div class="bg-[#F0F2F8] w-full max-w-sm mx-auto rounded-[32px] shadow-[0_10px_40px_rgba(0,0,0,0.08)] p-6 flex flex-col items-center transform transition-all duration-300 scale-95 opacity-0 z-10" id="movie-add-modal-content">
             
             <div class="w-full text-center mb-6">
                 <h2 class="text-xl font-bold text-gray-800 mb-2">Yeni İçerik Ekle</h2>
@@ -2931,11 +2931,11 @@
             <div class="w-full flex flex-col gap-4 mb-6 px-2">
                 <div class="flex flex-col gap-1">
                     <label class="text-xs font-bold text-silk-blue uppercase px-2">İçerik Adı</label>
-                    <input id="movie-add-title" class="w-full p-4 rounded-2xl bg-[#F7F9FF] border-none focus:ring-2 focus:ring-silk-blue/20 text-gray-800 placeholder:text-gray-400" style="box-shadow: inset 4px 4px 8px #e3e6ee, inset -4px -4px 8px rgba(255, 255, 255, 0.7);" placeholder="Örn: Inception" type="text"/>
+                    <input id="movie-add-title" class="w-full p-4 rounded-2xl bg-[#F0F2F8] border-none focus:ring-2 focus:ring-silk-blue/20 text-gray-800 placeholder:text-gray-400" style="box-shadow: inset 4px 4px 8px #e3e6ee, inset -4px -4px 8px rgba(255, 255, 255, 0.7);" placeholder="Örn: Inception" type="text"/>
                 </div>
                 <div class="flex flex-col gap-1">
                     <label class="text-xs font-bold text-silk-blue uppercase px-2">Tür</label>
-                    <select id="movie-add-type" class="w-full p-4 rounded-2xl bg-[#F7F9FF] border-none focus:ring-2 focus:ring-silk-blue/20 text-gray-800 outline-none" style="box-shadow: inset 4px 4px 8px #e3e6ee, inset -4px -4px 8px rgba(255, 255, 255, 0.7);">
+                    <select id="movie-add-type" class="w-full p-4 rounded-2xl bg-[#F0F2F8] border-none focus:ring-2 focus:ring-silk-blue/20 text-gray-800 outline-none" style="box-shadow: inset 4px 4px 8px #e3e6ee, inset -4px -4px 8px rgba(255, 255, 255, 0.7);">
                         <option value="series">Dizi</option>
                         <option value="movie">Film</option>
                     </select>
@@ -2944,21 +2944,21 @@
                     <div class="grid grid-cols-2 gap-4">
                         <div class="flex flex-col gap-1">
                             <label class="text-xs font-bold text-silk-blue uppercase px-2">Toplam Sezon</label>
-                            <input id="movie-add-total-season" class="w-full p-4 rounded-2xl bg-[#F7F9FF] border-none focus:ring-2 focus:ring-silk-blue/20 text-gray-800 placeholder:text-gray-400" style="box-shadow: inset 4px 4px 8px #e3e6ee, inset -4px -4px 8px rgba(255, 255, 255, 0.7);" placeholder="1" type="number"/>
+                            <input id="movie-add-total-season" class="w-full p-4 rounded-2xl bg-[#F0F2F8] border-none focus:ring-2 focus:ring-silk-blue/20 text-gray-800 placeholder:text-gray-400" style="box-shadow: inset 4px 4px 8px #e3e6ee, inset -4px -4px 8px rgba(255, 255, 255, 0.7);" placeholder="1" type="number"/>
                         </div>
                         <div class="flex flex-col gap-1">
                             <label class="text-xs font-bold text-silk-blue uppercase px-2">Toplam Bölüm</label>
-                            <input id="movie-add-total-episode" class="w-full p-4 rounded-2xl bg-[#F7F9FF] border-none focus:ring-2 focus:ring-silk-blue/20 text-gray-800 placeholder:text-gray-400" style="box-shadow: inset 4px 4px 8px #e3e6ee, inset -4px -4px 8px rgba(255, 255, 255, 0.7);" placeholder="10" type="number"/>
+                            <input id="movie-add-total-episode" class="w-full p-4 rounded-2xl bg-[#F0F2F8] border-none focus:ring-2 focus:ring-silk-blue/20 text-gray-800 placeholder:text-gray-400" style="box-shadow: inset 4px 4px 8px #e3e6ee, inset -4px -4px 8px rgba(255, 255, 255, 0.7);" placeholder="10" type="number"/>
                         </div>
                     </div>
                     <div class="grid grid-cols-2 gap-4">
                         <div class="flex flex-col gap-1">
                             <label class="text-xs font-bold text-silk-blue uppercase px-2">Şu Anki Sezon</label>
-                            <input id="movie-add-season" class="w-full p-4 rounded-2xl bg-[#F7F9FF] border-none focus:ring-2 focus:ring-silk-blue/20 text-gray-800 placeholder:text-gray-400" style="box-shadow: inset 4px 4px 8px #e3e6ee, inset -4px -4px 8px rgba(255, 255, 255, 0.7);" placeholder="1" value="1" type="number"/>
+                            <input id="movie-add-season" class="w-full p-4 rounded-2xl bg-[#F0F2F8] border-none focus:ring-2 focus:ring-silk-blue/20 text-gray-800 placeholder:text-gray-400" style="box-shadow: inset 4px 4px 8px #e3e6ee, inset -4px -4px 8px rgba(255, 255, 255, 0.7);" placeholder="1" value="1" type="number"/>
                         </div>
                         <div class="flex flex-col gap-1">
                             <label class="text-xs font-bold text-silk-blue uppercase px-2">Şu Anki Bölüm</label>
-                            <input id="movie-add-episode" class="w-full p-4 rounded-2xl bg-[#F7F9FF] border-none focus:ring-2 focus:ring-silk-blue/20 text-gray-800 placeholder:text-gray-400" style="box-shadow: inset 4px 4px 8px #e3e6ee, inset -4px -4px 8px rgba(255, 255, 255, 0.7);" placeholder="1" value="1" type="number"/>
+                            <input id="movie-add-episode" class="w-full p-4 rounded-2xl bg-[#F0F2F8] border-none focus:ring-2 focus:ring-silk-blue/20 text-gray-800 placeholder:text-gray-400" style="box-shadow: inset 4px 4px 8px #e3e6ee, inset -4px -4px 8px rgba(255, 255, 255, 0.7);" placeholder="1" value="1" type="number"/>
                         </div>
                     </div>
                 </div>
@@ -2982,7 +2982,7 @@
                 </div>
             </div>
             <!-- CTA Button -->
-            <button id="movie-add-save" class="w-full py-4 px-6 rounded-full font-bold text-lg text-gray-800 shadow-md focus:outline-none active:scale-[0.98] transition-transform flex items-center justify-center gap-2 mb-4" style="box-shadow: 6px 6px 12px #e3e6ee, -6px -6px 12px rgba(255, 255, 255, 0.7); border: 2px solid transparent; background: linear-gradient(#F7F9FF, #F7F9FF) padding-box, linear-gradient(to right, #4A90E2, #50E3C2) border-box;">
+            <button id="movie-add-save" class="w-full py-4 px-6 rounded-full font-bold text-lg text-gray-800 shadow-md focus:outline-none active:scale-[0.98] transition-transform flex items-center justify-center gap-2 mb-4" style="box-shadow: 6px 6px 12px #e3e6ee, -6px -6px 12px rgba(255, 255, 255, 0.7); border: 2px solid transparent; background: linear-gradient(#F0F2F8, #F0F2F8) padding-box, linear-gradient(to right, #4A90E2, #50E3C2) border-box;">
                 Kaydet <span class="material-symbols-rounded text-silk-blue" style="font-variation-settings: 'FILL' 1;">movie</span>
             </button>
         </div>
@@ -2991,7 +2991,7 @@
     <!-- Edit Movie Modal -->
     <div class="hidden fixed inset-0 z-[110] flex flex-col justify-center items-center md:p-4 px-4" id="movie-edit-modal">
         <div class="absolute inset-0 bg-black/10 backdrop-blur-sm opacity-0 transition-opacity duration-300" id="movie-edit-backdrop"></div>
-        <div class="bg-[#F7F9FF] w-full max-w-sm mx-auto rounded-[32px] shadow-[0_10px_40px_rgba(0,0,0,0.08)] p-6 flex flex-col items-center transform transition-all duration-300 scale-95 opacity-0 z-10" id="movie-edit-modal-content">
+        <div class="bg-[#F0F2F8] w-full max-w-sm mx-auto rounded-[32px] shadow-[0_10px_40px_rgba(0,0,0,0.08)] p-6 flex flex-col items-center transform transition-all duration-300 scale-95 opacity-0 z-10" id="movie-edit-modal-content">
             
             <div class="w-full text-center mb-6">
                 <h2 class="text-xl font-bold text-gray-800 mb-2">İçeriği Düzenle</h2>
@@ -3000,11 +3000,11 @@
             <div class="w-full flex flex-col gap-4 mb-6 px-2">
                 <div class="flex flex-col gap-1">
                     <label class="text-xs font-bold text-silk-blue uppercase px-2">İçerik Adı</label>
-                    <input id="movie-edit-title" class="w-full p-4 rounded-2xl bg-[#F7F9FF] border-none focus:ring-2 focus:ring-silk-blue/20 text-gray-800 placeholder:text-gray-400" style="box-shadow: inset 4px 4px 8px #e3e6ee, inset -4px -4px 8px rgba(255, 255, 255, 0.7);" type="text"/>
+                    <input id="movie-edit-title" class="w-full p-4 rounded-2xl bg-[#F0F2F8] border-none focus:ring-2 focus:ring-silk-blue/20 text-gray-800 placeholder:text-gray-400" style="box-shadow: inset 4px 4px 8px #e3e6ee, inset -4px -4px 8px rgba(255, 255, 255, 0.7);" type="text"/>
                 </div>
                 <div class="flex flex-col gap-1">
                     <label class="text-xs font-bold text-silk-blue uppercase px-2">Tür</label>
-                    <select id="movie-edit-type" class="w-full p-4 rounded-2xl bg-[#F7F9FF] border-none focus:ring-2 focus:ring-silk-blue/20 text-gray-800 outline-none" style="box-shadow: inset 4px 4px 8px #e3e6ee, inset -4px -4px 8px rgba(255, 255, 255, 0.7);">
+                    <select id="movie-edit-type" class="w-full p-4 rounded-2xl bg-[#F0F2F8] border-none focus:ring-2 focus:ring-silk-blue/20 text-gray-800 outline-none" style="box-shadow: inset 4px 4px 8px #e3e6ee, inset -4px -4px 8px rgba(255, 255, 255, 0.7);">
                         <option value="series">Dizi</option>
                         <option value="movie">Film</option>
                     </select>
@@ -3013,21 +3013,21 @@
                     <div class="grid grid-cols-2 gap-4">
                         <div class="flex flex-col gap-1">
                             <label class="text-xs font-bold text-silk-blue uppercase px-2">Toplam Sezon</label>
-                            <input id="movie-edit-total-season" class="w-full p-4 rounded-2xl bg-[#F7F9FF] border-none focus:ring-2 focus:ring-silk-blue/20 text-gray-800 placeholder:text-gray-400" style="box-shadow: inset 4px 4px 8px #e3e6ee, inset -4px -4px 8px rgba(255, 255, 255, 0.7);" placeholder="1" type="number"/>
+                            <input id="movie-edit-total-season" class="w-full p-4 rounded-2xl bg-[#F0F2F8] border-none focus:ring-2 focus:ring-silk-blue/20 text-gray-800 placeholder:text-gray-400" style="box-shadow: inset 4px 4px 8px #e3e6ee, inset -4px -4px 8px rgba(255, 255, 255, 0.7);" placeholder="1" type="number"/>
                         </div>
                         <div class="flex flex-col gap-1">
                             <label class="text-xs font-bold text-silk-blue uppercase px-2">Toplam Bölüm</label>
-                            <input id="movie-edit-total-episode" class="w-full p-4 rounded-2xl bg-[#F7F9FF] border-none focus:ring-2 focus:ring-silk-blue/20 text-gray-800 placeholder:text-gray-400" style="box-shadow: inset 4px 4px 8px #e3e6ee, inset -4px -4px 8px rgba(255, 255, 255, 0.7);" placeholder="10" type="number"/>
+                            <input id="movie-edit-total-episode" class="w-full p-4 rounded-2xl bg-[#F0F2F8] border-none focus:ring-2 focus:ring-silk-blue/20 text-gray-800 placeholder:text-gray-400" style="box-shadow: inset 4px 4px 8px #e3e6ee, inset -4px -4px 8px rgba(255, 255, 255, 0.7);" placeholder="10" type="number"/>
                         </div>
                     </div>
                     <div class="grid grid-cols-2 gap-4">
                         <div class="flex flex-col gap-1">
                             <label class="text-xs font-bold text-silk-blue uppercase px-2">Şu Anki Sezon</label>
-                            <input id="movie-edit-season" class="w-full p-4 rounded-2xl bg-[#F7F9FF] border-none focus:ring-2 focus:ring-silk-blue/20 text-gray-800 placeholder:text-gray-400" style="box-shadow: inset 4px 4px 8px #e3e6ee, inset -4px -4px 8px rgba(255, 255, 255, 0.7);" type="number"/>
+                            <input id="movie-edit-season" class="w-full p-4 rounded-2xl bg-[#F0F2F8] border-none focus:ring-2 focus:ring-silk-blue/20 text-gray-800 placeholder:text-gray-400" style="box-shadow: inset 4px 4px 8px #e3e6ee, inset -4px -4px 8px rgba(255, 255, 255, 0.7);" type="number"/>
                         </div>
                         <div class="flex flex-col gap-1">
                             <label class="text-xs font-bold text-silk-blue uppercase px-2">Şu Anki Bölüm</label>
-                            <input id="movie-edit-episode" class="w-full p-4 rounded-2xl bg-[#F7F9FF] border-none focus:ring-2 focus:ring-silk-blue/20 text-gray-800 placeholder:text-gray-400" style="box-shadow: inset 4px 4px 8px #e3e6ee, inset -4px -4px 8px rgba(255, 255, 255, 0.7);" type="number"/>
+                            <input id="movie-edit-episode" class="w-full p-4 rounded-2xl bg-[#F0F2F8] border-none focus:ring-2 focus:ring-silk-blue/20 text-gray-800 placeholder:text-gray-400" style="box-shadow: inset 4px 4px 8px #e3e6ee, inset -4px -4px 8px rgba(255, 255, 255, 0.7);" type="number"/>
                         </div>
                     </div>
                 </div>
@@ -3051,7 +3051,7 @@
                 </div>
             </div>
             <!-- CTA Buttons -->
-            <button id="movie-edit-save" class="w-full py-4 px-6 rounded-full font-bold text-lg text-gray-800 shadow-md focus:outline-none active:scale-[0.98] transition-transform flex items-center justify-center gap-2 mb-3" style="box-shadow: 6px 6px 12px #e3e6ee, -6px -6px 12px rgba(255, 255, 255, 0.7); border: 2px solid transparent; background: linear-gradient(#F7F9FF, #F7F9FF) padding-box, linear-gradient(to right, #4A90E2, #50E3C2) border-box;">
+            <button id="movie-edit-save" class="w-full py-4 px-6 rounded-full font-bold text-lg text-gray-800 shadow-md focus:outline-none active:scale-[0.98] transition-transform flex items-center justify-center gap-2 mb-3" style="box-shadow: 6px 6px 12px #e3e6ee, -6px -6px 12px rgba(255, 255, 255, 0.7); border: 2px solid transparent; background: linear-gradient(#F0F2F8, #F0F2F8) padding-box, linear-gradient(to right, #4A90E2, #50E3C2) border-box;">
                 Güncelle <span class="material-symbols-rounded text-silk-blue" style="font-variation-settings: 'FILL' 1;">done</span>
             </button>
             <button id="movie-edit-delete" class="w-full py-4 px-6 rounded-full font-bold text-lg text-red-500 bg-transparent border-2 border-red-500/20 shadow-sm focus:outline-none active:scale-[0.98] transition-transform flex items-center justify-center gap-2">
@@ -3064,28 +3064,28 @@
 <!-- ================= FİNANS ================= -->
 
 <section id="view-finance" class="view hidden bg-background text-on-background min-h-[100dvh] flex flex-col font-inter">
-<header class="w-full top-0 sticky z-40 max-w-md mx-auto px-container-padding py-4"><div class="flex items-center justify-between w-full"><button class="nav-tab w-10 h-10 flex items-center justify-center rounded-full bg-[#F7F9FF] active:scale-[0.98] transition-transform" style="box-shadow: rgb(209, 217, 230) 4px 4px 8px, rgb(255, 255, 255) -4px -4px 8px;" data-target="view-dashboard"><span class="material-symbols-rounded text-[#1E293B]">arrow_back</span></button><h1 class="text-h1 font-bold text-[#1E293B]">Finans </h1><button class="w-10 h-10 flex items-center justify-center rounded-full bg-[#F7F9FF] active:scale-[0.98] transition-transform" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);" data-action="openFinanceSettingsModal" title="Ayarlar"><span class="material-symbols-rounded text-[#1E293B]">settings</span></button></div></header>
+<header class="w-full top-0 sticky z-40 max-w-md mx-auto px-container-padding py-4"><div class="flex items-center justify-between w-full"><button class="nav-tab w-10 h-10 flex items-center justify-center rounded-full bg-[#F0F2F8] active:scale-[0.98] transition-transform" style="box-shadow: rgb(209, 217, 230) 4px 4px 8px, rgb(255, 255, 255) -4px -4px 8px;" data-target="view-dashboard"><span class="material-symbols-rounded text-[#1E293B]">arrow_back</span></button><h1 class="text-h1 font-bold text-[#1E293B]">Finans </h1><button class="w-10 h-10 flex items-center justify-center rounded-full bg-[#F0F2F8] active:scale-[0.98] transition-transform" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);" data-action="openFinanceSettingsModal" title="Ayarlar"><span class="material-symbols-rounded text-[#1E293B]">settings</span></button></div></header>
 <main class="flex-1 w-full max-w-md mx-auto px-container-padding pb-32 flex flex-col gap-section-margin pt-4">
 
 <!-- Circular Progress Section -->
 <div class="w-full overflow-hidden pb-2 relative">
-    <div class="absolute left-0 top-0 bottom-0 w-8 bg-gradient-to-r from-[#F7F9FF] to-transparent z-10 pointer-events-none"></div>
-    <div class="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-[#F7F9FF] to-transparent z-10 pointer-events-none"></div>
+    <div class="absolute left-0 top-0 bottom-0 w-8 bg-gradient-to-r from-[#F0F2F8] to-transparent z-10 pointer-events-none"></div>
+    <div class="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-[#F0F2F8] to-transparent z-10 pointer-events-none"></div>
     <div class="flex w-full snap-x snap-mandatory overflow-x-auto hide-scrollbar scroll-smooth" id="finance-month-carousel" style="scroll-behavior: smooth;">
         <!-- Months injected dynamically -->
     </div>
 </div>
 
-<section class="flex flex-col items-center justify-center relative"><div class="relative w-64 h-64 flex items-center justify-center rounded-full bg-[#F7F9FF]" style="box-shadow: 10px 10px 20px #D1D9E6, -10px -10px 20px rgba(255, 255, 255, 0.7);"><svg class="absolute inset-0 w-full h-full" viewbox="0 0 120 120"><defs><lineargradient id="neonFinanceGradient" x1="0%" x2="100%" y1="0%" y2="100%"><stop offset="0%" style="stop-color:#A855F7"></stop><stop offset="50%" style="stop-color:#3B82F6"></stop><stop offset="100%" style="stop-color:#22C55E"></stop></lineargradient></defs><circle cx="60" cy="60" fill="transparent" r="50" stroke="#E0E5EC" stroke-width="8"></circle><circle cx="60" cy="60" fill="transparent" r="50" stroke="url(#neonFinanceGradient)" stroke-dasharray="314.159" stroke-dashoffset="117.8" stroke-linecap="round" stroke-width="8" style="filter: drop-shadow(0 0 5px rgba(59, 130, 246, 0.5)); transition: stroke-dashoffset 1s ease-in-out;" id="finance-balance-ring"></circle></svg><div class="flex flex-col items-center z-10"><p class="text-[10px] font-bold uppercase tracking-wider text-[#64748B] mb-1">TOPLAM BAKİYE</p><h2 class="text-3xl font-bold text-[#1E293B]" id="finance-total-balance">₺0,00</h2><div class="mt-2 flex items-center gap-1 px-2 py-0.5 rounded-full bg-[#22C55E]/10"><span class="text-[10px] font-bold text-[#22C55E]" id="finance-monthly-trend">▲ +₺0 Bu Ay</span></div></div></div><button class="mt-8 px-8 py-3 rounded-full bg-[#F7F9FF] text-[#1E293B] font-bold uppercase tracking-wider text-xs active:scale-[0.98] transition-transform flex items-center gap-2" style="box-shadow: rgb(209, 217, 230) 4px 4px 8px, rgb(255, 255, 255) -4px -4px 8px;" data-action="openAddTransactionModal"><span class="material-symbols-rounded text-lg">add_circle</span> İşlem GİR</button></section>
+<section class="flex flex-col items-center justify-center relative"><div class="relative w-64 h-64 flex items-center justify-center rounded-full bg-[#F0F2F8]" style="box-shadow: 10px 10px 20px #D1D9E6, -10px -10px 20px rgba(255, 255, 255, 0.7);"><svg class="absolute inset-0 w-full h-full" viewbox="0 0 120 120"><defs><lineargradient id="neonFinanceGradient" x1="0%" x2="100%" y1="0%" y2="100%"><stop offset="0%" style="stop-color:#A855F7"></stop><stop offset="50%" style="stop-color:#3B82F6"></stop><stop offset="100%" style="stop-color:#22C55E"></stop></lineargradient></defs><circle cx="60" cy="60" fill="transparent" r="50" stroke="#E0E5EC" stroke-width="8"></circle><circle cx="60" cy="60" fill="transparent" r="50" stroke="url(#neonFinanceGradient)" stroke-dasharray="314.159" stroke-dashoffset="117.8" stroke-linecap="round" stroke-width="8" style="filter: drop-shadow(0 0 5px rgba(59, 130, 246, 0.5)); transition: stroke-dashoffset 1s ease-in-out;" id="finance-balance-ring"></circle></svg><div class="flex flex-col items-center z-10"><p class="text-[10px] font-bold uppercase tracking-wider text-[#64748B] mb-1">TOPLAM BAKİYE</p><h2 class="text-3xl font-bold text-[#1E293B]" id="finance-total-balance">₺0,00</h2><div class="mt-2 flex items-center gap-1 px-2 py-0.5 rounded-full bg-[#22C55E]/10"><span class="text-[10px] font-bold text-[#22C55E]" id="finance-monthly-trend">▲ +₺0 Bu Ay</span></div></div></div><button class="mt-8 px-8 py-3 rounded-full bg-[#F0F2F8] text-[#1E293B] font-bold uppercase tracking-wider text-xs active:scale-[0.98] transition-transform flex items-center gap-2" style="box-shadow: rgb(209, 217, 230) 4px 4px 8px, rgb(255, 255, 255) -4px -4px 8px;" data-action="openAddTransactionModal"><span class="material-symbols-rounded text-lg">add_circle</span> İşlem GİR</button></section>
 
 <!-- Quick Add Section -->
-<section class="flex flex-col gap-card-gap"><div class="grid grid-cols-2 gap-6"><button class="flex flex-col items-center justify-center gap-3 py-6 rounded-2xl bg-[#F7F9FF]" style="box-shadow: rgb(209, 217, 230) 6px 6px 12px, rgb(255, 255, 255) -6px -6px 12px;"><div class="flex flex-col items-center"><span class="text-xs font-bold text-[#1E293B]">Gram Altın</span><span class="text-[10px] font-medium text-[#64748B]" id="metal-gold-price">-- TL</span></div></button><button class="flex flex-col items-center justify-center gap-3 py-6 rounded-2xl bg-[#F7F9FF]" style="box-shadow: rgb(209, 217, 230) 6px 6px 12px, rgb(255, 255, 255) -6px -6px 12px;"><div class="flex flex-col items-center"><span class="text-xs font-bold text-[#1E293B]">Gram Gümüş</span><span class="text-[10px] font-medium text-[#64748B]" id="metal-silver-price">-- TL</span></div></button></div></section>
+<section class="flex flex-col gap-card-gap"><div class="grid grid-cols-2 gap-6"><button class="flex flex-col items-center justify-center gap-3 py-6 rounded-2xl bg-[#F0F2F8]" style="box-shadow: rgb(209, 217, 230) 6px 6px 12px, rgb(255, 255, 255) -6px -6px 12px;"><div class="flex flex-col items-center"><span class="text-xs font-bold text-[#1E293B]">Gram Altın</span><span class="text-[10px] font-medium text-[#64748B]" id="metal-gold-price">-- TL</span></div></button><button class="flex flex-col items-center justify-center gap-3 py-6 rounded-2xl bg-[#F0F2F8]" style="box-shadow: rgb(209, 217, 230) 6px 6px 12px, rgb(255, 255, 255) -6px -6px 12px;"><div class="flex flex-col items-center"><span class="text-xs font-bold text-[#1E293B]">Gram Gümüş</span><span class="text-[10px] font-medium text-[#64748B]" id="metal-silver-price">-- TL</span></div></button></div></section>
 
 <!-- Weekly Chart Section -->
 <section class="flex flex-col gap-card-gap">
-    <button class="w-full py-4 rounded-2xl bg-[#F7F9FF] flex justify-between items-center px-6 active:scale-[0.98] transition-transform" style="box-shadow: 6px 6px 12px #D1D9E6, -6px -6px 12px rgba(255, 255, 255, 0.7);" onclick="document.getElementById('view-finance').classList.add('hidden'); document.getElementById('view-finance-detail').classList.remove('hidden'); renderFinanceDetail();">
+    <button class="w-full py-4 rounded-2xl bg-[#F0F2F8] flex justify-between items-center px-6 active:scale-[0.98] transition-transform" style="box-shadow: 6px 6px 12px #D1D9E6, -6px -6px 12px rgba(255, 255, 255, 0.7);" onclick="document.getElementById('view-finance').classList.add('hidden'); document.getElementById('view-finance-detail').classList.remove('hidden'); renderFinanceDetail();">
         <div class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-full bg-[#F7F9FF] flex items-center justify-center" style="box-shadow: inset 2px 2px 5px #D1D9E6, inset -2px -2px 5px rgba(255, 255, 255, 0.7);">
+            <div class="w-10 h-10 rounded-full bg-[#F0F2F8] flex items-center justify-center" style="box-shadow: inset 2px 2px 5px #D1D9E6, inset -2px -2px 5px rgba(255, 255, 255, 0.7);">
                 <span class="material-symbols-rounded text-[#3B82F6]">analytics</span>
             </div>
             <span class="font-bold text-[#1E293B] text-lg">Aylık Analiz</span>
@@ -3107,7 +3107,7 @@
         <div class="absolute inset-0 bg-black/10 backdrop-blur-sm z-10 opacity-0 transition-opacity duration-300" id="water-goal-backdrop"></div>
         
         <!-- Bottom Sheet -->
-        <div id="water-goal-modal-content" class="relative w-full max-w-sm bg-[#F7F9FF] rounded-t-[32px] shadow-[0_-8px_30px_rgba(0,0,0,0.05)] p-6 z-20 flex flex-col items-center transform transition-transform duration-300 translate-y-full pb-10">
+        <div id="water-goal-modal-content" class="relative w-full max-w-sm bg-[#F0F2F8] rounded-t-[32px] shadow-[0_-8px_30px_rgba(0,0,0,0.05)] p-6 z-20 flex flex-col items-center transform transition-transform duration-300 translate-y-full pb-10">
             <!-- Drag Handle -->
             <div class="w-12 h-1.5 bg-gray-300 rounded-full mb-6 cursor-pointer" id="water-goal-close-handle"></div>
             <div class="w-full text-center mb-6">
@@ -3115,14 +3115,14 @@
             </div>
             <!-- Input Area -->
             <div class="flex items-center justify-between w-full px-4 mb-6">
-                <button id="water-goal-minus" class="neo-button w-14 h-14 rounded-full flex items-center justify-center bg-[#F7F9FF] text-[#4A90E2] focus:outline-none">
+                <button id="water-goal-minus" class="neo-button w-14 h-14 rounded-full flex items-center justify-center bg-[#F0F2F8] text-[#4A90E2] focus:outline-none">
                     <span class="material-symbols-rounded font-bold text-2xl" style="font-variation-settings: 'FILL' 1;">remove</span>
                 </button>
-                <div class="flex flex-col items-center justify-center w-32 h-32 rounded-full bg-[#F7F9FF]" style="box-shadow: inset 4px 4px 8px #e3e6ee, inset -4px -4px 8px rgba(255, 255, 255, 0.7);">
+                <div class="flex flex-col items-center justify-center w-32 h-32 rounded-full bg-[#F0F2F8]" style="box-shadow: inset 4px 4px 8px #e3e6ee, inset -4px -4px 8px rgba(255, 255, 255, 0.7);">
                     <span id="water-goal-amount-display" class="text-3xl font-extrabold text-gray-800">2000</span>
                     <span class="text-sm font-semibold text-[#4A90E2] mt-1">ml</span>
                 </div>
-                <button id="water-goal-plus" class="neo-button w-14 h-14 rounded-full flex items-center justify-center bg-[#F7F9FF] text-[#50E3C2] focus:outline-none">
+                <button id="water-goal-plus" class="neo-button w-14 h-14 rounded-full flex items-center justify-center bg-[#F0F2F8] text-[#50E3C2] focus:outline-none">
                     <span class="material-symbols-rounded font-bold text-2xl" style="font-variation-settings: 'FILL' 1;">add</span>
                 </button>
             </div>
@@ -3137,7 +3137,7 @@
         <div class="absolute inset-0 bg-black/10 backdrop-blur-sm z-10 opacity-0 transition-opacity duration-300" id="water-custom-backdrop"></div>
         
         <!-- Bottom Sheet -->
-        <div id="water-custom-modal-content" class="relative w-full max-w-sm bg-[#F7F9FF] rounded-t-[32px] shadow-[0_-8px_30px_rgba(0,0,0,0.05)] p-6 z-20 flex flex-col items-center transform transition-transform duration-300 translate-y-full pb-10">
+        <div id="water-custom-modal-content" class="relative w-full max-w-sm bg-[#F0F2F8] rounded-t-[32px] shadow-[0_-8px_30px_rgba(0,0,0,0.05)] p-6 z-20 flex flex-col items-center transform transition-transform duration-300 translate-y-full pb-10">
             <!-- Drag Handle -->
             <div class="w-12 h-1.5 bg-gray-300 rounded-full mb-6 cursor-pointer" id="water-custom-close-handle"></div>
             <div class="w-full text-center mb-6">
@@ -3145,14 +3145,14 @@
             </div>
             <!-- Input Area -->
             <div class="flex items-center justify-between w-full px-4 mb-6">
-                <button id="water-custom-minus" class="neo-button w-14 h-14 rounded-full flex items-center justify-center bg-[#F7F9FF] text-[#4A90E2] focus:outline-none">
+                <button id="water-custom-minus" class="neo-button w-14 h-14 rounded-full flex items-center justify-center bg-[#F0F2F8] text-[#4A90E2] focus:outline-none">
                     <span class="material-symbols-rounded font-bold text-2xl" style="font-variation-settings: 'FILL' 1;">remove</span>
                 </button>
-                <div class="flex flex-col items-center justify-center w-32 h-32 rounded-full bg-[#F7F9FF]" style="box-shadow: inset 4px 4px 8px #e3e6ee, inset -4px -4px 8px rgba(255, 255, 255, 0.7);">
+                <div class="flex flex-col items-center justify-center w-32 h-32 rounded-full bg-[#F0F2F8]" style="box-shadow: inset 4px 4px 8px #e3e6ee, inset -4px -4px 8px rgba(255, 255, 255, 0.7);">
                     <span id="water-custom-amount-display" class="text-3xl font-extrabold text-gray-800">250</span>
                     <span class="text-sm font-semibold text-[#4A90E2] mt-1">ml</span>
                 </div>
-                <button id="water-custom-plus" class="neo-button w-14 h-14 rounded-full flex items-center justify-center bg-[#F7F9FF] text-[#50E3C2] focus:outline-none">
+                <button id="water-custom-plus" class="neo-button w-14 h-14 rounded-full flex items-center justify-center bg-[#F0F2F8] text-[#50E3C2] focus:outline-none">
                     <span class="material-symbols-rounded font-bold text-2xl" style="font-variation-settings: 'FILL' 1;">add</span>
                 </button>
             </div>
@@ -3167,7 +3167,7 @@
     <div class="absolute inset-0 bg-black/10 backdrop-blur-sm z-10 transition-opacity duration-300 opacity-0" id="calories-goal-backdrop"></div>
     
     <!-- Modal Content -->
-    <div class="relative w-full max-w-sm bg-[#F7F9FF] rounded-t-[32px] shadow-[0_-8px_30px_rgba(0,0,0,0.05)] p-6 z-20 flex flex-col items-center transform transition-transform duration-300 translate-y-full pb-8" id="calories-goal-modal-content">
+    <div class="relative w-full max-w-sm bg-[#F0F2F8] rounded-t-[32px] shadow-[0_-8px_30px_rgba(0,0,0,0.05)] p-6 z-20 flex flex-col items-center transform transition-transform duration-300 translate-y-full pb-8" id="calories-goal-modal-content">
         <!-- Drag Handle (Mobile) -->
         <div class="w-12 h-1.5 bg-gray-300 rounded-full mb-6 cursor-pointer" id="calories-goal-close-handle"></div>
         <div class="w-full text-center mb-6">
@@ -3175,46 +3175,46 @@
         </div>
         <!-- Input Area -->
         <div class="flex items-center justify-between w-full px-4 mb-6">
-            <button aria-label="Decrease amount" class="neo-button w-14 h-14 rounded-full flex items-center justify-center bg-[#F7F9FF] text-silk-blue focus:outline-none" id="calories-goal-minus">
+            <button aria-label="Decrease amount" class="neo-button w-14 h-14 rounded-full flex items-center justify-center bg-[#F0F2F8] text-silk-blue focus:outline-none" id="calories-goal-minus">
                 <span class="material-symbols-rounded font-bold text-2xl" style="font-variation-settings: 'FILL' 1;">remove</span>
             </button>
-            <div class="flex flex-col items-center justify-center w-32 h-32 rounded-full shadow-neumorphic-inset bg-[#F7F9FF]">
+            <div class="flex flex-col items-center justify-center w-32 h-32 rounded-full shadow-neumorphic-inset bg-[#F0F2F8]">
                 <span class="text-3xl font-extrabold text-gray-800" id="calories-goal-display">2000</span>
                 <span class="text-sm font-semibold text-silk-blue mt-1">kcal</span>
             </div>
-            <button aria-label="Increase amount" class="neo-button w-14 h-14 rounded-full flex items-center justify-center bg-[#F7F9FF] text-silk-green focus:outline-none" id="calories-goal-plus">
+            <button aria-label="Increase amount" class="neo-button w-14 h-14 rounded-full flex items-center justify-center bg-[#F0F2F8] text-silk-green focus:outline-none" id="calories-goal-plus">
                 <span class="material-symbols-rounded font-bold text-2xl" style="font-variation-settings: 'FILL' 1;">add</span>
             </button>
         </div>
         <div class="w-full flex flex-col gap-2 mb-6">
-            <div class="flex items-center justify-between bg-[#F7F9FF] p-4 rounded-2xl shadow-neumorphic-inset">
+            <div class="flex items-center justify-between bg-[#F0F2F8] p-4 rounded-2xl shadow-neumorphic-inset">
                 <div class="flex flex-col">
                     <span class="text-xs font-bold text-silk-blue uppercase">Protein</span>
                     <div class="flex items-center gap-1"><span class="text-lg font-bold text-gray-800" id="calories-goal-protein-display">150</span><span class="text-xs text-gray-500">gr</span></div>
                 </div>
                 <div class="flex gap-2">
-                    <button id="calories-goal-protein-minus" class="neo-button w-10 h-10 rounded-full flex items-center justify-center bg-[#F7F9FF] text-silk-blue"><span class="material-symbols-rounded text-xl">remove</span></button>
-                    <button id="calories-goal-protein-plus" class="neo-button w-10 h-10 rounded-full flex items-center justify-center bg-[#F7F9FF] text-silk-green"><span class="material-symbols-rounded text-xl">add</span></button>
+                    <button id="calories-goal-protein-minus" class="neo-button w-10 h-10 rounded-full flex items-center justify-center bg-[#F0F2F8] text-silk-blue"><span class="material-symbols-rounded text-xl">remove</span></button>
+                    <button id="calories-goal-protein-plus" class="neo-button w-10 h-10 rounded-full flex items-center justify-center bg-[#F0F2F8] text-silk-green"><span class="material-symbols-rounded text-xl">add</span></button>
                 </div>
             </div>
-            <div class="flex items-center justify-between bg-[#F7F9FF] p-4 rounded-2xl shadow-neumorphic-inset">
+            <div class="flex items-center justify-between bg-[#F0F2F8] p-4 rounded-2xl shadow-neumorphic-inset">
                 <div class="flex flex-col">
                     <span class="text-xs font-bold text-silk-blue uppercase">Karbonhidrat</span>
                     <div class="flex items-center gap-1"><span class="text-lg font-bold text-gray-800" id="calories-goal-karb-display">250</span><span class="text-xs text-gray-500">gr</span></div>
                 </div>
                 <div class="flex gap-2">
-                    <button id="calories-goal-karb-minus" class="neo-button w-10 h-10 rounded-full flex items-center justify-center bg-[#F7F9FF] text-silk-blue"><span class="material-symbols-rounded text-xl">remove</span></button>
-                    <button id="calories-goal-karb-plus" class="neo-button w-10 h-10 rounded-full flex items-center justify-center bg-[#F7F9FF] text-silk-green"><span class="material-symbols-rounded text-xl">add</span></button>
+                    <button id="calories-goal-karb-minus" class="neo-button w-10 h-10 rounded-full flex items-center justify-center bg-[#F0F2F8] text-silk-blue"><span class="material-symbols-rounded text-xl">remove</span></button>
+                    <button id="calories-goal-karb-plus" class="neo-button w-10 h-10 rounded-full flex items-center justify-center bg-[#F0F2F8] text-silk-green"><span class="material-symbols-rounded text-xl">add</span></button>
                 </div>
             </div>
-            <div class="flex items-center justify-between bg-[#F7F9FF] p-4 rounded-2xl shadow-neumorphic-inset">
+            <div class="flex items-center justify-between bg-[#F0F2F8] p-4 rounded-2xl shadow-neumorphic-inset">
                 <div class="flex flex-col">
                     <span class="text-xs font-bold text-silk-blue uppercase">Yağ</span>
                     <div class="flex items-center gap-1"><span class="text-lg font-bold text-gray-800" id="calories-goal-yag-display">65</span><span class="text-xs text-gray-500">gr</span></div>
                 </div>
                 <div class="flex gap-2">
-                    <button id="calories-goal-yag-minus" class="neo-button w-10 h-10 rounded-full flex items-center justify-center bg-[#F7F9FF] text-silk-blue"><span class="material-symbols-rounded text-xl">remove</span></button>
-                    <button id="calories-goal-yag-plus" class="neo-button w-10 h-10 rounded-full flex items-center justify-center bg-[#F7F9FF] text-silk-green"><span class="material-symbols-rounded text-xl">add</span></button>
+                    <button id="calories-goal-yag-minus" class="neo-button w-10 h-10 rounded-full flex items-center justify-center bg-[#F0F2F8] text-silk-blue"><span class="material-symbols-rounded text-xl">remove</span></button>
+                    <button id="calories-goal-yag-plus" class="neo-button w-10 h-10 rounded-full flex items-center justify-center bg-[#F0F2F8] text-silk-green"><span class="material-symbols-rounded text-xl">add</span></button>
                 </div>
             </div>
         </div>
@@ -3339,11 +3339,11 @@
 <!-- Top App Bar -->
 <header class="w-full top-0 sticky z-40 max-w-md mx-auto px-container-padding py-4">
     <div class="flex items-center justify-between w-full">
-        <button class="w-10 h-10 flex items-center justify-center rounded-full bg-[#F7F9FF] active:scale-95 transition-transform" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);" onclick="document.getElementById('view-finance').classList.remove('hidden'); document.getElementById('view-finance-detail').classList.add('hidden');">
+        <button class="w-10 h-10 flex items-center justify-center rounded-full bg-[#F0F2F8] active:scale-95 transition-transform" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);" onclick="document.getElementById('view-finance').classList.remove('hidden'); document.getElementById('view-finance-detail').classList.add('hidden');">
             <span class="material-symbols-rounded text-[#1E293B]">arrow_back</span>
         </button>
         <h1 class="text-h1 font-bold text-[#1E293B]">Finans &nbsp;Detayı</h1>
-        <button class="w-10 h-10 flex items-center justify-center rounded-full bg-[#F7F9FF]" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7); visibility: hidden;">
+        <button class="w-10 h-10 flex items-center justify-center rounded-full bg-[#F0F2F8]" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7); visibility: hidden;">
             <span class="material-symbols-rounded text-[#1E293B]">settings</span>
         </button>
     </div>
@@ -3360,7 +3360,7 @@
     </div>
     
     <!-- Card 1: Harcama Dağılımı -->
-    <section class="bg-[#F7F9FF] shadow-sm rounded-[32px] p-6 flex flex-col gap-6" style="box-shadow: 8px 8px 16px #D1D9E6, -8px -8px 16px rgba(255, 255, 255, 0.7);">
+    <section class="bg-[#F0F2F8] shadow-sm rounded-[32px] p-6 flex flex-col gap-6" style="box-shadow: 8px 8px 16px #D1D9E6, -8px -8px 16px rgba(255, 255, 255, 0.7);">
         <div class="flex justify-between items-center">
             <h3 class="text-h2 font-bold text-[#1E293B]">Harcama Dağılımı</h3>
         </div>
@@ -3370,7 +3370,7 @@
     </section>
 
     <!-- Card 2: Aylık Durum -->
-    <section class="bg-[#F7F9FF] shadow-sm rounded-[32px] p-6 flex flex-col gap-6" style="box-shadow: 8px 8px 16px #D1D9E6, -8px -8px 16px rgba(255, 255, 255, 0.7);">
+    <section class="bg-[#F0F2F8] shadow-sm rounded-[32px] p-6 flex flex-col gap-6" style="box-shadow: 8px 8px 16px #D1D9E6, -8px -8px 16px rgba(255, 255, 255, 0.7);">
         <div class="flex justify-between items-center">
             <h3 class="text-h2 font-bold text-[#1E293B]">Aylık Durum</h3>
         </div>
@@ -3380,7 +3380,7 @@
     </section>
 
     <!-- Card 3: Ödeme Yöntemleri -->
-    <section class="bg-[#F7F9FF] shadow-sm rounded-[32px] p-6 flex flex-col gap-6" style="box-shadow: 8px 8px 16px #D1D9E6, -8px -8px 16px rgba(255, 255, 255, 0.7);">
+    <section class="bg-[#F0F2F8] shadow-sm rounded-[32px] p-6 flex flex-col gap-6" style="box-shadow: 8px 8px 16px #D1D9E6, -8px -8px 16px rgba(255, 255, 255, 0.7);">
         <div class="flex justify-between items-center">
             <h3 class="text-h2 font-bold text-[#1E293B]">Ödeme Yöntemleri</h3>
         </div>
@@ -3409,16 +3409,16 @@
 
 <section id="view-calories" class="view hidden">
 <!-- Top App Bar -->
-<header class="w-full top-0 sticky z-40 max-w-md mx-auto px-container-padding py-4"><div class="flex items-center justify-between w-full"><button class="nav-tab w-10 h-10 flex items-center justify-center rounded-full bg-[#F7F9FF]" style="box-shadow: rgb(209, 217, 230) 4px 4px 8px, rgb(255, 255, 255) -4px -4px 8px;" data-target="view-dashboard"><span class="material-symbols-rounded text-[#1E293B]">arrow_back</span></button><h1 class="text-h1 font-bold text-[#1E293B]">Kalori &nbsp;Takibi</h1><button class="w-10 h-10 flex items-center justify-center rounded-full bg-[#F7F9FF] active:scale-[0.98] transition-transform" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);" title="Ayarlar"><span class="material-symbols-rounded text-[#1E293B]">settings</span></button></div></header>
+<header class="w-full top-0 sticky z-40 max-w-md mx-auto px-container-padding py-4"><div class="flex items-center justify-between w-full"><button class="nav-tab w-10 h-10 flex items-center justify-center rounded-full bg-[#F0F2F8]" style="box-shadow: rgb(209, 217, 230) 4px 4px 8px, rgb(255, 255, 255) -4px -4px 8px;" data-target="view-dashboard"><span class="material-symbols-rounded text-[#1E293B]">arrow_back</span></button><h1 class="text-h1 font-bold text-[#1E293B]">Kalori &nbsp;Takibi</h1><button class="w-10 h-10 flex items-center justify-center rounded-full bg-[#F0F2F8] active:scale-[0.98] transition-transform" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);" title="Ayarlar"><span class="material-symbols-rounded text-[#1E293B]">settings</span></button></div></header>
 <!-- Main Content Container -->
 <main class="flex-1 w-full max-w-md mx-auto px-container-padding pb-32 flex flex-col gap-section-margin pt-4">
 <!-- Circular Progress Section -->
-<section class="flex flex-col items-center justify-center relative"><div class="relative w-64 h-64 flex items-center justify-center rounded-full bg-[#F7F9FF]" style="box-shadow: 10px 10px 20px #D1D9E6, -10px -10px 20px rgba(255, 255, 255, 0.7);"><svg class="absolute inset-0 w-full h-full" viewBox="0 0 120 120"><defs><linearGradient id="neonGradientCal" x1="0%" x2="100%" y1="0%" y2="100%"><stop offset="0%" style="stop-color:#A855F7"></stop><stop offset="50%" style="stop-color:#3B82F6"></stop><stop offset="100%" style="stop-color:#22C55E"></stop></linearGradient></defs><circle cx="60" cy="60" fill="transparent" r="50" stroke="#E0E5EC" stroke-width="8"></circle><circle id="ui-calorie-circle" cx="60" cy="60" fill="transparent" r="50" stroke="url(#neonGradientCal)" stroke-dasharray="314.159" stroke-dashoffset="314.159" stroke-linecap="round" stroke-width="8" style="filter: drop-shadow(0 0 5px rgba(59, 130, 246, 0.5)); transition: stroke-dashoffset 0.5s ease-out; transform: rotate(-90deg); transform-origin: 50% 50%;"></circle></svg><div class="flex flex-col items-center z-10"><h2 id="ui-calorie-consumed" class="text-4xl font-bold text-[#1E293B]">0</h2><p class="text-sm text-[#64748B]">of <span id="ui-calorie-goal">2000</span> kcal</p></div></div><button id="calories-goal-btn" class="mt-8 px-8 py-3 rounded-full bg-[#F7F9FF] text-[#1E293B] font-bold uppercase tracking-wider text-xs active:scale-95 transition-transform" style="box-shadow: rgb(209, 217, 230) 4px 4px 8px, rgb(255, 255, 255) -4px -4px 8px;">Daily Goal</button></section>
+<section class="flex flex-col items-center justify-center relative"><div class="relative w-64 h-64 flex items-center justify-center rounded-full bg-[#F0F2F8]" style="box-shadow: 10px 10px 20px #D1D9E6, -10px -10px 20px rgba(255, 255, 255, 0.7);"><svg class="absolute inset-0 w-full h-full" viewBox="0 0 120 120"><defs><linearGradient id="neonGradientCal" x1="0%" x2="100%" y1="0%" y2="100%"><stop offset="0%" style="stop-color:#A855F7"></stop><stop offset="50%" style="stop-color:#3B82F6"></stop><stop offset="100%" style="stop-color:#22C55E"></stop></linearGradient></defs><circle cx="60" cy="60" fill="transparent" r="50" stroke="#E0E5EC" stroke-width="8"></circle><circle id="ui-calorie-circle" cx="60" cy="60" fill="transparent" r="50" stroke="url(#neonGradientCal)" stroke-dasharray="314.159" stroke-dashoffset="314.159" stroke-linecap="round" stroke-width="8" style="filter: drop-shadow(0 0 5px rgba(59, 130, 246, 0.5)); transition: stroke-dashoffset 0.5s ease-out; transform: rotate(-90deg); transform-origin: 50% 50%;"></circle></svg><div class="flex flex-col items-center z-10"><h2 id="ui-calorie-consumed" class="text-4xl font-bold text-[#1E293B]">0</h2><p class="text-sm text-[#64748B]">of <span id="ui-calorie-goal">2000</span> kcal</p></div></div><button id="calories-goal-btn" class="mt-8 px-8 py-3 rounded-full bg-[#F0F2F8] text-[#1E293B] font-bold uppercase tracking-wider text-xs active:scale-95 transition-transform" style="box-shadow: rgb(209, 217, 230) 4px 4px 8px, rgb(255, 255, 255) -4px -4px 8px;">Daily Goal</button></section>
 <!-- Quick Add Section -->
-<section class="flex flex-col gap-card-gap"><div class="grid grid-cols-2 gap-6"><button class="nav-tab flex flex-col items-center justify-center gap-3 py-6 rounded-2xl bg-[#F7F9FF] active:scale-95 transition-transform" style="box-shadow: rgb(209, 217, 230) 6px 6px 12px, rgb(255, 255, 255) -6px -6px 12px;" data-target="view-foods"><span class="material-symbols-rounded text-[#3B82F6] text-3xl">restaurant</span><span class="text-xs font-bold text-[#1E293B]">Öğün Ekle</span></button><button id="calories-quick-add-btn" class="flex flex-col items-center justify-center gap-3 py-6 rounded-2xl bg-[#F7F9FF] active:scale-95 transition-transform" style="box-shadow: rgb(209, 217, 230) 6px 6px 12px, rgb(255, 255, 255) -6px -6px 12px;"><span class="material-symbols-rounded text-[#22C55E] text-3xl">add</span><span class="text-xs font-bold text-[#1E293B]">&nbsp;Hızlı Ekle</span></button></div></section><section class="flex flex-col gap-4">
+<section class="flex flex-col gap-card-gap"><div class="grid grid-cols-2 gap-6"><button class="nav-tab flex flex-col items-center justify-center gap-3 py-6 rounded-2xl bg-[#F0F2F8] active:scale-95 transition-transform" style="box-shadow: rgb(209, 217, 230) 6px 6px 12px, rgb(255, 255, 255) -6px -6px 12px;" data-target="view-foods"><span class="material-symbols-rounded text-[#3B82F6] text-3xl">restaurant</span><span class="text-xs font-bold text-[#1E293B]">Öğün Ekle</span></button><button id="calories-quick-add-btn" class="flex flex-col items-center justify-center gap-3 py-6 rounded-2xl bg-[#F0F2F8] active:scale-95 transition-transform" style="box-shadow: rgb(209, 217, 230) 6px 6px 12px, rgb(255, 255, 255) -6px -6px 12px;"><span class="material-symbols-rounded text-[#22C55E] text-3xl">add</span><span class="text-xs font-bold text-[#1E293B]">&nbsp;Hızlı Ekle</span></button></div></section><section class="flex flex-col gap-4">
   <div class="grid grid-cols-3 gap-4">
     <!-- Protein Card -->
-    <div class="flex flex-col gap-3 p-4 rounded-2xl bg-[#F7F9FF]" style="box-shadow: 6px 6px 12px #D1D9E6, -6px -6px 12px rgba(255, 255, 255, 0.7);">
+    <div class="flex flex-col gap-3 p-4 rounded-2xl bg-[#F0F2F8]" style="box-shadow: 6px 6px 12px #D1D9E6, -6px -6px 12px rgba(255, 255, 255, 0.7);">
       <span class="text-[10px] font-bold text-[#64748B] uppercase tracking-wider">Protein</span>
       <span class="text-xs font-bold text-[#1E293B]"><span id="ui-protein-consumed">0</span>g / <span id="ui-protein-goal">150</span>g</span>
       <div class="w-full h-1.5 bg-[#E0E5EC] rounded-full overflow-hidden">
@@ -3426,7 +3426,7 @@
       </div>
     </div>
     <!-- Carbs Card -->
-    <div class="flex flex-col gap-3 p-4 rounded-2xl bg-[#F7F9FF]" style="box-shadow: 6px 6px 12px #D1D9E6, -6px -6px 12px rgba(255, 255, 255, 0.7);">
+    <div class="flex flex-col gap-3 p-4 rounded-2xl bg-[#F0F2F8]" style="box-shadow: 6px 6px 12px #D1D9E6, -6px -6px 12px rgba(255, 255, 255, 0.7);">
       <span class="text-[10px] font-bold text-[#64748B] uppercase tracking-wider">Carbs</span>
       <span class="text-xs font-bold text-[#1E293B]"><span id="ui-karb-consumed">0</span>g / <span id="ui-karb-goal">250</span>g</span>
       <div class="w-full h-1.5 bg-[#E0E5EC] rounded-full overflow-hidden">
@@ -3434,7 +3434,7 @@
       </div>
     </div>
     <!-- Fat Card -->
-    <div class="flex flex-col gap-3 p-4 rounded-2xl bg-[#F7F9FF]" style="box-shadow: 6px 6px 12px #D1D9E6, -6px -6px 12px rgba(255, 255, 255, 0.7);">
+    <div class="flex flex-col gap-3 p-4 rounded-2xl bg-[#F0F2F8]" style="box-shadow: 6px 6px 12px #D1D9E6, -6px -6px 12px rgba(255, 255, 255, 0.7);">
       <span class="text-[10px] font-bold text-[#64748B] uppercase tracking-wider">Fat</span>
       <span class="text-xs font-bold text-[#1E293B]"><span id="ui-yag-consumed">0</span>g / <span id="ui-yag-goal">70</span>g</span>
       <div class="w-full h-1.5 bg-[#E0E5EC] rounded-full overflow-hidden">
@@ -3444,7 +3444,7 @@
   </div>
 </section>
 <!-- Weekly Chart Section -->
-<section class="bg-surface-container-lowest shadow-sm rounded-2xl p-6 flex flex-col gap-4" style="background-color: #F7F9FF; box-shadow: 8px 8px 16px #D1D9E6, -8px -8px 16px rgba(255, 255, 255, 0.7); border: none;">
+<section class="bg-surface-container-lowest shadow-sm rounded-2xl p-6 flex flex-col gap-4" style="background-color: #F0F2F8; box-shadow: 8px 8px 16px #D1D9E6, -8px -8px 16px rgba(255, 255, 255, 0.7); border: none;">
 <div class="flex justify-between items-end mb-2"><h3 class="text-h2 font-bold text-[#1E293B]">Last 7 Days</h3><span id="calories-avg-text" class="text-xs font-bold text-[#64748B] uppercase tracking-wider">Avg: 0 kcal</span></div>
 <div id="calories-chart-wrapper" class="h-40 flex items-end justify-between pt-4 pb-2 border-b border-outline-variant/30">
 <!-- Chart gets generated here -->
@@ -3460,16 +3460,16 @@
     <!-- ================= BESİNLERİM (Foods Library) ================= -->
     <section id="view-foods" class="view hidden">
 <!-- Top App Bar -->
-<header class="w-full top-0 sticky z-40 max-w-md mx-auto px-container-padding py-4"><div class="flex items-center justify-between w-full"><button class="nav-tab w-10 h-10 flex items-center justify-center rounded-full bg-[#F7F9FF]" style="box-shadow: rgb(209, 217, 230) 4px 4px 8px, rgb(255, 255, 255) -4px -4px 8px;" data-target="view-calories"><span class="material-symbols-rounded text-[#1E293B]">arrow_back</span></button><h1 class="text-h1 font-bold text-[#1E293B]">Öğün Ekle</h1><button class="w-10 h-10 flex items-center justify-center rounded-full bg-[#F7F9FF] active:scale-[0.98] transition-transform" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);" title="Ayarlar"><span class="material-symbols-rounded text-[#1E293B]">settings</span></button></div></header>
+<header class="w-full top-0 sticky z-40 max-w-md mx-auto px-container-padding py-4"><div class="flex items-center justify-between w-full"><button class="nav-tab w-10 h-10 flex items-center justify-center rounded-full bg-[#F0F2F8]" style="box-shadow: rgb(209, 217, 230) 4px 4px 8px, rgb(255, 255, 255) -4px -4px 8px;" data-target="view-calories"><span class="material-symbols-rounded text-[#1E293B]">arrow_back</span></button><h1 class="text-h1 font-bold text-[#1E293B]">Öğün Ekle</h1><button class="w-10 h-10 flex items-center justify-center rounded-full bg-[#F0F2F8] active:scale-[0.98] transition-transform" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);" title="Ayarlar"><span class="material-symbols-rounded text-[#1E293B]">settings</span></button></div></header>
 <!-- Main Content Container -->
 <main class="flex-1 w-full max-w-md mx-auto px-container-padding pb-32 flex flex-col gap-section-margin pt-4">
 
 <!-- Quick Add Section -->
-<section class="flex flex-col gap-card-gap"><div class="flex flex-col gap-6"><button class="open-new-food-modal-btn flex flex-col items-center justify-center gap-3 py-6 rounded-2xl bg-[#F7F9FF] w-full active:scale-95 transition-transform" style="box-shadow: rgb(209, 217, 230) 6px 6px 12px, rgb(255, 255, 255) -6px -6px 12px;" onclick="openNewFoodModal()"><span class="material-symbols-rounded text-[#3B82F6] text-3xl">add</span><span class="text-xs font-bold text-[#1E293B]">Besin Ekle</span></button></div></section>
+<section class="flex flex-col gap-card-gap"><div class="flex flex-col gap-6"><button class="open-new-food-modal-btn flex flex-col items-center justify-center gap-3 py-6 rounded-2xl bg-[#F0F2F8] w-full active:scale-95 transition-transform" style="box-shadow: rgb(209, 217, 230) 6px 6px 12px, rgb(255, 255, 255) -6px -6px 12px;" onclick="openNewFoodModal()"><span class="material-symbols-rounded text-[#3B82F6] text-3xl">add</span><span class="text-xs font-bold text-[#1E293B]">Besin Ekle</span></button></div></section>
 
 <!-- Search Section -->
 <section class="flex flex-col gap-4">
-  <div class="flex items-center gap-3 p-4 rounded-2xl bg-[#F7F9FF] w-full" style="box-shadow: rgb(209, 217, 230) 6px 6px 12px, rgb(255, 255, 255) -6px -6px 12px;"><span class="material-symbols-rounded text-[#64748B]">search</span><input type="text" id="food-search-input" placeholder="Besin ara..." class="bg-transparent border-none outline-none text-sm text-[#1E293B] w-full placeholder-[#64748B]"></div>
+  <div class="flex items-center gap-3 p-4 rounded-2xl bg-[#F0F2F8] w-full" style="box-shadow: rgb(209, 217, 230) 6px 6px 12px, rgb(255, 255, 255) -6px -6px 12px;"><span class="material-symbols-rounded text-[#64748B]">search</span><input type="text" id="food-search-input" placeholder="Besin ara..." class="bg-transparent border-none outline-none text-sm text-[#1E293B] w-full placeholder-[#64748B]"></div>
 </section>
 
 <!-- History Log -->
@@ -3486,7 +3486,7 @@
         <!-- Backdrop -->
         <div class="absolute inset-0 bg-black/10 backdrop-blur-sm z-10 transition-opacity duration-300 opacity-0" id="add-food-backdrop"></div>
         <!-- Modal Content -->
-        <div class="relative w-full max-w-sm bg-[#F7F9FF] rounded-t-[32px] shadow-[0_-8px_30px_rgba(0,0,0,0.05)] p-6 z-20 flex flex-col items-center transform transition-transform duration-300 translate-y-full pb-8 max-h-[90dvh] overflow-y-auto" id="addFoodModalContent">
+        <div class="relative w-full max-w-sm bg-[#F0F2F8] rounded-t-[32px] shadow-[0_-8px_30px_rgba(0,0,0,0.05)] p-6 z-20 flex flex-col items-center transform transition-transform duration-300 translate-y-full pb-8 max-h-[90dvh] overflow-y-auto" id="addFoodModalContent">
             <!-- Drag Handle (Mobile) -->
             <div class="w-12 h-1.5 bg-gray-300 rounded-full mb-6 cursor-pointer" id="close-add-food-handle"></div>
             <div class="flex justify-between items-center mb-6">
@@ -3538,7 +3538,7 @@
     <!-- Backdrop -->
     <div class="absolute inset-0 bg-black/10 backdrop-blur-sm z-10 transition-opacity duration-300 opacity-0" id="add-portion-backdrop"></div>
     <!-- Modal Content -->
-    <div class="relative w-full max-w-sm bg-[#F7F9FF] rounded-t-[32px] shadow-[0_-8px_30px_rgba(0,0,0,0.05)] p-6 z-20 flex flex-col items-center transform transition-transform duration-300 translate-y-full pb-8" id="addPortionModalContent">
+    <div class="relative w-full max-w-sm bg-[#F0F2F8] rounded-t-[32px] shadow-[0_-8px_30px_rgba(0,0,0,0.05)] p-6 z-20 flex flex-col items-center transform transition-transform duration-300 translate-y-full pb-8" id="addPortionModalContent">
         <!-- Drag Handle (Mobile) -->
         <div class="w-12 h-1.5 bg-gray-300 rounded-full mb-6 cursor-pointer" id="close-portion-handle"></div>
         <div class="w-full text-center mb-6">
@@ -3546,15 +3546,15 @@
         </div>
         <!-- Input Area -->
         <div class="flex items-center justify-between w-full px-4 mb-6">
-            <button aria-label="Decrease amount" class="neo-button w-14 h-14 rounded-full flex items-center justify-center bg-[#F7F9FF] text-silk-blue focus:outline-none" id="portion-minus-btn">
+            <button aria-label="Decrease amount" class="neo-button w-14 h-14 rounded-full flex items-center justify-center bg-[#F0F2F8] text-silk-blue focus:outline-none" id="portion-minus-btn">
                 <span class="material-symbols-rounded font-bold text-2xl" style="font-variation-settings: 'FILL' 1;">remove</span>
             </button>
-            <div class="flex flex-col items-center justify-center w-32 h-32 rounded-full shadow-neumorphic-inset bg-[#F7F9FF]">
+            <div class="flex flex-col items-center justify-center w-32 h-32 rounded-full shadow-neumorphic-inset bg-[#F0F2F8]">
                 <span class="text-3xl font-extrabold text-gray-800" id="portion-gram-display">100</span>
                 <span class="text-sm font-semibold text-silk-blue mt-1">gr</span>
                 <span class="text-sm font-medium text-gray-800/60 mt-1" id="portion-kcal-display">150 kcal</span>
             </div>
-            <button aria-label="Increase amount" class="neo-button w-14 h-14 rounded-full flex items-center justify-center bg-[#F7F9FF] text-silk-green focus:outline-none" id="portion-plus-btn">
+            <button aria-label="Increase amount" class="neo-button w-14 h-14 rounded-full flex items-center justify-center bg-[#F0F2F8] text-silk-green focus:outline-none" id="portion-plus-btn">
                 <span class="material-symbols-rounded font-bold text-2xl" style="font-variation-settings: 'FILL' 1;">add</span>
             </button>
         </div>
@@ -3570,7 +3570,7 @@
     <div class="absolute inset-0 bg-black/10 backdrop-blur-sm z-10 transition-opacity duration-300 opacity-0" id="new-food-backdrop"></div>
     
     <!-- Modal Content -->
-    <div class="relative w-full max-w-sm bg-[#F7F9FF] rounded-t-[32px] shadow-[0_-8px_30px_rgba(0,0,0,0.05)] p-6 z-20 flex flex-col items-center transform transition-transform duration-300 translate-y-full pb-8" id="newFoodModalContent">
+    <div class="relative w-full max-w-sm bg-[#F0F2F8] rounded-t-[32px] shadow-[0_-8px_30px_rgba(0,0,0,0.05)] p-6 z-20 flex flex-col items-center transform transition-transform duration-300 translate-y-full pb-8" id="newFoodModalContent">
         <!-- Drag Handle (Mobile) -->
         <div class="w-12 h-1.5 bg-gray-300 rounded-full mb-6 cursor-pointer" id="close-new-food-handle"></div>
         <div class="w-full text-center mb-6">
@@ -3578,52 +3578,52 @@
         </div>
         <!-- Input Area -->
         <div class="w-full px-4 mb-6">
-            <div class="relative flex items-center w-full h-14 px-6 rounded-full bg-[#F7F9FF] shadow-neumorphic-inset">
+            <div class="relative flex items-center w-full h-14 px-6 rounded-full bg-[#F0F2F8] shadow-neumorphic-inset">
                 <span class="material-symbols-rounded text-gray-500 mr-3">restaurant</span>
                 <input type="text" id="new-food-name" placeholder="Örn: Izgara Tavuk" class="bg-transparent border-none focus:ring-0 w-full text-gray-800 placeholder-gray-500 font-semibold text-sm outline-none">
             </div>
         </div>
         <div class="flex items-center justify-between w-full px-4 mb-6">
-            <button aria-label="Decrease amount" class="neo-button w-14 h-14 rounded-full flex items-center justify-center bg-[#F7F9FF] text-silk-blue focus:outline-none" id="new-food-kcal-minus">
+            <button aria-label="Decrease amount" class="neo-button w-14 h-14 rounded-full flex items-center justify-center bg-[#F0F2F8] text-silk-blue focus:outline-none" id="new-food-kcal-minus">
                 <span class="material-symbols-rounded font-bold text-2xl" style="font-variation-settings: 'FILL' 1;">remove</span>
             </button>
-            <div class="flex flex-col items-center justify-center w-32 h-32 rounded-full shadow-neumorphic-inset bg-[#F7F9FF]">
+            <div class="flex flex-col items-center justify-center w-32 h-32 rounded-full shadow-neumorphic-inset bg-[#F0F2F8]">
                 <span class="text-3xl font-extrabold text-gray-800" id="new-food-kcal-display">100</span>
                 <span class="text-sm font-semibold text-silk-blue mt-1">kcal</span>
             </div>
-            <button aria-label="Increase amount" class="neo-button w-14 h-14 rounded-full flex items-center justify-center bg-[#F7F9FF] text-silk-green focus:outline-none" id="new-food-kcal-plus">
+            <button aria-label="Increase amount" class="neo-button w-14 h-14 rounded-full flex items-center justify-center bg-[#F0F2F8] text-silk-green focus:outline-none" id="new-food-kcal-plus">
                 <span class="material-symbols-rounded font-bold text-2xl" style="font-variation-settings: 'FILL' 1;">add</span>
             </button>
         </div>
         <div class="w-full flex flex-col gap-2 mb-6">
-            <div class="flex items-center justify-between bg-[#F7F9FF] p-4 rounded-2xl shadow-neumorphic-inset">
+            <div class="flex items-center justify-between bg-[#F0F2F8] p-4 rounded-2xl shadow-neumorphic-inset">
                 <div class="flex flex-col">
                     <span class="text-xs font-bold text-silk-blue uppercase">Protein</span>
                     <div class="flex items-center gap-1"><span class="text-lg font-bold text-gray-800" id="new-food-protein-display">0</span><span class="text-xs text-gray-500">gr</span></div>
                 </div>
                 <div class="flex gap-2">
-                    <button id="new-food-protein-minus" class="neo-button w-10 h-10 rounded-full flex items-center justify-center bg-[#F7F9FF] text-silk-blue"><span class="material-symbols-rounded text-xl">remove</span></button>
-                    <button id="new-food-protein-plus" class="neo-button w-10 h-10 rounded-full flex items-center justify-center bg-[#F7F9FF] text-silk-green"><span class="material-symbols-rounded text-xl">add</span></button>
+                    <button id="new-food-protein-minus" class="neo-button w-10 h-10 rounded-full flex items-center justify-center bg-[#F0F2F8] text-silk-blue"><span class="material-symbols-rounded text-xl">remove</span></button>
+                    <button id="new-food-protein-plus" class="neo-button w-10 h-10 rounded-full flex items-center justify-center bg-[#F0F2F8] text-silk-green"><span class="material-symbols-rounded text-xl">add</span></button>
                 </div>
             </div>
-            <div class="flex items-center justify-between bg-[#F7F9FF] p-4 rounded-2xl shadow-neumorphic-inset">
+            <div class="flex items-center justify-between bg-[#F0F2F8] p-4 rounded-2xl shadow-neumorphic-inset">
                 <div class="flex flex-col">
                     <span class="text-xs font-bold text-silk-blue uppercase">Karbonhidrat</span>
                     <div class="flex items-center gap-1"><span class="text-lg font-bold text-gray-800" id="new-food-karb-display">0</span><span class="text-xs text-gray-500">gr</span></div>
                 </div>
                 <div class="flex gap-2">
-                    <button id="new-food-karb-minus" class="neo-button w-10 h-10 rounded-full flex items-center justify-center bg-[#F7F9FF] text-silk-blue"><span class="material-symbols-rounded text-xl">remove</span></button>
-                    <button id="new-food-karb-plus" class="neo-button w-10 h-10 rounded-full flex items-center justify-center bg-[#F7F9FF] text-silk-green"><span class="material-symbols-rounded text-xl">add</span></button>
+                    <button id="new-food-karb-minus" class="neo-button w-10 h-10 rounded-full flex items-center justify-center bg-[#F0F2F8] text-silk-blue"><span class="material-symbols-rounded text-xl">remove</span></button>
+                    <button id="new-food-karb-plus" class="neo-button w-10 h-10 rounded-full flex items-center justify-center bg-[#F0F2F8] text-silk-green"><span class="material-symbols-rounded text-xl">add</span></button>
                 </div>
             </div>
-            <div class="flex items-center justify-between bg-[#F7F9FF] p-4 rounded-2xl shadow-neumorphic-inset">
+            <div class="flex items-center justify-between bg-[#F0F2F8] p-4 rounded-2xl shadow-neumorphic-inset">
                 <div class="flex flex-col">
                     <span class="text-xs font-bold text-silk-blue uppercase">Yağ</span>
                     <div class="flex items-center gap-1"><span class="text-lg font-bold text-gray-800" id="new-food-yag-display">0</span><span class="text-xs text-gray-500">gr</span></div>
                 </div>
                 <div class="flex gap-2">
-                    <button id="new-food-yag-minus" class="neo-button w-10 h-10 rounded-full flex items-center justify-center bg-[#F7F9FF] text-silk-blue"><span class="material-symbols-rounded text-xl">remove</span></button>
-                    <button id="new-food-yag-plus" class="neo-button w-10 h-10 rounded-full flex items-center justify-center bg-[#F7F9FF] text-silk-green"><span class="material-symbols-rounded text-xl">add</span></button>
+                    <button id="new-food-yag-minus" class="neo-button w-10 h-10 rounded-full flex items-center justify-center bg-[#F0F2F8] text-silk-blue"><span class="material-symbols-rounded text-xl">remove</span></button>
+                    <button id="new-food-yag-plus" class="neo-button w-10 h-10 rounded-full flex items-center justify-center bg-[#F0F2F8] text-silk-green"><span class="material-symbols-rounded text-xl">add</span></button>
                 </div>
             </div>
         </div>
@@ -3756,7 +3756,7 @@
 <!-- Add Transaction Modal -->
 <div id="finance-add-tx-modal" class="fixed inset-0 z-[100] hidden flex-col justify-end items-center md:p-4">
     <div class="absolute inset-0 bg-black/10 backdrop-blur-sm opacity-0 transition-opacity duration-300 cursor-pointer" data-action="closeAddTransactionModal" id="finance-add-tx-backdrop"></div>
-    <div class="bg-[#F7F9FF] w-full max-w-sm mx-auto rounded-t-[32px] md:rounded-[32px] shadow-[0_-8px_30px_rgba(0,0,0,0.05)] md:shadow-[0_10px_40px_rgba(0,0,0,0.08)] p-6 flex flex-col items-center transform transition-transform duration-300 translate-y-full z-10 pb-8 md:pb-6" id="finance-add-tx-content">
+    <div class="bg-[#F0F2F8] w-full max-w-sm mx-auto rounded-t-[32px] md:rounded-[32px] shadow-[0_-8px_30px_rgba(0,0,0,0.05)] md:shadow-[0_10px_40px_rgba(0,0,0,0.08)] p-6 flex flex-col items-center transform transition-transform duration-300 translate-y-full z-10 pb-8 md:pb-6" id="finance-add-tx-content">
         <!-- Drag Handle (Mobile) -->
         <div class="w-12 h-1.5 bg-gray-300 rounded-full mb-6 md:hidden cursor-pointer" data-action="closeAddTransactionModal"></div>
         <div class="w-full text-center mb-6">
@@ -3764,14 +3764,14 @@
         </div>
         
         <!-- Type Selection -->
-        <div class="flex w-full mb-6 bg-[#F7F9FF] p-1 rounded-full" style="box-shadow: inset 4px 4px 8px #e3e6ee, inset -4px -4px 8px rgba(255, 255, 255, 0.7);">
+        <div class="flex w-full mb-6 bg-[#F0F2F8] p-1 rounded-full" style="box-shadow: inset 4px 4px 8px #e3e6ee, inset -4px -4px 8px rgba(255, 255, 255, 0.7);">
             <label class="flex-1 cursor-pointer">
                 <input type="radio" name="tx-type" value="expense" class="peer sr-only" checked>
-                <div class="py-2 text-center rounded-full text-sm font-semibold text-[#64748B] transition-all peer-checked:text-[#EF4444] peer-checked:bg-[#F7F9FF]" style="box-shadow: none;">Gider</div>
+                <div class="py-2 text-center rounded-full text-sm font-semibold text-[#64748B] transition-all peer-checked:text-[#EF4444] peer-checked:bg-[#F0F2F8]" style="box-shadow: none;">Gider</div>
             </label>
             <label class="flex-1 cursor-pointer">
                 <input type="radio" name="tx-type" value="income" class="peer sr-only">
-                <div class="py-2 text-center rounded-full text-sm font-semibold text-[#64748B] transition-all peer-checked:text-[#22c55e] peer-checked:bg-[#F7F9FF]" style="box-shadow: none;">Gelir</div>
+                <div class="py-2 text-center rounded-full text-sm font-semibold text-[#64748B] transition-all peer-checked:text-[#22c55e] peer-checked:bg-[#F0F2F8]" style="box-shadow: none;">Gelir</div>
             </label>
             <style>
         .material-symbols-rounded {
@@ -3789,15 +3789,15 @@
             
             <!-- Amount -->
             <div class="flex flex-col items-center gap-4 mb-2">
-                <div class="flex items-center justify-between w-full px-6 py-4 rounded-full bg-[#F7F9FF]" style="box-shadow: inset 4px 4px 8px #e3e6ee, inset -4px -4px 8px rgba(255, 255, 255, 0.7);">
-                    <button id="tx-amount-minus" class="w-10 h-10 rounded-full bg-[#F7F9FF] flex items-center justify-center active:scale-[0.98] transition-transform" style="box-shadow: 6px 6px 12px #e3e6ee, -6px -6px 12px rgba(255, 255, 255, 0.7);">
+                <div class="flex items-center justify-between w-full px-6 py-4 rounded-full bg-[#F0F2F8]" style="box-shadow: inset 4px 4px 8px #e3e6ee, inset -4px -4px 8px rgba(255, 255, 255, 0.7);">
+                    <button id="tx-amount-minus" class="w-10 h-10 rounded-full bg-[#F0F2F8] flex items-center justify-center active:scale-[0.98] transition-transform" style="box-shadow: 6px 6px 12px #e3e6ee, -6px -6px 12px rgba(255, 255, 255, 0.7);">
                         <span class="material-symbols-rounded text-[#3B82F6] font-bold">remove</span>
                     </button>
                     <div class="flex flex-col items-center justify-center -space-y-1">
                         <input id="tx-amount" class="w-24 bg-transparent border-none outline-none font-bold text-2xl text-center text-[#1E293B] focus:ring-0 p-0" placeholder="0" type="number" min="0" step="0.01">
                         <span class="text-[10px] font-bold text-[#64748B] uppercase">Tutar (₺)</span>
                     </div>
-                    <button id="tx-amount-plus" class="w-10 h-10 rounded-full bg-[#F7F9FF] flex items-center justify-center active:scale-[0.98] transition-transform" style="box-shadow: 6px 6px 12px #e3e6ee, -6px -6px 12px rgba(255, 255, 255, 0.7);">
+                    <button id="tx-amount-plus" class="w-10 h-10 rounded-full bg-[#F0F2F8] flex items-center justify-center active:scale-[0.98] transition-transform" style="box-shadow: 6px 6px 12px #e3e6ee, -6px -6px 12px rgba(255, 255, 255, 0.7);">
                         <span class="material-symbols-rounded text-[#3B82F6] font-bold">add</span>
                     </button>
                 </div>
@@ -3806,7 +3806,7 @@
             <!-- Transaction Title -->
             <div class="flex flex-col gap-1">
                 <label class="text-xs font-bold text-[#3B82F6] uppercase px-2">AÇIKLAMA</label>
-                <div class="flex items-center rounded-2xl p-4 bg-[#F7F9FF]" style="box-shadow: inset 4px 4px 8px #e3e6ee, inset -4px -4px 8px rgba(255, 255, 255, 0.7);">
+                <div class="flex items-center rounded-2xl p-4 bg-[#F0F2F8]" style="box-shadow: inset 4px 4px 8px #e3e6ee, inset -4px -4px 8px rgba(255, 255, 255, 0.7);">
                     <input id="tx-title" class="w-full bg-transparent border-none focus:ring-0 text-sm font-medium text-[#1E293B] p-0 appearance-none outline-none" placeholder="Örn: Market, Kahve" type="text">
                 </div>
             </div>
@@ -3832,14 +3832,14 @@
             <!-- Date -->
             <div class="flex flex-col gap-1">
                 <label class="text-xs font-bold text-[#3B82F6] uppercase px-2">TARİH</label>
-                <div class="flex items-center rounded-2xl p-4 bg-[#F7F9FF]" style="box-shadow: inset 4px 4px 8px #e3e6ee, inset -4px -4px 8px rgba(255, 255, 255, 0.7);">
+                <div class="flex items-center rounded-2xl p-4 bg-[#F0F2F8]" style="box-shadow: inset 4px 4px 8px #e3e6ee, inset -4px -4px 8px rgba(255, 255, 255, 0.7);">
                     <input id="tx-date" class="w-full bg-transparent border-none focus:ring-0 text-sm font-medium text-[#1E293B] p-0 appearance-none outline-none" type="date"/>
                 </div>
             </div>
         </div>
 
         <!-- CTA Button -->
-        <button id="finance-save-tx-btn" class="w-full py-4 px-6 rounded-full font-bold text-lg text-[#1E293B] shadow-md focus:outline-none active:scale-[0.98] transition-transform flex items-center justify-center gap-2" style="box-shadow: 6px 6px 12px #e3e6ee, -6px -6px 12px rgba(255, 255, 255, 0.7); border: 2px solid transparent; background: linear-gradient(#F7F9FF, #F7F9FF) padding-box, linear-gradient(to right, #4A90E2, #50E3C2) border-box;">
+        <button id="finance-save-tx-btn" class="w-full py-4 px-6 rounded-full font-bold text-lg text-[#1E293B] shadow-md focus:outline-none active:scale-[0.98] transition-transform flex items-center justify-center gap-2" style="box-shadow: 6px 6px 12px #e3e6ee, -6px -6px 12px rgba(255, 255, 255, 0.7); border: 2px solid transparent; background: linear-gradient(#F0F2F8, #F0F2F8) padding-box, linear-gradient(to right, #4A90E2, #50E3C2) border-box;">
             Kaydet 
             <span class="material-symbols-rounded text-[#3B82F6]" style="font-variation-settings: 'FILL' 1;">check_circle</span>
         </button>
@@ -3850,12 +3850,12 @@
 <!-- Finance Settings Modal -->
 <div id="finance-settings-modal" class="fixed inset-0 z-[100] hidden flex-col justify-end items-center md:p-4">
     <div class="absolute inset-0 bg-black/10 backdrop-blur-sm opacity-0 transition-opacity duration-300 cursor-pointer" data-action="closeFinanceSettingsModal" id="finance-settings-backdrop"></div>
-    <div class="bg-[#F7F9FF] w-full max-w-sm mx-auto rounded-t-[32px] md:rounded-[32px] shadow-[0_-8px_30px_rgba(0,0,0,0.05)] md:shadow-[0_10px_40px_rgba(0,0,0,0.08)] p-6 flex flex-col items-center transform transition-transform duration-300 translate-y-full z-10 pb-8 md:pb-6" id="finance-settings-content" style="max-height: 90vh;">
+    <div class="bg-[#F0F2F8] w-full max-w-sm mx-auto rounded-t-[32px] md:rounded-[32px] shadow-[0_-8px_30px_rgba(0,0,0,0.05)] md:shadow-[0_10px_40px_rgba(0,0,0,0.08)] p-6 flex flex-col items-center transform transition-transform duration-300 translate-y-full z-10 pb-8 md:pb-6" id="finance-settings-content" style="max-height: 90vh;">
         <!-- Drag Handle (Mobile) -->
         <div class="w-12 h-1.5 bg-gray-300 rounded-full mb-6 md:hidden cursor-pointer" data-action="closeFinanceSettingsModal"></div>
         <div class="w-full flex items-center justify-between mb-6">
             <h2 class="text-xl font-bold text-[#1E293B]">Finans Ayarları</h2>
-            <button class="w-10 h-10 flex items-center justify-center rounded-full bg-[#F7F9FF] active:scale-[0.98] transition-transform" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);" data-action="closeFinanceSettingsModal">
+            <button class="w-10 h-10 flex items-center justify-center rounded-full bg-[#F0F2F8] active:scale-[0.98] transition-transform" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);" data-action="closeFinanceSettingsModal">
                 <span class="material-symbols-rounded text-[#1E293B]">close</span>
             </button>
         </div>
@@ -3898,7 +3898,7 @@
 <!-- Add Category Modal -->
 <div id="finance-add-category-modal" class="fixed inset-0 z-[110] hidden flex-col justify-center items-center md:p-4 px-4">
     <div class="absolute inset-0 bg-black/10 backdrop-blur-sm opacity-0 transition-opacity duration-300 cursor-pointer" data-action="closeAddCategoryModal" id="finance-add-category-backdrop"></div>
-    <div class="bg-[#F7F9FF] w-full max-w-sm mx-auto rounded-[32px] shadow-[0_10px_40px_rgba(0,0,0,0.08)] p-6 flex flex-col items-center transform transition-all duration-300 scale-95 opacity-0 z-10" id="finance-add-category-content">
+    <div class="bg-[#F0F2F8] w-full max-w-sm mx-auto rounded-[32px] shadow-[0_10px_40px_rgba(0,0,0,0.08)] p-6 flex flex-col items-center transform transition-all duration-300 scale-95 opacity-0 z-10" id="finance-add-category-content">
         <div class="w-full text-center mb-6">
             <h2 class="text-xl font-bold text-[#1E293B] mb-2">Harcama Türü Ekle</h2>
         </div>
@@ -3907,7 +3907,7 @@
             <!-- Name Input -->
             <div class="flex flex-col gap-1">
                 <label class="text-xs font-bold text-[#3B82F6] uppercase px-2">HARCAMA ADI</label>
-                <div class="flex items-center rounded-2xl p-4 bg-[#F7F9FF]" style="box-shadow: inset 4px 4px 8px #e3e6ee, inset -4px -4px 8px rgba(255, 255, 255, 0.7);">
+                <div class="flex items-center rounded-2xl p-4 bg-[#F0F2F8]" style="box-shadow: inset 4px 4px 8px #e3e6ee, inset -4px -4px 8px rgba(255, 255, 255, 0.7);">
                     <input id="category-name" class="w-full bg-transparent border-none focus:ring-0 text-sm font-medium text-[#1E293B] p-0 appearance-none outline-none" placeholder="Tür adı girin" type="text">
                 </div>
             </div>
@@ -3915,38 +3915,38 @@
             <div class="flex flex-col gap-1">
                 <label class="text-xs font-bold text-[#3B82F6] uppercase px-2">İKON SEÇİMİ</label>
                 <div class="grid grid-cols-3 gap-4 p-4 justify-items-center" id="category-icon-container">
-                    <button class="category-icon-option w-12 h-12 rounded-full flex items-center justify-center bg-[#F7F9FF] text-[#3B82F6] selected active:scale-[0.98] transition-transform" style="box-shadow: 6px 6px 12px #e3e6ee, -6px -6px 12px rgba(255, 255, 255, 0.7);" data-icon="shopping_cart">
+                    <button class="category-icon-option w-12 h-12 rounded-full flex items-center justify-center bg-[#F0F2F8] text-[#3B82F6] selected active:scale-[0.98] transition-transform" style="box-shadow: 6px 6px 12px #e3e6ee, -6px -6px 12px rgba(255, 255, 255, 0.7);" data-icon="shopping_cart">
                         <span class="material-symbols-rounded">shopping_cart</span>
                     </button>
-                    <button class="category-icon-option w-12 h-12 rounded-full flex items-center justify-center bg-[#F7F9FF] text-[#64748B] active:scale-[0.98] transition-transform" style="box-shadow: inset 4px 4px 8px #e3e6ee, inset -4px -4px 8px rgba(255, 255, 255, 0.7);" data-icon="receipt_long">
+                    <button class="category-icon-option w-12 h-12 rounded-full flex items-center justify-center bg-[#F0F2F8] text-[#64748B] active:scale-[0.98] transition-transform" style="box-shadow: inset 4px 4px 8px #e3e6ee, inset -4px -4px 8px rgba(255, 255, 255, 0.7);" data-icon="receipt_long">
                         <span class="material-symbols-rounded">receipt_long</span>
                     </button>
-                    <button class="category-icon-option w-12 h-12 rounded-full flex items-center justify-center bg-[#F7F9FF] text-[#64748B] active:scale-[0.98] transition-transform" style="box-shadow: inset 4px 4px 8px #e3e6ee, inset -4px -4px 8px rgba(255, 255, 255, 0.7);" data-icon="directions_car">
+                    <button class="category-icon-option w-12 h-12 rounded-full flex items-center justify-center bg-[#F0F2F8] text-[#64748B] active:scale-[0.98] transition-transform" style="box-shadow: inset 4px 4px 8px #e3e6ee, inset -4px -4px 8px rgba(255, 255, 255, 0.7);" data-icon="directions_car">
                         <span class="material-symbols-rounded">directions_car</span>
                     </button>
-                    <button class="category-icon-option w-12 h-12 rounded-full flex items-center justify-center bg-[#F7F9FF] text-[#64748B] active:scale-[0.98] transition-transform" style="box-shadow: inset 4px 4px 8px #e3e6ee, inset -4px -4px 8px rgba(255, 255, 255, 0.7);" data-icon="medical_services">
+                    <button class="category-icon-option w-12 h-12 rounded-full flex items-center justify-center bg-[#F0F2F8] text-[#64748B] active:scale-[0.98] transition-transform" style="box-shadow: inset 4px 4px 8px #e3e6ee, inset -4px -4px 8px rgba(255, 255, 255, 0.7);" data-icon="medical_services">
                         <span class="material-symbols-rounded">medical_services</span>
                     </button>
-                    <button class="category-icon-option w-12 h-12 rounded-full flex items-center justify-center bg-[#F7F9FF] text-[#64748B] active:scale-[0.98] transition-transform" style="box-shadow: inset 4px 4px 8px #e3e6ee, inset -4px -4px 8px rgba(255, 255, 255, 0.7);" data-icon="school">
+                    <button class="category-icon-option w-12 h-12 rounded-full flex items-center justify-center bg-[#F0F2F8] text-[#64748B] active:scale-[0.98] transition-transform" style="box-shadow: inset 4px 4px 8px #e3e6ee, inset -4px -4px 8px rgba(255, 255, 255, 0.7);" data-icon="school">
                         <span class="material-symbols-rounded">school</span>
                     </button>
-                    <button class="category-icon-option w-12 h-12 rounded-full flex items-center justify-center bg-[#F7F9FF] text-[#64748B] active:scale-[0.98] transition-transform" style="box-shadow: inset 4px 4px 8px #e3e6ee, inset -4px -4px 8px rgba(255, 255, 255, 0.7);" data-icon="sports_esports">
+                    <button class="category-icon-option w-12 h-12 rounded-full flex items-center justify-center bg-[#F0F2F8] text-[#64748B] active:scale-[0.98] transition-transform" style="box-shadow: inset 4px 4px 8px #e3e6ee, inset -4px -4px 8px rgba(255, 255, 255, 0.7);" data-icon="sports_esports">
                         <span class="material-symbols-rounded">sports_esports</span>
                     </button>
-                    <button class="category-icon-option w-12 h-12 rounded-full flex items-center justify-center bg-[#F7F9FF] text-[#64748B] active:scale-[0.98] transition-transform" style="box-shadow: inset 4px 4px 8px #e3e6ee, inset -4px -4px 8px rgba(255, 255, 255, 0.7);" data-icon="restaurant">
+                    <button class="category-icon-option w-12 h-12 rounded-full flex items-center justify-center bg-[#F0F2F8] text-[#64748B] active:scale-[0.98] transition-transform" style="box-shadow: inset 4px 4px 8px #e3e6ee, inset -4px -4px 8px rgba(255, 255, 255, 0.7);" data-icon="restaurant">
                         <span class="material-symbols-rounded">restaurant</span>
                     </button>
-                    <button class="category-icon-option w-12 h-12 rounded-full flex items-center justify-center bg-[#F7F9FF] text-[#64748B] active:scale-[0.98] transition-transform" style="box-shadow: inset 4px 4px 8px #e3e6ee, inset -4px -4px 8px rgba(255, 255, 255, 0.7);" data-icon="home">
+                    <button class="category-icon-option w-12 h-12 rounded-full flex items-center justify-center bg-[#F0F2F8] text-[#64748B] active:scale-[0.98] transition-transform" style="box-shadow: inset 4px 4px 8px #e3e6ee, inset -4px -4px 8px rgba(255, 255, 255, 0.7);" data-icon="home">
                         <span class="material-symbols-rounded">home</span>
                     </button>
-                    <button class="category-icon-option w-12 h-12 rounded-full flex items-center justify-center bg-[#F7F9FF] text-[#64748B] active:scale-[0.98] transition-transform" style="box-shadow: inset 4px 4px 8px #e3e6ee, inset -4px -4px 8px rgba(255, 255, 255, 0.7);" data-icon="category">
+                    <button class="category-icon-option w-12 h-12 rounded-full flex items-center justify-center bg-[#F0F2F8] text-[#64748B] active:scale-[0.98] transition-transform" style="box-shadow: inset 4px 4px 8px #e3e6ee, inset -4px -4px 8px rgba(255, 255, 255, 0.7);" data-icon="category">
                         <span class="material-symbols-rounded">category</span>
                     </button>
                 </div>
             </div>
         </div>
         <!-- CTA Button -->
-        <button id="finance-save-category-btn" class="w-full py-4 px-6 rounded-full font-bold text-lg text-[#1E293B] shadow-md focus:outline-none active:scale-[0.98] transition-transform flex items-center justify-center gap-2" style="box-shadow: 6px 6px 12px #e3e6ee, -6px -6px 12px rgba(255, 255, 255, 0.7); border: 2px solid transparent; background: linear-gradient(#F7F9FF, #F7F9FF) padding-box, linear-gradient(to right, #4A90E2, #50E3C2) border-box;">
+        <button id="finance-save-category-btn" class="w-full py-4 px-6 rounded-full font-bold text-lg text-[#1E293B] shadow-md focus:outline-none active:scale-[0.98] transition-transform flex items-center justify-center gap-2" style="box-shadow: 6px 6px 12px #e3e6ee, -6px -6px 12px rgba(255, 255, 255, 0.7); border: 2px solid transparent; background: linear-gradient(#F0F2F8, #F0F2F8) padding-box, linear-gradient(to right, #4A90E2, #50E3C2) border-box;">
             Kaydet 
             <span class="material-symbols-rounded text-[#3B82F6]" style="font-variation-settings: 'FILL' 1;">check_circle</span>
         </button>
@@ -3956,7 +3956,7 @@
 <!-- Add Payment Method Modal -->
 <div id="finance-add-payment-modal" class="fixed inset-0 z-[110] hidden flex-col justify-center items-center md:p-4 px-4">
     <div class="absolute inset-0 bg-black/10 backdrop-blur-sm opacity-0 transition-opacity duration-300 cursor-pointer" data-action="closeAddPaymentMethodModal" id="finance-add-payment-backdrop"></div>
-    <div class="bg-[#F7F9FF] w-full max-w-sm mx-auto rounded-[32px] shadow-[0_10px_40px_rgba(0,0,0,0.08)] p-6 flex flex-col items-center transform transition-all duration-300 scale-95 opacity-0 z-10" id="finance-add-payment-content">
+    <div class="bg-[#F0F2F8] w-full max-w-sm mx-auto rounded-[32px] shadow-[0_10px_40px_rgba(0,0,0,0.08)] p-6 flex flex-col items-center transform transition-all duration-300 scale-95 opacity-0 z-10" id="finance-add-payment-content">
         <div class="w-full text-center mb-6">
             <h2 class="text-xl font-bold text-[#1E293B] mb-2">Ödeme Yöntemi Ekle</h2>
         </div>
@@ -3965,29 +3965,29 @@
             <!-- Name Input -->
             <div class="flex flex-col gap-1">
                 <label class="text-xs font-bold text-[#3B82F6] uppercase px-2">AD</label>
-                <div class="flex items-center rounded-2xl p-4 bg-[#F7F9FF]" style="box-shadow: inset 4px 4px 8px #e3e6ee, inset -4px -4px 8px rgba(255, 255, 255, 0.7);">
+                <div class="flex items-center rounded-2xl p-4 bg-[#F0F2F8]" style="box-shadow: inset 4px 4px 8px #e3e6ee, inset -4px -4px 8px rgba(255, 255, 255, 0.7);">
                     <input id="method-name" class="w-full bg-transparent border-none focus:ring-0 text-sm font-medium text-[#1E293B] p-0 appearance-none outline-none" placeholder="Yöntem adı girin" type="text"/>
                 </div>
             </div>
             <!-- Type Selection (Pill Style) -->
             <div class="flex flex-col gap-1">
                 <label class="text-xs font-bold text-[#3B82F6] uppercase px-2">TÜRÜ</label>
-                <div class="grid grid-cols-2 gap-2 p-1 bg-[#F7F9FF] rounded-2xl" style="box-shadow: inset 4px 4px 8px #e3e6ee, inset -4px -4px 8px rgba(255, 255, 255, 0.7);">
+                <div class="grid grid-cols-2 gap-2 p-1 bg-[#F0F2F8] rounded-2xl" style="box-shadow: inset 4px 4px 8px #e3e6ee, inset -4px -4px 8px rgba(255, 255, 255, 0.7);">
                     <label class="cursor-pointer">
                         <input type="radio" name="payment-type" value="Banka Kartı" class="peer sr-only" checked>
-                        <div class="py-2 text-center rounded-xl text-xs font-semibold text-[#64748B] transition-all peer-checked:text-[#22c55e] peer-checked:bg-[#F7F9FF]" style="box-shadow: none;">Banka Kartı</div>
+                        <div class="py-2 text-center rounded-xl text-xs font-semibold text-[#64748B] transition-all peer-checked:text-[#22c55e] peer-checked:bg-[#F0F2F8]" style="box-shadow: none;">Banka Kartı</div>
                     </label>
                     <label class="cursor-pointer">
                         <input type="radio" name="payment-type" value="Kredi Kartı" class="peer sr-only">
-                        <div class="py-2 text-center rounded-xl text-xs font-semibold text-[#64748B] transition-all peer-checked:text-[#22c55e] peer-checked:bg-[#F7F9FF]">Kredi Kartı</div>
+                        <div class="py-2 text-center rounded-xl text-xs font-semibold text-[#64748B] transition-all peer-checked:text-[#22c55e] peer-checked:bg-[#F0F2F8]">Kredi Kartı</div>
                     </label>
                     <label class="cursor-pointer">
                         <input type="radio" name="payment-type" value="Nakit" class="peer sr-only">
-                        <div class="py-2 text-center rounded-xl text-xs font-semibold text-[#64748B] transition-all peer-checked:text-[#22c55e] peer-checked:bg-[#F7F9FF]">Nakit</div>
+                        <div class="py-2 text-center rounded-xl text-xs font-semibold text-[#64748B] transition-all peer-checked:text-[#22c55e] peer-checked:bg-[#F0F2F8]">Nakit</div>
                     </label>
                     <label class="cursor-pointer">
                         <input type="radio" name="payment-type" value="Cüzdan" class="peer sr-only">
-                        <div class="py-2 text-center rounded-xl text-xs font-semibold text-[#64748B] transition-all peer-checked:text-[#22c55e] peer-checked:bg-[#F7F9FF]">Cüzdan</div>
+                        <div class="py-2 text-center rounded-xl text-xs font-semibold text-[#64748B] transition-all peer-checked:text-[#22c55e] peer-checked:bg-[#F0F2F8]">Cüzdan</div>
                     </label>
                 </div>
                 <!-- Inline style script for peer-checked box-shadow since tailwind arbitrary peer variants can be tricky in this setup -->
@@ -4005,20 +4005,20 @@
             <div class="flex flex-col gap-1">
                 <label class="text-xs font-bold text-[#3B82F6] uppercase px-2">İKON SEÇİMİ</label>
                 <div class="flex justify-around p-4" id="payment-icon-container">
-                    <button class="payment-icon-option w-12 h-12 rounded-full flex items-center justify-center bg-[#F7F9FF] text-[#3B82F6] selected" style="box-shadow: 6px 6px 12px #e3e6ee, -6px -6px 12px rgba(255, 255, 255, 0.7);" data-icon="credit_card">
+                    <button class="payment-icon-option w-12 h-12 rounded-full flex items-center justify-center bg-[#F0F2F8] text-[#3B82F6] selected" style="box-shadow: 6px 6px 12px #e3e6ee, -6px -6px 12px rgba(255, 255, 255, 0.7);" data-icon="credit_card">
                         <span class="material-symbols-rounded">credit_card</span>
                     </button>
-                    <button class="payment-icon-option w-12 h-12 rounded-full flex items-center justify-center bg-[#F7F9FF] text-[#64748B]" style="box-shadow: inset 4px 4px 8px #e3e6ee, inset -4px -4px 8px rgba(255, 255, 255, 0.7);" data-icon="account_balance_wallet">
+                    <button class="payment-icon-option w-12 h-12 rounded-full flex items-center justify-center bg-[#F0F2F8] text-[#64748B]" style="box-shadow: inset 4px 4px 8px #e3e6ee, inset -4px -4px 8px rgba(255, 255, 255, 0.7);" data-icon="account_balance_wallet">
                         <span class="material-symbols-rounded">account_balance_wallet</span>
                     </button>
-                    <button class="payment-icon-option w-12 h-12 rounded-full flex items-center justify-center bg-[#F7F9FF] text-[#64748B]" style="box-shadow: inset 4px 4px 8px #e3e6ee, inset -4px -4px 8px rgba(255, 255, 255, 0.7);" data-icon="payments">
+                    <button class="payment-icon-option w-12 h-12 rounded-full flex items-center justify-center bg-[#F0F2F8] text-[#64748B]" style="box-shadow: inset 4px 4px 8px #e3e6ee, inset -4px -4px 8px rgba(255, 255, 255, 0.7);" data-icon="payments">
                         <span class="material-symbols-rounded">payments</span>
                     </button>
                 </div>
             </div>
         </div>
         <!-- CTA Button -->
-        <button id="finance-save-payment-btn" class="w-full py-4 px-6 rounded-full font-bold text-lg text-[#1E293B] shadow-md focus:outline-none active:scale-[0.98] transition-transform flex items-center justify-center gap-2" style="box-shadow: 6px 6px 12px #e3e6ee, -6px -6px 12px rgba(255, 255, 255, 0.7); border: 2px solid transparent; background: linear-gradient(#F7F9FF, #F7F9FF) padding-box, linear-gradient(to right, #4A90E2, #50E3C2) border-box;">
+        <button id="finance-save-payment-btn" class="w-full py-4 px-6 rounded-full font-bold text-lg text-[#1E293B] shadow-md focus:outline-none active:scale-[0.98] transition-transform flex items-center justify-center gap-2" style="box-shadow: 6px 6px 12px #e3e6ee, -6px -6px 12px rgba(255, 255, 255, 0.7); border: 2px solid transparent; background: linear-gradient(#F0F2F8, #F0F2F8) padding-box, linear-gradient(to right, #4A90E2, #50E3C2) border-box;">
             Kaydet 
             <span class="material-symbols-rounded text-[#3B82F6]" style="font-variation-settings: 'FILL' 1;">check_circle</span>
         </button>
@@ -4153,16 +4153,16 @@
             
             // Sync sheet star state with list item star state
             const listFavBtn = element.querySelector('.exercise-fav-btn');
-            const isFav = listFavBtn.classList.contains('text-primary');
+            const isFav = listFavBtn.classList.contains('text-amber-500');
             const sheetFavBtn = document.getElementById('sheet-fav-btn');
-            const sheetIcon = sheetFavBtn.querySelector('.material-symbols-rounded');
+            const sheetIcon = sheetFavBtn.querySelector('span');
             
             if (isFav) {
-                sheetFavBtn.classList.add('text-primary');
+                sheetFavBtn.classList.add('text-amber-500');
                 sheetFavBtn.classList.remove('text-on-surface-variant');
                 sheetIcon.style.fontVariationSettings = "'FILL' 1";
             } else {
-                sheetFavBtn.classList.remove('text-primary');
+                sheetFavBtn.classList.remove('text-amber-500');
                 sheetFavBtn.classList.add('text-on-surface-variant');
                 sheetIcon.style.fontVariationSettings = "'FILL' 0";
             }
@@ -4304,20 +4304,20 @@
             if (!currentExerciseElement) return;
             const listFavBtn = currentExerciseElement.querySelector('.exercise-fav-btn');
             const sheetFavBtn = document.getElementById('sheet-fav-btn');
-            const sheetIcon = sheetFavBtn.querySelector('.material-symbols-rounded');
+            const sheetIcon = sheetFavBtn.querySelector('span');
             
             // Toggle the list item star
             toggleFav({ stopPropagation: () => {} }, listFavBtn);
             if(currentExerciseCategory === 'Favoriler') { applyExerciseFilters(); }
             
             // Update sheet star visually
-            const isFav = listFavBtn.classList.contains('text-primary');
+            const isFav = listFavBtn.classList.contains('text-amber-500');
             if (isFav) {
-                sheetFavBtn.classList.add('text-primary');
+                sheetFavBtn.classList.add('text-amber-500');
                 sheetFavBtn.classList.remove('text-on-surface-variant');
                 sheetIcon.style.fontVariationSettings = "'FILL' 1";
             } else {
-                sheetFavBtn.classList.remove('text-primary');
+                sheetFavBtn.classList.remove('text-amber-500');
                 sheetFavBtn.classList.add('text-on-surface-variant');
                 sheetIcon.style.fontVariationSettings = "'FILL' 0";
             }
@@ -4325,13 +4325,13 @@
 
         function toggleFav(event, btn) {
             event.stopPropagation();
-            const icon = btn.querySelector('.material-symbols-rounded');
-            if (btn.classList.contains('text-primary')) {
-                btn.classList.remove('text-primary');
+            const icon = btn.querySelector('span');
+            if (btn.classList.contains('text-amber-500')) {
+                btn.classList.remove('text-amber-500');
                 btn.classList.add('text-on-surface-variant');
                 icon.style.fontVariationSettings = "'FILL' 0";
             } else {
-                btn.classList.add('text-primary');
+                btn.classList.add('text-amber-500');
                 btn.classList.remove('text-on-surface-variant');
                 icon.style.fontVariationSettings = "'FILL' 1";
             }
@@ -4740,7 +4740,7 @@
     <!-- Top App Bar -->
     <header class="flex items-center justify-between px-5 pt-12 pb-4 flex-shrink-0">
         <button data-action="closeStretchPlayer"
-            class="w-10 h-10 rounded-full bg-[#F7F9FF] flex items-center justify-center active:scale-95 transition-transform" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);">
+            class="w-10 h-10 rounded-full bg-[#F0F2F8] flex items-center justify-center active:scale-95 transition-transform" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);">
             <span class="material-symbols-rounded text-[#1E293B] text-[22px]">close</span>
         </button>
         <div class="flex flex-col items-center">
@@ -4763,8 +4763,8 @@
         </div>
 
         <!-- Central Image / Icon Circle -->
-        <div class="w-48 h-48 rounded-full bg-[#F7F9FF] p-2 flex items-center justify-center" style="box-shadow: 8px 8px 20px #D1D9E6, -8px -8px 20px rgba(255, 255, 255, 0.7);">
-            <div class="w-full h-full rounded-full bg-[#F7F9FF] overflow-hidden flex items-center justify-center" style="box-shadow: inset 4px 4px 10px #D1D9E6, inset -4px -4px 10px rgba(255, 255, 255, 0.7);">
+        <div class="w-48 h-48 rounded-full bg-[#F0F2F8] p-2 flex items-center justify-center" style="box-shadow: 8px 8px 20px #D1D9E6, -8px -8px 20px rgba(255, 255, 255, 0.7);">
+            <div class="w-full h-full rounded-full bg-[#F0F2F8] overflow-hidden flex items-center justify-center" style="box-shadow: inset 4px 4px 10px #D1D9E6, inset -4px -4px 10px rgba(255, 255, 255, 0.7);">
                 <img id="stretch-player-image" src="" alt="" class="w-full h-full object-cover hidden rounded-full"/>
                 <span id="stretch-player-image-placeholder" class="material-symbols-rounded text-[80px] text-[#3B82F6]" style="font-variation-settings:'FILL' 1;">self_improvement</span>
             </div>
@@ -4779,7 +4779,7 @@
         <!-- Controls -->
         <div class="flex items-center justify-center gap-8 w-full max-w-xs mx-auto">
             <button data-action="stretchPlayerPrev"
-                class="w-12 h-12 rounded-full bg-[#F7F9FF] flex items-center justify-center active:scale-90 transition-all text-[#1E293B]" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);">
+                class="w-12 h-12 rounded-full bg-[#F0F2F8] flex items-center justify-center active:scale-90 transition-all text-[#1E293B]" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);">
                 <span class="material-symbols-rounded" style="font-variation-settings:'FILL' 1;">skip_previous</span>
             </button>
             <button id="stretch-player-pause-btn" data-action="stretchPlayerPauseToggle"
@@ -4787,7 +4787,7 @@
                 <span id="stretch-player-pause-icon" class="material-symbols-rounded text-4xl text-white" style="font-variation-settings:'FILL' 1;">pause</span>
             </button>
             <button data-action="stretchPlayerNext"
-                class="w-12 h-12 rounded-full bg-[#F7F9FF] flex items-center justify-center active:scale-90 transition-all text-[#1E293B]" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);">
+                class="w-12 h-12 rounded-full bg-[#F0F2F8] flex items-center justify-center active:scale-90 transition-all text-[#1E293B]" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);">
                 <span class="material-symbols-rounded" style="font-variation-settings:'FILL' 1;">skip_next</span>
             </button>
         </div>
@@ -4796,7 +4796,7 @@
     <!-- Bottom: End Session -->
     <div class="px-6 pb-8 pt-4 w-full z-10 flex justify-center">
         <button data-action="stretchPlayerEnd"
-            class="px-6 py-3 rounded-full bg-[#F7F9FF] text-[#64748B] font-bold text-sm flex items-center gap-2 active:scale-[0.98] transition-transform" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);">
+            class="px-6 py-3 rounded-full bg-[#F0F2F8] text-[#64748B] font-bold text-sm flex items-center gap-2 active:scale-[0.98] transition-transform" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);">
             <span class="material-symbols-rounded text-lg">stop_circle</span>
             Seansı Bitir
         </button>
@@ -4808,7 +4808,7 @@
     <!-- Top App Bar -->
     <header class="flex items-center justify-between px-5 pt-12 pb-4 flex-shrink-0">
         <button data-action="closeCorePlayer"
-            class="w-10 h-10 rounded-full bg-[#F7F9FF] flex items-center justify-center active:scale-95 transition-transform" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);">
+            class="w-10 h-10 rounded-full bg-[#F0F2F8] flex items-center justify-center active:scale-95 transition-transform" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);">
             <span class="material-symbols-rounded text-[#1E293B] text-[22px]">close</span>
         </button>
         <div class="flex flex-col items-center">
@@ -4831,8 +4831,8 @@
         </div>
 
         <!-- Central Image / Icon Circle -->
-        <div class="w-48 h-48 rounded-full bg-[#F7F9FF] p-2 flex items-center justify-center" style="box-shadow: 8px 8px 20px #D1D9E6, -8px -8px 20px rgba(255, 255, 255, 0.7);">
-            <div class="w-full h-full rounded-full bg-[#F7F9FF] overflow-hidden flex items-center justify-center" style="box-shadow: inset 4px 4px 10px #D1D9E6, inset -4px -4px 10px rgba(255, 255, 255, 0.7);">
+        <div class="w-48 h-48 rounded-full bg-[#F0F2F8] p-2 flex items-center justify-center" style="box-shadow: 8px 8px 20px #D1D9E6, -8px -8px 20px rgba(255, 255, 255, 0.7);">
+            <div class="w-full h-full rounded-full bg-[#F0F2F8] overflow-hidden flex items-center justify-center" style="box-shadow: inset 4px 4px 10px #D1D9E6, inset -4px -4px 10px rgba(255, 255, 255, 0.7);">
                 <img id="core-player-image" src="" alt="" class="w-full h-full object-cover hidden rounded-full"/>
                 <span id="core-player-image-placeholder" class="material-symbols-rounded text-[80px] text-[#22C55E]" style="font-variation-settings:'FILL' 1;">accessibility_new</span>
             </div>
@@ -4847,7 +4847,7 @@
         <!-- Controls -->
         <div class="flex items-center justify-center gap-8 w-full max-w-xs mx-auto">
             <button data-action="corePlayerPrev"
-                class="w-12 h-12 rounded-full bg-[#F7F9FF] flex items-center justify-center active:scale-90 transition-all text-[#1E293B]" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);">
+                class="w-12 h-12 rounded-full bg-[#F0F2F8] flex items-center justify-center active:scale-90 transition-all text-[#1E293B]" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);">
                 <span class="material-symbols-rounded" style="font-variation-settings:'FILL' 1;">skip_previous</span>
             </button>
             <button id="core-player-pause-btn" data-action="corePlayerPauseToggle"
@@ -4855,7 +4855,7 @@
                 <span id="core-player-pause-icon" class="material-symbols-rounded text-4xl text-white" style="font-variation-settings:'FILL' 1;">pause</span>
             </button>
             <button data-action="corePlayerNext"
-                class="w-12 h-12 rounded-full bg-[#F7F9FF] flex items-center justify-center active:scale-90 transition-all text-[#1E293B]" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);">
+                class="w-12 h-12 rounded-full bg-[#F0F2F8] flex items-center justify-center active:scale-90 transition-all text-[#1E293B]" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);">
                 <span class="material-symbols-rounded" style="font-variation-settings:'FILL' 1;">skip_next</span>
             </button>
         </div>
@@ -4864,7 +4864,7 @@
     <!-- Bottom: End Session -->
     <div class="px-6 pb-8 pt-4 w-full z-10 flex justify-center">
         <button data-action="corePlayerEnd"
-            class="px-6 py-3 rounded-full bg-[#F7F9FF] text-[#64748B] font-bold text-sm flex items-center gap-2 active:scale-[0.98] transition-transform" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);">
+            class="px-6 py-3 rounded-full bg-[#F0F2F8] text-[#64748B] font-bold text-sm flex items-center gap-2 active:scale-[0.98] transition-transform" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);">
             <span class="material-symbols-rounded text-lg">stop_circle</span>
             Seansı Bitir
         </button>
