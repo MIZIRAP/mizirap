@@ -403,7 +403,7 @@ function _activeSetHTML(exId, setIdx, set, isCurrent = false, isCompleted = fals
                         <div class="neo-inset-pill px-4 py-2 inline-flex items-center">
                             <span class="font-label-sm text-label-sm font-bold text-tertiary" id="e1rm-display-${exId}-${setIdx}">Tahmini e1RM: ${e1rmDisplay}</span>
                         </div>
-                        ${isCurrent ? \`<button class="px-5 py-2 rounded-full bg-primary text-white font-title-sm text-title-sm shadow-sm active:scale-95 transition-transform" onclick="completeSet('\${exId}', \${setIdx})">Tamamla</button>\` : ''}
+                        ${isCurrent ? `<button class="px-5 py-2 rounded-full bg-primary text-white font-title-sm text-title-sm shadow-sm active:scale-95 transition-transform" onclick="completeSet('${exId}', ${setIdx})">Tamamla</button>` : ''}
                     </div>
                 </div>
             </div>
