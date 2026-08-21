@@ -2204,7 +2204,7 @@ function renderCores() {
     }
 }
 
-function deleteCore(id) {
+async function deleteCore(id) {
     if (!currentUid) return;
     if (!confirm("Bu hareketi silmek istediğinize emin misiniz?")) return;
     
