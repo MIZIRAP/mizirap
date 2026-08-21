@@ -408,7 +408,7 @@ function _activeSetHTML(exId, setIdx, set, isCurrent = false, isCompleted = fals
                 </div>
             </div>
         </div>
-    \`;
+    `;
 }
 
 // ─── User actions (window.* for HTML onclick) ──────────────────────────────
