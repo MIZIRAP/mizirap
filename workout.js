@@ -147,7 +147,6 @@ document.addEventListener('click', (e) => {
     else if (action === 'saveNewCore') saveCoreExercise();
     else if (action === 'deleteCore') { e.stopPropagation(); deleteCore(actionBtn.getAttribute('data-core-id')); }
     else if (action === 'editCore') { e.stopPropagation(); editCore(actionBtn.getAttribute('data-core-id')); }
-    else if (action === 'triggerCoreImageUpload') document.getElementById('core-image-input').click();
 
     else if (action === 'switchStretchTab') switchStretchTab(actionBtn.getAttribute('data-tab'));
     else if (action === 'openAddSessionModal') openAddSessionModal();
@@ -344,10 +343,7 @@ export function initWorkout(uid, onChangeCallback) {
     if (imageInput) {
         imageInput.addEventListener('change', handleStretchImageUpload);
     }
-    const coreImageInput = document.getElementById('core-image-input');
-    if (coreImageInput) {
-        coreImageInput.addEventListener('change', handleCoreImageUpload);
-    }
+    // core-image-input: reserved for future core image upload UI
 
     setupEventListeners();
 }

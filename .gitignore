@@ -1,0 +1,18 @@
+# Node
+node_modules/
+package-lock.json
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Backup & temp files
+*.orig
+*.rej
+*.bak
+scratchpad_*
+
+# Build outputs
+dist/
+build/
