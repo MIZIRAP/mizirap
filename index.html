@@ -2381,10 +2381,15 @@
                 </div>
                 <!-- Sheet Header -->
                 <div class="px-6 pb-4 flex items-center justify-between flex-shrink-0 pt-2">
-                    <h2 id="sheet-exercise-name" class="font-headline-lg-mobile text-on-surface">Egzersiz Adı</h2>
-                    <button id="sheet-fav-btn" class="p-2 hover:bg-surface-container-low rounded-full transition-colors flex-shrink-0 text-on-surface-variant" onclick="toggleSheetFav()">
-                        <span class="material-symbols-rounded text-2xl" style="font-variation-settings: 'FILL' 0;">star</span>
-                    </button>
+                    <h2 id="sheet-exercise-name" class="font-headline-lg-mobile text-on-surface truncate">Egzersiz Adı</h2>
+                    <div class="flex items-center gap-1">
+                        <button class="p-2 hover:bg-error-container rounded-full transition-colors flex-shrink-0 text-error/80 hover:text-error" onclick="deleteCurrentExercise()" title="Hareketi Sil">
+                            <span class="material-symbols-rounded text-2xl">delete</span>
+                        </button>
+                        <button id="sheet-fav-btn" class="p-2 hover:bg-surface-container-low rounded-full transition-colors flex-shrink-0 text-on-surface-variant" onclick="toggleSheetFav()">
+                            <span class="material-symbols-rounded text-2xl" style="font-variation-settings: 'FILL' 0;">star</span>
+                        </button>
+                    </div>
                 </div>
                 <!-- Sheet Content -->
                 <div class="px-6 pb-6 overflow-y-auto flex-grow flex flex-col gap-4">
@@ -4431,7 +4436,18 @@
             applyExerciseFilters();
         }
 
-function closeExerciseSheet() {
+        function deleteCurrentExercise() {
+            if (!currentExerciseElement) return;
+            
+            if (confirm("Bu hareketi silmek istediğinize emin misiniz?")) {
+                currentExerciseElement.remove();
+                currentExerciseElement = null;
+                closeExerciseSheet();
+                applyExerciseFilters();
+            }
+        }
+        
+        function closeExerciseSheet() {
             const sheet = document.getElementById('exercise-bottom-sheet');
             const sheetContent = document.getElementById('exercise-bottom-sheet-content');
             
