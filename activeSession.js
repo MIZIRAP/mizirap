@@ -260,7 +260,7 @@ function _renderSessionExercises() {
             <button class="w-full flex items-center gap-sm p-md text-left hover:bg-background shadow-neo transition-colors"
                     data-action="sessionToggleExAccordion" data-ex-id="${ex.id}">
                 <div class="w-10 h-10 rounded-full bg-gradient-to-r from-neon-purple to-neon-blue-container/20 flex items-center justify-center text-neon-blue shrink-0">
-                    <span class="material-symbols-rounded" style="font-variation-settings:'FILL' 1">fitness_center</span>
+                    <span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1">fitness_center</span>
                 </div>
                 <div class="flex-1 min-w-0">
                     <h2 class="font-title-lg text-title-lg text-on-surface truncate">${escHtml(ex.name)}</h2>
@@ -268,7 +268,7 @@ function _renderSessionExercises() {
                 </div>
                 <div class="flex items-center gap-2 shrink-0">
                     <span class=\"font-label-sm text-label-sm text-on-surface-variant\">${totalSets} Set</span>
-                    <span class="material-symbols-rounded text-on-surface-variant transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}" style="font-size:20px" id="chevron-${ex.id}">expand_more</span>
+                    <span class="material-symbols-outlined text-on-surface-variant transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}" style="font-size:20px" id="chevron-${ex.id}">expand_more</span>
                 </div>
             </button>
             <!-- Accordion Body -->
@@ -307,7 +307,7 @@ function _renderSets(exId) {
     // Append Add Set Button
     const addSetBtn = document.createElement('button');
     addSetBtn.className = 'w-full py-4 neo-inset-pill flex items-center justify-center gap-2 text-primary font-body-md neo-surface-interactive mt-2';
-    addSetBtn.innerHTML = '<span class="material-symbols-rounded">add</span>Yeni Set Ekle';
+    addSetBtn.innerHTML = '<span class="material-symbols-outlined">add</span>Yeni Set Ekle';
     addSetBtn.onclick = () => sessionAddSet(exId);
     container.appendChild(addSetBtn);
 
@@ -337,6 +337,15 @@ function _activeSetHTML(exId, setIdx, set, isCurrent = false) {
     const numBgClass = isCurrent ? '' : 'bg-accent-green/10';
     const numTextClass = isCurrent ? 'text-primary' : 'text-accent-green';
     const rpeLabel = (set.rpe && !isCurrent) ? `<span class="font-label-sm text-label-sm text-outline ml-2" id="rpe-summary-${exId}-${setIdx}">RPE ${set.rpe}</span>` : `<span class="font-label-sm text-label-sm text-outline ml-2" id="rpe-summary-${exId}-${setIdx}"></span>`;
+    
+    // Icon colors: current set uses primary, completed sets use outline
+    const chevronColor = isCurrent ? 'text-primary' : 'text-outline';
+    
+    // We will expand the current set by default, and collapse the completed sets by default
+    const isExpanded = isCurrent; 
+
+    // For completed sets, the inputs should be read-only (opacity-50 pointer-events-none)
+    const wrapperClass = isCurrent ? '' : 'opacity-50 pointer-events-none';
 
     return `
         <button class="w-full p-4 flex items-center justify-between focus:outline-none" onclick="toggleSet(this)">
@@ -347,46 +356,48 @@ function _activeSetHTML(exId, setIdx, set, isCurrent = false) {
                 <span class="font-body-md text-body-md ${titleClass}" id="set-summary-${exId}-${setIdx}">${titleText}</span>
                 ${rpeLabel}
             </div>
-            <span class="material-symbols-rounded text-primary transition-transform duration-300 transform ${isCurrent ? 'rotate-180' : ''}" data-icon="expand_more">expand_more</span>
+            <span class="material-symbols-outlined ${chevronColor} transition-transform duration-300 transform ${isExpanded ? 'rotate-180' : ''}" data-icon="expand_more">expand_more</span>
         </button>
-        <div class="expandable-content ${isCurrent ? 'expanded' : ''}">
+        <div class="expandable-content ${isExpanded ? 'expanded' : ''}">
             <div class="expandable-inner px-5 pb-5">
-                <!-- Weight Stepper -->
-                <div class="flex justify-between items-center mb-6 pt-2">
-                    <span class="font-title-sm text-title-sm text-text-primary">Ağırlık (kg)</span>
-                    <div class="flex items-center gap-4">
-                        <button data-action="sessionStepWeight" data-ex-id="${exId}" data-set-idx="${setIdx}" data-delta="-2.5" class="w-12 h-12 neo-inset-circle flex items-center justify-center text-secondary neo-surface-interactive hover:text-primary transition-colors">
-                            <span class="material-symbols-rounded">remove</span>
-                        </button>
-                        <span class="font-display-lg text-display-lg w-16 text-center text-on-surface" id="weight-val-${exId}-${setIdx}">${set.weight}</span>
-                        <button data-action="sessionStepWeight" data-ex-id="${exId}" data-set-idx="${setIdx}" data-delta="2.5" class="w-12 h-12 neo-inset-circle flex items-center justify-center text-secondary neo-surface-interactive hover:text-primary transition-colors">
-                            <span class="material-symbols-rounded">add</span>
-                        </button>
+                <div class="${wrapperClass}">
+                    <!-- Weight Stepper -->
+                    <div class="flex justify-between items-center mb-6 pt-2">
+                        <span class="font-title-sm text-title-sm text-text-primary">Ağırlık (kg)</span>
+                        <div class="flex items-center gap-4">
+                            <button data-action="sessionStepWeight" data-ex-id="${exId}" data-set-idx="${setIdx}" data-delta="-2.5" class="w-12 h-12 neo-inset-circle flex items-center justify-center text-secondary neo-surface-interactive hover:text-primary transition-colors">
+                                <span class="material-symbols-outlined" data-icon="remove">remove</span>
+                            </button>
+                            <span class="font-display-lg text-display-lg w-16 text-center text-on-surface" id="weight-val-${exId}-${setIdx}">${set.weight}</span>
+                            <button data-action="sessionStepWeight" data-ex-id="${exId}" data-set-idx="${setIdx}" data-delta="2.5" class="w-12 h-12 neo-inset-circle flex items-center justify-center text-secondary neo-surface-interactive hover:text-primary transition-colors">
+                                <span class="material-symbols-outlined" data-icon="add">add</span>
+                            </button>
+                        </div>
                     </div>
-                </div>
-                <!-- Reps Stepper -->
-                <div class="flex justify-between items-center mb-6">
-                    <span class="font-title-sm text-title-sm text-text-primary">Tekrar</span>
-                    <div class="flex items-center gap-4">
-                        <button data-action="sessionStepReps" data-ex-id="${exId}" data-set-idx="${setIdx}" data-delta="-1" class="w-12 h-12 neo-inset-circle flex items-center justify-center text-secondary neo-surface-interactive hover:text-primary transition-colors">
-                            <span class="material-symbols-rounded">remove</span>
-                        </button>
-                        <span class="font-display-lg text-display-lg w-16 text-center text-on-surface" id="reps-val-${exId}-${setIdx}">${set.reps}</span>
-                        <button data-action="sessionStepReps" data-ex-id="${exId}" data-set-idx="${setIdx}" data-delta="1" class="w-12 h-12 neo-inset-circle flex items-center justify-center text-secondary neo-surface-interactive hover:text-primary transition-colors">
-                            <span class="material-symbols-rounded">add</span>
-                        </button>
+                    <!-- Reps Stepper -->
+                    <div class="flex justify-between items-center mb-6">
+                        <span class="font-title-sm text-title-sm text-text-primary">Tekrar</span>
+                        <div class="flex items-center gap-4">
+                            <button data-action="sessionStepReps" data-ex-id="${exId}" data-set-idx="${setIdx}" data-delta="-1" class="w-12 h-12 neo-inset-circle flex items-center justify-center text-secondary neo-surface-interactive hover:text-primary transition-colors">
+                                <span class="material-symbols-outlined" data-icon="remove">remove</span>
+                            </button>
+                            <span class="font-display-lg text-display-lg w-16 text-center text-on-surface" id="reps-val-${exId}-${setIdx}">${set.reps}</span>
+                            <button data-action="sessionStepReps" data-ex-id="${exId}" data-set-idx="${setIdx}" data-delta="1" class="w-12 h-12 neo-inset-circle flex items-center justify-center text-secondary neo-surface-interactive hover:text-primary transition-colors">
+                                <span class="material-symbols-outlined" data-icon="add">add</span>
+                            </button>
+                        </div>
                     </div>
-                </div>
-                <hr class="border-surface-variant mb-6 mx-2">
-                <!-- RPE Selection -->
-                <div class="mb-6">
-                    <p class="font-label-sm text-label-sm text-text-secondary mb-3">RPE (Zorluk) — opsiyonel</p>
-                    <div class="rpe-btn-group flex justify-between gap-2">${rpeButtons}</div>
-                </div>
-                <!-- Actions & e1RM -->
-                <div class="flex justify-between items-center mt-2">
-                    <div class="neo-inset-pill px-4 py-2 inline-flex items-center">
-                        <span class="font-label-sm text-label-sm font-bold text-tertiary" id="e1rm-display-${exId}-${setIdx}">Tahmini e1RM: ${e1rmDisplay}</span>
+                    <hr class="border-surface-variant mb-6 mx-2">
+                    <!-- RPE Selection -->
+                    <div class="mb-6">
+                        <p class="font-label-sm text-label-sm text-text-secondary mb-3">RPE (Zorluk) — opsiyonel</p>
+                        <div class="rpe-btn-group flex justify-between gap-2">${rpeButtons}</div>
+                    </div>
+                    <!-- Actions & e1RM -->
+                    <div class="flex justify-between items-center mt-2">
+                        <div class="neo-inset-pill px-4 py-2 inline-flex items-center">
+                            <span class="font-label-sm text-label-sm font-bold text-tertiary" id="e1rm-display-${exId}-${setIdx}">Tahmini e1RM: ${e1rmDisplay}</span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -493,7 +504,7 @@ async function finishSession() {
         // Reset button
         if (btn) {
             btn.disabled = false;
-            btn.innerHTML = `<span class="material-symbols-rounded" style="font-size:16px">flag</span> Bitir`;
+            btn.innerHTML = `<span class="material-symbols-outlined" style="font-size:16px">flag</span> Bitir`;
         }
 
         // Navigate back to workout home
@@ -508,7 +519,7 @@ async function finishSession() {
         alert('Antrenman kaydedilemedi: ' + e.message);
         if (btn) {
             btn.disabled = false;
-            btn.innerHTML = `<span class="material-symbols-rounded" style="font-size:16px">flag</span> Bitir`;
+            btn.innerHTML = `<span class="material-symbols-outlined" style="font-size:16px">flag</span> Bitir`;
         }
     }
 };
