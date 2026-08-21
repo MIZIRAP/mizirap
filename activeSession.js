@@ -260,7 +260,7 @@ function _renderSessionExercises() {
             <button class="w-full flex items-center gap-sm p-md text-left hover:bg-background shadow-neo transition-colors"
                     data-action="sessionToggleExAccordion" data-ex-id="${ex.id}">
                 <div class="w-10 h-10 rounded-full bg-gradient-to-r from-neon-purple to-neon-blue-container/20 flex items-center justify-center text-neon-blue shrink-0">
-                    <span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1">fitness_center</span>
+                    <span class="material-symbols-rounded" style="font-variation-settings:'FILL' 1">fitness_center</span>
                 </div>
                 <div class="flex-1 min-w-0">
                     <h2 class="font-title-lg text-title-lg text-on-surface truncate">${escHtml(ex.name)}</h2>
@@ -268,7 +268,7 @@ function _renderSessionExercises() {
                 </div>
                 <div class="flex items-center gap-2 shrink-0">
                     <span class=\"font-label-sm text-label-sm text-on-surface-variant\">${totalSets} Set</span>
-                    <span class="material-symbols-outlined text-on-surface-variant transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}" style="font-size:20px" id="chevron-${ex.id}">expand_more</span>
+                    <span class="material-symbols-rounded text-on-surface-variant transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}" style="font-size:20px" id="chevron-${ex.id}">expand_more</span>
                 </div>
             </button>
             <!-- Accordion Body -->
@@ -307,7 +307,7 @@ function _renderSets(exId) {
     // Append Add Set Button
     const addSetBtn = document.createElement('button');
     addSetBtn.className = 'w-full py-4 neo-inset-pill flex items-center justify-center gap-2 text-primary font-body-md neo-surface-interactive mt-2';
-    addSetBtn.innerHTML = '<span class="material-symbols-outlined">add</span>Yeni Set Ekle';
+    addSetBtn.innerHTML = '<span class="material-symbols-rounded">add</span>Yeni Set Ekle';
     addSetBtn.onclick = () => sessionAddSet(exId);
     container.appendChild(addSetBtn);
 
@@ -356,7 +356,7 @@ function _activeSetHTML(exId, setIdx, set, isCurrent = false) {
                 <span class="font-body-md text-body-md ${titleClass}" id="set-summary-${exId}-${setIdx}">${titleText}</span>
                 ${rpeLabel}
             </div>
-            <span class="material-symbols-outlined ${chevronColor} transition-transform duration-300 transform ${isExpanded ? 'rotate-180' : ''}" data-icon="expand_more">expand_more</span>
+            <span class="material-symbols-rounded ${chevronColor} transition-transform duration-300 transform ${isExpanded ? 'rotate-180' : ''}" data-icon="expand_more">expand_more</span>
         </button>
         <div class="expandable-content ${isExpanded ? 'expanded' : ''}">
             <div class="expandable-inner px-5 pb-5">
@@ -366,11 +366,11 @@ function _activeSetHTML(exId, setIdx, set, isCurrent = false) {
                         <span class="font-title-sm text-title-sm text-text-primary">Ağırlık (kg)</span>
                         <div class="flex items-center gap-4">
                             <button data-action="sessionStepWeight" data-ex-id="${exId}" data-set-idx="${setIdx}" data-delta="-2.5" class="w-12 h-12 neo-inset-circle flex items-center justify-center text-secondary neo-surface-interactive hover:text-primary transition-colors">
-                                <span class="material-symbols-outlined" data-icon="remove">remove</span>
+                                <span class="material-symbols-rounded" data-icon="remove">remove</span>
                             </button>
                             <span class="font-display-lg text-display-lg w-16 text-center text-on-surface" id="weight-val-${exId}-${setIdx}">${set.weight}</span>
                             <button data-action="sessionStepWeight" data-ex-id="${exId}" data-set-idx="${setIdx}" data-delta="2.5" class="w-12 h-12 neo-inset-circle flex items-center justify-center text-secondary neo-surface-interactive hover:text-primary transition-colors">
-                                <span class="material-symbols-outlined" data-icon="add">add</span>
+                                <span class="material-symbols-rounded" data-icon="add">add</span>
                             </button>
                         </div>
                     </div>
@@ -379,11 +379,11 @@ function _activeSetHTML(exId, setIdx, set, isCurrent = false) {
                         <span class="font-title-sm text-title-sm text-text-primary">Tekrar</span>
                         <div class="flex items-center gap-4">
                             <button data-action="sessionStepReps" data-ex-id="${exId}" data-set-idx="${setIdx}" data-delta="-1" class="w-12 h-12 neo-inset-circle flex items-center justify-center text-secondary neo-surface-interactive hover:text-primary transition-colors">
-                                <span class="material-symbols-outlined" data-icon="remove">remove</span>
+                                <span class="material-symbols-rounded" data-icon="remove">remove</span>
                             </button>
                             <span class="font-display-lg text-display-lg w-16 text-center text-on-surface" id="reps-val-${exId}-${setIdx}">${set.reps}</span>
                             <button data-action="sessionStepReps" data-ex-id="${exId}" data-set-idx="${setIdx}" data-delta="1" class="w-12 h-12 neo-inset-circle flex items-center justify-center text-secondary neo-surface-interactive hover:text-primary transition-colors">
-                                <span class="material-symbols-outlined" data-icon="add">add</span>
+                                <span class="material-symbols-rounded" data-icon="add">add</span>
                             </button>
                         </div>
                     </div>
@@ -504,7 +504,7 @@ async function finishSession() {
         // Reset button
         if (btn) {
             btn.disabled = false;
-            btn.innerHTML = `<span class="material-symbols-outlined" style="font-size:16px">flag</span> Bitir`;
+            btn.innerHTML = `<span class="material-symbols-rounded" style="font-size:16px">flag</span> Bitir`;
         }
 
         // Navigate back to workout home
@@ -519,7 +519,7 @@ async function finishSession() {
         alert('Antrenman kaydedilemedi: ' + e.message);
         if (btn) {
             btn.disabled = false;
-            btn.innerHTML = `<span class="material-symbols-outlined" style="font-size:16px">flag</span> Bitir`;
+            btn.innerHTML = `<span class="material-symbols-rounded" style="font-size:16px">flag</span> Bitir`;
         }
     }
 };
