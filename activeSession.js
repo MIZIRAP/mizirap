@@ -257,7 +257,7 @@ function _renderSessionExercises() {
         card.id = `session-card-${ex.id}`;
 
         card.innerHTML = `
-            <button class="w-full p-4 flex items-center justify-between focus:outline-none" onclick="sessionToggleExAccordion('${ex.id}', this)">
+            <button class="w-full p-4 flex items-center justify-between focus:outline-none" data-action="sessionToggleExAccordion" data-ex-id="${ex.id}">
                 <div class="flex items-center gap-4">
                     <div class="w-12 h-12 rounded-full flex items-center justify-center bg-gradient-to-br from-purple-400 to-blue-400 text-white shadow-sm shrink-0">
                         <span class="material-symbols-rounded text-2xl">fitness_center</span>
@@ -268,7 +268,6 @@ function _renderSessionExercises() {
                     </div>
                 </div>
                 <div class="flex items-center gap-3 shrink-0">
-                    <span class="font-label-sm text-label-sm text-outline">${totalSets} Set</span>
                     <span class="material-symbols-rounded text-outline transition-transform duration-300 transform ${isOpen ? 'rotate-180' : ''}" id="chevron-${ex.id}">expand_more</span>
                 </div>
             </button>
@@ -421,11 +420,11 @@ function sessionToggleExAccordion(exId, headerBtn) {
     if (_openExAccordions.has(exId)) {
         _openExAccordions.delete(exId);
         body.classList.add('hidden');
-        if (chevron) chevron.classList.remove('rotate-90');
+        if (chevron) chevron.classList.remove('rotate-180');
     } else {
         _openExAccordions.add(exId);
         body.classList.remove('hidden');
-        if (chevron) chevron.classList.add('rotate-90');
+        if (chevron) chevron.classList.add('rotate-180');
         _renderSets(exId);
     }
 };
