@@ -308,6 +308,9 @@ document.addEventListener('click', (e) => {
 export function initWorkout(uid, onChangeCallback) {
     if(!uid) return;
     currentUid = uid;
+    if (typeof loadCustomExercises === 'function') {
+        loadCustomExercises();
+    }
     initFavoritesUI();
     localStorage.setItem('uid', uid);
     callback = onChangeCallback;
