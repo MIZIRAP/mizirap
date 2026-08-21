@@ -308,6 +308,7 @@ document.addEventListener('click', (e) => {
 export function initWorkout(uid, onChangeCallback) {
     if(!uid) return;
     currentUid = uid;
+    initFavoritesUI();
     localStorage.setItem('uid', uid);
     callback = onChangeCallback;
     
@@ -859,14 +860,6 @@ function toggleFavorite(e, btn) {
     localStorage.setItem(`miz_fav_exercises_${currentUid}`, JSON.stringify(favs));
     initFavoritesUI();
 }
-
-// override to also init favorites
-const _oldFilterExercises = window.filterExercises; // or just write it here
-function _setupFavoritesOnLoad() {
-    // wait for DOM then init
-    setTimeout(initFavoritesUI, 100);
-}
-_setupFavoritesOnLoad();
 
 // ==========================================
 // EXERCISE HISTORY VIEW
