@@ -1261,7 +1261,7 @@ function renderSplitEditView() {
 }
 
 function toggleDayAccordion(key, headerBtn) {
-    const body = headerBtn.closest('.bg-background shadow-neo-lowest').querySelector('.accordion-body');
+    const body = headerBtn.closest('.bg-background.shadow-neo-lowest').querySelector('.accordion-body');
     const chevron = headerBtn.querySelector('.material-symbols-rounded');
     
     if(_openDayAccordions.has(key)) {
@@ -2665,6 +2665,13 @@ function openStretchPlayer() {
 
     const view = document.getElementById('view-stretch-player');
     view.classList.remove('hidden');
+    view.style.display = 'flex';
+    view.style.zIndex = '999999';
+    view.style.position = 'fixed';
+    view.style.top = '0';
+    view.style.left = '0';
+    view.style.width = '100%';
+    view.style.height = '100dvh';
     // Ensure we start at the top of the player
     const appContainer = document.getElementById('app-container');
     if(appContainer) appContainer.scrollTop = 0;
@@ -2678,6 +2685,7 @@ function closeStretchPlayer() {
     _spStopTimer();
     const view = document.getElementById('view-stretch-player');
     view.classList.add('hidden');
+    view.style.display = '';
     
     // Restore the previous view
     if (window._prevStretchView) {
@@ -3146,6 +3154,13 @@ function openCorePlayer() {
 
     const view = document.getElementById('view-core-player');
     view.classList.remove('hidden');
+    view.style.display = 'flex';
+    view.style.zIndex = '999999';
+    view.style.position = 'fixed';
+    view.style.top = '0';
+    view.style.left = '0';
+    view.style.width = '100%';
+    view.style.height = '100dvh';
     
     const appContainer = document.getElementById('app-container');
     if(appContainer) appContainer.scrollTop = 0;
@@ -3159,6 +3174,7 @@ function closeCorePlayer() {
     _cpStopTimer();
     const view = document.getElementById('view-core-player');
     view.classList.add('hidden');
+    view.style.display = '';
     
     // Restore the previous view
     if (window._prevCoreView) {

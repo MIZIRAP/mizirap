@@ -250,7 +250,7 @@ function _renderSessionExercises() {
         const totalSets = state.sets.length;
         const prevLine = (state.prevBestWeight !== null)
             ? `Son antrenman: ${state.prevBestWeight}kg × ${state.prevBestReps} reps`
-            : 'İlk antrenman';
+            : '';
 
         const card = document.createElement('article');
         card.className = 'neo-surface overflow-hidden mb-4';
