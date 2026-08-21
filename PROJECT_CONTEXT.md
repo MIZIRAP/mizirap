@@ -193,14 +193,14 @@ app/
 ## 6. BİLİNEN SORUNLAR / YARIM KALANLAR
 
 **Aktif Sorunlar**
-- `workout.js` ~3500 satır — stretch + core + exercise kodu tek dosyada karışık; refactor önerilir
-- Core Library → Core Player navigasyonu düzenlenmeli ("Seansa Başla" kaldırıldı, yerine ne koyulacağı açık)
-- `assets/core/` tamamen silindi — core hareketleri görselsiz görünüyor (`imageBase64: null`)
-- `triggerCoreImageUpload` action handler workout.js'te var ama `core-image-input` elementi HTML'de yok — null hatası üretebilir
+- `workout.js` ~3500 satır — stretch + core + exercise kodu tek dosyada karışık; refactor önerilir *(Core planlandıktan sonra)*
+- Core Library → Core Player navigasyonu düzenlenmeli — *(Core planı bekleniyor)*
+- `assets/core/` tamamen silindi — core hareketleri görselsiz görünüyor *(Core planı bekleniyor)*
+- ~~`triggerCoreImageUpload` action handler null hatası~~ → ✅ **Düzeltildi** (dead code kaldırıldı)
 
 **Teknik Borç**
-- `.gitignore` yok — `node_modules/`, `.DS_Store` repo'ya giriyor
-- `package.json` boş (`{}`) — node_modules gereksiz yere var
+- ~~`.gitignore` yok~~ → ✅ **Düzeltildi** (`node_modules/`, `.DS_Store`, `*.orig`, `*.bak`, `scratchpad_*` eklendi; `node_modules` tracking'den çıkarıldı)
+- `package.json` boş (`{}`) — node_modules artık gitignore'da, repo'ya girmiyor
 - Firebase API key `firebase-config.js`'te açık — public repo'da Security Rules ile korunuyor ama riskli
 - `app.js?v=...` ve `workout.js?v=...` versiyonları hardcode — deploy'da güncellenmesi unutulabilir
 
