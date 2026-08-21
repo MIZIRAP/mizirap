@@ -142,9 +142,9 @@ document.addEventListener('click', (e) => {
     else if (action === 'editStretch') { e.stopPropagation(); editStretch(actionBtn.getAttribute('data-stretch-id')); }
     else if (action === 'triggerStretchImageUpload') document.getElementById('stretch-image-input').click();
     
-    else if (action === 'openAddCoreModal') openAddCoreModal();
-    else if (action === 'closeAddCoreModal') closeAddCoreModal();
-    else if (action === 'saveNewCore') saveCore();
+    else if (action === 'openAddCoreModal') openAddCoreSheet();
+    else if (action === 'closeAddCoreModal') closeAddCoreSheet();
+    else if (action === 'saveNewCore') saveCoreExercise();
     else if (action === 'deleteCore') { e.stopPropagation(); deleteCore(actionBtn.getAttribute('data-core-id')); }
     else if (action === 'editCore') { e.stopPropagation(); editCore(actionBtn.getAttribute('data-core-id')); }
     else if (action === 'triggerCoreImageUpload') document.getElementById('core-image-input').click();
@@ -305,7 +305,7 @@ export function initWorkout(uid, onChangeCallback) {
             if (migrationNeeded) {
                 try {
                     await migrationBatch.commit();
-                    console.log("Migrated core categories successfully.");
+                    // Migration complete
                 } catch(e) {
                     console.error("Migration failed:", e);
                 }
@@ -2009,60 +2009,6 @@ async function deleteStretch(id) {
 // ==========================================
 // CORE CRUD & RENDERING
 // ==========================================
-
-function openAddCoreModal(isEdit = false) {
-    const nameInput = document.getElementById('core-name');
-    const imageBtn = document.getElementById('core-image-picker-btn');
-
-    if (!isEdit) {
-        editingCoreId = null;
-        editingCoreIsDefault = false;
-        currentCoreImageBase64 = null;
-        nameInput.value = '';
-        document.getElementById('core-duration').value = '';
-        document.getElementById('core-modal-title').textContent = "Yeni Hareket";
-        
-        const preview = document.getElementById('core-image-preview');
-        const placeholder = document.getElementById('core-image-placeholder');
-        if (preview && placeholder) {
-            preview.src = "";
-            preview.classList.add('hidden');
-            placeholder.classList.remove('hidden');
-        }
-    }
-
-    if (nameInput) {
-        nameInput.disabled = editingCoreIsDefault;
-        if (editingCoreIsDefault) nameInput.classList.add('opacity-50', 'cursor-not-allowed');
-        else nameInput.classList.remove('opacity-50', 'cursor-not-allowed');
-    }
-    if (imageBtn) {
-        imageBtn.disabled = editingCoreIsDefault;
-        if (editingCoreIsDefault) imageBtn.classList.add('opacity-50', 'cursor-not-allowed');
-        else imageBtn.classList.remove('opacity-50', 'cursor-not-allowed');
-    }
-
-    const modal = document.getElementById('addCoreModal');
-    const content = document.getElementById('addCoreModalContent');
-    modal.classList.remove('hidden');
-    // small delay for transition
-    setTimeout(() => {
-        modal.classList.remove('opacity-0');
-        content.classList.remove('translate-y-full');
-    }, 10);
-}
-
-function closeAddCoreModal() {
-    const modal = document.getElementById('addCoreModal');
-    const content = document.getElementById('addCoreModalContent');
-    
-    modal.classList.add('opacity-0');
-    content.classList.add('translate-y-full');
-    
-    setTimeout(() => {
-        modal.classList.add('hidden');
-    }, 300);
-}
 
 function renderCores() {
     const container = document.getElementById('core-list-container');
