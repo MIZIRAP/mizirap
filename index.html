@@ -4377,7 +4377,8 @@
         }
         
                 function loadCustomExercises() {
-            if (typeof currentUid === 'undefined') return;
+            const currentUid = localStorage.getItem('uid');
+            if (!currentUid) return;
             const customKey = `miz_custom_exercises_${currentUid || 'guest'}`;
             let customExercises = JSON.parse(localStorage.getItem(customKey) || "[]");
             
@@ -4474,7 +4475,8 @@
                 };
             }
             
-            if (typeof currentUid !== 'undefined') {
+            const currentUid = localStorage.getItem('uid');
+            if (currentUid) {
                 const customKey = `miz_custom_exercises_${currentUid || 'guest'}`;
                 let customExercises = JSON.parse(localStorage.getItem(customKey) || "[]");
                 if (!customExercises.some(ex => ex.name === name)) {
@@ -4539,7 +4541,8 @@
             if (confirm("Bu hareketi silmek istediğinize emin misiniz?")) {
                 const name = currentExerciseElement.querySelector('h4').innerText;
                 
-                if (typeof currentUid !== 'undefined') {
+                const currentUid = localStorage.getItem('uid');
+            if (currentUid) {
                     const customKey = `miz_custom_exercises_${currentUid || 'guest'}`;
                     let customExercises = JSON.parse(localStorage.getItem(customKey) || "[]");
                     customExercises = customExercises.filter(ex => ex.name !== name);
