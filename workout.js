@@ -470,7 +470,8 @@ function renderSplitView() {
             const shadowStyle = isActive 
                 ? 'box-shadow: 2px 2px 5px #D1D9E6, -2px -2px 5px #FFFFFF;' 
                 : 'box-shadow: inset 2px 2px 5px #D1D9E6, inset -2px -2px 5px #FFFFFF;';
-            bar.className = `h-2 rounded-full transition-all duration-300 cursor-pointer bg-[#F7F9FF] ${isActive ? 'w-10' : 'w-6 opacity-60 hover:opacity-100'}`;
+            const bgClass = isActive ? 'bg-gradient-to-r from-neon-purple to-neon-blue' : 'bg-[#E2E8F0]';
+            bar.className = `h-2 rounded-full transition-all duration-300 cursor-pointer ${bgClass} ${isActive ? 'w-10' : 'w-6 opacity-80 hover:opacity-100'}`;
             bar.style = shadowStyle;
             bar.title = day.name;
             bar.onclick = () => selectActiveDay(day.id);
