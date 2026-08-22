@@ -328,6 +328,7 @@ function updateWaterUI() {
 
                 card.addEventListener('touchstart', (e) => {
                     startX = e.touches[0].clientX;
+            currentX = startX;
                     isSwiping = true;
                     card.style.transition = 'none';
                 }, {passive: true});

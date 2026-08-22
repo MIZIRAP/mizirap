@@ -583,6 +583,7 @@ function renderTransactions(isFromScroll = false) {
 
         item.addEventListener('touchstart', (e) => {
             startX = e.touches[0].clientX;
+            currentX = startX;
             isDragging = true;
             item.style.transition = 'none';
         }, {passive: true});
@@ -1379,6 +1380,7 @@ export function renderFinanceSettings() {
 
                 item.addEventListener('touchstart', (e) => {
                     startX = e.touches[0].clientX;
+            currentX = startX;
                     isDragging = true;
                     item.style.transition = 'none';
                 }, {passive: true});
@@ -1460,6 +1462,7 @@ export function renderFinanceSettings() {
 
                 item.addEventListener('touchstart', (e) => {
                     startX = e.touches[0].clientX;
+            currentX = startX;
                     isDragging = true;
                     item.style.transition = 'none';
                 }, {passive: true});

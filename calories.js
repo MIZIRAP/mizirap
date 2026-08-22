@@ -598,6 +598,7 @@ function renderLogs() {
 
         item.addEventListener('touchstart', (e) => {
             startX = e.touches[0].clientX;
+            currentX = startX;
             isDragging = true;
             item.style.transition = 'none';
         }, {passive: true});
@@ -753,6 +754,7 @@ function renderLibraryFoods() {
 
         item.addEventListener('touchstart', (e) => {
             startX = e.touches[0].clientX;
+            currentX = startX;
             isDragging = true;
             item.style.transition = 'none';
         }, {passive: true});

@@ -323,6 +323,7 @@ function renderMoviesView() {
 
         cardContent.addEventListener('touchstart', (e) => {
             startX = e.touches[0].clientX;
+            currentX = startX;
             isDragging = true;
             cardContent.style.transition = 'none';
         }, {passive: true});

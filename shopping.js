@@ -104,6 +104,7 @@ function renderShoppingList() {
 
         itemDiv.addEventListener('touchstart', (e) => {
             startX = e.touches[0].clientX;
+            currentX = startX;
             isDragging = true;
             itemDiv.style.transition = 'none';
         }, {passive: true});
@@ -187,6 +188,7 @@ function renderShoppingList() {
 
         itemDiv.addEventListener('touchstart', (e) => {
             startX = e.touches[0].clientX;
+            currentX = startX;
             isDragging = true;
             itemDiv.style.transition = 'none';
         }, {passive: true});
