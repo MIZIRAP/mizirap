@@ -1,13 +1,13 @@
 import { auth } from "./firebase-config.js";
 import { onAuthStateChanged, signInAnonymously } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
 import { setupAuthUI } from "./auth.js";
-import { initDashboard, clearDashboard, updateDashboardWorkouts, updateDashboardFinance, updateDashboardWater, updateDashboardBooks, updateDashboardMovies, updateDashboardCalories } from "./dashboard.js?v=1787411166";
+import { initDashboard, clearDashboard, updateDashboardWorkouts, updateDashboardFinance, updateDashboardWater, updateDashboardBooks, updateDashboardMovies, updateDashboardCalories } from "./dashboard.js?v=1787411466";
 import { initShopping, clearShopping } from "./shopping.js";
-import { initWorkout, clearWorkout } from "./workout.js?v=1787411166";
+import { initWorkout, clearWorkout } from "./workout.js?v=1787411466";
 import { initFinance, clearFinance } from "./finance.js";
 import { initWater, clearWater } from "./water.js";
-import { initBooks, clearBooks } from "./books.js?v=1787411166";
-import { initMovies, clearMovies } from "./movies.js?v=1787411166";
+import { initBooks, clearBooks } from "./books.js?v=1787411466";
+import { initMovies, clearMovies } from "./movies.js?v=1787411466";
 import { initProfile, clearProfile } from "./profile.js";
 import { initCalories, clearCalories } from "./calories.js";
 import { initHistory, clearHistory } from "./history.js";
