@@ -3,7 +3,7 @@ import { onAuthStateChanged, signInAnonymously } from "https://www.gstatic.com/f
 import { setupAuthUI } from "./auth.js";
 import { initDashboard, clearDashboard, updateDashboardWorkouts, updateDashboardFinance, updateDashboardWater, updateDashboardBooks, updateDashboardMovies, updateDashboardCalories } from "./dashboard.js?v=1787301376";
 import { initShopping, clearShopping } from "./shopping.js";
-import { initWorkout, clearWorkout } from "./workout.js?v=1787407716";
+import { initWorkout, clearWorkout } from "./workout.js?v=1787408416";
 import { initFinance, clearFinance } from "./finance.js";
 import { initWater, clearWater } from "./water.js";
 import { initBooks, clearBooks } from "./books.js?v=1787301376";
