@@ -672,7 +672,7 @@
                 <span class="material-symbols-rounded text-[#1E293B]">chevron_right</span>
             </a>
             
-            <button data-action="openStretchPlayer" class="w-full bg-[#F0F2F8] p-4 rounded-2xl flex items-center justify-between active:scale-[0.99] transition-transform text-left" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);">
+            <button onclick="document.getElementById('view-workout').classList.add('hidden'); document.getElementById('view-stretch-library').classList.remove('hidden'); if(typeof renderStretches === 'function') renderStretches();" class="w-full bg-[#F0F2F8] p-4 rounded-2xl flex items-center justify-between active:scale-[0.99] transition-transform text-left" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);">
                 <div class="flex items-center gap-4">
                     <div class="w-10 h-10 rounded-full bg-[#F0F2F8] flex items-center justify-center flex-shrink-0" style="box-shadow: inset 2px 2px 5px #D1D9E6, inset -2px -2px 5px rgba(255, 255, 255, 0.7);">
                         <span class="material-symbols-rounded text-[#1E293B]">self_improvement</span>
@@ -723,7 +723,7 @@
             <main class="flex-1 px-6 flex flex-col pt-4 gap-6 pb-24">
                 <!-- Search Box -->
                 <section class="pt-2">
-                    <div class="neo-inset p-4 flex items-center gap-3" style="">
+                    <div class="neo-inset p-4 rounded-full flex items-center gap-3">
                         <span class="material-symbols-outlined text-on-surface-variant">search</span>
                         <input id="exercise-search-input" oninput="handleExerciseSearch(this.value)" class="bg-transparent border-none focus:ring-0 text-sm w-full p-0 text-on-surface" placeholder="Egzersiz Ara..." type="text"/>
                     </div>
@@ -754,12 +754,12 @@
                         <h2 class="font-title-lg text-on-surface">Göğüs</h2>
                     </div>
                     <div class="flex flex-col gap-2">
-                        <div onclick="openExerciseSheet(this, 'Flat Barbell Bench Press')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
+                        <div onclick="openExerciseSheet(this, 'Flat Barbell Bench Press')" class="neo-surface p-4 rounded-2xl flex items-center justify-between neo-button transition-all exercise-item mb-3 cursor-pointer">
                     <div class="flex items-center gap-4">
                         <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">F</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Flat Barbell Bench Press</h4>
-                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Chest</p>
+                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Göğüs</p>
                         </div>
                     </div>
                     <div class="flex items-center gap-2">
@@ -769,12 +769,12 @@
                         <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
-                        <div onclick="openExerciseSheet(this, 'Flat Dumbbell Bench Press')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
+                        <div onclick="openExerciseSheet(this, 'Flat Dumbbell Bench Press')" class="neo-surface p-4 rounded-2xl flex items-center justify-between neo-button transition-all exercise-item mb-3 cursor-pointer">
                     <div class="flex items-center gap-4">
                         <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">F</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Flat Dumbbell Bench Press</h4>
-                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Chest</p>
+                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Göğüs</p>
                         </div>
                     </div>
                     <div class="flex items-center gap-2">
@@ -784,12 +784,12 @@
                         <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
-                        <div onclick="openExerciseSheet(this, 'Machine Chest Press')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
+                        <div onclick="openExerciseSheet(this, 'Machine Chest Press')" class="neo-surface p-4 rounded-2xl flex items-center justify-between neo-button transition-all exercise-item mb-3 cursor-pointer">
                     <div class="flex items-center gap-4">
                         <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">M</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Machine Chest Press</h4>
-                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Chest</p>
+                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Göğüs</p>
                         </div>
                     </div>
                     <div class="flex items-center gap-2">
@@ -799,12 +799,12 @@
                         <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
-                        <div onclick="openExerciseSheet(this, 'Cable Chest Press')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
+                        <div onclick="openExerciseSheet(this, 'Cable Chest Press')" class="neo-surface p-4 rounded-2xl flex items-center justify-between neo-button transition-all exercise-item mb-3 cursor-pointer">
                     <div class="flex items-center gap-4">
                         <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">C</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Cable Chest Press</h4>
-                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Chest</p>
+                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Göğüs</p>
                         </div>
                     </div>
                     <div class="flex items-center gap-2">
@@ -814,12 +814,12 @@
                         <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
-                        <div onclick="openExerciseSheet(this, 'Incline Barbell Bench Press')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
+                        <div onclick="openExerciseSheet(this, 'Incline Barbell Bench Press')" class="neo-surface p-4 rounded-2xl flex items-center justify-between neo-button transition-all exercise-item mb-3 cursor-pointer">
                     <div class="flex items-center gap-4">
                         <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">I</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Incline Barbell Bench Press</h4>
-                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Chest</p>
+                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Göğüs</p>
                         </div>
                     </div>
                     <div class="flex items-center gap-2">
@@ -829,12 +829,12 @@
                         <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
-                        <div onclick="openExerciseSheet(this, 'Incline Dumbbell Bench Press')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
+                        <div onclick="openExerciseSheet(this, 'Incline Dumbbell Bench Press')" class="neo-surface p-4 rounded-2xl flex items-center justify-between neo-button transition-all exercise-item mb-3 cursor-pointer">
                     <div class="flex items-center gap-4">
                         <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">I</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Incline Dumbbell Bench Press</h4>
-                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Chest</p>
+                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Göğüs</p>
                         </div>
                     </div>
                     <div class="flex items-center gap-2">
@@ -844,12 +844,12 @@
                         <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
-                        <div onclick="openExerciseSheet(this, 'Decline Dumbbell Press')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
+                        <div onclick="openExerciseSheet(this, 'Decline Dumbbell Press')" class="neo-surface p-4 rounded-2xl flex items-center justify-between neo-button transition-all exercise-item mb-3 cursor-pointer">
                     <div class="flex items-center gap-4">
                         <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">D</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Decline Dumbbell Press</h4>
-                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Chest</p>
+                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Göğüs</p>
                         </div>
                     </div>
                     <div class="flex items-center gap-2">
@@ -859,12 +859,12 @@
                         <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
-                        <div onclick="openExerciseSheet(this, 'Cable Crossover')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
+                        <div onclick="openExerciseSheet(this, 'Cable Crossover')" class="neo-surface p-4 rounded-2xl flex items-center justify-between neo-button transition-all exercise-item mb-3 cursor-pointer">
                     <div class="flex items-center gap-4">
                         <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">C</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Cable Crossover</h4>
-                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Chest</p>
+                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Göğüs</p>
                         </div>
                     </div>
                     <div class="flex items-center gap-2">
@@ -874,12 +874,12 @@
                         <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
-                        <div onclick="openExerciseSheet(this, 'Dumbbell Fly')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
+                        <div onclick="openExerciseSheet(this, 'Dumbbell Fly')" class="neo-surface p-4 rounded-2xl flex items-center justify-between neo-button transition-all exercise-item mb-3 cursor-pointer">
                     <div class="flex items-center gap-4">
                         <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">D</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Dumbbell Fly</h4>
-                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Chest</p>
+                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Göğüs</p>
                         </div>
                     </div>
                     <div class="flex items-center gap-2">
@@ -889,12 +889,12 @@
                         <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
-                        <div onclick="openExerciseSheet(this, 'Machine Fly (Pec Deck)')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
+                        <div onclick="openExerciseSheet(this, 'Machine Fly (Pec Deck)')" class="neo-surface p-4 rounded-2xl flex items-center justify-between neo-button transition-all exercise-item mb-3 cursor-pointer">
                     <div class="flex items-center gap-4">
                         <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">M</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Machine Fly (Pec Deck)</h4>
-                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Chest</p>
+                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Göğüs</p>
                         </div>
                     </div>
                     <div class="flex items-center gap-2">
@@ -904,12 +904,12 @@
                         <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
-                        <div onclick="openExerciseSheet(this, 'Incline Cable Fly')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
+                        <div onclick="openExerciseSheet(this, 'Incline Cable Fly')" class="neo-surface p-4 rounded-2xl flex items-center justify-between neo-button transition-all exercise-item mb-3 cursor-pointer">
                     <div class="flex items-center gap-4">
                         <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">I</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Incline Cable Fly</h4>
-                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Chest</p>
+                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Göğüs</p>
                         </div>
                     </div>
                     <div class="flex items-center gap-2">
@@ -919,12 +919,12 @@
                         <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
-                        <div onclick="openExerciseSheet(this, 'TRX Push-up (Feet Suspended)')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
+                        <div onclick="openExerciseSheet(this, 'TRX Push-up (Feet Suspended)')" class="neo-surface p-4 rounded-2xl flex items-center justify-between neo-button transition-all exercise-item mb-3 cursor-pointer">
                     <div class="flex items-center gap-4">
                         <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">T</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">TRX Push-up (Feet Suspended)</h4>
-                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Chest</p>
+                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Göğüs</p>
                         </div>
                     </div>
                     <div class="flex items-center gap-2">
@@ -934,12 +934,12 @@
                         <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
-                        <div onclick="openExerciseSheet(this, 'Incline Machine Chest Press')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
+                        <div onclick="openExerciseSheet(this, 'Incline Machine Chest Press')" class="neo-surface p-4 rounded-2xl flex items-center justify-between neo-button transition-all exercise-item mb-3 cursor-pointer">
                     <div class="flex items-center gap-4">
                         <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">I</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Incline Machine Chest Press</h4>
-                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Chest</p>
+                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Göğüs</p>
                         </div>
                     </div>
                     <div class="flex items-center gap-2">
@@ -957,12 +957,12 @@
                         <h2 class="font-title-lg text-on-surface">Sırt</h2>
                     </div>
                     <div class="flex flex-col gap-2">
-                        <div onclick="openExerciseSheet(this, 'Barbell Row')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
+                        <div onclick="openExerciseSheet(this, 'Barbell Row')" class="neo-surface p-4 rounded-2xl flex items-center justify-between neo-button transition-all exercise-item mb-3 cursor-pointer">
                     <div class="flex items-center gap-4">
                         <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">B</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Barbell Row</h4>
-                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Upper Back</p>
+                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Üst Sırt Back</p>
                         </div>
                     </div>
                     <div class="flex items-center gap-2">
@@ -972,12 +972,12 @@
                         <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
-                        <div onclick="openExerciseSheet(this, 'Dumbbell Row')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
+                        <div onclick="openExerciseSheet(this, 'Dumbbell Row')" class="neo-surface p-4 rounded-2xl flex items-center justify-between neo-button transition-all exercise-item mb-3 cursor-pointer">
                     <div class="flex items-center gap-4">
                         <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">D</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Dumbbell Row</h4>
-                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Upper Back</p>
+                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Üst Sırt Back</p>
                         </div>
                     </div>
                     <div class="flex items-center gap-2">
@@ -987,12 +987,12 @@
                         <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
-                        <div onclick="openExerciseSheet(this, 'T-Bar Row')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
+                        <div onclick="openExerciseSheet(this, 'T-Bar Row')" class="neo-surface p-4 rounded-2xl flex items-center justify-between neo-button transition-all exercise-item mb-3 cursor-pointer">
                     <div class="flex items-center gap-4">
                         <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">T</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">T-Bar Row</h4>
-                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Upper Back</p>
+                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Üst Sırt Back</p>
                         </div>
                     </div>
                     <div class="flex items-center gap-2">
@@ -1002,12 +1002,12 @@
                         <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
-                        <div onclick="openExerciseSheet(this, 'Cable Seated Row')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
+                        <div onclick="openExerciseSheet(this, 'Cable Seated Row')" class="neo-surface p-4 rounded-2xl flex items-center justify-between neo-button transition-all exercise-item mb-3 cursor-pointer">
                     <div class="flex items-center gap-4">
                         <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">C</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Cable Seated Row</h4>
-                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Upper Back</p>
+                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Üst Sırt Back</p>
                         </div>
                     </div>
                     <div class="flex items-center gap-2">
@@ -1017,12 +1017,12 @@
                         <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
-                        <div onclick="openExerciseSheet(this, 'Machine Row')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
+                        <div onclick="openExerciseSheet(this, 'Machine Row')" class="neo-surface p-4 rounded-2xl flex items-center justify-between neo-button transition-all exercise-item mb-3 cursor-pointer">
                     <div class="flex items-center gap-4">
                         <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">M</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Machine Row</h4>
-                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Upper Back</p>
+                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Üst Sırt Back</p>
                         </div>
                     </div>
                     <div class="flex items-center gap-2">
@@ -1032,12 +1032,12 @@
                         <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
-                        <div onclick="openExerciseSheet(this, 'Lat Pulldown')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
+                        <div onclick="openExerciseSheet(this, 'Lat Pulldown')" class="neo-surface p-4 rounded-2xl flex items-center justify-between neo-button transition-all exercise-item mb-3 cursor-pointer">
                     <div class="flex items-center gap-4">
                         <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">L</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Lat Pulldown</h4>
-                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Upper Back</p>
+                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Üst Sırt Back</p>
                         </div>
                     </div>
                     <div class="flex items-center gap-2">
@@ -1047,12 +1047,12 @@
                         <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
-                        <div onclick="openExerciseSheet(this, 'Close-Grip Lat Pulldown')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
+                        <div onclick="openExerciseSheet(this, 'Close-Grip Lat Pulldown')" class="neo-surface p-4 rounded-2xl flex items-center justify-between neo-button transition-all exercise-item mb-3 cursor-pointer">
                     <div class="flex items-center gap-4">
                         <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">C</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Close-Grip Lat Pulldown</h4>
-                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Upper Back</p>
+                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Üst Sırt Back</p>
                         </div>
                     </div>
                     <div class="flex items-center gap-2">
@@ -1062,12 +1062,12 @@
                         <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
-                        <div onclick="openExerciseSheet(this, 'Straight-Arm Cable Pulldown')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
+                        <div onclick="openExerciseSheet(this, 'Straight-Arm Cable Pulldown')" class="neo-surface p-4 rounded-2xl flex items-center justify-between neo-button transition-all exercise-item mb-3 cursor-pointer">
                     <div class="flex items-center gap-4">
                         <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">S</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Straight-Arm Cable Pulldown</h4>
-                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Upper Back</p>
+                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Üst Sırt Back</p>
                         </div>
                     </div>
                     <div class="flex items-center gap-2">
@@ -1077,12 +1077,12 @@
                         <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
-                        <div onclick="openExerciseSheet(this, 'Pull-Up')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
+                        <div onclick="openExerciseSheet(this, 'Pull-Up')" class="neo-surface p-4 rounded-2xl flex items-center justify-between neo-button transition-all exercise-item mb-3 cursor-pointer">
                     <div class="flex items-center gap-4">
                         <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">P</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Pull-Up</h4>
-                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Upper Back</p>
+                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Üst Sırt Back</p>
                         </div>
                     </div>
                     <div class="flex items-center gap-2">
@@ -1092,12 +1092,12 @@
                         <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
-                        <div onclick="openExerciseSheet(this, 'Chin-Up')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
+                        <div onclick="openExerciseSheet(this, 'Chin-Up')" class="neo-surface p-4 rounded-2xl flex items-center justify-between neo-button transition-all exercise-item mb-3 cursor-pointer">
                     <div class="flex items-center gap-4">
                         <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">C</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Chin-Up</h4>
-                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Upper Back, Biceps</p>
+                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Üst Sırt Back, Biceps</p>
                         </div>
                     </div>
                     <div class="flex items-center gap-2">
@@ -1107,12 +1107,12 @@
                         <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
-                        <div onclick="openExerciseSheet(this, 'Deadlift')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
+                        <div onclick="openExerciseSheet(this, 'Deadlift')" class="neo-surface p-4 rounded-2xl flex items-center justify-between neo-button transition-all exercise-item mb-3 cursor-pointer">
                     <div class="flex items-center gap-4">
                         <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">D</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Deadlift</h4>
-                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Lower Back, Upper Back</p>
+                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Bel, Upper Back</p>
                         </div>
                     </div>
                     <div class="flex items-center gap-2">
@@ -1122,12 +1122,12 @@
                         <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
-                        <div onclick="openExerciseSheet(this, 'Back Extension')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
+                        <div onclick="openExerciseSheet(this, 'Back Extension')" class="neo-surface p-4 rounded-2xl flex items-center justify-between neo-button transition-all exercise-item mb-3 cursor-pointer">
                     <div class="flex items-center gap-4">
                         <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">B</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Back Extension</h4>
-                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Lower Back</p>
+                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Bel</p>
                         </div>
                     </div>
                     <div class="flex items-center gap-2">
@@ -1137,12 +1137,12 @@
                         <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
-                        <div onclick="openExerciseSheet(this, 'TRX Inverted Row')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
+                        <div onclick="openExerciseSheet(this, 'TRX Inverted Row')" class="neo-surface p-4 rounded-2xl flex items-center justify-between neo-button transition-all exercise-item mb-3 cursor-pointer">
                     <div class="flex items-center gap-4">
                         <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">T</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">TRX Inverted Row</h4>
-                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Upper Back</p>
+                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Üst Sırt Back</p>
                         </div>
                     </div>
                     <div class="flex items-center gap-2">
@@ -1152,12 +1152,12 @@
                         <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
-                        <div onclick="openExerciseSheet(this, '3-Point Quadripod Exercise (3-PQE)')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
+                        <div onclick="openExerciseSheet(this, '3-Point Quadripod Exercise (3-PQE)')" class="neo-surface p-4 rounded-2xl flex items-center justify-between neo-button transition-all exercise-item mb-3 cursor-pointer">
                     <div class="flex items-center gap-4">
                         <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">3</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">3-Point Quadripod Exercise (3-PQE)</h4>
-                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Lower Back</p>
+                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Bel</p>
                         </div>
                     </div>
                     <div class="flex items-center gap-2">
@@ -1167,12 +1167,12 @@
                         <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
-                        <div onclick="openExerciseSheet(this, 'Wide-Grip Lat Pulldown')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
+                        <div onclick="openExerciseSheet(this, 'Wide-Grip Lat Pulldown')" class="neo-surface p-4 rounded-2xl flex items-center justify-between neo-button transition-all exercise-item mb-3 cursor-pointer">
                     <div class="flex items-center gap-4">
                         <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">W</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Wide-Grip Lat Pulldown</h4>
-                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Upper Back</p>
+                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Üst Sırt Back</p>
                         </div>
                     </div>
                     <div class="flex items-center gap-2">
@@ -1182,12 +1182,12 @@
                         <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
-                        <div onclick="openExerciseSheet(this, 'Wide-Grip Cable Row')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
+                        <div onclick="openExerciseSheet(this, 'Wide-Grip Cable Row')" class="neo-surface p-4 rounded-2xl flex items-center justify-between neo-button transition-all exercise-item mb-3 cursor-pointer">
                     <div class="flex items-center gap-4">
                         <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">W</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Wide-Grip Cable Row</h4>
-                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Upper Back</p>
+                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Üst Sırt Back</p>
                         </div>
                     </div>
                     <div class="flex items-center gap-2">
@@ -1197,12 +1197,12 @@
                         <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
-                        <div onclick="openExerciseSheet(this, 'Close-Grip Cable Row')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
+                        <div onclick="openExerciseSheet(this, 'Close-Grip Cable Row')" class="neo-surface p-4 rounded-2xl flex items-center justify-between neo-button transition-all exercise-item mb-3 cursor-pointer">
                     <div class="flex items-center gap-4">
                         <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">C</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Close-Grip Cable Row</h4>
-                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Upper Back</p>
+                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Üst Sırt Back</p>
                         </div>
                     </div>
                     <div class="flex items-center gap-2">
@@ -1220,12 +1220,12 @@
                         <h2 class="font-title-lg text-on-surface">Omuz</h2>
                     </div>
                     <div class="flex flex-col gap-2">
-                        <div onclick="openExerciseSheet(this, 'Barbell Overhead Press')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
+                        <div onclick="openExerciseSheet(this, 'Barbell Overhead Press')" class="neo-surface p-4 rounded-2xl flex items-center justify-between neo-button transition-all exercise-item mb-3 cursor-pointer">
                     <div class="flex items-center gap-4">
                         <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">B</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Barbell Overhead Press</h4>
-                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Deltoids</p>
+                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Omuz</p>
                         </div>
                     </div>
                     <div class="flex items-center gap-2">
@@ -1235,12 +1235,12 @@
                         <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
-                        <div onclick="openExerciseSheet(this, 'Dumbbell Shoulder Press')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
+                        <div onclick="openExerciseSheet(this, 'Dumbbell Shoulder Press')" class="neo-surface p-4 rounded-2xl flex items-center justify-between neo-button transition-all exercise-item mb-3 cursor-pointer">
                     <div class="flex items-center gap-4">
                         <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">D</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Dumbbell Shoulder Press</h4>
-                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Deltoids</p>
+                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Omuz</p>
                         </div>
                     </div>
                     <div class="flex items-center gap-2">
@@ -1250,12 +1250,12 @@
                         <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
-                        <div onclick="openExerciseSheet(this, 'Machine Shoulder Press')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
+                        <div onclick="openExerciseSheet(this, 'Machine Shoulder Press')" class="neo-surface p-4 rounded-2xl flex items-center justify-between neo-button transition-all exercise-item mb-3 cursor-pointer">
                     <div class="flex items-center gap-4">
                         <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">M</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Machine Shoulder Press</h4>
-                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Deltoids</p>
+                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Omuz</p>
                         </div>
                     </div>
                     <div class="flex items-center gap-2">
@@ -1265,12 +1265,12 @@
                         <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
-                        <div onclick="openExerciseSheet(this, 'Cable Shoulder Press')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
+                        <div onclick="openExerciseSheet(this, 'Cable Shoulder Press')" class="neo-surface p-4 rounded-2xl flex items-center justify-between neo-button transition-all exercise-item mb-3 cursor-pointer">
                     <div class="flex items-center gap-4">
                         <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">C</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Cable Shoulder Press</h4>
-                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Deltoids</p>
+                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Omuz</p>
                         </div>
                     </div>
                     <div class="flex items-center gap-2">
@@ -1280,12 +1280,12 @@
                         <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
-                        <div onclick="openExerciseSheet(this, 'Dumbbell Lateral Raise')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
+                        <div onclick="openExerciseSheet(this, 'Dumbbell Lateral Raise')" class="neo-surface p-4 rounded-2xl flex items-center justify-between neo-button transition-all exercise-item mb-3 cursor-pointer">
                     <div class="flex items-center gap-4">
                         <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">D</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Dumbbell Lateral Raise</h4>
-                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Deltoids</p>
+                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Omuz</p>
                         </div>
                     </div>
                     <div class="flex items-center gap-2">
@@ -1295,12 +1295,12 @@
                         <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
-                        <div onclick="openExerciseSheet(this, 'Cable Lateral Raise')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
+                        <div onclick="openExerciseSheet(this, 'Cable Lateral Raise')" class="neo-surface p-4 rounded-2xl flex items-center justify-between neo-button transition-all exercise-item mb-3 cursor-pointer">
                     <div class="flex items-center gap-4">
                         <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">C</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Cable Lateral Raise</h4>
-                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Deltoids</p>
+                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Omuz</p>
                         </div>
                     </div>
                     <div class="flex items-center gap-2">
@@ -1310,12 +1310,12 @@
                         <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
-                        <div onclick="openExerciseSheet(this, 'Machine Lateral Raise')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
+                        <div onclick="openExerciseSheet(this, 'Machine Lateral Raise')" class="neo-surface p-4 rounded-2xl flex items-center justify-between neo-button transition-all exercise-item mb-3 cursor-pointer">
                     <div class="flex items-center gap-4">
                         <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">M</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Machine Lateral Raise</h4>
-                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Deltoids</p>
+                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Omuz</p>
                         </div>
                     </div>
                     <div class="flex items-center gap-2">
@@ -1325,12 +1325,12 @@
                         <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
-                        <div onclick="openExerciseSheet(this, 'Dumbbell Front Raise')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
+                        <div onclick="openExerciseSheet(this, 'Dumbbell Front Raise')" class="neo-surface p-4 rounded-2xl flex items-center justify-between neo-button transition-all exercise-item mb-3 cursor-pointer">
                     <div class="flex items-center gap-4">
                         <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">D</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Dumbbell Front Raise</h4>
-                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Deltoids</p>
+                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Omuz</p>
                         </div>
                     </div>
                     <div class="flex items-center gap-2">
@@ -1340,12 +1340,12 @@
                         <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
-                        <div onclick="openExerciseSheet(this, 'Reverse Pec Deck Fly')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
+                        <div onclick="openExerciseSheet(this, 'Reverse Pec Deck Fly')" class="neo-surface p-4 rounded-2xl flex items-center justify-between neo-button transition-all exercise-item mb-3 cursor-pointer">
                     <div class="flex items-center gap-4">
                         <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">R</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Reverse Pec Deck Fly</h4>
-                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Deltoids, Upper Back</p>
+                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Omuz, Upper Back</p>
                         </div>
                     </div>
                     <div class="flex items-center gap-2">
@@ -1355,12 +1355,12 @@
                         <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
-                        <div onclick="openExerciseSheet(this, 'Dumbbell Rear Delt Row')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
+                        <div onclick="openExerciseSheet(this, 'Dumbbell Rear Delt Row')" class="neo-surface p-4 rounded-2xl flex items-center justify-between neo-button transition-all exercise-item mb-3 cursor-pointer">
                     <div class="flex items-center gap-4">
                         <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">D</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Dumbbell Rear Delt Row</h4>
-                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Deltoids, Upper Back</p>
+                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Omuz, Upper Back</p>
                         </div>
                     </div>
                     <div class="flex items-center gap-2">
@@ -1370,12 +1370,12 @@
                         <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
-                        <div onclick="openExerciseSheet(this, 'Cable Face Pull')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
+                        <div onclick="openExerciseSheet(this, 'Cable Face Pull')" class="neo-surface p-4 rounded-2xl flex items-center justify-between neo-button transition-all exercise-item mb-3 cursor-pointer">
                     <div class="flex items-center gap-4">
                         <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">C</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Cable Face Pull</h4>
-                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Deltoids, Upper Back</p>
+                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Omuz, Upper Back</p>
                         </div>
                     </div>
                     <div class="flex items-center gap-2">
@@ -1385,12 +1385,12 @@
                         <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
-                        <div onclick="openExerciseSheet(this, 'Incline Bench I-Y-T Raise')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
+                        <div onclick="openExerciseSheet(this, 'Incline Bench I-Y-T Raise')" class="neo-surface p-4 rounded-2xl flex items-center justify-between neo-button transition-all exercise-item mb-3 cursor-pointer">
                     <div class="flex items-center gap-4">
                         <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">I</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Incline Bench I-Y-T Raise</h4>
-                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Trapezius, Deltoids</p>
+                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Trapez, Deltoids</p>
                         </div>
                     </div>
                     <div class="flex items-center gap-2">
@@ -1408,7 +1408,7 @@
                         <h2 class="font-title-lg text-on-surface">Biceps</h2>
                     </div>
                     <div class="flex flex-col gap-2">
-                        <div onclick="openExerciseSheet(this, 'Barbell Curl')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
+                        <div onclick="openExerciseSheet(this, 'Barbell Curl')" class="neo-surface p-4 rounded-2xl flex items-center justify-between neo-button transition-all exercise-item mb-3 cursor-pointer">
                     <div class="flex items-center gap-4">
                         <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">B</div>
                         <div>
@@ -1423,7 +1423,7 @@
                         <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
-                        <div onclick="openExerciseSheet(this, 'Dumbbell Curl')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
+                        <div onclick="openExerciseSheet(this, 'Dumbbell Curl')" class="neo-surface p-4 rounded-2xl flex items-center justify-between neo-button transition-all exercise-item mb-3 cursor-pointer">
                     <div class="flex items-center gap-4">
                         <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">D</div>
                         <div>
@@ -1438,7 +1438,7 @@
                         <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
-                        <div onclick="openExerciseSheet(this, 'Cable Curl')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
+                        <div onclick="openExerciseSheet(this, 'Cable Curl')" class="neo-surface p-4 rounded-2xl flex items-center justify-between neo-button transition-all exercise-item mb-3 cursor-pointer">
                     <div class="flex items-center gap-4">
                         <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">C</div>
                         <div>
@@ -1453,7 +1453,7 @@
                         <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
-                        <div onclick="openExerciseSheet(this, 'Machine Preacher Curl')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
+                        <div onclick="openExerciseSheet(this, 'Machine Preacher Curl')" class="neo-surface p-4 rounded-2xl flex items-center justify-between neo-button transition-all exercise-item mb-3 cursor-pointer">
                     <div class="flex items-center gap-4">
                         <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">M</div>
                         <div>
@@ -1468,7 +1468,7 @@
                         <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
-                        <div onclick="openExerciseSheet(this, 'EZ-Bar Preacher Curl')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
+                        <div onclick="openExerciseSheet(this, 'EZ-Bar Preacher Curl')" class="neo-surface p-4 rounded-2xl flex items-center justify-between neo-button transition-all exercise-item mb-3 cursor-pointer">
                     <div class="flex items-center gap-4">
                         <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">E</div>
                         <div>
@@ -1483,7 +1483,7 @@
                         <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
-                        <div onclick="openExerciseSheet(this, 'Dumbbell Hammer Curl')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
+                        <div onclick="openExerciseSheet(this, 'Dumbbell Hammer Curl')" class="neo-surface p-4 rounded-2xl flex items-center justify-between neo-button transition-all exercise-item mb-3 cursor-pointer">
                     <div class="flex items-center gap-4">
                         <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">D</div>
                         <div>
@@ -1498,7 +1498,7 @@
                         <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
-                        <div onclick="openExerciseSheet(this, 'Cable Hammer Curl')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
+                        <div onclick="openExerciseSheet(this, 'Cable Hammer Curl')" class="neo-surface p-4 rounded-2xl flex items-center justify-between neo-button transition-all exercise-item mb-3 cursor-pointer">
                     <div class="flex items-center gap-4">
                         <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">C</div>
                         <div>
@@ -1513,7 +1513,7 @@
                         <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
-                        <div onclick="openExerciseSheet(this, 'Incline Dumbbell Curl')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
+                        <div onclick="openExerciseSheet(this, 'Incline Dumbbell Curl')" class="neo-surface p-4 rounded-2xl flex items-center justify-between neo-button transition-all exercise-item mb-3 cursor-pointer">
                     <div class="flex items-center gap-4">
                         <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">I</div>
                         <div>
@@ -1528,7 +1528,7 @@
                         <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
-                        <div onclick="openExerciseSheet(this, 'Concentration Curl')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
+                        <div onclick="openExerciseSheet(this, 'Concentration Curl')" class="neo-surface p-4 rounded-2xl flex items-center justify-between neo-button transition-all exercise-item mb-3 cursor-pointer">
                     <div class="flex items-center gap-4">
                         <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">C</div>
                         <div>
@@ -1543,7 +1543,7 @@
                         <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
-                        <div onclick="openExerciseSheet(this, 'High Cable Curl')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
+                        <div onclick="openExerciseSheet(this, 'High Cable Curl')" class="neo-surface p-4 rounded-2xl flex items-center justify-between neo-button transition-all exercise-item mb-3 cursor-pointer">
                     <div class="flex items-center gap-4">
                         <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">H</div>
                         <div>
@@ -1558,7 +1558,7 @@
                         <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
-                        <div onclick="openExerciseSheet(this, 'Reverse Barbell Curl')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
+                        <div onclick="openExerciseSheet(this, 'Reverse Barbell Curl')" class="neo-surface p-4 rounded-2xl flex items-center justify-between neo-button transition-all exercise-item mb-3 cursor-pointer">
                     <div class="flex items-center gap-4">
                         <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">R</div>
                         <div>
@@ -1581,7 +1581,7 @@
                         <h2 class="font-title-lg text-on-surface">Triceps</h2>
                     </div>
                     <div class="flex flex-col gap-2">
-                        <div onclick="openExerciseSheet(this, 'Cable Triceps Pushdown')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
+                        <div onclick="openExerciseSheet(this, 'Cable Triceps Pushdown')" class="neo-surface p-4 rounded-2xl flex items-center justify-between neo-button transition-all exercise-item mb-3 cursor-pointer">
                     <div class="flex items-center gap-4">
                         <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">C</div>
                         <div>
@@ -1596,7 +1596,7 @@
                         <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
-                        <div onclick="openExerciseSheet(this, 'Cable Rope Triceps Pushdown')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
+                        <div onclick="openExerciseSheet(this, 'Cable Rope Triceps Pushdown')" class="neo-surface p-4 rounded-2xl flex items-center justify-between neo-button transition-all exercise-item mb-3 cursor-pointer">
                     <div class="flex items-center gap-4">
                         <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">C</div>
                         <div>
@@ -1611,7 +1611,7 @@
                         <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
-                        <div onclick="openExerciseSheet(this, 'Overhead Cable Triceps Extension')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
+                        <div onclick="openExerciseSheet(this, 'Overhead Cable Triceps Extension')" class="neo-surface p-4 rounded-2xl flex items-center justify-between neo-button transition-all exercise-item mb-3 cursor-pointer">
                     <div class="flex items-center gap-4">
                         <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">O</div>
                         <div>
@@ -1626,7 +1626,7 @@
                         <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
-                        <div onclick="openExerciseSheet(this, 'Dumbbell Overhead Triceps Extension')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
+                        <div onclick="openExerciseSheet(this, 'Dumbbell Overhead Triceps Extension')" class="neo-surface p-4 rounded-2xl flex items-center justify-between neo-button transition-all exercise-item mb-3 cursor-pointer">
                     <div class="flex items-center gap-4">
                         <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">D</div>
                         <div>
@@ -1641,7 +1641,7 @@
                         <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
-                        <div onclick="openExerciseSheet(this, 'Skull Crusher (EZ-Bar)')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
+                        <div onclick="openExerciseSheet(this, 'Skull Crusher (EZ-Bar)')" class="neo-surface p-4 rounded-2xl flex items-center justify-between neo-button transition-all exercise-item mb-3 cursor-pointer">
                     <div class="flex items-center gap-4">
                         <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">S</div>
                         <div>
@@ -1656,7 +1656,7 @@
                         <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
-                        <div onclick="openExerciseSheet(this, 'Dumbbell Skull Crusher')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
+                        <div onclick="openExerciseSheet(this, 'Dumbbell Skull Crusher')" class="neo-surface p-4 rounded-2xl flex items-center justify-between neo-button transition-all exercise-item mb-3 cursor-pointer">
                     <div class="flex items-center gap-4">
                         <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">D</div>
                         <div>
@@ -1671,7 +1671,7 @@
                         <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
-                        <div onclick="openExerciseSheet(this, 'Barbell Close-Grip Bench Press')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
+                        <div onclick="openExerciseSheet(this, 'Barbell Close-Grip Bench Press')" class="neo-surface p-4 rounded-2xl flex items-center justify-between neo-button transition-all exercise-item mb-3 cursor-pointer">
                     <div class="flex items-center gap-4">
                         <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">B</div>
                         <div>
@@ -1686,7 +1686,7 @@
                         <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
-                        <div onclick="openExerciseSheet(this, 'Dumbbell Kickback')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
+                        <div onclick="openExerciseSheet(this, 'Dumbbell Kickback')" class="neo-surface p-4 rounded-2xl flex items-center justify-between neo-button transition-all exercise-item mb-3 cursor-pointer">
                     <div class="flex items-center gap-4">
                         <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">D</div>
                         <div>
@@ -1701,7 +1701,7 @@
                         <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
-                        <div onclick="openExerciseSheet(this, 'Cable Kickback')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
+                        <div onclick="openExerciseSheet(this, 'Cable Kickback')" class="neo-surface p-4 rounded-2xl flex items-center justify-between neo-button transition-all exercise-item mb-3 cursor-pointer">
                     <div class="flex items-center gap-4">
                         <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">C</div>
                         <div>
@@ -1716,7 +1716,7 @@
                         <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
-                        <div onclick="openExerciseSheet(this, 'Machine Triceps Extension')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
+                        <div onclick="openExerciseSheet(this, 'Machine Triceps Extension')" class="neo-surface p-4 rounded-2xl flex items-center justify-between neo-button transition-all exercise-item mb-3 cursor-pointer">
                     <div class="flex items-center gap-4">
                         <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">M</div>
                         <div>
@@ -1731,7 +1731,7 @@
                         <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
-                        <div onclick="openExerciseSheet(this, 'Triceps Dips')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
+                        <div onclick="openExerciseSheet(this, 'Triceps Dips')" class="neo-surface p-4 rounded-2xl flex items-center justify-between neo-button transition-all exercise-item mb-3 cursor-pointer">
                     <div class="flex items-center gap-4">
                         <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">T</div>
                         <div>
@@ -1754,12 +1754,12 @@
                         <h2 class="font-title-lg text-on-surface">Bacak</h2>
                     </div>
                     <div class="flex flex-col gap-2">
-                        <div onclick="openExerciseSheet(this, 'Barbell Squat')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
+                        <div onclick="openExerciseSheet(this, 'Barbell Squat')" class="neo-surface p-4 rounded-2xl flex items-center justify-between neo-button transition-all exercise-item mb-3 cursor-pointer">
                     <div class="flex items-center gap-4">
                         <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">B</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Barbell Squat</h4>
-                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Quadriceps</p>
+                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Ön Bacak</p>
                         </div>
                     </div>
                     <div class="flex items-center gap-2">
@@ -1769,12 +1769,12 @@
                         <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
-                        <div onclick="openExerciseSheet(this, 'Dumbbell Goblet Squat')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
+                        <div onclick="openExerciseSheet(this, 'Dumbbell Goblet Squat')" class="neo-surface p-4 rounded-2xl flex items-center justify-between neo-button transition-all exercise-item mb-3 cursor-pointer">
                     <div class="flex items-center gap-4">
                         <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">D</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Dumbbell Goblet Squat</h4>
-                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Quadriceps</p>
+                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Ön Bacak</p>
                         </div>
                     </div>
                     <div class="flex items-center gap-2">
@@ -1784,12 +1784,12 @@
                         <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
-                        <div onclick="openExerciseSheet(this, 'Smith Machine Squat')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
+                        <div onclick="openExerciseSheet(this, 'Smith Machine Squat')" class="neo-surface p-4 rounded-2xl flex items-center justify-between neo-button transition-all exercise-item mb-3 cursor-pointer">
                     <div class="flex items-center gap-4">
                         <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">S</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Smith Machine Squat</h4>
-                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Quadriceps</p>
+                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Ön Bacak</p>
                         </div>
                     </div>
                     <div class="flex items-center gap-2">
@@ -1799,12 +1799,12 @@
                         <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
-                        <div onclick="openExerciseSheet(this, 'Leg Press Machine')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
+                        <div onclick="openExerciseSheet(this, 'Leg Press Machine')" class="neo-surface p-4 rounded-2xl flex items-center justify-between neo-button transition-all exercise-item mb-3 cursor-pointer">
                     <div class="flex items-center gap-4">
                         <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">L</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Leg Press Machine</h4>
-                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Quadriceps</p>
+                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Ön Bacak</p>
                         </div>
                     </div>
                     <div class="flex items-center gap-2">
@@ -1814,12 +1814,12 @@
                         <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
-                        <div onclick="openExerciseSheet(this, 'Hack Squat Machine')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
+                        <div onclick="openExerciseSheet(this, 'Hack Squat Machine')" class="neo-surface p-4 rounded-2xl flex items-center justify-between neo-button transition-all exercise-item mb-3 cursor-pointer">
                     <div class="flex items-center gap-4">
                         <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">H</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Hack Squat Machine</h4>
-                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Quadriceps</p>
+                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Ön Bacak</p>
                         </div>
                     </div>
                     <div class="flex items-center gap-2">
@@ -1829,12 +1829,12 @@
                         <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
-                        <div onclick="openExerciseSheet(this, 'Barbell Lunge')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
+                        <div onclick="openExerciseSheet(this, 'Barbell Lunge')" class="neo-surface p-4 rounded-2xl flex items-center justify-between neo-button transition-all exercise-item mb-3 cursor-pointer">
                     <div class="flex items-center gap-4">
                         <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">B</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Barbell Lunge</h4>
-                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Quadriceps, Gluteal</p>
+                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Ön Bacak, Gluteal</p>
                         </div>
                     </div>
                     <div class="flex items-center gap-2">
@@ -1844,12 +1844,12 @@
                         <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
-                        <div onclick="openExerciseSheet(this, 'Dumbbell Lunge')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
+                        <div onclick="openExerciseSheet(this, 'Dumbbell Lunge')" class="neo-surface p-4 rounded-2xl flex items-center justify-between neo-button transition-all exercise-item mb-3 cursor-pointer">
                     <div class="flex items-center gap-4">
                         <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">D</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Dumbbell Lunge</h4>
-                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Quadriceps, Gluteal</p>
+                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Ön Bacak, Gluteal</p>
                         </div>
                     </div>
                     <div class="flex items-center gap-2">
@@ -1859,12 +1859,12 @@
                         <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
-                        <div onclick="openExerciseSheet(this, 'Dumbbell Bulgarian Split Squat')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
+                        <div onclick="openExerciseSheet(this, 'Dumbbell Bulgarian Split Squat')" class="neo-surface p-4 rounded-2xl flex items-center justify-between neo-button transition-all exercise-item mb-3 cursor-pointer">
                     <div class="flex items-center gap-4">
                         <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">D</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Dumbbell Bulgarian Split Squat</h4>
-                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Quadriceps</p>
+                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Ön Bacak</p>
                         </div>
                     </div>
                     <div class="flex items-center gap-2">
@@ -1874,12 +1874,12 @@
                         <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
-                        <div onclick="openExerciseSheet(this, 'Leg Extension Machine')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
+                        <div onclick="openExerciseSheet(this, 'Leg Extension Machine')" class="neo-surface p-4 rounded-2xl flex items-center justify-between neo-button transition-all exercise-item mb-3 cursor-pointer">
                     <div class="flex items-center gap-4">
                         <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">L</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Leg Extension Machine</h4>
-                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Quadriceps</p>
+                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Ön Bacak</p>
                         </div>
                     </div>
                     <div class="flex items-center gap-2">
@@ -1889,12 +1889,12 @@
                         <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
-                        <div onclick="openExerciseSheet(this, 'Seated Leg Curl Machine')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
+                        <div onclick="openExerciseSheet(this, 'Seated Leg Curl Machine')" class="neo-surface p-4 rounded-2xl flex items-center justify-between neo-button transition-all exercise-item mb-3 cursor-pointer">
                     <div class="flex items-center gap-4">
                         <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">S</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Seated Leg Curl Machine</h4>
-                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Hamstring</p>
+                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Arka Bacak</p>
                         </div>
                     </div>
                     <div class="flex items-center gap-2">
@@ -1904,12 +1904,12 @@
                         <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
-                        <div onclick="openExerciseSheet(this, 'Lying Leg Curl Machine')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
+                        <div onclick="openExerciseSheet(this, 'Lying Leg Curl Machine')" class="neo-surface p-4 rounded-2xl flex items-center justify-between neo-button transition-all exercise-item mb-3 cursor-pointer">
                     <div class="flex items-center gap-4">
                         <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">L</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Lying Leg Curl Machine</h4>
-                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Hamstring</p>
+                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Arka Bacak</p>
                         </div>
                     </div>
                     <div class="flex items-center gap-2">
@@ -1919,12 +1919,12 @@
                         <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
-                        <div onclick="openExerciseSheet(this, 'Standing Calf Raise Machine')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
+                        <div onclick="openExerciseSheet(this, 'Standing Calf Raise Machine')" class="neo-surface p-4 rounded-2xl flex items-center justify-between neo-button transition-all exercise-item mb-3 cursor-pointer">
                     <div class="flex items-center gap-4">
                         <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">S</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Standing Calf Raise Machine</h4>
-                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Calves</p>
+                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Baldır</p>
                         </div>
                     </div>
                     <div class="flex items-center gap-2">
@@ -1934,12 +1934,12 @@
                         <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
-                        <div onclick="openExerciseSheet(this, 'Seated Calf Raise Machine')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
+                        <div onclick="openExerciseSheet(this, 'Seated Calf Raise Machine')" class="neo-surface p-4 rounded-2xl flex items-center justify-between neo-button transition-all exercise-item mb-3 cursor-pointer">
                     <div class="flex items-center gap-4">
                         <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">S</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Seated Calf Raise Machine</h4>
-                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Calves</p>
+                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Baldır</p>
                         </div>
                     </div>
                     <div class="flex items-center gap-2">
@@ -1949,12 +1949,12 @@
                         <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
-                        <div onclick="openExerciseSheet(this, 'Dumbbell Calf Raise')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
+                        <div onclick="openExerciseSheet(this, 'Dumbbell Calf Raise')" class="neo-surface p-4 rounded-2xl flex items-center justify-between neo-button transition-all exercise-item mb-3 cursor-pointer">
                     <div class="flex items-center gap-4">
                         <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">D</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Dumbbell Calf Raise</h4>
-                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Calves</p>
+                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Baldır</p>
                         </div>
                     </div>
                     <div class="flex items-center gap-2">
@@ -1972,12 +1972,12 @@
                         <h2 class="font-title-lg text-on-surface">Karın</h2>
                     </div>
                     <div class="flex flex-col gap-2">
-                        <div onclick="openExerciseSheet(this, 'Cable Crunch')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
+                        <div onclick="openExerciseSheet(this, 'Cable Crunch')" class="neo-surface p-4 rounded-2xl flex items-center justify-between neo-button transition-all exercise-item mb-3 cursor-pointer">
                     <div class="flex items-center gap-4">
                         <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">C</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Cable Crunch</h4>
-                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Abs</p>
+                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Karın</p>
                         </div>
                     </div>
                     <div class="flex items-center gap-2">
@@ -1987,12 +1987,12 @@
                         <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
-                        <div onclick="openExerciseSheet(this, 'Machine Crunch')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
+                        <div onclick="openExerciseSheet(this, 'Machine Crunch')" class="neo-surface p-4 rounded-2xl flex items-center justify-between neo-button transition-all exercise-item mb-3 cursor-pointer">
                     <div class="flex items-center gap-4">
                         <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">M</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Machine Crunch</h4>
-                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Abs</p>
+                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Karın</p>
                         </div>
                     </div>
                     <div class="flex items-center gap-2">
@@ -2002,12 +2002,12 @@
                         <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
-                        <div onclick="openExerciseSheet(this, 'Decline Bench Crunch')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
+                        <div onclick="openExerciseSheet(this, 'Decline Bench Crunch')" class="neo-surface p-4 rounded-2xl flex items-center justify-between neo-button transition-all exercise-item mb-3 cursor-pointer">
                     <div class="flex items-center gap-4">
                         <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">D</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Decline Bench Crunch</h4>
-                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Abs</p>
+                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Karın</p>
                         </div>
                     </div>
                     <div class="flex items-center gap-2">
@@ -2017,12 +2017,12 @@
                         <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
-                        <div onclick="openExerciseSheet(this, 'Dumbbell Side Bend')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
+                        <div onclick="openExerciseSheet(this, 'Dumbbell Side Bend')" class="neo-surface p-4 rounded-2xl flex items-center justify-between neo-button transition-all exercise-item mb-3 cursor-pointer">
                     <div class="flex items-center gap-4">
                         <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">D</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Dumbbell Side Bend</h4>
-                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Obliques</p>
+                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Yan Karın</p>
                         </div>
                     </div>
                     <div class="flex items-center gap-2">
@@ -2032,12 +2032,12 @@
                         <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
-                        <div onclick="openExerciseSheet(this, 'Cable Woodchopper')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
+                        <div onclick="openExerciseSheet(this, 'Cable Woodchopper')" class="neo-surface p-4 rounded-2xl flex items-center justify-between neo-button transition-all exercise-item mb-3 cursor-pointer">
                     <div class="flex items-center gap-4">
                         <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">C</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Cable Woodchopper</h4>
-                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Obliques</p>
+                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Yan Karın</p>
                         </div>
                     </div>
                     <div class="flex items-center gap-2">
@@ -2047,12 +2047,12 @@
                         <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
-                        <div onclick="openExerciseSheet(this, 'Hanging Leg Raise')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
+                        <div onclick="openExerciseSheet(this, 'Hanging Leg Raise')" class="neo-surface p-4 rounded-2xl flex items-center justify-between neo-button transition-all exercise-item mb-3 cursor-pointer">
                     <div class="flex items-center gap-4">
                         <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">H</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Hanging Leg Raise</h4>
-                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Abs</p>
+                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Karın</p>
                         </div>
                     </div>
                     <div class="flex items-center gap-2">
@@ -2062,12 +2062,12 @@
                         <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
-                        <div onclick="openExerciseSheet(this, 'Captain\'s Chair Leg Raise')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
+                        <div onclick="openExerciseSheet(this, 'Captain\'s Chair Leg Raise')" class="neo-surface p-4 rounded-2xl flex items-center justify-between neo-button transition-all exercise-item mb-3 cursor-pointer">
                     <div class="flex items-center gap-4">
                         <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">C</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Captain's Chair Leg Raise</h4>
-                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Abs</p>
+                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Karın</p>
                         </div>
                     </div>
                     <div class="flex items-center gap-2">
@@ -2077,12 +2077,12 @@
                         <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
-                        <div onclick="openExerciseSheet(this, 'Lying Leg Raise')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
+                        <div onclick="openExerciseSheet(this, 'Lying Leg Raise')" class="neo-surface p-4 rounded-2xl flex items-center justify-between neo-button transition-all exercise-item mb-3 cursor-pointer">
                     <div class="flex items-center gap-4">
                         <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">L</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Lying Leg Raise</h4>
-                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Abs</p>
+                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Karın</p>
                         </div>
                     </div>
                     <div class="flex items-center gap-2">
@@ -2092,12 +2092,12 @@
                         <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
-                        <div onclick="openExerciseSheet(this, 'Ab Wheel Rollout')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
+                        <div onclick="openExerciseSheet(this, 'Ab Wheel Rollout')" class="neo-surface p-4 rounded-2xl flex items-center justify-between neo-button transition-all exercise-item mb-3 cursor-pointer">
                     <div class="flex items-center gap-4">
                         <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">A</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Ab Wheel Rollout</h4>
-                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Abs</p>
+                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Karın</p>
                         </div>
                     </div>
                     <div class="flex items-center gap-2">
@@ -2107,12 +2107,12 @@
                         <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
-                        <div onclick="openExerciseSheet(this, 'Russian Twist (with Dumbbell)')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
+                        <div onclick="openExerciseSheet(this, 'Russian Twist (with Dumbbell)')" class="neo-surface p-4 rounded-2xl flex items-center justify-between neo-button transition-all exercise-item mb-3 cursor-pointer">
                     <div class="flex items-center gap-4">
                         <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">R</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Russian Twist (with Dumbbell)</h4>
-                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Obliques, Abs</p>
+                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Yan Karın, Abs</p>
                         </div>
                     </div>
                     <div class="flex items-center gap-2">
@@ -2122,12 +2122,12 @@
                         <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
-                        <div onclick="openExerciseSheet(this, 'Stir-the-pot (Swiss Ball)')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
+                        <div onclick="openExerciseSheet(this, 'Stir-the-pot (Swiss Ball)')" class="neo-surface p-4 rounded-2xl flex items-center justify-between neo-button transition-all exercise-item mb-3 cursor-pointer">
                     <div class="flex items-center gap-4">
                         <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">S</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Stir-the-pot (Swiss Ball)</h4>
-                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Obliques, Abs</p>
+                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Yan Karın, Abs</p>
                         </div>
                     </div>
                     <div class="flex items-center gap-2">
@@ -2137,12 +2137,12 @@
                         <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
-                        <div onclick="openExerciseSheet(this, 'Suspended Roll-out Plank')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
+                        <div onclick="openExerciseSheet(this, 'Suspended Roll-out Plank')" class="neo-surface p-4 rounded-2xl flex items-center justify-between neo-button transition-all exercise-item mb-3 cursor-pointer">
                     <div class="flex items-center gap-4">
                         <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">S</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Suspended Roll-out Plank</h4>
-                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Abs</p>
+                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Karın</p>
                         </div>
                     </div>
                     <div class="flex items-center gap-2">
@@ -2152,12 +2152,12 @@
                         <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
-                        <div onclick="openExerciseSheet(this, 'TRX Front Plank')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
+                        <div onclick="openExerciseSheet(this, 'TRX Front Plank')" class="neo-surface p-4 rounded-2xl flex items-center justify-between neo-button transition-all exercise-item mb-3 cursor-pointer">
                     <div class="flex items-center gap-4">
                         <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">T</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">TRX Front Plank</h4>
-                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Abs, Obliques</p>
+                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Karın, Obliques</p>
                         </div>
                     </div>
                     <div class="flex items-center gap-2">
@@ -2175,12 +2175,12 @@
                         <h2 class="font-title-lg text-on-surface">Kalça</h2>
                     </div>
                     <div class="flex flex-col gap-2">
-                        <div onclick="openExerciseSheet(this, 'Barbell Hip Thrust')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
+                        <div onclick="openExerciseSheet(this, 'Barbell Hip Thrust')" class="neo-surface p-4 rounded-2xl flex items-center justify-between neo-button transition-all exercise-item mb-3 cursor-pointer">
                     <div class="flex items-center gap-4">
                         <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">B</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Barbell Hip Thrust</h4>
-                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Gluteal</p>
+                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Kalça</p>
                         </div>
                     </div>
                     <div class="flex items-center gap-2">
@@ -2190,12 +2190,12 @@
                         <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
-                        <div onclick="openExerciseSheet(this, 'Dumbbell Hip Thrust')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
+                        <div onclick="openExerciseSheet(this, 'Dumbbell Hip Thrust')" class="neo-surface p-4 rounded-2xl flex items-center justify-between neo-button transition-all exercise-item mb-3 cursor-pointer">
                     <div class="flex items-center gap-4">
                         <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">D</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Dumbbell Hip Thrust</h4>
-                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Gluteal</p>
+                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Kalça</p>
                         </div>
                     </div>
                     <div class="flex items-center gap-2">
@@ -2205,12 +2205,12 @@
                         <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
-                        <div onclick="openExerciseSheet(this, 'Smith Machine Hip Thrust')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
+                        <div onclick="openExerciseSheet(this, 'Smith Machine Hip Thrust')" class="neo-surface p-4 rounded-2xl flex items-center justify-between neo-button transition-all exercise-item mb-3 cursor-pointer">
                     <div class="flex items-center gap-4">
                         <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">S</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Smith Machine Hip Thrust</h4>
-                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Gluteal</p>
+                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Kalça</p>
                         </div>
                     </div>
                     <div class="flex items-center gap-2">
@@ -2220,12 +2220,12 @@
                         <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
-                        <div onclick="openExerciseSheet(this, 'Machine Glute Kickback')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
+                        <div onclick="openExerciseSheet(this, 'Machine Glute Kickback')" class="neo-surface p-4 rounded-2xl flex items-center justify-between neo-button transition-all exercise-item mb-3 cursor-pointer">
                     <div class="flex items-center gap-4">
                         <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">M</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Machine Glute Kickback</h4>
-                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Gluteal</p>
+                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Kalça</p>
                         </div>
                     </div>
                     <div class="flex items-center gap-2">
@@ -2235,12 +2235,12 @@
                         <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
-                        <div onclick="openExerciseSheet(this, 'Cable Glute Kickback')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
+                        <div onclick="openExerciseSheet(this, 'Cable Glute Kickback')" class="neo-surface p-4 rounded-2xl flex items-center justify-between neo-button transition-all exercise-item mb-3 cursor-pointer">
                     <div class="flex items-center gap-4">
                         <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">C</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Cable Glute Kickback</h4>
-                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Gluteal</p>
+                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Kalça</p>
                         </div>
                     </div>
                     <div class="flex items-center gap-2">
@@ -2250,12 +2250,12 @@
                         <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
-                        <div onclick="openExerciseSheet(this, 'Cable Pull-Through')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
+                        <div onclick="openExerciseSheet(this, 'Cable Pull-Through')" class="neo-surface p-4 rounded-2xl flex items-center justify-between neo-button transition-all exercise-item mb-3 cursor-pointer">
                     <div class="flex items-center gap-4">
                         <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">C</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Cable Pull-Through</h4>
-                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Gluteal, Hamstring</p>
+                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Kalça, Hamstring</p>
                         </div>
                     </div>
                     <div class="flex items-center gap-2">
@@ -2265,12 +2265,12 @@
                         <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
-                        <div onclick="openExerciseSheet(this, 'Romanian Deadlift')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
+                        <div onclick="openExerciseSheet(this, 'Romanian Deadlift')" class="neo-surface p-4 rounded-2xl flex items-center justify-between neo-button transition-all exercise-item mb-3 cursor-pointer">
                     <div class="flex items-center gap-4">
                         <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">R</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Romanian Deadlift</h4>
-                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Hamstring, Gluteal</p>
+                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Arka Bacak, Gluteal</p>
                         </div>
                     </div>
                     <div class="flex items-center gap-2">
@@ -2280,12 +2280,12 @@
                         <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
-                        <div onclick="openExerciseSheet(this, 'Dumbbell Romanian Deadlift')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
+                        <div onclick="openExerciseSheet(this, 'Dumbbell Romanian Deadlift')" class="neo-surface p-4 rounded-2xl flex items-center justify-between neo-button transition-all exercise-item mb-3 cursor-pointer">
                     <div class="flex items-center gap-4">
                         <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">D</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Dumbbell Romanian Deadlift</h4>
-                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Hamstring, Gluteal</p>
+                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Arka Bacak, Gluteal</p>
                         </div>
                     </div>
                     <div class="flex items-center gap-2">
@@ -2295,12 +2295,12 @@
                         <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
-                        <div onclick="openExerciseSheet(this, 'Machine Abductor')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
+                        <div onclick="openExerciseSheet(this, 'Machine Abductor')" class="neo-surface p-4 rounded-2xl flex items-center justify-between neo-button transition-all exercise-item mb-3 cursor-pointer">
                     <div class="flex items-center gap-4">
                         <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">M</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Machine Abductor</h4>
-                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Adductors</p>
+                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: İç Bacak</p>
                         </div>
                     </div>
                     <div class="flex items-center gap-2">
@@ -2310,12 +2310,12 @@
                         <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
-                        <div onclick="openExerciseSheet(this, 'Cable Hip Abduction')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
+                        <div onclick="openExerciseSheet(this, 'Cable Hip Abduction')" class="neo-surface p-4 rounded-2xl flex items-center justify-between neo-button transition-all exercise-item mb-3 cursor-pointer">
                     <div class="flex items-center gap-4">
                         <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">C</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Cable Hip Abduction</h4>
-                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Adductors</p>
+                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: İç Bacak</p>
                         </div>
                     </div>
                     <div class="flex items-center gap-2">
@@ -2325,12 +2325,12 @@
                         <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
-                        <div onclick="openExerciseSheet(this, 'Kettlebell Swing')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
+                        <div onclick="openExerciseSheet(this, 'Kettlebell Swing')" class="neo-surface p-4 rounded-2xl flex items-center justify-between neo-button transition-all exercise-item mb-3 cursor-pointer">
                     <div class="flex items-center gap-4">
                         <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">K</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Kettlebell Swing</h4>
-                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Gluteal, Hamstring</p>
+                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Kalça, Hamstring</p>
                         </div>
                     </div>
                     <div class="flex items-center gap-2">
@@ -2340,12 +2340,12 @@
                         <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
-                        <div onclick="openExerciseSheet(this, 'Glute Bridge')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
+                        <div onclick="openExerciseSheet(this, 'Glute Bridge')" class="neo-surface p-4 rounded-2xl flex items-center justify-between neo-button transition-all exercise-item mb-3 cursor-pointer">
                     <div class="flex items-center gap-4">
                         <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">G</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Glute Bridge</h4>
-                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Gluteal</p>
+                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Kalça</p>
                         </div>
                     </div>
                     <div class="flex items-center gap-2">
@@ -2355,12 +2355,12 @@
                         <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                     </div>
                 </div>
-                        <div onclick="openExerciseSheet(this, 'Dumbbell Sumo Squat')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
+                        <div onclick="openExerciseSheet(this, 'Dumbbell Sumo Squat')" class="neo-surface p-4 rounded-2xl flex items-center justify-between neo-button transition-all exercise-item mb-3 cursor-pointer">
                     <div class="flex items-center gap-4">
                         <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">D</div>
                         <div>
                             <h4 class="font-semibold text-body-md text-on-surface tracking-tight">Dumbbell Sumo Squat</h4>
-                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Gluteal, Quadriceps</p>
+                            <p class="text-xs text-on-surface-variant capitalize">Ana Kas: Kalça, Quadriceps</p>
                         </div>
                     </div>
                     <div class="flex items-center gap-2">
@@ -2440,7 +2440,7 @@
             <main class="flex-1 px-6 flex flex-col pt-4 gap-6 pb-24">
                 <!-- Search Box -->
                 <section class="pt-2">
-                    <div class="neo-inset p-4 flex items-center gap-3" style="">
+                    <div class="neo-inset p-4 rounded-full flex items-center gap-3">
                         <span class="material-symbols-outlined text-on-surface-variant">search</span>
                         <input id="core-search-input" oninput="handleCoreSearch(this.value)" class="bg-transparent border-none focus:ring-0 text-sm w-full p-0 text-on-surface" placeholder="Core Hareketi Ara..." type="text"/>
                     </div>
@@ -3407,7 +3407,51 @@
     </div>
 </div>
     <!-- ================= KALORİ TAKİBİ (Calories) ================= -->
-        <section id="view-profile" class="view hidden bg-background text-on-background min-h-[100dvh] flex flex-col font-body-lg no-scrollbar">
+        
+    <!-- STRETCH LIBRARY VIEW -->
+    <section id="view-stretch-library" class="view hidden bg-surface-light min-h-[100dvh] text-on-surface antialiased font-body-lg pb-[100px]">
+        <div class="max-w-md mx-auto relative h-full flex flex-col">
+            <!-- Header -->
+            <header class="w-full top-0 sticky z-40 max-w-md mx-auto px-container-padding py-4">
+                <div class="flex items-center justify-between w-full">
+                    <button onclick="document.getElementById('view-stretch-library').classList.add('hidden'); document.getElementById('view-workout').classList.remove('hidden');" class="w-10 h-10 flex items-center justify-center rounded-full bg-[#F0F2F8] active:scale-95 transition-transform" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);">
+                        <span class="material-symbols-rounded text-[#1E293B]">arrow_back</span>
+                    </button>
+                    <h1 class="text-h1 font-bold text-[#1E293B]">Esneme Hareketleri</h1>
+                    <div class="w-10 h-10"></div> <!-- Placeholder for layout -->
+                </div>
+            </header>
+
+            <main class="flex-1 px-6 flex flex-col pt-4 gap-6 pb-24">
+                <!-- Search Box -->
+                <section class="pt-2">
+                    <div class="neo-inset p-4 rounded-full flex items-center gap-3">
+                        <span class="material-symbols-outlined text-on-surface-variant">search</span>
+                        <input id="stretch-search-input" oninput="handleStretchSearch(this.value)" class="bg-transparent border-none focus:ring-0 text-sm w-full p-0 text-on-surface" placeholder="Esneme Hareketi Ara..." type="text"/>
+                    </div>
+                </section>
+
+                <!-- Filter Chips -->
+                <section class="overflow-x-auto pb-2">
+                    <div class="flex gap-4 px-1" id="stretch-filter-chips">
+                        <button onclick="filterStretches('Tümü', this)" class="neo-inset px-5 py-2 rounded-full text-sm font-semibold text-on-surface whitespace-nowrap filter-chip active">Tümü</button>
+                        <button onclick="filterStretches('Sırt/Bel', this)" class="neo-surface px-5 py-2 rounded-full text-sm font-semibold text-on-surface-variant whitespace-nowrap neo-button filter-chip">Sırt/Bel</button>
+                        <button onclick="filterStretches('Göğüs/Omuz', this)" class="neo-surface px-5 py-2 rounded-full text-sm font-semibold text-on-surface-variant whitespace-nowrap neo-button filter-chip">Göğüs/Omuz</button>
+                        <button onclick="filterStretches('Kol', this)" class="neo-surface px-5 py-2 rounded-full text-sm font-semibold text-on-surface-variant whitespace-nowrap neo-button filter-chip">Kol</button>
+                        <button onclick="filterStretches('Kalça/Bacak', this)" class="neo-surface px-5 py-2 rounded-full text-sm font-semibold text-on-surface-variant whitespace-nowrap neo-button filter-chip">Kalça/Bacak</button>
+                        <button onclick="filterStretches('Boyun', this)" class="neo-surface px-5 py-2 rounded-full text-sm font-semibold text-on-surface-variant whitespace-nowrap neo-button filter-chip">Boyun</button>
+                        <button onclick="filterStretches('Tam Vücut', this)" class="neo-surface px-5 py-2 rounded-full text-sm font-semibold text-on-surface-variant whitespace-nowrap neo-button filter-chip">Tam Vücut</button>
+                    </div>
+                </section>
+
+                <!-- Stretch List Container -->
+                <div id="stretch-list-container" class="flex flex-col gap-6 flex-1 overflow-y-auto no-scrollbar pb-32">
+                </div>
+            </main>
+        </div>
+    </section>
+
+<section id="view-profile" class="view hidden bg-background text-on-background min-h-[100dvh] flex flex-col font-body-lg no-scrollbar">
         <!-- TopAppBar -->
         <header class="w-full top-0 sticky bg-background dark:bg-background flat no shadows transition-opacity duration-200 z-40 max-w-md mx-auto">
             <div class="flex items-center justify-between px-container-padding py-4 w-full">
@@ -4596,7 +4640,7 @@
                 
                 const letter = ex.name.charAt(0).toUpperCase();
                 const newExerciseHtml = `
-                    <div onclick="openExerciseSheet(this, '${ex.name}')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
+                    <div onclick="openExerciseSheet(this, '${ex.name}')" class="neo-surface p-4 rounded-2xl flex items-center justify-between neo-button transition-all exercise-item mb-3 cursor-pointer">
                         <div class="flex items-center gap-4">
                             <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">${letter}</div>
                             <div>
@@ -4675,7 +4719,7 @@
             const letter = name.charAt(0).toUpperCase();
             
             const newExerciseHtml = `
-                <div onclick="openExerciseSheet(this, '${name}')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all exercise-item mb-4 cursor-pointer">
+                <div onclick="openExerciseSheet(this, '${name}')" class="neo-surface p-4 rounded-2xl flex items-center justify-between neo-button transition-all exercise-item mb-3 cursor-pointer">
                     <div class="flex items-center gap-4">
                         <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface font-bold">${letter}</div>
                         <div>

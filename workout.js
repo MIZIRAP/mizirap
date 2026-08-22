@@ -49,56 +49,56 @@ let editingDefaultStretchId = null;
 let hiddenDefaultStretchIds = new Set(JSON.parse(localStorage.getItem('hiddenDefaultStretches') || '[]'));
 
 const DEFAULT_STRETCHES = [
-    { id: 'def_stretch_1', name: 'Cat-Cow Stretch', duration: 30, imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_a_cat_cow_stretch_fitness_exercise_a/circle_150.png', isDefault: true },
-    { id: 'def_stretch_2', name: 'Cobra Pose (Karın Esnetme)', duration: 30, imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_a_cobra_pose_fitness_exercise_a_person/circle_150.png', isDefault: true },
-    { id: 'def_stretch_3', name: 'Thread the Needle Stretch', duration: 30, imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_a_thread_the_needle_stretch_fitness/circle_150.png', isDefault: true },
-    { id: 'def_stretch_4', name: 'Doorway Chest Stretch (Kapı Eşiği Göğüs Esnetme)', duration: 30, imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_a_doorway_chest_stretch_fitness_exercise/circle_150.png', isDefault: true },
-    { id: 'def_stretch_5', name: 'Wall Angel (Scapular Slide / Duvar Meleği)', duration: 30, imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_a_wall_angel_fitness_exercise_a_human/circle_150.png', isDefault: true },
-    { id: 'def_stretch_6', name: 'Cross-Body Shoulder Stretch (Çapraz Omuz Esnetme)', duration: 30, imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_a_cross_body_shoulder_stretch_fitness/circle_150.png', isDefault: true },
-    { id: 'def_stretch_7', name: 'Overhead Triceps Stretch (Baş Üstü Arka Kol Esnetme)', duration: 30, imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_an_overhead_triceps_stretch_fitness/circle_150.png', isDefault: true },
-    { id: 'def_stretch_8', name: 'Wall Biceps Stretch (Duvar Biceps Esnetme)', duration: 30, imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_a_wall_biceps_stretch_fitness_exercise_a/circle_150.png', isDefault: true },
-    { id: 'def_stretch_9', name: 'Forearm Flexor Stretch (Ön Kol Flexor Esnetme)', duration: 30, imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_a_forearm_flexor_stretch_fitness/circle_150.png', isDefault: true },
-    { id: 'def_stretch_10', name: 'Forearm Extensor Stretch (Ön Kol Extensor Esnetme)', duration: 30, imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_a_forearm_extensor_stretch_fitness/circle_150.png', isDefault: true },
-    { id: 'def_stretch_11', name: 'Kneeling Hip Flexor Stretch (Diz Üstü Kalça Esnetme)', duration: 30, imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_a_kneeling_hip_flexor_stretch_fitness/circle_150.png', isDefault: true },
-    { id: 'def_stretch_12', name: 'Standing Quadriceps Stretch (Ayakta Ön Bacak Esnetme)', duration: 30, imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_a_standing_quadriceps_stretch_fitness_1/circle_150.png', isDefault: true },
-    { id: 'def_stretch_13', name: 'Supine Hamstring Stretch (Sırtüstü Arka Bacak Esnetme)', duration: 30, imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_a_supine_hamstring_stretch_fitness/circle_150.png', isDefault: true },
-    { id: 'def_stretch_14', name: 'Figure 4 Glute Stretch (Kalça Esnetme)', duration: 30, imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_a_figure_4_glute_stretch_fitness/circle_150.png', isDefault: true },
-    { id: 'def_stretch_15', name: 'Pigeon Pose Stretch (Güvercin Duruşu)', duration: 30, imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_a_pigeon_pose_stretch_fitness_exercise_a/circle_150.png', isDefault: true },
-    { id: 'def_stretch_16', name: 'Seated Spinal Twist Stretch (Oturarak Omurga Döndürme)', duration: 30, imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_a_seated_spinal_twist_stretch_fitness/circle_150.png', isDefault: true },
-    { id: 'def_stretch_17', name: 'Downward-Facing Dog (Aşağı Bakan Köpek)', duration: 30, imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_downward_facing_dog_fitness_exercise_a/circle_150.png', isDefault: true },
-    { id: 'def_stretch_18', name: 'Child\'s Pose (Çocuk Duruşu)', duration: 30, imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_child_s_pose_fitness_exercise_a_human/circle_150.png', isDefault: true },
-    { id: 'def_stretch_19', name: 'Wall Calf Stretch (Duvar Kalf Esnetme)', duration: 30, imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_a_wall_calf_stretch_fitness_exercise_a/circle_150.png', isDefault: true },
-    { id: 'def_stretch_20', name: 'Butterfly Stretch (Kelebek Esnetme)', duration: 30, imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_a_butterfly_stretch_fitness_exercise_a/circle_150.png', isDefault: true },
-    { id: 'def_stretch_21', name: 'Neck Tilt Stretch (Boyun Yana Eğme)', duration: 30, imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_a_neck_tilt_stretch_fitness_exercise_a/circle_150.png', isDefault: true },
-    { id: 'def_stretch_22', name: 'Neck Rotation Stretch (Boyun Döndürme)', duration: 30, imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_a_neck_rotation_stretch_fitness_exercise/circle_150.png', isDefault: true },
-    { id: 'def_stretch_23', name: 'Chin Tuck (Çene Çekme / Boyun Arkası Esnetme)', duration: 30, imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_a_chin_tuck_fitness_exercise_a_human/circle_150.png', isDefault: true },
-    { id: 'def_stretch_24', name: 'Sleeper Stretch (Yatarak Omuz Rotasyon Esnetmesi)', duration: 30, imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_a_sleeper_stretch_fitness_exercise_a/circle_150.png', isDefault: true },
-    { id: 'def_stretch_25', name: 'Hands Behind Back Stretch (Eller Arkada Göğüs ve Omuz Esnetme)', duration: 30, imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_a_hands_behind_back_stretch_fitness/circle_150.png', isDefault: true },
-    { id: 'def_stretch_26', name: 'Cow Face Pose Arms (İnek Yüzü Kol Esnetmesi)', duration: 30, imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_a_cow_face_pose_arms_fitness_exercise_a/circle_150.png', isDefault: true },
-    { id: 'def_stretch_27', name: 'Standing Side Bend (Ayakta Yana Eğilme)', duration: 30, imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_a_standing_side_bend_fitness_exercise_a/circle_150.png', isDefault: true },
-    { id: 'def_stretch_28', name: 'Puppy Pose / Extended Child\'s Pose (Yavru Köpek Duruşu)', duration: 30, imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_a_puppy_pose_fitness_exercise_a_human/circle_150.png', isDefault: true },
-    { id: 'def_stretch_29', name: 'Lying Pectoral Stretch (Yüzüstü Göğüs Esnetme)', duration: 30, imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_a_lying_pectoral_stretch_fitness/circle_150.png', isDefault: true },
-    { id: 'def_stretch_30', name: 'Open Book Stretch (Açık Kitap / Torasik Mobilite Esnetmesi)', duration: 30, imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_an_open_book_stretch_fitness_exercise_a/circle_150.png', isDefault: true },
-    { id: 'def_stretch_31', name: 'Knee to Chest Stretch (Dizi Göğse Çekme)', duration: 30, imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_a_knee_to_chest_stretch_fitness_exercise/circle_150.png', isDefault: true },
-    { id: 'def_stretch_32', name: 'Double Knee to Chest (İki Dizi Göğse Çekme)', duration: 30, imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_a_double_knee_to_chest_fitness_exercise/circle_150.png', isDefault: true },
-    { id: 'def_stretch_33', name: 'Lying Spinal Twist (Sırtüstü Omurga Döndürme)', duration: 30, imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_a_lying_spinal_twist_fitness_exercise_a/circle_150.png', isDefault: true },
-    { id: 'def_stretch_34', name: 'Upward-Facing Dog (Yukarı Bakan Köpek)', duration: 30, imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_an_upward_facing_dog_fitness_exercise_a/circle_150.png', isDefault: true },
-    { id: 'def_stretch_35', name: 'Sphinx Pose (Sfenks Duruşu)', duration: 30, imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_a_sphinx_pose_fitness_exercise_a_human/circle_150.png', isDefault: true },
-    { id: 'def_stretch_36', name: 'World\'s Greatest Stretch / Spiderman Lunge (Dünyanın En İyi Esnetmesi)', duration: 30, imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_world_s_greatest_stretch_fitness/circle_150.png', isDefault: true },
-    { id: 'def_stretch_37', name: 'Frog Stretch (Kurbağa Esnetmesi)', duration: 30, imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_a_frog_stretch_fitness_exercise_a_human/circle_150.png', isDefault: true },
-    { id: 'def_stretch_38', name: 'Happy Baby Pose (Mutlu Bebek Duruşu)', duration: 30, imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_a_happy_baby_pose_fitness_exercise_a/circle_150.png', isDefault: true },
-    { id: 'def_stretch_39', name: '90/90 Hip Stretch (90/90 Kalça Esnetmesi)', duration: 30, imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_a_90_90_hip_stretch_fitness_exercise_a/circle_150.png', isDefault: true },
-    { id: 'def_stretch_40', name: 'Lizard Pose (Kertenkele Duruşu)', duration: 30, imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_a_lizard_pose_fitness_exercise_a_human/circle_150.png', isDefault: true },
-    { id: 'def_stretch_41', name: 'Deep Squat Stretch / Malasana (Derin Squat Esnetmesi)', duration: 30, imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_a_deep_squat_stretch_fitness_exercise_a/circle_150.png', isDefault: true },
-    { id: 'def_stretch_42', name: 'Standing Hamstring Stretch (Ayakta Arka Bacak Esnetme)', duration: 30, imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_a_standing_hamstring_stretch_fitness/circle_150.png', isDefault: true },
-    { id: 'def_stretch_43', name: 'Half Kneeling Hamstring Stretch (Yarım Diz Üstü Arka Bacak Esnetme)', duration: 30, imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_a_half_kneeling_hamstring_stretch/circle_150.png', isDefault: true },
-    { id: 'def_stretch_44', name: 'Lying Quadriceps Stretch (Yüzüstü Ön Bacak Esnetme)', duration: 30, imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_a_lying_quadriceps_stretch_fitness/circle_150.png', isDefault: true },
-    { id: 'def_stretch_45', name: 'Straddle Stretch / Wide-Angle Forward Bend (Bacaklar Açık Oturarak Öne Eğilme)', duration: 30, imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_a_straddle_stretch_fitness_exercise_a/circle_150.png', isDefault: true },
-    { id: 'def_stretch_46', name: 'Standing Forward Bend / Uttanasana (Ayakta Öne Eğilme)', duration: 30, imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_a_standing_forward_bend_fitness_exercise/circle_150.png', isDefault: true },
-    { id: 'def_stretch_47', name: 'Seated Forward Bend / Paschimottanasana (Oturarak Öne Eğilme)', duration: 30, imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_a_seated_forward_bend_fitness_exercise_a/circle_150.png', isDefault: true },
-    { id: 'def_stretch_48', name: 'Iliotibial (IT) Band Stretch (Çapraz Bacak Öne Eğilme)', duration: 30, imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_an_iliotibial_it_band_stretch_fitness/circle_150.png', isDefault: true },
-    { id: 'def_stretch_49', name: 'Heel Drop Stretch (Basamakta Topuk Düşürme)', duration: 30, imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_a_heel_drop_stretch_fitness_exercise_a/circle_150.png', isDefault: true },
-    { id: 'def_stretch_50', name: 'Tibialis Anterior Stretch (Kaval Kemiği Esnetme)', duration: 30, imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_a_tibialis_anterior_stretch_fitness/circle_150.png', isDefault: true },
+    { id: 'def_stretch_1', name: 'Cat-Cow Stretch', duration: 30, category: 'Sırt/Bel', imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_a_cat_cow_stretch_fitness_exercise_a/circle_150.png', isDefault: true },
+    { id: 'def_stretch_2', name: 'Cobra Pose (Karın Esnetme)', duration: 30, category: 'Sırt/Bel', imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_a_cobra_pose_fitness_exercise_a_person/circle_150.png', isDefault: true },
+    { id: 'def_stretch_3', name: 'Thread the Needle Stretch', duration: 30, category: 'Sırt/Bel', imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_a_thread_the_needle_stretch_fitness/circle_150.png', isDefault: true },
+    { id: 'def_stretch_4', name: 'Doorway Chest Stretch (Kapı Eşiği Göğüs Esnetme)', duration: 30, category: 'Göğüs/Omuz', imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_a_doorway_chest_stretch_fitness_exercise/circle_150.png', isDefault: true },
+    { id: 'def_stretch_5', name: 'Wall Angel (Scapular Slide / Duvar Meleği)', duration: 30, category: 'Göğüs/Omuz', imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_a_wall_angel_fitness_exercise_a_human/circle_150.png', isDefault: true },
+    { id: 'def_stretch_6', name: 'Cross-Body Shoulder Stretch (Çapraz Omuz Esnetme)', duration: 30, category: 'Göğüs/Omuz', imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_a_cross_body_shoulder_stretch_fitness/circle_150.png', isDefault: true },
+    { id: 'def_stretch_7', name: 'Overhead Triceps Stretch (Baş Üstü Arka Kol Esnetme)', duration: 30, category: 'Kol', imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_an_overhead_triceps_stretch_fitness/circle_150.png', isDefault: true },
+    { id: 'def_stretch_8', name: 'Wall Biceps Stretch (Duvar Biceps Esnetme)', duration: 30, category: 'Kol', imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_a_wall_biceps_stretch_fitness_exercise_a/circle_150.png', isDefault: true },
+    { id: 'def_stretch_9', name: 'Forearm Flexor Stretch (Ön Kol Flexor Esnetme)', duration: 30, category: 'Kol', imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_a_forearm_flexor_stretch_fitness/circle_150.png', isDefault: true },
+    { id: 'def_stretch_10', name: 'Forearm Extensor Stretch (Ön Kol Extensor Esnetme)', duration: 30, category: 'Kol', imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_a_forearm_extensor_stretch_fitness/circle_150.png', isDefault: true },
+    { id: 'def_stretch_11', name: 'Kneeling Hip Flexor Stretch (Diz Üstü Kalça Esnetme)', duration: 30, category: 'Kalça/Bacak', imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_a_kneeling_hip_flexor_stretch_fitness/circle_150.png', isDefault: true },
+    { id: 'def_stretch_12', name: 'Standing Quadriceps Stretch (Ayakta Ön Bacak Esnetme)', duration: 30, category: 'Kalça/Bacak', imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_a_standing_quadriceps_stretch_fitness_1/circle_150.png', isDefault: true },
+    { id: 'def_stretch_13', name: 'Supine Hamstring Stretch (Sırtüstü Arka Bacak Esnetme)', duration: 30, category: 'Kalça/Bacak', imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_a_supine_hamstring_stretch_fitness/circle_150.png', isDefault: true },
+    { id: 'def_stretch_14', name: 'Figure 4 Glute Stretch (Kalça Esnetme)', duration: 30, category: 'Kalça/Bacak', imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_a_figure_4_glute_stretch_fitness/circle_150.png', isDefault: true },
+    { id: 'def_stretch_15', name: 'Pigeon Pose Stretch (Güvercin Duruşu)', duration: 30, category: 'Kalça/Bacak', imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_a_pigeon_pose_stretch_fitness_exercise_a/circle_150.png', isDefault: true },
+    { id: 'def_stretch_16', name: 'Seated Spinal Twist Stretch (Oturarak Omurga Döndürme)', duration: 30, category: 'Sırt/Bel', imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_a_seated_spinal_twist_stretch_fitness/circle_150.png', isDefault: true },
+    { id: 'def_stretch_17', name: 'Downward-Facing Dog (Aşağı Bakan Köpek)', duration: 30, category: 'Tüm Vücut', imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_downward_facing_dog_fitness_exercise_a/circle_150.png', isDefault: true },
+    { id: 'def_stretch_18', name: 'Child\'s Pose (Çocuk Duruşu)', duration: 30, category: 'Sırt/Bel', imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_child_s_pose_fitness_exercise_a_human/circle_150.png', isDefault: true },
+    { id: 'def_stretch_19', name: 'Wall Calf Stretch (Duvar Kalf Esnetme)', duration: 30, category: 'Kalça/Bacak', imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_a_wall_calf_stretch_fitness_exercise_a/circle_150.png', isDefault: true },
+    { id: 'def_stretch_20', name: 'Butterfly Stretch (Kelebek Esnetme)', duration: 30, category: 'Kalça/Bacak', imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_a_butterfly_stretch_fitness_exercise_a/circle_150.png', isDefault: true },
+    { id: 'def_stretch_21', name: 'Neck Tilt Stretch (Boyun Yana Eğme)', duration: 30, category: 'Boyun', imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_a_neck_tilt_stretch_fitness_exercise_a/circle_150.png', isDefault: true },
+    { id: 'def_stretch_22', name: 'Neck Rotation Stretch (Boyun Döndürme)', duration: 30, category: 'Boyun', imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_a_neck_rotation_stretch_fitness_exercise/circle_150.png', isDefault: true },
+    { id: 'def_stretch_23', name: 'Chin Tuck (Çene Çekme / Boyun Arkası Esnetme)', duration: 30, category: 'Boyun', imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_a_chin_tuck_fitness_exercise_a_human/circle_150.png', isDefault: true },
+    { id: 'def_stretch_24', name: 'Sleeper Stretch (Yatarak Omuz Rotasyon Esnetmesi)', duration: 30, category: 'Göğüs/Omuz', imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_a_sleeper_stretch_fitness_exercise_a/circle_150.png', isDefault: true },
+    { id: 'def_stretch_25', name: 'Hands Behind Back Stretch (Eller Arkada Göğüs ve Omuz Esnetme)', duration: 30, category: 'Göğüs/Omuz', imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_a_hands_behind_back_stretch_fitness/circle_150.png', isDefault: true },
+    { id: 'def_stretch_26', name: 'Cow Face Pose Arms (İnek Yüzü Kol Esnetmesi)', duration: 30, category: 'Kol', imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_a_cow_face_pose_arms_fitness_exercise_a/circle_150.png', isDefault: true },
+    { id: 'def_stretch_27', name: 'Standing Side Bend (Ayakta Yana Eğilme)', duration: 30, category: 'Sırt/Bel', imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_a_standing_side_bend_fitness_exercise_a/circle_150.png', isDefault: true },
+    { id: 'def_stretch_28', name: 'Puppy Pose / Extended Child\'s Pose (Yavru Köpek Duruşu)', duration: 30, category: 'Sırt/Bel', imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_a_puppy_pose_fitness_exercise_a_human/circle_150.png', isDefault: true },
+    { id: 'def_stretch_29', name: 'Lying Pectoral Stretch (Yüzüstü Göğüs Esnetme)', duration: 30, category: 'Göğüs/Omuz', imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_a_lying_pectoral_stretch_fitness/circle_150.png', isDefault: true },
+    { id: 'def_stretch_30', name: 'Open Book Stretch (Açık Kitap / Torasik Mobilite Esnetmesi)', duration: 30, category: 'Sırt/Bel', imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_an_open_book_stretch_fitness_exercise_a/circle_150.png', isDefault: true },
+    { id: 'def_stretch_31', name: 'Knee to Chest Stretch (Dizi Göğse Çekme)', duration: 30, category: 'Sırt/Bel', imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_a_knee_to_chest_stretch_fitness_exercise/circle_150.png', isDefault: true },
+    { id: 'def_stretch_32', name: 'Double Knee to Chest (İki Dizi Göğse Çekme)', duration: 30, category: 'Sırt/Bel', imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_a_double_knee_to_chest_fitness_exercise/circle_150.png', isDefault: true },
+    { id: 'def_stretch_33', name: 'Lying Spinal Twist (Sırtüstü Omurga Döndürme)', duration: 30, category: 'Sırt/Bel', imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_a_lying_spinal_twist_fitness_exercise_a/circle_150.png', isDefault: true },
+    { id: 'def_stretch_34', name: 'Upward-Facing Dog (Yukarı Bakan Köpek)', duration: 30, category: 'Sırt/Bel', imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_an_upward_facing_dog_fitness_exercise_a/circle_150.png', isDefault: true },
+    { id: 'def_stretch_35', name: 'Sphinx Pose (Sfenks Duruşu)', duration: 30, category: 'Sırt/Bel', imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_a_sphinx_pose_fitness_exercise_a_human/circle_150.png', isDefault: true },
+    { id: 'def_stretch_36', name: 'World\'s Greatest Stretch / Spiderman Lunge (Dünyanın En İyi Esnetmesi)', duration: 30, category: 'Tüm Vücut', imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_world_s_greatest_stretch_fitness/circle_150.png', isDefault: true },
+    { id: 'def_stretch_37', name: 'Frog Stretch (Kurbağa Esnetmesi)', duration: 30, category: 'Kalça/Bacak', imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_a_frog_stretch_fitness_exercise_a_human/circle_150.png', isDefault: true },
+    { id: 'def_stretch_38', name: 'Happy Baby Pose (Mutlu Bebek Duruşu)', duration: 30, category: 'Kalça/Bacak', imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_a_happy_baby_pose_fitness_exercise_a/circle_150.png', isDefault: true },
+    { id: 'def_stretch_39', name: '90/90 Hip Stretch (90/90 Kalça Esnetmesi)', duration: 30, category: 'Kalça/Bacak', imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_a_90_90_hip_stretch_fitness_exercise_a/circle_150.png', isDefault: true },
+    { id: 'def_stretch_40', name: 'Lizard Pose (Kertenkele Duruşu)', duration: 30, category: 'Kalça/Bacak', imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_a_lizard_pose_fitness_exercise_a_human/circle_150.png', isDefault: true },
+    { id: 'def_stretch_41', name: 'Deep Squat Stretch / Malasana (Derin Squat Esnetmesi)', duration: 30, category: 'Kalça/Bacak', imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_a_deep_squat_stretch_fitness_exercise_a/circle_150.png', isDefault: true },
+    { id: 'def_stretch_42', name: 'Standing Hamstring Stretch (Ayakta Arka Bacak Esnetme)', duration: 30, category: 'Kalça/Bacak', imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_a_standing_hamstring_stretch_fitness/circle_150.png', isDefault: true },
+    { id: 'def_stretch_43', name: 'Half Kneeling Hamstring Stretch (Yarım Diz Üstü Arka Bacak Esnetme)', duration: 30, category: 'Kalça/Bacak', imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_a_half_kneeling_hamstring_stretch/circle_150.png', isDefault: true },
+    { id: 'def_stretch_44', name: 'Lying Quadriceps Stretch (Yüzüstü Ön Bacak Esnetme)', duration: 30, category: 'Kalça/Bacak', imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_a_lying_quadriceps_stretch_fitness/circle_150.png', isDefault: true },
+    { id: 'def_stretch_45', name: 'Straddle Stretch / Wide-Angle Forward Bend (Bacaklar Açık Oturarak Öne Eğilme)', duration: 30, category: 'Kalça/Bacak', imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_a_straddle_stretch_fitness_exercise_a/circle_150.png', isDefault: true },
+    { id: 'def_stretch_46', name: 'Standing Forward Bend / Uttanasana (Ayakta Öne Eğilme)', duration: 30, category: 'Tüm Vücut', imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_a_standing_forward_bend_fitness_exercise/circle_150.png', isDefault: true },
+    { id: 'def_stretch_47', name: 'Seated Forward Bend / Paschimottanasana (Oturarak Öne Eğilme)', duration: 30, category: 'Tüm Vücut', imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_a_seated_forward_bend_fitness_exercise_a/circle_150.png', isDefault: true },
+    { id: 'def_stretch_48', name: 'Iliotibial (IT) Band Stretch (Çapraz Bacak Öne Eğilme)', duration: 30, category: 'Kalça/Bacak', imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_an_iliotibial_it_band_stretch_fitness/circle_150.png', isDefault: true },
+    { id: 'def_stretch_49', name: 'Heel Drop Stretch (Basamakta Topuk Düşürme)', duration: 30, category: 'Kalça/Bacak', imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_a_heel_drop_stretch_fitness_exercise_a/circle_150.png', isDefault: true },
+    { id: 'def_stretch_50', name: 'Tibialis Anterior Stretch (Kaval Kemiği Esnetme)', duration: 30, category: 'Kalça/Bacak', imageBase64: 'assets/stretches/minimalist_flat_vector_illustration_of_a_tibialis_anterior_stretch_fitness/circle_150.png', isDefault: true },
 ];
 
 
@@ -1793,57 +1793,132 @@ function closeAddStretchModal() {
 // STRETCHES CRUD & RENDERING
 // ==========================================
 
+// --- Stretch Library Functions ---
+let currentStretchCategory = 'Tümü';
+let currentStretchSearchTerm = '';
+
 function renderStretches() {
-    const container = document.getElementById('stretching-list-container');
+    const container = document.getElementById('stretch-list-container');
     if (!container) return;
     
-    // Combine defaults and customs into a single list
-    const visibleDefaults = DEFAULT_STRETCHES.filter(s => !hiddenDefaultStretchIds.has(s.id));
-    const allStretches = [...visibleDefaults, ...stretches].sort((a, b) => {
-        const nameA = a.name || '';
-        const nameB = b.name || '';
-        return nameA.localeCompare(nameB, 'tr');
-    });
-    
-    if (allStretches.length === 0) {
+    if (!DEFAULT_STRETCHES || DEFAULT_STRETCHES.length === 0) {
         container.innerHTML = `<p class="text-center text-on-surface-variant font-body-md mt-4">Henüz hareket eklenmedi.</p>`;
         return;
     }
     
-    let html = '';
+    // Group stretches by category
+    const categories = ['Sırt/Bel', 'Göğüs/Omuz', 'Kol', 'Kalça/Bacak', 'Boyun', 'Tam Vücut', 'Diğer'];
+    const groupedStretches = {};
+    categories.forEach(cat => groupedStretches[cat] = []);
     
-    allStretches.forEach(stretch => {
-        html += generateStretchCard(stretch);
+    DEFAULT_STRETCHES.forEach(stretch => {
+        let cat = stretch.category || 'Diğer';
+        if (!groupedStretches[cat]) {
+            groupedStretches[cat] = [];
+        }
+        groupedStretches[cat].push(stretch);
     });
-    
-    container.innerHTML = html;
-}
 
-function generateStretchCard(stretch) {
-    return `
-        <div class="bg-background shadow-neo-low rounded-[32px] p-md flex items-center gap-md">
-            <div class="w-16 h-16 rounded-full overflow-hidden flex-shrink-0 bg-background shadow-neo-highest">
-                ${stretch.imageBase64 ? `<img alt="${escapeHtml(stretch.name)}" class="w-full h-full object-cover" src="${stretch.imageBase64}"/>` : ''}
+    let html = '';
+    for (const [catName, items] of Object.entries(groupedStretches)) {
+        if (items.length === 0) continue;
+        
+        html += `
+        <div class="mb-4 stretch-category" data-category="${catName}">
+            <div class="flex items-center justify-between mb-2 py-1">
+                <h2 class="font-title-lg text-on-surface">${catName}</h2>
             </div>
-            <div class="flex-1 flex flex-col justify-center">
-                <h3 class="font-body-lg text-body-lg font-medium text-on-surface">${escapeHtml(stretch.name)}</h3>
-                <div class="flex items-center gap-2 mt-1">
-                    <span class="text-on-surface-variant font-label-sm text-label-sm flex items-center gap-1">
-                        <span class="material-symbols-rounded text-[14px]" data-icon="timer">timer</span> ${stretch.duration}
-                    </span>
+            <div class="flex flex-col gap-2">
+        `;
+        
+        items.forEach(stretch => {
+            let imageHtml = '';
+            if (stretch.imageBase64) {
+                imageHtml = `<img alt="${escapeHtml(stretch.name)}" class="w-full h-full object-cover" src="${stretch.imageBase64}"/>`;
+            } else {
+                imageHtml = `<div class="w-full h-full flex items-center justify-center font-bold text-lg">${stretch.name.charAt(0)}</div>`;
+            }
+
+            // Using the same design as exercise library
+            html += `
+            <div class="neo-surface p-4 rounded-2xl flex items-center justify-between neo-button transition-all stretch-item mb-3 cursor-pointer" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);">
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface overflow-hidden font-bold text-lg">
+                        ${imageHtml}
+                    </div>
+                    <div>
+                        <h4 class="font-semibold text-body-md text-on-surface tracking-tight">${escapeHtml(stretch.name)}</h4>
+                        <p class="text-xs text-on-surface-variant capitalize">Bölge: ${escapeHtml(stretch.category || 'Diğer')}</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-2">
+                    <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                 </div>
             </div>
-            <div class="flex items-center gap-sm flex-shrink-0">
-                <button data-action="editStretch" data-stretch-id="${stretch.id}" class="text-on-surface-variant hover:text-neon-blue transition-colors p-1 rounded-full hover:bg-background shadow-neo-variant active:scale-95">
-                    <span class="material-symbols-rounded text-[20px]" data-icon="edit">edit</span>
-                </button>
-                <button data-action="deleteStretch" data-stretch-id="${stretch.id}" class="text-on-surface-variant hover:text-error transition-colors p-1 rounded-full hover:bg-background shadow-neo-variant active:scale-95">
-                    <span class="material-symbols-rounded text-[20px]" data-icon="delete">delete</span>
-                </button>
+            `;
+        });
+        
+        html += `
             </div>
         </div>
-    `;
+        `;
+    }
+    
+    container.innerHTML = html;
+    applyStretchFilters();
 }
+
+function handleStretchSearch(value) {
+    currentStretchSearchTerm = value.toLowerCase().trim();
+    applyStretchFilters();
+}
+
+function filterStretches(category, btnElement) {
+    currentStretchCategory = category;
+    
+    // Update active styling on chips
+    const allChips = document.querySelectorAll('#view-stretch-library .filter-chip');
+    allChips.forEach(chip => {
+        chip.className = 'neo-surface px-5 py-2 rounded-full text-sm font-semibold text-on-surface-variant whitespace-nowrap neo-button filter-chip';
+    });
+    
+    // Set clicked chip to active
+    btnElement.className = 'neo-inset px-5 py-2 rounded-full text-sm font-semibold text-on-surface whitespace-nowrap filter-chip active';
+
+    applyStretchFilters();
+}
+
+function applyStretchFilters() {
+    const categories = document.querySelectorAll('.stretch-category');
+    
+    categories.forEach(catGroup => {
+        const catName = catGroup.getAttribute('data-category');
+        const items = catGroup.querySelectorAll('.stretch-item');
+        let hasVisibleItems = false;
+        
+        items.forEach(item => {
+            const name = item.querySelector('h4').textContent.toLowerCase();
+            const matchesSearch = name.includes(currentStretchSearchTerm);
+            const matchesCategory = (currentStretchCategory === 'Tümü' || catName === currentStretchCategory);
+            
+            if (matchesSearch && matchesCategory) {
+                item.style.display = 'flex';
+                hasVisibleItems = true;
+            } else {
+                item.style.display = 'none';
+            }
+        });
+        
+        // Hide category header if no items match
+        if (hasVisibleItems) {
+            catGroup.style.display = 'block';
+        } else {
+            catGroup.style.display = 'none';
+        }
+    });
+}
+
+
 
 function handleStretchImageUpload(e) {
     const file = e.target.files[0];
@@ -2053,14 +2128,14 @@ function renderCores() {
 
             // Note: openCoreSheet needs the core object or ID, we will pass ID.
             html += `
-            <div onclick="openCoreSheet(this, '${core.id}')" class="neo-surface p-5 flex items-center justify-between neo-button transition-all core-item mb-4 cursor-pointer" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);">
+            <div onclick="openCoreSheet(this, '${core.id}')" class="neo-surface p-4 rounded-2xl flex items-center justify-between neo-button transition-all core-item mb-3 cursor-pointer" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);">
                 <div class="flex items-center gap-4">
-                    <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface overflow-hidden">
+                    <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface overflow-hidden font-bold text-lg">
                         ${imageHtml}
                     </div>
                     <div>
                         <h4 class="font-semibold text-body-md text-on-surface tracking-tight">${escapeHtml(core.name)}</h4>
-                        <p class="text-xs text-on-surface-variant capitalize">Süre: ${core.duration}s</p>
+                        <p class="text-xs text-on-surface-variant capitalize">Bölge: ${escapeHtml(core.category || 'Diğer')}</p>
                     </div>
                 </div>
                 <div class="flex items-center gap-2">
