@@ -943,6 +943,8 @@ function closeSplitEdit() {
 
 // Track which day accordions are open
 const _openDayAccordions = new Set();
+const _openSplitAccordions = new Set();
+const _openExAccordions = new Set();
 
 function renderSplitEditView() {
     const mainContainer = document.getElementById('split-edit-main-container');
