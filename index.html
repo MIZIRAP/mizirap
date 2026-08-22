@@ -5110,7 +5110,7 @@
     </div>
 </div>
 
-    <div id="add-stretch-bottom-sheet" class="fixed inset-0 bg-black/30 z-[100] flex items-end opacity-0 pointer-events-none transition-opacity duration-300" onclick="closeAddStretchSheetOnOutsideClick(event)">
+        <div id="add-stretch-bottom-sheet" class="fixed inset-0 bg-black/30 z-[100] flex items-end opacity-0 pointer-events-none transition-opacity duration-300" onclick="closeAddStretchSheetOnOutsideClick(event)">
         <div class="bg-background shadow-neo rounded-t-[24px] w-full max-w-md mx-auto shadow-2xl transform transition-transform translate-y-full duration-300 relative max-h-[90vh] flex flex-col" id="add-stretch-bottom-sheet-content">
             <!-- Drag Handle -->
             <div class="w-full flex justify-center pt-4 pb-2 cursor-pointer" onclick="closeAddStretchSheet()">
@@ -5133,21 +5133,21 @@
                         <span class="material-symbols-outlined text-lg">image</span>
                         Kapak Fotoğrafı
                     </label>
-                    <div id="coreImagePreviewContainer" class="hidden relative w-full h-48 rounded-2xl overflow-hidden shadow-sm group">
-                        <img id="coreImagePreview" src="" alt="Preview" class="w-full h-full object-cover transition-transform group-hover:scale-105" />
+                    <div id="stretchImagePreviewContainer" class="hidden relative w-full h-48 rounded-2xl overflow-hidden shadow-sm group">
+                        <img id="stretchImagePreview" src="" alt="Preview" class="w-full h-full object-cover transition-transform group-hover:scale-105" />
                         <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                             <button type="button" onclick="document.getElementById('stretchImageInput').click()" class="bg-white/20 hover:bg-white/30 backdrop-blur-md text-white p-3 rounded-full transition-colors shadow-lg border border-white/20">
                                 <span class="material-symbols-outlined">edit</span>
                             </button>
                         </div>
                     </div>
-                    <button type="button" id="coreImageUploadBtn" onclick="document.getElementById('stretchImageInput').click()" class="neo-surface p-6 rounded-2xl neo-button transition-all border-2 border-dashed border-outline-variant/30 flex flex-col items-center justify-center gap-3 text-on-surface-variant hover:text-primary hover:border-primary/50 group">
+                    <button type="button" id="stretchImageUploadBtn" onclick="document.getElementById('stretchImageInput').click()" class="neo-surface p-6 rounded-2xl neo-button transition-all border-2 border-dashed border-outline-variant/30 flex flex-col items-center justify-center gap-3 text-on-surface-variant hover:text-primary hover:border-primary/50 group">
                         <div class="w-12 h-12 rounded-full bg-surface-container-highest flex items-center justify-center group-hover:bg-primary/10 transition-colors">
                             <span class="material-symbols-outlined text-2xl group-hover:scale-110 transition-transform">add_a_photo</span>
                         </div>
                         <span class="text-sm font-medium">Fotoğraf Seç veya Çek</span>
                     </button>
-                    <input type="file" id="stretchImageInput" accept="image/*" class="hidden" onchange="handleCoreImageSelect(event)">
+                    <input type="file" id="stretchImageInput" accept="image/*" class="hidden" onchange="handleStretchImageUpload(event)">
                 </div>
 
                 <!-- Hareket Adı -->
@@ -5178,12 +5178,13 @@
                         <span class="material-symbols-outlined text-lg">fitness_center</span>
                         Bölge (Kategori)
                     </label>
-                    <div class="grid grid-cols-2 gap-3" id="coreCategoryGrid">
-                        <button type="button" class="neo-surface p-3 rounded-xl neo-button transition-all text-sm font-medium text-on-surface hover:text-primary category-select-btn border-2 border-transparent focus:outline-none" data-cat="Alt Karın">Alt Karın</button>
-                        <button type="button" class="neo-surface p-3 rounded-xl neo-button transition-all text-sm font-medium text-on-surface hover:text-primary category-select-btn border-2 border-transparent focus:outline-none" data-cat="Üst Karın">Üst Karın</button>
-                        <button type="button" class="neo-surface p-3 rounded-xl neo-button transition-all text-sm font-medium text-on-surface hover:text-primary category-select-btn border-2 border-transparent focus:outline-none" data-cat="Yan Karın">Yan Karın</button>
-                        <button type="button" class="neo-surface p-3 rounded-xl neo-button transition-all text-sm font-medium text-on-surface hover:text-primary category-select-btn border-2 border-transparent focus:outline-none" data-cat="Bel/Sırt">Bel/Sırt</button>
-                        <button type="button" class="neo-surface p-3 rounded-xl neo-button transition-all text-sm font-medium text-on-surface hover:text-primary category-select-btn border-2 border-transparent focus:outline-none col-span-2" data-cat="Tüm Karın">Tüm Karın</button>
+                    <div class="grid grid-cols-2 gap-3" id="newStretchCategoryOptions">
+                        <button type="button" class="neo-surface p-3 rounded-xl neo-button transition-all text-sm font-medium text-on-surface hover:text-primary category-select-btn border-2 border-transparent focus:outline-none" data-cat="Sırt/Bel">Sırt/Bel</button>
+                        <button type="button" class="neo-surface p-3 rounded-xl neo-button transition-all text-sm font-medium text-on-surface hover:text-primary category-select-btn border-2 border-transparent focus:outline-none" data-cat="Göğüs/Omuz">Göğüs/Omuz</button>
+                        <button type="button" class="neo-surface p-3 rounded-xl neo-button transition-all text-sm font-medium text-on-surface hover:text-primary category-select-btn border-2 border-transparent focus:outline-none" data-cat="Kol">Kol</button>
+                        <button type="button" class="neo-surface p-3 rounded-xl neo-button transition-all text-sm font-medium text-on-surface hover:text-primary category-select-btn border-2 border-transparent focus:outline-none" data-cat="Kalça/Bacak">Kalça/Bacak</button>
+                        <button type="button" class="neo-surface p-3 rounded-xl neo-button transition-all text-sm font-medium text-on-surface hover:text-primary category-select-btn border-2 border-transparent focus:outline-none" data-cat="Boyun">Boyun</button>
+                        <button type="button" class="neo-surface p-3 rounded-xl neo-button transition-all text-sm font-medium text-on-surface hover:text-primary category-select-btn border-2 border-transparent focus:outline-none col-span-2" data-cat="Tam Vücut">Tam Vücut</button>
                     </div>
                     <input type="hidden" id="newStretchCategory" value="">
                 </div>

@@ -1746,8 +1746,10 @@ function openAddStretchModal(isEdit = false) {
         document.getElementById('stretch-duration').value = '';
         document.getElementById('modal-title').textContent = "Yeni Hareket";
         
-        const preview = document.getElementById('stretch-image-preview');
-        const placeholder = document.getElementById('stretch-image-placeholder');
+        const preview = document.getElementById('stretchImagePreview');
+        const placeholder = document.getElementById('stretchImagePreviewContainer');
+            const uploadBtn = document.getElementById('stretchImageUploadBtn');
+            if(uploadBtn) uploadBtn.classList.add('hidden');
         if (preview && placeholder) {
             preview.src = "";
             preview.classList.add('hidden');
@@ -1961,8 +1963,10 @@ function handleStretchImageUpload(e) {
             
             currentStretchImageBase64 = canvas.toDataURL('image/jpeg', 0.8);
             
-            const preview = document.getElementById('stretch-image-preview');
-            const placeholder = document.getElementById('stretch-image-placeholder');
+            const preview = document.getElementById('stretchImagePreview');
+            const placeholder = document.getElementById('stretchImagePreviewContainer');
+            const uploadBtn = document.getElementById('stretchImageUploadBtn');
+            if(uploadBtn) uploadBtn.classList.add('hidden');
             
             if (preview && placeholder) {
                 preview.src = currentStretchImageBase64;
@@ -2034,8 +2038,10 @@ function editStretch(id) {
     
     currentStretchImageBase64 = stretch.imageBase64 || null;
     
-    const preview = document.getElementById('stretch-image-preview');
-    const placeholder = document.getElementById('stretch-image-placeholder');
+    const preview = document.getElementById('stretchImagePreview');
+    const placeholder = document.getElementById('stretchImagePreviewContainer');
+            const uploadBtn = document.getElementById('stretchImageUploadBtn');
+            if(uploadBtn) uploadBtn.classList.add('hidden');
     const imageBtn = document.getElementById('stretch-image-picker-btn');
     
     if (editingStretchIsDefault) {
@@ -3584,8 +3590,8 @@ function openAddStretchSheet() {
     document.getElementById('newStretchDuration').value = '30';
     document.getElementById('newStretchCategory').value = 'Sırt/Bel';
     
-    document.getElementById('stretchPreviewImage').classList.add('hidden');
-    document.getElementById('stretchImagePlaceholder').classList.remove('hidden');
+    document.getElementById('stretchImagePreviewContainer').classList.add('hidden');
+    document.getElementById('stretchImageUploadBtn').classList.remove('hidden');
     
     const catOptions = document.querySelectorAll('#newStretchCategoryOptions .category-select-btn');
     catOptions.forEach(btn => {
