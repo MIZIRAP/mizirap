@@ -1039,11 +1039,17 @@ function renderSplitEditView() {
 
         // Wrap card + delete button in a relative container (swipe-to-reveal pattern)
         const swipeWrapper = document.createElement('div');
-        swipeWrapper.className = 'relative w-full overflow-hidden rounded-[24px] mb-1';
+        swipeWrapper.className = 'relative w-full max-w-[342px] mx-auto overflow-hidden mb-1';
 
-        // Red delete button behind the card
+        // Make card sit above the delete button
+        splitCard.style.position = 'relative';
+        splitCard.style.zIndex = '1';
+        splitCard.className = splitCard.className.replace('mx-auto', '').trim();
+
+        // Red delete button hidden behind the card (right-0 = fully hidden initially)
         const delBtn = document.createElement('button');
-        delBtn.className = 'absolute right-4 top-1/2 -translate-y-1/2 w-14 h-14 bg-[#BA1A1A] rounded-2xl text-white flex items-center justify-center z-0 active:bg-red-700 transition-colors';
+        delBtn.className = 'absolute right-0 top-0 h-full w-[80px] bg-[#BA1A1A] text-white flex items-center justify-center z-0 active:bg-red-700 transition-colors';
+        delBtn.style.borderRadius = '0 24px 24px 0';
         delBtn.innerHTML = `<span class="material-symbols-rounded text-white text-[24px]">delete</span>`;
         delBtn.onclick = () => {
             if(confirm(`"${split.name}" programını silmek istediğinize emin misiniz?`)) {
