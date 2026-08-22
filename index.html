@@ -137,240 +137,139 @@
 
     <!-- Ana Stil Dosyası (Custom CSS) -->
     <link href="style.css" rel="stylesheet" />
-    <style>
-        .material-symbols-rounded {
-            font-family: "Material Symbols Rounded" !important;
-        }
-
-        .view.hidden { display: none !important; }
-
-        /* Number input up/down oklarını gizle */
-        input[type="number"]::-webkit-inner-spin-button,
-        input[type="number"]::-webkit-outer-spin-button {
-            -webkit-appearance: none;
-            margin: 0;
-        }
-        input[type="number"] {
-            -moz-appearance: textfield;
-        }
-
-        @keyframes gradientShift {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-        .progress-ring__circle {
-            transition: stroke-dashoffset 0.8s ease-in-out;
-            transform: rotate(-90deg);
-            transform-origin: 50% 50%;
-        }
     
-        .neo-surface { background: #F0F2F8; box-shadow: 6px 6px 12px rgba(0,0,0,0.08), -6px -6px 12px rgba(255,255,255,0.6); border-radius: 16px; }
-        .neo-surface-small { background: #F0F2F8; box-shadow: 4px 4px 8px rgba(0,0,0,0.08), -4px -4px 8px rgba(255,255,255,0.6); border-radius: 12px; }
-        .neo-inset { background: #F0F2F8; box-shadow: inset 4px 4px 8px rgba(0,0,0,0.08), inset -4px -4px 8px rgba(255,255,255,0.6); border-radius: 16px; }
-        .neo-inset-small { background: #F0F2F8; box-shadow: inset 2px 2px 4px rgba(0,0,0,0.08), inset -2px -2px 4px rgba(255,255,255,0.6); border-radius: 8px; }
-        .neo-button:active { box-shadow: inset 2px 2px 4px rgba(0,0,0,0.1), inset -2px -2px 4px rgba(255,255,255,0.7) !important; }
-        .accordion-content { max-height: 0; overflow: hidden; transition: max-height 0.4s ease-out, opacity 0.3s ease-out, margin 0.3s ease-out; opacity: 0; }
-        .accordion-content.expanded { opacity: 1; }
-        .chevron { transition: transform 0.3s ease; }
-        .expanded > .accordion-header .chevron { transform: rotate(180deg); }
-</style>
 
     <!-- Muscle Map Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/@panzoom/panzoom/dist/panzoom.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="assets/exercises/muscle-map.js"></script>
 
-    <style>
-        .material-symbols-rounded {
-            font-family: "Material Symbols Rounded" !important;
-        }
+    
 
-        
-        .neo-surface-interactive:active {
-            box-shadow: inset 4px 4px 8px rgba(0,0,0,0.08), inset -4px -4px 8px rgba(255,255,255,0.6);
-            transform: scale(0.98);
-        }
-        .neo-inset-pill {
-            background: #f0f2f8;
-            box-shadow: inset 4px 4px 8px rgba(0,0,0,0.06), inset -4px -4px 8px rgba(255,255,255,0.7);
-            border-radius: 9999px;
-        }
-        .neo-inset-circle {
-            background: #f0f2f8;
-            box-shadow: inset 4px 4px 8px rgba(0,0,0,0.06), inset -4px -4px 8px rgba(255,255,255,0.7);
-            border-radius: 50%;
-        }
-        .expandable-content {
-            display: grid;
-            grid-template-rows: 0fr;
-            transition: grid-template-rows 300ms cubic-bezier(0.4, 0, 0.2, 1);
-            visibility: hidden;
-        }
-        .expandable-content.expanded {
-            grid-template-rows: 1fr;
-            visibility: visible;
-        }
-        .expandable-inner {
-            overflow: hidden;
-        }
+    
 
-        .glass-nav {
-            background: rgba(247, 249, 255, 0.85);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-        }
+    
 
+    
+<style>
+.material-symbols-rounded {
+font-family: "Material Symbols Rounded" !important;
+}
+.view.hidden { display: none !important; }
+/* Number input up/down oklarını gizle */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+-webkit-appearance: none;
+margin: 0;
+input[type="number"] {
+-moz-appearance: textfield;
+@keyframes gradientShift {
+0% { background-position: 0% 50%; }
+50% { background-position: 100% 50%; }
+100% { background-position: 0% 50%; }
+.progress-ring__circle {
+transition: stroke-dashoffset 0.8s ease-in-out;
+transform: rotate(-90deg);
+transform-origin: 50% 50%;
+.neo-surface { background: #F0F2F8; box-shadow: 6px 6px 12px rgba(0,0,0,0.08), -6px -6px 12px rgba(255,255,255,0.6); border-radius: 16px; }
+.neo-surface-small { background: #F0F2F8; box-shadow: 4px 4px 8px rgba(0,0,0,0.08), -4px -4px 8px rgba(255,255,255,0.6); border-radius: 12px; }
+.neo-inset { background: #F0F2F8; box-shadow: inset 4px 4px 8px rgba(0,0,0,0.08), inset -4px -4px 8px rgba(255,255,255,0.6); border-radius: 16px; }
+.neo-inset-small { background: #F0F2F8; box-shadow: inset 2px 2px 4px rgba(0,0,0,0.08), inset -2px -2px 4px rgba(255,255,255,0.6); border-radius: 8px; }
+.neo-button:active { box-shadow: inset 2px 2px 4px rgba(0,0,0,0.1), inset -2px -2px 4px rgba(255,255,255,0.7) !important; }
+.accordion-content { max-height: 0; overflow: hidden; transition: max-height 0.4s ease-out, opacity 0.3s ease-out, margin 0.3s ease-out; opacity: 0; }
+.accordion-content.expanded { opacity: 1; }
+.chevron { transition: transform 0.3s ease; }
+.expanded > .accordion-header .chevron { transform: rotate(180deg); }
+.neo-surface-interactive:active {
+box-shadow: inset 4px 4px 8px rgba(0,0,0,0.08), inset -4px -4px 8px rgba(255,255,255,0.6);
+transform: scale(0.98);
+.neo-inset-pill {
+background: #f0f2f8;
+box-shadow: inset 4px 4px 8px rgba(0,0,0,0.06), inset -4px -4px 8px rgba(255,255,255,0.7);
+border-radius: 9999px;
+.neo-inset-circle {
+border-radius: 50%;
+.expandable-content {
+display: grid;
+grid-template-rows: 0fr;
+transition: grid-template-rows 300ms cubic-bezier(0.4, 0, 0.2, 1);
+visibility: hidden;
+.expandable-content.expanded {
+grid-template-rows: 1fr;
+visibility: visible;
+.expandable-inner {
+overflow: hidden;
+.glass-nav {
+background: rgba(247, 249, 255, 0.85);
+backdrop-filter: blur(12px);
+-webkit-backdrop-filter: blur(12px);
 .neo-surface {
-            background-color: #f0f2f8;
-            box-shadow: 6px 6px 12px rgba(0,0,0,0.08), -6px -6px 12px rgba(255,255,255,0.7);
-            
-        }
-
-        .neo-inset {
-            background-color: #f0f2f8;
-            box-shadow: inset 4px 4px 8px rgba(0,0,0,0.06), inset -4px -4px 8px rgba(255,255,255,0.7);
-            
-        }
-        
-        .neo-button:active {
-            box-shadow: inset 4px 4px 8px rgba(0,0,0,0.06), inset -4px -4px 8px rgba(255,255,255,0.7);
-        }
-
-        /* Circular Progress Styling */
-        @keyframes gradientShift {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-        .progress-ring__circle {
-            transition: stroke-dashoffset 0.35s;
-            transform: rotate(-90deg);
-            transform-origin: 50% 50%;
-        }
-
-        /* Neon Border Animations */
-        @keyframes spin-neon {
-            0% { transform: translate(-50%, -50%) rotate(0deg); }
-            100% { transform: translate(-50%, -50%) rotate(360deg); }
-        }
-        
-        .neon-card {
-            position: relative;
-            padding: 3px;
-            
-            box-shadow: 6px 6px 12px rgba(0,0,0,0.08), -6px -6px 12px rgba(255,255,255,0.7);
-            overflow: hidden;
-            z-index: 1;
-        }
-        
-        .neon-card::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 200%;
-            height: 200%;
-            background: conic-gradient(from 0deg, transparent 0%, #a855f7 33%, #22c55e 66%, #3b82f6 100%);
-            animation: spin-neon 4s linear infinite;
-            z-index: -1;
-        }
-        
-        .neon-card-inner {
-            background-color: #f0f2f8;
-            border-radius: calc(1.5rem - 3px);
-            width: 100%;
-            height: 100%;
-        }
-
-        .neon-text-glow {
-            text-shadow: 0 0 10px rgba(138, 76, 252, 0.4);
-        }
-        .neon-icon-glow {
-            filter: drop-shadow(0 0 6px rgba(138, 76, 252, 0.5));
-        }
-        .neon-icon-glow-blue {
-            filter: drop-shadow(0 0 6px rgba(59, 130, 246, 0.5));
-        }
-    </style>
-
-    <style>
-        .material-symbols-rounded {
-            font-family: "Material Symbols Rounded" !important;
-        }
-
-        .gradient-border {
-            position: relative;
-            background: #F0F2F8;
-            background-clip: padding-box;
-            border: 2px solid transparent;
-            border-radius: 32px;
-        }
-        .gradient-border::before {
-            content: '';
-            position: absolute;
-            top: 0; right: 0; bottom: 0; left: 0;
-            z-index: -1;
-            margin: -2px;
-            border-radius: inherit;
-            background: linear-gradient(to right, #4A90E2, #50E3C2);
-        }
-        .neo-button {
-            background-color: #F0F2F8;
-            transition: all 0.2s ease-in-out;
-            box-shadow: 6px 6px 12px rgba(0,0,0,0.08), -6px -6px 12px rgba(255,255,255,0.7);
-        }
-        .neo-button:active {
-            box-shadow: inset 4px 4px 8px rgba(0,0,0,0.06), inset -4px -4px 8px rgba(255,255,255,0.7) !important;
-            transform: scale(0.98);
-        }
-    </style>
-
-    <style>
-        .material-symbols-rounded {
-            font-family: "Material Symbols Rounded" !important;
-        }
-
-        .gradient-border {
-            position: relative;
-            background: #F0F2F8;
-            background-clip: padding-box;
-            border: 2px solid transparent;
-            border-radius: 32px;
-        }
-        .gradient-border::before {
-            content: '';
-            position: absolute;
-            top: 0; right: 0; bottom: 0; left: 0;
-            z-index: -1;
-            margin: -2px;
-            border-radius: inherit;
-            background: linear-gradient(to right, #4A90E2, #50E3C2);
-        }
-        .neo-button {
-            background-color: #F0F2F8;
-            transition: all 0.2s ease-in-out;
-            box-shadow: 6px 6px 12px rgba(0,0,0,0.08), -6px -6px 12px rgba(255,255,255,0.7);
-        }
-        .neo-button:active {
-            box-shadow: inset 4px 4px 8px rgba(0,0,0,0.06), inset -4px -4px 8px rgba(255,255,255,0.7) !important;
-            transform: scale(0.98);
-        }
-    </style>
-
-    <style>
-        .gradient-bg {
-            background: linear-gradient(135deg, rgba(113,42,226,0.15) 0%, rgba(59,130,246,0.15) 50%, rgba(34,197,94,0.15) 100%);
-            background-size: 200% 200%;
-            animation: gradientShift 10s ease infinite;
-        }
-
-        @keyframes gradientShift {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-    </style>
+background-color: #f0f2f8;
+box-shadow: 6px 6px 12px rgba(0,0,0,0.08), -6px -6px 12px rgba(255,255,255,0.7);
+.neo-inset {
+.neo-button:active {
+/* Circular Progress Styling */
+transition: stroke-dashoffset 0.35s;
+/* Neon Border Animations */
+@keyframes spin-neon {
+0% { transform: translate(-50%, -50%) rotate(0deg); }
+100% { transform: translate(-50%, -50%) rotate(360deg); }
+.neon-card {
+position: relative;
+padding: 3px;
+z-index: 1;
+.neon-card::before {
+content: '';
+position: absolute;
+top: 50%;
+left: 50%;
+width: 200%;
+height: 200%;
+background: conic-gradient(from 0deg, transparent 0%, #a855f7 33%, #22c55e 66%, #3b82f6 100%);
+animation: spin-neon 4s linear infinite;
+z-index: -1;
+.neon-card-inner {
+border-radius: calc(1.5rem - 3px);
+width: 100%;
+height: 100%;
+.neon-text-glow {
+text-shadow: 0 0 10px rgba(138, 76, 252, 0.4);
+.neon-icon-glow {
+filter: drop-shadow(0 0 6px rgba(138, 76, 252, 0.5));
+.neon-icon-glow-blue {
+filter: drop-shadow(0 0 6px rgba(59, 130, 246, 0.5));
+.gradient-border {
+background: #F0F2F8;
+background-clip: padding-box;
+border: 2px solid transparent;
+border-radius: 32px;
+.gradient-border::before {
+top: 0; right: 0; bottom: 0; left: 0;
+margin: -2px;
+border-radius: inherit;
+background: linear-gradient(to right, #4A90E2, #50E3C2);
+.neo-button {
+background-color: #F0F2F8;
+transition: all 0.2s ease-in-out;
+box-shadow: inset 4px 4px 8px rgba(0,0,0,0.06), inset -4px -4px 8px rgba(255,255,255,0.7) !important;
+.gradient-bg {
+background: linear-gradient(135deg, rgba(113,42,226,0.15) 0%, rgba(59,130,246,0.15) 50%, rgba(34,197,94,0.15) 100%);
+background-size: 200% 200%;
+animation: gradientShift 10s ease infinite;
+.drag-handle {
+cursor: grab;
+.drag-handle:active {
+cursor: grabbing;
+.exercise-item {
+transition: transform 0.2s ease, box-shadow 0.2s ease;
+.exercise-item:active {
+box-shadow: 0px 2px 10px rgba(0,0,0,0.05);
+.sortable-ghost {
+opacity: 0.4;
+input[name="tx-type"]:checked + div {
+box-shadow: 6px 6px 12px #e3e6ee, -6px -6px 12px rgba(255, 255, 255, 0.7) !important;
+input[name="payment-type"]:checked + div {
+</style>
 </head>
 <body class="bg-surface-variant text-on-background font-body-lg antialiased min-h-[100dvh] flex justify-center">
 
@@ -2437,134 +2336,10 @@
     </section>
 
     
-    <section id="view-core-library" class="view hidden bg-surface-light min-h-[100dvh] text-on-surface antialiased font-body-lg pb-[100px]">
-        <div class="max-w-md mx-auto relative h-full flex flex-col">
-            <!-- Header -->
-            <header class="w-full top-0 sticky z-40 max-w-md mx-auto px-container-padding py-4">
-                <div class="flex items-center justify-between w-full">
-                    <button onclick="document.getElementById('view-core-library').classList.add('hidden'); document.getElementById('view-workout').classList.remove('hidden');" class="w-10 h-10 flex items-center justify-center rounded-full bg-[#F0F2F8] active:scale-95 transition-transform" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);">
-                        <span class="material-symbols-rounded text-[#1E293B]">arrow_back</span>
-                    </button>
-                    <h1 class="text-h1 font-bold text-[#1E293B]">Core Hareketleri</h1>
-                    <div class="flex items-center gap-2">
-                        <button onclick="openCreateSessionSheet('core')" class="w-10 h-10 flex items-center justify-center rounded-full bg-[#F0F2F8] active:scale-95 transition-transform" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);" title="Seans Oluştur">
-                            <span class="material-symbols-rounded text-[#1E293B]">playlist_add</span>
-                        </button>
-                        <button onclick="openAddCoreSheet()" class="w-10 h-10 flex items-center justify-center rounded-full bg-[#F0F2F8] active:scale-95 transition-transform" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);">
-                            <span class="material-symbols-rounded text-[#1E293B]">add</span>
-                        </button>
-                    </div>
-                </div>
-            </header>
-
-            <main class="flex-1 px-6 flex flex-col pt-4 gap-6 pb-24">
-                <!-- Search Box -->
-                <section class="pt-2">
-                    <div class="neo-inset p-4 rounded-full flex items-center gap-3">
-                        <span class="material-symbols-outlined text-on-surface-variant">search</span>
-                        <input id="core-search-input" oninput="handleCoreSearch(this.value)" class="bg-transparent border-none focus:ring-0 text-sm w-full p-0 text-on-surface" placeholder="Core Hareketi Ara..." type="text"/>
-                    </div>
-                </section>
-
-                <!-- Filter Chips -->
-                <section class="overflow-x-auto pb-2">
-                    <div class="flex gap-4 px-1">
-                        <button onclick="filterCores('Seanslar', this)" class="neo-surface px-5 py-2 rounded-full text-sm font-semibold text-on-surface-variant whitespace-nowrap neo-button filter-chip" id="core-seanslar-tab">Seanslar</button>
-                        <button onclick="filterCores('Tümü', this)" class="neo-inset px-5 py-2 rounded-full text-sm font-semibold text-on-surface whitespace-nowrap filter-chip active" id="core-tumu-tab">Tümü</button>
-                        <button onclick="filterCores('Favoriler', this)" class="neo-surface px-5 py-2 rounded-full text-sm font-semibold text-on-surface-variant whitespace-nowrap neo-button filter-chip">Favoriler</button>
-                        <button onclick="filterCores('Alt Karın', this)" class="neo-surface px-5 py-2 rounded-full text-sm font-semibold text-on-surface-variant whitespace-nowrap neo-button filter-chip">Alt Karın</button>
-                        <button onclick="filterCores('Üst Karın', this)" class="neo-surface px-5 py-2 rounded-full text-sm font-semibold text-on-surface-variant whitespace-nowrap neo-button filter-chip">Üst Karın</button>
-                        <button onclick="filterCores('Yan Karın', this)" class="neo-surface px-5 py-2 rounded-full text-sm font-semibold text-on-surface-variant whitespace-nowrap neo-button filter-chip">Yan Karın</button>
-                        <button onclick="filterCores('Bel/Sırt', this)" class="neo-surface px-5 py-2 rounded-full text-sm font-semibold text-on-surface-variant whitespace-nowrap neo-button filter-chip">Bel/Sırt</button>
-                        <button onclick="filterCores('Tüm Karın', this)" class="neo-surface px-5 py-2 rounded-full text-sm font-semibold text-on-surface-variant whitespace-nowrap neo-button filter-chip">Tüm Karın</button>
-                    </div>
-                </section>
-
-                
-                <!-- My Sessions Container (Core) -->
-                <section id="core-sessions-section" class="flex flex-col gap-3 hidden">
-                    
-                    <div id="core-sessions-container" class="flex flex-col gap-4 pb-2 px-1">
-                        <!-- Populated by JS -->
-                    </div>
-                </section>
-
-                <!-- Core List Container -->
-                <div id="core-list-container" class="flex flex-col gap-6 flex-1 overflow-y-auto no-scrollbar pb-32">
-                </div>
-                
-
-            </main>
-        </div>
-
-        <!-- Bottom Sheet Demonstration Overlay -->
-        <div id="core-bottom-sheet" class="fixed inset-0 bg-black/30 z-[100] flex items-end opacity-0 pointer-events-none transition-opacity duration-300" onclick="closeCoreSheetOnOutsideClick(event)">
-            <div class="bg-background shadow-neo rounded-t-[24px] w-full max-w-md mx-auto shadow-2xl transform transition-transform translate-y-full duration-300 relative max-h-[90vh] flex flex-col" id="core-bottom-sheet-content">
-                <!-- Drag Handle -->
-                <div class="w-full flex justify-center pt-4 pb-2 cursor-pointer" onclick="closeCoreSheet()">
-                    <div class="w-12 h-1.5 bg-outline-variant rounded-full"></div>
-                </div>
-                <!-- Sheet Header -->
-                <div class="px-6 pb-4 flex items-center justify-between flex-shrink-0 pt-2">
-                    <h2 id="sheet-core-name" class="font-headline-lg-mobile text-on-surface truncate">Hareket Adı</h2>
-                    <div class="flex items-center gap-1">
-                        <button class="p-2 hover:bg-error-container rounded-full transition-colors flex-shrink-0 text-error/80 hover:text-error" onclick="deleteCurrentCore()" title="Hareketi Sil">
-                            <span class="material-symbols-outlined text-2xl">delete</span>
-                        </button>
-                        <button id="sheet-core-fav-btn" class="p-2 hover:bg-surface-container-low rounded-full transition-colors flex-shrink-0 text-on-surface-variant" onclick="toggleCoreSheetFav()">
-                            <span class="material-symbols-outlined text-2xl" style="font-variation-settings: 'FILL' 0;">star</span>
-                        </button>
-                    </div>
-                </div>
-                <!-- Sheet Content -->
-                <div class="px-6 pb-6 overflow-y-auto flex-grow flex flex-col gap-4">
-                    <!-- Muscle Diagram Area -->
-                    <div class="bg-background shadow-neo rounded-[32px] p-4 flex flex-col items-center justify-center shadow-sm border border-surface-container-low">
-                        
-                    <!-- Dynamic Interactive SVG Map Container -->
-                    <div id="sheet-core-interactive-map-wrapper" class="relative w-full h-[350px] mb-6 flex justify-center items-center overflow-hidden bg-background shadow-neo rounded-[32px] border border-surface-container-low shadow-inner">
-                        <div id="sheet-core-interactive-map" class="w-full h-full cursor-move"></div>
-                        
-                        <!-- Zoom Controls -->
-                        <div class="absolute bottom-2 right-2 flex flex-col gap-1 bg-surface-container-high/80 backdrop-blur-sm rounded-lg p-1 shadow-sm">
-                            <button id="core-zoom-in" class="p-1 text-on-surface hover:text-neon-blue active:scale-95 transition-transform"><span class="material-symbols-outlined text-sm">add</span></button>
-                            <button id="core-zoom-out" class="p-1 text-on-surface hover:text-neon-blue active:scale-95 transition-transform"><span class="material-symbols-outlined text-sm">remove</span></button>
-                            <button id="core-zoom-reset" class="p-1 text-on-surface hover:text-neon-blue active:scale-95 transition-transform"><span class="material-symbols-outlined text-sm">restart_alt</span></button>
-                        </div>
-                    </div>
-
-                        <div class="flex flex-col gap-2 items-center" id="sheet-core-legend">
-                            <!-- Eklenecek -->
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+    
 
     <section id="view-edit-workout-template" class="view hidden bg-background text-on-background antialiased min-h-[100dvh] flex flex-col items-center pb-[100px]">
-        <style>
-        .material-symbols-rounded {
-            font-family: "Material Symbols Rounded" !important;
-        }
-
-            .drag-handle {
-                cursor: grab;
-            }
-            .drag-handle:active {
-                cursor: grabbing;
-            }
-            .exercise-item {
-                transition: transform 0.2s ease, box-shadow 0.2s ease;
-            }
-            .exercise-item:active {
-                transform: scale(0.98);
-                box-shadow: 0px 2px 10px rgba(0,0,0,0.05);
-            }
-            .sortable-ghost {
-                opacity: 0.4;
-            }
-        </style>
+        
         
         <!-- TopAppBar -->
         <header class="w-full top-0 sticky bg-background dark:bg-background flat no shadows transition-opacity duration-200 z-40 max-w-md mx-auto">
@@ -2934,94 +2709,7 @@
     
     
     <!-- Add Core Bottom Sheet -->
-    <div id="add-core-bottom-sheet" class="fixed inset-0 bg-black/30 z-[100] flex items-end opacity-0 pointer-events-none transition-opacity duration-300" onclick="closeAddCoreSheetOnOutsideClick(event)">
-        <div class="bg-background shadow-neo rounded-t-[24px] w-full max-w-md mx-auto shadow-2xl transform transition-transform translate-y-full duration-300 relative max-h-[90vh] flex flex-col" id="add-core-bottom-sheet-content">
-            <!-- Drag Handle -->
-            <div class="w-full flex justify-center pt-4 pb-2 cursor-pointer" onclick="closeAddStretchSheet()">
-                <div class="w-12 h-1.5 bg-outline-variant rounded-full opacity-60"></div>
-            </div>
-            
-            <!-- Sheet Header -->
-            <div class="px-6 pb-4 flex items-center justify-between flex-shrink-0 pt-2 border-b border-surface-container-low">
-                <h2 class="font-headline-sm-mobile text-on-surface font-semibold tracking-tight">Yeni Core Hareketi Ekle</h2>
-                <button class="p-2 -mr-2 bg-surface-container-low hover:bg-surface-container transition-colors rounded-full text-on-surface-variant hover:text-on-surface" onclick="closeAddStretchSheet()">
-                    <span class="material-symbols-outlined text-xl">close</span>
-                </button>
-            </div>
-            
-            <!-- Sheet Content -->
-            <div class="px-6 py-6 overflow-y-auto flex-grow flex flex-col gap-6">
-                <!-- Fotoğraf Ekleme Alanı -->
-                <div class="flex flex-col gap-3">
-                    <label class="text-sm font-semibold text-on-surface-variant flex items-center gap-2">
-                        <span class="material-symbols-outlined text-lg">image</span>
-                        Kapak Fotoğrafı
-                    </label>
-                    <div id="coreImagePreviewContainer" class="hidden relative w-full h-48 rounded-2xl overflow-hidden shadow-sm group">
-                        <img id="coreImagePreview" src="" alt="Preview" class="w-full h-full object-cover transition-transform group-hover:scale-105" />
-                        <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                            <button type="button" onclick="document.getElementById('coreImageInput').click()" class="bg-white/20 hover:bg-white/30 backdrop-blur-md text-white p-3 rounded-full transition-colors shadow-lg border border-white/20">
-                                <span class="material-symbols-outlined">edit</span>
-                            </button>
-                        </div>
-                    </div>
-                    <button type="button" id="coreImageUploadBtn" onclick="document.getElementById('coreImageInput').click()" class="neo-surface p-6 rounded-2xl neo-button transition-all border-2 border-dashed border-outline-variant/30 flex flex-col items-center justify-center gap-3 text-on-surface-variant hover:text-primary hover:border-primary/50 group">
-                        <div class="w-12 h-12 rounded-full bg-surface-container-highest flex items-center justify-center group-hover:bg-primary/10 transition-colors">
-                            <span class="material-symbols-outlined text-2xl group-hover:scale-110 transition-transform">add_a_photo</span>
-                        </div>
-                        <span class="text-sm font-medium">Fotoğraf Seç veya Çek</span>
-                    </button>
-                    <input type="file" id="coreImageInput" accept="image/*" class="hidden" onchange="handleCoreImageSelect(event)">
-                </div>
-
-                <!-- Hareket Adı -->
-                <div class="flex flex-col gap-3">
-                    <label class="text-sm font-semibold text-on-surface-variant flex items-center gap-2">
-                        <span class="material-symbols-outlined text-lg">edit_note</span>
-                        Hareket Adı
-                    </label>
-                    <div class="relative">
-                        <input type="text" id="newCoreName" class="neo-inset w-full p-4 rounded-2xl bg-transparent border-none text-on-surface focus:ring-2 focus:ring-primary/20 transition-shadow text-base placeholder:text-on-surface-variant/50" placeholder="Örn: Plank, Crunch...">
-                    </div>
-                </div>
-
-                <!-- Süre -->
-                <div class="flex flex-col gap-3">
-                    <label class="text-sm font-semibold text-on-surface-variant flex items-center gap-2">
-                        <span class="material-symbols-outlined text-lg">timer</span>
-                        Süre (Saniye)
-                    </label>
-                    <div class="relative">
-                        <input type="number" id="newCoreDuration" class="neo-inset w-full p-4 rounded-2xl bg-transparent border-none text-on-surface focus:ring-2 focus:ring-primary/20 transition-shadow text-base placeholder:text-on-surface-variant/50" placeholder="Örn: 30, 45, 60...">
-                    </div>
-                </div>
-                
-                <!-- Bölge Seçimi -->
-                <div class="flex flex-col gap-3">
-                    <label class="text-sm font-semibold text-on-surface-variant flex items-center gap-2">
-                        <span class="material-symbols-outlined text-lg">fitness_center</span>
-                        Bölge (Kategori)
-                    </label>
-                    <div class="grid grid-cols-2 gap-3" id="coreCategoryGrid">
-                        <button type="button" class="neo-surface p-3 rounded-xl neo-button transition-all text-sm font-medium text-on-surface hover:text-primary category-select-btn border-2 border-transparent focus:outline-none" data-cat="Alt Karın">Alt Karın</button>
-                        <button type="button" class="neo-surface p-3 rounded-xl neo-button transition-all text-sm font-medium text-on-surface hover:text-primary category-select-btn border-2 border-transparent focus:outline-none" data-cat="Üst Karın">Üst Karın</button>
-                        <button type="button" class="neo-surface p-3 rounded-xl neo-button transition-all text-sm font-medium text-on-surface hover:text-primary category-select-btn border-2 border-transparent focus:outline-none" data-cat="Yan Karın">Yan Karın</button>
-                        <button type="button" class="neo-surface p-3 rounded-xl neo-button transition-all text-sm font-medium text-on-surface hover:text-primary category-select-btn border-2 border-transparent focus:outline-none" data-cat="Bel/Sırt">Bel/Sırt</button>
-                        <button type="button" class="neo-surface p-3 rounded-xl neo-button transition-all text-sm font-medium text-on-surface hover:text-primary category-select-btn border-2 border-transparent focus:outline-none col-span-2" data-cat="Tüm Karın">Tüm Karın</button>
-                    </div>
-                    <input type="hidden" id="newCoreCategory" value="">
-                </div>
-            </div>
-            
-            <!-- Sticky Bottom Action -->
-            <div class="p-6 border-t border-surface-container-low bg-background/80 backdrop-blur-md">
-                <button onclick="saveCoreExercise()" class="w-full neo-button bg-primary text-on-primary py-4 rounded-2xl font-bold text-base shadow-neo-primary hover:shadow-neo-primary-hover active:shadow-neo-primary-active transition-all flex items-center justify-center gap-2">
-                    <span class="material-symbols-outlined text-lg">save</span>
-                    Kaydet
-                </button>
-            </div>
-        </div>
-    </div>
+    
 
     <!-- Add Exercise Bottom Sheet -->
     <div id="add-exercise-bottom-sheet" class="fixed inset-0 bg-black/30 z-[100] flex items-end opacity-0 pointer-events-none transition-opacity duration-300" onclick="closeAddExerciseSheetOnOutsideClick(event)">
@@ -3439,64 +3127,7 @@
     <!-- ================= KALORİ TAKİBİ (Calories) ================= -->
         
     <!-- STRETCH LIBRARY VIEW -->
-    <section id="view-stretch-library" class="view hidden bg-surface-light min-h-[100dvh] text-on-surface antialiased font-body-lg pb-[100px]">
-        <div class="max-w-md mx-auto relative h-full flex flex-col">
-            <!-- Header -->
-            <header class="w-full top-0 sticky z-40 max-w-md mx-auto px-container-padding py-4">
-                <div class="flex items-center justify-between w-full">
-                    <button onclick="document.getElementById('view-stretch-library').classList.add('hidden'); document.getElementById('view-workout').classList.remove('hidden');" class="w-10 h-10 flex items-center justify-center rounded-full bg-[#F0F2F8] active:scale-95 transition-transform" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);">
-                        <span class="material-symbols-rounded text-[#1E293B]">arrow_back</span>
-                    </button>
-                    <h1 class="text-h1 font-bold text-[#1E293B]">Esneme Hareketleri</h1>
-                    <div class="flex items-center gap-2">
-                        <button onclick="openCreateSessionSheet('stretch')" class="w-10 h-10 flex items-center justify-center rounded-full bg-[#F0F2F8] active:scale-95 transition-transform" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);" title="Seans Oluştur">
-                            <span class="material-symbols-rounded text-[#1E293B]">playlist_add</span>
-                        </button>
-                        <button onclick="openAddStretchSheet()" class="w-10 h-10 flex items-center justify-center rounded-full bg-[#F0F2F8] active:scale-95 transition-transform" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);">
-                            <span class="material-symbols-rounded text-[#1E293B]">add</span>
-                        </button>
-                    </div>
-                </div>
-            </header>
-
-            <main class="flex-1 px-6 flex flex-col pt-4 gap-6 pb-24">
-                <!-- Search Box -->
-                <section class="pt-2">
-                    <div class="neo-inset p-4 rounded-full flex items-center gap-3">
-                        <span class="material-symbols-outlined text-on-surface-variant">search</span>
-                        <input id="stretch-search-input" oninput="handleStretchSearch(this.value)" class="bg-transparent border-none focus:ring-0 text-sm w-full p-0 text-on-surface" placeholder="Esneme Hareketi Ara..." type="text"/>
-                    </div>
-                </section>
-
-                <!-- Filter Chips -->
-                <section class="overflow-x-auto pb-2">
-                    <div class="flex gap-4 px-1" id="stretch-filter-chips">
-                        <button onclick="filterStretches('Seanslar', this)" class="neo-surface px-5 py-2 rounded-full text-sm font-semibold text-on-surface-variant whitespace-nowrap neo-button filter-chip" id="stretch-seanslar-tab">Seanslar</button>
-                        <button onclick="filterStretches('Tümü', this)" class="neo-inset px-5 py-2 rounded-full text-sm font-semibold text-on-surface whitespace-nowrap filter-chip active" id="stretch-tumu-tab">Tümü</button>
-                        <button onclick="filterStretches('Sırt/Bel', this)" class="neo-surface px-5 py-2 rounded-full text-sm font-semibold text-on-surface-variant whitespace-nowrap neo-button filter-chip">Sırt/Bel</button>
-                        <button onclick="filterStretches('Göğüs/Omuz', this)" class="neo-surface px-5 py-2 rounded-full text-sm font-semibold text-on-surface-variant whitespace-nowrap neo-button filter-chip">Göğüs/Omuz</button>
-                        <button onclick="filterStretches('Kol', this)" class="neo-surface px-5 py-2 rounded-full text-sm font-semibold text-on-surface-variant whitespace-nowrap neo-button filter-chip">Kol</button>
-                        <button onclick="filterStretches('Kalça/Bacak', this)" class="neo-surface px-5 py-2 rounded-full text-sm font-semibold text-on-surface-variant whitespace-nowrap neo-button filter-chip">Kalça/Bacak</button>
-                        <button onclick="filterStretches('Boyun', this)" class="neo-surface px-5 py-2 rounded-full text-sm font-semibold text-on-surface-variant whitespace-nowrap neo-button filter-chip">Boyun</button>
-                        <button onclick="filterStretches('Tam Vücut', this)" class="neo-surface px-5 py-2 rounded-full text-sm font-semibold text-on-surface-variant whitespace-nowrap neo-button filter-chip">Tam Vücut</button>
-                    </div>
-                </section>
-
-                
-                <!-- My Sessions Container (Stretch) -->
-                <section id="stretch-sessions-section" class="flex flex-col gap-3 hidden">
-                    
-                    <div id="stretch-sessions-container" class="flex flex-col gap-4 pb-2 px-1">
-                        <!-- Populated by JS -->
-                    </div>
-                </section>
-
-                <!-- Stretch List Container -->
-                <div id="stretch-list-container" class="flex flex-col gap-6 flex-1 overflow-y-auto no-scrollbar pb-32">
-                </div>
-            </main>
-        </div>
-    </section>
+    
 
 <section id="view-profile" class="view hidden bg-background text-on-background min-h-[100dvh] flex flex-col font-body-lg no-scrollbar">
         <!-- TopAppBar -->
@@ -4048,15 +3679,7 @@
                 <input type="radio" name="tx-type" value="income" class="peer sr-only">
                 <div class="py-2 text-center rounded-full text-sm font-semibold text-[#64748B] transition-all peer-checked:text-[#22c55e] peer-checked:bg-[#F0F2F8]" style="box-shadow: none;">Gelir</div>
             </label>
-            <style>
-        .material-symbols-rounded {
-            font-family: "Material Symbols Rounded" !important;
-        }
-
-                input[name="tx-type"]:checked + div {
-                    box-shadow: 6px 6px 12px #e3e6ee, -6px -6px 12px rgba(255, 255, 255, 0.7) !important;
-                }
-            </style>
+            
         </div>
 
         <!-- Input Area -->
@@ -4266,15 +3889,7 @@
                     </label>
                 </div>
                 <!-- Inline style script for peer-checked box-shadow since tailwind arbitrary peer variants can be tricky in this setup -->
-                <style>
-        .material-symbols-rounded {
-            font-family: "Material Symbols Rounded" !important;
-        }
-
-                    input[name="payment-type"]:checked + div {
-                        box-shadow: 6px 6px 12px #e3e6ee, -6px -6px 12px rgba(255, 255, 255, 0.7) !important;
-                    }
-                </style>
+                
             </div>
             <!-- Icon Selection -->
             <div class="flex flex-col gap-1">

@@ -16,17 +16,10 @@ let callback = null;
 
 let unsubSplits = null;
 let unsubLogs = null;
-let currentCoreImageBase64 = null;
-let editingCoreId = null;
-let editingCoreIsDefault = false;
 
 let sessionDraftMovements = []; // [{id, name, duration, imageBase64}]
 let editingSessionId = null;
-let currentStretchTab = 'movements';
 
-let coreSessionDraftMovements = [];
-let editingCoreSessionId = null;
-let currentCoreTab = 'movements';
 
 document.addEventListener('click', (e) => {
     const actionBtn = e.target.closest('[data-action]');
@@ -35,56 +28,11 @@ document.addEventListener('click', (e) => {
 
     if (action === 'openSplitEdit') openSplitEdit();
     else if (action === 'closeSplitEdit') closeSplitEdit();
-    else if (action === 'openStretchingView') openStretchingView();
-    else if (action === 'closeStretchingView') closeStretchingView();
-    else if (action === 'openCoreView') openCoreView();
-    else if (action === 'closeCoreView') closeCoreView();
-    else if (action === 'openAddStretchModal') openAddStretchModal();
-    else if (action === 'closeAddStretchModal') closeAddStretchModal();
-    else if (action === 'saveNewStretch') saveStretch();
-    else if (action === 'deleteStretch') { e.stopPropagation(); deleteStretch(actionBtn.getAttribute('data-stretch-id')); }
-    else if (action === 'editStretch') { e.stopPropagation(); editStretch(actionBtn.getAttribute('data-stretch-id')); }
-    else if (action === 'triggerStretchImageUpload') document.getElementById('stretch-image-input').click();
     
-    else if (action === 'openAddCoreModal') openAddCoreSheet();
-    else if (action === 'closeAddCoreModal') closeAddCoreSheet();
-    else if (action === 'saveNewCore') saveCoreExercise();
-    else if (action === 'deleteCore') { e.stopPropagation(); deleteCore(actionBtn.getAttribute('data-core-id')); }
-    else if (action === 'editCore') { e.stopPropagation(); editCore(actionBtn.getAttribute('data-core-id')); }
 
-    else if (action === 'switchStretchTab') switchStretchTab(actionBtn.getAttribute('data-tab'));
-    else if (action === 'openAddSessionModal') openAddSessionModal();
-    else if (action === 'closeAddSessionModal') closeAddSessionModal();
-    else if (action === 'saveStretchSession') saveStretchSession();
-    else if (action === 'deleteStretchSession') { e.stopPropagation(); deleteStretchSession(actionBtn.getAttribute('data-session-id')); }
-    else if (action === 'editStretchSession') { e.stopPropagation(); editStretchSession(actionBtn.getAttribute('data-session-id')); }
-    else if (action === 'setActiveStretchSession') { e.stopPropagation(); setActiveStretchSession(actionBtn.getAttribute('data-session-id')); }
-    else if (action === 'toggleSessionMovement') toggleSessionMovement(actionBtn.getAttribute('data-move-id'));
-    else if (action === 'removeSessionMovement') { e.stopPropagation(); removeSessionMovement(actionBtn.getAttribute('data-move-id')); }
 
-    else if (action === 'switchCoreTab') switchCoreTab(actionBtn.getAttribute('data-tab'));
-    else if (action === 'openAddCoreSessionModal') openAddCoreSessionModal();
-    else if (action === 'closeAddCoreSessionModal') closeAddCoreSessionModal();
-    else if (action === 'saveCoreSession') saveCoreSession();
-    else if (action === 'deleteCoreSession') { e.stopPropagation(); deleteCoreSession(actionBtn.getAttribute('data-session-id')); }
-    else if (action === 'editCoreSession') { e.stopPropagation(); editCoreSession(actionBtn.getAttribute('data-session-id')); }
-    else if (action === 'setActiveCoreSession') { e.stopPropagation(); setActiveCoreSession(actionBtn.getAttribute('data-session-id')); }
-    else if (action === 'toggleCoreSessionMovement') toggleCoreSessionMovement(actionBtn.getAttribute('data-move-id'));
-    else if (action === 'removeCoreSessionMovement') { e.stopPropagation(); removeCoreSessionMovement(actionBtn.getAttribute('data-move-id')); }
 
-    else if (action === 'openStretchPlayer') openStretchPlayer();
-    else if (action === 'closeStretchPlayer') closeStretchPlayer();
-    else if (action === 'stretchPlayerPauseToggle') stretchPlayerPauseToggle();
-    else if (action === 'stretchPlayerPrev') stretchPlayerGoPrev();
-    else if (action === 'stretchPlayerNext') stretchPlayerGoNext(true);
-    else if (action === 'stretchPlayerEnd') stretchPlayerEnd();
     
-    else if (action === 'openCorePlayer') openCorePlayer();
-    else if (action === 'closeCorePlayer') closeCorePlayer();
-    else if (action === 'corePlayerPauseToggle') _cpPauseToggle();
-    else if (action === 'corePlayerPrev') corePlayerGoPrev();
-    else if (action === 'corePlayerNext') corePlayerGoNext(true);
-    else if (action === 'corePlayerEnd') corePlayerEnd();
 
     else if (action === 'closeExerciseHistory') closeExerciseHistory();
     else if (action === 'closeSplitSelectionModal') closeSplitSelectionModal();
@@ -1616,122 +1564,25 @@ async function deleteSplit(splitId) {
 // STRETCHING & CORE PLACEHOLDER VIEWS
 // ==========================================
 
-function openStretchingView() {
-    document.getElementById('view-workout').classList.add('hidden');
-    document.querySelectorAll('.view').forEach(v => {
-        if(v.id !== 'view-stretching') v.classList.add('hidden');
-    });
-    document.getElementById('view-stretching').classList.remove('hidden');
-}
 
-function closeStretchingView() {
-    document.getElementById('view-stretching').classList.add('hidden');
-    document.getElementById('view-workout').classList.remove('hidden');
-    document.body.classList.remove("overflow-hidden");
-}
 
-function openCoreView() {
-    document.getElementById('view-workout').classList.add('hidden');
-    document.querySelectorAll('.view').forEach(v => {
-        if(v.id !== 'view-core') v.classList.add('hidden');
-    });
-    document.getElementById('view-core').classList.remove('hidden');
-}
 
-function closeCoreView() {
-    document.getElementById('view-core').classList.add('hidden');
-    document.getElementById('view-workout').classList.remove('hidden');
-    document.body.classList.remove("overflow-hidden");
-}
 
-function openAddStretchModal(isEdit = false) {
-    const nameInput = document.getElementById('stretch-name');
-    const imageBtn = document.getElementById('stretch-image-picker-btn');
-    
-    if (!isEdit) {
-        editingStretchId = null;
-        editingDefaultStretchId = null;
-        editingStretchIsDefault = false;
-        currentStretchImageBase64 = null;
-        nameInput.value = '';
-        document.getElementById('stretch-duration').value = '';
-        document.getElementById('modal-title').textContent = "Yeni Hareket";
-        
-        const preview = document.getElementById('stretchImagePreview');
-        const placeholder = document.getElementById('stretchImagePreviewContainer');
-            const uploadBtn = document.getElementById('stretchImageUploadBtn');
-            if(uploadBtn) uploadBtn.classList.add('hidden');
-        if (preview && placeholder) {
-            preview.src = "";
-            preview.classList.add('hidden');
-            placeholder.classList.remove('hidden');
-        }
-    }
-    
-    // Always re-enable for new movements or normal edits (editStretch will disable if needed)
-    if (nameInput) {
-        nameInput.disabled = editingStretchIsDefault;
-        if (editingStretchIsDefault) nameInput.classList.add('opacity-50', 'cursor-not-allowed');
-        else nameInput.classList.remove('opacity-50', 'cursor-not-allowed');
-    }
-    if (imageBtn) {
-        imageBtn.disabled = editingStretchIsDefault;
-        if (editingStretchIsDefault) imageBtn.classList.add('opacity-50', 'cursor-not-allowed');
-        else imageBtn.classList.remove('opacity-50', 'cursor-not-allowed');
-    }
 
-    const modal = document.getElementById('addStretchModal');
-    const content = document.getElementById('addStretchModalContent');
-    modal.classList.remove('hidden');
-    // small delay for transition
-    setTimeout(() => {
-        modal.classList.remove('opacity-0');
-        content.classList.remove('translate-y-full');
-    }, 10);
-}
 
-function closeAddStretchModal() {
-    const modal = document.getElementById('addStretchModal');
-    const content = document.getElementById('addStretchModalContent');
-    
-    modal.classList.add('opacity-0');
-    content.classList.add('translate-y-full');
-    
-    setTimeout(() => {
-        modal.classList.add('hidden');
-    }, 300);
-}
+
+
+
+
+
 
 // ==========================================
 // STRETCH SESSIONS
 // ==========================================
 
-function switchStretchTab(tab) {
-    currentStretchTab = tab;
-    const movements = document.getElementById('stretch-panel-movements');
-    const sessions = document.getElementById('stretch-panel-sessions');
-    const tabMovements = document.getElementById('stretch-tab-movements');
-    const tabSessions = document.getElementById('stretch-tab-sessions');
-    if (!movements || !sessions) return;
 
-    if (tab === 'movements') {
-        movements.classList.remove('hidden');
-        sessions.classList.add('hidden');
-        tabMovements.className = 'flex-1 py-3 font-label-lg text-label-lg text-neon-blue border-b-2 border-primary transition-colors';
-        tabSessions.className = 'flex-1 py-3 font-label-lg text-label-lg text-on-surface-variant border-b-2 border-transparent hover:text-on-surface transition-colors';
-    } else {
-        movements.classList.add('hidden');
-        sessions.classList.remove('hidden');
-        tabMovements.className = 'flex-1 py-3 font-label-lg text-label-lg text-on-surface-variant border-b-2 border-transparent hover:text-on-surface transition-colors';
-        tabSessions.className = 'flex-1 py-3 font-label-lg text-label-lg text-neon-blue border-b-2 border-primary transition-colors';
-        renderStretchSessions();
-    }
-}
 
-function getAllStretchMovements() {
-    const visibleDefaults = DEFAULT_STRETCHES.filter(s => !hiddenDefaultStretchIds.has(s.id));
-    return [...visibleDefaults, ...stretches];
-}
+
 
 function openAddSessionModal(isEdit = false) {
     if (!isEdit) {
@@ -1865,110 +1716,15 @@ function initSessionDrag(list) {
     });
 }
 
-async function saveStretchSession() {
-    if (!currentUid) return;
-    const name = document.getElementById('session-name').value.trim();
-    if (!name) { alert('Lütfen seans adı girin.'); return; }
-    if (sessionDraftMovements.length === 0) { alert('En az bir hareket seçin.'); return; }
 
-    const totalDuration = sessionDraftMovements.reduce((acc, m) => acc + (parseInt(m.duration) || 0), 0);
-    const data = {
-        name,
-        movements: sessionDraftMovements,
-        totalDuration,
-        updatedAt: serverTimestamp()
-    };
 
-    try {
-        if (editingSessionId) {
-            await updateDoc(doc(db, "users", currentUid, "stretchSessions", editingSessionId), data).catch(e => { console.error('DB Error:', e); alert('Veritabanı işlemi sırasında bir hata oluştu.'); throw e; });
-        } else {
-            data.createdAt = serverTimestamp();
-            await addDoc(collection(db, "users", currentUid, "stretchSessions"), data).catch(e => { console.error('DB Error:', e); alert('Veritabanı işlemi sırasında bir hata oluştu.'); throw e; });
-        }
-        closeAddSessionModal();
-    } catch (e) {
-        console.error("Error saving session:", e);
-        alert("Seans kaydedilirken hata oluştu.");
-    }
-}
 
-function editStretchSession(id) {
-    const session = stretchSessions.find(s => s.id === id);
-    if (!session) return;
-    editingSessionId = id;
-    sessionDraftMovements = [...(session.movements || [])];
-    document.getElementById('session-name').value = session.name;
-    document.getElementById('session-modal-title').textContent = 'Seans Düzenle';
-    openAddSessionModal(true);
-}
 
-async function deleteStretchSession(id) {
-    if (!currentUid) return;
-    if (!confirm("Bu seansı silmek istediğinize emin misiniz?")) return;
-    try {
-        await deleteDoc(doc(db, "users", currentUid, "stretchSessions", id)).catch(e => { console.error('DB Error:', e); alert('Veritabanı işlemi sırasında bir hata oluştu.'); throw e; });
-        if (activeStretchSessionId === id) {
-            activeStretchSessionId = null;
-            localStorage.removeItem('activeStretchSessionId');
-        }
-    } catch (e) {
-        console.error("Error deleting session:", e);
-        alert("Seans silinirken hata oluştu.");
-    }
-}
 
-function setActiveStretchSession(id) {
-    activeStretchSessionId = id;
-    localStorage.setItem('activeStretchSessionId', id);
-    renderStretchSessions();
-}
 
-function renderStretchSessions() {
-    const container = document.getElementById('stretch-sessions-container');
-    if (!container) return;
 
-    if (stretchSessions.length === 0) {
-        container.innerHTML = `<p class="text-center text-on-surface-variant font-body-md mt-4">Henüz seans eklenmedi.</p>`;
-        return;
-    }
 
-    container.innerHTML = stretchSessions.map(session => {
-        const isActive = session.id === activeStretchSessionId;
-        const totalSec = (session.movements || []).reduce((acc, m) => acc + (parseInt(m.duration) || 0), 0);
-        const mins = Math.floor(totalSec / 60);
-        const secs = totalSec % 60;
-        const durationStr = mins > 0 ? `${mins} dk ${secs > 0 ? secs + ' sn' : ''}` : `${secs} sn`;
-        const moveCount = (session.movements || []).length;
 
-        const activeStyle = isActive ? "border-2 border-primary bg-primary/5" : "";
-
-        return `
-        <div class="neo-surface p-4 rounded-2xl flex items-center justify-between neo-button transition-all mb-3 ${activeStyle}" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);">
-            <div class="flex items-center gap-4">
-                <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface overflow-hidden font-bold text-lg">
-                    <span class="material-symbols-outlined text-primary">format_list_numbered</span>
-                </div>
-                <div>
-                    <div class="flex items-center gap-2">
-                        ${isActive ? `<span class="material-symbols-rounded text-primary text-sm" style="font-variation-settings:'FILL' 1;">check_circle</span>` : ''}
-                        <h4 class="font-semibold text-body-md text-on-surface tracking-tight">${escapeHtml(session.name)}</h4>
-                    </div>
-                    <p class="text-xs text-on-surface-variant">${moveCount} Hareket • ${durationStr}</p>
-                </div>
-            </div>
-            <div class="flex items-center gap-1">
-                <button data-action="deleteStretchSession" data-session-id="${session.id}" class="p-2 transition-colors flex items-center justify-center text-error/70 hover:text-error">
-                    <span class="material-symbols-outlined text-xl">delete</span>
-                </button>
-                ${!isActive ? `<button data-action="setActiveStretchSession" data-session-id="${session.id}" class="p-2 transition-colors flex items-center justify-center text-primary">
-                    <span class="material-symbols-outlined text-2xl" style="font-variation-settings: 'FILL' 1">play_circle</span>
-                </button>` : ''}
-            </div>
-        </div>
-        `;
-    }).join('');
-}
 
 function _playFinishBeep() {
     // Triple ascending beep on movement finish
@@ -1977,74 +1733,9 @@ function _playFinishBeep() {
     setTimeout(() => _playBeep(1046, 0.25, 0.4), 360);
 }
 
-function openStretchPlayer() {
-    // Decide which movements to use
-    let movements = [];
-    if (activeStretchSessionId) {
-        const session = stretchSessions.find(s => s.id === activeStretchSessionId);
-        if (session && session.movements && session.movements.length > 0) {
-            movements = session.movements;
-            const nameEl = document.getElementById('stretch-player-session-name');
-            if (nameEl) nameEl.textContent = session.name;
-        }
-    }
-    if (movements.length === 0) {
-        // Fallback: use all visible movements
-        movements = getAllStretchMovements();
-        const nameEl = document.getElementById('stretch-player-session-name');
-        if (nameEl) nameEl.textContent = 'Tüm Hareketler';
-    }
-    if (movements.length === 0) {
-        alert('Önce Esneme Hareketleri sekmesinden hareket ekleyin veya bir seans oluşturun.');
-        return;
-    }
 
-    _spMovements = movements;
-    _spIdx = 0;
-    _spPaused = false;
 
-    // Find the currently active view and hide it
-    const activeView = document.querySelector('.view:not(.hidden)');
-    if (activeView && activeView.id !== 'view-stretch-player') {
-        window._prevStretchView = activeView.id;
-        activeView.classList.add('hidden');
-    }
 
-    const view = document.getElementById('view-stretch-player');
-    view.classList.remove('hidden');
-    view.style.display = 'flex';
-    view.style.zIndex = '999999';
-    view.style.zIndex = '999999';
-    view.style.position = 'fixed';
-    view.style.top = '0';
-    view.style.left = '0';
-    view.style.width = '100%';
-    view.style.height = '100dvh';
-    // Ensure we start at the top of the player
-    const appContainer = document.getElementById('app-container');
-    if(appContainer) appContainer.scrollTop = 0;
-    view.scrollTop = 0;
-
-    _spLoadMovement(_spIdx);
-    _spStartTimer();
-}
-
-function closeStretchPlayer() {
-    _spStopTimer();
-    const view = document.getElementById('view-stretch-player');
-    view.classList.add('hidden');
-    view.style.display = '';
-    
-    // Restore the previous view
-    if (window._prevStretchView) {
-        document.getElementById(window._prevStretchView).classList.remove('hidden');
-        window._prevStretchView = null;
-    } else {
-        // Fallback
-        document.getElementById('view-workout').classList.remove('hidden');
-    document.body.classList.remove("overflow-hidden");
-    }
-}
 
 function _spLoadMovement(idx) {
     const m = _spMovements[idx];
@@ -2141,40 +1832,11 @@ function _spStopTimer() {
     }
 }
 
-function stretchPlayerPauseToggle() {
-    _spPaused = !_spPaused;
-    const pauseIcon = document.getElementById('stretch-player-pause-icon');
-    if (pauseIcon) pauseIcon.textContent = _spPaused ? 'play_arrow' : 'pause';
-}
 
-function stretchPlayerGoNext(userTriggered = true) {
-    _playFinishBeep();
-    if (_spIdx >= _spMovements.length - 1) {
-        // Session complete
-        if (userTriggered) {
-            closeStretchPlayer();
-        } else {
-            // Last movement finished naturally — play success beep and close
-            _playBeep(1046, 0.5, 0.5);
-            setTimeout(closeStretchPlayer, 800);
-        }
-        return;
-    }
-    _spIdx++;
-    _spStopTimer();
-    _spPaused = false;
-    _spLoadMovement(_spIdx);
-    _spStartTimer();
-}
 
-function stretchPlayerGoPrev() {
-    if (_spIdx <= 0) return;
-    _spIdx--;
-    _spStopTimer();
-    _spPaused = false;
-    _spLoadMovement(_spIdx);
-    _spStartTimer();
-}
+
+
+
 
 
 // ==========================================
@@ -2184,71 +1846,9 @@ function stretchPlayerGoPrev() {
 let _cpTimeLeft = 0;
 let _cpTotalTime = 0;
 let _cpInterval = null;
-function openCorePlayer() {
-    let movements = [];
-    if (activeCoreSessionId) {
-        const session = coreSessions.find(s => s.id === activeCoreSessionId);
-        if (session && session.movements && session.movements.length > 0) {
-            movements = session.movements;
-            const nameEl = document.getElementById('core-player-session-name');
-            if (nameEl) nameEl.textContent = session.name;
-        }
-    }
-    if (movements.length === 0) {
-        movements = cores;
-        const nameEl = document.getElementById('core-player-session-name');
-        if (nameEl) nameEl.textContent = 'Tüm Hareketler';
-    }
-    if (movements.length === 0) {
-        alert('Önce Core Hareketleri ekleyin veya bir seans oluşturun.');
-        return;
-    }
 
-    _cpMovements = movements;
-    _cpIdx = 0;
-    _cpPaused = false;
 
-    // Find the currently active view and hide it
-    const activeView = document.querySelector('.view:not(.hidden)');
-    if (activeView && activeView.id !== 'view-core-player') {
-        window._prevCoreView = activeView.id;
-        activeView.classList.add('hidden');
-    }
 
-    const view = document.getElementById('view-core-player');
-    view.classList.remove('hidden');
-    view.style.display = 'flex';
-    view.style.zIndex = '999999';
-    view.style.zIndex = '999999';
-    view.style.position = 'fixed';
-    view.style.top = '0';
-    view.style.left = '0';
-    view.style.width = '100%';
-    view.style.height = '100dvh';
-    
-    const appContainer = document.getElementById('app-container');
-    if(appContainer) appContainer.scrollTop = 0;
-    view.scrollTop = 0;
-
-    _cpLoadMovement(_cpIdx);
-    _cpStartTimer();
-}
-
-function closeCorePlayer() {
-    _cpStopTimer();
-    const view = document.getElementById('view-core-player');
-    view.classList.add('hidden');
-    view.style.display = '';
-    
-    // Restore the previous view
-    if (window._prevCoreView) {
-        document.getElementById(window._prevCoreView).classList.remove('hidden');
-        window._prevCoreView = null;
-    } else {
-        document.getElementById('view-workout').classList.remove('hidden');
-    document.body.classList.remove("overflow-hidden");
-    }
-}
 
 function _cpLoadMovement(idx) {
     const move = _cpMovements[idx];
@@ -2342,275 +1942,30 @@ function _cpPauseToggle() {
     if (pauseIcon) pauseIcon.textContent = _cpPaused ? 'play_arrow' : 'pause';
 }
 
-function corePlayerGoNext(userTriggered = true) {
-    _playFinishBeep();
-    if (_cpIdx >= _cpMovements.length - 1) {
-        if (userTriggered) {
-            closeCorePlayer();
-        } else {
-            _playBeep(1046, 0.5, 0.5);
-            setTimeout(closeCorePlayer, 800);
-        }
-        return;
-    }
-    _cpIdx++;
-    _cpStopTimer();
-    _cpPaused = false;
-    _cpLoadMovement(_cpIdx);
-    _cpStartTimer();
-}
-
-function corePlayerGoPrev() {
-    if (_cpIdx <= 0) return;
-    _cpIdx--;
-    _cpStopTimer();
-    _cpPaused = false;
-    _cpLoadMovement(_cpIdx);
-    _cpStartTimer();
-}
-
-function corePlayerEnd() {
-    closeCorePlayer();
-}
 
 
 
-let currentCoreCategory = 'Tümü';
-let currentCoreSearchTerm = '';
-let currentCoreElement = null;
-let currentCoreId = null;
 
-function handleCoreSearch(value) {
-    currentCoreSearchTerm = value.toLowerCase().trim();
-    applyCoreFilters();
-}
 
-function filterCores(category, btnElement) {
-    currentCoreCategory = category;
-    
-    // Update active styling on chips
-    const allChips = document.querySelectorAll('#view-core-library .filter-chip');
-    allChips.forEach(chip => {
-        chip.className = 'neo-surface px-5 py-2 rounded-full text-sm font-semibold text-on-surface-variant whitespace-nowrap neo-button filter-chip';
-    });
-    
-    // Set clicked chip to active
-    btnElement.className = 'neo-inset px-5 py-2 rounded-full text-sm font-semibold text-on-surface whitespace-nowrap filter-chip active';
 
-    const sessionsSection = document.getElementById('core-sessions-section');
-    const listContainer = document.getElementById('core-list-container');
-    
-    if (category === 'Seanslar') {
-        if(sessionsSection) sessionsSection.classList.remove('hidden');
-        if(listContainer) listContainer.classList.add('hidden');
-    } else {
-        if(sessionsSection) sessionsSection.classList.add('hidden');
-        if(listContainer) listContainer.classList.remove('hidden');
-        applyCoreFilters();
-    }
-}
 
-function applyCoreFilters() {
-    const categories = document.querySelectorAll('.core-category');
-    
-    categories.forEach(catGroup => {
-        const catName = catGroup.getAttribute('data-category');
-        const items = catGroup.querySelectorAll('.core-item');
-        let hasVisibleItems = false;
-        
-        items.forEach(item => {
-            let shouldShow = false;
-            
-            // 1. Tab Filter
-            if (currentCoreCategory === 'Tümü') {
-                shouldShow = true;
-            } else if (currentCoreCategory === 'Favoriler') {
-                const isFav = item.querySelector('.core-fav-btn').classList.contains('text-amber-500');
-                shouldShow = isFav;
-            } else {
-                shouldShow = (catName === currentCoreCategory);
-            }
-            
-            // 2. Search Filter
-            if (shouldShow && currentCoreSearchTerm !== '') {
-                const name = item.querySelector('h4').innerText.toLowerCase();
-                if (!name.includes(currentCoreSearchTerm)) {
-                    shouldShow = false;
-                }
-            }
-            
-            if (shouldShow) {
-                item.classList.remove('hidden');
-                hasVisibleItems = true;
-            } else {
-                item.classList.add('hidden');
-            }
-        });
-        
-        // Hide the whole category group if no items are visible
-        if (hasVisibleItems) {
-            catGroup.classList.remove('hidden');
-        } else {
-            catGroup.classList.add('hidden');
-        }
-    });
-}
 
-function openCoreSheet(element, id) {
-    const ev = window.event;
-    if (ev && ev.target.closest('.core-fav-btn')) return;
-    currentCoreElement = element;
-    currentCoreId = id;
-    
-    const core = cores.find(c => c.id === id);
-    if (!core) return;
-    
-    // Sync sheet star state with list item star state
-    const listFavBtn = element.querySelector('.core-fav-btn');
-    const isFav = listFavBtn.classList.contains('text-amber-500');
-    const sheetFavBtn = document.getElementById('sheet-core-fav-btn');
-    const sheetIcon = sheetFavBtn.querySelector('span');
-    
-    if (isFav) {
-        sheetFavBtn.classList.add('text-amber-500');
-        sheetFavBtn.classList.remove('text-on-surface-variant');
-        sheetIcon.style.fontVariationSettings = "'FILL' 1";
-    } else {
-        sheetFavBtn.classList.remove('text-amber-500');
-        sheetFavBtn.classList.add('text-on-surface-variant');
-        sheetIcon.style.fontVariationSettings = "'FILL' 0";
-    }
 
-    document.getElementById('sheet-core-name').innerText = core.name;
-    
-    // Render the interactive SVG instead of static image
-    if (typeof renderCoreMuscleMap === 'function') {
-        renderCoreMuscleMap(core.category);
-        
-        // Initialize Panzoom
-        const mapElement = document.getElementById('sheet-core-interactive-map');
-        
-        // Destroy previous instance if exists to prevent memory leaks
-        if (window.currentCorePanzoom) {
-            window.currentCorePanzoom.destroy();
-        }
-        
-        window.currentCorePanzoom = Panzoom(mapElement, {
-            maxScale: 4,
-            minScale: 0.8,
-            contain: 'outside',
-            step: 0.2
-        });
-        
-        // Bind buttons
-        document.getElementById('core-zoom-in').onclick = () => window.currentCorePanzoom.zoomIn();
-        document.getElementById('core-zoom-out').onclick = () => window.currentCorePanzoom.zoomOut();
-        document.getElementById('core-zoom-reset').onclick = () => window.currentCorePanzoom.reset();
-        
-        // Add wheel support
-        mapElement.parentElement.addEventListener('wheel', window.currentCorePanzoom.zoomWithWheel);
-    }
 
-    
-    let legendHtml = `
-        <div class="flex items-center gap-2">
-            <div class="w-3 h-3 rounded-full" style="background-color: #7ea18d;"></div>
-            <span class="text-body-md text-on-surface-variant">Ana Kaslar</span>
-        </div>
-        <div class="flex items-center gap-2">
-            <div class="w-3 h-3 rounded-full" style="background-color: #c6ebd5;"></div>
-            <span class="text-body-md text-on-surface-variant">Yardımcı Kaslar</span>
-        </div>
-    `;
-    document.getElementById('sheet-core-legend').innerHTML = legendHtml;
-    
-    const sheet = document.getElementById('core-bottom-sheet');
-    const sheetContent = document.getElementById('core-bottom-sheet-content');
-    
-    sheet.classList.remove('pointer-events-none');
-    sheet.classList.add('opacity-100');
-    sheet.classList.remove('opacity-0');
-    
-    setTimeout(() => {
-        sheetContent.classList.remove('translate-y-full');
-        sheetContent.classList.add('translate-y-0');
-    }, 10);
-}
 
-function closeCoreSheet() {
-    const sheet = document.getElementById('core-bottom-sheet');
-    const sheetContent = document.getElementById('core-bottom-sheet-content');
-    
-    sheetContent.classList.remove('translate-y-0');
-    sheetContent.classList.add('translate-y-full');
-    
-    setTimeout(() => {
-        sheet.classList.add('opacity-0');
-        sheet.classList.remove('opacity-100');
-        sheet.classList.add('pointer-events-none');
-    }, 300);
-}
 
-function closeCoreSheetOnOutsideClick(event) {
-    if (event.target.id === 'core-bottom-sheet') {
-        closeCoreSheet();
-    }
-}
 
-async function toggleCoreFav(event, btn, coreId) {
-    if(event) event.stopPropagation();
-    
-    const core = cores.find(c => c.id === coreId);
-    if(!core) return;
 
-    const isFav = !core.isFav; // Toggle state
-    core.isFav = isFav; // Optimistic update
 
-    const icon = btn.querySelector('span');
-    if (isFav) {
-        btn.classList.add('text-amber-500');
-        btn.classList.remove('text-on-surface-variant');
-        icon.style.fontVariationSettings = "'FILL' 1";
-    } else {
-        btn.classList.remove('text-amber-500');
-        btn.classList.add('text-on-surface-variant');
-        icon.style.fontVariationSettings = "'FILL' 0";
-    }
 
-    if(currentCoreCategory === 'Favoriler') {
-        applyCoreFilters();
-    }
-    
-    // Save to Firebase
-    try {
-        const coreRef = doc(db, "users", auth.currentUser.uid, "cores", coreId);
-        await updateDoc(coreRef, { isFav: isFav });
-    } catch(err) {
-        console.error("Error updating fav:", err);
-    }
-}
 
-function toggleCoreSheetFav() {
-    if (!currentCoreElement || !currentCoreId) return;
-    const listFavBtn = currentCoreElement.querySelector('.core-fav-btn');
-    const sheetFavBtn = document.getElementById('sheet-core-fav-btn');
-    const sheetIcon = sheetFavBtn.querySelector('span');
-    
-    // Toggle the list item star
-    toggleCoreFav(null, listFavBtn, currentCoreId);
-    
-    // Update sheet star visually
-    const isFav = listFavBtn.classList.contains('text-amber-500');
-    if (isFav) {
-        sheetFavBtn.classList.add('text-amber-500');
-        sheetFavBtn.classList.remove('text-on-surface-variant');
-        sheetIcon.style.fontVariationSettings = "'FILL' 1";
-    } else {
-        sheetFavBtn.classList.remove('text-amber-500');
-        sheetFavBtn.classList.add('text-on-surface-variant');
-        sheetIcon.style.fontVariationSettings = "'FILL' 0";
-    }
-}
+
+
+
+
+
+
+
 
 // category grid logic for Add Core Sheet
 document.addEventListener('DOMContentLoaded', () => {
@@ -2628,136 +1983,19 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-function openAddCoreSheet() {
-    editingCoreId = null;
-    editingCoreIsDefault = false;
-    currentCoreImageBase64 = null;
-    
-    document.getElementById('newCoreName').value = '';
-    document.getElementById('newCoreDuration').value = '';
-    document.getElementById('newCoreCategory').value = '';
-    
-    const catBtns = document.querySelectorAll('#coreCategoryGrid .category-select-btn');
-    catBtns.forEach(b => b.classList.remove('border-primary', 'text-primary', 'bg-primary/5'));
-    
-    const previewContainer = document.getElementById('coreImagePreviewContainer');
-    const uploadBtn = document.getElementById('coreImageUploadBtn');
-    previewContainer.classList.add('hidden');
-    uploadBtn.classList.remove('hidden');
-    
-    const sheet = document.getElementById('add-core-bottom-sheet');
-    const sheetContent = document.getElementById('add-core-bottom-sheet-content');
-    
-    sheet.classList.remove('pointer-events-none');
-    sheet.classList.add('opacity-100');
-    sheet.classList.remove('opacity-0');
-    
-    setTimeout(() => {
-        sheetContent.classList.remove('translate-y-full');
-        sheetContent.classList.add('translate-y-0');
-    }, 10);
-}
-
-function closeAddCoreSheet() {
-    const sheet = document.getElementById('add-core-bottom-sheet');
-    const sheetContent = document.getElementById('add-core-bottom-sheet-content');
-    
-    sheetContent.classList.remove('translate-y-0');
-    sheetContent.classList.add('translate-y-full');
-    
-    setTimeout(() => {
-        sheet.classList.add('opacity-0');
-        sheet.classList.remove('opacity-100');
-        sheet.classList.add('pointer-events-none');
-    }, 300);
-}
-
-function closeAddCoreSheetOnOutsideClick(event) {
-    if (event.target.id === 'add-core-bottom-sheet') {
-        closeAddCoreSheet();
-    }
-}
-
-async function deleteCurrentCore() {
-    if (!currentCoreId) return;
-    
-    const core = cores.find(c => c.id === currentCoreId);
-    if (!core) return;
-    
-    const confirmDelete = confirm(`${core.name} adlı hareketi silmek istediğinize emin misiniz?`);
-    if (!confirmDelete) return;
-
-    try {
-        await deleteDoc(doc(db, "users", auth.currentUser.uid, "cores", currentCoreId));
-        closeCoreSheet();
-    } catch (error) {
-        console.error("Error removing document: ", error);
-        alert("Hareket silinirken bir hata oluştu.");
-    }
-}
-
-async function saveCoreExercise() {
-    const name = document.getElementById('newCoreName').value.trim();
-    const duration = document.getElementById('newCoreDuration').value.trim();
-    const category = document.getElementById('newCoreCategory').value.trim();
-    
-    if (!name || !duration || !category) {
-        alert("Lütfen tüm alanları doldurun.");
-        return;
-    }
-    
-    const coreData = {
-        name,
-        duration,
-        category,
-        isDefault: false
-    };
-    if (currentCoreImageBase64) {
-        coreData.imageBase64 = currentCoreImageBase64;
-    }
-    
-    try {
-        if (editingCoreId) {
-            const coreRef = doc(db, "users", auth.currentUser.uid, "cores", editingCoreId);
-            await updateDoc(coreRef, coreData);
-        } else {
-            const coresRef = collection(db, "users", auth.currentUser.uid, "cores");
-            await addDoc(coresRef, coreData);
-        }
-        closeAddCoreSheet();
-    } catch(err) {
-        console.error("Error saving core:", err);
-        alert("Kaydedilirken hata oluştu.");
-    }
-}
 
 
 
-function renderCoreMuscleMap(category) {
-    const container = document.getElementById('sheet-core-interactive-map');
-    if (!container || typeof COMBINED_SVG === 'undefined') return;
-    
-    container.innerHTML = COMBINED_SVG;
-    
-    const svgEl = container.querySelector('svg');
-    const primaryColor = '#7ea18d'; // Sage green
-    
-    let targetMuscles = [];
-    if (category === 'Alt Karın' || category === 'Üst Karın' || category === 'Tüm Karın' || category === 'Karın') {
-        targetMuscles = ['abs'];
-    } else if (category === 'Yan Karın') {
-        targetMuscles = ['obliques'];
-    } else if (category === 'Bel/Sırt' || category === 'Sırt') {
-        targetMuscles = ['lower-back', 'upper-back'];
-    } else if (category === 'Kalça') {
-        targetMuscles = ['glutes'];
-    }
-    
-    targetMuscles.forEach(muscle => {
-        const paths = svgEl.querySelectorAll(`path[data-muscle="${muscle}"]`);
-        paths.forEach(p => p.setAttribute('fill', primaryColor));
-    });
-}
+
+
+
+
+
+
+
+
+
+
 
 
 // --- Global Exports for Inline HTML Handlers ---
@@ -2767,99 +2005,15 @@ function renderCoreMuscleMap(category) {
 
 // --- Stretch Add/Edit Bottom Sheet Functions ---
 
-function openAddStretchSheet() {
-    editingStretchId = null;
-    currentStretchImageBase64 = null;
-    
-    document.getElementById('newStretchName').value = '';
-    document.getElementById('newStretchDuration').value = '30';
-    document.getElementById('newStretchCategory').value = 'Sırt/Bel';
-    
-    document.getElementById('stretchImagePreviewContainer').classList.add('hidden');
-    document.getElementById('stretchImageUploadBtn').classList.remove('hidden');
-    
-    const catOptions = document.querySelectorAll('#newStretchCategoryOptions .category-select-btn');
-    catOptions.forEach(btn => {
-        if (btn.getAttribute('data-cat') === 'Sırt/Bel') {
-            btn.classList.remove('neo-surface', 'text-on-surface-variant');
-            btn.classList.add('neo-inset', 'text-primary', 'border-primary/20');
-        } else {
-            btn.classList.add('neo-surface', 'text-on-surface-variant');
-            btn.classList.remove('neo-inset', 'text-primary', 'border-primary/20');
-        }
-    });
-    
-    const sheet = document.getElementById('add-stretch-bottom-sheet');
-    const sheetContent = document.getElementById('add-stretch-bottom-sheet-content');
-    
-    sheet.classList.remove('pointer-events-none');
-    sheet.classList.remove('opacity-0');
-    sheet.classList.add('opacity-100');
-    
-    setTimeout(() => {
-        sheetContent.classList.remove('translate-y-full');
-        sheetContent.classList.add('translate-y-0');
-    }, 50);
-}
 
-function closeAddStretchSheet() {
-    const sheet = document.getElementById('add-stretch-bottom-sheet');
-    const sheetContent = document.getElementById('add-stretch-bottom-sheet-content');
-    
-    sheetContent.classList.remove('translate-y-0');
-    sheetContent.classList.add('translate-y-full');
-    
-    setTimeout(() => {
-        sheet.classList.add('opacity-0');
-        sheet.classList.remove('opacity-100');
-        sheet.classList.add('pointer-events-none');
-    }, 300);
-}
 
-function closeAddStretchSheetOnOutsideClick(event) {
-    if (event.target.id === 'add-stretch-bottom-sheet') {
-        closeAddStretchSheet();
-    }
-}
 
-async function saveStretchExercise() {
-    const name = document.getElementById('newStretchName').value.trim();
-    const duration = document.getElementById('newStretchDuration').value.trim();
-    const category = document.getElementById('newStretchCategory').value.trim();
-    
-    if (!name || !duration || !category) {
-        alert("Lütfen tüm alanları doldurun.");
-        return;
-    }
-    
-    const stretchData = {
-        name,
-        duration,
-        category,
-        isDefault: false
-    };
-    if (currentStretchImageBase64) {
-        stretchData.imageBase64 = currentStretchImageBase64;
-    }
-    
-    try {
-        if (editingStretchId) {
-            const stretchRef = doc(db, "users", auth.currentUser.uid, "stretches", editingStretchId);
-            await updateDoc(stretchRef, stretchData);
-        } else {
-            const stretchesRef = collection(db, "users", auth.currentUser.uid, "stretches");
-            await addDoc(stretchesRef, stretchData);
-        }
-        closeAddStretchSheet();
-    } catch(err) {
-        console.error("Error saving stretch:", err);
-        alert("Kaydedilirken hata oluştu.");
-    }
-}
 
-function triggerStretchImageUpload() {
-    document.getElementById('stretchImageInput').click();
-}
+
+
+
+
+
 
 
 
@@ -2886,7 +2040,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 // --- Session Builder Logic ---
-let currentSessionType = null; // 'core' or 'stretch'
 let currentSessionExercises = [];
 let sessionSortableInstance = null;
 
