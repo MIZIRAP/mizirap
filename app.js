@@ -1,13 +1,13 @@
 import { auth } from "./firebase-config.js";
 import { onAuthStateChanged, signInAnonymously } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
 import { setupAuthUI } from "./auth.js";
-import { initDashboard, clearDashboard, updateDashboardWorkouts, updateDashboardFinance, updateDashboardWater, updateDashboardBooks, updateDashboardMovies, updateDashboardCalories } from "./dashboard.js?v=1787427096";
+import { initDashboard, clearDashboard, updateDashboardWorkouts, updateDashboardFinance, updateDashboardWater, updateDashboardBooks, updateDashboardMovies, updateDashboardCalories } from "./dashboard.js?v=1787428044";
 import { initShopping, clearShopping } from "./shopping.js";
-import { initWorkout, clearWorkout } from "./workout.js?v=1787427096";
+import { initWorkout, clearWorkout } from "./workout.js?v=1787428044";
 import { initFinance, clearFinance } from "./finance.js";
 import { initWater, clearWater } from "./water.js";
-import { initBooks, clearBooks } from "./books.js?v=1787427096";
-import { initMovies, clearMovies } from "./movies.js?v=1787427096";
+import { initBooks, clearBooks } from "./books.js?v=1787428044";
+import { initMovies, clearMovies } from "./movies.js?v=1787428044";
 import { initProfile, clearProfile } from "./profile.js";
 import { initCalories, clearCalories } from "./calories.js";
 import { initHistory, clearHistory } from "./history.js";
@@ -94,7 +94,32 @@ onAuthStateChanged(auth, async (user) => {
     }
 });
 
-// ---------- Sekme (view) geçişleri (Uygulama İçi) ----------
+// ---------- Sekme (view) geçişleri (Uygulama İçi, History API Destekli) ----------
+window.showView = function(viewId) {
+    document.querySelectorAll(".view").forEach(v => {
+        v.classList.add("hidden");
+    });
+    const target = document.getElementById(viewId);
+    if(target) {
+        target.classList.remove("hidden");
+        window.scrollTo(0,0);
+    } else {
+        const dash = document.getElementById("view-dashboard");
+        if (dash) {
+            dash.classList.remove("hidden");
+            window.scrollTo(0,0);
+        }
+    }
+};
+
+window.addEventListener("popstate", (e) => {
+    if (e.state && e.state.view) {
+        window.showView(e.state.view);
+    } else {
+        window.showView("view-dashboard");
+    }
+});
+
 document.addEventListener("click", (e) => {
     const tab = e.target.closest(".nav-tab");
     if (!tab) return;
@@ -102,14 +127,7 @@ document.addEventListener("click", (e) => {
     const targetId = tab.dataset.target;
     if (!targetId) return;
 
-    document.querySelectorAll(".view").forEach(v => {
-        v.classList.add("hidden");
-    });
-
-    const target = document.getElementById(targetId);
-    if(target) {
-        target.classList.remove("hidden");
-    }
-
-
+    e.preventDefault();
+    history.pushState({view: targetId}, "", "?view=" + targetId);
+    window.showView(targetId);
 });

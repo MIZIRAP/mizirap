@@ -583,7 +583,7 @@
 <!-- Top App Bar -->
 <header class="w-full top-0 sticky z-40 max-w-md mx-auto px-[20px] py-4 bg-[#F7F9FF]">
     <div class="flex items-center justify-between w-full gap-[53px]">
-        <button class="w-10 h-10 shrink-0 flex items-center justify-center rounded-full bg-[#F7F9FF] active:scale-95 transition-transform" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px #FFFFFF;" onclick="document.getElementById('view-dashboard').classList.remove('hidden'); document.getElementById('view-shopping').classList.add('hidden');">
+        <button class="w-10 h-10 shrink-0 flex items-center justify-center rounded-full bg-[#F7F9FF] active:scale-95 transition-transform" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px #FFFFFF;" onclick="history.back()">
             <span class="material-symbols-rounded text-[#1E293B] text-[16px]">arrow_back</span>
         </button>
         <h1 class="font-[700] text-[24px] leading-[32px] text-[#1E293B] tracking-[-0.24px]" style="font-family: 'Plus Jakarta Sans', sans-serif;">Alışveriş Listesi</h1>
@@ -628,7 +628,7 @@
 <!-- Top App Bar -->
 <header class="w-full top-0 sticky z-40 max-w-md mx-auto px-container-padding py-4">
     <div class="flex items-center justify-between w-full">
-        <button class="w-10 h-10 flex items-center justify-center rounded-full bg-[#F0F2F8] active:scale-95 transition-transform" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);" onclick="document.getElementById('view-dashboard').classList.remove('hidden'); document.getElementById('view-workout').classList.add('hidden');">
+        <button class="w-10 h-10 flex items-center justify-center rounded-full bg-[#F0F2F8] active:scale-95 transition-transform" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);" onclick="history.back()">
             <span class="material-symbols-rounded text-[#1E293B]">arrow_back</span>
         </button>
         <h1 class="text-h1 font-bold text-[#1E293B]">Spor</h1>
@@ -673,7 +673,7 @@
 
     <section>
         <div class="flex flex-col gap-4">
-            <a href="#" class="bg-[#F0F2F8] p-4 rounded-2xl flex items-center justify-between active:scale-[0.99] transition-transform" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);" onclick="document.getElementById('view-workout').classList.add('hidden'); document.getElementById('view-exercise-library').classList.remove('hidden'); return false;">
+            <a href="#" class="bg-[#F0F2F8] p-4 rounded-2xl flex items-center justify-between active:scale-[0.99] transition-transform" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);" onclick="history.pushState({view: 'view-exercise-library'}, '', '?view=view-exercise-library'); window.showView('view-exercise-library'); return false;">
                 <div class="flex items-center gap-4">
                     <div class="w-10 h-10 rounded-full bg-[#F0F2F8] flex items-center justify-center" style="box-shadow: inset 2px 2px 5px #D1D9E6, inset -2px -2px 5px rgba(255, 255, 255, 0.7);">
                         <span class="material-symbols-rounded text-[#1E293B]">book</span>
@@ -714,7 +714,7 @@
             <!-- Header -->
             <header class="w-full top-0 sticky z-40 max-w-md mx-auto px-container-padding py-4">
                 <div class="flex items-center justify-between w-full">
-                    <button onclick="document.getElementById('view-exercise-library').classList.add('hidden'); document.getElementById('view-workout').classList.remove('hidden');" class="w-10 h-10 flex items-center justify-center rounded-full bg-[#F0F2F8] active:scale-95 transition-transform" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);">
+                    <button onclick="history.back()" class="w-10 h-10 flex items-center justify-center rounded-full bg-[#F0F2F8] active:scale-95 transition-transform" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);">
                         <span class="material-symbols-rounded text-[#1E293B]">arrow_back</span>
                     </button>
                     <h1 class="text-h1 font-bold text-[#1E293B]">Egzersiz Kütüphanesi</h1>
@@ -3093,7 +3093,7 @@
 
 <!-- Weekly Chart Section -->
 <section class="flex flex-col gap-card-gap">
-    <button class="w-full py-4 rounded-2xl bg-[#F0F2F8] flex justify-between items-center px-6 active:scale-[0.98] transition-transform" style="box-shadow: 6px 6px 12px #D1D9E6, -6px -6px 12px rgba(255, 255, 255, 0.7);" onclick="document.getElementById('view-finance').classList.add('hidden'); document.getElementById('view-finance-detail').classList.remove('hidden'); renderFinanceDetail();">
+    <button class="w-full py-4 rounded-2xl bg-[#F0F2F8] flex justify-between items-center px-6 active:scale-[0.98] transition-transform" style="box-shadow: 6px 6px 12px #D1D9E6, -6px -6px 12px rgba(255, 255, 255, 0.7);" onclick="history.pushState({view: 'view-finance-detail'}, '', '?view=view-finance-detail'); window.showView('view-finance-detail'); renderFinanceDetail();">
         <div class="flex items-center gap-3">
             <div class="w-10 h-10 rounded-full bg-[#F0F2F8] flex items-center justify-center" style="box-shadow: inset 2px 2px 5px #D1D9E6, inset -2px -2px 5px rgba(255, 255, 255, 0.7);">
                 <span class="material-symbols-rounded text-[#3B82F6]">analytics</span>
@@ -3353,7 +3353,7 @@
 <!-- Top App Bar -->
 <header class="w-full top-0 sticky z-40 max-w-md mx-auto px-container-padding py-4">
     <div class="flex items-center justify-between w-full">
-        <button class="w-10 h-10 flex items-center justify-center rounded-full bg-[#F0F2F8] active:scale-95 transition-transform" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);" onclick="document.getElementById('view-finance').classList.remove('hidden'); document.getElementById('view-finance-detail').classList.add('hidden');">
+        <button class="w-10 h-10 flex items-center justify-center rounded-full bg-[#F0F2F8] active:scale-95 transition-transform" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);" onclick="history.back()">
             <span class="material-symbols-rounded text-[#1E293B]">arrow_back</span>
         </button>
         <h1 class="text-h1 font-bold text-[#1E293B]">Finans &nbsp;Detayı</h1>
@@ -3762,7 +3762,7 @@
     </section>
 
 
-    <script type="module" src="app.js?v=1787427729"></script>
+    <script type="module" src="app.js?v=1787428044"></script>
 
 <!-- ================= FINANCE MODALS ================= -->
 <!-- Add Transaction Modal -->
