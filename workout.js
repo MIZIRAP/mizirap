@@ -872,6 +872,12 @@ let newSplitId = null;
 
 // Extends the global scope
 function openSplitEdit() {
+    // Fix DOM nesting if it got stuck inside an unclosed modal
+    const appScreen = document.getElementById("app-screen");
+    const splitEdit = document.getElementById("view-split-edit");
+    if (appScreen && splitEdit && splitEdit.parentNode !== appScreen) {
+        appScreen.appendChild(splitEdit);
+    }
     // Hide workout home
     document.getElementById('view-workout').classList.add('hidden');
     // Hide all other views just in case
