@@ -3542,3 +3542,24 @@ function renderCoreMuscleMap(category) {
         paths.forEach(p => p.setAttribute('fill', primaryColor));
     });
 }
+
+
+// --- Global Exports for Inline HTML Handlers ---
+window.filterCores = typeof filterCores !== 'undefined' ? filterCores : null;
+window.handleCoreSearch = typeof handleCoreSearch !== 'undefined' ? handleCoreSearch : null;
+window.filterStretches = typeof filterStretches !== 'undefined' ? filterStretches : null;
+window.handleStretchSearch = typeof handleStretchSearch !== 'undefined' ? handleStretchSearch : null;
+window.renderCores = typeof renderCores !== 'undefined' ? renderCores : null;
+window.renderStretches = typeof renderStretches !== 'undefined' ? renderStretches : null;
+window.openCoreSheet = typeof openCoreSheet !== 'undefined' ? openCoreSheet : null;
+window.openAddCoreSheet = typeof openAddCoreSheet !== 'undefined' ? openAddCoreSheet : null;
+
+
+window.closeAddCoreSheet = typeof closeAddCoreSheet !== 'undefined' ? closeAddCoreSheet : null;
+window.closeAddCoreSheetOnOutsideClick = typeof closeAddCoreSheetOnOutsideClick !== 'undefined' ? closeAddCoreSheetOnOutsideClick : null;
+window.closeCoreSheet = typeof closeCoreSheet !== 'undefined' ? closeCoreSheet : null;
+window.closeCoreSheetOnOutsideClick = typeof closeCoreSheetOnOutsideClick !== 'undefined' ? closeCoreSheetOnOutsideClick : null;
+window.deleteCurrentCore = typeof deleteCurrentCore !== 'undefined' ? deleteCurrentCore : null;
+window.saveCoreExercise = typeof saveCoreExercise !== 'undefined' ? saveCoreExercise : null;
+window.toggleCoreSheetFav = typeof toggleCoreSheetFav !== 'undefined' ? toggleCoreSheetFav : null;
+window.toggleCoreFav = typeof toggleCoreFav !== 'undefined' ? toggleCoreFav : null;
