@@ -2695,24 +2695,8 @@ function renderCoreMuscleMap(category) {
 
 
 // --- Global Exports for Inline HTML Handlers ---
-window.filterCores = typeof filterCores !== 'undefined' ? filterCores : null;
-window.handleCoreSearch = typeof handleCoreSearch !== 'undefined' ? handleCoreSearch : null;
-window.filterStretches = typeof filterStretches !== 'undefined' ? filterStretches : null;
-window.handleStretchSearch = typeof handleStretchSearch !== 'undefined' ? handleStretchSearch : null;
-window.renderCores = typeof renderCores !== 'undefined' ? renderCores : null;
-window.renderStretches = typeof renderStretches !== 'undefined' ? renderStretches : null;
-window.openCoreSheet = typeof openCoreSheet !== 'undefined' ? openCoreSheet : null;
-window.openAddCoreSheet = typeof openAddCoreSheet !== 'undefined' ? openAddCoreSheet : null;
 
 
-window.closeAddCoreSheet = typeof closeAddCoreSheet !== 'undefined' ? closeAddCoreSheet : null;
-window.closeAddCoreSheetOnOutsideClick = typeof closeAddCoreSheetOnOutsideClick !== 'undefined' ? closeAddCoreSheetOnOutsideClick : null;
-window.closeCoreSheet = typeof closeCoreSheet !== 'undefined' ? closeCoreSheet : null;
-window.closeCoreSheetOnOutsideClick = typeof closeCoreSheetOnOutsideClick !== 'undefined' ? closeCoreSheetOnOutsideClick : null;
-window.deleteCurrentCore = typeof deleteCurrentCore !== 'undefined' ? deleteCurrentCore : null;
-window.saveCoreExercise = typeof saveCoreExercise !== 'undefined' ? saveCoreExercise : null;
-window.toggleCoreSheetFav = typeof toggleCoreSheetFav !== 'undefined' ? toggleCoreSheetFav : null;
-window.toggleCoreFav = typeof toggleCoreFav !== 'undefined' ? toggleCoreFav : null;
 
 
 // --- Stretch Add/Edit Bottom Sheet Functions ---
@@ -2814,12 +2798,6 @@ function triggerStretchImageUpload() {
 
 
 // Window Exports
-window.openAddStretchSheet = openAddStretchSheet;
-window.closeAddStretchSheet = closeAddStretchSheet;
-window.closeAddStretchSheetOnOutsideClick = closeAddStretchSheetOnOutsideClick;
-window.saveStretchExercise = saveStretchExercise;
-window.triggerStretchImageUpload = triggerStretchImageUpload;
-window.handleStretchImageUpload = handleStretchImageUpload;
 
 
 // category grid logic for Add Stretch Sheet
@@ -3063,41 +3041,3 @@ async function saveSession() {
     }
 }
 
-// Windows exports
-window.openCreateSessionSheet = openCreateSessionSheet;
-window.closeCreateSessionSheet = closeCreateSessionSheet;
-window.closeCreateSessionSheetOnOutsideClick = closeCreateSessionSheetOnOutsideClick;
-window.filterSessionAvailableExercises = filterSessionAvailableExercises;
-window.addExerciseToSession = addExerciseToSession;
-window.removeExerciseFromSession = removeExerciseFromSession;
-window.saveSession = saveSession;
-
-window.startStretchSessionFromHome = function() {
-    if (!activeStretchSessionId) {
-        // Lütfen önce Esneme Hareketleri sayfasından bir seans seçin.
-        const activeView = document.querySelector('.view:not(.hidden)');
-        if(activeView) activeView.classList.add('hidden');
-        document.getElementById('view-stretching').classList.remove('hidden');
-        
-        document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('text-primary'));
-        const tab = document.querySelector('.nav-tab[data-target="view-stretching"]');
-        if (tab) tab.classList.add('text-primary');
-        return;
-    }
-    openStretchPlayer();
-};
-
-window.startCoreSessionFromHome = function() {
-    if (!activeCoreSessionId) {
-        // Lütfen önce Core Hareketleri sayfasından bir seans seçin.
-        const activeView = document.querySelector('.view:not(.hidden)');
-        if(activeView) activeView.classList.add('hidden');
-        document.getElementById('view-core').classList.remove('hidden');
-        
-        document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('text-primary'));
-        const tab = document.querySelector('.nav-tab[data-target="view-core"]');
-        if (tab) tab.classList.add('text-primary');
-        return;
-    }
-    openCorePlayer();
-};
