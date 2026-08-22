@@ -1037,24 +1037,73 @@ function renderSplitEditView() {
         `;
 
 
+        // Wrap card + delete button in a relative container (swipe-to-reveal pattern)
+        const swipeWrapper = document.createElement('div');
+        swipeWrapper.className = 'relative w-full overflow-hidden rounded-[24px] mb-1';
+
+        // Red delete button behind the card
+        const delBtn = document.createElement('button');
+        delBtn.className = 'absolute right-4 top-1/2 -translate-y-1/2 w-14 h-14 bg-[#BA1A1A] rounded-2xl text-white flex items-center justify-center z-0 active:bg-red-700 transition-colors';
+        delBtn.innerHTML = `<span class="material-symbols-rounded text-white text-[24px]">delete</span>`;
+        delBtn.onclick = () => {
+            if(confirm(`"${split.name}" programını silmek istediğinize emin misiniz?`)) {
+                deleteSplit(split.id);
+            } else {
+                // Reset swipe on cancel
+                splitCard.style.transition = 'transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)';
+                splitCard.style.transform = 'translateX(0px)';
+            }
+        };
+
+        // Swipe gesture on the card itself
         const headerEl = splitCard.querySelector('.accordion-header');
         if(headerEl) {
-            let startX=0, startY=0;
+            let startX = 0, startY = 0, currentX = 0, isDragging = false;
+
             headerEl.addEventListener('touchstart', e => {
-                startX = e.changedTouches[0].screenX;
-                startY = e.changedTouches[0].screenY;
+                startX = e.touches[0].clientX;
+                startY = e.touches[0].clientY;
+                currentX = startX;
+                isDragging = true;
+                splitCard.style.transition = 'none';
             }, {passive: true});
+
+            headerEl.addEventListener('touchmove', e => {
+                if(!isDragging) return;
+                currentX = e.touches[0].clientX;
+                let diff = currentX - startX;
+                if(diff > 0) diff = 0;
+                if(diff < -80) diff = -80;
+                splitCard.style.transform = `translateX(${diff}px)`;
+            }, {passive: true});
+
             headerEl.addEventListener('touchend', e => {
-                let endX = e.changedTouches[0].screenX;
-                let endY = e.changedTouches[0].screenY;
-                if (startX - endX > 60 && Math.abs(startY - endY) < 40) {
-                    if(confirm("Bu programı silmek istediğinize emin misiniz?")) {
-                        deleteSplit(split.id);
-                    }
+                if(!isDragging) return;
+                isDragging = false;
+                splitCard.style.transition = 'transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)';
+                const diff = currentX - startX;
+                if(diff < -40) {
+                    // Reveal delete icon
+                    splitCard.style.transform = 'translateX(-80px)';
+                    // Close swipe if user taps elsewhere
+                    setTimeout(() => {
+                        document.addEventListener('touchstart', function closeSwipe(evt) {
+                            if(!swipeWrapper.contains(evt.target)) {
+                                splitCard.style.transition = 'transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)';
+                                splitCard.style.transform = 'translateX(0px)';
+                                document.removeEventListener('touchstart', closeSwipe);
+                            }
+                        }, {passive: true});
+                    }, 100);
+                } else {
+                    splitCard.style.transform = 'translateX(0px)';
                 }
             });
         }
-        mainContainer.appendChild(splitCard);
+
+        swipeWrapper.appendChild(delBtn);
+        swipeWrapper.appendChild(splitCard);
+        mainContainer.appendChild(swipeWrapper);
 
 
         if (split.days) {
