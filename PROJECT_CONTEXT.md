@@ -34,6 +34,8 @@ mizirap/
 ├── style.css               # Minimal custom CSS (Tailwind üstüne ek)
 ├── icon-192.png            # PWA ikon
 ├── icon-512.png            # PWA ikon
+├── .gitignore              # node_modules/, .DS_Store, *.orig, *.bak, scratchpad_* hariç
+├── PROJECT_CONTEXT.md      # Bu dosya — proje hafızası
 │
 └── assets/
     ├── exercises/          # Egzersiz görselleri (JPG) + muscle-map.js + SVG vücut haritaları
@@ -192,39 +194,37 @@ app/
 
 ## 6. BİLİNEN SORUNLAR / YARIM KALANLAR
 
-**Aktif Sorunlar**
-- `workout.js` ~3500 satır — stretch + core + exercise kodu tek dosyada karışık; refactor önerilir *(Core planlandıktan sonra)*
-- Core Library → Core Player navigasyonu düzenlenmeli — *(Core planı bekleniyor)*
-- `assets/core/` tamamen silindi — core hareketleri görselsiz görünüyor *(Core planı bekleniyor)*
-- ~~`triggerCoreImageUpload` action handler null hatası~~ → ✅ **Düzeltildi** (dead code kaldırıldı)
+**Core (Planlanıyor — Dokunulmadı)**
+- `workout.js` ~3500 satır — stretch + core + exercise kodu tek dosyada karışık; Core planı netleşince refactor edilecek
+- Core Library → Core Player navigasyonu henüz düzenlenmedi
+- `assets/core/` silindi — core hareketleri görselsiz (`imageBase64: null`)
+- Core görsel upload sistemi — bottom sheet'te görsel upload UI'ı eksik
+- Core detay popup'ında `#sheet-core-interactive-map` elementinin HTML'de var olup olmadığı doğrulanmadı
 
 **Teknik Borç**
-- ~~`.gitignore` yok~~ → ✅ **Düzeltildi** (`node_modules/`, `.DS_Store`, `*.orig`, `*.bak`, `scratchpad_*` eklendi; `node_modules` tracking'den çıkarıldı)
-- `package.json` boş (`{}`) — node_modules artık gitignore'da, repo'ya girmiyor
+- `package.json` boş (`{}`) — `node_modules/` disk'te var ama artık `.gitignore`'da ve repo'ya girmiyor
 - Firebase API key `firebase-config.js`'te açık — public repo'da Security Rules ile korunuyor ama riskli
-- `app.js?v=...` ve `workout.js?v=...` versiyonları hardcode — deploy'da güncellenmesi unutulabilir
-
-**Yarım Kalanlar**
-- Core detay popup'ında `#sheet-core-interactive-map` elementinin varlığı doğrulanmadı
-- Core görsel upload sistemi — eski modal kaldırıldı, yeni bottom sheet'te görsel upload UI'ı eksik
+- `app.js?v=1787301376` ve `workout.js?v=1787309443` versiyonları hardcode — deploy'da güncellenmesi unutulabilir
 
 ---
 
 ## 7. SON DURUM
 
-**En son çalışılan:** Core Hareketleri ve Seanslar özelliği (2026-08-22)
-- "Core Çalışması" → "Core Hareketleri ve Seanslar" yeniden adlandırıldı
-- `view-core-library` ve `add-core-bottom-sheet` oluşturuldu (Egzersiz Kütüphanesi tasarımının kopyası)
-- 18 varsayılan core hareketi kategorileriyle tanımlandı; Firebase category migration scripti eklendi
-- Proje genelinde büyük temizlik: 35+ junk dosya, duplicate asset klasörleri, puppeteer/acorn bağımlılıkları silindi
+**Bu oturumda yapılanlar (2026-08-22)**
+- `deleteCore` async syntax hatası düzeltildi (giriş sorunu çözüldü)
+- Core Library'den "Seansa Başla" butonu kaldırıldı
+- Varsayılan 18 core hareketi kategorileriyle tanımlandı; Firebase category migration scripti eklendi
+- **Proje temizliği:** 35+ Python/junk/test dosyası silindi; `old_activeSession.js`, `workout.js.orig`, `workout.js.rej` temizlendi; `puppeteer` ve `acorn` npm bağımlılıkları kaldırıldı; duplicate stretch asset klasörleri ve kullanılmayan `assets/core/` silindi; debug `console.log`'lar temizlendi
+- **Dead code:** `openAddCoreModal()`, `closeAddCoreModal()` fonksiyonları silindi; action handler'lar yeni bottom-sheet fonksiyonlarına güncellendi; `triggerCoreImageUpload` dead handler kaldırıldı
+- **`.gitignore` eklendi:** `node_modules/`, `.DS_Store`, `*.orig`, `*.bak`, `scratchpad_*` — `node_modules` git tracking'den çıkarıldı
+- **`PROJECT_CONTEXT.md` oluşturuldu** (bu dosya)
 
-**Mevcut commit:** `928deda` (main branch)
+**Mevcut commit:** `e5ef269` (main branch)
 
 **Önerilen sonraki adımlar:**
-1. `#sheet-core-interactive-map` elementinin HTML'de varlığını kontrol et
-2. Core Library → Core Player navigasyonunu düzenle
-3. `.gitignore` ekle (`node_modules/`, `.DS_Store`)
-4. `triggerCoreImageUpload` dead handler'ı veya eksik `core-image-input` elementini düzelt
+1. Core özelliğini planla: Library → Player navigasyonu, görsel upload, kas haritası entegrasyonu
+2. `workout.js`'i Core planı netleşince modüllere böl
+3. Firebase API key rotation (uzun vadeli güvenlik)
 
 ---
 
