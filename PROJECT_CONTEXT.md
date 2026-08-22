@@ -86,7 +86,7 @@ mizirap/
 - Durum: ✅ Tamamlandı
 
 **Core Hareketleri** — `workout.js` içinde
-- Core egzersiz kütüphanesi (Üst/Alt/Yan Karın, Bel/Sırt), core seansı, core player
+- Core egzersiz kütüphanesi (Üst/Alt/Yan Karın, Bel/Sırt), core seans oluşturma (Drag & Drop), core player
 - Varsayılan 18 hareket; ilk girişte `writeBatch` ile Firebase'e seed edilir
 - Navigasyon: Antrenman → "Core Hareketleri ve Seanslar" → `view-core-library` → `view-core-player`
 - Durum: ⚠️ Kısmen çalışıyor — Library UI tamam, navigasyon yeniden düzenlenecek
@@ -194,11 +194,10 @@ app/
 
 ## 6. BİLİNEN SORUNLAR / YARIM KALANLAR
 
-**Core (Planlanıyor — Dokunulmadı)**
-- `workout.js` ~3500 satır — stretch + core + exercise kodu tek dosyada karışık; Core planı netleşince refactor edilecek
+**Core & JS Refactor (Planlanıyor)**
+- `workout.js` ~3800 satır — stretch + core + exercise kodu tek dosyada karışık; modüllere bölünmesi gerekiyor.
 - Core Library → Core Player navigasyonu henüz düzenlenmedi
-- `assets/core/` silindi — core hareketleri görselsiz (`imageBase64: null`)
-- Core görsel upload sistemi — bottom sheet'te görsel upload UI'ı eksik
+- Core görsel upload sistemi — bottom sheet'te görsel upload UI'ı tam bağlı değil (image placeholder'lar düzeltilecek).
 - Core detay popup'ında `#sheet-core-interactive-map` elementinin HTML'de var olup olmadığı doğrulanmadı
 
 **Teknik Borç**
@@ -211,15 +210,12 @@ app/
 ## 7. SON DURUM
 
 **Bu oturumda yapılanlar (2026-08-22)**
-- `deleteCore` async syntax hatası düzeltildi (giriş sorunu çözüldü)
-- Core Library'den "Seansa Başla" butonu kaldırıldı
-- Varsayılan 18 core hareketi kategorileriyle tanımlandı; Firebase category migration scripti eklendi
-- **Proje temizliği:** 35+ Python/junk/test dosyası silindi; `old_activeSession.js`, `workout.js.orig`, `workout.js.rej` temizlendi; `puppeteer` ve `acorn` npm bağımlılıkları kaldırıldı; duplicate stretch asset klasörleri ve kullanılmayan `assets/core/` silindi; debug `console.log`'lar temizlendi
-- **Dead code:** `openAddCoreModal()`, `closeAddCoreModal()` fonksiyonları silindi; action handler'lar yeni bottom-sheet fonksiyonlarına güncellendi; `triggerCoreImageUpload` dead handler kaldırıldı
-- **`.gitignore` eklendi:** `node_modules/`, `.DS_Store`, `*.orig`, `*.bak`, `scratchpad_*` — `node_modules` git tracking'den çıkarıldı
-- **`PROJECT_CONTEXT.md` oluşturuldu** (bu dosya)
+- **UI & ID Düzeltmeleri:** Esneme ekleme popup'ının açılmasını engelleyen DOM ID uyuşmazlıkları (HTML vs. JS) giderildi.
+- **Seans Oluşturma (Session Builder):** Hem Core hem de Esneme sayfalarına "Seans Oluştur" özelliği eklendi.
+- **Drag & Drop:** `SortableJS` CDN üzerinden entegre edilerek seansa eklenen hareketlerin sürükle-bırak ile sıralanması sağlandı.
+- **Seanslar UI Entegrasyonu:** Core ve Esneme kütüphane başlıklarına "+" butonunun yanına eklendi. Filtre çipleri arasına "Seanslar" sekmesi eklendi. Seans kart tasarımı egzersiz kart tasarımıyla birebir eşleştirildi.
 
-**Mevcut commit:** `357df10` (main branch)
+**Mevcut commit:** `cd1f673` (main branch)
 
 **Önerilen sonraki adımlar:**
 1. Core özelliğini planla: Library → Player navigasyonu, görsel upload, kas haritası entegrasyonu
