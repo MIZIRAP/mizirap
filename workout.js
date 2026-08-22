@@ -1094,6 +1094,7 @@ function openSplitEdit() {
 function closeSplitEdit() {
     document.getElementById('view-split-edit').classList.add('hidden');
     document.getElementById('view-workout').classList.remove('hidden');
+    document.body.classList.remove("overflow-hidden");
 };
 
 // Track which day accordions are open
@@ -1718,6 +1719,7 @@ function openStretchingView() {
 function closeStretchingView() {
     document.getElementById('view-stretching').classList.add('hidden');
     document.getElementById('view-workout').classList.remove('hidden');
+    document.body.classList.remove("overflow-hidden");
 }
 
 function openCoreView() {
@@ -1731,6 +1733,7 @@ function openCoreView() {
 function closeCoreView() {
     document.getElementById('view-core').classList.add('hidden');
     document.getElementById('view-workout').classList.remove('hidden');
+    document.body.classList.remove("overflow-hidden");
 }
 
 function openAddStretchModal(isEdit = false) {
@@ -2536,6 +2539,7 @@ function closeStretchPlayer() {
     } else {
         // Fallback
         document.getElementById('view-workout').classList.remove('hidden');
+    document.body.classList.remove("overflow-hidden");
     }
 }
 
@@ -2945,6 +2949,7 @@ function closeCorePlayer() {
         window._prevCoreView = null;
     } else {
         document.getElementById('view-workout').classList.remove('hidden');
+    document.body.classList.remove("overflow-hidden");
     }
 }
 
@@ -3823,3 +3828,19 @@ window.filterSessionAvailableExercises = filterSessionAvailableExercises;
 window.addExerciseToSession = addExerciseToSession;
 window.removeExerciseFromSession = removeExerciseFromSession;
 window.saveSession = saveSession;
+
+window.startStretchSessionFromHome = function() {
+    if (!activeStretchSessionId) {
+        alert("Lütfen önce Esneme Hareketleri sayfasından bir seans seçin.");
+        return;
+    }
+    openStretchPlayer();
+};
+
+window.startCoreSessionFromHome = function() {
+    if (!activeCoreSessionId) {
+        alert("Lütfen önce Core Hareketleri sayfasından bir seans seçin.");
+        return;
+    }
+    openCorePlayer();
+};
