@@ -55,23 +55,23 @@ export function clearShopping() {
 function renderShoppingList() {
     const activeList = document.getElementById("active-shopping-list");
     const completedList = document.getElementById("completed-shopping-list");
-    
+
     if(!activeList || !completedList) return;
-    
+
     activeList.innerHTML = "";
     completedList.innerHTML = "";
-    
+
     const activeItems = allShopping.filter(i => !i.done);
     const completedItems = allShopping.filter(i => i.done);
-    
+
     const dashboardCountLabel = document.getElementById("dashboard-shopping-count");
     if(dashboardCountLabel) dashboardCountLabel.textContent = `${activeItems.length} Ürün`;
-    
+
     // ACTIVE ITEMS
     activeItems.forEach(item => {
         const wrapper = document.createElement('div');
         wrapper.className = "relative w-full shrink-0 mb-4";
-        
+
         const delBtn = document.createElement('button');
         delBtn.className = "absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-red-500 rounded-2xl text-white flex items-center justify-center z-0 active:bg-red-600 transition-colors";
         delBtn.innerHTML = `<span class="material-symbols-rounded text-xl">delete</span>`;
@@ -95,7 +95,7 @@ function renderShoppingList() {
                 <div><p class="text-sm font-bold text-[#1E293B]">${escapeHtml(item.title)}</p></div>
             </div>
         `;
-        
+
         let startX = 0;
         let currentX = 0;
         let isDragging = false;
@@ -110,7 +110,7 @@ function renderShoppingList() {
             if (!isDragging) return;
             currentX = e.touches[0].clientX;
             let diff = currentX - startX;
-            if (diff > 0) diff = 0; 
+            if (diff > 0) diff = 0;
             if (diff < -80) diff = -80;
             itemDiv.style.transform = `translateX(${diff}px)`;
         }, {passive: true});
@@ -121,7 +121,7 @@ function renderShoppingList() {
             itemDiv.style.transition = 'transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)';
             let diff = currentX - startX;
             if (diff < -40) {
-                itemDiv.style.transform = `translateX(-80px)`; 
+                itemDiv.style.transform = `translateX(-80px)`;
                 setTimeout(() => {
                     document.addEventListener('touchstart', function closeSwipe(evt) {
                         if (!wrapper.contains(evt.target)) {
@@ -147,12 +147,12 @@ function renderShoppingList() {
         wrapper.appendChild(itemDiv);
         activeList.appendChild(wrapper);
     });
-    
+
     // COMPLETED ITEMS
     completedItems.forEach(item => {
         const wrapper = document.createElement('div');
         wrapper.className = "relative w-full shrink-0 mb-4";
-        
+
         const delBtn = document.createElement('button');
         delBtn.className = "absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-red-500 rounded-2xl text-white flex items-center justify-center z-0 active:bg-red-600 transition-colors";
         delBtn.innerHTML = `<span class="material-symbols-rounded text-xl">delete</span>`;
@@ -191,7 +191,7 @@ function renderShoppingList() {
             if (!isDragging) return;
             currentX = e.touches[0].clientX;
             let diff = currentX - startX;
-            if (diff > 0) diff = 0; 
+            if (diff > 0) diff = 0;
             if (diff < -80) diff = -80;
             itemDiv.style.transform = `translateX(${diff}px)`;
         }, {passive: true});
@@ -202,7 +202,7 @@ function renderShoppingList() {
             itemDiv.style.transition = 'transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)';
             let diff = currentX - startX;
             if (diff < -40) {
-                itemDiv.style.transform = `translateX(-80px)`; 
+                itemDiv.style.transform = `translateX(-80px)`;
                 setTimeout(() => {
                     document.addEventListener('touchstart', function closeSwipe(evt) {
                         if (!wrapper.contains(evt.target)) {

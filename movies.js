@@ -55,16 +55,16 @@ const editDeleteBtn = document.getElementById("movie-edit-delete");
 export function initMovies(uid, onChangeCallback) {
     currentUid = uid;
     onChangeCb = onChangeCallback;
-    
+
     // Bind Add Quick Button
     if(addMovieBtn) addMovieBtn.onclick = openAddModal;
-    
+
     // Bind Modal Closers
     if(addBackdrop) addBackdrop.onclick = closeAddModal;
     if(addCloseHandle) addCloseHandle.onclick = closeAddModal;
     if(editBackdrop) editBackdrop.onclick = closeEditModal;
     if(editCloseHandle) editCloseHandle.onclick = closeEditModal;
-    
+
     // Bind Type Toggles
     if(addType) {
         addType.onchange = () => {
@@ -95,23 +95,23 @@ export function initMovies(uid, onChangeCallback) {
     }
 
     const moviesRef = collection(db, "users", uid, "movies");
-    
+
     moviesUnsubscribe = onSnapshot(moviesRef, (snapshot) => {
         currentMovies = [];
         snapshot.forEach(docSnap => {
             currentMovies.push({ id: docSnap.id, ...docSnap.data() });
         });
-        
+
         // Sort: activeMovie always first, then by updatedAt descending
         currentMovies.sort((a, b) => {
             if (activeMovie && a.id === activeMovie.id) return -1;
             if (activeMovie && b.id === activeMovie.id) return 1;
-            
+
             const timeA = a.updatedAt ? a.updatedAt.toMillis() : 0;
             const timeB = b.updatedAt ? b.updatedAt.toMillis() : 0;
             return timeB - timeA;
         });
-        
+
         // Ensure activeMovie is valid
         if (currentMovies.length > 0) {
             const foundActive = activeMovie ? currentMovies.find(m => m.id === activeMovie.id) : null;
@@ -125,14 +125,14 @@ export function initMovies(uid, onChangeCallback) {
             activeMovie = null;
             localStorage.removeItem(`activeMovie_${currentUid}`);
         }
-        
+
         renderMoviesView();
-        
+
         if (onChangeCb) onChangeCb(currentMovies);
     }, (error) => {
         console.error("Filmler çekilemedi:", error);
     });
-    
+
     registerListener(moviesUnsubscribe);
 }
 
@@ -166,10 +166,10 @@ function updateActiveMovieUI() {
         const episode = activeMovie.episode || 1;
         const totalSeason = activeMovie.totalSeason || 1;
         const totalEpisode = activeMovie.totalEpisode || 1;
-        
+
         if(activeSeasonEl) activeSeasonEl.textContent = `SEZON ${season.toString().padStart(2, '0')}`;
         if(activeEpisodeEl) activeEpisodeEl.textContent = `B${episode.toString().padStart(2, '0')}`;
-        
+
         // Use total episode for progress if available, otherwise just use a small calculation
         if (totalEpisode > 1) {
             percentage = Math.min((episode / totalEpisode) * 100, 100);
@@ -188,7 +188,7 @@ function updateActiveMovieUI() {
 
 async function handleActiveMinus() {
     if(!activeMovie || !currentUid) return;
-    
+
     let updates = {};
     if (activeMovie.type === 'series') {
         let ep = (activeMovie.episode || 1) - 1;
@@ -216,7 +216,7 @@ async function handleActiveMinus() {
 
 async function handleActivePlus() {
     if(!activeMovie || !currentUid) return;
-    
+
     let updates = {};
     if (activeMovie.type === 'series') {
         let ep = (activeMovie.episode || 0) + 1;
@@ -245,18 +245,18 @@ async function handleActivePlus() {
 function renderMoviesView() {
     updateActiveMovieUI();
     if (!allListEl) return;
-    
+
     allListEl.innerHTML = '';
-    
+
     if (currentMovies.length === 0) {
         allListEl.innerHTML = `<p class="text-center text-[#64748B] py-8 text-sm">Henüz eklenmiş bir içerik yok.</p>`;
         return;
     }
-    
+
     currentMovies.forEach(movie => {
         const type = movie.type || 'series';
         const title = escapeHtml(movie.title || 'İsimsiz');
-        
+
         let subtitleText = '';
         if (type === 'series') {
             const tEp = movie.totalEpisode ? ` / ${movie.totalEpisode}` : '';
@@ -264,7 +264,7 @@ function renderMoviesView() {
         } else {
             subtitleText = `Film`;
         }
-        
+
         let statusText = "";
         let statusColor = "text-[#64748B]";
         if (movie.status === 'watchlist') {
@@ -280,10 +280,10 @@ function renderMoviesView() {
 
         const iconStr = type === 'movie' ? 'movie' : 'live_tv';
         const isActive = activeMovie && activeMovie.id === movie.id;
-        
+
         const wrapper = document.createElement("div");
         wrapper.className = "relative w-full overflow-hidden rounded-2xl mb-4";
-        
+
         // Background Actions (Edit)
         const actionsHtml = `
             <div class="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-2 z-0">
@@ -292,7 +292,7 @@ function renderMoviesView() {
                 </button>
             </div>
         `;
-        
+
         // Foreground Card
         const cardHtml = `
             <div class="card-content relative z-10 bg-[#F7F9FF] rounded-2xl p-4 flex gap-4 items-center cursor-pointer transition-transform ${isActive ? 'border-2 border-silk-blue' : ''}" style="touch-action: pan-y; box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px #FFFFFF;" data-swiped="false">
@@ -308,42 +308,42 @@ function renderMoviesView() {
                 </div>
             </div>
         `;
-        
+
         wrapper.innerHTML = actionsHtml + cardHtml;
-        
+
         const cardContent = wrapper.querySelector('.card-content');
         const editBtn = wrapper.querySelector('.edit-movie-btn');
-        
+
         // --- Swipe Logic ---
         let startX = 0;
         let currentX = 0;
         let isDragging = false;
         const threshold = -80; // One button of 48px + gap
         let isSwiped = false;
-        
+
         cardContent.addEventListener('touchstart', (e) => {
             startX = e.touches[0].clientX;
             isDragging = true;
             cardContent.style.transition = 'none';
         }, {passive: true});
-        
+
         cardContent.addEventListener('touchmove', (e) => {
             if (!isDragging) return;
             currentX = e.touches[0].clientX;
             let diffX = currentX - startX;
-            
+
             if (isSwiped) diffX += threshold;
-            if (diffX > 0) diffX = 0; 
-            if (diffX < threshold - 20) diffX = threshold - 20; 
-            
+            if (diffX > 0) diffX = 0;
+            if (diffX < threshold - 20) diffX = threshold - 20;
+
             cardContent.style.transform = `translateX(${diffX}px)`;
         }, {passive: true});
-        
+
         cardContent.addEventListener('touchend', (e) => {
             if (!isDragging) return;
             isDragging = false;
             cardContent.style.transition = 'transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)';
-            
+
             let diffX = currentX - startX;
             if (!isSwiped && diffX < -40) {
                 isSwiped = true;
@@ -355,14 +355,14 @@ function renderMoviesView() {
                 cardContent.style.transform = isSwiped ? `translateX(${threshold}px)` : 'translateX(0px)';
             }
         });
-        
+
         // Mouse Fallbacks
         cardContent.addEventListener('mousedown', (e) => {
             startX = e.clientX;
             isDragging = true;
             cardContent.style.transition = 'none';
         });
-        
+
         cardContent.addEventListener('mousemove', (e) => {
             if (!isDragging) return;
             currentX = e.clientX;
@@ -372,7 +372,7 @@ function renderMoviesView() {
             if (diffX < threshold - 20) diffX = threshold - 20;
             cardContent.style.transform = `translateX(${diffX}px)`;
         });
-        
+
         cardContent.addEventListener('mouseup', (e) => {
             if (!isDragging) return;
             isDragging = false;
@@ -388,7 +388,7 @@ function renderMoviesView() {
                 cardContent.style.transform = isSwiped ? `translateX(${threshold}px)` : 'translateX(0px)';
             }
         });
-        
+
         cardContent.addEventListener('mouseleave', () => {
              if(isDragging) {
                 isDragging = false;
@@ -402,7 +402,7 @@ function renderMoviesView() {
             if (Math.abs(currentX - startX) < 5 && !isSwiped) {
                 activeMovie = movie;
                 localStorage.setItem(`activeMovie_${currentUid}`, JSON.stringify(activeMovie));
-                
+
                 // Re-sort and re-render
                 currentMovies.sort((a, b) => {
                     if (a.id === activeMovie.id) return -1;
@@ -412,7 +412,7 @@ function renderMoviesView() {
                     return timeB - timeA;
                 });
                 renderMoviesView();
-                
+
                 // Notify dashboard right away
                 if (onChangeCb) onChangeCb(currentMovies);
             }
@@ -424,7 +424,7 @@ function renderMoviesView() {
             cardContent.style.transform = 'translateX(0px)';
             isSwiped = false;
         };
-        
+
         allListEl.appendChild(wrapper);
     });
 }
@@ -470,10 +470,10 @@ async function saveAddMovie() {
     if(!currentUid) return;
     const title = addTitle.value.trim();
     if(!title) return alert("Lütfen içerik adını giriniz.");
-    
+
     const type = addType.value;
     const status = document.querySelector('input[name="movie-add-status"]:checked').value;
-    
+
     const data = {
         title,
         type,
@@ -481,14 +481,14 @@ async function saveAddMovie() {
         createdAt: serverTimestamp(),
         updatedAt: serverTimestamp()
     };
-    
+
     if (type === 'series') {
         data.totalSeason = parseInt(addTotalSeason.value) || 1;
         data.totalEpisode = parseInt(addTotalEpisode.value) || 1;
         data.season = parseInt(addSeason.value) || 1;
         data.episode = parseInt(addEpisode.value) || 1;
     }
-    
+
     try {
         await addDoc(collection(db, "users", currentUid, "movies"), data);
         closeAddModal();
@@ -502,7 +502,7 @@ async function saveAddMovie() {
 function openEditModal(movie) {
     if(!editModal) return;
     currentEditingId = movie.id;
-    
+
     editType.value = movie.type || 'series';
     editTitle.value = movie.title || '';
     if (editType.value === 'series') {
@@ -518,11 +518,11 @@ function openEditModal(movie) {
         editSeason.value = 1;
         editEpisode.value = 1;
     }
-    
+
     const s = movie.status || 'watching';
     const rb = document.querySelector(`input[name="movie-edit-status"][value="${s}"]`);
     if(rb) rb.checked = true;
-    
+
     editModal.classList.remove('hidden');
     editModal.classList.add('flex');
     requestAnimationFrame(() => {
@@ -553,24 +553,24 @@ async function saveEditMovie() {
     if(!currentUid || !currentEditingId) return;
     const title = editTitle.value.trim();
     if(!title) return alert("Lütfen içerik adını giriniz.");
-    
+
     const type = editType.value;
     const status = document.querySelector('input[name="movie-edit-status"]:checked').value;
-    
+
     const data = {
         title,
         type,
         status,
         updatedAt: serverTimestamp()
     };
-    
+
     if (type === 'series') {
         data.totalSeason = parseInt(editTotalSeason.value) || 1;
         data.totalEpisode = parseInt(editTotalEpisode.value) || 1;
         data.season = parseInt(editSeason.value) || 1;
         data.episode = parseInt(editEpisode.value) || 1;
     }
-    
+
     try {
         await updateDoc(doc(db, "users", currentUid, "movies", currentEditingId), data);
         closeEditModal();
@@ -583,7 +583,7 @@ async function saveEditMovie() {
 async function deleteMovie() {
     if(!currentUid || !currentEditingId) return;
     if(!confirm("Bu içeriği silmek istediğinize emin misiniz?")) return;
-    
+
     try {
         await deleteDoc(doc(db, "users", currentUid, "movies", currentEditingId));
         closeEditModal();

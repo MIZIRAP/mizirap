@@ -33,7 +33,7 @@ export function setupAuthUI() {
             });
             btn.classList.add("active", "text-on-surface");
             btn.classList.remove("text-on-surface-variant");
-            
+
             const target = btn.dataset.auth;
             if(loginForm && registerForm) {
                 loginForm.classList.toggle("hidden", target !== "login");
@@ -103,7 +103,7 @@ export function setupAuthUI() {
             forgotEmail.value = document.getElementById("login-email")?.value || "";
             forgotMsg.textContent = "";
             forgotMsg.className = "font-label-sm min-h-[20px] mb-4";
-            
+
             forgotModal.classList.remove("hidden");
             void forgotModal.offsetWidth;
             const content = document.getElementById("forgot-password-modal-content");
@@ -117,7 +117,7 @@ export function setupAuthUI() {
         };
 
         if (forgotCancel) forgotCancel.addEventListener("click", closeForgotModal);
-        
+
         forgotModal.addEventListener("click", (e) => {
             if(e.target === forgotModal) closeForgotModal();
         });
@@ -130,10 +130,10 @@ export function setupAuthUI() {
                     forgotMsg.className = "font-label-sm min-h-[20px] mb-4 text-error";
                     return;
                 }
-                
+
                 forgotSend.disabled = true;
                 forgotSend.textContent = "Gönderiliyor...";
-                
+
                 try {
                     await sendPasswordResetEmail(auth, email);
                     forgotMsg.textContent = "Şifre sıfırlama bağlantısı gönderildi! Lütfen e-postanızı kontrol edin.";

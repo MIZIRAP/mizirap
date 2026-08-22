@@ -17,5 +17,4 @@ export function clearAllListeners() {
         }
     });
     activeListeners.length = 0; // Clear the array
-    console.log("All Firestore listeners have been unsubscribed.");
 }

@@ -80,7 +80,7 @@ function openEditModal(book) {
     editTitleInput.value = book.title || "";
     editAuthorInput.value = book.author || "";
     editPagesInput.value = book.totalPages || "";
-    
+
     editStatusRadios.forEach(radio => {
         if(radio.value === book.status) radio.checked = true;
     });
@@ -90,10 +90,10 @@ function openEditModal(book) {
 export function initBooks(uid, onChangeCallback) {
     currentUid = uid;
     onChangeCb = onChangeCallback;
-    
+
     // Bind Add Quick Button
     if(addBookBtn) addBookBtn.onclick = openAddModal;
-    
+
     // Close handles
     if(closeAddHandle) closeAddHandle.onclick = () => closeModal(addModal, addModalBackdrop, addModalContent);
     if(closeEditHandle) closeEditHandle.onclick = () => closeModal(editModal, editModalBackdrop, editModalContent);
@@ -112,7 +112,7 @@ export function initBooks(uid, onChangeCallback) {
             const title = titleInput.value.trim();
             const author = authorInput.value.trim();
             const totalPages = parseInt(pagesInput.value) || 0;
-            
+
             let status = "to_read";
             addStatusRadios.forEach(radio => { if(radio.checked) status = radio.value; });
 
@@ -150,7 +150,7 @@ export function initBooks(uid, onChangeCallback) {
             const title = editTitleInput.value.trim();
             const author = editAuthorInput.value.trim();
             const totalPages = parseInt(editPagesInput.value) || 0;
-            
+
             let status = "to_read";
             editStatusRadios.forEach(radio => { if(radio.checked) status = radio.value; });
 
@@ -158,7 +158,7 @@ export function initBooks(uid, onChangeCallback) {
                 alert("Lütfen tüm alanları geçerli şekilde doldurun.");
                 return;
             }
-            
+
             // Validate readPages vs new totalPages
             const currentBook = currentBooks.find(b => b.id === currentEditId);
             let safeReadPages = currentBook ? currentBook.readPages : 0;
@@ -227,28 +227,28 @@ export function initBooks(uid, onChangeCallback) {
     if (booksUnsubscribe) {
         booksUnsubscribe();
     }
-    
+
     const booksRef = collection(db, "users", uid, "books");
     booksUnsubscribe = onSnapshot(booksRef, (snapshot) => {
         currentBooks = [];
         snapshot.forEach(docSnap => {
             currentBooks.push({ id: docSnap.id, ...docSnap.data() });
         });
-        
+
         // Sort by updatedAt descending
         currentBooks.sort((a, b) => {
             const timeA = a.updatedAt ? a.updatedAt.toMillis() : 0;
             const timeB = b.updatedAt ? b.updatedAt.toMillis() : 0;
             return timeB - timeA;
         });
-        
+
         renderBooksView();
-        
+
         if (onChangeCb) onChangeCb(currentBooks);
     }, (error) => {
         console.error("Books Snapshot Error:", error);
     });
-    
+
     registerListener("books", booksUnsubscribe);
 }
 
@@ -256,7 +256,7 @@ async function updateActiveBookPages(newPages) {
     if(!activeBook) return;
     try {
         const docRef = doc(db, "users", currentUid, "books", activeBook.id);
-        
+
         // Also auto-update status if completed
         let newStatus = activeBook.status;
         if(newPages >= activeBook.totalPages && activeBook.status !== "finished") {
@@ -280,7 +280,7 @@ function renderBooksView() {
     if (!activeBook && savedId) {
         activeBook = currentBooks.find(b => b.id === savedId) || null;
     }
-    
+
     if (activeBook) {
         const found = currentBooks.find(b => b.id === activeBook.id);
         if (found) activeBook = found;
@@ -294,10 +294,10 @@ function renderBooksView() {
         }
         activeBook = candidates.length > 0 ? candidates[0] : null;
     }
-    
+
     if (activeBook) {
         localStorage.setItem('lastActiveBookId_' + currentUid, activeBook.id);
-        
+
         currentBooks.sort((a, b) => {
             if (a.id === activeBook.id) return -1;
             if (b.id === activeBook.id) return 1;
@@ -311,7 +311,7 @@ function renderBooksView() {
 
 function updateActiveBookUI() {
     if(!activePagesEl || !activeTotalEl || !progressCircle || !activeTitleEl) return;
-    
+
     if(!activeBook) {
         activePagesEl.textContent = "0";
         activeTotalEl.textContent = "of 0 sayfa";
@@ -321,20 +321,20 @@ function updateActiveBookUI() {
         activePlusBtn.style.opacity = "0.5";
         return;
     }
-    
+
     const read = activeBook.readPages || 0;
     const total = activeBook.totalPages || 1;
     activePagesEl.textContent = read;
     activeTotalEl.textContent = `of ${total} sayfa`;
     activeTitleEl.textContent = activeBook.title || "İsimsiz";
-    
+
     // Calculate stroke dashoffset for circumference 314.159 (radius 50)
     // Formula: circumference - (percentage * circumference)
     const percentage = Math.min(1, Math.max(0, read / total));
     const circumference = 314.159;
     const offset = circumference - (percentage * circumference);
     progressCircle.style.strokeDashoffset = offset;
-    
+
     activeMinusBtn.style.opacity = read <= 0 ? "0.5" : "1";
     activePlusBtn.style.opacity = read >= total ? "0.5" : "1";
 }
@@ -342,21 +342,21 @@ function updateActiveBookUI() {
 
 function renderAllBooksList() {
     if(!allListEl) return;
-    
+
     allListEl.innerHTML = "";
-    
+
     if(currentBooks.length === 0) {
         allListEl.innerHTML = `<p class="text-sm text-gray-400 text-center py-4">Henüz kitap eklemedin.</p>`;
         return;
     }
-    
+
     currentBooks.forEach(book => {
         const safeTitle = escapeHtml(book.title || "İsimsiz");
         const safeAuthor = escapeHtml(book.author || "Yazar Yok");
-        
+
         let statusColor = "text-[#64748B]";
         let statusText = "Okunacak";
-        
+
         if(book.status === "reading") {
             statusColor = "text-[#3B82F6]";
             statusText = "Okuyorum";
@@ -368,7 +368,7 @@ function renderAllBooksList() {
         const wrapper = document.createElement("div");
         wrapper.className = "relative w-full overflow-hidden rounded-2xl mb-4";
         // removed wrapper box shadow since the card inside has it
-        
+
         // Background Actions (Edit & Delete) - Matching Calories Style
         const actionsHtml = `
             <div class="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-2 z-0">
@@ -377,7 +377,7 @@ function renderAllBooksList() {
                 </button>
             </div>
         `;
-        
+
         // Foreground Card
         const cardHtml = `
             <div class="card-content relative z-10 bg-[#F7F9FF] rounded-2xl p-4 flex gap-4 items-center cursor-pointer transition-transform" style="touch-action: pan-y; box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px #FFFFFF;" data-swiped="false">
@@ -394,34 +394,34 @@ function renderAllBooksList() {
                 </div>
             </div>
         `;
-        
+
         wrapper.innerHTML = actionsHtml + cardHtml;
-        
+
         const cardContent = wrapper.querySelector('.card-content');
         const editBtn = wrapper.querySelector('.edit-book-btn');
-        
+
         // --- Swipe Logic ---
         let startX = 0;
         let currentX = 0;
         let isDragging = false;
         const threshold = -80; // One button of 48px + gap
         let isSwiped = false;
-        
+
         cardContent.addEventListener('touchstart', (e) => {
             startX = e.touches[0].clientX;
             isDragging = true;
             cardContent.style.transition = 'none';
         }, { passive: true });
-        
+
         cardContent.addEventListener('touchmove', (e) => {
             if (!isDragging) return;
             currentX = e.touches[0].clientX;
             let diffX = currentX - startX;
-            
+
             // Allow swiping left (negative diff) and right (if already swiped)
             if (!isSwiped && diffX < 0) {
                 // Dragging left from neutral
-                const moveX = Math.max(diffX, -120); 
+                const moveX = Math.max(diffX, -120);
                 cardContent.style.transform = `translateX(${moveX}px)`;
             } else if (isSwiped && diffX > 0) {
                 // Dragging right from swiped
@@ -429,12 +429,12 @@ function renderAllBooksList() {
                 cardContent.style.transform = `translateX(${moveX}px)`;
             }
         }, { passive: true });
-        
+
         cardContent.addEventListener('touchend', (e) => {
             if (!isDragging) return;
             isDragging = false;
             cardContent.style.transition = 'transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)';
-            
+
             let diffX = currentX - startX;
             if (!isSwiped && diffX < -40) {
                 // Trigger swipe open
@@ -447,14 +447,14 @@ function renderAllBooksList() {
             } else {
                 // Snap back to current state
                 cardContent.style.transform = isSwiped ? `translateX(${threshold}px)` : 'translateX(0px)';
-                
+
                 // If it was a tap (very small movement), trigger click
                 if (Math.abs(diffX) < 10) {
                     activeBook = book;
                     localStorage.setItem('lastActiveBookId_' + currentUid, activeBook.id);
                     renderBooksView();
                     if (onChangeCb) onChangeCb(currentBooks);
-                    
+
                     document.querySelectorAll('.card-content').forEach(el => {
                         el.style.transform = 'translateX(0px)';
                     });
@@ -462,7 +462,7 @@ function renderAllBooksList() {
                 }
             }
         });
-        
+
         // Desktop click fallback (if touch is not used)
         cardContent.addEventListener('mousedown', (e) => {
             startX = e.clientX;
@@ -497,7 +497,7 @@ function renderAllBooksList() {
                     localStorage.setItem('lastActiveBookId_' + currentUid, activeBook.id);
                     renderBooksView();
                     if (onChangeCb) onChangeCb(currentBooks);
-                    
+
                     document.querySelectorAll('.card-content').forEach(el => {
                         el.style.transform = 'translateX(0px)';
                     });
@@ -512,14 +512,14 @@ function renderAllBooksList() {
                 cardContent.style.transform = isSwiped ? `translateX(${threshold}px)` : 'translateX(0px)';
              }
         });
-        
+
         // Actions
         editBtn.onclick = () => {
             openEditModal(book);
             cardContent.style.transform = 'translateX(0px)';
             isSwiped = false;
         };
-        
+
         allListEl.appendChild(wrapper);
     });
 }

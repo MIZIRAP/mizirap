@@ -98,7 +98,7 @@ export async function openActiveSession(uid, splitId, dayId, dayObj) {
         };
         const newRef = doc(db, 'users', uid, 'workout_logs', _sessionId);
         await setDoc(newRef, _sessionDoc).catch(e => { console.error('DB Error:', e); alert('Veritabanı işlemi sırasında bir hata oluştu.'); throw e; });
-        
+
         // Reset timer explicitly to now
         _sessionStartTs = new Date();
     }
@@ -143,12 +143,12 @@ async function _loadPreviousSessionData() {
 
     try {
         const allLogs = window._miz_last_workout_logs || [];
-        
+
         // Find the most recent completed session for this specific day
-        const lastDayLog = allLogs.find(log => 
+        const lastDayLog = allLogs.find(log =>
             log.status === 'completed' && log.splitId === _splitId && log.dayId === _dayId
         );
-        
+
         if (lastDayLog && lastDayLog.exercises) {
             _prevData = lastDayLog.exercises;
         }
@@ -157,7 +157,7 @@ async function _loadPreviousSessionData() {
         if (_day && _day.exercises) {
             for (const ex of _day.exercises) {
                 if (!_prevData[ex.id]) {
-                    const latestLogWithEx = allLogs.find(log => 
+                    const latestLogWithEx = allLogs.find(log =>
                         log.status === 'completed' && log.exercises && log.exercises[ex.id]
                     );
                     if (latestLogWithEx) {
@@ -194,7 +194,7 @@ function _buildExState() {
                 weight: draft?.weight ?? fallbackPrevSet?.weight ?? 60,
                 reps:   draft?.reps   ?? fallbackPrevSet?.reps   ?? 8,
                 rpe:    draft?.rpe    ?? null,
-                
+
             });
         }
 
@@ -296,11 +296,11 @@ function _renderSets(exId) {
     state.sets.forEach((set, setIdx) => {
         const isCurrent = setIdx === state.activeSetIdx;
         const isCompleted = setIdx < state.activeSetIdx;
-        
+
         const setEl = document.createElement('article');
         setEl.className = 'neo-surface overflow-hidden rounded-2xl';
         setEl.id = `set-row-${exId}-${setIdx}`;
-        
+
         setEl.innerHTML = _activeSetHTML(exId, setIdx, set, isCurrent, isCompleted);
         container.appendChild(setEl);
     });
@@ -317,7 +317,7 @@ function _activeSetHTML(exId, setIdx, set, isCurrent = false, isCompleted = fals
 
     const rpeButtons = [6, 7, 8, 9, 10].map(r => {
         const isSelected = set.rpe === r;
-        const btnClass = isSelected 
+        const btnClass = isSelected
             ? 'flex-1 py-3 neo-inset rounded-xl font-body-md text-body-md text-primary font-bold bg-primary/5'
             : 'flex-1 py-3 neo-surface rounded-xl font-body-md text-body-md text-text-secondary neo-surface-interactive';
         return `<button data-action="sessionSetRPE" data-ex-id="${exId}" data-set-idx="${setIdx}" data-rpe="${r}" class="${btnClass}">${r}</button>`;
@@ -325,16 +325,16 @@ function _activeSetHTML(exId, setIdx, set, isCurrent = false, isCompleted = fals
 
     const titleText = isCompleted ? 'Tamamlandı' : (isCurrent ? 'Şu anki set' : 'Bekliyor');
     const titleClass = isCompleted ? 'text-accent-green font-semibold' : (isCurrent ? 'text-primary font-semibold' : 'text-text-secondary');
-    
+
     let numBgClass = 'bg-surface-container-high text-outline';
     if (isCurrent) numBgClass = 'bg-primary/10 text-primary';
     if (isCompleted) numBgClass = 'bg-accent-green/10 text-accent-green';
 
     const rpeLabel = (set.rpe && isCompleted) ? `<span class="font-label-sm text-label-sm text-outline ml-2" id="rpe-summary-${exId}-${setIdx}">RPE ${set.rpe}</span>` : `<span class="font-label-sm text-label-sm text-outline ml-2" id="rpe-summary-${exId}-${setIdx}"></span>`;
     const chevronColor = 'text-outline';
-    
+
     // Auto-expand the current set. Users can toggle freely.
-    const isExpanded = isCurrent; 
+    const isExpanded = isCurrent;
 
     // Future sets are disabled until reached
     const isFuture = !isCurrent && !isCompleted;
@@ -388,15 +388,15 @@ function _activeSetHTML(exId, setIdx, set, isCurrent = false, isCompleted = fals
                             </div>
                         </div>
                     </div>
-                    
+
                     <hr class="border-surface-variant mb-4 mx-2">
-                    
+
                     <!-- RPE Selection -->
                     <div class="mb-4">
                         <p class="font-label-sm text-label-sm text-text-secondary mb-2 text-center">RPE (Zorluk) — opsiyonel</p>
                         <div class="rpe-btn-group flex justify-between gap-2">${rpeButtons}</div>
                     </div>
-                    
+
                     <!-- Actions & e1RM -->
                     <div class="flex justify-between items-center mt-4">
                         <div class="neo-inset-pill px-4 py-2 inline-flex items-center">
@@ -484,8 +484,7 @@ async function finishSession() {
             for (const ex of _day.exercises) {
                 const state = _exState[ex.id];
                 if (!state) continue;
-                
-                
+
 
                 exercises[ex.id] = {
                     name: ex.name,
@@ -547,10 +546,10 @@ function _refreshWeightRepsDisplay(exId, setIdx, set) {
     const weightEl = document.getElementById(`weight-val-${exId}-${setIdx}`);
     const repsEl = document.getElementById(`reps-val-${exId}-${setIdx}`);
     const summaryEl = document.getElementById(`set-summary-${exId}-${setIdx}`);
-    
+
     if (weightEl) weightEl.textContent = set.weight;
     if (repsEl) repsEl.textContent = set.reps;
-    
+
     // Only update summary if it's not the "current set" label
     if (summaryEl && summaryEl.textContent !== 'Şu anki set') {
         summaryEl.textContent = `${set.weight}kg × ${set.reps} reps`;
@@ -576,7 +575,7 @@ function _refreshRPEButtons(exId, setIdx, set) {
 
     rpeGroup.innerHTML = [6, 7, 8, 9, 10].map(r => {
         const isSelected = set.rpe === r;
-        const btnClass = isSelected 
+        const btnClass = isSelected
             ? 'flex-1 py-3 neo-inset rounded-xl font-body-md text-body-md text-primary font-bold bg-primary/5'
             : 'flex-1 py-3 neo-surface rounded-xl font-body-md text-body-md text-text-secondary neo-surface-interactive';
         return `<button data-action="sessionSetRPE" data-ex-id="${exId}" data-set-idx="${setIdx}" data-rpe="${r}" class="${btnClass}">${r}</button>`;
@@ -640,7 +639,7 @@ function escHtml(str) {
 window.toggleSet = function(button) {
     const content = button.nextElementSibling;
     const icon = button.querySelector('[data-icon="expand_more"]');
-    
+
     if (content.classList.contains('expanded')) {
         content.classList.remove('expanded');
         if (icon) icon.classList.remove('rotate-180');
@@ -653,14 +652,14 @@ window.toggleSet = function(button) {
 window.completeSet = function(exId, setIdx) {
     const state = _exState[exId];
     if (!state) return;
-    
+
     // Increment activeSetIdx to unlock the next set
     if (state.activeSetIdx === setIdx) {
         state.activeSetIdx++;
-        
+
         // Persist the set immediately to Firestore
         _persistSet(exId, setIdx, state.sets[setIdx]);
-        
+
         // Re-render sets to update UI states (collapses current, expands next)
         _renderSets(exId);
     }

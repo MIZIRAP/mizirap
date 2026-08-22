@@ -127,7 +127,7 @@ export function initCalories(uid, onChangeCallback) {
     unsubscribeLogs = registerListener(onSnapshot(logsRef, (snap) => {
         const today = new Date();
         today.setHours(0,0,0,0);
-        
+
         dailyLogs = [];
         snap.forEach(d => {
             const data = d.data();
@@ -290,7 +290,7 @@ if (caloriesGoalBackdrop) {
         btn.onclick = openNewFoodModal;
     });
 
-    
+
     if (newFoodBackdrop) {
         newFoodBackdrop.onclick = () => closeNewFoodModal();
     }
@@ -391,11 +391,11 @@ if (caloriesGoalBackdrop) {
     if (portionMinusBtn) {
         portionMinusBtn.onclick = () => { adjustAmount(-10); };
     }
-    
+
     if (portionPlusBtn) {
         portionPlusBtn.onclick = () => { adjustAmount(10); };
     }
-    
+
     if (addFoodToLogBtn) {
         addFoodToLogBtn.onclick = async () => {
             let grams = tempPortionAmount;
@@ -404,13 +404,13 @@ if (caloriesGoalBackdrop) {
                 return;
             }
             const total = Math.round((grams / 100) * currentKcalPer100g);
-            
+
             // Approximate macros based on library macros or standard ratios
             let p = 0, k = 0, y = 0;
             if (currentFoodMacros.protein !== null) p = Math.round((grams / 100) * currentFoodMacros.protein);
             if (currentFoodMacros.karb !== null) k = Math.round((grams / 100) * currentFoodMacros.karb);
             if (currentFoodMacros.yag !== null) y = Math.round((grams / 100) * currentFoodMacros.yag);
-            
+
             addFoodToLogBtn.disabled = true;
             try {
                 if (currentEditLogId) {
@@ -469,7 +469,7 @@ function openCaloriesGoalModal() {
     if(macroProteinDisplay) macroProteinDisplay.textContent = tempMacroProtein;
     if(macroKarbDisplay) macroKarbDisplay.textContent = tempMacroKarb;
     if(macroYagDisplay) macroYagDisplay.textContent = tempMacroYag;
-    
+
     caloriesGoalModal.classList.remove('hidden');
     // small delay for transition
     setTimeout(() => {
@@ -495,19 +495,19 @@ function closeCaloriesGoalModal() {
 
 function openNewFoodModal() {
     if(!newFoodModal) return;
-    
+
     // Reset inputs
     tempNewFoodKcal = 100;
     tempNewFoodProtein = 0;
     tempNewFoodKarb = 0;
     tempNewFoodYag = 0;
-    
+
     if (newFoodNameInput) newFoodNameInput.value = "";
     if (newFoodKcalDisplay) newFoodKcalDisplay.textContent = tempNewFoodKcal;
     if (newFoodProteinDisplay) newFoodProteinDisplay.textContent = tempNewFoodProtein;
     if (newFoodKarbDisplay) newFoodKarbDisplay.textContent = tempNewFoodKarb;
     if (newFoodYagDisplay) newFoodYagDisplay.textContent = tempNewFoodYag;
-    
+
     newFoodModal.classList.remove('hidden');
     // small delay for transition
     setTimeout(() => {
@@ -534,21 +534,21 @@ function closeNewFoodModal() {
 function renderLogs() {
     const list = document.getElementById('daily-log-list');
     if(!list) return;
-    
+
     if(dailyLogs.length === 0) {
         list.innerHTML = '<div class="text-center py-4 text-[#64748B] text-sm">Henüz kayıt yok.</div>';
         return;
     }
 
     list.innerHTML = '';
-    
+
     dailyLogs.forEach(log => {
         let dateObj = log.createdAt ? (log.createdAt.toDate ? log.createdAt.toDate() : new Date(log.createdAt)) : new Date();
         let timeStr = dateObj.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' }) + ' ' + (dateObj.getHours() >= 12 ? 'PM' : 'AM');
-        
+
         const wrapper = document.createElement('div');
         wrapper.className = "relative w-full shrink-0";
-        
+
         // Delete button underneath
         const delBtn = document.createElement('button');
         delBtn.className = "absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-red-500 rounded-2xl text-white flex items-center justify-center z-0 active:bg-red-600 transition-colors";
@@ -567,7 +567,7 @@ function renderLogs() {
         const item = document.createElement('div');
         item.className = "relative flex items-center justify-between p-4 rounded-2xl bg-[#F7F9FF] z-10 transition-transform cursor-grab active:cursor-grabbing";
         item.style.boxShadow = "4px 4px 8px #D1D9E6, -4px -4px 8px #FFFFFF";
-        
+
         let iconHtml = '';
         let colorClass = '';
         if(log.type === "Meal") {
@@ -629,7 +629,7 @@ function renderLogs() {
                 item.style.transform = `translateX(0px)`;
             }
         });
-        
+
         wrapper.appendChild(delBtn);
         wrapper.appendChild(item);
         list.appendChild(wrapper);
@@ -640,12 +640,12 @@ window.openAddPortionModal = function(name, kcal100, macros) {
     currentFoodName = name;
     currentKcalPer100g = kcal100;
     currentFoodMacros = macros || {karb: 0, protein: 0, yag: 0};
-    
+
     if(portionModalTitle) portionModalTitle.textContent = name;
     tempPortionAmount = 100;
     if(portionGramDisplay) portionGramDisplay.textContent = tempPortionAmount;
     updatePortionTotal();
-    
+
     if(portionModal) {
         portionModal.classList.remove('hidden');
         setTimeout(() => {
@@ -694,15 +694,15 @@ function adjustAmount(amount) {
 function renderLibraryFoods() {
     const list = document.getElementById('library-food-list');
     if (!list) return;
-    
+
     list.innerHTML = '';
-    
+
     let filteredFoods = libraryFoods;
     if (foodSearchInput && foodSearchInput.value) {
         const q = foodSearchInput.value.toLowerCase();
         filteredFoods = libraryFoods.filter(f => (f.name || "").toLowerCase().includes(q));
     }
-    
+
     if(filteredFoods.length === 0) {
         list.innerHTML = `<p class="text-[#64748B] text-sm text-center py-4">Kayıtlı besin bulunamadı.</p>`;
         return;
@@ -711,7 +711,7 @@ function renderLibraryFoods() {
     filteredFoods.forEach((food) => {
         const wrapper = document.createElement('div');
         wrapper.className = "relative w-full shrink-0 overflow-hidden rounded-2xl";
-        
+
         // Delete button underneath
         const delBtn = document.createElement('button');
         delBtn.className = "absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-red-500 rounded-2xl text-white flex items-center justify-center z-0 active:bg-red-600 transition-colors";
@@ -728,7 +728,7 @@ function renderLibraryFoods() {
         const item = document.createElement('div');
         item.className = "flex items-center justify-between p-4 rounded-2xl bg-[#F7F9FF] relative z-10 transition-transform cursor-pointer";
         item.style.boxShadow = "4px 4px 8px #D1D9E6, -4px -4px 8px #FFFFFF";
-        
+
         let p = food.protein || 0;
         let k = food.karb || 0;
         let y = food.yag || 0;
@@ -745,7 +745,7 @@ function renderLibraryFoods() {
             </div>
             <span class="font-bold text-[#3B82F6] pointer-events-none whitespace-nowrap shrink-0">${food.kcal} kcal</span>
         `;
-        
+
         // Swipe logic
         let startX = 0;
         let currentX = 0;
@@ -784,18 +784,18 @@ function renderLibraryFoods() {
                 item.style.transform = `translateX(0px)`;
             }
         });
-        
+
         item.addEventListener('click', (e) => {
             if (Math.abs(currentX - startX) < 5) {
                 openAddPortionModal(food.name, food.kcal, {karb: food.karb, protein: food.protein, yag: food.yag});
             }
         });
-        
+
         wrapper.appendChild(delBtn);
         wrapper.appendChild(item);
         list.appendChild(wrapper);
     });
-    
+
     const countEl = document.getElementById('library-food-count');
     if (countEl) countEl.textContent = libraryFoods.length;
 }
@@ -816,35 +816,35 @@ function updateUIState() {
     // Update Goals
     const calGoalEl = document.getElementById('ui-calorie-goal');
     if (calGoalEl) calGoalEl.textContent = dailyCalorieGoal;
-    
+
     const proteinGoalEl = document.getElementById('ui-protein-goal');
     if (proteinGoalEl) proteinGoalEl.textContent = proteinGoal;
-    
+
     const karbGoalEl = document.getElementById('ui-karb-goal');
     if (karbGoalEl) karbGoalEl.textContent = karbGoal;
-    
+
     const yagGoalEl = document.getElementById('ui-yag-goal');
     if (yagGoalEl) yagGoalEl.textContent = yagGoal;
-    
+
     // Update Consumed
     const calConsEl = document.getElementById('ui-calorie-consumed');
     if (calConsEl) calConsEl.textContent = totalCaloriesConsumed;
-    
+
     const calRemEl = document.getElementById('ui-calorie-remaining');
     if (calRemEl) {
         let remaining = dailyCalorieGoal - totalCaloriesConsumed;
         calRemEl.textContent = `Kalan: ${remaining > 0 ? remaining : 0} kcal`;
     }
-    
+
     const proteinConsEl = document.getElementById('ui-protein-consumed');
     if (proteinConsEl) proteinConsEl.textContent = proteinConsumed;
-    
+
     const karbConsEl = document.getElementById('ui-karb-consumed');
     if (karbConsEl) karbConsEl.textContent = karbConsumed;
-    
+
     const yagConsEl = document.getElementById('ui-yag-consumed');
     if (yagConsEl) yagConsEl.textContent = yagConsumed;
-    
+
     // Update SVG Circle
     const circle = document.getElementById('ui-calorie-circle');
     if (circle) {
@@ -852,17 +852,17 @@ function updateUIState() {
         let offset = 314.159 - (314.159 * percentage);
         circle.style.strokeDashoffset = offset;
     }
-    
+
     // Update Macro Bars
     const proteinBar = document.getElementById('ui-protein-bar');
     if (proteinBar) proteinBar.style.width = `${Math.min((proteinConsumed / proteinGoal) * 100, 100)}%`;
-    
+
     const karbBar = document.getElementById('ui-karb-bar');
     if (karbBar) karbBar.style.width = `${Math.min((karbConsumed / karbGoal) * 100, 100)}%`;
-    
+
     const yagBar = document.getElementById('ui-yag-bar');
     if (yagBar) yagBar.style.width = `${Math.min((yagConsumed / yagGoal) * 100, 100)}%`;
-    
+
     // Update Dashboard
     const dashCalText = document.getElementById('dashboard-calories-text');
     if (dashCalText) {
@@ -899,13 +899,13 @@ function renderWeeklyChart() {
 
     const today = new Date();
     today.setHours(0,0,0,0);
-    
+
     let chartData = [];
     for(let i=6; i>=0; i--) {
         let d = new Date(today);
         d.setDate(d.getDate() - i);
         let dayStr = d.toISOString().split('T')[0];
-        
+
         let sum = 0;
         weeklyLogs.forEach(l => {
             let logDate = l.createdAt ? (l.createdAt.toDate ? l.createdAt.toDate() : new Date(l.createdAt)) : new Date();
@@ -914,7 +914,7 @@ function renderWeeklyChart() {
                 sum += l.kcal || 0;
             }
         });
-        
+
         chartData.push({
             date: d,
             total: sum,
@@ -929,15 +929,15 @@ function renderWeeklyChart() {
     let maxVal = Math.max(...chartData.map(c => c.total), dailyCalorieGoal, 1);
 
     wrapper.innerHTML = '';
-    
+
     chartData.forEach((data, index) => {
         const isToday = index === 6;
         let percent = Math.min((data.total / maxVal) * 100, 100);
-        
+
         // Colors from user design
         let barColor = isToday ? "bg-[#22C55E]" : (index === 3 ? "bg-[#A855F7]" : "bg-[#3B82F6]");
         let textColor = isToday ? "font-bold text-[#1E293B]" : "text-[#64748B]";
-        
+
         const col = document.createElement('div');
         col.className = "flex flex-col items-center gap-2 w-1/7";
         col.innerHTML = `

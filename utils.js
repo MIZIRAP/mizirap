@@ -39,7 +39,7 @@ export async function handleFormSubmit(btn, inputs, submitAction) {
         if (!inputObj.el) continue;
         const val = inputObj.el.value.trim();
         let errorMsg = null;
-        
+
         if (inputObj.required !== false && !val) {
             errorMsg = "Bu alan zorunludur.";
         } else if (inputObj.type === 'number' && val) {
@@ -50,7 +50,7 @@ export async function handleFormSubmit(btn, inputs, submitAction) {
                 errorMsg = `Değer ${inputObj.min} veya büyük olmalıdır.`;
             }
         }
-        
+
         if (errorMsg) {
             inputObj.el.classList.add('border-error');
             inputObj.el.classList.add('ring-error'); // tailwind ring color if defined

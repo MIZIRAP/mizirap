@@ -9,10 +9,10 @@ let currentUid = null;
 let splits = [];
 let activeSplitId = null;
 let activeDayId = null;
-let currentWorkoutLog = null; 
-let lastWorkoutLog = null; 
+let currentWorkoutLog = null;
+let lastWorkoutLog = null;
 
-let callback = null; 
+let callback = null;
 
 let unsubSplits = null;
 let unsubLogs = null;
@@ -28,11 +28,7 @@ document.addEventListener('click', (e) => {
 
     if (action === 'openSplitEdit') openSplitEdit();
     else if (action === 'closeSplitEdit') closeSplitEdit();
-    
 
-
-
-    
 
     else if (action === 'closeExerciseHistory') closeExerciseHistory();
     else if (action === 'closeSplitSelectionModal') closeSplitSelectionModal();
@@ -85,11 +81,11 @@ export function initWorkout(uid, onChangeCallback) {
     initFavoritesUI();
     localStorage.setItem('uid', uid);
     callback = onChangeCallback;
-    
+
     const splitsRef = collection(db, "users", uid, "splits");
     unsubSplits = registerListener(onSnapshot(splitsRef, (snap) => {
         splits = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-        
+
         const savedSplit = localStorage.getItem(`miz_activeSplit_${uid}`);
         if(savedSplit && splits.find(s => s.id === savedSplit)) {
             activeSplitId = savedSplit;
@@ -100,7 +96,7 @@ export function initWorkout(uid, onChangeCallback) {
         }
 
         renderSplitView();
-        
+
         if(callback) {
             const activeSplit = splits.find(s => s.id === activeSplitId);
             const activeSplitName = activeSplit ? activeSplit.name : "Yapılmadı";
@@ -112,7 +108,7 @@ export function initWorkout(uid, onChangeCallback) {
     const logsRef = query(collection(db, "users", uid, "workout_logs"), orderBy("dateStr", "desc"));
     unsubLogs = registerListener(onSnapshot(logsRef, (snap) => {
         const allLogs = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-        
+
         const mappedLogs = allLogs.map(log => {
             const dateObj = new Date(log.dateStr);
             return {
@@ -120,9 +116,9 @@ export function initWorkout(uid, onChangeCallback) {
                 createdAt: log.createdAt || { toDate: () => dateObj }
             };
         });
-        
+
         window._miz_last_workout_logs = mappedLogs;
-        
+
         if(callback) {
             const activeSplit = splits.find(s => s.id === activeSplitId);
             const activeSplitName = activeSplit ? activeSplit.name : "Yapılmadı";
@@ -130,15 +126,7 @@ export function initWorkout(uid, onChangeCallback) {
         }
     }));
 
-    
 
-    
-
-    
-
-    
-
-    
     // core-image-input: reserved for future core image upload UI
 
     setupEventListeners();
@@ -156,8 +144,8 @@ export function clearWorkout() {
 function setupEventListeners() {
     const saveSplitBtn = document.getElementById("save-split-btn");
     if (saveSplitBtn) saveSplitBtn.onclick = saveNewSplit;
-    
-    
+
+
     const saveWorkoutBtn = document.getElementById("workout-save-btn");
     if (saveWorkoutBtn) saveWorkoutBtn.onclick = saveWorkoutSession;
 }
@@ -167,7 +155,7 @@ function renderSplitView() {
     const descEl = document.getElementById('workout-split-desc');
     const dotsContainer = document.getElementById('workout-day-indicator');
     const dashNameEl = document.getElementById('stat-workout-split');
-    
+
     if (!activeSplitId || splits.length === 0) {
         if(titleEl) titleEl.innerText = "Split Bulunamadı";
         if(descEl) descEl.innerText = "Henüz bir program oluşturmadınız.";
@@ -175,12 +163,12 @@ function renderSplitView() {
         if(dashNameEl) dashNameEl.innerText = "Yapılmadı";
         return;
     }
-    
+
     const activeSplit = splits.find(s => s.id === activeSplitId);
     if (!activeSplit) return;
-    
+
     if(dashNameEl) dashNameEl.innerText = activeSplit.name;
-    
+
     // Restore saved active day or default to first
     if(!activeDayId || !activeSplit.days.find(d => d.id === activeDayId)) {
         const savedDay = localStorage.getItem(`miz_activeDay_${currentUid}`);
@@ -190,20 +178,20 @@ function renderSplitView() {
             activeDayId = activeSplit.days.length > 0 ? activeSplit.days[0].id : null;
         }
     }
-    
+
     const currentDay = activeSplit.days.find(d => d.id === activeDayId) || (activeSplit.days.length > 0 ? activeSplit.days[0] : null);
     if(currentDay) {
         if(titleEl) titleEl.innerText = "Bugün: " + currentDay.name;
         if(descEl) descEl.innerText = (currentDay.exercises ? currentDay.exercises.length : 0) + " Hareket içeren antrenman";
     }
-    
+
     if(dotsContainer && activeSplit.days) {
         dotsContainer.innerHTML = '';
         activeSplit.days.forEach((day, idx) => {
             const isActive = day.id === activeDayId;
             const bar = document.createElement('button');
-            const shadowStyle = isActive 
-                ? 'box-shadow: 2px 2px 5px #D1D9E6, -2px -2px 5px #FFFFFF;' 
+            const shadowStyle = isActive
+                ? 'box-shadow: 2px 2px 5px #D1D9E6, -2px -2px 5px #FFFFFF;'
                 : 'box-shadow: inset 2px 2px 5px #D1D9E6, inset -2px -2px 5px #FFFFFF;';
             const bgClass = isActive ? 'bg-gradient-to-r from-neon-purple to-neon-blue' : 'bg-[#E2E8F0]';
             bar.className = `h-2 rounded-full transition-all duration-300 cursor-pointer ${bgClass} ${isActive ? 'w-10' : 'w-6 opacity-80 hover:opacity-100'}`;
@@ -221,10 +209,10 @@ function selectActiveDay(dayId) {
     if(!activeSplit) return;
     const day = activeSplit.days.find(d => d.id === dayId);
     if(!day) return;
-    
+
     activeDayId = dayId;
     localStorage.setItem(`miz_activeDay_${currentUid}`, dayId);
-    
+
     renderSplitView();
 };
 
@@ -245,10 +233,10 @@ function startActiveSession() {
 
 async function saveWorkoutSession() {
     if(!currentUid || !activeSplitId || !activeDayId) return;
-    
+
     const todayStr = new Date().toLocaleDateString('en-CA');
     const exercisesData = {};
-    
+
     const cards = document.querySelectorAll(".exercise-card");
     cards.forEach(card => {
         const exId = card.dataset.exerciseId;
@@ -263,47 +251,47 @@ async function saveWorkoutSession() {
         });
         if(sets.length > 0) exercisesData[exId] = sets;
     });
-    
+
     if (Object.keys(exercisesData).length === 0) {
         alert("En az bir set verisi girmelisiniz.");
         return;
     }
-    
+
     const logData = {
         splitId: activeSplitId,
         dayId: activeDayId,
         dateStr: todayStr,
         exercises: exercisesData,
-        createdAt: serverTimestamp() 
+        createdAt: serverTimestamp()
     };
-    
+
     try {
         const saveBtn = document.getElementById("workout-save-btn");
         const originalText = saveBtn.innerHTML;
         saveBtn.innerHTML = "Kaydediliyor...";
         saveBtn.disabled = true;
-        
+
         // Always update or create a log for this specific split, day, and date
         logData.completed = true;
         const docId = `${activeSplitId}_${activeDayId}_${todayStr}`;
         await setDoc(doc(db, "users", currentUid, "workout_logs", docId), logData).catch(e => { console.error('DB Error:', e); alert('Veritabanı işlemi sırasında bir hata oluştu.'); throw e; });
         currentWorkoutLog = { id: docId, ...logData };
-        
+
         saveBtn.innerHTML = `<span class="material-symbols-rounded">check_circle</span> Kaydedildi!`;
         saveBtn.classList.add("bg-gradient-to-r from-neon-purple to-neon-blue-container", "text-white-container");
-        
+
         setTimeout(() => {
             saveBtn.innerHTML = originalText;
             saveBtn.classList.remove("bg-gradient-to-r from-neon-purple to-neon-blue-container", "text-white-container");
             saveBtn.disabled = false;
-            
+
             // RESET STATE
             activeDayId = null;
             currentWorkoutLog = null;
-            renderSplitView(); 
+            renderSplitView();
             window.scrollTo(0,0);
         }, 1500);
-        
+
     } catch (e) {
         console.error("Save error:", e);
         alert("Kaydetme sırasında bir hata oluştu.");
@@ -339,7 +327,7 @@ function openEditTemplateView() {
     // Switch View
     document.querySelectorAll(".view").forEach(v => v.classList.add("hidden"));
     document.getElementById("view-edit-workout-template").classList.remove("hidden");
-    
+
     // Hide BottomNavBar for this transactional screen
     const navBar = document.getElementById("bottom-nav");
     if(navBar) navBar.style.display = "none";
@@ -348,14 +336,14 @@ function openEditTemplateView() {
 function renderEditTemplateList() {
     const listEl = document.getElementById("edit-template-exercise-list");
     if (!listEl) return;
-    
+
     listEl.innerHTML = "";
-    
+
     editingExercises.forEach((ex, index) => {
         const item = document.createElement("div");
         item.className = "exercise-item bg-background shadow-neo-lowest rounded-[32px] p-4 shadow-sm flex items-center gap-4 group";
         item.dataset.index = index;
-        
+
         item.innerHTML = `
             <span class="material-symbols-rounded text-outline-variant drag-handle">drag_handle</span>
             <div class="flex-1">
@@ -366,15 +354,15 @@ function renderEditTemplateList() {
                 <span class="material-symbols-rounded" style="font-variation-settings: 'FILL' 1;">delete</span>
             </button>
         `;
-        
+
         item.querySelector(".delete-btn").onclick = () => {
             editingExercises.splice(index, 1);
             renderEditTemplateList();
         };
-        
+
         listEl.appendChild(item);
     });
-    
+
     // Init SortableJS
     if (window.Sortable && !listEl.sortableInstance) {
         listEl.sortableInstance = new Sortable(listEl, {
@@ -423,7 +411,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 if(e.key === 'Enter') addBtn.click();
             });
         }
-        
+
         // Back Btn
         const backBtn = document.getElementById("edit-template-back-btn");
         if(backBtn) {
@@ -431,7 +419,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 closeEditTemplateView();
             };
         }
-        
+
         // Save Btn
         const saveBtn = document.getElementById("edit-template-save-btn");
         if(saveBtn) {
@@ -439,24 +427,24 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (!activeSplitId || !activeDayId) return;
                 const split = splits.find(s => s.id === activeSplitId);
                 if (!split) return;
-                
+
                 const dayIndex = split.days.findIndex(d => d.id === activeDayId);
                 if (dayIndex === -1) return;
-                
+
                 // Update local split object
                 const updatedSplit = JSON.parse(JSON.stringify(split));
                 updatedSplit.days[dayIndex].exercises = editingExercises;
-                
+
                 try {
                     saveBtn.style.opacity = '0.5';
                     saveBtn.disabled = true;
-                    
+
                     await setDoc(doc(db, "users", currentUid, "splits", activeSplitId), updatedSplit).catch(e => { console.error('DB Error:', e); alert('Veritabanı işlemi sırasında bir hata oluştu.'); throw e; });
-                    
+
                     saveBtn.style.opacity = '1';
                     saveBtn.disabled = false;
                     closeEditTemplateView();
-                    
+
                 } catch(e) {
                     console.error("Error updating template:", e);
                     alert("Şablon kaydedilirken hata oluştu.");
@@ -471,7 +459,7 @@ document.addEventListener('DOMContentLoaded', () => {
 function closeEditTemplateView() {
     document.querySelectorAll(".view").forEach(v => v.classList.add("hidden"));
     document.getElementById("view-workout").classList.remove("hidden");
-    
+
     // Show BottomNavBar again
     const navBar = document.getElementById("bottom-nav");
     if(navBar) navBar.style.display = "flex";
@@ -485,18 +473,18 @@ function openSplitSelectionModal() {
     const modal = document.getElementById("splitSelectionModal");
     const content = document.getElementById("splitSelectionModalContent");
     const list = document.getElementById("split-selection-list");
-    
+
     if(!modal || !content || !list) return;
-    
+
     list.innerHTML = "";
-    
+
     if (splits.length === 0) {
         list.innerHTML = `<p class="text-on-surface-variant text-center mt-6">Kayıtlı split yok.</p>`;
     } else {
         splits.forEach(split => {
             const isActive = split.id === activeSplitId;
             const btn = document.createElement("button");
-            
+
             if (isActive) {
                 btn.className = "w-full text-left bg-background shadow-neo-low border-2 border-primary rounded-[32px] p-4 flex items-center justify-between group transition-transform active:scale-[0.98] relative overflow-hidden shadow-sm";
                 btn.innerHTML = `
@@ -511,26 +499,26 @@ function openSplitSelectionModal() {
                 `;
             } else {
                 btn.className = "w-full text-left bg-background shadow-neo-lowest border-none rounded-[32px] p-4 flex items-center justify-between hover:bg-background shadow-neo-low transition-colors active:scale-[0.98] shadow-sm";
-                
+
                 // For subtitle, we could show creation date if available
                 let subTitle = "Kayıtlı Program";
                 if (split.createdAt && split.createdAt.toDate) {
                     const d = split.createdAt.toDate();
                     subTitle = `Eklenme: ${formatDate(d)}`;
                 }
-                
+
                 btn.innerHTML = `
                     <div class="flex flex-col gap-1">
                         <span class="font-body-lg text-body-lg text-on-background">${escapeHtml(split.name)}</span>
                         <span class="font-label-md text-label-md text-on-surface-variant">${subTitle}</span>
                     </div>
                 `;
-                
+
                 btn.onclick = () => {
                     activeSplitId = split.id;
                     localStorage.setItem(`miz_activeSplit_${currentUid}`, split.id);
                     // activeDayId will be reset/fixed automatically in renderSplitView
-                    activeDayId = null; 
+                    activeDayId = null;
                     renderSplitView();
                     closeSplitSelectionModal();
                 };
@@ -538,7 +526,7 @@ function openSplitSelectionModal() {
             list.appendChild(btn);
         });
     }
-    
+
     modal.classList.remove('hidden');
     setTimeout(() => {
         modal.classList.remove('opacity-0');
@@ -585,7 +573,7 @@ function toggleFavorite(e, btn) {
     e.stopPropagation();
     const exName = btn.closest('.exercise-item').querySelector('h4').innerText;
     let favs = JSON.parse(localStorage.getItem(`miz_fav_exercises_${currentUid}`) || "[]");
-    
+
     if (favs.includes(exName)) {
         favs = favs.filter(f => f !== exName);
     } else {
@@ -607,32 +595,32 @@ function switchView(viewId) {
 
 function closeExerciseHistory() {
     switchView('workout');
-    renderSplitView(); 
+    renderSplitView();
 };
 
 async function openExerciseHistory(triggerExId, exName) {
     if(!currentUid) return;
-    
+
     // Switch view
     switchView('exercise-history');
-    
+
     // Setup UI loading state
     const titleEl = document.getElementById("history-title");
     const maxWeightEl = document.getElementById("history-max-weight");
     const trendBadgeEl = document.getElementById("history-trend-badge");
     const chartContainer = document.getElementById("history-chart-container");
     const listContainer = document.getElementById("history-list-container");
-    
+
     titleEl.textContent = `${exName} Geçmişi`;
     maxWeightEl.textContent = "...";
     trendBadgeEl.innerHTML = ``;
     chartContainer.innerHTML = `<div class="absolute inset-0 flex items-center justify-center text-outline text-sm">Yükleniyor...</div>`;
     listContainer.innerHTML = `<div class="text-center text-outline text-sm py-4">Veriler getiriliyor...</div>`;
-    
+
     // 1. Gather all exercise IDs that match the target name (case-insensitive) across all splits
     const targetNameLower = exName.toLowerCase().trim();
     const targetIds = new Set();
-    
+
     splits.forEach(s => {
         s.days.forEach(d => {
             d.exercises.forEach(e => {
@@ -642,7 +630,7 @@ async function openExerciseHistory(triggerExId, exName) {
             });
         });
     });
-    
+
     // 2. Fetch all workout logs for this user, ordered by date descending
     try {
         const q = query(
@@ -650,14 +638,14 @@ async function openExerciseHistory(triggerExId, exName) {
             orderBy("dateStr", "desc") // Fetching all and filtering in memory, limits could be applied if >1000 logs, but ok for now
         );
         const snap = await getDocs(q).catch(e => { console.error('DB Error:', e); alert('Veritabanı işlemi sırasında bir hata oluştu.'); throw e; });
-        
+
         let historyRecords = []; // Array to store matching logs
         let overallMaxWeight = 0;
-        
+
         snap.forEach(docSnap => {
             const logData = docSnap.data();
             const exData = logData.exercises || {};
-            
+
             // Check if this log contains ANY of the target IDs
             let matchedSets = null;
             let matchedExId = null;
@@ -668,29 +656,29 @@ async function openExerciseHistory(triggerExId, exName) {
                     break;
                 }
             }
-            
+
             if(matchedSets && matchedSets.length > 0) {
                 // Calculate max weight and volume for this session
                 let sessionMaxW = 0;
                 let sessionTotalSets = matchedSets.length;
                 let sessionTotalReps = 0;
                 let bestSet = null;
-                
+
                 matchedSets.forEach(s => {
                     const w = parseFloat(s.weight) || 0;
                     const r = parseInt(s.reps) || 0;
                     sessionTotalReps += r;
                     if(w > sessionMaxW) sessionMaxW = w;
-                    
+
                     if(!bestSet || w > parseFloat(bestSet.weight)) {
                         bestSet = s;
                     } else if (w === parseFloat(bestSet.weight) && r > parseInt(bestSet.reps)) {
                         bestSet = s;
                     }
                 });
-                
+
                 if(sessionMaxW > overallMaxWeight) overallMaxWeight = sessionMaxW;
-                
+
                 historyRecords.push({
                     dateStr: logData.dateStr, // YYYY-MM-DD
                     maxWeight: sessionMaxW,
@@ -701,7 +689,7 @@ async function openExerciseHistory(triggerExId, exName) {
                 });
             }
         });
-        
+
         // 3. Process Data for UI
         if(historyRecords.length === 0) {
             maxWeightEl.textContent = "0.0 kg";
@@ -709,9 +697,9 @@ async function openExerciseHistory(triggerExId, exName) {
             listContainer.innerHTML = `<div class="text-center text-outline text-sm py-4">Henüz bu hareket için geçmiş kayıt yok.</div>`;
             return;
         }
-        
+
         maxWeightEl.textContent = `${overallMaxWeight.toFixed(1)} kg`;
-        
+
         // Trend calculation (compare most recent with the one before it, or oldest in this month)
         // Let's just compare the latest record's max weight with the second latest
         if(historyRecords.length >= 2) {
@@ -742,19 +730,19 @@ async function openExerciseHistory(triggerExId, exName) {
             `;
              trendBadgeEl.className = "bg-gradient-to-r from-neon-purple to-neon-blue-container bg-opacity-20 rounded-full px-3 py-1 flex items-center gap-1";
         }
-        
+
         // Render List (Only last 3)
         listContainer.innerHTML = "";
         const recordsToDisplay = historyRecords.slice(0, 3);
-        
+
         recordsToDisplay.forEach((rec, idx) => {
             const dateObj = new Date(rec.dateStr);
             const dateFormatted = formatDate(dateObj, { day: 'numeric', month: 'long', year: 'numeric' });
-            
+
             // Format best set like "4 x 8 x 85.0 kg" as per UI mockup
             const bestW = rec.bestSet ? parseFloat(rec.bestSet.weight).toFixed(1) : 0;
             const bestR = rec.bestSet ? parseInt(rec.bestSet.reps) : 0;
-            
+
             let diffBadge = `<div class="text-on-surface-variant font-label-md text-label-md px-2 py-1">-</div>`;
             if (idx < historyRecords.length - 1) {
                 const prevRec = historyRecords[idx+1];
@@ -765,10 +753,10 @@ async function openExerciseHistory(triggerExId, exName) {
                     diffBadge = `<div class="bg-error-container bg-opacity-10 text-error font-label-md text-label-md px-1 py-1 rounded inline-block min-w-[56px] text-center">${diff.toFixed(1)} kg</div>`;
                 }
             }
-            
+
             // Opacity for older items
             const opacityClass = idx === 0 ? "opacity-100" : (idx === 1 ? "opacity-90" : "opacity-80");
-            
+
             listContainer.innerHTML += `
                 <div class="bg-background shadow-neo-lowest rounded-[32px] shadow-sm p-4 flex items-center justify-between interactive-card cursor-pointer ${opacityClass}">
                     <div class="flex items-center gap-4">
@@ -784,7 +772,7 @@ async function openExerciseHistory(triggerExId, exName) {
                 </div>
             `;
         });
-        
+
         // Render Chart
         // We take up to 5 points for the chart to make it look nice (ascending order for left-to-right)
         const chartData = historyRecords.slice(0, 5).reverse();
@@ -796,7 +784,7 @@ async function openExerciseHistory(triggerExId, exName) {
             const maxW = Math.max(...weights);
             const minW = Math.max(0, Math.min(...weights) - 5); // padding below
             const range = maxW - minW || 1; // avoid div by 0
-            
+
             // Y Axis Labels
             const yLabels = `
                 <div class="absolute left-0 top-0 h-full flex flex-col justify-between text-label-sm text-outline font-label-sm pb-6 pr-2">
@@ -806,7 +794,7 @@ async function openExerciseHistory(triggerExId, exName) {
                     <span>${Math.round(minW)}k</span>
                 </div>
             `;
-            
+
             const gridLines = `
                 <div class="absolute inset-0 ml-6 mb-6 flex flex-col justify-between z-0">
                     <div class="w-full border-t border-surface-variant"></div>
@@ -815,28 +803,28 @@ async function openExerciseHistory(triggerExId, exName) {
                     <div class="w-full border-t border-surface-variant"></div>
                 </div>
             `;
-            
+
             let pathD = "";
             let pointsHtml = "";
             let xLabelsHtml = "";
-            
+
             const width = 100; // SVG viewBox 0-100
             const height = 100;
-            
+
             chartData.forEach((d, i) => {
                 const x = 5 + (i * (90 / (chartData.length - 1))); // spread 5 to 95
                 const y = 100 - (((d.maxWeight - minW) / range) * 80 + 10); // 10 to 90
-                
+
                 if(i === 0) pathD += `M ${x},${y} `;
                 else pathD += `L ${x},${y} `;
-                
+
                 pointsHtml += `<div class="w-2 h-2 rounded-full bg-gradient-to-r from-neon-purple to-neon-blue border-2 border-surface-container-lowest absolute bottom-[${100-y}%] left-[${x}%] transform -translate-x-1/2 translate-y-1/2"></div>`;
-                
+
                 const dObj = new Date(d.dateStr);
                 const shortDate = formatDate(dObj, { day: 'numeric', month: 'short' });
                 xLabelsHtml += `<span>${shortDate}</span>`;
             });
-            
+
             const chartHtml = `
                 ${yLabels}
                 ${gridLines}
@@ -850,7 +838,7 @@ async function openExerciseHistory(triggerExId, exName) {
                     ${xLabelsHtml}
                 </div>
             `;
-            
+
             chartContainer.innerHTML = chartHtml;
         }
 
@@ -859,7 +847,6 @@ async function openExerciseHistory(triggerExId, exName) {
         listContainer.innerHTML = `<div class="text-center text-error text-sm py-4">Veriler getirilirken bir hata oluştu.</div>`;
     }
 };
-
 
 
 // ==========================================
@@ -884,7 +871,7 @@ function openSplitEdit() {
     document.querySelectorAll('.view').forEach(v => {
         if(v.id !== 'view-split-edit') v.classList.add('hidden');
     });
-    
+
     document.getElementById('view-split-edit').classList.remove('hidden');
     renderSplitEditView();
 };
@@ -903,7 +890,7 @@ const _openExAccordions = new Set();
 function renderSplitEditView() {
     const mainContainer = document.getElementById('split-edit-main-container');
     if(!mainContainer) return;
-    
+
     if(splits.length === 0) {
         mainContainer.innerHTML = `<div class="flex flex-col items-center justify-center py-8 opacity-40">
             <span class="material-symbols-outlined text-on-surface-variant mb-2">calendar_today</span>
@@ -911,16 +898,16 @@ function renderSplitEditView() {
         </div>`;
         return;
     }
-    
+
     mainContainer.innerHTML = '';
-    
+
     splits.forEach(split => {
         const isSplitOpen = _openSplitAccordions.has(split.id);
         const splitCard = document.createElement('div');
         splitCard.className = `split-card w-full max-w-[342px] mx-auto flex flex-col items-center ${isSplitOpen ? 'expanded' : ''}`;
-        
+
         const splitInitial = (split.name || 'S').charAt(0).toUpperCase();
-        
+
         let daysHtml = '';
         if (!split.days || split.days.length === 0) {
             daysHtml = `
@@ -934,7 +921,7 @@ function renderSplitEditView() {
             split.days.forEach((day, dayIdx) => {
                 const dayAccordionKey = `${split.id}-${dayIdx}`;
                 const isDayOpen = _openDayAccordions.has(dayAccordionKey);
-                
+
                 let exHtml = '';
                 if (!day.exercises || day.exercises.length === 0) {
                     exHtml = `
@@ -950,7 +937,7 @@ function renderSplitEditView() {
                         const isExOpen = _openExAccordions.has(exAccordionKey);
                         const initial = (ex.name || 'E').charAt(0).toUpperCase();
                         const sets = ex.defaultSets || 3;
-                        
+
                         exHtml += `
                         <div class="exercise-card w-[282px] flex flex-col items-center ${isExOpen ? 'expanded' : ''} ex-drag-item" data-ex-idx="${exIdx}" data-split-id="${split.id}" data-day-idx="${dayIdx}">
                             <div class="accordion-header w-[282px] h-[56px] bg-[#E8EAF0] rounded-[12px] p-3 flex items-center justify-between cursor-pointer transition-all z-20 relative" style="box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.08), -4px -4px 8px rgba(255, 255, 255, 0.6);" onclick="toggleMizAccordion(this, '${exAccordionKey}', 'ex', event)">
@@ -968,7 +955,7 @@ function renderSplitEditView() {
                                     </button>
                                 </div>
                             </div>
-                            
+
                             <!-- Ex Content -->
                             <div class="accordion-content w-[250px] bg-transparent pt-3 pb-3 flex flex-col gap-2 relative z-10 transition-all overflow-hidden ${isExOpen ? 'expanded' : ''}" style="margin-top: 0px; ${isExOpen ? 'max-height: 500px;' : ''}">
                                 <div class="flex items-center gap-4 w-[160px] h-[40px] mx-auto mt-2">
@@ -986,7 +973,7 @@ function renderSplitEditView() {
                     });
                     exHtml += `</div>`;
                 }
-                
+
                 daysHtml += `
                 <div class="day-card w-full flex flex-col items-center ${isDayOpen ? 'expanded' : ''}">
                     <!-- Day Header -->
@@ -1005,7 +992,7 @@ function renderSplitEditView() {
                             </button>
                         </div>
                     </div>
-                    
+
                     <!-- Day Content -->
                     <div class="accordion-content w-[294px] bg-[#E8EAF0] rounded-[8px] pt-[24px] pb-[12px] px-[12px] relative z-20 flex flex-col items-center transition-all overflow-hidden ${isDayOpen ? 'expanded' : ''}" style="margin-top: -12px; ${isDayOpen ? 'max-height: 2000px;' : ''}">
                         ${exHtml}
@@ -1019,7 +1006,7 @@ function renderSplitEditView() {
             });
             daysHtml += `</div>`;
         }
-        
+
         let splitHeaderStyles = 'box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.08), -6px -6px 12px rgba(255, 255, 255, 0.6);';
         let splitHeaderWrapperClass = 'accordion-header w-[342px] h-[72px] rounded-[24px] relative z-40 transition-all cursor-pointer p-[2px] bg-gradient-to-r from-[#4648D4] to-[#20E0B0]';
 
@@ -1038,7 +1025,7 @@ function renderSplitEditView() {
                     </div>
                 </div>
             </div>
-            
+
             <!-- Split Content -->
             <div class="accordion-content w-[342px] bg-[#E8EAF0] rounded-[16px] pt-[32px] px-[16px] pb-[16px] relative z-30 flex flex-col items-center transition-all overflow-hidden ${isSplitOpen ? 'expanded' : ''}" style="margin-top: -16px; ${isSplitOpen ? 'max-height: 5000px;' : ''}">
                 ${daysHtml}
@@ -1050,8 +1037,8 @@ function renderSplitEditView() {
                 </div>
             </div>
         `;
-        
-        
+
+
         const headerEl = splitCard.querySelector('.accordion-header');
         if(headerEl) {
             let startX=0, startY=0;
@@ -1071,7 +1058,7 @@ function renderSplitEditView() {
         }
         mainContainer.appendChild(splitCard);
 
-        
+
         if (split.days) {
             split.days.forEach((day, dayIdx) => {
                 const listEl = splitCard.querySelector(`#ex-list-${split.id}-${dayIdx}`);
@@ -1085,7 +1072,7 @@ function renderSplitEditView() {
 function toggleDayAccordion(key, headerBtn) {
     const body = headerBtn.closest('.bg-background.shadow-neo-lowest').querySelector('.accordion-body');
     const chevron = headerBtn.querySelector('.material-symbols-rounded');
-    
+
     if(_openDayAccordions.has(key)) {
         _openDayAccordions.delete(key);
         body.classList.add('hidden');
@@ -1094,14 +1081,14 @@ function toggleDayAccordion(key, headerBtn) {
         _openDayAccordions.add(key);
         body.classList.remove('hidden');
         chevron.classList.add('rotate-90');
-        
+
         // Init sortable after opening
         const [splitId, dayIdx] = [key.split('-')[0] + '-' + key.split('-')[1] + '-' + key.split('-')[2], parseInt(key.split('-').pop())];
         // Re-parse key properly: key is `${activeSplit.id}-${dayIdx}` but splitId may contain dashes
         const lastDash = key.lastIndexOf('-');
         const parsedSplitId = key.substring(0, lastDash);
         const parsedDayIdx = parseInt(key.substring(lastDash + 1));
-        
+
         const listEl = document.getElementById(`ex-list-${parsedSplitId}-${parsedDayIdx}`);
         if(listEl) _initExSortable(listEl, parsedSplitId, parsedDayIdx);
     }
@@ -1110,7 +1097,7 @@ function toggleDayAccordion(key, headerBtn) {
 function _initExSortable(listEl, splitId, dayIdx) {
     if(listEl._sortable) { listEl._sortable.destroy(); }
     if(typeof Sortable === 'undefined') return;
-    
+
     listEl._sortable = Sortable.create(listEl, {
         handle: '.drag-handle',
         animation: 150,
@@ -1137,10 +1124,10 @@ function changeExerciseSets(splitId, dayIdx, exIdx, delta) {
     if(!split) return;
     const ex = split.days[dayIdx].exercises[exIdx];
     ex.defaultSets = Math.max(1, (ex.defaultSets || 3) + delta);
-    
+
     const label = document.getElementById(`sets-lbl-${splitId}-${dayIdx}-${exIdx}`);
     if(label) label.innerText = `${ex.defaultSets} set`;
-    
+
     persistSplitEdit(split);
 };
 
@@ -1158,7 +1145,7 @@ function openExercisePickerForSplit(splitId, dayIdx) {
     currentPickerDayId = `__split__${splitId}__day__${dayIdx}`;
     document.getElementById('modal-exercise-picker').classList.remove('hidden');
     renderExercisePickerList('Tümü');
-    
+
     const searchInput = document.getElementById('exercise-picker-search');
     if(searchInput) {
         searchInput.value = '';
@@ -1170,7 +1157,7 @@ function openExercisePickerForSplit(splitId, dayIdx) {
 const _origPickerClick = window._origPickerClick;
 function handlePickerSelect(exName) {
     if(!currentPickerDayId) return;
-    
+
     if(currentPickerDayId.startsWith('__split__')) {
         // Mevcut split'e ekle
         const parts = currentPickerDayId.split('__');
@@ -1230,15 +1217,15 @@ async function persistSplitEdit(split) {
 function openCreateSplitView() {
     document.getElementById('view-split-edit').classList.add('hidden');
     document.getElementById('view-create-split').classList.remove('hidden');
-    
+
     const headerTitle = document.querySelector('#view-create-split header h1');
     if(headerTitle) headerTitle.innerText = "Yeni Split";
-    
+
     newSplitId = 'split_' + Date.now();
     newSplitDays = [];
     document.getElementById('create-split-name-input').value = "";
     renderCreateSplitDays();
-    
+
     // Bind save button
     document.getElementById('create-split-save-btn').onclick = saveNewSplit;
 };
@@ -1261,11 +1248,11 @@ function addDayToNewSplit() {
 function renderCreateSplitDays() {
     const container = document.getElementById('create-split-days-container');
     container.innerHTML = '';
-    
+
     newSplitDays.forEach((day, index) => {
         const div = document.createElement('div');
         div.className = "bg-background shadow-neo-lowest rounded-[32px] p-md shadow-sm relative";
-        
+
         let exHtml = '';
         if(day.exercises.length === 0) {
             exHtml = `<p class="text-label-sm text-on-surface-variant italic mb-2">Henüz hareket eklenmedi.</p>`;
@@ -1281,7 +1268,7 @@ function renderCreateSplitDays() {
                 `;
             });
         }
-        
+
         div.innerHTML = `
             <div class="flex items-center justify-between mb-sm">
                 <input type="text" value="${day.name}" onchange="updateNewDayName(${index}, this.value)" class="font-title-md text-title-md font-bold text-on-surface bg-transparent outline-none w-3/4 border-b border-transparent focus:border-none focus:shadow-neo-inset rounded">
@@ -1318,7 +1305,7 @@ function openExercisePicker(dayId) {
     currentPickerDayId = dayId;
     document.getElementById('modal-exercise-picker').classList.remove('hidden');
     renderExercisePickerList('Tümü');
-    
+
     const searchInput = document.getElementById('exercise-picker-search');
     if(searchInput) {
         searchInput.value = '';
@@ -1339,7 +1326,7 @@ function filterPickerCategory(cat, btnElement) {
         b.className = "px-4 py-1.5 rounded-full border-none text-on-surface-variant font-label-sm whitespace-nowrap";
     });
     if(btnElement) btnElement.className = "px-4 py-1.5 rounded-full bg-gradient-to-r from-neon-purple to-neon-blue text-white font-label-sm whitespace-nowrap";
-    
+
     const searchInput = document.getElementById('exercise-picker-search');
     renderExercisePickerList(cat, searchInput ? searchInput.value : '');
 };
@@ -1347,15 +1334,15 @@ function filterPickerCategory(cat, btnElement) {
 function renderExercisePickerList(category, searchTerm = '') {
     const list = document.getElementById('exercise-picker-list');
     list.innerHTML = '';
-    
+
     if(!window.EXERCISE_MUSCLE_MAPPING) {
         list.innerHTML = '<p class="text-on-surface-variant p-4">Egzersiz verisi bulunamadı. Lütfen sayfayı yenileyin.</p>';
         return;
     }
-    
+
     const exercises = Object.keys(window.EXERCISE_MUSCLE_MAPPING);
     let filtered = exercises;
-    
+
     if(category !== 'Tümü') {
         const catMap = {
             'Göğüs': ['chest'],
@@ -1367,7 +1354,7 @@ function renderExercisePickerList(category, searchTerm = '') {
             'Karın': ['abs', 'obliques']
         };
         const targets = catMap[category] || [category.toLowerCase()];
-        
+
         filtered = filtered.filter(exName => {
             const data = window.EXERCISE_MUSCLE_MAPPING[exName];
             if(!data) return false;
@@ -1377,12 +1364,12 @@ function renderExercisePickerList(category, searchTerm = '') {
             );
         });
     }
-    
+
     if(searchTerm.trim() !== '') {
         const term = searchTerm.toLowerCase();
         filtered = filtered.filter(ex => ex.toLowerCase().includes(term));
     }
-    
+
     filtered.forEach(exName => {
         const btn = document.createElement('button');
         btn.className = "w-full text-left p-3 rounded-[32px] hover:bg-background shadow-neo-high transition-colors flex items-center justify-between border-none hover:border-none shadow-neo-inset p-2 rounded";
@@ -1401,34 +1388,34 @@ async function saveNewSplit() {
         alert("Lütfen split adı girin.");
         return;
     }
-    
+
     if(newSplitDays.length === 0) {
         alert("En az bir gün eklemelisiniz.");
         return;
     }
-    
+
     const saveBtn = document.getElementById('create-split-save-btn');
     saveBtn.disabled = true;
     saveBtn.innerText = "Kaydediliyor...";
-    
+
     try {
-        
+
         const newSplit = {
             id: newSplitId,
             name: nameInput,
             days: newSplitDays,
             createdAt: new Date().toISOString()
         };
-        
+
         await setDoc(doc(db, "users", currentUid, "splits", newSplitId), newSplit).catch(e => { console.error('DB Error:', e); alert('Veritabanı işlemi sırasında bir hata oluştu.'); throw e; });
-        
+
         const existingIdx = splits.findIndex(s => s.id === newSplitId);
         if (existingIdx !== -1) {
             splits[existingIdx] = newSplit;
         } else {
             splits.push(newSplit);
         }
-        
+
         if(splits.length === 1 || !activeSplitId) {
             activeSplitId = newSplitId;
             await setDoc(doc(db, "users", currentUid), {
@@ -1436,14 +1423,14 @@ async function saveNewSplit() {
             }, { merge: true });
             localStorage.setItem(`miz_activeSplit_${currentUid}`, newSplitId);
         }
-        
+
         closeCreateSplitView();
         renderSplitEditView();
-        
+
         if(typeof renderSplitView === 'function') {
             renderSplitView();
         }
-        
+
     } catch(e) {
         console.error("Error saving new split", e);
         alert("Kaydedilirken hata oluştu.");
@@ -1456,17 +1443,17 @@ async function saveNewSplit() {
 function openSplitModal() {
     const modal = document.getElementById('modal-split-change');
     const optionsContainer = document.getElementById('split-modal-options');
-    
+
     if(!modal || !optionsContainer) return;
-    
+
     optionsContainer.innerHTML = '';
     tempSelectedSplitId = activeSplitId;
-    
+
     splits.forEach(split => {
         const isAct = split.id === activeSplitId;
         const div = document.createElement('div');
         div.className = `flex flex-col p-4 rounded-[32px] border ${isAct ? 'border-none shadow-neo-inset bg-gradient-to-r from-neon-purple to-neon-blue-container/10' : 'border-none bg-background shadow-neo'} cursor-pointer hover:bg-background shadow-neo-high transition-colors`;
-        
+
         div.innerHTML = `
             <div class="flex items-center justify-between mb-2" data-action="selectSplit" data-split-id="${split.id}">
                 <div>
@@ -1486,7 +1473,7 @@ function openSplitModal() {
         `;
         optionsContainer.appendChild(div);
     });
-    
+
     modal.classList.remove('hidden');
 };
 
@@ -1514,23 +1501,23 @@ function selectSplit(splitId) {
 async function applySplitSelection() {
     if(!tempSelectedSplitId) return;
     activeSplitId = tempSelectedSplitId;
-    
+
     try {
         await setDoc(doc(db, "users", currentUid), {
             activeSplitId: activeSplitId
         }, { merge: true });
         localStorage.setItem(`miz_activeSplit_${currentUid}`, activeSplitId);
-        
+
         if (typeof renderSplitEditView === 'function') renderSplitEditView();
         if (typeof renderSplitView === 'function') renderSplitView();
-        
+
         // Notify dashboard of the split change so it doesn't revert
         if (callback) {
             const activeSplit = splits.find(s => s.id === activeSplitId);
             const activeSplitName = activeSplit ? activeSplit.name : "Yapılmadı";
             callback(window._miz_last_workout_logs || [], activeSplitName);
         }
-        
+
         closeSplitModal();
     } catch(e) {
         console.error(e);
@@ -1541,31 +1528,31 @@ async function applySplitSelection() {
 function openEditSplitView(splitId) {
     const split = splits.find(s => s.id === splitId);
     if(!split) return;
-    
+
     closeSplitModal();
-    
+
     document.getElementById('view-split-edit').classList.add('hidden');
     document.getElementById('view-create-split').classList.remove('hidden');
-    
+
     const headerTitle = document.querySelector('#view-create-split header h1');
     if(headerTitle) headerTitle.innerText = "Split Düzenle";
-    
+
     newSplitId = split.id;
     newSplitDays = JSON.parse(JSON.stringify(split.days || []));
-    
+
     document.getElementById('create-split-name-input').value = split.name;
     renderCreateSplitDays();
-    
+
     document.getElementById('create-split-save-btn').onclick = saveNewSplit;
 };
 
 async function deleteSplit(splitId) {
     if(!confirm("Bu split'i silmek istediğinize emin misiniz?")) return;
-    
+
     try {
         await deleteDoc(doc(db, "users", currentUid, "splits", splitId)).catch(e => { console.error('DB Error:', e); alert('Veritabanı işlemi sırasında bir hata oluştu.'); throw e; });
         splits = splits.filter(s => s.id !== splitId);
-        
+
         if(activeSplitId === splitId) {
             activeSplitId = splits.length > 0 ? splits[0].id : null;
             if(activeSplitId) {
@@ -1576,15 +1563,15 @@ async function deleteSplit(splitId) {
                 localStorage.removeItem(`miz_activeSplit_${currentUid}`);
             }
         }
-        
+
         if (typeof renderSplitEditView === 'function') renderSplitEditView();
         if (typeof renderSplitView === 'function') renderSplitView();
-        
+
         const modal = document.getElementById('modal-split-change');
         if(modal && !modal.classList.contains('hidden')) {
             openSplitModal();
         }
-        
+
     } catch(e) {
         console.error(e);
         alert("Silme işlemi başarısız.");
@@ -1596,23 +1583,9 @@ async function deleteSplit(splitId) {
 // ==========================================
 
 
-
-
-
-
-
-
-
-
-
-
-
 // ==========================================
 // STRETCH SESSIONS
 // ==========================================
-
-
-
 
 
 function openAddSessionModal(isEdit = false) {
@@ -1748,24 +1721,12 @@ function initSessionDrag(list) {
 }
 
 
-
-
-
-
-
-
-
-
-
 function _playFinishBeep() {
     // Triple ascending beep on movement finish
     _playBeep(660, 0.15, 0.3);
     setTimeout(() => _playBeep(784, 0.15, 0.35), 180);
     setTimeout(() => _playBeep(1046, 0.25, 0.4), 360);
 }
-
-
-
 
 
 function _spLoadMovement(idx) {
@@ -1864,12 +1825,6 @@ function _spStopTimer() {
 }
 
 
-
-
-
-
-
-
 // ==========================================
 // CORE PLAYER ENGINE
 // ==========================================
@@ -1877,8 +1832,6 @@ function _spStopTimer() {
 let _cpTimeLeft = 0;
 let _cpTotalTime = 0;
 let _cpInterval = null;
-
-
 
 
 function _cpLoadMovement(idx) {
@@ -1902,7 +1855,7 @@ function _cpLoadMovement(idx) {
 
     document.getElementById('core-player-name').textContent = move.name;
     document.getElementById('core-player-counter').textContent = `${idx + 1} / ${_cpMovements.length}`;
-    
+
     _cpRenderProgressStrip(idx);
 
     _playBeep(660, 0.15, 0.3);
@@ -1974,30 +1927,6 @@ function _cpPauseToggle() {
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 // category grid logic for Add Core Sheet
 document.addEventListener('DOMContentLoaded', () => {
     const catBtns = document.querySelectorAll('#coreCategoryGrid .category-select-btn');
@@ -2015,37 +1944,10 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 // --- Global Exports for Inline HTML Handlers ---
 
 
-
-
 // --- Stretch Add/Edit Bottom Sheet Functions ---
-
-
-
-
-
-
-
-
-
-
-
 
 
 // Window Exports
@@ -2077,27 +1979,27 @@ let sessionSortableInstance = null;
 function openCreateSessionSheet(type) {
     currentSessionType = type;
     currentSessionExercises = [];
-    
+
     document.getElementById('newSessionName').value = '';
     document.getElementById('sessionSearchInput').value = '';
-    
+
     const title = document.getElementById('create-session-title');
     title.textContent = type === 'core' ? 'Core Seansı Oluştur' : 'Esneme Seansı Oluştur';
-    
+
     renderSessionAvailableExercises();
     renderSessionSelectedExercises();
-    
+
     const sheet = document.getElementById('create-session-bottom-sheet');
     const sheetContent = document.getElementById('create-session-bottom-sheet-content');
-    
+
     sheet.classList.remove('pointer-events-none');
     sheet.classList.remove('opacity-0');
     sheet.classList.add('opacity-100');
-    
+
     setTimeout(() => {
         sheetContent.classList.remove('translate-y-full');
         sheetContent.classList.add('translate-y-0');
-        
+
         // Init sortable if not already init
         if (!sessionSortableInstance && typeof Sortable !== 'undefined') {
             const el = document.getElementById('session-selected-exercises');
@@ -2110,7 +2012,7 @@ function openCreateSessionSheet(type) {
                     const itemEl = evt.item;
                     const newIndex = evt.newIndex;
                     const oldIndex = evt.oldIndex;
-                    
+
                     const movedItem = currentSessionExercises.splice(oldIndex, 1)[0];
                     currentSessionExercises.splice(newIndex, 0, movedItem);
                 }
@@ -2122,10 +2024,10 @@ function openCreateSessionSheet(type) {
 function closeCreateSessionSheet() {
     const sheet = document.getElementById('create-session-bottom-sheet');
     const sheetContent = document.getElementById('create-session-bottom-sheet-content');
-    
+
     sheetContent.classList.remove('translate-y-0');
     sheetContent.classList.add('translate-y-full');
-    
+
     setTimeout(() => {
         sheet.classList.add('opacity-0');
         sheet.classList.remove('opacity-100');
@@ -2142,20 +2044,20 @@ function closeCreateSessionSheetOnOutsideClick(event) {
 function renderSessionAvailableExercises() {
     const container = document.getElementById('session-available-exercises');
     const searchTerm = document.getElementById('sessionSearchInput').value.toLowerCase();
-    
+
     let sourceArray = [];
     if (currentSessionType === 'core') {
         sourceArray = [...defaultCores, ...(typeof cores !== 'undefined' ? cores : [])];
     } else {
         sourceArray = [...DEFAULT_STRETCHES, ...(typeof stretches !== 'undefined' ? stretches : [])];
     }
-    
+
     // Sort alphabetically
     sourceArray.sort((a, b) => (a.name || '').localeCompare(b.name || '', 'tr'));
-    
+
     let html = '';
     let hasMatch = false;
-    
+
     sourceArray.forEach(ex => {
         if (ex.name && ex.name.toLowerCase().includes(searchTerm)) {
             hasMatch = true;
@@ -2166,10 +2068,10 @@ function renderSessionAvailableExercises() {
             } else {
                 imgHtml = `<div class="w-10 h-10 rounded-xl bg-surface-container-highest flex items-center justify-center text-primary font-bold text-xs">${ex.name.substring(0,2).toUpperCase()}</div>`;
             }
-            
+
             // Pass entire exercise as JSON to avoid complex string parsing
             const exJson = encodeURIComponent(JSON.stringify(ex));
-            
+
             html += `
             <div class="flex items-center justify-between p-3 neo-surface rounded-2xl mb-2">
                 <div class="flex items-center gap-3">
@@ -2185,7 +2087,7 @@ function renderSessionAvailableExercises() {
             </div>`;
         }
     });
-    
+
     if (!hasMatch) {
         html = '<div class="text-center text-on-surface-variant text-sm py-4">Sonuç bulunamadı.</div>';
     }
@@ -2201,7 +2103,7 @@ function addExerciseToSession(exJsonStr) {
         const ex = JSON.parse(decodeURIComponent(exJsonStr));
         // Generate a unique instance ID so same exercise can be added twice
         const instanceId = 'inst_' + Math.random().toString(36).substr(2, 9);
-        
+
         currentSessionExercises.push({
             instanceId,
             id: ex.id || null,
@@ -2211,7 +2113,7 @@ function addExerciseToSession(exJsonStr) {
             isDefault: ex.isDefault,
             imageBase64: ex.imageBase64 || null
         });
-        
+
         renderSessionSelectedExercises();
     } catch(err) {
         console.error("Error adding exercise:", err);
@@ -2225,12 +2127,12 @@ function removeExerciseFromSession(instanceId) {
 
 function renderSessionSelectedExercises() {
     const container = document.getElementById('session-selected-exercises');
-    
+
     if (currentSessionExercises.length === 0) {
         container.innerHTML = `<div class="text-center text-on-surface-variant text-sm py-4 italic" id="session-empty-state">Henüz hareket seçilmedi.<br>Aşağıdan seçerek ekleyebilirsiniz.</div>`;
         return;
     }
-    
+
     let html = '';
     currentSessionExercises.forEach(ex => {
         let imgHtml = '';
@@ -2239,7 +2141,7 @@ function renderSessionSelectedExercises() {
         } else {
             imgHtml = `<div class="w-8 h-8 rounded-lg bg-surface-container-highest flex items-center justify-center text-primary font-bold text-[10px]">${ex.name.substring(0,2).toUpperCase()}</div>`;
         }
-        
+
         html += `
         <div class="flex items-center justify-between p-2 bg-surface rounded-xl border border-outline-variant/30" data-id="${ex.instanceId}">
             <div class="flex items-center gap-3">
@@ -2257,7 +2159,7 @@ function renderSessionSelectedExercises() {
             </button>
         </div>`;
     });
-    
+
     container.innerHTML = html;
 }
 
@@ -2271,14 +2173,14 @@ async function saveSession() {
         alert("Lütfen seansa en az bir hareket ekleyin.");
         return;
     }
-    
+
     const sessionData = {
         name,
         type: currentSessionType,
         movements: currentSessionExercises,
         createdAt: serverTimestamp()
     };
-    
+
     try {
         const collectionName = currentSessionType === 'core' ? 'coreSessions' : 'stretchSessions';
         const sessionsRef = collection(db, "users", auth.currentUser.uid, collectionName);
@@ -2298,13 +2200,13 @@ window.toggleMizAccordion = function(headerElement, key, type, event) {
     }
     const parent = headerElement.parentElement;
     parent.classList.toggle('expanded');
-    
+
     // Update state sets
     let stateSet;
     if (type === 'split') stateSet = _openSplitAccordions;
     else if (type === 'day') stateSet = _openDayAccordions;
     else if (type === 'ex') stateSet = _openExAccordions;
-    
+
     if (stateSet) {
         if (parent.classList.contains('expanded')) {
             stateSet.add(key);
@@ -2312,16 +2214,16 @@ window.toggleMizAccordion = function(headerElement, key, type, event) {
             stateSet.delete(key);
         }
     }
-    
+
     const content = headerElement.nextElementSibling;
     if (parent.classList.contains('expanded')) {
         content.classList.add("expanded");
-        content.style.maxHeight = content.scrollHeight + 500 + "px"; 
+        content.style.maxHeight = content.scrollHeight + 500 + "px";
     } else {
         content.classList.remove("expanded");
         content.style.maxHeight = null;
     }
-    
+
     updateMizParentHeights(parent);
 };
 
@@ -2339,7 +2241,7 @@ async function addDayToExistingSplit(splitId) {
     if(!auth.currentUser) return;
     const splitIndex = splits.findIndex(s => s.id === splitId);
     if(splitIndex === -1) return;
-    
+
     const split = splits[splitIndex];
     const newDay = {
         id: 'day_' + Date.now(),
@@ -2347,18 +2249,18 @@ async function addDayToExistingSplit(splitId) {
         exercises: []
     };
     split.days.push(newDay);
-    
+
     try {
         const docRef = doc(db, "users", auth.currentUser.uid, "splits", splitId);
         await updateDoc(docRef, {
             days: split.days,
             updatedAt: serverTimestamp()
         });
-        
+
         // Ensure the split and the new day accordions are open so user sees it
         _openSplitAccordions.add(splitId);
         _openDayAccordions.add(`${splitId}-${split.days.length - 1}`);
-        
+
         renderSplitEditView();
     } catch(err) {
         console.error("Error adding day:", err);
@@ -2370,19 +2272,19 @@ async function removeDayFromSplit(splitId, dayIdx) {
     if(!auth.currentUser) return;
     const splitIndex = splits.findIndex(s => s.id === splitId);
     if(splitIndex === -1) return;
-    
+
     if(!confirm("Bu günü silmek istediğinize emin misiniz?")) return;
-    
+
     const split = splits[splitIndex];
     split.days.splice(dayIdx, 1);
-    
+
     try {
         const docRef = doc(db, "users", auth.currentUser.uid, "splits", splitId);
         await updateDoc(docRef, {
             days: split.days,
             updatedAt: serverTimestamp()
         });
-        
+
         renderSplitEditView();
     } catch(err) {
         console.error("Error removing day:", err);

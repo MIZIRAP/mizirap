@@ -1,7 +1,4 @@
 /* Ambient shadows and transitions */
-.ambient-shadow {
-    box-shadow: 10px 10px 20px #D1D9E6, -10px -10px 20px #FFFFFF;
-}
 .interactive-card {
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
@@ -20,11 +17,6 @@
 }
 
 /* Shopping list strike-through */
-.checked-item {
-    text-decoration: line-through;
-    opacity: 0.5;
-}
-
 /* Base body */
 body {
     -webkit-tap-highlight-color: transparent;
@@ -43,6 +35,3 @@ body {
 
 
 .icon-md { font-size: 20px !important; }
-.icon-lg { font-size: 24px !important; }
-.badge-primary { @apply px-2 py-0.5 rounded-full shadow-neo text-primary text-label-sm font-label-sm; }
-.badge-outline { @apply px-2 py-0.5 rounded-full shadow-neo text-on-surface-variant text-label-sm font-label-sm; }

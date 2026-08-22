@@ -26,8 +26,8 @@ async function loadProfile() {
     try {
         const docRef = doc(db, "users", currentUid, "profile", "data");
         const docSnap = await getDoc(docRef).catch(e => { console.error('DB Error:', e); alert('Veritabanı işlemi sırasında bir hata oluştu.'); throw e; });
-        
-        
+
+
         if (docSnap.exists()) {
             const data = docSnap.data();
             if (nameEl) nameEl.value = data.name || (auth.currentUser ? auth.currentUser.displayName : "") || "";
@@ -117,12 +117,12 @@ function setupProfileEvents() {
                                     height = MAX_HEIGHT;
                                 }
                             }
-                            
+
                             canvas.width = width;
                             canvas.height = height;
                             const ctx = canvas.getContext('2d');
                             ctx.drawImage(img, 0, 0, width, height);
-                            
+
                             // 0.7 quality to keep size small enough for Firestore
                             resolve(canvas.toDataURL('image/jpeg', 0.7));
                         };
@@ -132,7 +132,7 @@ function setupProfileEvents() {
                     reader.onerror = () => reject(new Error("Dosya okunamadı"));
                     reader.readAsDataURL(file);
                 });
-                
+
                 currentPhotoUrl = base64Url;
 
                 // 4. Update Firestore
@@ -169,17 +169,17 @@ function setupProfileEvents() {
     if (saveBtn) {
         saveBtn.addEventListener('click', async () => {
             if (!currentUid) return;
-            
+
             const nameEl = document.getElementById('profile-name');
             const bioEl = document.getElementById('profile-bio');
             const dobEl = document.getElementById('profile-dob');
-            
+
             const originalText = saveBtn.innerHTML;
             saveBtn.innerHTML = 'Kaydediliyor...';
             saveBtn.disabled = true;
 
             try {
-                
+
                 await setDoc(doc(db, "users", currentUid, "profile", "data"), {
                     name: nameEl.value.trim(),
                     bio: bioEl.value.trim(),
@@ -191,7 +191,7 @@ function setupProfileEvents() {
 
                 saveBtn.innerHTML = `<span class="material-symbols-rounded" style="font-variation-settings: 'FILL' 1;">check_circle</span> Kaydedildi!`;
                 saveBtn.classList.add("bg-gradient-to-r from-neon-purple to-neon-blue-container", "text-white-container");
-                
+
                 setTimeout(() => {
                     saveBtn.innerHTML = originalText;
                     saveBtn.classList.remove("bg-gradient-to-r from-neon-purple to-neon-blue-container", "text-white-container");
@@ -245,18 +245,18 @@ function setupProfileEvents() {
                 // Re-authenticate first
                 const credential = EmailAuthProvider.credential(user.email, currentPassword);
                 await reauthenticateWithCredential(user, credential);
-                
+
                 // Update password
                 await updatePassword(user, newPassword);
-                
+
                 msgEl.textContent = "Şifreniz başarıyla güncellendi.";
                 msgEl.classList.add("text-neon-blue");
-                
+
                 // Clear fields
                 document.getElementById('profile-current-password').value = "";
                 document.getElementById('profile-new-password').value = "";
                 document.getElementById('profile-confirm-password').value = "";
-                
+
             } catch (err) {
                 console.error("Password update error:", err);
                 msgEl.classList.add("text-error");

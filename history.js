@@ -17,7 +17,7 @@ let currentUid = null;
 
 export function initHistory(uid) {
     currentUid = uid;
-    
+
     // Clear previous unsubs
     if(unsubCalories) unsubCalories();
     if(unsubWater) unsubWater();
@@ -64,9 +64,9 @@ function renderHistory() {
     const processDoc = (doc, type) => {
         if (!doc.createdAt) return;
         const dateObj = doc.createdAt.toDate ? doc.createdAt.toDate() : new Date(doc.createdAt);
-        if(isNaN(dateObj)) return; 
-        
-        const dateKey = formatDate(dateObj); 
+        if(isNaN(dateObj)) return;
+
+        const dateKey = formatDate(dateObj);
 
         if(!grouped[dateKey]) {
             grouped[dateKey] = {
@@ -103,7 +103,7 @@ function renderHistory() {
     const sortedKeys = Object.keys(grouped).sort((a, b) => grouped[b].dateObj - grouped[a].dateObj);
 
     container.innerHTML = "";
-    
+
     if (sortedKeys.length === 0) {
         container.innerHTML = `<div class="text-center text-on-surface/60 mt-10">Henüz geçmiş kaydı bulunmuyor.</div>`;
         return;
@@ -116,11 +116,11 @@ function renderHistory() {
 
     sortedKeys.forEach((key, index) => {
         const data = grouped[key];
-        
-        let title = key; 
+
+        let title = key;
         const options = { day: 'numeric', month: 'long', weekday: 'long' };
         let formattedDate = formatDate(data.dateObj, options);
-        
+
         if (key === todayStr) {
             title = "Bugün, " + formatDate(data.dateObj, { day: 'numeric', month: 'long' });
         } else if (key === yesterdayStr) {
@@ -180,7 +180,7 @@ function renderHistory() {
             </div>
         </article>
         `;
-        
+
         container.insertAdjacentHTML("beforeend", html);
     });
 }

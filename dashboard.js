@@ -56,7 +56,7 @@ export function updateDashboardMovies(movies) {
 
 function renderDashboard() {
     const circum = 251.2; // 2 * PI * 40 for the SVG circles
-    
+
     // Su Tüketimi
     const waterText = document.getElementById("dashboard-water-text");
     const waterProg = document.getElementById("dash-prog-water");
@@ -67,7 +67,7 @@ function renderDashboard() {
         if (isNaN(percent)) percent = 0;
         waterProg.style.strokeDashoffset = circum - (percent / 100) * circum;
     }
-    
+
     // Kalori Tüketimi
     const calsText = document.getElementById("dashboard-calories-text");
     const calsProg = document.getElementById("dash-prog-cals");
@@ -91,7 +91,7 @@ function renderDashboard() {
             dashBooksText.innerHTML = `<span class="text-2xl font-bold text-on-surface leading-none">0</span><span class="text-xs text-on-surface-variant mb-1">/0 p.</span>`;
         }
     }
-    
+
     // Dizi/Film
     const dashMoviesText = document.getElementById("dashboard-movies-text");
     if (dashMoviesText) {

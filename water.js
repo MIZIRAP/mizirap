@@ -13,7 +13,7 @@ let currentUid = null;
 export function initWater(uid, onChangeCallback) {
     callback = onChangeCallback;
     currentUid = uid;
-    
+
     // Settings listener for daily goal
     const settingsRef = doc(db, "users", uid, "settings", "water");
     unsubscribeSettings = registerListener(onSnapshot(settingsRef, (docSnap) => {
@@ -58,7 +58,7 @@ export function initWater(uid, onChangeCallback) {
     if(btnCustom) btnCustom.onclick = openCustomModal;
     if(btnEditGoal) btnEditGoal.onclick = openModal;
 
-    
+
     // Event Listeners for Custom Add Modal
     const customBtn = document.getElementById("water-custom-btn");
     const customModal = document.getElementById("water-custom-modal");
@@ -69,7 +69,7 @@ export function initWater(uid, onChangeCallback) {
     const customSaveBtn = document.getElementById("water-custom-save");
     const customAmountDisplay = document.getElementById("water-custom-amount-display");
     const customCloseHandle = document.getElementById("water-custom-close-handle");
-    
+
     let tempCustomAmount = 250;
 
     function updateCustomModalUI() {
@@ -159,7 +159,7 @@ export function initWater(uid, onChangeCallback) {
     const amountDisplay = document.getElementById("water-goal-amount-display");
     const closeHandle = document.getElementById("water-goal-close-handle");
     const presetBtns = document.querySelectorAll(".water-goal-preset");
-    
+
     let tempGoal = dailyGoal;
 
     function updateModalUI() {
@@ -258,22 +258,22 @@ function updateWaterUI() {
     const circle = document.getElementById("water-prog-circle");
     const currentText = document.getElementById("water-current-amount");
     const goalText = document.getElementById("water-goal-text");
-    
+
     if(currentText) currentText.textContent = currentAmount;
     if(goalText) goalText.textContent = `of ${dailyGoal} ml`;
-    
+
     if(circle) {
         const radius = circle.r.baseVal.value; // 50
         const circumference = radius * 2 * Math.PI; // 314.159
         circle.style.strokeDasharray = `${circumference} ${circumference}`;
-        
+
         let percent = currentAmount / dailyGoal;
         if (percent > 1) percent = 1;
         const offset = circumference - percent * circumference;
         circle.style.strokeDashoffset = offset;
     }
 
-    
+
     // 2. Today's Log Render
     const logList = document.getElementById("water-history-list");
     if(logList) {
@@ -283,10 +283,10 @@ function updateWaterUI() {
         } else {
             todaysLogs.forEach(log => {
                 const timeStr = log.createdAt?.toDate ? log.createdAt.toDate().toLocaleTimeString("tr-TR", {hour: '2-digit', minute:'2-digit'}) : "";
-                
+
                 const wrapper = document.createElement("div");
                 wrapper.className = "relative w-full shrink-0";
-                
+
                 const delBtn = document.createElement("button");
                 delBtn.className = "absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-red-500 rounded-2xl text-white flex items-center justify-center z-0 active:bg-red-600 transition-colors";
                 delBtn.innerHTML = `<span class="material-symbols-rounded text-xl">delete</span>`;
@@ -304,10 +304,10 @@ function updateWaterUI() {
                 const card = document.createElement("div");
                 card.className = "relative z-10 flex items-center justify-between p-4 rounded-2xl bg-[#F7F9FF] w-full touch-pan-y";
                 card.style.boxShadow = "4px 4px 8px #D1D9E6, -4px -4px 8px #FFFFFF";
-                
+
                 let iconClass = "text-[#3B82F6]";
                 if(log.icon === "water_bottle") iconClass = "text-[#A855F7]";
-                
+
                 card.innerHTML = `
                     <div class="flex items-center gap-4 pointer-events-none">
                         <div class="w-10 h-10 rounded-full bg-[#F7F9FF] flex items-center justify-center" style="box-shadow: inset 2px 2px 5px #D1D9E6, inset -2px -2px 5px #FFFFFF;">
@@ -354,7 +354,7 @@ function updateWaterUI() {
                     }
                     currentX = 0;
                 });
-                
+
                 // Close swipe when clicking outside
                 document.addEventListener('touchstart', (e) => {
                     if(!wrapper.contains(e.target) && card.style.transform === 'translateX(-72px)') {
@@ -372,17 +372,17 @@ function updateWaterUI() {
     // 3. Weekly Chart Calculation
     const chartContainer = document.getElementById("water-chart-wrapper");
     const avgText = document.getElementById("water-avg-text");
-    
+
     if(chartContainer && avgText) {
         chartContainer.innerHTML = "";
-        
+
         let total7Days = 0;
         const days = [];
         const dayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]; // Changed to english based on user's HTML
-        
+
         const currentDayOfWeek = today.getDay();
         const diffToMonday = currentDayOfWeek === 0 ? 6 : currentDayOfWeek - 1;
-        
+
         const monday = new Date(today);
         monday.setDate(monday.getDate() - diffToMonday);
 
@@ -405,8 +405,8 @@ function updateWaterUI() {
             if(!log.createdAt || !log.createdAt.toDate) return;
             const logDate = log.createdAt.toDate();
             if(logDate >= monday && logDate <= endOfWeek) {
-                const matchingDay = days.find(day => 
-                    logDate.getDate() === day.date.getDate() && 
+                const matchingDay = days.find(day =>
+                    logDate.getDate() === day.date.getDate() &&
                     logDate.getMonth() === day.date.getMonth()
                 );
                 if(matchingDay) {
@@ -425,7 +425,7 @@ function updateWaterUI() {
 
             const div = document.createElement("div");
             div.className = "flex flex-col items-center gap-2 w-1/7";
-            
+
             let color = "#3B82F6"; // default blue
             let textClass = "text-[#64748B]";
             if(day.isToday) {
@@ -434,14 +434,14 @@ function updateWaterUI() {
             } else if (day.amount >= dailyGoal) {
                 color = "#A855F7"; // purple for met goal
             }
-            
+
             div.innerHTML = `
                 <div class="w-4 h-32 bg-[#E0E5EC] rounded-full relative overflow-hidden">
                     <div class="absolute bottom-0 w-full rounded-full transition-all duration-500" style="background-color: ${color}; height: ${percent}%;"></div>
                 </div>
                 <span class="text-[10px] ${textClass}">${day.name}</span>
             `;
-            
+
             chartContainer.appendChild(div);
         });
     }

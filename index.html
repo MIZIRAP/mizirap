@@ -75,7 +75,7 @@
                 "surface-container-highest": "#e0e2e8",
                 "accent-purple": "#a855f7",
                 "secondary": "#5b5d6d",
-                
+
                 "neon-purple": "#A855F7",
                 "neon-blue": "#3B82F6",
                 "neon-green": "#22C55E"
@@ -95,7 +95,7 @@
                 "stack-gap": "1.5rem",
                 "section-margin": "2rem"
         },
-        
+
 
 "fontFamily": {
                 "title-sm": ["Plus Jakarta Sans"],
@@ -164,7 +164,7 @@
             transform: rotate(-90deg);
             transform-origin: 50% 50%;
         }
-    
+
         .neo-surface { background: #F0F2F8; box-shadow: 6px 6px 12px rgba(0,0,0,0.08), -6px -6px 12px rgba(255,255,255,0.6); border-radius: 16px; }
         .neo-surface-small { background: #F0F2F8; box-shadow: 4px 4px 8px rgba(0,0,0,0.08), -4px -4px 8px rgba(255,255,255,0.6); border-radius: 12px; }
         .neo-inset { background: #F0F2F8; box-shadow: inset 4px 4px 8px rgba(0,0,0,0.08), inset -4px -4px 8px rgba(255,255,255,0.6); border-radius: 16px; }
@@ -186,7 +186,7 @@
             font-family: "Material Symbols Rounded" !important;
         }
 
-        
+
         .neo-surface-interactive:active {
             box-shadow: inset 4px 4px 8px rgba(0,0,0,0.08), inset -4px -4px 8px rgba(255,255,255,0.6);
             transform: scale(0.98);
@@ -224,15 +224,15 @@
 .neo-surface {
             background-color: #f0f2f8;
             box-shadow: 6px 6px 12px rgba(0,0,0,0.08), -6px -6px 12px rgba(255,255,255,0.7);
-            
+
         }
 
         .neo-inset {
             background-color: #f0f2f8;
             box-shadow: inset 4px 4px 8px rgba(0,0,0,0.06), inset -4px -4px 8px rgba(255,255,255,0.7);
-            
+
         }
-        
+
         .neo-button:active {
             box-shadow: inset 4px 4px 8px rgba(0,0,0,0.06), inset -4px -4px 8px rgba(255,255,255,0.7);
         }
@@ -254,16 +254,16 @@
             0% { transform: translate(-50%, -50%) rotate(0deg); }
             100% { transform: translate(-50%, -50%) rotate(360deg); }
         }
-        
+
         .neon-card {
             position: relative;
             padding: 3px;
-            
+
             box-shadow: 6px 6px 12px rgba(0,0,0,0.08), -6px -6px 12px rgba(255,255,255,0.7);
             overflow: hidden;
             z-index: 1;
         }
-        
+
         .neon-card::before {
             content: '';
             position: absolute;
@@ -275,7 +275,7 @@
             animation: spin-neon 4s linear infinite;
             z-index: -1;
         }
-        
+
         .neon-card-inner {
             background-color: #f0f2f8;
             border-radius: calc(1.5rem - 3px);
@@ -643,7 +643,7 @@
     <section class="flex flex-col gap-4">
         <div class="neon-card rounded-[32px]" style="border-radius: 32px;">
             <div class="neon-card-inner bg-[#F0F2F8] p-6 flex flex-col gap-4 relative overflow-hidden" style="border-radius: 29px; box-shadow: 8px 8px 16px #D1D9E6, -8px -8px 16px rgba(255, 255, 255, 0.7);">
-            
+
             <div class="flex justify-between items-start">
                 <div>
                     <h2 class="text-xs font-bold text-[#64748B] uppercase tracking-wider mb-1">WORKOUT</h2>
@@ -655,12 +655,12 @@
                     <span class="material-symbols-rounded text-[#1E293B] text-xl">fitness_center</span>
                 </div>
             </div>
-            
+
             <button data-action="startActiveSession" class="w-full py-4 mt-2 rounded-2xl bg-[#F0F2F8] flex items-center justify-center gap-2 active:scale-[0.98] transition-transform" style="box-shadow: inset 4px 4px 8px #D1D9E6, inset -4px -4px 8px rgba(255, 255, 255, 0.7);">
                 <span class="material-symbols-rounded text-[#1E293B]">play_arrow</span>
                 <span class="font-bold text-[#1E293B]">Antrenmanı Başlat</span>
             </button>
-            
+
             <div class="text-center mt-2">
                 <a href="#" class="text-xs font-medium text-[#64748B] hover:text-[#1E293B] transition-colors">Farklı bir program seç</a>
             </div>
@@ -668,8 +668,7 @@
         </div>
     </section>
 
-    
-    
+
     <section>
         <div class="flex flex-col gap-4">
             <a href="#" class="bg-[#F0F2F8] p-4 rounded-2xl flex items-center justify-between active:scale-[0.99] transition-transform" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);" onclick="document.getElementById('view-workout').classList.add('hidden'); document.getElementById('view-exercise-library').classList.remove('hidden'); return false;">
@@ -684,9 +683,8 @@
                 </div>
                 <span class="material-symbols-rounded text-[#1E293B]">chevron_right</span>
             </a>
-            
 
-            
+
             <a href="#" data-action="openSplitEdit" class="bg-[#F0F2F8] p-4 rounded-2xl flex items-center justify-between active:scale-[0.99] transition-transform" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);">
                 <div class="flex items-center gap-4">
                     <div class="w-10 h-10 rounded-full bg-[#F0F2F8] flex items-center justify-center" style="box-shadow: inset 2px 2px 5px #D1D9E6, inset -2px -2px 5px rgba(255, 255, 255, 0.7);">
@@ -699,7 +697,7 @@
                 </div>
                 <span class="material-symbols-rounded text-[#1E293B]">chevron_right</span>
             </a>
-            
+
 
         </div>
     </section>
@@ -707,7 +705,7 @@
 </section>
 
     <!-- Edit Workout Template View -->
-    
+
     <!-- ================= EGZERSİZ KÜTÜPHANESI ================= -->
     <section id="view-exercise-library" class="view hidden bg-surface-light min-h-[100dvh] text-on-surface antialiased font-body-lg pb-[100px]">
         <div class="max-w-md mx-auto relative h-full flex flex-col">
@@ -2403,11 +2401,11 @@
                 <div class="px-6 pb-6 overflow-y-auto flex-grow flex flex-col gap-4">
                     <!-- Muscle Diagram Area -->
                     <div class="bg-background shadow-neo rounded-[32px] p-4 flex flex-col items-center justify-center shadow-sm border border-surface-container-low">
-                        
+
                     <!-- Dynamic Interactive SVG Map Container -->
                     <div id="sheet-interactive-map-wrapper" class="relative w-full h-[350px] mb-6 flex justify-center items-center overflow-hidden bg-background shadow-neo rounded-[32px] border border-surface-container-low shadow-inner">
                         <div id="sheet-interactive-map" class="w-full h-full cursor-move"></div>
-                        
+
                         <!-- Zoom Controls -->
                         <div class="absolute bottom-2 right-2 flex flex-col gap-1 bg-surface-container-high/80 backdrop-blur-sm rounded-lg p-1 shadow-sm">
                             <button id="zoom-in" class="p-1 text-on-surface hover:text-neon-blue active:scale-95 transition-transform"><span class="material-symbols-outlined text-sm">add</span></button>
@@ -2425,8 +2423,6 @@
         </div>
     </section>
 
-    
-    
 
     <section id="view-edit-workout-template" class="view hidden bg-background text-on-background antialiased min-h-[100dvh] flex flex-col items-center pb-[100px]">
         <style>
@@ -2451,7 +2447,7 @@
                 opacity: 0.4;
             }
         </style>
-        
+
         <!-- TopAppBar -->
         <header class="w-full top-0 sticky bg-background dark:bg-background flat no shadows transition-opacity duration-200 z-40 max-w-md mx-auto">
             <div class="flex items-center justify-between px-container-padding py-4 w-full">
@@ -2492,10 +2488,10 @@
                     </button>
                 </div>
             </div>
-            
+
         </main>
     </section>
-    
+
     <!-- Exercise History View -->
     <section id="view-exercise-history" class="view hidden bg-background text-on-background font-body-md min-h-[100dvh] pb-[100px] flex flex-col">
         <!-- TopAppBar -->
@@ -2515,7 +2511,7 @@
 
         <main class="flex flex-col items-center w-full px-container-padding pb-section-margin gap-card-gap">
             <div class="w-full max-w-md flex flex-col gap-card-gap">
-                
+
                 <!-- Chart Section -->
                 <section class="bg-background shadow-neo rounded-[32px] shadow-sm p-6 flex flex-col gap-4">
                     <div class="flex justify-between items-end">
@@ -2528,25 +2524,25 @@
                             <span class="font-label-sm text-label-sm text-neon-blue">0%</span>
                         </div>
                     </div>
-                    
+
                     <!-- Simple Line Chart Visualization -->
                     <div class="w-full h-40 mt-4 relative flex items-end" id="history-chart-container">
                         <!-- Chart will be injected here via JS -->
                     </div>
                 </section>
-                
+
                 <!-- History List Section -->
                 <section class="flex flex-col gap-3 mt-2">
                     <h3 class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider ml-1 mb-1">Geçmiş Kayıtlar</h3>
                     <div id="history-list-container" class="flex flex-col gap-3">
                     <div class="flex justify-center items-center py-8"><div class="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div></div>
-                
+
                         <!-- History items will be injected here via JS -->
                     </div>
                 </section>
 
             </div>
-            
+
         </main>
     </section>
 
@@ -2597,7 +2593,7 @@
                     Aktif Kitap Yok
                 </button>
             </section>
-            
+
             <!-- Quick Add Section -->
             <section class="flex flex-col gap-4">
                 <div class="grid grid-cols-2 gap-6">
@@ -2718,7 +2714,7 @@
     </section>
 
     <!-- ================= SU TAKİBİ (Water) ================= -->
-    
+
 <section id="view-water" class="view hidden">
     <!-- Top App Bar -->
     <header class="w-full top-0 sticky z-40 max-w-md mx-auto px-container-padding py-4">
@@ -2732,7 +2728,7 @@
             </button>
         </div>
     </header>
-    
+
     <!-- Main Content Container -->
     <main class="flex-1 w-full max-w-md mx-auto px-container-padding pb-32 flex flex-col gap-section-margin pt-4">
         <!-- Circular Progress Section -->
@@ -2756,7 +2752,7 @@
             </div>
             <button id="btn-edit-water-goal" class="mt-8 px-8 py-3 rounded-full bg-[#F0F2F8] text-[#1E293B] font-bold uppercase tracking-wider text-xs" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);">Daily Goal</button>
         </div>
-        
+
         <!-- Quick Add Section -->
         <div class="flex flex-col gap-card-gap">
             <div class="grid grid-cols-3 gap-6">
@@ -2774,7 +2770,7 @@
                 </button>
             </div>
         </div>
-        
+
         <!-- Weekly Chart Section -->
         <div class="bg-surface-container-lowest shadow-sm rounded-2xl p-6 flex flex-col gap-4" style="background-color: #F0F2F8; box-shadow: 8px 8px 16px #D1D9E6, -8px -8px 16px rgba(255, 255, 255, 0.7); border: none;">
             <div class="flex justify-between items-end mb-2">
@@ -2785,7 +2781,7 @@
                 <!-- CHART BARS WILL BE INJECTED HERE -->
             </div>
         </div>
-        
+
         <!-- History Log -->
         <div class="flex flex-col gap-4">
             <h3 class="text-h2 font-bold text-[#1E293B]">Today's Log</h3>
@@ -2809,7 +2805,7 @@
         </header>
 
         <main class="px-5 flex flex-col gap-4 max-w-md mx-auto mt-4">
-            
+
             <!-- Dinamik İçerik Buraya Gelecek -->
             <div id="history-cards-container" class="flex flex-col gap-4">
                 <div class="text-center text-on-surface-variant mt-10">Yükleniyor...</div>
@@ -2817,10 +2813,9 @@
         </main>
     </section>
 
-    
-    
+
     <!-- Add Core Bottom Sheet -->
-    
+
 
     <!-- Add Exercise Bottom Sheet -->
     <div id="add-exercise-bottom-sheet" class="fixed inset-0 bg-black/30 z-[100] flex items-end opacity-0 pointer-events-none transition-opacity duration-300" onclick="closeAddExerciseSheetOnOutsideClick(event)">
@@ -2829,7 +2824,7 @@
             <div class="w-full flex justify-center pt-4 pb-2 cursor-pointer" onclick="closeAddExerciseSheet()">
                 <div class="w-12 h-1.5 bg-outline-variant rounded-full opacity-60"></div>
             </div>
-            
+
             <!-- Header -->
             <div class="px-6 pb-4 flex justify-between items-center z-30">
                 <h2 class="font-headline-md text-on-surface text-xl font-bold">Hareket Ekle</h2>
@@ -2837,7 +2832,7 @@
                     <span class="material-symbols-rounded">close</span>
                 </button>
             </div>
-            
+
             <!-- Scrollable Content -->
             <div class="flex-1 overflow-y-auto px-6 pb-24 no-scrollbar">
                 <form id="add-exercise-form" class="space-y-6 flex flex-col pb-8">
@@ -2848,7 +2843,7 @@
                             <input class="w-full h-14 bg-background focus:border-primary focus:ring-1 focus:ring-primary rounded-xl px-4 font-body-md text-on-surface placeholder:text-outline-variant outline-none transition-shadow shadow-neo-inset border-none" id="newExerciseName" placeholder="Örn: Flat Barbell Bench Press" type="text" required>
                         </div>
                     </div>
-                    
+
                     <!-- 2. Muscle Group Chips Grid -->
                     <div class="flex flex-col gap-3">
                         <label class="font-title-sm text-on-surface-variant text-sm uppercase tracking-wider pl-1">Ana Kas Grubu</label>
@@ -2889,7 +2884,7 @@
                     </div>
                 </form>
             </div>
-            
+
             <!-- Bottom Action Bar -->
             <div class="absolute bottom-0 left-0 right-0 p-6 bg-background/90 backdrop-blur-md rounded-t-xl z-40 border-t border-surface-variant/30 flex gap-4">
                 <button class="flex-1 h-[56px] rounded-full border border-outline-variant bg-transparent font-title-sm text-on-surface-variant hover:bg-surface-container-low active:bg-surface-variant transition-colors flex items-center justify-center" type="button" onclick="closeAddExerciseSheet()">
@@ -2919,7 +2914,7 @@
         </button>
         </div><button id="movie-active-title" class="px-8 py-3 rounded-full bg-[#F0F2F8] text-[#1E293B] font-bold uppercase tracking-wider text-xs mt-4 truncate max-w-full" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);">İçerik Seçin</button>
         </section>
-        
+
         <!-- Quick Add Section -->
         <section class="flex flex-col gap-4"><div class="grid grid-cols-2 gap-6"><button id="add-movie-btn-new" class="flex flex-col items-center justify-center gap-3 py-6 rounded-2xl bg-[#F0F2F8] col-span-2 active:scale-95 transition-transform" style="box-shadow: 6px 6px 12px #D1D9E6, -6px -6px 12px rgba(255, 255, 255, 0.7);"><span class="material-symbols-rounded text-[#3B82F6] text-3xl">movie</span><span class="text-xs font-bold text-[#1E293B]">İçerik Ekle</span></button></div></section>
 
@@ -2931,12 +2926,12 @@
             </div>
         </section>
     </main>
-    
+
     <!-- Add Movie Modal -->
     <div class="hidden fixed inset-0 z-[110] flex flex-col justify-center items-center md:p-4 px-4" id="movie-add-modal">
         <div class="absolute inset-0 bg-black/10 backdrop-blur-sm opacity-0 transition-opacity duration-300" id="movie-add-backdrop"></div>
         <div class="bg-[#F0F2F8] w-full max-w-sm mx-auto rounded-[32px] shadow-[0_10px_40px_rgba(0,0,0,0.08)] p-6 flex flex-col items-center transform transition-all duration-300 scale-95 opacity-0 z-10" id="movie-add-modal-content">
-            
+
             <div class="w-full text-center mb-6">
                 <h2 class="text-xl font-bold text-gray-800 mb-2">Yeni İçerik Ekle</h2>
             </div>
@@ -2975,7 +2970,7 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <div class="flex flex-col gap-2 mt-2">
                     <label class="text-xs font-bold text-silk-blue uppercase px-2">Durum</label>
                     <div class="flex gap-4 px-2">
@@ -3005,7 +3000,7 @@
     <div class="hidden fixed inset-0 z-[110] flex flex-col justify-center items-center md:p-4 px-4" id="movie-edit-modal">
         <div class="absolute inset-0 bg-black/10 backdrop-blur-sm opacity-0 transition-opacity duration-300" id="movie-edit-backdrop"></div>
         <div class="bg-[#F0F2F8] w-full max-w-sm mx-auto rounded-[32px] shadow-[0_10px_40px_rgba(0,0,0,0.08)] p-6 flex flex-col items-center transform transition-all duration-300 scale-95 opacity-0 z-10" id="movie-edit-modal-content">
-            
+
             <div class="w-full text-center mb-6">
                 <h2 class="text-xl font-bold text-gray-800 mb-2">İçeriği Düzenle</h2>
             </div>
@@ -3044,7 +3039,7 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <div class="flex flex-col gap-2 mt-2">
                     <label class="text-xs font-bold text-silk-blue uppercase px-2">Durum</label>
                     <div class="flex gap-4 px-2">
@@ -3118,7 +3113,7 @@
     <div class="hidden fixed inset-0 z-[100] flex items-end justify-center" id="water-goal-modal">
         <!-- Backdrop -->
         <div class="absolute inset-0 bg-black/10 backdrop-blur-sm z-10 opacity-0 transition-opacity duration-300" id="water-goal-backdrop"></div>
-        
+
         <!-- Bottom Sheet -->
         <div id="water-goal-modal-content" class="relative w-full max-w-sm bg-[#F0F2F8] rounded-t-[32px] shadow-[0_-8px_30px_rgba(0,0,0,0.05)] p-6 z-20 flex flex-col items-center transform transition-transform duration-300 translate-y-full pb-10">
             <!-- Drag Handle -->
@@ -3148,7 +3143,7 @@
     <div class="hidden fixed inset-0 z-[100] flex items-end justify-center" id="water-custom-modal">
         <!-- Backdrop -->
         <div class="absolute inset-0 bg-black/10 backdrop-blur-sm z-10 opacity-0 transition-opacity duration-300" id="water-custom-backdrop"></div>
-        
+
         <!-- Bottom Sheet -->
         <div id="water-custom-modal-content" class="relative w-full max-w-sm bg-[#F0F2F8] rounded-t-[32px] shadow-[0_-8px_30px_rgba(0,0,0,0.05)] p-6 z-20 flex flex-col items-center transform transition-transform duration-300 translate-y-full pb-10">
             <!-- Drag Handle -->
@@ -3178,7 +3173,7 @@
     <div class="hidden fixed inset-0 z-[100] flex items-end justify-center" id="calories-goal-modal">
     <!-- Backdrop -->
     <div class="absolute inset-0 bg-black/10 backdrop-blur-sm z-10 transition-opacity duration-300 opacity-0" id="calories-goal-backdrop"></div>
-    
+
     <!-- Modal Content -->
     <div class="relative w-full max-w-sm bg-[#F0F2F8] rounded-t-[32px] shadow-[0_-8px_30px_rgba(0,0,0,0.05)] p-6 z-20 flex flex-col items-center transform transition-transform duration-300 translate-y-full pb-8" id="calories-goal-modal-content">
         <!-- Drag Handle (Mobile) -->
@@ -3236,9 +3231,9 @@
     </div>
 </div>
     <!-- ================= KALORİ TAKİBİ (Calories) ================= -->
-        
+
     <!-- STRETCH LIBRARY VIEW -->
-    
+
 
 <section id="view-profile" class="view hidden bg-background text-on-background min-h-[100dvh] flex flex-col font-body-lg no-scrollbar">
         <!-- TopAppBar -->
@@ -3255,7 +3250,7 @@
 
         <!-- Main Content Canvas -->
         <main class="flex-grow flex flex-col items-center px-container-padding py-section-margin w-full max-w-md mx-auto space-y-card-gap pb-32">
-            
+
             <!-- Profile Photo Edit Area -->
             <div class="relative w-32 h-32 mb-6 group cursor-pointer" onclick="document.getElementById('profile-photo-input').click()">
                 <img id="profile-edit-photo" class="user-profile-img w-full h-full object-cover rounded-full shadow-sm ring-4 ring-surface" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBN2LY6Awb3wVgBvih9JKyp1CwhDN4LDNpt_5IqiYyNWQyGb4zHzzu5utwTNmJTrK-T6sJ5N_hJBDMyHsKjeff59NjrORxyxPWXI6_yhu0v3PKjvuNms0YMsshGWhWhcrYdnPXTzV7bDta8SAMUbUBZnAOoyfbI5vWNTk4Hs_mt5KEVKxcjBlFtpyPP4o21TIOkPwOfoQO0rXwYWrHaUD0j10DRhpXqdpRFhP0UBIB1b3gSLT3tZuPt"/>
@@ -3304,7 +3299,7 @@
                 <!-- Password Change Section -->
                 <div class="space-y-6 pt-4 border-t border-outline-variant">
                     <label class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider block ml-1">ŞİFRE DEĞİŞTİR</label>
-                    
+
                     <!-- Current Password -->
                     <div class="space-y-2">
                         <div class="relative">
@@ -3336,7 +3331,7 @@
                     </button>
                     <p id="profile-password-msg" class="text-sm text-center mt-2"></p>
                 </div>
-                
+
                 <div class="pt-4 pb-2">
                     <button id="profile-save-btn" class="w-full bg-gradient-to-r from-neon-purple to-neon-blue text-white font-headline-sm text-body-lg py-4 rounded-[32px] shadow-sm hover:shadow-md transition-all active:scale-[0.98] flex items-center justify-center gap-2">
                         <span class="material-symbols-rounded" style="font-variation-settings: 'FILL' 1;">check_circle</span>
@@ -3375,7 +3370,7 @@
             <!-- Dynamically populated in JS -->
         </div>
     </div>
-    
+
     <!-- Card 1: Harcama Dağılımı -->
     <section class="bg-[#F0F2F8] shadow-sm rounded-[32px] p-6 flex flex-col gap-6" style="box-shadow: 8px 8px 16px #D1D9E6, -8px -8px 16px rgba(255, 255, 255, 0.7);">
         <div class="flex justify-between items-center">
@@ -3547,7 +3542,6 @@
             </div>
         </div>
     </div>
-    
 
 
 <!-- Modal for Add Portion (Hidden by default) -->
@@ -3585,7 +3579,7 @@
 <div class="hidden fixed inset-0 z-[100] flex items-end justify-center" id="newFoodModal">
     <!-- Backdrop -->
     <div class="absolute inset-0 bg-black/10 backdrop-blur-sm z-10 transition-opacity duration-300 opacity-0" id="new-food-backdrop"></div>
-    
+
     <!-- Modal Content -->
     <div class="relative w-full max-w-sm bg-[#F0F2F8] rounded-t-[32px] shadow-[0_-8px_30px_rgba(0,0,0,0.05)] p-6 z-20 flex flex-col items-center transform transition-transform duration-300 translate-y-full pb-8" id="newFoodModalContent">
         <!-- Drag Handle (Mobile) -->
@@ -3663,10 +3657,10 @@
                 <span class="material-symbols-rounded" style="font-variation-settings: 'wght' 400;">close</span>
             </button>
         </div>
-        
+
         <!-- Scrollable Content -->
         <div class="flex-1 overflow-y-auto hide-scrollbar px-container-padding py-4 flex flex-col gap-section-margin">
-            
+
             <div class="flex flex-col gap-2">
                 <label class="font-label-md text-label-md text-on-surface-variant ml-1">Split Adı</label>
                 <input class="w-full bg-surface-container-low border border-transparent focus:border-primary/30 outline-none rounded-[32px] py-3 px-4 font-body-lg text-body-lg text-on-surface transition-colors shadow-neo-inset border-none rounded-xl bg-background " id="new-split-name" placeholder="Örn: İtiş/Çekiş/Bacak" type="text" />
@@ -3679,14 +3673,14 @@
                         <span class="material-symbols-rounded text-lg">add</span> Gün Ekle
                     </button>
                 </div>
-                
+
                 <div id="split-days-container" class="flex flex-col gap-4">
                     <!-- Day Items Go Here -->
                 </div>
             </div>
 
             <!-- Spacing for bottom fixed button -->
-            
+
             <div class="mt-8">
                 <button class="w-full h-[56px] bg-gradient-to-r from-neon-purple to-neon-blue text-white rounded-full flex items-center justify-center gap-2 hover:opacity-95 active:scale-[0.98] transition-all shadow-lg shadow-primary/20" id="save-split-btn">
                 <span class="font-label-md text-label-md text-body-lg font-body-lg">Split'i Kaydet</span>
@@ -3729,12 +3723,12 @@
                 </button>
             </div>
         </div>
-        
+
         <!-- Content List (Scrollable) -->
         <div class="flex-1 overflow-y-auto px-container-padding py-4 space-y-card-gap pb-4" id="split-selection-list">
             <!-- Dynamic Items Here -->
         </div>
-        
+
         <!-- Static Bottom Action -->
         <div class="w-full px-container-padding py-4 border-t border-surface-variant/30 shrink-0 bg-surface-container-lowest">
             <button class="w-full bg-gradient-to-r from-neon-purple to-neon-blue text-white font-headline-sm text-headline-sm rounded-full h-14 flex justify-center items-center gap-2 shadow-md hover:bg-gradient-to-r from-neon-purple to-neon-blue/90 transition-colors active:scale-[0.98]" data-action="closeSplitSelectionAndOpenModal">
@@ -3766,7 +3760,7 @@
     </section>
 
 
-    <script type="module" src="app.js?v=1787422051"></script>
+    <script type="module" src="app.js?v=1787422485"></script>
 
 <!-- ================= FINANCE MODALS ================= -->
 <!-- Add Transaction Modal -->
@@ -3779,7 +3773,7 @@
         <div class="w-full text-center mb-6">
             <h2 class="text-xl font-bold text-[#1E293B] mb-2">İşlem Gir</h2>
         </div>
-        
+
         <!-- Type Selection -->
         <div class="flex w-full mb-6 bg-[#F0F2F8] p-1 rounded-full" style="box-shadow: inset 4px 4px 8px #e3e6ee, inset -4px -4px 8px rgba(255, 255, 255, 0.7);">
             <label class="flex-1 cursor-pointer">
@@ -3803,7 +3797,7 @@
 
         <!-- Input Area -->
         <div class="w-full flex flex-col gap-4 mb-6">
-            
+
             <!-- Amount -->
             <div class="flex flex-col items-center gap-4 mb-2">
                 <div class="flex items-center justify-between w-full px-6 py-4 rounded-full bg-[#F0F2F8]" style="box-shadow: inset 4px 4px 8px #e3e6ee, inset -4px -4px 8px rgba(255, 255, 255, 0.7);">
@@ -3857,7 +3851,7 @@
 
         <!-- CTA Button -->
         <button id="finance-save-tx-btn" class="w-full py-4 px-6 rounded-full font-bold text-lg text-[#1E293B] shadow-md focus:outline-none active:scale-[0.98] transition-transform flex items-center justify-center gap-2" style="box-shadow: 6px 6px 12px #e3e6ee, -6px -6px 12px rgba(255, 255, 255, 0.7); border: 2px solid transparent; background: linear-gradient(#F0F2F8, #F0F2F8) padding-box, linear-gradient(to right, #4A90E2, #50E3C2) border-box;">
-            Kaydet 
+            Kaydet
             <span class="material-symbols-rounded text-[#3B82F6]" style="font-variation-settings: 'FILL' 1;">check_circle</span>
         </button>
     </div>
@@ -3876,9 +3870,9 @@
                 <span class="material-symbols-rounded text-[#1E293B]">close</span>
             </button>
         </div>
-        
+
         <div class="w-full flex-1 overflow-y-auto hide-scrollbar flex flex-col gap-8 pb-4">
-            
+
             <!-- Payment Methods Section -->
             <div class="flex flex-col gap-4">
                 <div class="flex items-center justify-between px-2">
@@ -3965,7 +3959,7 @@
         </div>
         <!-- CTA Button -->
         <button id="finance-save-category-btn" class="w-full py-4 px-6 rounded-full font-bold text-lg text-[#1E293B] shadow-md focus:outline-none active:scale-[0.98] transition-transform flex items-center justify-center gap-2" style="box-shadow: 6px 6px 12px #e3e6ee, -6px -6px 12px rgba(255, 255, 255, 0.7); border: 2px solid transparent; background: linear-gradient(#F0F2F8, #F0F2F8) padding-box, linear-gradient(to right, #4A90E2, #50E3C2) border-box;">
-            Kaydet 
+            Kaydet
             <span class="material-symbols-rounded text-[#3B82F6]" style="font-variation-settings: 'FILL' 1;">check_circle</span>
         </button>
     </div>
@@ -4038,7 +4032,7 @@
         </div>
         <!-- CTA Button -->
         <button id="finance-save-payment-btn" class="w-full py-4 px-6 rounded-full font-bold text-lg text-[#1E293B] shadow-md focus:outline-none active:scale-[0.98] transition-transform flex items-center justify-center gap-2" style="box-shadow: 6px 6px 12px #e3e6ee, -6px -6px 12px rgba(255, 255, 255, 0.7); border: 2px solid transparent; background: linear-gradient(#F0F2F8, #F0F2F8) padding-box, linear-gradient(to right, #4A90E2, #50E3C2) border-box;">
-            Kaydet 
+            Kaydet
             <span class="material-symbols-rounded text-[#3B82F6]" style="font-variation-settings: 'FILL' 1;">check_circle</span>
         </button>
     </div>
@@ -4052,14 +4046,14 @@
 <div id="movies-modal" class="fixed inset-0 z-[105] hidden items-end justify-center sm:items-center bg-inverse-surface/40 backdrop-blur-sm transition-opacity duration-300 opacity-0">
     <!-- Overlay -->
     <div aria-hidden="true" class="absolute inset-0" data-action="closeMoviesModal"></div>
-    
+
     <!-- Bottom Sheet / Modal -->
     <div aria-labelledby="movies-modal-title" aria-modal="true" class="bg-background shadow-neo w-full sm:w-[90%] sm:max-w-[390px] mx-auto rounded-t-2xl sm:rounded-[32px] shadow-md transform translate-y-full transition-transform duration-300 overflow-hidden flex flex-col relative z-10 max-h-[90dvh]" role="dialog">
         <!-- Drag Handle (Mobile only) -->
         <div class="w-full flex justify-center pt-3 pb-1 md:hidden">
             <div class="w-12 h-1.5 bg-outline-variant rounded-full"></div>
         </div>
-        
+
         <!-- Header -->
         <div class="px-container-padding py-4 flex items-center justify-between border-b border-surface-variant/50">
             <h2 class="font-headline-sm text-headline-sm text-on-surface" id="movies-modal-title">İçeriği Düzenle</h2>
@@ -4067,7 +4061,7 @@
                 <span class="material-symbols-rounded" style="font-size: 20px;">close</span>
             </button>
         </div>
-        
+
         <!-- Content Area -->
         <div class="px-container-padding py-6 flex flex-col gap-6 overflow-y-auto flex-1">
             <!-- Target Content Info -->
@@ -4085,7 +4079,7 @@
                     <input type="text" id="movies-modal-input-title" class="w-full bg-transparent border-b border-transparent hover:border-surface-variant focus:border-primary focus:outline-none font-headline-md text-headline-md text-on-surface placeholder:text-outline-variant shadow-neo-inset border-none rounded-xl bg-background " placeholder="İçerik Adı">
                 </div>
             </div>
-            
+
             <!-- Type Selection -->
             <div class="space-y-element-spacing">
                 <label class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">TÜR</label>
@@ -4100,7 +4094,7 @@
                     </label>
                 </div>
             </div>
-            
+
             <!-- Conditional Series Inputs -->
             <div class="flex gap-4 w-full" id="movies-series-inputs">
                 <div class="flex-1 space-y-element-spacing">
@@ -4112,7 +4106,7 @@
                     <input class="w-full bg-surface-container-low border border-surface-variant rounded-lg px-4 py-2 font-body-lg text-on-surface focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none transition-shadow shadow-neo-inset border-none rounded-xl bg-background " min="1" type="number" id="movies-modal-episode">
                 </div>
             </div>
-            
+
             <!-- Category Selection (Status) -->
             <div class="space-y-element-spacing">
                 <label class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">DURUM</label>
@@ -4132,7 +4126,7 @@
                 </div>
             </div>
         </div>
-        
+
         <!-- Footer Actions -->
         <div class="px-container-padding py-6 mt-auto flex items-center justify-between gap-4 border-t border-surface-variant/50 bg-surface-container-lowest">
             <button class="flex items-center justify-center px-4 py-3 rounded-[32px] text-error hover:bg-error-container transition-colors font-headline-sm text-body-lg gap-2 w-1/3" id="movies-modal-delete-btn">
@@ -4163,20 +4157,20 @@
     </div>
 
     <script>
-        
+
         let currentExerciseElement = null;
 
         function openExerciseSheet(element, name, imgSrc, legendItems) {
             const ev = window.event;
             if (ev && ev.target.closest('.exercise-fav-btn')) return;
             currentExerciseElement = element;
-            
+
             // Sync sheet star state with list item star state
             const listFavBtn = element.querySelector('.exercise-fav-btn');
             const isFav = listFavBtn.classList.contains('text-amber-500');
             const sheetFavBtn = document.getElementById('sheet-fav-btn');
             const sheetIcon = sheetFavBtn.querySelector('span');
-            
+
             if (isFav) {
                 sheetFavBtn.classList.add('text-amber-500');
                 sheetFavBtn.classList.remove('text-on-surface-variant');
@@ -4188,36 +4182,36 @@
             }
 
             document.getElementById('sheet-exercise-name').innerText = name;
-            
+
             // Render the interactive SVG instead of static image
             if (typeof renderMuscleMap === 'function') {
                 renderMuscleMap(name);
-                
+
                 // Initialize Panzoom
                 const mapElement = document.getElementById('sheet-interactive-map');
-                
+
                 // Destroy previous instance if exists to prevent memory leaks
                 if (window.currentPanzoom) {
                     window.currentPanzoom.destroy();
                 }
-                
+
                 window.currentPanzoom = Panzoom(mapElement, {
                     maxScale: 4,
                     minScale: 0.8,
                     contain: 'outside',
                     step: 0.2
                 });
-                
+
                 // Bind buttons
                 document.getElementById('zoom-in').onclick = () => window.currentPanzoom.zoomIn();
                 document.getElementById('zoom-out').onclick = () => window.currentPanzoom.zoomOut();
                 document.getElementById('zoom-reset').onclick = () => window.currentPanzoom.reset();
-                
+
                 // Add wheel support
                 mapElement.parentElement.addEventListener('wheel', window.currentPanzoom.zoomWithWheel);
             }
 
-            
+
             let legendHtml = `
                 <div class="flex items-center gap-2">
                     <div class="w-3 h-3 rounded-full" style="background-color: #7ea18d;"></div>
@@ -4229,14 +4223,14 @@
                 </div>
             `;
             document.getElementById('sheet-exercise-legend').innerHTML = legendHtml;
-            
+
             const sheet = document.getElementById('exercise-bottom-sheet');
             const sheetContent = document.getElementById('exercise-bottom-sheet-content');
-            
+
             sheet.classList.remove('pointer-events-none');
             sheet.classList.add('opacity-100');
             sheet.classList.remove('opacity-0');
-            
+
             setTimeout(() => {
                 sheetContent.classList.remove('translate-y-full');
                 sheetContent.classList.add('translate-y-0');
@@ -4248,8 +4242,8 @@
                 closeExerciseSheet();
             }
         }
-        
-        
+
+
         let currentExerciseCategory = 'Tümü';
         let currentExerciseSearchTerm = '';
 
@@ -4260,30 +4254,30 @@
 
         function filterExercises(category, btnElement) {
             currentExerciseCategory = category;
-            
+
             // Update active styling on chips
             const allChips = document.querySelectorAll('.filter-chip');
             allChips.forEach(chip => {
                 chip.className = 'neo-surface px-5 py-2 rounded-full text-sm font-semibold text-on-surface-variant whitespace-nowrap neo-button filter-chip';
             });
-            
+
             // Set clicked chip to active
             btnElement.className = 'neo-inset px-5 py-2 rounded-full text-sm font-semibold text-on-surface whitespace-nowrap filter-chip active';
 
             applyExerciseFilters();
         }
-        
+
         function applyExerciseFilters() {
             const categories = document.querySelectorAll('.exercise-category');
-            
+
             categories.forEach(catGroup => {
                 const catName = catGroup.getAttribute('data-category');
                 const items = catGroup.querySelectorAll('.exercise-item');
                 let hasVisibleItems = false;
-                
+
                 items.forEach(item => {
                     let shouldShow = false;
-                    
+
                     // 1. Tab Filter
                     if (currentExerciseCategory === 'Tümü') {
                         shouldShow = true;
@@ -4293,7 +4287,7 @@
                     } else {
                         shouldShow = (catName === currentExerciseCategory);
                     }
-                    
+
                     // 2. Search Filter
                     if (shouldShow && currentExerciseSearchTerm !== '') {
                         const exerciseName = item.querySelector('h4').innerText.toLowerCase();
@@ -4301,7 +4295,7 @@
                             shouldShow = false;
                         }
                     }
-                    
+
                     if (shouldShow) {
                         item.classList.remove('hidden');
                         hasVisibleItems = true;
@@ -4309,7 +4303,7 @@
                         item.classList.add('hidden');
                     }
                 });
-                
+
                 // Hide the whole category group if no items are visible
                 if (hasVisibleItems) {
                     catGroup.classList.remove('hidden');
@@ -4319,17 +4313,17 @@
             });
         }
 
-        
+
         function toggleSheetFav() {
             if (!currentExerciseElement) return;
             const listFavBtn = currentExerciseElement.querySelector('.exercise-fav-btn');
             const sheetFavBtn = document.getElementById('sheet-fav-btn');
             const sheetIcon = sheetFavBtn.querySelector('span');
-            
+
             // Toggle the list item star
             toggleFav({ stopPropagation: () => {} }, listFavBtn);
             if(currentExerciseCategory === 'Favoriler') { applyExerciseFilters(); }
-            
+
             // Update sheet star visually
             const isFav = listFavBtn.classList.contains('text-amber-500');
             if (isFav) {
@@ -4361,17 +4355,17 @@
             }
         }
 
-        
+
         function openAddExerciseSheet() {
             const sheet = document.getElementById('add-exercise-bottom-sheet');
             const sheetContent = document.getElementById('add-exercise-bottom-sheet-content');
-            
+
             document.getElementById('newExerciseName').value = '';
-            
+
             sheet.classList.remove('pointer-events-none');
             sheet.classList.add('opacity-100');
             sheet.classList.remove('opacity-0');
-            
+
             setTimeout(() => {
                 sheetContent.classList.remove('translate-y-full');
                 sheetContent.classList.add('translate-y-0');
@@ -4381,10 +4375,10 @@
         function closeAddExerciseSheet() {
             const sheet = document.getElementById('add-exercise-bottom-sheet');
             const sheetContent = document.getElementById('add-exercise-bottom-sheet-content');
-            
+
             sheetContent.classList.add('translate-y-full');
             sheetContent.classList.remove('translate-y-0');
-            
+
             setTimeout(() => {
                 sheet.classList.remove('opacity-100');
                 sheet.classList.add('opacity-0');
@@ -4397,13 +4391,13 @@
                 closeAddExerciseSheet();
             }
         }
-        
+
                 function loadCustomExercises() {
             const currentUid = localStorage.getItem('uid');
             if (!currentUid) return;
             const customKey = `miz_custom_exercises_${currentUid || 'guest'}`;
             let customExercises = JSON.parse(localStorage.getItem(customKey) || "[]");
-            
+
             const categoryToSvgMap = {
                 'Göğüs': ['chest'],
                 'Sırt': ['upper-back'],
@@ -4414,22 +4408,22 @@
                 'Karın': ['abs'],
                 'Kalça': ['gluteal']
             };
-            
+
             const container = document.getElementById('exercise-list-container');
             if (!container) return;
-            
+
             customExercises.forEach(ex => {
                 // Skip if already in DOM
                 const existingItems = Array.from(document.querySelectorAll('.exercise-item h4')).map(el => el.innerText);
                 if (existingItems.includes(ex.name)) return;
-                
+
                 if (window.EXERCISE_MUSCLE_MAPPING) {
-                    window.EXERCISE_MUSCLE_MAPPING[ex.name] = { 
-                        primary: categoryToSvgMap[ex.muscleGroup] || [], 
-                        secondary: [] 
+                    window.EXERCISE_MUSCLE_MAPPING[ex.name] = {
+                        primary: categoryToSvgMap[ex.muscleGroup] || [],
+                        secondary: []
                     };
                 }
-                
+
                 const letter = ex.name.charAt(0).toUpperCase();
                 const newExerciseHtml = `
                     <div onclick="openExerciseSheet(this, '${ex.name}')" class="neo-surface p-4 rounded-2xl flex items-center justify-between neo-button transition-all exercise-item mb-3 cursor-pointer">
@@ -4448,7 +4442,7 @@
                         </div>
                     </div>
                 `;
-                
+
                 const categoryGroups = container.querySelectorAll('.exercise-category');
                 let targetGroup = null;
                 categoryGroups.forEach(group => {
@@ -4456,13 +4450,13 @@
                         targetGroup = group;
                     }
                 });
-                
+
                 if (targetGroup) {
                     const list = targetGroup.querySelector('.flex.flex-col.gap-2');
                     list.insertAdjacentHTML('beforeend', newExerciseHtml);
                 }
             });
-            
+
             // We need to re-init favorites because new items were added!
             if (typeof initFavoritesUI === 'function') {
                 initFavoritesUI();
@@ -4476,9 +4470,9 @@
                 alert('Lütfen hareket adını girin');
                 return;
             }
-            
+
             const muscleGroup = document.querySelector('input[name="newExerciseMuscle"]:checked').value;
-            
+
             const categoryToSvgMap = {
                 'Göğüs': ['chest'],
                 'Sırt': ['upper-back'],
@@ -4489,14 +4483,14 @@
                 'Karın': ['abs'],
                 'Kalça': ['gluteal']
             };
-            
+
             if (window.EXERCISE_MUSCLE_MAPPING) {
-                window.EXERCISE_MUSCLE_MAPPING[name] = { 
-                    primary: categoryToSvgMap[muscleGroup] || [], 
-                    secondary: [] 
+                window.EXERCISE_MUSCLE_MAPPING[name] = {
+                    primary: categoryToSvgMap[muscleGroup] || [],
+                    secondary: []
                 };
             }
-            
+
             const currentUid = localStorage.getItem('uid');
             if (currentUid) {
                 const customKey = `miz_custom_exercises_${currentUid || 'guest'}`;
@@ -4506,10 +4500,10 @@
                     localStorage.setItem(customKey, JSON.stringify(customExercises));
                 }
             }
-            
+
             // Create the exercise item HTML dynamically
             const letter = name.charAt(0).toUpperCase();
-            
+
             const newExerciseHtml = `
                 <div onclick="openExerciseSheet(this, '${name}')" class="neo-surface p-4 rounded-2xl flex items-center justify-between neo-button transition-all exercise-item mb-3 cursor-pointer">
                     <div class="flex items-center gap-4">
@@ -4527,18 +4521,18 @@
                     </div>
                 </div>
             `;
-            
+
             // Add it to the correct category in the DOM
             const container = document.getElementById('exercise-list-container');
             const categoryGroups = container.querySelectorAll('.exercise-category');
             let targetGroup = null;
-            
+
             categoryGroups.forEach(group => {
                 if (group.getAttribute('data-category') === muscleGroup) {
                     targetGroup = group;
                 }
             });
-            
+
             if (targetGroup) {
                 const list = targetGroup.querySelector('.flex.flex-col.gap-2');
                 list.insertAdjacentHTML('beforeend', newExerciseHtml);
@@ -4546,23 +4540,23 @@
                 // Should not happen since all categories are defined
                 alert('Kategori bulunamadı!');
             }
-            
-            // Note: Since this is frontend only and the user just asked for the UI, 
+
+            // Note: Since this is frontend only and the user just asked for the UI,
             // the added exercise won't persist across full page reloads without backend logic.
             // But this accomplishes the requested feature in the current session.
-            
+
             closeAddExerciseSheet();
-            
+
             // Re-apply filters so it shows up if filters are active
             applyExerciseFilters();
         }
 
         function deleteCurrentExercise() {
             if (!currentExerciseElement) return;
-            
+
             if (confirm("Bu hareketi silmek istediğinize emin misiniz?")) {
                 const name = currentExerciseElement.querySelector('h4').innerText;
-                
+
                 const currentUid = localStorage.getItem('uid');
             if (currentUid) {
                     const customKey = `miz_custom_exercises_${currentUid || 'guest'}`;
@@ -4570,25 +4564,25 @@
                     customExercises = customExercises.filter(ex => ex.name !== name);
                     localStorage.setItem(customKey, JSON.stringify(customExercises));
                 }
-                
+
                 if (window.EXERCISE_MUSCLE_MAPPING && window.EXERCISE_MUSCLE_MAPPING[name]) {
                     delete window.EXERCISE_MUSCLE_MAPPING[name];
                 }
-                
+
                 currentExerciseElement.remove();
                 currentExerciseElement = null;
                 closeExerciseSheet();
                 applyExerciseFilters();
             }
         }
-        
+
         function closeExerciseSheet() {
             const sheet = document.getElementById('exercise-bottom-sheet');
             const sheetContent = document.getElementById('exercise-bottom-sheet-content');
-            
+
             sheetContent.classList.add('translate-y-full');
             sheetContent.classList.remove('translate-y-0');
-            
+
             setTimeout(() => {
                 sheet.classList.add('opacity-0');
                 sheet.classList.remove('opacity-100');
@@ -4627,7 +4621,7 @@
     <div id="modal-split-change" class="hidden fixed inset-0 z-[60] flex items-center justify-center font-body-md">
         <!-- Modal Backdrop -->
         <div class="absolute inset-0 bg-on-background/40 backdrop-blur-sm z-40 transition-opacity duration-300" onclick="closeSplitModal()"></div>
-        
+
         <!-- Modal Container -->
         <div class="relative bg-background shadow-neo w-full max-w-md mx-margin-mobile md:mx-auto rounded-[32px] shadow-xl z-50 flex flex-col overflow-hidden max-h-[90vh]">
             <!-- Header -->
@@ -4668,8 +4662,6 @@
         </div>
     </div>
 
-    
-
 
     <!-- CREATE SPLIT VIEW -->
     <section id="view-create-split" class="view hidden bg-background min-h-[100dvh] text-on-background font-body-md selection:bg-gradient-to-r from-neon-purple to-neon-blue-container selection:text-white-container pb-[100px] overflow-y-auto">
@@ -4694,7 +4686,7 @@
             <section id="create-split-days-container" class="space-y-sm">
                 <!-- Days will be added here dynamically -->
             </section>
-            
+
             <button onclick="addDayToNewSplit()" class="w-full bg-transparent border-2 border-dashed border-primary-container text-neon-blue font-label-lg text-label-lg rounded-[32px] h-20 flex items-center justify-center hover:bg-background shadow-neo transition-colors">
                 + Yeni Gün Ekle
             </button>

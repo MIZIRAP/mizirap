@@ -38,7 +38,7 @@ document.addEventListener('click', (e) => {
 export function initFinance(uid, onChangeCallback) {
     currentUid = uid;
     callback = onChangeCallback;
-    
+
     // 1. Load Categories
     const categoriesRef = collection(db, "users", uid, "finance_categories");
     unsubCategories = registerListener(onSnapshot(categoriesRef, (snap) => {
@@ -62,7 +62,7 @@ export function initFinance(uid, onChangeCallback) {
     // 3. Load Transactions
     const txRef = collection(db, "users", uid, "finance_transactions");
     const q = query(txRef, orderBy("dateStr", "desc"));
-    
+
     unsubTransactions = registerListener(onSnapshot(q, (snap) => {
         financeTransactions = snap.docs.map(d => ({ id: d.id, ...d.data() }));
         renderTransactions();
@@ -71,7 +71,7 @@ export function initFinance(uid, onChangeCallback) {
         if (typeof renderFinanceDetail !== "undefined") renderFinanceDetail();
         if(callback) callback(financeTransactions);
     }));
-    
+
     setupFinanceModals();
     fetchMetalPrices();
 }
@@ -84,12 +84,12 @@ export function clearFinance() {
     financeCategories = [];
     financePaymentMethods = [];
     financeTransactions = [];
-    
+
     const list = document.getElementById("finance-recent-transactions");
     if(list) list.innerHTML = "";
     const balance = document.getElementById("finance-total-balance");
     if(balance) balance.textContent = "₺0,00";
-    
+
     // Reset the carousel so it re-initializes for the next session
     const carousel = document.getElementById("finance-month-carousel");
     if(carousel) {
@@ -108,7 +108,7 @@ function setupFinanceModals() {
     const amtMinus = document.getElementById('tx-amount-minus');
     const amtPlus = document.getElementById('tx-amount-plus');
     const amtInput = document.getElementById('tx-amount');
-    
+
     if (amtMinus && amtPlus && amtInput) {
         amtMinus.addEventListener('click', () => {
             let val = parseFloat(amtInput.value) || 0;
@@ -194,30 +194,29 @@ function setupFinanceModals() {
 }
 
 
-
 async function savePaymentMethod() {
     if(!currentUid) return;
-    
+
     const nameEl = document.getElementById('method-name');
     const typeEl = document.querySelector('input[name="payment-type"]:checked');
     const iconEl = document.querySelector('.payment-icon-option.selected');
-    
+
     if(!nameEl || !typeEl || !iconEl) return;
-    
+
     const name = nameEl.value.trim();
     if(!name) {
         alert('Lütfen bir hesap/kart adı girin.');
         return;
     }
-    
+
     const type = typeEl.value;
     const icon = iconEl.dataset.icon || 'account_balance';
-    
+
     const saveBtn = document.getElementById('finance-save-payment-btn');
     const originalText = saveBtn.innerHTML;
     saveBtn.innerHTML = 'Kaydediliyor...';
     saveBtn.disabled = true;
-    
+
     try {
         await addDoc(collection(db, "users", currentUid, "finance_payment_methods"), {
             name,
@@ -225,18 +224,18 @@ async function savePaymentMethod() {
             icon,
             createdAt: serverTimestamp()
         });
-        
+
         saveBtn.innerHTML = `<span class="material-symbols-rounded">check_circle</span> Eklendi!`;
         saveBtn.classList.add("bg-gradient-to-r", "from-neon-purple", "to-neon-blue-container", "text-white-container");
-        
+
         setTimeout(() => {
             saveBtn.innerHTML = originalText;
             saveBtn.classList.remove("bg-gradient-to-r", "from-neon-purple", "to-neon-blue-container", "text-white-container");
             saveBtn.disabled = false;
-            
+
             // Clear inputs
             nameEl.value = '';
-            
+
             closeModal('finance-add-payment-modal');
         }, 1000);
     } catch(err) {
@@ -260,7 +259,7 @@ function openModal(id) {
             panel.classList.remove("scale-95", "opacity-0");
             panel.classList.add("scale-100", "opacity-100");
         }
-        
+
         const backdrop = el.querySelector("[id$='-backdrop']");
         if (backdrop) backdrop.classList.remove("opacity-0");
     });
@@ -269,7 +268,7 @@ function openModal(id) {
 function closeModal(id) {
     const el = document.getElementById(id);
     if (!el) return;
-    
+
     const panel = el.querySelector("div.transform") || el.querySelector("div");
     if(panel) {
         if (panel.classList.contains("scale-100")) {
@@ -279,10 +278,10 @@ function closeModal(id) {
             panel.classList.add("translate-y-full");
         }
     }
-    
+
     const backdrop = el.querySelector("[id$='-backdrop']");
     if (backdrop) backdrop.classList.add("opacity-0");
-    
+
     el.classList.add("opacity-0");
     setTimeout(() => {
         el.classList.remove("flex");
@@ -299,18 +298,18 @@ let financeCarouselObserver = null;
 function renderMonthCarousel() {
     const carousel = document.getElementById("finance-month-carousel");
     if (!carousel) return;
-    
+
     // Only generate HTML if not initialized
     if (!carousel.hasAttribute("data-initialized")) {
         carousel.setAttribute("data-initialized", "true");
-        
+
         const today = new Date();
         const startYear = today.getFullYear() - 1;
         const endYear = today.getFullYear() + 1;
-        
+
         let html = '';
         const monthNames = ["Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran", "Temmuz", "Ağustos", "Eylül", "Ekim", "Kasım", "Aralık"];
-        
+
         for (let y = startYear; y <= endYear; y++) {
             for (let m = 0; m < 12; m++) {
                 // Change min-w-full to min-w-[120px] to allow swiping to see parts of adjacent months
@@ -323,7 +322,7 @@ function renderMonthCarousel() {
                 `;
             }
         }
-        
+
         carousel.innerHTML = html;
 
         // Click to scroll
@@ -356,7 +355,7 @@ function renderMonthCarousel() {
                 if (closestItem) {
                     const year = parseInt(closestItem.getAttribute("data-year"));
                     const month = parseInt(closestItem.getAttribute("data-month"));
-                    
+
                     if (currentMainFinanceMonth.getFullYear() !== year || currentMainFinanceMonth.getMonth() !== month) {
                         currentMainFinanceMonth.setFullYear(year, month, 1);
                         updateMonthStyles();
@@ -365,7 +364,7 @@ function renderMonthCarousel() {
                 }
             }, 100);
         });
-        
+
         // Ensure it scrolls to current month when it becomes visible
         if (!financeCarouselObserver) {
             financeCarouselObserver = new IntersectionObserver((entries) => {
@@ -381,23 +380,23 @@ function renderMonthCarousel() {
             financeCarouselObserver.observe(carousel);
         }
     }
-    
+
     updateMonthStyles();
 }
 
 function updateMonthStyles() {
     const carousel = document.getElementById("finance-month-carousel");
     if (!carousel) return;
-    
+
     const items = carousel.querySelectorAll('.month-snap-item');
     const targetY = currentMainFinanceMonth.getFullYear();
     const targetM = currentMainFinanceMonth.getMonth();
-    
+
     items.forEach(item => {
         const btn = item.querySelector('.month-btn');
         const y = parseInt(item.getAttribute("data-year"));
         const m = parseInt(item.getAttribute("data-month"));
-        
+
         if (y === targetY && m === targetM) {
             btn.classList.remove('text-[#64748B]');
             btn.classList.add('text-[#3B82F6]');
@@ -412,27 +411,27 @@ function updateMonthStyles() {
 
 function renderTransactions(isFromScroll = false) {
     if (!isFromScroll) renderMonthCarousel();
-    
+
     const list = document.getElementById("finance-recent-transactions");
     const balanceEl = document.getElementById("finance-total-balance");
     const trendEl = document.getElementById("finance-monthly-trend");
     const ringEl = document.getElementById("finance-balance-ring");
-    
+
     if(!list) return;
-    
+
     const targetMonth = currentMainFinanceMonth.getMonth();
     const targetYear = currentMainFinanceMonth.getFullYear();
-    
+
     const monthTxs = financeTransactions.filter(tx => {
         const d = new Date(tx.dateStr);
         return d.getMonth() === targetMonth && d.getFullYear() === targetYear;
     });
-    
+
     let totalBalance = 0;
-    let currentMonthBalance = 0; 
+    let currentMonthBalance = 0;
     let currentMonthIncome = 0;
     let currentMonthExpense = 0;
-    
+
     const barsContainer = document.getElementById("finance-expense-bars");
     let categoryExpenses = {};
 
@@ -457,19 +456,19 @@ function renderTransactions(isFromScroll = false) {
         } else {
             const sortedCats = Object.keys(categoryExpenses).sort((a, b) => categoryExpenses[b] - categoryExpenses[a]);
             const colorClasses = [
-                'linear-gradient(to right, #A855F7, #3B82F6)', 
-                'linear-gradient(to right, #3B82F6, #22C55E)', 
+                'linear-gradient(to right, #A855F7, #3B82F6)',
+                'linear-gradient(to right, #3B82F6, #22C55E)',
                 'linear-gradient(to right, #A855F7, #22C55E)'
             ];
             const textColors = ['text-[#A855F7]', 'text-[#3B82F6]', 'text-[#22C55E]'];
-            
+
             barsContainer.innerHTML = sortedCats.slice(0, 4).map((catId, index) => {
                 const amount = categoryExpenses[catId];
                 const percentage = Math.round((amount / currentMonthExpense) * 100);
                 const catObj = financeCategories.find(c => c.id === catId) || { name: 'Genel' };
                 const bg = colorClasses[index % colorClasses.length];
                 const txtCol = textColors[index % textColors.length];
-                
+
                 return `
                 <div class="flex flex-col gap-2">
                     <div class="flex justify-between items-center">
@@ -488,7 +487,7 @@ function renderTransactions(isFromScroll = false) {
     if(balanceEl) {
         balanceEl.textContent = formatCurrency(totalBalance);
     }
-    
+
     if(trendEl) {
         if(currentMonthBalance > 0) {
             trendEl.innerHTML = `▲ +${formatCurrency(currentMonthBalance)} Bu Ay`;
@@ -507,7 +506,7 @@ function renderTransactions(isFromScroll = false) {
 
     if (ringEl) {
         // Circumference is 314.159. offset 0 = full, 314.159 = empty
-        // Let's make it represent income vs expense ratio. 
+        // Let's make it represent income vs expense ratio.
         // If expenses > income, it gets emptier.
         let ratio = 1;
         if (currentMonthIncome > 0) {
@@ -517,36 +516,36 @@ function renderTransactions(isFromScroll = false) {
         }
         // minimum 5% to always show a bit if there's any activity
         if (currentMonthIncome > 0 || currentMonthExpense > 0) ratio = Math.max(0.05, ratio);
-        
+
         const offset = 314.159 - (ratio * 314.159);
         ringEl.style.strokeDashoffset = offset;
     }
-    
+
     if(monthTxs.length === 0) {
         list.innerHTML = `<div class="text-center text-[#64748B] text-sm py-4 font-medium">Henüz bir işlem bulunmuyor.</div>`;
         return;
     }
-    
+
     list.innerHTML = "";
     const recent = monthTxs.slice(0, 5);
-    
+
     recent.forEach(tx => {
         const cat = financeCategories.find(c => c.id === tx.categoryId) || { name: 'Genel', icon: 'payments', type: tx.type };
         const pm = financePaymentMethods.find(p => p.id === tx.paymentMethodId) || { name: 'Bilinmiyor', type: 'Nakit' };
-        
+
         const isIncome = tx.type === 'income';
         const sign = isIncome ? "+" : "-";
         const valStr = formatCurrency(tx.amount);
-        
+
         const dateObj = new Date(tx.dateStr);
         const dateFormatted = dateObj.getDate() + ' ' + ["Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran", "Temmuz", "Ağustos", "Eylül", "Ekim", "Kasım", "Aralık"][dateObj.getMonth()];
-        
+
         const iconColor = isIncome ? 'text-[#22C55E]' : 'text-[#3B82F6]';
         const valColor = isIncome ? 'text-[#22C55E]' : 'text-[#3B82F6]';
-        
+
         const wrapper = document.createElement('div');
         wrapper.className = "relative w-full shrink-0 mb-4";
-        
+
         const delBtn = document.createElement('button');
         delBtn.className = "absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-red-500 rounded-2xl text-white flex items-center justify-center z-0 active:bg-red-600 transition-colors";
         delBtn.innerHTML = `<span class="material-symbols-rounded text-xl">delete</span>`;
@@ -577,7 +576,7 @@ function renderTransactions(isFromScroll = false) {
             </div>
             <span class="font-bold ${valColor} whitespace-nowrap ml-2 pointer-events-none">${sign}${valStr}</span>
         `;
-        
+
         let startX = 0;
         let currentX = 0;
         let isDragging = false;
@@ -592,7 +591,7 @@ function renderTransactions(isFromScroll = false) {
             if (!isDragging) return;
             currentX = e.touches[0].clientX;
             let diff = currentX - startX;
-            if (diff > 0) diff = 0; 
+            if (diff > 0) diff = 0;
             if (diff < -80) diff = -80;
             item.style.transform = `translateX(${diff}px)`;
         }, {passive: true});
@@ -603,7 +602,7 @@ function renderTransactions(isFromScroll = false) {
             item.style.transition = 'transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)';
             let diff = currentX - startX;
             if (diff < -40) {
-                item.style.transform = `translateX(-80px)`; 
+                item.style.transform = `translateX(-80px)`;
                 setTimeout(() => {
                     document.addEventListener('touchstart', function closeSwipe(evt) {
                         if (!wrapper.contains(evt.target)) {
@@ -627,7 +626,7 @@ function renderTransactions(isFromScroll = false) {
                 const amtEl = document.getElementById('tx-amount');
                 if (titleEl) titleEl.value = tx.title;
                 if (amtEl) amtEl.value = tx.amount;
-                
+
                 const typeRadios = document.querySelectorAll('input[name="tx-type"]');
                 typeRadios.forEach(r => {
                     if(r.value === tx.type) r.checked = true;
@@ -636,7 +635,7 @@ function renderTransactions(isFromScroll = false) {
                 if (typeof renderCategoryOptions === 'function') {
                     renderCategoryOptions();
                 }
-                
+
                 setTimeout(() => {
                     const catOpts = document.querySelectorAll('.tx-cat-btn');
                     catOpts.forEach(o => {
@@ -696,27 +695,27 @@ export function calcBalance(txs) {
 
 async function saveCategory() {
     if(!currentUid) return;
-    
+
     const nameEl = document.getElementById('category-name');
     const iconEl = document.querySelector('.category-icon-option.selected');
     const colorEl = document.querySelector('.category-color-option.selected');
-    
+
     if(!nameEl || !iconEl) return;
-    
+
     const name = nameEl.value.trim();
     if(!name) {
         alert('Lütfen bir tür adı girin.');
         return;
     }
-    
+
     const icon = iconEl.dataset.icon || 'receipt_long';
     const color = colorEl?.dataset?.color || "primary";
-    
+
     const saveBtn = document.getElementById('finance-save-category-btn');
     const originalText = saveBtn.innerHTML;
     saveBtn.innerHTML = 'Kaydediliyor...';
     saveBtn.disabled = true;
-    
+
     try {
         await addDoc(collection(db, "users", currentUid, "finance_categories"), {
             name,
@@ -724,18 +723,18 @@ async function saveCategory() {
             color,
             createdAt: serverTimestamp()
         });
-        
+
         saveBtn.innerHTML = `<span class="material-symbols-rounded">check_circle</span> Eklendi!`;
         saveBtn.classList.add("bg-gradient-to-r", "from-neon-purple", "to-neon-blue-container", "text-white-container");
-        
+
         setTimeout(() => {
             saveBtn.innerHTML = originalText;
             saveBtn.classList.remove("bg-gradient-to-r", "from-neon-purple", "to-neon-blue-container", "text-white-container");
             saveBtn.disabled = false;
-            
+
             // Clear inputs
             nameEl.value = '';
-            
+
             closeModal('finance-add-category-modal');
         }, 1000);
     } catch(err) {
@@ -750,23 +749,23 @@ async function saveCategory() {
 export function renderTxModalOptions() {
     const catContainer = document.getElementById('tx-category-container');
     const pmContainer = document.getElementById('tx-payment-container');
-    
+
     const unselectedShadow = '6px 6px 12px #e3e6ee, -6px -6px 12px #ffffff';
     const selectedShadow = 'inset 4px 4px 8px #e3e6ee, inset -4px -4px 8px #ffffff';
-    
+
     if (catContainer) {
         if (financeCategories.length === 0) {
             catContainer.innerHTML = '<div class="text-sm text-[#64748B] py-2 italic w-full text-center">Önce harcama türü ekleyin.</div>';
         } else {
             catContainer.innerHTML = financeCategories.map((c, idx) => `
-                <button class="tx-cat-btn flex flex-col items-center gap-2 p-4 rounded-2xl transition-all min-w-[80px] snap-center bg-[#F7F9FF] ${idx === 0 ? 'selected' : ''}" 
-                        style="box-shadow: ${idx === 0 ? selectedShadow : unselectedShadow};" 
+                <button class="tx-cat-btn flex flex-col items-center gap-2 p-4 rounded-2xl transition-all min-w-[80px] snap-center bg-[#F7F9FF] ${idx === 0 ? 'selected' : ''}"
+                        style="box-shadow: ${idx === 0 ? selectedShadow : unselectedShadow};"
                         data-id="${c.id}">
                     <span class="material-symbols-rounded ${idx === 0 ? 'text-[#22c55e]' : 'text-[#3B82F6]'}">${c.icon || 'category'}</span>
                     <span class="text-xs font-bold ${idx === 0 ? 'text-[#1E293B]' : 'text-[#64748B]'} whitespace-nowrap">${c.name}</span>
                 </button>
             `).join('');
-            
+
             // Add Listeners
             document.querySelectorAll('.tx-cat-btn').forEach(btn => {
                 btn.addEventListener('click', () => {
@@ -788,20 +787,20 @@ export function renderTxModalOptions() {
             });
         }
     }
-    
+
     if (pmContainer) {
         if (financePaymentMethods.length === 0) {
             pmContainer.innerHTML = '<div class="text-sm text-[#64748B] py-2 italic w-full text-center">Önce ödeme yöntemi ekleyin.</div>';
         } else {
             pmContainer.innerHTML = financePaymentMethods.map((p, idx) => `
-                <button class="tx-pm-btn flex flex-col items-center gap-2 p-4 rounded-2xl transition-all min-w-[100px] snap-center bg-[#F7F9FF] ${idx === 0 ? 'selected' : ''}" 
-                        style="box-shadow: ${idx === 0 ? selectedShadow : unselectedShadow};" 
+                <button class="tx-pm-btn flex flex-col items-center gap-2 p-4 rounded-2xl transition-all min-w-[100px] snap-center bg-[#F7F9FF] ${idx === 0 ? 'selected' : ''}"
+                        style="box-shadow: ${idx === 0 ? selectedShadow : unselectedShadow};"
                         data-id="${p.id}">
                     <span class="material-symbols-rounded ${idx === 0 ? 'text-[#22c55e]' : 'text-[#3B82F6]'}">${p.icon || 'credit_card'}</span>
                     <span class="text-xs font-bold ${idx === 0 ? 'text-[#1E293B]' : 'text-[#64748B]'} whitespace-nowrap">${p.name}</span>
                 </button>
             `).join('');
-            
+
             // Add Listeners
             document.querySelectorAll('.tx-pm-btn').forEach(btn => {
                 btn.addEventListener('click', () => {
@@ -823,7 +822,7 @@ export function renderTxModalOptions() {
             });
         }
     }
-    
+
     const dateInput = document.getElementById('tx-date');
     if(dateInput && !dateInput.value) {
         const today = new Date();
@@ -836,22 +835,22 @@ export function renderTxModalOptions() {
 
 async function saveTransaction() {
     if(!currentUid) return;
-    
+
     const amountEl = document.getElementById('tx-amount');
     const titleEl = document.getElementById('tx-title');
     const typeEl = document.querySelector('input[name="tx-type"]:checked');
     const dateEl = document.getElementById('tx-date');
-    
+
     const activeCat = document.querySelector('.tx-cat-btn.selected');
     const activePm = document.querySelector('.tx-pm-btn.selected');
-    
+
     if(!amountEl || !titleEl || !typeEl || !dateEl) return;
-    
+
     const amount = parseFloat(amountEl.value);
     const title = titleEl.value.trim();
     const type = typeEl.value; // income or expense
     const dateStr = dateEl.value;
-    
+
     if(!validatePositiveNumber(amount)) {
         alert('Lütfen geçerli bir tutar girin (Sıfırdan büyük olmalıdır).');
         return;
@@ -868,15 +867,15 @@ async function saveTransaction() {
         alert('Lütfen bir ödeme yöntemi seçin.');
         return;
     }
-    
+
     const categoryId = activeCat.dataset.id;
     const paymentMethodId = activePm.dataset.id;
-    
+
     const saveBtn = document.getElementById('finance-save-tx-btn');
     const originalText = saveBtn.innerHTML;
     saveBtn.innerHTML = 'Kaydediliyor...';
     saveBtn.disabled = true;
-    
+
     try {
         const txData = {
             title,
@@ -895,19 +894,19 @@ async function saveTransaction() {
             txData.createdAt = serverTimestamp();
             await addDoc(collection(db, "users", currentUid, "finance_transactions"), txData).catch(e => { console.error('DB Error:', e); alert('Veritabanı işlemi sırasında bir hata oluştu.'); throw e; });
         }
-        
+
         saveBtn.innerHTML = `<span class="material-symbols-rounded">check_circle</span> Eklendi!`;
         saveBtn.classList.add("bg-gradient-to-r", "from-neon-purple", "to-neon-blue-container", "text-white-container");
-        
+
         setTimeout(() => {
             saveBtn.innerHTML = originalText;
             saveBtn.classList.remove("bg-gradient-to-r", "from-neon-purple", "to-neon-blue-container", "text-white-container");
             saveBtn.disabled = false;
-            
+
             // Clear inputs
             amountEl.value = '';
             titleEl.value = '';
-            
+
             closeModal('finance-add-tx-modal');
         }, 1000);
     } catch(err) {
@@ -928,19 +927,19 @@ export function renderFinanceDetail() {
     const paymentMethodsEl = document.getElementById('fd-payment-methods');
     const incomeListEl = document.getElementById('fd-income-list');
     const expenseListEl = document.getElementById('fd-expense-list');
-    
+
     if(!monthSelectorEl) return;
-    
+
     // Setup Month Selector
     const monthNames = ["Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran", "Temmuz", "Ağustos", "Eylül", "Ekim", "Kasım", "Aralık"];
-    
+
     // We will render Previous Month, Current Month, Next Month
     let selectorHtml = '';
     for(let i = -1; i <= 1; i++) {
         const d = new Date(currentDetailDate.getFullYear(), currentDetailDate.getMonth() + i, 1);
         const mName = monthNames[d.getMonth()];
         const dir = i;
-        
+
         if(i === 0) {
             selectorHtml += `<div class="px-2 flex justify-center items-center py-3 snap-center">
                 <button class="px-6 py-2 rounded-full bg-[#F7F9FF] text-xs font-bold text-[#3B82F6]" style="box-shadow: inset 2px 2px 5px #D1D9E6, inset -2px -2px 5px #FFFFFF;">${mName}</button>
@@ -956,19 +955,19 @@ export function renderFinanceDetail() {
     // Filter transactions for this month
     const targetMonth = currentDetailDate.getMonth();
     const targetYear = currentDetailDate.getFullYear();
-    
+
     const monthTxs = financeTransactions.filter(tx => {
         const d = new Date(tx.dateStr);
         return d.getMonth() === targetMonth && d.getFullYear() === targetYear;
     });
-    
+
     const incomes = monthTxs.filter(tx => tx.type === 'income');
     const expenses = monthTxs.filter(tx => tx.type === 'expense');
-    
+
     const totalIncome = incomes.reduce((sum, tx) => sum + parseFloat(tx.amount || 0), 0);
     const totalExpense = expenses.reduce((sum, tx) => sum + parseFloat(tx.amount || 0), 0);
     const netTotal = totalIncome - totalExpense;
-    
+
     // Format helpers
     const formatTL = (val) => '₺' + new Intl.NumberFormat('tr-TR', { maximumFractionDigits: 0 }).format(val);
     const formatK = (val) => {
@@ -992,7 +991,7 @@ export function renderFinanceDetail() {
         categorySums[tx.categoryId] += parseFloat(tx.amount || 0);
     });
     const sortedCatIds = Object.keys(categorySums).sort((a,b) => categorySums[b] - categorySums[a]);
-    
+
     if(sortedCatIds.length === 0) {
         catDistributionEl.innerHTML = '<div class="text-center text-sm text-[#64748B] italic">Harcama bulunmuyor.</div>';
     } else {
@@ -1020,7 +1019,7 @@ export function renderFinanceDetail() {
     const incomePct = Math.round((totalIncome / totalMax) * 100);
     const expensePct = Math.round((totalExpense / totalMax) * 100);
     const netPct = Math.round((Math.abs(netTotal) / totalMax) * 100);
-    
+
     monthlyStatusEl.innerHTML = `
         <div class="flex flex-col gap-2">
             <div class="flex justify-between items-center">
@@ -1058,7 +1057,7 @@ export function renderFinanceDetail() {
         pmSums[tx.paymentMethodId] += parseFloat(tx.amount || 0);
     });
     const sortedPmIds = Object.keys(pmSums).sort((a,b) => pmSums[b] - pmSums[a]);
-    
+
     if(sortedPmIds.length === 0) {
         paymentMethodsEl.innerHTML = '<div class="text-center text-sm text-[#64748B] italic">Harcama bulunmuyor.</div>';
     } else {
@@ -1090,7 +1089,7 @@ export function renderFinanceDetail() {
             const cat = financeCategories.find(c => c.id === tx.categoryId) || { name: 'Genel', icon: 'payments' };
             const d = new Date(tx.dateStr);
             const dateStr = d.getDate() + ' ' + monthNames[d.getMonth()] + ' ' + d.getFullYear();
-            
+
             return `
             <div class="flex items-center justify-between p-4 rounded-2xl bg-[#F7F9FF]" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px #FFFFFF;">
                 <div class="flex items-center gap-4">
@@ -1121,7 +1120,7 @@ export function renderFinanceDetail() {
             const d = new Date(tx.dateStr);
             const dateStr = d.getDate() + ' ' + monthNames[d.getMonth()];
             const color = expenseColors[idx % expenseColors.length];
-            
+
             return `
             <div class="flex items-center justify-between p-4 rounded-2xl bg-[#F7F9FF]" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px #FFFFFF;">
                 <div class="flex items-center gap-4">
@@ -1306,25 +1305,25 @@ function renderMetalPrices(gold, silver) {
 async function resetFinanceData() {
     if (!currentUid) return;
     if (!confirm('Tüm finans verileriniz (kategoriler, ödeme yöntemleri ve işlemler) kalıcı olarak silinecektir. Emin misiniz?')) return;
-    
+
     try {
         const batch = writeBatch(db);
-        
+
         // Delete all transactions
         const txsRef = collection(db, "users", currentUid, "finance_transactions");
         const txsSnap = await getDocs(txsRef);
         txsSnap.forEach(docSnap => batch.delete(docSnap.ref));
-        
+
         // Delete all payment methods
         const methodsRef = collection(db, "users", currentUid, "finance_payment_methods");
         const methodsSnap = await getDocs(methodsRef);
         methodsSnap.forEach(docSnap => batch.delete(docSnap.ref));
-        
+
         // Delete all categories
         const catsRef = collection(db, "users", currentUid, "finance_categories");
         const catsSnap = await getDocs(catsRef);
         catsSnap.forEach(docSnap => batch.delete(docSnap.ref));
-        
+
         await batch.commit();
         alert('Finans verileriniz başarıyla sıfırlandı.');
         // After deletion, the onSnapshot listeners will automatically trigger an empty render
@@ -1337,7 +1336,7 @@ async function resetFinanceData() {
 export function renderFinanceSettings() {
     const catContainer = document.getElementById('settings-category-list');
     const pmContainer = document.getElementById('settings-payment-list');
-    
+
     if (catContainer) {
         catContainer.innerHTML = '';
         if (financeCategories.length === 0) {
@@ -1346,7 +1345,7 @@ export function renderFinanceSettings() {
             financeCategories.forEach(cat => {
                 const wrapper = document.createElement('div');
                 wrapper.className = "relative w-full shrink-0";
-                
+
                 // Delete button underneath
                 const delBtn = document.createElement('button');
                 delBtn.className = "absolute right-0 top-1/2 -translate-y-1/2 w-12 h-12 bg-red-500 rounded-2xl text-white flex items-center justify-center z-0 active:bg-red-600 transition-colors shadow-[4px_4px_8px_#D1D9E6,-4px_-4px_8px_#FFFFFF]";
@@ -1418,7 +1417,7 @@ export function renderFinanceSettings() {
             });
         }
     }
-    
+
     if (pmContainer) {
         pmContainer.innerHTML = '';
         if (financePaymentMethods.length === 0) {
@@ -1427,7 +1426,7 @@ export function renderFinanceSettings() {
             financePaymentMethods.forEach(pm => {
                 const wrapper = document.createElement('div');
                 wrapper.className = "relative w-full shrink-0";
-                
+
                 // Delete button underneath
                 const delBtn = document.createElement('button');
                 delBtn.className = "absolute right-0 top-1/2 -translate-y-1/2 w-12 h-12 bg-red-500 rounded-2xl text-white flex items-center justify-center z-0 active:bg-red-600 transition-colors shadow-[4px_4px_8px_#D1D9E6,-4px_-4px_8px_#FFFFFF]";
