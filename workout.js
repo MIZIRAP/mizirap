@@ -3782,7 +3782,7 @@ function renderSessionAvailableExercises() {
     
     let sourceArray = [];
     if (currentSessionType === 'core') {
-        sourceArray = [...DEFAULT_CORES, ...(typeof cores !== 'undefined' ? cores : [])];
+        sourceArray = [...defaultCores, ...(typeof cores !== 'undefined' ? cores : [])];
     } else {
         sourceArray = [...DEFAULT_STRETCHES, ...(typeof stretches !== 'undefined' ? stretches : [])];
     }
