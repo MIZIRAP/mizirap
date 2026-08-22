@@ -617,8 +617,8 @@
             <span class="material-symbols-rounded text-[#1E293B]">arrow_back</span>
         </button>
         <h1 class="text-h1 font-bold text-[#1E293B]">Spor</h1>
-        <button data-action="openSplitEdit" class="w-10 h-10 flex items-center justify-center rounded-full bg-[#F0F2F8] active:scale-95 transition-transform" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);">
-            <span class="material-symbols-rounded text-[#1E293B] pointer-events-none">settings</span>
+        <button class="w-10 h-10 flex items-center justify-center rounded-full bg-[#F0F2F8] active:scale-95 transition-transform" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);">
+            <span class="material-symbols-rounded text-[#1E293B]">settings</span>
         </button>
     </div>
 </header>
@@ -649,7 +649,7 @@
             </button>
             
             <div class="text-center mt-2">
-                <a href="#" data-action="openSplitEdit" class="text-xs font-medium text-[#64748B] hover:text-[#1E293B] transition-colors">Farklı bir program seç</a>
+                <a href="#" class="text-xs font-medium text-[#64748B] hover:text-[#1E293B] transition-colors">Farklı bir program seç</a>
             </div>
             </div>
         </div>
@@ -674,12 +674,12 @@
             
 
             
-            <a href="#" class="bg-[#F0F2F8] p-4 rounded-2xl flex items-center justify-between active:scale-[0.99] transition-transform" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);">
+            <a href="#" data-action="openSplitEdit" class="bg-[#F0F2F8] p-4 rounded-2xl flex items-center justify-between active:scale-[0.99] transition-transform" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);">
                 <div class="flex items-center gap-4">
                     <div class="w-10 h-10 rounded-full bg-[#F0F2F8] flex items-center justify-center" style="box-shadow: inset 2px 2px 5px #D1D9E6, inset -2px -2px 5px rgba(255, 255, 255, 0.7);">
-                        <span class="material-symbols-rounded text-[#1E293B]">settings</span>
+                        <span class="material-symbols-rounded text-[#1E293B] pointer-events-none">settings</span>
                     </div>
-                    <div>
+                    <div class="pointer-events-none">
                         <h4 class="font-bold text-sm text-[#1E293B]">Split Düzenle</h4>
                         <p class="text-xs font-medium text-[#64748B] mt-0.5">Programını kişiselleştir</p>
                     </div>
