@@ -164,7 +164,17 @@
             transform: rotate(-90deg);
             transform-origin: 50% 50%;
         }
-    </style>
+    
+        .neo-surface { background: #F0F2F8; box-shadow: 6px 6px 12px rgba(0,0,0,0.08), -6px -6px 12px rgba(255,255,255,0.6); border-radius: 16px; }
+        .neo-surface-small { background: #F0F2F8; box-shadow: 4px 4px 8px rgba(0,0,0,0.08), -4px -4px 8px rgba(255,255,255,0.6); border-radius: 12px; }
+        .neo-inset { background: #F0F2F8; box-shadow: inset 4px 4px 8px rgba(0,0,0,0.08), inset -4px -4px 8px rgba(255,255,255,0.6); border-radius: 16px; }
+        .neo-inset-small { background: #F0F2F8; box-shadow: inset 2px 2px 4px rgba(0,0,0,0.08), inset -2px -2px 4px rgba(255,255,255,0.6); border-radius: 8px; }
+        .neo-button:active { box-shadow: inset 2px 2px 4px rgba(0,0,0,0.1), inset -2px -2px 4px rgba(255,255,255,0.7) !important; }
+        .accordion-content { max-height: 0; overflow: hidden; transition: max-height 0.4s ease-out, opacity 0.3s ease-out, margin 0.3s ease-out; opacity: 0; }
+        .accordion-content.expanded { opacity: 1; }
+        .chevron { transition: transform 0.3s ease; }
+        .expanded > .accordion-header .chevron { transform: rotate(180deg); }
+</style>
 
     <!-- Muscle Map Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/@panzoom/panzoom/dist/panzoom.min.js"></script>
@@ -4844,33 +4854,28 @@
 
 
     <!-- SPLIT EDIT VIEW -->
-    <section id="view-split-edit" class="view hidden bg-background min-h-[100dvh] text-on-background font-body-md selection:bg-gradient-to-r from-neon-purple to-neon-blue-container selection:text-white-container pb-[100px] overflow-y-auto">
+        <section id="view-split-edit" class="view hidden bg-background min-h-[100dvh] text-on-background font-body-md selection:bg-gradient-to-r from-neon-purple to-neon-blue-container selection:text-white-container pb-[100px] overflow-y-auto">
         <!-- Top Navigation Container -->
-        <header class="w-full top-0 sticky bg-background z-10">
+        <header class="w-full top-0 sticky bg-background z-40 mb-4 pt-4">
             <div class="flex items-center justify-between px-margin-mobile h-14 w-full max-w-md mx-auto">
                 <!-- Leading Action -->
-                <button data-action="closeSplitEdit" aria-label="Geri" class="h-12 w-12 flex items-center justify-center text-neon-blue hover:bg-surface-container-high transition-colors active:opacity-70 rounded-full shrink-0">
-                    <span class="material-symbols-rounded" data-icon="arrow_back">arrow_back</span>
+                <button data-action="closeSplitEdit" aria-label="Geri" class="neo-surface-small w-10 h-10 flex items-center justify-center text-primary neo-button transition-shadow shrink-0 rounded-full">
+                    <span class="material-symbols-rounded">arrow_back</span>
                 </button>
                 <!-- Headline -->
-                <h1 class="font-title-lg text-title-lg font-bold text-neon-blue flex-1 text-center truncate">Split Düzenle</h1>
+                <h1 class="font-headline-md text-headline-md font-bold text-primary flex-1 text-center truncate tracking-tight">Split Programlarım</h1>
                 <!-- Trailing Action -->
-                <div class="h-12 w-12 shrink-0"></div>
+                <button data-action="openCreateSplitModal" aria-label="Yeni Ekle" class="neo-inset w-10 h-10 flex items-center justify-center text-primary neo-button transition-shadow rounded-full shrink-0">
+                    <span class="material-symbols-rounded">add</span>
+                </button>
             </div>
         </header>
 
         <!-- Main Content Canvas -->
-        <main class="w-full max-w-md mx-auto px-margin-mobile pb-24 pt-4 space-y-md">
-            <!-- ACTIVE SPLIT SELECTOR -->
-            <section data-action="openSplitModal" class="bg-background shadow-neo rounded-[32px] p-md shadow-sm flex items-center justify-between group hover:bg-surface-container-highest transition-colors cursor-pointer active:scale-[0.99] duration-150">
-                <div>
-                    <span class="font-label-sm text-label-sm text-on-surface-variant block mb-xs">Aktif Split</span>
-                    <span class="font-body-lg text-body-lg text-on-background font-medium" id="split-edit-active-name">Push / Pull / Legs</span>
-                </div>
-                <button class="h-12 px-4 flex items-center justify-center text-neon-blue font-label-lg text-label-lg rounded-full hover:bg-gradient-to-r from-neon-purple to-neon-blue-container hover:text-white-container transition-colors">
-                    Değiştir
-                </button>
-            </section>
+        <main class="w-full max-w-md mx-auto px-margin-mobile pb-24 space-y-md flex flex-col gap-6" id="split-edit-main-container">
+            <!-- Dynamically populated by JS -->
+        </main>
+    </section>
 
             <!-- DAY ROTATION LIST -->
             <section class="space-y-sm" id="split-edit-days-container">

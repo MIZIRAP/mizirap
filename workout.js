@@ -104,6 +104,8 @@ document.addEventListener('click', (e) => {
     else if (action === 'openEditSplitView') { e.stopPropagation(); openEditSplitView(actionBtn.getAttribute('data-split-id')); }
     else if (action === 'startActiveSession') startActiveSession();
     else if (action === 'deleteSplit') { e.stopPropagation(); deleteSplit(actionBtn.getAttribute('data-split-id')); }
+    else if (action === 'addDayToSplit') { e.stopPropagation(); addDayToExistingSplit(actionBtn.getAttribute('data-split-id')); }
+    else if (action === 'removeDayFromSplit') { e.stopPropagation(); removeDayFromSplit(actionBtn.getAttribute('data-split-id'), parseInt(actionBtn.getAttribute('data-day-idx'), 10)); }
     else if (action === 'openSplitModal') openSplitModal();
     else if (action === 'changeExerciseSets') {
         changeExerciseSets(actionBtn.getAttribute('data-split-id'), parseInt(actionBtn.getAttribute('data-day-idx')), parseInt(actionBtn.getAttribute('data-ex-idx')), parseInt(actionBtn.getAttribute('data-delta')));
@@ -943,100 +945,162 @@ function closeSplitEdit() {
 const _openDayAccordions = new Set();
 
 function renderSplitEditView() {
-    const activeNameEl = document.getElementById('split-edit-active-name');
-    const daysContainer = document.getElementById('split-edit-days-container');
-    const createBtn = document.getElementById('split-edit-create-btn');
+    const mainContainer = document.getElementById('split-edit-main-container');
+    if(!mainContainer) return;
     
-    if(createBtn) createBtn.onclick = openCreateSplitView;
-    
-    if(!activeSplitId || splits.length === 0) {
-        if(activeNameEl) activeNameEl.innerText = "Henüz Split Yok";
-        if(daysContainer) {
-            daysContainer.innerHTML = `<div class="text-center text-on-surface-variant p-4">Kayıtlı bir splitiniz bulunmuyor. Yeni bir split oluşturun.</div>`;
-        }
+    if(splits.length === 0) {
+        mainContainer.innerHTML = `<div class="flex flex-col items-center justify-center py-8 opacity-40">
+            <span class="material-symbols-outlined text-on-surface-variant mb-2">calendar_today</span>
+            <p class="font-label-sm text-label-sm text-on-surface-variant">Henüz program eklenmemiş</p>
+        </div>`;
         return;
     }
     
-    const activeSplit = splits.find(s => s.id === activeSplitId);
-    if(activeNameEl) activeNameEl.innerText = activeSplit.name;
-    if(!daysContainer) return;
+    mainContainer.innerHTML = '';
     
-    daysContainer.innerHTML = '';
-    
-    activeSplit.days.forEach((day, dayIdx) => {
-        const isOpen = _openDayAccordions.has(`${activeSplit.id}-${dayIdx}`);
-        const exCount = day.exercises ? day.exercises.length : 0;
-        const accordionKey = `${activeSplit.id}-${dayIdx}`;
+    splits.forEach(split => {
+        const isSplitOpen = _openSplitAccordions.has(split.id);
+        const splitCard = document.createElement('div');
+        splitCard.className = `split-card ${isSplitOpen ? 'expanded' : ''}`;
         
-        const dayCard = document.createElement('div');
-        dayCard.className = "bg-background shadow-neo-lowest rounded-[32px] shadow-sm overflow-hidden";
-        dayCard.dataset.dayIdx = dayIdx;
-        dayCard.dataset.splitId = activeSplit.id;
+        const splitInitial = split.name.charAt(0).toUpperCase();
         
-        // Build exercise rows
-        let exRows = '';
-        if(exCount === 0) {
-            exRows = `<p class="text-label-sm text-on-surface-variant italic px-md py-sm pb-3">Henüz hareket eklenmedi.</p>`;
+        let daysHtml = '';
+        if (!split.days || split.days.length === 0) {
+            daysHtml = `
+            <div class="flex flex-col items-center justify-center py-8 opacity-40">
+                <span class="material-symbols-outlined text-on-surface-variant mb-2">calendar_today</span>
+                <p class="font-label-sm text-label-sm text-on-surface-variant">Henüz gün eklenmemiş</p>
+            </div>
+            `;
         } else {
-            day.exercises.forEach((ex, exIdx) => {
-                exRows += `
-                    <div class="ex-drag-item flex items-center gap-2 px-md py-2.5 border-b border-surface-container-highest last:border-0 active:bg-background shadow-neo-high transition-colors"
-                         data-ex-idx="${exIdx}" data-split-id="${activeSplit.id}" data-day-idx="${dayIdx}">
-                        <!-- Drag Handle -->
-                        <span class="material-symbols-rounded text-on-surface-variant/50 drag-handle select-none shrink-0 cursor-grab active:cursor-grabbing" style="font-size:20px">drag_indicator</span>
-                        <!-- Hareket Adı -->
-                        <span class="flex-1 font-body-md text-on-surface text-sm leading-tight">${ex.name}</span>
-                        <!-- Set Sayısı -->
-                        <div class="flex items-center gap-1 shrink-0">
-                            <button data-action="changeExerciseSets" data-split-id="${activeSplit.id}" data-day-idx="${dayIdx}" data-ex-idx="${exIdx}" data-delta="-1"
-                                class="w-7 h-7 rounded-full bg-background shadow-neo-high flex items-center justify-center hover:bg-gradient-to-r from-neon-purple to-neon-blue-container/40 transition-colors text-on-surface font-bold text-lg leading-none">−</button>
-                            <span class="font-label-sm text-on-surface w-10 text-center whitespace-nowrap" id="sets-lbl-${activeSplit.id}-${dayIdx}-${exIdx}">${ex.defaultSets || 3} set</span>
-                            <button data-action="changeExerciseSets" data-split-id="${activeSplit.id}" data-day-idx="${dayIdx}" data-ex-idx="${exIdx}" data-delta="1"
-                                class="w-7 h-7 rounded-full bg-background shadow-neo-high flex items-center justify-center hover:bg-gradient-to-r from-neon-purple to-neon-blue-container/40 transition-colors text-on-surface font-bold text-lg leading-none">+</button>
+            daysHtml = '<div class="flex flex-col gap-4">';
+            split.days.forEach((day, dayIdx) => {
+                const dayAccordionKey = `${split.id}-${dayIdx}`;
+                const isDayOpen = _openDayAccordions.has(dayAccordionKey);
+                
+                let exHtml = '';
+                if (!day.exercises || day.exercises.length === 0) {
+                    exHtml = `
+                    <div class="flex flex-col items-center justify-center py-6 opacity-40">
+                        <span class="material-symbols-outlined text-on-surface-variant mb-2">fitness_center</span>
+                        <p class="font-label-sm text-label-sm text-on-surface-variant">Bu gün için hareket planlanmamış</p>
+                    </div>
+                    `;
+                } else {
+                    exHtml = `<div class="flex flex-col gap-3 ex-list" id="ex-list-${split.id}-${dayIdx}">`;
+                    day.exercises.forEach((ex, exIdx) => {
+                        const exAccordionKey = `${split.id}-${dayIdx}-${exIdx}`;
+                        const isExOpen = _openExAccordions.has(exAccordionKey);
+                        const initial = ex.name.charAt(0).toUpperCase();
+                        const sets = ex.defaultSets || 3;
+                        
+                        exHtml += `
+                        <div class="exercise-card pl-8 ${isExOpen ? 'expanded' : ''} ex-drag-item" data-ex-idx="${exIdx}" data-split-id="${split.id}" data-day-idx="${dayIdx}">
+                            <div class="accordion-header neo-surface-small p-3 flex items-center justify-between cursor-pointer neo-button transition-all" onclick="toggleMizAccordion(this, '${exAccordionKey}', 'ex')">
+                                <div class="flex items-center gap-3">
+                                    <div class="neo-inset-small w-10 h-10 flex items-center justify-center text-tertiary font-bold rounded-full">${initial}</div>
+                                    <div>
+                                        <h4 class="font-title-sm text-title-sm text-on-surface drag-handle active:cursor-grabbing">${ex.name}</h4>
+                                        <p class="font-label-sm text-label-sm text-text-secondary" id="sets-lbl-${split.id}-${dayIdx}-${exIdx}">${sets} set</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <span class="material-symbols-outlined text-secondary chevron">expand_more</span>
+                                    <button class="p-1 text-error hover:text-on-error-container transition-colors" data-action="removeExerciseFromSplit" data-split-id="${split.id}" data-day-idx="${dayIdx}" data-ex-idx="${exIdx}" onclick="event.stopPropagation()">
+                                        <span class="material-symbols-outlined text-sm pointer-events-none">delete</span>
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div class="accordion-content pt-2 pl-12 pr-2 pb-2 flex flex-col gap-2 ${isExOpen ? 'expanded' : ''}" style="${isExOpen ? 'max-height: 2000px;' : ''}">
+                                <div class="flex flex-col gap-2 py-2">
+                                    <div class="flex items-center justify-between gap-4 mb-2">
+                                      <div class="flex items-center gap-3">
+                                        <div class="flex flex-col">
+                                          <div class="flex items-center gap-2 justify-center">
+                                            <button data-action="changeExerciseSets" data-split-id="${split.id}" data-day-idx="${dayIdx}" data-ex-idx="${exIdx}" data-delta="-1" class="neo-inset-small w-6 h-6 flex items-center justify-center text-primary neo-button"><span class="material-symbols-outlined text-sm pointer-events-none">remove</span></button>
+                                            <span class="font-title-sm text-on-surface min-w-[40px] text-center">${sets}</span>
+                                            <button data-action="changeExerciseSets" data-split-id="${split.id}" data-day-idx="${dayIdx}" data-ex-idx="${exIdx}" data-delta="1" class="neo-inset-small w-6 h-6 flex items-center justify-center text-primary neo-button"><span class="material-symbols-outlined text-sm pointer-events-none">add</span></button>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <!-- Sil -->
-                        <button data-action="removeExerciseFromSplit" data-split-id="${activeSplit.id}" data-day-idx="${dayIdx}" data-ex-idx="${exIdx}"
-                            class="shrink-0 w-8 h-8 flex items-center justify-center text-on-surface-variant hover:text-error hover:bg-error-container/20 rounded-full transition-colors">
-                            <span class="material-symbols-rounded" style="font-size:18px">delete</span>
+                        `;
+                    });
+                    exHtml += `</div>`;
+                }
+                
+                daysHtml += `
+                <div class="day-card pl-4 ${isDayOpen ? 'expanded' : ''}">
+                    <div class="accordion-header neo-surface-small p-4 flex items-center justify-between cursor-pointer neo-button transition-all z-20 relative" onclick="toggleMizAccordion(this, '${dayAccordionKey}', 'day')">
+                        <div class="flex items-center gap-3">
+                            <span class="material-symbols-outlined text-outline-variant cursor-grab day-drag-handle">drag_indicator</span>
+                            <div class="neo-inset-small px-2 py-1 flex items-center justify-center rounded text-tertiary font-title-sm text-[10px]">Gün ${dayIdx + 1}</div>
+                            <div>
+                                <h3 class="font-body-md text-body-md text-on-surface">${day.name}</h3>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="material-symbols-outlined text-tertiary chevron">expand_more</span>
+                            <button class="p-1 text-error hover:text-on-error-container transition-colors" data-action="removeDayFromSplit" data-split-id="${split.id}" data-day-idx="${dayIdx}" onclick="event.stopPropagation()">
+                                <span class="material-symbols-outlined text-sm pointer-events-none">delete</span>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="accordion-content neo-inset-small mt-[-12px] pt-6 pb-3 px-3 relative z-10 ${isDayOpen ? 'expanded' : ''}" style="${isDayOpen ? 'max-height: 2000px;' : ''}">
+                        ${exHtml}
+                        <button data-action="openExercisePickerForSplit" data-split-id="${split.id}" data-day-idx="${dayIdx}" class="mt-2 py-2 text-center w-full font-title-sm text-sm text-tertiary flex items-center justify-center gap-2 hover:text-primary transition-colors">
+                            <span class="material-symbols-outlined text-sm pointer-events-none">add</span> Hareket Ekle
                         </button>
                     </div>
+                </div>
                 `;
             });
+            daysHtml += `</div>`;
         }
         
-        dayCard.innerHTML = `
-            <!-- Accordion Header -->
-            <button class="accordion-header w-full flex items-center justify-between px-md py-3.5 text-left group transition-colors hover:bg-background shadow-neo-high"
-                    data-action="toggleDayAccordion" data-accordion-key="${accordionKey}">
+        splitCard.innerHTML = `
+            <div class="accordion-header neo-surface p-5 flex items-center justify-between cursor-pointer neo-button transition-all z-30 relative" onclick="toggleMizAccordion(this, '${split.id}', 'split')">
+                <div class="flex items-center gap-4">
+                    <div class="neo-inset w-12 h-12 flex items-center justify-center rounded-full text-primary font-bold text-title-sm">${splitInitial}</div>
+                    <div>
+                        <h2 class="font-headline-md text-headline-md text-on-surface">${split.name}</h2>
+                    </div>
+                </div>
                 <div class="flex items-center gap-2">
-                    <span class="material-symbols-rounded text-neon-blue transition-transform duration-200 ${isOpen ? 'rotate-90' : ''}" style="font-size:20px">chevron_right</span>
-                    <h3 class="font-title-md text-title-md font-semibold text-on-surface">${day.name}</h3>
+                    <span class="material-symbols-outlined text-primary chevron">expand_more</span>
+                    <button class="p-1 text-secondary hover:text-primary transition-colors" data-action="deleteSplit" data-split-id="${split.id}" onclick="event.stopPropagation()">
+                        <span class="material-symbols-outlined pointer-events-none text-error">delete</span>
+                    </button>
                 </div>
-                <span class="font-label-sm text-on-surface-variant">${exCount} hareket</span>
-            </button>
-            <!-- Accordion Body -->
-            <div class="accordion-body ${isOpen ? '' : 'hidden'}">
-                <div class="ex-list flex flex-col" id="ex-list-${activeSplit.id}-${dayIdx}">
-                    ${exRows}
-                </div>
-                <div class="px-md pt-2 pb-md">
-                    <button data-action="openExercisePickerForSplit" data-split-id="${activeSplit.id}" data-day-idx="${dayIdx}"
-                        class="w-full py-2 bg-gradient-to-r from-neon-purple to-neon-blue-container/20 text-neon-blue rounded-lg font-label-sm hover:bg-gradient-to-r from-neon-purple to-neon-blue-container/40 transition-colors flex items-center justify-center gap-1">
-                        <span class="material-symbols-rounded text-[18px]">add</span> Egzersiz Ekle
+            </div>
+            
+            <div class="accordion-content neo-inset mt-[-16px] pt-8 pb-4 px-4 relative z-20 ${isSplitOpen ? 'expanded' : ''}" style="${isSplitOpen ? 'max-height: 2000px;' : ''}">
+                ${daysHtml}
+                <div class="text-center mt-4 mb-2">
+                    <button data-action="addDayToSplit" data-split-id="${split.id}" class="font-title-sm text-title-sm text-primary neo-surface-small px-4 py-2 rounded flex items-center justify-center gap-2 mx-auto neo-button">
+                        <span class="material-symbols-outlined text-sm pointer-events-none">add</span> Gün Ekle
                     </button>
                 </div>
             </div>
         `;
         
-        daysContainer.appendChild(dayCard);
+        mainContainer.appendChild(splitCard);
         
-        // Init Sortable on the exercise list
-        if(isOpen) {
-            const listEl = dayCard.querySelector(`#ex-list-${activeSplit.id}-${dayIdx}`);
-            if(listEl) _initExSortable(listEl, activeSplit.id, dayIdx);
+        if (split.days) {
+            split.days.forEach((day, dayIdx) => {
+                const listEl = splitCard.querySelector(`#ex-list-${split.id}-${dayIdx}`);
+                if(listEl) _initExSortable(listEl, split.id, dayIdx);
+            });
         }
     });
 }
+
 
 function toggleDayAccordion(key, headerBtn) {
     const body = headerBtn.closest('.bg-background.shadow-neo-lowest').querySelector('.accordion-body');
@@ -3041,3 +3105,96 @@ async function saveSession() {
     }
 }
 
+
+window.toggleMizAccordion = function(headerElement, key, type) {
+    const parent = headerElement.parentElement;
+    parent.classList.toggle('expanded');
+    
+    // Update state sets
+    let stateSet;
+    if (type === 'split') stateSet = _openSplitAccordions;
+    else if (type === 'day') stateSet = _openDayAccordions;
+    else if (type === 'ex') stateSet = _openExAccordions;
+    
+    if (stateSet) {
+        if (parent.classList.contains('expanded')) {
+            stateSet.add(key);
+        } else {
+            stateSet.delete(key);
+        }
+    }
+    
+    const content = headerElement.nextElementSibling;
+    if (parent.classList.contains('expanded')) {
+        content.style.maxHeight = content.scrollHeight + 500 + "px"; 
+    } else {
+        content.style.maxHeight = null;
+    }
+    
+    updateMizParentHeights(parent);
+};
+
+window.updateMizParentHeights = function(element) {
+    let current = element.parentElement;
+    while (current) {
+        if (current.classList.contains('accordion-content') && current.style.maxHeight) {
+             current.style.maxHeight = current.scrollHeight + 500 + "px";
+        }
+        current = current.parentElement;
+    }
+};
+
+async function addDayToExistingSplit(splitId) {
+    if(!auth.currentUser) return;
+    const splitIndex = splits.findIndex(s => s.id === splitId);
+    if(splitIndex === -1) return;
+    
+    const split = splits[splitIndex];
+    const newDay = {
+        id: 'day_' + Date.now(),
+        name: `Gün ${split.days.length + 1}`,
+        exercises: []
+    };
+    split.days.push(newDay);
+    
+    try {
+        const docRef = doc(db, "users", auth.currentUser.uid, "splits", splitId);
+        await updateDoc(docRef, {
+            days: split.days,
+            updatedAt: serverTimestamp()
+        });
+        
+        // Ensure the split and the new day accordions are open so user sees it
+        _openSplitAccordions.add(splitId);
+        _openDayAccordions.add(`${splitId}-${split.days.length - 1}`);
+        
+        renderSplitEditView();
+    } catch(err) {
+        console.error("Error adding day:", err);
+        alert("Gün eklenirken bir hata oluştu.");
+    }
+}
+
+async function removeDayFromSplit(splitId, dayIdx) {
+    if(!auth.currentUser) return;
+    const splitIndex = splits.findIndex(s => s.id === splitId);
+    if(splitIndex === -1) return;
+    
+    if(!confirm("Bu günü silmek istediğinize emin misiniz?")) return;
+    
+    const split = splits[splitIndex];
+    split.days.splice(dayIdx, 1);
+    
+    try {
+        const docRef = doc(db, "users", auth.currentUser.uid, "splits", splitId);
+        await updateDoc(docRef, {
+            days: split.days,
+            updatedAt: serverTimestamp()
+        });
+        
+        renderSplitEditView();
+    } catch(err) {
+        console.error("Error removing day:", err);
+        alert("Gün silinirken bir hata oluştu.");
+    }
+}
