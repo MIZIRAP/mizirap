@@ -3670,28 +3670,7 @@ function triggerStretchImageUpload() {
     document.getElementById('stretchImageInput').click();
 }
 
-function handleStretchImageUpload(event) {
-    const file = event.target.files[0];
-    if (!file) return;
 
-    if (file.size > 1024 * 1024) {
-        alert("Görsel 1MB'dan küçük olmalıdır. Lütfen daha küçük bir görsel seçin.");
-        event.target.value = '';
-        return;
-    }
-
-    const reader = new FileReader();
-    reader.onload = function(e) {
-        currentStretchImageBase64 = e.target.result;
-        const previewEl = document.getElementById('stretchPreviewImage');
-        const placeholderEl = document.getElementById('stretchImagePlaceholder');
-        
-        previewEl.src = currentStretchImageBase64;
-        previewEl.classList.remove('hidden');
-        placeholderEl.classList.add('hidden');
-    };
-    reader.readAsDataURL(file);
-}
 
 // Window Exports
 window.openAddStretchSheet = openAddStretchSheet;
