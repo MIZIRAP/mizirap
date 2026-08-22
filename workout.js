@@ -919,7 +919,7 @@ function renderSplitEditView() {
         const splitCard = document.createElement('div');
         splitCard.className = `split-card ${isSplitOpen ? 'expanded' : ''}`;
         
-        const splitInitial = split.name.charAt(0).toUpperCase();
+        const splitInitial = (split.name || 'S').charAt(0).toUpperCase();
         
         let daysHtml = '';
         if (!split.days || split.days.length === 0) {
@@ -948,7 +948,7 @@ function renderSplitEditView() {
                     day.exercises.forEach((ex, exIdx) => {
                         const exAccordionKey = `${split.id}-${dayIdx}-${exIdx}`;
                         const isExOpen = _openExAccordions.has(exAccordionKey);
-                        const initial = ex.name.charAt(0).toUpperCase();
+                        const initial = (ex.name || 'E').charAt(0).toUpperCase();
                         const sets = ex.defaultSets || 3;
                         
                         exHtml += `
