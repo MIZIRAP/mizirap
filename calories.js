@@ -399,7 +399,9 @@ if (caloriesGoalBackdrop) {
     
     if (portionGramDisplay) {
         portionGramDisplay.addEventListener('input', (e) => {
-            let val = parseInt(e.target.value);
+            let valStr = e.target.value.replace(/[^0-9]/g, '');
+            e.target.value = valStr;
+            let val = parseInt(valStr);
             if (isNaN(val) || val < 0) val = 0;
             tempPortionAmount = val;
             updatePortionTotal();
