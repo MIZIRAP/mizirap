@@ -1801,7 +1801,7 @@ function renderStretches() {
     const container = document.getElementById('stretch-list-container');
     if (!container) return;
     
-    if (!DEFAULT_STRETCHES || DEFAULT_STRETCHES.length === 0) {
+    if (!DEFAULT_STRETCHES && (!typeof stretches !== 'undefined' || stretches.length === 0)) {
         container.innerHTML = `<p class="text-center text-on-surface-variant font-body-md mt-4">Henüz hareket eklenmedi.</p>`;
         return;
     }
@@ -1811,7 +1811,16 @@ function renderStretches() {
     const groupedStretches = {};
     categories.forEach(cat => groupedStretches[cat] = []);
     
-    DEFAULT_STRETCHES.forEach(stretch => {
+    
+    // Combine defaults and custom stretches
+    const allStretches = [...DEFAULT_STRETCHES, ...(typeof stretches !== 'undefined' ? stretches : [])].sort((a, b) => {
+        const nameA = a.name || '';
+        const nameB = b.name || '';
+        return nameA.localeCompare(nameB, 'tr');
+    });
+
+    allStretches.forEach(stretch => {
+
         let cat = stretch.category || 'Diğer';
         if (!groupedStretches[cat]) {
             groupedStretches[cat] = [];
@@ -3563,3 +3572,150 @@ window.deleteCurrentCore = typeof deleteCurrentCore !== 'undefined' ? deleteCurr
 window.saveCoreExercise = typeof saveCoreExercise !== 'undefined' ? saveCoreExercise : null;
 window.toggleCoreSheetFav = typeof toggleCoreSheetFav !== 'undefined' ? toggleCoreSheetFav : null;
 window.toggleCoreFav = typeof toggleCoreFav !== 'undefined' ? toggleCoreFav : null;
+
+
+// --- Stretch Add/Edit Bottom Sheet Functions ---
+
+function openAddStretchSheet() {
+    editingStretchId = null;
+    currentStretchImageBase64 = null;
+    
+    document.getElementById('newStretchName').value = '';
+    document.getElementById('newStretchDuration').value = '30';
+    document.getElementById('newStretchCategory').value = 'Sırt/Bel';
+    
+    document.getElementById('stretchPreviewImage').classList.add('hidden');
+    document.getElementById('stretchImagePlaceholder').classList.remove('hidden');
+    
+    const catOptions = document.querySelectorAll('#newStretchCategoryOptions .category-select-btn');
+    catOptions.forEach(btn => {
+        if (btn.getAttribute('data-cat') === 'Sırt/Bel') {
+            btn.classList.remove('neo-surface', 'text-on-surface-variant');
+            btn.classList.add('neo-inset', 'text-primary', 'border-primary/20');
+        } else {
+            btn.classList.add('neo-surface', 'text-on-surface-variant');
+            btn.classList.remove('neo-inset', 'text-primary', 'border-primary/20');
+        }
+    });
+    
+    const sheet = document.getElementById('add-stretch-bottom-sheet');
+    const sheetContent = document.getElementById('add-stretch-bottom-sheet-content');
+    
+    sheet.classList.remove('pointer-events-none');
+    sheet.classList.remove('opacity-0');
+    sheet.classList.add('opacity-100');
+    
+    setTimeout(() => {
+        sheetContent.classList.remove('translate-y-full');
+        sheetContent.classList.add('translate-y-0');
+    }, 50);
+}
+
+function closeAddStretchSheet() {
+    const sheet = document.getElementById('add-stretch-bottom-sheet');
+    const sheetContent = document.getElementById('add-stretch-bottom-sheet-content');
+    
+    sheetContent.classList.remove('translate-y-0');
+    sheetContent.classList.add('translate-y-full');
+    
+    setTimeout(() => {
+        sheet.classList.add('opacity-0');
+        sheet.classList.remove('opacity-100');
+        sheet.classList.add('pointer-events-none');
+    }, 300);
+}
+
+function closeAddStretchSheetOnOutsideClick(event) {
+    if (event.target.id === 'add-stretch-bottom-sheet') {
+        closeAddStretchSheet();
+    }
+}
+
+async function saveStretchExercise() {
+    const name = document.getElementById('newStretchName').value.trim();
+    const duration = document.getElementById('newStretchDuration').value.trim();
+    const category = document.getElementById('newStretchCategory').value.trim();
+    
+    if (!name || !duration || !category) {
+        alert("Lütfen tüm alanları doldurun.");
+        return;
+    }
+    
+    const stretchData = {
+        name,
+        duration,
+        category,
+        isDefault: false
+    };
+    if (currentStretchImageBase64) {
+        stretchData.imageBase64 = currentStretchImageBase64;
+    }
+    
+    try {
+        if (editingStretchId) {
+            const stretchRef = doc(db, "users", auth.currentUser.uid, "stretches", editingStretchId);
+            await updateDoc(stretchRef, stretchData);
+        } else {
+            const stretchesRef = collection(db, "users", auth.currentUser.uid, "stretches");
+            await addDoc(stretchesRef, stretchData);
+        }
+        closeAddStretchSheet();
+    } catch(err) {
+        console.error("Error saving stretch:", err);
+        alert("Kaydedilirken hata oluştu.");
+    }
+}
+
+function triggerStretchImageUpload() {
+    document.getElementById('stretchImageInput').click();
+}
+
+function handleStretchImageUpload(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    if (file.size > 1024 * 1024) {
+        alert("Görsel 1MB'dan küçük olmalıdır. Lütfen daha küçük bir görsel seçin.");
+        event.target.value = '';
+        return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        currentStretchImageBase64 = e.target.result;
+        const previewEl = document.getElementById('stretchPreviewImage');
+        const placeholderEl = document.getElementById('stretchImagePlaceholder');
+        
+        previewEl.src = currentStretchImageBase64;
+        previewEl.classList.remove('hidden');
+        placeholderEl.classList.add('hidden');
+    };
+    reader.readAsDataURL(file);
+}
+
+// Window Exports
+window.openAddStretchSheet = openAddStretchSheet;
+window.closeAddStretchSheet = closeAddStretchSheet;
+window.closeAddStretchSheetOnOutsideClick = closeAddStretchSheetOnOutsideClick;
+window.saveStretchExercise = saveStretchExercise;
+window.triggerStretchImageUpload = triggerStretchImageUpload;
+window.handleStretchImageUpload = handleStretchImageUpload;
+
+
+// category grid logic for Add Stretch Sheet
+document.addEventListener('DOMContentLoaded', () => {
+    const stretchCatBtns = document.querySelectorAll('#newStretchCategoryOptions .category-select-btn');
+    stretchCatBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            // Remove active from all
+            stretchCatBtns.forEach(b => {
+                b.classList.remove('neo-inset', 'text-primary', 'border-primary/20');
+                b.classList.add('neo-surface', 'text-on-surface-variant');
+            });
+            // Add to clicked
+            btn.classList.add('neo-inset', 'text-primary', 'border-primary/20');
+            btn.classList.remove('neo-surface', 'text-on-surface-variant');
+            document.getElementById('newStretchCategory').value = btn.getAttribute('data-cat');
+        });
+    });
+});
