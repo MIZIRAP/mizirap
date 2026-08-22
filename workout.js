@@ -2290,21 +2290,28 @@ async function saveSimpleNewSplit() {
 
         await setDoc(doc(db, "users", currentUid, "splits", newSplitId), newSplit);
         
-        splits.push(newSplit);
+        // If already in splits array (shouldn't be), update it
+        const existingIdx = splits.findIndex(s => s.id === newSplitId);
+        if (existingIdx !== -1) {
+            splits[existingIdx] = newSplit;
+        } else {
+            splits.push(newSplit);
+        }
 
         if(splits.length === 1 || !activeSplitId) {
             activeSplitId = newSplitId;
-            localStorage.setItem(`mizirap_active_split_${currentUid}`, activeSplitId);
+            localStorage.setItem(`miz_activeSplit_${currentUid}`, activeSplitId);
         }
 
+        // Update all UI immediately — no refresh needed
         renderSplitView();
+        renderSplitEditView();
         closeSimpleNewSplitModal();
         
-        // Open the edit view for the new split so they can add days
+        // Navigate to split edit view so user can add days to the new split
         setTimeout(() => {
-            tempSelectedSplitId = newSplitId;
-            openSplitEditModal(newSplitId);
-        }, 350);
+            openSplitEdit();
+        }, 300);
 
     } catch(err) {
         console.error(err);
