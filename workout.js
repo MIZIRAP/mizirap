@@ -2512,6 +2512,7 @@ function openStretchPlayer() {
     view.classList.remove('hidden');
     view.style.display = 'flex';
     view.style.zIndex = '999999';
+    view.style.zIndex = '999999';
     view.style.position = 'fixed';
     view.style.top = '0';
     view.style.left = '0';
@@ -2934,6 +2935,7 @@ function openCorePlayer() {
     const view = document.getElementById('view-core-player');
     view.classList.remove('hidden');
     view.style.display = 'flex';
+    view.style.zIndex = '999999';
     view.style.zIndex = '999999';
     view.style.position = 'fixed';
     view.style.top = '0';
@@ -3855,7 +3857,14 @@ window.saveSession = saveSession;
 
 window.startStretchSessionFromHome = function() {
     if (!activeStretchSessionId) {
-        alert("Lütfen önce Esneme Hareketleri sayfasından bir seans seçin.");
+        // Lütfen önce Esneme Hareketleri sayfasından bir seans seçin.
+        const activeView = document.querySelector('.view:not(.hidden)');
+        if(activeView) activeView.classList.add('hidden');
+        document.getElementById('view-stretching').classList.remove('hidden');
+        
+        document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('text-primary'));
+        const tab = document.querySelector('.nav-tab[data-target="view-stretching"]');
+        if (tab) tab.classList.add('text-primary');
         return;
     }
     openStretchPlayer();
@@ -3863,7 +3872,14 @@ window.startStretchSessionFromHome = function() {
 
 window.startCoreSessionFromHome = function() {
     if (!activeCoreSessionId) {
-        alert("Lütfen önce Core Hareketleri sayfasından bir seans seçin.");
+        // Lütfen önce Core Hareketleri sayfasından bir seans seçin.
+        const activeView = document.querySelector('.view:not(.hidden)');
+        if(activeView) activeView.classList.add('hidden');
+        document.getElementById('view-core').classList.remove('hidden');
+        
+        document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('text-primary'));
+        const tab = document.querySelector('.nav-tab[data-target="view-core"]');
+        if (tab) tab.classList.add('text-primary');
         return;
     }
     openCorePlayer();
