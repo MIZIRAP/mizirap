@@ -85,14 +85,16 @@ function renderShoppingList() {
         };
 
         const itemDiv = document.createElement('div');
-        itemDiv.className = "relative flex items-center justify-between p-4 rounded-2xl bg-[#F7F9FF] z-10 transition-transform cursor-pointer active:scale-[0.99]";
+        itemDiv.className = "relative flex items-center justify-between p-4 rounded-[24px] bg-[#F7F9FF] z-10 transition-transform cursor-pointer active:scale-[0.99] w-full h-[72px]";
         itemDiv.style.boxShadow = "4px 4px 8px #D1D9E6, -4px -4px 8px #FFFFFF";
         itemDiv.innerHTML = `
-            <div class="flex items-center gap-4 pointer-events-none">
-                <div class="w-10 h-10 rounded-full bg-[#F7F9FF] flex items-center justify-center" style="box-shadow: inset 2px 2px 5px #D1D9E6, inset -2px -2px 5px #FFFFFF;">
-                    <span class="material-symbols-rounded text-[#3B82F6]">shopping_basket</span>
+            <div class="flex items-center gap-[16px] pointer-events-none">
+                <div class="w-10 h-10 rounded-full bg-[#F7F9FF] flex items-center justify-center shrink-0" style="box-shadow: inset 2px 2px 5px #D1D9E6, inset -2px -2px 5px #FFFFFF;">
+                    <span class="material-symbols-rounded text-[#3B82F6] text-[20px]">shopping_cart</span>
                 </div>
-                <div><p class="text-sm font-bold text-[#1E293B]">${escapeHtml(item.title)}</p></div>
+                <div>
+                    <p class="font-[700] text-[14px] leading-[20px] text-[#1E293B]" style="font-family: 'Plus Jakarta Sans', sans-serif;">${escapeHtml(item.title)}</p>
+                </div>
             </div>
         `;
 
@@ -166,14 +168,16 @@ function renderShoppingList() {
         };
 
         const itemDiv = document.createElement('div');
-        itemDiv.className = "relative flex items-center justify-between p-4 rounded-2xl bg-[#F7F9FF] opacity-70 z-10 transition-transform cursor-pointer active:scale-[0.99]";
+        itemDiv.className = "relative flex items-center justify-between p-4 rounded-[24px] bg-[#F7F9FF] z-10 transition-transform cursor-pointer active:scale-[0.99] w-full h-[72px]";
         itemDiv.style.boxShadow = "4px 4px 8px #D1D9E6, -4px -4px 8px #FFFFFF";
         itemDiv.innerHTML = `
-            <div class="flex items-center gap-4 pointer-events-none">
-                <div class="w-10 h-10 rounded-full bg-[#F7F9FF] flex items-center justify-center" style="box-shadow: inset 2px 2px 5px #D1D9E6, inset -2px -2px 5px #FFFFFF;">
-                    <span class="material-symbols-rounded text-[#64748B]">check</span>
+            <div class="flex items-center gap-[16px] pointer-events-none">
+                <div class="w-10 h-10 rounded-full bg-[#F7F9FF] flex items-center justify-center shrink-0" style="box-shadow: inset 2px 2px 5px #D1D9E6, inset -2px -2px 5px #FFFFFF;">
+                    <span class="material-symbols-rounded text-[#3B82F6] text-[20px]">check</span>
                 </div>
-                <div><p class="text-sm font-bold text-[#64748B] line-through">${escapeHtml(item.title)}</p></div>
+                <div>
+                    <p class="font-[700] text-[14px] leading-[20px] text-[#1E293B]" style="font-family: 'Plus Jakarta Sans', sans-serif;">${escapeHtml(item.title)}</p>
+                </div>
             </div>
         `;
 
