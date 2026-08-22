@@ -3625,35 +3625,17 @@
             </button>
         </div>
 
-        <!-- Scrollable Content -->
-        <div class="flex-1 overflow-y-auto hide-scrollbar px-container-padding py-4 flex flex-col gap-section-margin">
-
+        <!-- Content -->
+        <div class="px-container-padding py-6 flex flex-col gap-6">
             <div class="flex flex-col gap-2">
                 <label class="font-label-md text-label-md text-on-surface-variant ml-1">Split Adı</label>
-                <input class="w-full bg-surface-container-low border border-transparent focus:border-primary/30 outline-none rounded-[32px] py-3 px-4 font-body-lg text-body-lg text-on-surface transition-colors shadow-neo-inset border-none rounded-xl bg-background " id="new-split-name" placeholder="Örn: İtiş/Çekiş/Bacak" type="text" />
+                <input class="w-full bg-surface-container-low border border-transparent focus:border-primary/30 outline-none rounded-[32px] py-3 px-4 font-body-lg text-body-lg text-on-surface transition-colors shadow-neo-inset border-none rounded-xl bg-background" id="new-split-name" placeholder="Örn: Push / Pull / Legs" type="text" autocomplete="off" />
             </div>
 
-            <div class="flex flex-col gap-4">
-                <div class="flex justify-between items-center">
-                    <label class="font-label-md text-label-md text-on-surface-variant ml-1">Gün Tipleri ve Hareketler</label>
-                    <button class="text-neon-blue font-label-sm flex items-center gap-1 hover:bg-gradient-to-r from-neon-purple to-neon-blue/10 px-2 py-1 rounded transition-colors" id="add-day-btn">
-                        <span class="material-symbols-rounded text-lg">add</span> Gün Ekle
-                    </button>
-                </div>
-
-                <div id="split-days-container" class="flex flex-col gap-4">
-                    <!-- Day Items Go Here -->
-                </div>
-            </div>
-
-            <!-- Spacing for bottom fixed button -->
-
-            <div class="mt-8">
-                <button class="w-full h-[56px] bg-gradient-to-r from-neon-purple to-neon-blue text-white rounded-full flex items-center justify-center gap-2 hover:opacity-95 active:scale-[0.98] transition-all shadow-lg shadow-primary/20" id="save-split-btn">
-                <span class="font-label-md text-label-md text-body-lg font-body-lg">Split'i Kaydet</span>
-                <span class="material-symbols-rounded icon-md">check_circle</span>
+            <button class="w-full h-[56px] bg-gradient-to-r from-neon-purple to-neon-blue text-white rounded-full flex items-center justify-center gap-2 hover:opacity-95 active:scale-[0.98] transition-all shadow-lg shadow-primary/20" id="save-split-btn">
+                <span class="font-label-md text-label-md text-body-lg font-body-lg">Oluştur</span>
+                <span class="material-symbols-rounded icon-md">add_circle</span>
             </button>
-            </div>
         </div>
     </div>
 </div>
@@ -3727,7 +3709,7 @@
     </section>
 
 
-    <script type="module" src="app.js?v=1787428938"></script>
+    <script type="module" src="app.js?v=1787429980"></script>
 
 <!-- ================= FINANCE MODALS ================= -->
 <!-- Add Transaction Modal -->
@@ -4629,26 +4611,6 @@
 
 
     <!-- CREATE SPLIT VIEW -->
-    <section id="view-create-split" class="view hidden bg-background min-h-[100dvh] text-on-background font-body-md selection:bg-gradient-to-r from-neon-purple to-neon-blue-container selection:text-white-container pb-[100px] overflow-y-auto">
-        <header class="w-full top-0 sticky bg-background z-10">
-            <div class="flex items-center justify-between px-margin-mobile h-14 w-full max-w-md mx-auto">
-                <div class="w-10 h-10 shrink-0"></div>
-                <h1 class="font-title-lg text-title-lg font-bold text-neon-blue flex-1 text-center">Yeni Split</h1>
-                <button id="create-split-save-btn" class="h-12 px-4 flex items-center justify-center text-neon-blue font-label-lg text-label-lg rounded-full hover:bg-gradient-to-r from-neon-purple to-neon-blue-container hover:text-white-container transition-colors disabled:opacity-50">
-                    Kaydet
-                </button>
-            </div>
-        </header>
-
-        <main class="w-full max-w-md mx-auto px-margin-mobile pb-24 pt-4 space-y-md">
-            <div class="bg-background shadow-neo rounded-[32px] p-md shadow-sm">
-                <label class="block font-label-sm text-label-sm text-on-surface-variant mb-1">Split Adı</label>
-                <input type="text" id="create-split-name-input" placeholder="Örn: Push / Pull / Legs" class="w-full bg-transparent border-b-2 border-outline-variant focus:border-primary py-2 text-body-lg font-medium text-on-background outline-none transition-colors shadow-neo-inset border-none rounded-xl bg-background ">
-            </div>
-
-            <section id="create-split-days-container" class="space-y-sm">
-                <!-- Days will be added here dynamically -->
-            </section>
 
             <button onclick="addDayToNewSplit()" class="w-full bg-transparent border-2 border-dashed border-primary-container text-neon-blue font-label-lg text-label-lg rounded-[32px] h-20 flex items-center justify-center hover:bg-background shadow-neo transition-colors">
                 + Yeni Gün Ekle

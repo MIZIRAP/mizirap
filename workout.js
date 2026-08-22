@@ -32,8 +32,8 @@ document.addEventListener('click', (e) => {
 
     else if (action === 'closeExerciseHistory') closeExerciseHistory();
     else if (action === 'closeSplitSelectionModal') closeSplitSelectionModal();
-    else if (action === 'closeSplitSelectionAndOpenModal') { closeSplitSelectionModal(); setTimeout(openSplitModal, 300); }
-    else if (action === 'closeSplitModalAndOpenCreate') { closeSplitModal(); setTimeout(openCreateSplitView, 300); }
+    else if (action === 'closeSplitSelectionAndOpenModal') { closeSplitSelectionModal(); setTimeout(openSimpleNewSplitModal, 300); }
+    else if (action === 'closeSplitModalAndOpenCreate') { closeSplitSelectionModal(); setTimeout(openSimpleNewSplitModal, 300); }
     else if (action === 'closeCreateSplitView') closeCreateSplitView();
     else if (action === 'changeExerciseSets') changeExerciseSets(actionBtn.getAttribute('data-split-id'), parseInt(actionBtn.getAttribute('data-day-idx'), 10), parseInt(actionBtn.getAttribute('data-ex-idx'), 10), parseInt(actionBtn.getAttribute('data-delta'), 10));
     else if (action === 'removeExerciseFromSplit') removeExerciseFromSplit(actionBtn.getAttribute('data-split-id'), parseInt(actionBtn.getAttribute('data-day-idx'), 10), parseInt(actionBtn.getAttribute('data-ex-idx'), 10));
@@ -142,8 +142,7 @@ export function clearWorkout() {
 }
 
 function setupEventListeners() {
-    const saveSplitBtn = document.getElementById("save-split-btn");
-    if (saveSplitBtn) saveSplitBtn.onclick = saveNewSplit;
+    const saveSplitBtn = document.getElementById("save-split-btn"); if (saveSplitBtn) saveSplitBtn.onclick = saveSimpleNewSplit; const closeSplitModalBtn = document.getElementById("close-split-modal-btn"); if(closeSplitModalBtn) closeSplitModalBtn.onclick = closeSimpleNewSplitModal;
 
 
     const saveWorkoutBtn = document.getElementById("workout-save-btn");
@@ -1214,26 +1213,7 @@ async function persistSplitEdit(split) {
     }
 }
 
-function openCreateSplitView() {
-    document.getElementById('view-split-edit').classList.add('hidden');
-    document.getElementById('view-create-split').classList.remove('hidden');
 
-    const headerTitle = document.querySelector('#view-create-split header h1');
-    if(headerTitle) headerTitle.innerText = "Yeni Split";
-
-    newSplitId = 'split_' + Date.now();
-    newSplitDays = [];
-    document.getElementById('create-split-name-input').value = "";
-    renderCreateSplitDays();
-
-    // Bind save button
-    document.getElementById('create-split-save-btn').onclick = saveNewSplit;
-};
-
-function closeCreateSplitView() {
-    document.getElementById('view-create-split').classList.add('hidden');
-    document.getElementById('view-split-edit').classList.remove('hidden');
-};
 
 function addDayToNewSplit() {
     const dayCount = newSplitDays.length + 1;
@@ -1245,47 +1225,6 @@ function addDayToNewSplit() {
     renderCreateSplitDays();
 };
 
-function renderCreateSplitDays() {
-    const container = document.getElementById('create-split-days-container');
-    container.innerHTML = '';
-
-    newSplitDays.forEach((day, index) => {
-        const div = document.createElement('div');
-        div.className = "bg-background shadow-neo-lowest rounded-[32px] p-md shadow-sm relative";
-
-        let exHtml = '';
-        if(day.exercises.length === 0) {
-            exHtml = `<p class="text-label-sm text-on-surface-variant italic mb-2">Henüz hareket eklenmedi.</p>`;
-        } else {
-            day.exercises.forEach((ex, exIdx) => {
-                exHtml += `
-                    <div class="flex items-center justify-between py-2 border-b border-surface-container-highest last:border-0">
-                        <span class="text-body-sm">${ex.name}</span>
-                        <button data-action="removeExerciseFromNewDay" data-day-idx="${index}" data-ex-idx="${exIdx}" class="text-error/80 hover:text-error p-1">
-                            <span class="material-symbols-rounded" style="font-size: 18px">close</span>
-                        </button>
-                    </div>
-                `;
-            });
-        }
-
-        div.innerHTML = `
-            <div class="flex items-center justify-between mb-sm">
-                <input type="text" value="${day.name}" onchange="updateNewDayName(${index}, this.value)" class="font-title-md text-title-md font-bold text-on-surface bg-transparent outline-none w-3/4 border-b border-transparent focus:border-none focus:shadow-neo-inset rounded">
-                <button data-action="removeDayFromNewSplit" data-day-idx="${index}" class="text-on-surface-variant hover:text-error transition-colors p-1">
-                    <span class="material-symbols-rounded" style="font-size: 20px">delete</span>
-                </button>
-            </div>
-            <div class="mb-3">
-                ${exHtml}
-            </div>
-            <button data-action="openExercisePicker" data-day-id="${day.id}" class="w-full py-2 bg-gradient-to-r from-neon-purple to-neon-blue-container/30 text-neon-blue rounded-lg font-label-sm hover:bg-gradient-to-r from-neon-purple to-neon-blue-container/50 transition-colors flex items-center justify-center gap-1">
-                <span class="material-symbols-rounded text-[18px]">add</span> Egzersiz Ekle
-            </button>
-        `;
-        container.appendChild(div);
-    });
-}
 
 function updateNewDayName(index, val) {
     newSplitDays[index].name = val;
@@ -2300,3 +2239,80 @@ window.updateSplitDayName = function(splitId, dayIdx, newName) {
         persistSplitEdit(split);
     }
 };
+
+
+function openSimpleNewSplitModal() {
+    const modal = document.getElementById('newSplitModal');
+    const content = document.getElementById('newSplitModalContent');
+    const input = document.getElementById('new-split-name');
+    
+    if(modal && content) {
+        modal.classList.remove('hidden');
+        if(input) { input.value = ""; } // clear input
+        // Small delay to allow display:block to apply before animating opacity/transform
+        setTimeout(() => {
+            modal.classList.remove('opacity-0');
+            content.classList.remove('translate-y-full');
+            if(input) input.focus();
+        }, 10);
+    }
+}
+
+function closeSimpleNewSplitModal() {
+    const modal = document.getElementById('newSplitModal');
+    const content = document.getElementById('newSplitModalContent');
+    if(modal && content) {
+        modal.classList.add('opacity-0');
+        content.classList.add('translate-y-full');
+        setTimeout(() => {
+            modal.classList.add('hidden');
+        }, 300);
+    }
+}
+
+async function saveSimpleNewSplit() {
+    const nameInput = document.getElementById('new-split-name').value.trim();
+    if(!nameInput) {
+        alert("Lütfen split adı girin.");
+        return;
+    }
+
+    const saveBtn = document.getElementById('save-split-btn');
+    saveBtn.disabled = true;
+    saveBtn.innerText = "Oluşturuluyor...";
+
+    try {
+        const newSplitId = 'split_' + Date.now();
+        const newSplit = {
+            id: newSplitId,
+            name: nameInput,
+            days: [], 
+            createdAt: new Date().toISOString()
+        };
+
+        await setDoc(doc(db, "users", currentUid, "splits", newSplitId), newSplit);
+        
+        splits.push(newSplit);
+
+        if(splits.length === 1 || !activeSplitId) {
+            activeSplitId = newSplitId;
+            localStorage.setItem(`mizirap_active_split_${currentUid}`, activeSplitId);
+        }
+
+        renderSplitView();
+        closeSimpleNewSplitModal();
+        
+        // Open the edit view for the new split so they can add days
+        setTimeout(() => {
+            tempSelectedSplitId = newSplitId;
+            openSplitEditModal(newSplitId);
+        }, 350);
+
+    } catch(err) {
+        console.error(err);
+        alert("Oluşturulurken hata meydana geldi.");
+    } finally {
+        saveBtn.disabled = false;
+        saveBtn.innerHTML = `<span class="font-label-md text-label-md text-body-lg font-body-lg">Oluştur</span><span class="material-symbols-rounded icon-md">add_circle</span>`;
+    }
+}
