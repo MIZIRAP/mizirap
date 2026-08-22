@@ -953,7 +953,7 @@ function renderSplitEditView() {
                         
                         exHtml += `
                         <div class="exercise-card w-[282px] flex flex-col items-center ${isExOpen ? 'expanded' : ''} ex-drag-item" data-ex-idx="${exIdx}" data-split-id="${split.id}" data-day-idx="${dayIdx}">
-                            <div class="accordion-header w-[282px] h-[56px] bg-[#E8EAF0] rounded-[12px] p-3 flex items-center justify-between cursor-pointer transition-all z-20 relative" style="box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.08), -4px -4px 8px rgba(255, 255, 255, 0.6);" onclick="toggleMizAccordion(this, '${exAccordionKey}', 'ex')">
+                            <div class="accordion-header w-[282px] h-[56px] bg-[#E8EAF0] rounded-[12px] p-3 flex items-center justify-between cursor-pointer transition-all z-20 relative" style="box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.08), -4px -4px 8px rgba(255, 255, 255, 0.6);" onclick="toggleMizAccordion(this, '${exAccordionKey}', 'ex', event)">
                                 <div class="flex items-center gap-3">
                                     <div class="w-[40px] h-[40px] bg-[#E8EAF0] rounded-full flex items-center justify-center text-[#712AE2] font-bold text-[16px] shrink-0" style="box-shadow: inset 2px 2px 4px rgba(0, 0, 0, 0.08), inset -2px -2px 4px rgba(255, 255, 255, 0.6);">${initial}</div>
                                     <div class="flex flex-col">
@@ -963,7 +963,7 @@ function renderSplitEditView() {
                                 </div>
                                 <div class="flex items-center gap-2 shrink-0">
                                     <span class="material-symbols-rounded text-[#1E293B] text-[16px] transition-transform chevron">expand_more</span>
-                                    <button class="p-1 transition-colors" onclick="event.stopPropagation(); removeExerciseFromSplit('${split.id}', ${dayIdx}, ${exIdx})">
+                                    <button class="p-1 transition-colors" data-action="removeExerciseFromSplit" data-split-id="${split.id}" data-day-idx="${dayIdx}" data-ex-idx="${exIdx}">
                                         <span class="material-symbols-rounded text-[#BA1A1A] text-[16px] pointer-events-none">delete</span>
                                     </button>
                                 </div>
@@ -990,17 +990,17 @@ function renderSplitEditView() {
                 daysHtml += `
                 <div class="day-card w-full flex flex-col items-center ${isDayOpen ? 'expanded' : ''}">
                     <!-- Day Header -->
-                    <div class="accordion-header w-[300px] h-[56px] bg-[#E8EAF0] rounded-[12px] px-4 flex items-center justify-between cursor-pointer transition-all z-30 relative" style="box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.08), -4px -4px 8px rgba(255, 255, 255, 0.6); ${dayIdx > 0 ? 'margin-top: 12px;' : ''}" onclick="toggleMizAccordion(this, '${dayAccordionKey}', 'day')">
+                    <div class="accordion-header w-[300px] h-[56px] bg-[#E8EAF0] rounded-[12px] px-4 flex items-center justify-between cursor-pointer transition-all z-30 relative" style="box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.08), -4px -4px 8px rgba(255, 255, 255, 0.6); ${dayIdx > 0 ? 'margin-top: 12px;' : ''}" onclick="toggleMizAccordion(this, '${dayAccordionKey}', 'day', event)">
                         <div class="flex items-center gap-3">
                             <span class="material-symbols-rounded text-[#C7C4D7] text-[16px] cursor-grab day-drag-handle shrink-0">drag_indicator</span>
                             <div class="bg-[#E8EAF0] px-2 py-1 rounded-[4px] flex items-center justify-center shrink-0" style="box-shadow: inset 2px 2px 4px rgba(0, 0, 0, 0.08), inset -2px -2px 4px rgba(255, 255, 255, 0.6);">
                                 <span class="text-[#712AE2] font-normal text-[10px] leading-[15px]">Gün ${dayIdx + 1}</span>
                             </div>
-                            <input type="text" value="${day.name}" class="font-medium text-[#181C20] text-[16px] leading-[24px] bg-transparent outline-none w-[110px] truncate" onclick="event.stopPropagation()" onchange="updateSplitDayName('${split.id}', ${dayIdx}, this.value)" />
+                            <input type="text" value="${day.name}" class="font-medium text-[#181C20] text-[16px] leading-[24px] bg-transparent outline-none border-none focus:ring-0 shadow-none p-0 w-[110px] truncate" onclick="event.stopPropagation()" onchange="updateSplitDayName('${split.id}', ${dayIdx}, this.value)" />
                         </div>
                         <div class="flex items-center gap-2 shrink-0">
                             <span class="material-symbols-rounded text-[#1E293B] text-[16px] transition-transform chevron">expand_more</span>
-                            <button class="p-1 transition-colors" onclick="event.stopPropagation(); removeDayFromSplit('${split.id}', ${dayIdx})">
+                            <button class="p-1 transition-colors" data-action="removeDayFromSplit" data-split-id="${split.id}" data-day-idx="${dayIdx}">
                                 <span class="material-symbols-rounded text-[#BA1A1A] text-[16px] pointer-events-none">delete</span>
                             </button>
                         </div>
@@ -1025,7 +1025,7 @@ function renderSplitEditView() {
 
         splitCard.innerHTML = `
             <!-- Split Header Wrapper -->
-            <div class="${splitHeaderWrapperClass}" style="${isSplitOpen ? 'box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.08), -6px -6px 12px rgba(255, 255, 255, 0.6);' : splitHeaderStyles}" onclick="toggleMizAccordion(this, '${split.id}', 'split')">
+            <div class="${splitHeaderWrapperClass}" style="${isSplitOpen ? 'box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.08), -6px -6px 12px rgba(255, 255, 255, 0.6);' : splitHeaderStyles}" onclick="toggleMizAccordion(this, '${split.id}', 'split', event)">
                 <div class="w-full h-full bg-[#E8EAF0] rounded-[22px] px-5 flex items-center justify-between">
                     <div class="flex items-center gap-4">
                         <div class="w-[48px] h-[48px] bg-[#E8EAF0] rounded-full flex items-center justify-center text-[#4648D4] font-bold text-[14px] leading-[21px] tracking-[0.7px] shrink-0" style="box-shadow: inset 4px 4px 8px rgba(0, 0, 0, 0.08), inset -4px -4px 8px rgba(255, 255, 255, 0.6);">
@@ -2292,7 +2292,10 @@ async function saveSession() {
 }
 
 
-window.toggleMizAccordion = function(headerElement, key, type) {
+window.toggleMizAccordion = function(headerElement, key, type, event) {
+    if (event && event.target.closest('button')) {
+        return;
+    }
     const parent = headerElement.parentElement;
     parent.classList.toggle('expanded');
     
