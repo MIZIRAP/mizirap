@@ -2431,9 +2431,14 @@
                         <span class="material-symbols-rounded text-[#1E293B]">arrow_back</span>
                     </button>
                     <h1 class="text-h1 font-bold text-[#1E293B]">Core Hareketleri</h1>
-                    <button onclick="openAddCoreSheet()" class="w-10 h-10 flex items-center justify-center rounded-full bg-[#F0F2F8] active:scale-95 transition-transform" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);">
-                        <span class="material-symbols-rounded text-[#1E293B]">add</span>
-                    </button>
+                    <div class="flex items-center gap-2">
+                        <button onclick="openCreateSessionSheet('core')" class="w-10 h-10 flex items-center justify-center rounded-full bg-[#F0F2F8] active:scale-95 transition-transform" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);" title="Seans Oluştur">
+                            <span class="material-symbols-rounded text-[#1E293B]">playlist_add</span>
+                        </button>
+                        <button onclick="openAddCoreSheet()" class="w-10 h-10 flex items-center justify-center rounded-full bg-[#F0F2F8] active:scale-95 transition-transform" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);">
+                            <span class="material-symbols-rounded text-[#1E293B]">add</span>
+                        </button>
+                    </div>
                 </div>
             </header>
 
@@ -2456,6 +2461,15 @@
                         <button onclick="filterCores('Yan Karın', this)" class="neo-surface px-5 py-2 rounded-full text-sm font-semibold text-on-surface-variant whitespace-nowrap neo-button filter-chip">Yan Karın</button>
                         <button onclick="filterCores('Bel/Sırt', this)" class="neo-surface px-5 py-2 rounded-full text-sm font-semibold text-on-surface-variant whitespace-nowrap neo-button filter-chip">Bel/Sırt</button>
                         <button onclick="filterCores('Tüm Karın', this)" class="neo-surface px-5 py-2 rounded-full text-sm font-semibold text-on-surface-variant whitespace-nowrap neo-button filter-chip">Tüm Karın</button>
+                    </div>
+                </section>
+
+                
+                <!-- My Sessions Container (Core) -->
+                <section id="core-sessions-section" class="flex flex-col gap-3">
+                    <h2 class="text-lg font-bold text-[#1E293B] px-1">Seanslarım</h2>
+                    <div id="core-sessions-container" class="flex overflow-x-auto no-scrollbar gap-4 pb-2 px-1">
+                        <!-- Populated by JS -->
                     </div>
                 </section>
 
@@ -3418,9 +3432,14 @@
                         <span class="material-symbols-rounded text-[#1E293B]">arrow_back</span>
                     </button>
                     <h1 class="text-h1 font-bold text-[#1E293B]">Esneme Hareketleri</h1>
-                    <button onclick="openAddStretchSheet()" class="w-10 h-10 flex items-center justify-center rounded-full bg-[#F0F2F8] active:scale-95 transition-transform" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);">
-                        <span class="material-symbols-rounded text-[#1E293B]">add</span>
-                    </button>
+                    <div class="flex items-center gap-2">
+                        <button onclick="openCreateSessionSheet('stretch')" class="w-10 h-10 flex items-center justify-center rounded-full bg-[#F0F2F8] active:scale-95 transition-transform" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);" title="Seans Oluştur">
+                            <span class="material-symbols-rounded text-[#1E293B]">playlist_add</span>
+                        </button>
+                        <button onclick="openAddStretchSheet()" class="w-10 h-10 flex items-center justify-center rounded-full bg-[#F0F2F8] active:scale-95 transition-transform" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);">
+                            <span class="material-symbols-rounded text-[#1E293B]">add</span>
+                        </button>
+                    </div>
                 </div>
             </header>
 
@@ -3443,6 +3462,15 @@
                         <button onclick="filterStretches('Kalça/Bacak', this)" class="neo-surface px-5 py-2 rounded-full text-sm font-semibold text-on-surface-variant whitespace-nowrap neo-button filter-chip">Kalça/Bacak</button>
                         <button onclick="filterStretches('Boyun', this)" class="neo-surface px-5 py-2 rounded-full text-sm font-semibold text-on-surface-variant whitespace-nowrap neo-button filter-chip">Boyun</button>
                         <button onclick="filterStretches('Tam Vücut', this)" class="neo-surface px-5 py-2 rounded-full text-sm font-semibold text-on-surface-variant whitespace-nowrap neo-button filter-chip">Tam Vücut</button>
+                    </div>
+                </section>
+
+                
+                <!-- My Sessions Container (Stretch) -->
+                <section id="stretch-sessions-section" class="flex flex-col gap-3">
+                    <h2 class="text-lg font-bold text-[#1E293B] px-1">Seanslarım</h2>
+                    <div id="stretch-sessions-container" class="flex overflow-x-auto no-scrollbar gap-4 pb-2 px-1">
+                        <!-- Populated by JS -->
                     </div>
                 </section>
 
@@ -5195,6 +5223,79 @@
                 <button onclick="saveStretchExercise()" class="w-full neo-button bg-primary text-on-primary py-4 rounded-2xl font-bold text-base shadow-neo-primary hover:shadow-neo-primary-hover active:shadow-neo-primary-active transition-all flex items-center justify-center gap-2">
                     <span class="material-symbols-outlined text-lg">save</span>
                     Kaydet
+                </button>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- CREATE SESSION BOTTOM SHEET -->
+    <div id="create-session-bottom-sheet" class="fixed inset-0 bg-black/30 z-[100] flex items-end opacity-0 pointer-events-none transition-opacity duration-300" onclick="closeCreateSessionSheetOnOutsideClick(event)">
+        <div class="bg-background shadow-neo rounded-t-[24px] w-full max-w-md mx-auto shadow-2xl transform transition-transform translate-y-full duration-300 relative h-[90vh] flex flex-col" id="create-session-bottom-sheet-content">
+            <!-- Drag Handle -->
+            <div class="w-full flex justify-center pt-4 pb-2 cursor-pointer" onclick="closeCreateSessionSheet()">
+                <div class="w-12 h-1.5 bg-outline-variant rounded-full opacity-60"></div>
+            </div>
+            
+            <!-- Sheet Header -->
+            <div class="px-6 pb-4 flex items-center justify-between flex-shrink-0 pt-2 border-b border-surface-container-low">
+                <h2 id="create-session-title" class="font-headline-sm-mobile text-on-surface font-semibold tracking-tight">Seans Oluştur</h2>
+                <button class="p-2 -mr-2 bg-surface-container-low hover:bg-surface-container transition-colors rounded-full text-on-surface-variant hover:text-on-surface" onclick="closeCreateSessionSheet()">
+                    <span class="material-symbols-outlined text-xl">close</span>
+                </button>
+            </div>
+            
+            <!-- Sheet Content -->
+            <div class="px-6 py-4 overflow-y-auto flex-grow flex flex-col gap-6">
+                <!-- Seans Adı -->
+                <div class="flex flex-col gap-3 flex-shrink-0">
+                    <label class="text-sm font-semibold text-on-surface-variant flex items-center gap-2">
+                        <span class="material-symbols-outlined text-lg">edit_note</span>
+                        Seans Adı
+                    </label>
+                    <div class="relative">
+                        <input type="text" id="newSessionName" class="neo-inset w-full p-4 rounded-2xl bg-transparent border-none text-on-surface focus:ring-2 focus:ring-primary/20 transition-shadow text-base placeholder:text-on-surface-variant/50" placeholder="Örn: Sabah Rutini, İleri Seviye Karın...">
+                    </div>
+                </div>
+
+                <div class="flex flex-col gap-2 flex-grow min-h-0">
+                    <div class="flex items-center justify-between">
+                        <label class="text-sm font-semibold text-on-surface-variant flex items-center gap-2">
+                            <span class="material-symbols-outlined text-lg">format_list_numbered</span>
+                            Seçilen Hareketler
+                        </label>
+                        <span class="text-xs text-on-surface-variant opacity-70">Sürükleyip sıralayabilirsin</span>
+                    </div>
+                    <!-- Selected Exercises List (Sortable) -->
+                    <div id="session-selected-exercises" class="flex flex-col gap-2 bg-surface-container-low rounded-2xl p-4 min-h-[120px] max-h-[40vh] overflow-y-auto border border-surface-container">
+                        <div class="text-center text-on-surface-variant text-sm py-4 italic" id="session-empty-state">
+                            Henüz hareket seçilmedi.<br>Aşağıdan seçerek ekleyebilirsiniz.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Available Exercises Search -->
+                <div class="flex flex-col gap-3 flex-shrink-0">
+                    <label class="text-sm font-semibold text-on-surface-variant flex items-center gap-2">
+                        <span class="material-symbols-outlined text-lg">search</span>
+                        Hareket Ekle
+                    </label>
+                    <div class="relative">
+                        <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
+                        <input type="text" id="sessionSearchInput" onkeyup="filterSessionAvailableExercises()" class="neo-inset w-full pl-12 pr-4 py-4 rounded-2xl bg-transparent border-none text-on-surface focus:ring-2 focus:ring-primary/20 transition-shadow text-base placeholder:text-on-surface-variant/50" placeholder="Hareket ara...">
+                    </div>
+                    <!-- Available Exercises List -->
+                    <div id="session-available-exercises" class="flex flex-col gap-2 max-h-[30vh] overflow-y-auto pr-2 mt-2">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Sticky Bottom Action -->
+            <div class="p-6 border-t border-surface-container-low bg-background/80 backdrop-blur-md">
+                <button onclick="saveSession()" class="w-full neo-button bg-primary text-on-primary py-4 rounded-2xl font-bold text-base shadow-neo-primary hover:shadow-neo-primary-hover active:shadow-neo-primary-active transition-all flex items-center justify-center gap-2">
+                    <span class="material-symbols-outlined text-lg">save</span>
+                    Seansı Kaydet
                 </button>
             </div>
         </div>

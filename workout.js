@@ -3704,3 +3704,235 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 });
+
+
+// --- Session Builder Logic ---
+let currentSessionType = null; // 'core' or 'stretch'
+let currentSessionExercises = [];
+let sessionSortableInstance = null;
+
+function openCreateSessionSheet(type) {
+    currentSessionType = type;
+    currentSessionExercises = [];
+    
+    document.getElementById('newSessionName').value = '';
+    document.getElementById('sessionSearchInput').value = '';
+    
+    const title = document.getElementById('create-session-title');
+    title.textContent = type === 'core' ? 'Core Seansı Oluştur' : 'Esneme Seansı Oluştur';
+    
+    renderSessionAvailableExercises();
+    renderSessionSelectedExercises();
+    
+    const sheet = document.getElementById('create-session-bottom-sheet');
+    const sheetContent = document.getElementById('create-session-bottom-sheet-content');
+    
+    sheet.classList.remove('pointer-events-none');
+    sheet.classList.remove('opacity-0');
+    sheet.classList.add('opacity-100');
+    
+    setTimeout(() => {
+        sheetContent.classList.remove('translate-y-full');
+        sheetContent.classList.add('translate-y-0');
+        
+        // Init sortable if not already init
+        if (!sessionSortableInstance && typeof Sortable !== 'undefined') {
+            const el = document.getElementById('session-selected-exercises');
+            sessionSortableInstance = new Sortable(el, {
+                animation: 150,
+                handle: '.drag-handle',
+                ghostClass: 'opacity-50',
+                onEnd: function (evt) {
+                    // Update array order based on DOM
+                    const itemEl = evt.item;
+                    const newIndex = evt.newIndex;
+                    const oldIndex = evt.oldIndex;
+                    
+                    const movedItem = currentSessionExercises.splice(oldIndex, 1)[0];
+                    currentSessionExercises.splice(newIndex, 0, movedItem);
+                }
+            });
+        }
+    }, 50);
+}
+
+function closeCreateSessionSheet() {
+    const sheet = document.getElementById('create-session-bottom-sheet');
+    const sheetContent = document.getElementById('create-session-bottom-sheet-content');
+    
+    sheetContent.classList.remove('translate-y-0');
+    sheetContent.classList.add('translate-y-full');
+    
+    setTimeout(() => {
+        sheet.classList.add('opacity-0');
+        sheet.classList.remove('opacity-100');
+        sheet.classList.add('pointer-events-none');
+    }, 300);
+}
+
+function closeCreateSessionSheetOnOutsideClick(event) {
+    if (event.target.id === 'create-session-bottom-sheet') {
+        closeCreateSessionSheet();
+    }
+}
+
+function renderSessionAvailableExercises() {
+    const container = document.getElementById('session-available-exercises');
+    const searchTerm = document.getElementById('sessionSearchInput').value.toLowerCase();
+    
+    let sourceArray = [];
+    if (currentSessionType === 'core') {
+        sourceArray = [...DEFAULT_CORES, ...(typeof cores !== 'undefined' ? cores : [])];
+    } else {
+        sourceArray = [...DEFAULT_STRETCHES, ...(typeof stretches !== 'undefined' ? stretches : [])];
+    }
+    
+    // Sort alphabetically
+    sourceArray.sort((a, b) => (a.name || '').localeCompare(b.name || '', 'tr'));
+    
+    let html = '';
+    let hasMatch = false;
+    
+    sourceArray.forEach(ex => {
+        if (ex.name && ex.name.toLowerCase().includes(searchTerm)) {
+            hasMatch = true;
+            // Determine image
+            let imgHtml = '';
+            if (ex.imageBase64) {
+                imgHtml = `<img src="${ex.imageBase64}" class="w-10 h-10 rounded-xl object-cover">`;
+            } else {
+                imgHtml = `<div class="w-10 h-10 rounded-xl bg-surface-container-highest flex items-center justify-center text-primary font-bold text-xs">${ex.name.substring(0,2).toUpperCase()}</div>`;
+            }
+            
+            // Pass entire exercise as JSON to avoid complex string parsing
+            const exJson = encodeURIComponent(JSON.stringify(ex));
+            
+            html += `
+            <div class="flex items-center justify-between p-3 neo-surface rounded-2xl mb-2">
+                <div class="flex items-center gap-3">
+                    ${imgHtml}
+                    <div>
+                        <div class="font-bold text-sm text-on-surface">${ex.name}</div>
+                        <div class="text-xs text-on-surface-variant">${ex.duration}s • ${ex.category}</div>
+                    </div>
+                </div>
+                <button onclick="addExerciseToSession('${exJson}')" class="w-8 h-8 flex items-center justify-center rounded-full bg-primary/10 text-primary hover:bg-primary/20 transition-colors">
+                    <span class="material-symbols-rounded text-sm">add</span>
+                </button>
+            </div>`;
+        }
+    });
+    
+    if (!hasMatch) {
+        html = '<div class="text-center text-on-surface-variant text-sm py-4">Sonuç bulunamadı.</div>';
+    }
+    container.innerHTML = html;
+}
+
+function filterSessionAvailableExercises() {
+    renderSessionAvailableExercises();
+}
+
+function addExerciseToSession(exJsonStr) {
+    try {
+        const ex = JSON.parse(decodeURIComponent(exJsonStr));
+        // Generate a unique instance ID so same exercise can be added twice
+        const instanceId = 'inst_' + Math.random().toString(36).substr(2, 9);
+        
+        currentSessionExercises.push({
+            instanceId,
+            id: ex.id || null,
+            name: ex.name,
+            duration: ex.duration,
+            category: ex.category,
+            isDefault: ex.isDefault,
+            imageBase64: ex.imageBase64 || null
+        });
+        
+        renderSessionSelectedExercises();
+    } catch(err) {
+        console.error("Error adding exercise:", err);
+    }
+}
+
+function removeExerciseFromSession(instanceId) {
+    currentSessionExercises = currentSessionExercises.filter(ex => ex.instanceId !== instanceId);
+    renderSessionSelectedExercises();
+}
+
+function renderSessionSelectedExercises() {
+    const container = document.getElementById('session-selected-exercises');
+    
+    if (currentSessionExercises.length === 0) {
+        container.innerHTML = `<div class="text-center text-on-surface-variant text-sm py-4 italic" id="session-empty-state">Henüz hareket seçilmedi.<br>Aşağıdan seçerek ekleyebilirsiniz.</div>`;
+        return;
+    }
+    
+    let html = '';
+    currentSessionExercises.forEach(ex => {
+        let imgHtml = '';
+        if (ex.imageBase64) {
+            imgHtml = `<img src="${ex.imageBase64}" class="w-8 h-8 rounded-lg object-cover">`;
+        } else {
+            imgHtml = `<div class="w-8 h-8 rounded-lg bg-surface-container-highest flex items-center justify-center text-primary font-bold text-[10px]">${ex.name.substring(0,2).toUpperCase()}</div>`;
+        }
+        
+        html += `
+        <div class="flex items-center justify-between p-2 bg-surface rounded-xl border border-outline-variant/30" data-id="${ex.instanceId}">
+            <div class="flex items-center gap-3">
+                <div class="drag-handle cursor-grab active:cursor-grabbing text-on-surface-variant/50 hover:text-on-surface-variant p-1">
+                    <span class="material-symbols-rounded text-lg">drag_indicator</span>
+                </div>
+                ${imgHtml}
+                <div>
+                    <div class="font-bold text-sm text-on-surface leading-tight">${ex.name}</div>
+                    <div class="text-[10px] text-on-surface-variant">${ex.duration}s</div>
+                </div>
+            </div>
+            <button onclick="removeExerciseFromSession('${ex.instanceId}')" class="p-2 text-error/70 hover:text-error transition-colors rounded-full hover:bg-error-container/50">
+                <span class="material-symbols-rounded text-sm">remove</span>
+            </button>
+        </div>`;
+    });
+    
+    container.innerHTML = html;
+}
+
+async function saveSession() {
+    const name = document.getElementById('newSessionName').value.trim();
+    if (!name) {
+        alert("Lütfen seans adı girin.");
+        return;
+    }
+    if (currentSessionExercises.length === 0) {
+        alert("Lütfen seansa en az bir hareket ekleyin.");
+        return;
+    }
+    
+    const sessionData = {
+        name,
+        type: currentSessionType,
+        movements: currentSessionExercises,
+        createdAt: serverTimestamp()
+    };
+    
+    try {
+        const collectionName = currentSessionType === 'core' ? 'coreSessions' : 'stretchSessions';
+        const sessionsRef = collection(db, "users", auth.currentUser.uid, collectionName);
+        await addDoc(sessionsRef, sessionData);
+        closeCreateSessionSheet();
+        alert("Seans başarıyla kaydedildi!");
+    } catch(err) {
+        console.error("Error saving session:", err);
+        alert("Kaydedilirken hata oluştu.");
+    }
+}
+
+// Windows exports
+window.openCreateSessionSheet = openCreateSessionSheet;
+window.closeCreateSessionSheet = closeCreateSessionSheet;
+window.closeCreateSessionSheetOnOutsideClick = closeCreateSessionSheetOnOutsideClick;
+window.filterSessionAvailableExercises = filterSessionAvailableExercises;
+window.addExerciseToSession = addExerciseToSession;
+window.removeExerciseFromSession = removeExerciseFromSession;
+window.saveSession = saveSession;
