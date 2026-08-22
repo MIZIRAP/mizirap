@@ -34,7 +34,6 @@ document.addEventListener('click', (e) => {
     else if (action === 'closeSplitSelectionModal') closeSplitSelectionModal();
     else if (action === 'closeSplitSelectionAndOpenModal') { closeSplitSelectionModal(); setTimeout(openSimpleNewSplitModal, 300); }
     else if (action === 'closeSplitModalAndOpenCreate') { closeSplitSelectionModal(); setTimeout(openSimpleNewSplitModal, 300); }
-    else if (action === 'closeCreateSplitView') closeCreateSplitView();
     else if (action === 'changeExerciseSets') changeExerciseSets(actionBtn.getAttribute('data-split-id'), parseInt(actionBtn.getAttribute('data-day-idx'), 10), parseInt(actionBtn.getAttribute('data-ex-idx'), 10), parseInt(actionBtn.getAttribute('data-delta'), 10));
     else if (action === 'removeExerciseFromSplit') removeExerciseFromSplit(actionBtn.getAttribute('data-split-id'), parseInt(actionBtn.getAttribute('data-day-idx'), 10), parseInt(actionBtn.getAttribute('data-ex-idx'), 10));
     else if (action === 'toggleDayAccordion') toggleDayAccordion(actionBtn.getAttribute('data-accordion-key'), actionBtn);
@@ -1363,7 +1362,6 @@ async function saveNewSplit() {
             localStorage.setItem(`miz_activeSplit_${currentUid}`, newSplitId);
         }
 
-        closeCreateSplitView();
         renderSplitEditView();
 
         if(typeof renderSplitView === 'function') {
