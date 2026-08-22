@@ -137,139 +137,240 @@
 
     <!-- Ana Stil Dosyası (Custom CSS) -->
     <link href="style.css" rel="stylesheet" />
+    <style>
+        .material-symbols-rounded {
+            font-family: "Material Symbols Rounded" !important;
+        }
+
+        .view.hidden { display: none !important; }
+
+        /* Number input up/down oklarını gizle */
+        input[type="number"]::-webkit-inner-spin-button,
+        input[type="number"]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        input[type="number"] {
+            -moz-appearance: textfield;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        .progress-ring__circle {
+            transition: stroke-dashoffset 0.8s ease-in-out;
+            transform: rotate(-90deg);
+            transform-origin: 50% 50%;
+        }
     
+        .neo-surface { background: #F0F2F8; box-shadow: 6px 6px 12px rgba(0,0,0,0.08), -6px -6px 12px rgba(255,255,255,0.6); border-radius: 16px; }
+        .neo-surface-small { background: #F0F2F8; box-shadow: 4px 4px 8px rgba(0,0,0,0.08), -4px -4px 8px rgba(255,255,255,0.6); border-radius: 12px; }
+        .neo-inset { background: #F0F2F8; box-shadow: inset 4px 4px 8px rgba(0,0,0,0.08), inset -4px -4px 8px rgba(255,255,255,0.6); border-radius: 16px; }
+        .neo-inset-small { background: #F0F2F8; box-shadow: inset 2px 2px 4px rgba(0,0,0,0.08), inset -2px -2px 4px rgba(255,255,255,0.6); border-radius: 8px; }
+        .neo-button:active { box-shadow: inset 2px 2px 4px rgba(0,0,0,0.1), inset -2px -2px 4px rgba(255,255,255,0.7) !important; }
+        .accordion-content { max-height: 0; overflow: hidden; transition: max-height 0.4s ease-out, opacity 0.3s ease-out, margin 0.3s ease-out; opacity: 0; }
+        .accordion-content.expanded { opacity: 1; }
+        .chevron { transition: transform 0.3s ease; }
+        .expanded > .accordion-header .chevron { transform: rotate(180deg); }
+</style>
 
     <!-- Muscle Map Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/@panzoom/panzoom/dist/panzoom.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="assets/exercises/muscle-map.js"></script>
 
-    
+    <style>
+        .material-symbols-rounded {
+            font-family: "Material Symbols Rounded" !important;
+        }
 
-    
+        
+        .neo-surface-interactive:active {
+            box-shadow: inset 4px 4px 8px rgba(0,0,0,0.08), inset -4px -4px 8px rgba(255,255,255,0.6);
+            transform: scale(0.98);
+        }
+        .neo-inset-pill {
+            background: #f0f2f8;
+            box-shadow: inset 4px 4px 8px rgba(0,0,0,0.06), inset -4px -4px 8px rgba(255,255,255,0.7);
+            border-radius: 9999px;
+        }
+        .neo-inset-circle {
+            background: #f0f2f8;
+            box-shadow: inset 4px 4px 8px rgba(0,0,0,0.06), inset -4px -4px 8px rgba(255,255,255,0.7);
+            border-radius: 50%;
+        }
+        .expandable-content {
+            display: grid;
+            grid-template-rows: 0fr;
+            transition: grid-template-rows 300ms cubic-bezier(0.4, 0, 0.2, 1);
+            visibility: hidden;
+        }
+        .expandable-content.expanded {
+            grid-template-rows: 1fr;
+            visibility: visible;
+        }
+        .expandable-inner {
+            overflow: hidden;
+        }
 
-    
+        .glass-nav {
+            background: rgba(247, 249, 255, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
 
-    
-<style>
-.material-symbols-rounded {
-font-family: "Material Symbols Rounded" !important;
-}
-.view.hidden { display: none !important; }
-/* Number input up/down oklarını gizle */
-input[type="number"]::-webkit-inner-spin-button,
-input[type="number"]::-webkit-outer-spin-button {
--webkit-appearance: none;
-margin: 0;
-input[type="number"] {
--moz-appearance: textfield;
-@keyframes gradientShift {
-0% { background-position: 0% 50%; }
-50% { background-position: 100% 50%; }
-100% { background-position: 0% 50%; }
-.progress-ring__circle {
-transition: stroke-dashoffset 0.8s ease-in-out;
-transform: rotate(-90deg);
-transform-origin: 50% 50%;
-.neo-surface { background: #F0F2F8; box-shadow: 6px 6px 12px rgba(0,0,0,0.08), -6px -6px 12px rgba(255,255,255,0.6); border-radius: 16px; }
-.neo-surface-small { background: #F0F2F8; box-shadow: 4px 4px 8px rgba(0,0,0,0.08), -4px -4px 8px rgba(255,255,255,0.6); border-radius: 12px; }
-.neo-inset { background: #F0F2F8; box-shadow: inset 4px 4px 8px rgba(0,0,0,0.08), inset -4px -4px 8px rgba(255,255,255,0.6); border-radius: 16px; }
-.neo-inset-small { background: #F0F2F8; box-shadow: inset 2px 2px 4px rgba(0,0,0,0.08), inset -2px -2px 4px rgba(255,255,255,0.6); border-radius: 8px; }
-.neo-button:active { box-shadow: inset 2px 2px 4px rgba(0,0,0,0.1), inset -2px -2px 4px rgba(255,255,255,0.7) !important; }
-.accordion-content { max-height: 0; overflow: hidden; transition: max-height 0.4s ease-out, opacity 0.3s ease-out, margin 0.3s ease-out; opacity: 0; }
-.accordion-content.expanded { opacity: 1; }
-.chevron { transition: transform 0.3s ease; }
-.expanded > .accordion-header .chevron { transform: rotate(180deg); }
-.neo-surface-interactive:active {
-box-shadow: inset 4px 4px 8px rgba(0,0,0,0.08), inset -4px -4px 8px rgba(255,255,255,0.6);
-transform: scale(0.98);
-.neo-inset-pill {
-background: #f0f2f8;
-box-shadow: inset 4px 4px 8px rgba(0,0,0,0.06), inset -4px -4px 8px rgba(255,255,255,0.7);
-border-radius: 9999px;
-.neo-inset-circle {
-border-radius: 50%;
-.expandable-content {
-display: grid;
-grid-template-rows: 0fr;
-transition: grid-template-rows 300ms cubic-bezier(0.4, 0, 0.2, 1);
-visibility: hidden;
-.expandable-content.expanded {
-grid-template-rows: 1fr;
-visibility: visible;
-.expandable-inner {
-overflow: hidden;
-.glass-nav {
-background: rgba(247, 249, 255, 0.85);
-backdrop-filter: blur(12px);
--webkit-backdrop-filter: blur(12px);
 .neo-surface {
-background-color: #f0f2f8;
-box-shadow: 6px 6px 12px rgba(0,0,0,0.08), -6px -6px 12px rgba(255,255,255,0.7);
-.neo-inset {
-.neo-button:active {
-/* Circular Progress Styling */
-transition: stroke-dashoffset 0.35s;
-/* Neon Border Animations */
-@keyframes spin-neon {
-0% { transform: translate(-50%, -50%) rotate(0deg); }
-100% { transform: translate(-50%, -50%) rotate(360deg); }
-.neon-card {
-position: relative;
-padding: 3px;
-z-index: 1;
-.neon-card::before {
-content: '';
-position: absolute;
-top: 50%;
-left: 50%;
-width: 200%;
-height: 200%;
-background: conic-gradient(from 0deg, transparent 0%, #a855f7 33%, #22c55e 66%, #3b82f6 100%);
-animation: spin-neon 4s linear infinite;
-z-index: -1;
-.neon-card-inner {
-border-radius: calc(1.5rem - 3px);
-width: 100%;
-height: 100%;
-.neon-text-glow {
-text-shadow: 0 0 10px rgba(138, 76, 252, 0.4);
-.neon-icon-glow {
-filter: drop-shadow(0 0 6px rgba(138, 76, 252, 0.5));
-.neon-icon-glow-blue {
-filter: drop-shadow(0 0 6px rgba(59, 130, 246, 0.5));
-.gradient-border {
-background: #F0F2F8;
-background-clip: padding-box;
-border: 2px solid transparent;
-border-radius: 32px;
-.gradient-border::before {
-top: 0; right: 0; bottom: 0; left: 0;
-margin: -2px;
-border-radius: inherit;
-background: linear-gradient(to right, #4A90E2, #50E3C2);
-.neo-button {
-background-color: #F0F2F8;
-transition: all 0.2s ease-in-out;
-box-shadow: inset 4px 4px 8px rgba(0,0,0,0.06), inset -4px -4px 8px rgba(255,255,255,0.7) !important;
-.gradient-bg {
-background: linear-gradient(135deg, rgba(113,42,226,0.15) 0%, rgba(59,130,246,0.15) 50%, rgba(34,197,94,0.15) 100%);
-background-size: 200% 200%;
-animation: gradientShift 10s ease infinite;
-.drag-handle {
-cursor: grab;
-.drag-handle:active {
-cursor: grabbing;
-.exercise-item {
-transition: transform 0.2s ease, box-shadow 0.2s ease;
-.exercise-item:active {
-box-shadow: 0px 2px 10px rgba(0,0,0,0.05);
-.sortable-ghost {
-opacity: 0.4;
-input[name="tx-type"]:checked + div {
-box-shadow: 6px 6px 12px #e3e6ee, -6px -6px 12px rgba(255, 255, 255, 0.7) !important;
-input[name="payment-type"]:checked + div {
-</style>
+            background-color: #f0f2f8;
+            box-shadow: 6px 6px 12px rgba(0,0,0,0.08), -6px -6px 12px rgba(255,255,255,0.7);
+            
+        }
+
+        .neo-inset {
+            background-color: #f0f2f8;
+            box-shadow: inset 4px 4px 8px rgba(0,0,0,0.06), inset -4px -4px 8px rgba(255,255,255,0.7);
+            
+        }
+        
+        .neo-button:active {
+            box-shadow: inset 4px 4px 8px rgba(0,0,0,0.06), inset -4px -4px 8px rgba(255,255,255,0.7);
+        }
+
+        /* Circular Progress Styling */
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        .progress-ring__circle {
+            transition: stroke-dashoffset 0.35s;
+            transform: rotate(-90deg);
+            transform-origin: 50% 50%;
+        }
+
+        /* Neon Border Animations */
+        @keyframes spin-neon {
+            0% { transform: translate(-50%, -50%) rotate(0deg); }
+            100% { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+        
+        .neon-card {
+            position: relative;
+            padding: 3px;
+            
+            box-shadow: 6px 6px 12px rgba(0,0,0,0.08), -6px -6px 12px rgba(255,255,255,0.7);
+            overflow: hidden;
+            z-index: 1;
+        }
+        
+        .neon-card::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(from 0deg, transparent 0%, #a855f7 33%, #22c55e 66%, #3b82f6 100%);
+            animation: spin-neon 4s linear infinite;
+            z-index: -1;
+        }
+        
+        .neon-card-inner {
+            background-color: #f0f2f8;
+            border-radius: calc(1.5rem - 3px);
+            width: 100%;
+            height: 100%;
+        }
+
+        .neon-text-glow {
+            text-shadow: 0 0 10px rgba(138, 76, 252, 0.4);
+        }
+        .neon-icon-glow {
+            filter: drop-shadow(0 0 6px rgba(138, 76, 252, 0.5));
+        }
+        .neon-icon-glow-blue {
+            filter: drop-shadow(0 0 6px rgba(59, 130, 246, 0.5));
+        }
+    </style>
+
+    <style>
+        .material-symbols-rounded {
+            font-family: "Material Symbols Rounded" !important;
+        }
+
+        .gradient-border {
+            position: relative;
+            background: #F0F2F8;
+            background-clip: padding-box;
+            border: 2px solid transparent;
+            border-radius: 32px;
+        }
+        .gradient-border::before {
+            content: '';
+            position: absolute;
+            top: 0; right: 0; bottom: 0; left: 0;
+            z-index: -1;
+            margin: -2px;
+            border-radius: inherit;
+            background: linear-gradient(to right, #4A90E2, #50E3C2);
+        }
+        .neo-button {
+            background-color: #F0F2F8;
+            transition: all 0.2s ease-in-out;
+            box-shadow: 6px 6px 12px rgba(0,0,0,0.08), -6px -6px 12px rgba(255,255,255,0.7);
+        }
+        .neo-button:active {
+            box-shadow: inset 4px 4px 8px rgba(0,0,0,0.06), inset -4px -4px 8px rgba(255,255,255,0.7) !important;
+            transform: scale(0.98);
+        }
+    </style>
+
+    <style>
+        .material-symbols-rounded {
+            font-family: "Material Symbols Rounded" !important;
+        }
+
+        .gradient-border {
+            position: relative;
+            background: #F0F2F8;
+            background-clip: padding-box;
+            border: 2px solid transparent;
+            border-radius: 32px;
+        }
+        .gradient-border::before {
+            content: '';
+            position: absolute;
+            top: 0; right: 0; bottom: 0; left: 0;
+            z-index: -1;
+            margin: -2px;
+            border-radius: inherit;
+            background: linear-gradient(to right, #4A90E2, #50E3C2);
+        }
+        .neo-button {
+            background-color: #F0F2F8;
+            transition: all 0.2s ease-in-out;
+            box-shadow: 6px 6px 12px rgba(0,0,0,0.08), -6px -6px 12px rgba(255,255,255,0.7);
+        }
+        .neo-button:active {
+            box-shadow: inset 4px 4px 8px rgba(0,0,0,0.06), inset -4px -4px 8px rgba(255,255,255,0.7) !important;
+            transform: scale(0.98);
+        }
+    </style>
+
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, rgba(113,42,226,0.15) 0%, rgba(59,130,246,0.15) 50%, rgba(34,197,94,0.15) 100%);
+            background-size: 200% 200%;
+            animation: gradientShift 10s ease infinite;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+    </style>
 </head>
 <body class="bg-surface-variant text-on-background font-body-lg antialiased min-h-[100dvh] flex justify-center">
 
@@ -2339,7 +2440,28 @@ input[name="payment-type"]:checked + div {
     
 
     <section id="view-edit-workout-template" class="view hidden bg-background text-on-background antialiased min-h-[100dvh] flex flex-col items-center pb-[100px]">
-        
+        <style>
+        .material-symbols-rounded {
+            font-family: "Material Symbols Rounded" !important;
+        }
+
+            .drag-handle {
+                cursor: grab;
+            }
+            .drag-handle:active {
+                cursor: grabbing;
+            }
+            .exercise-item {
+                transition: transform 0.2s ease, box-shadow 0.2s ease;
+            }
+            .exercise-item:active {
+                transform: scale(0.98);
+                box-shadow: 0px 2px 10px rgba(0,0,0,0.05);
+            }
+            .sortable-ghost {
+                opacity: 0.4;
+            }
+        </style>
         
         <!-- TopAppBar -->
         <header class="w-full top-0 sticky bg-background dark:bg-background flat no shadows transition-opacity duration-200 z-40 max-w-md mx-auto">
@@ -3679,7 +3801,15 @@ input[name="payment-type"]:checked + div {
                 <input type="radio" name="tx-type" value="income" class="peer sr-only">
                 <div class="py-2 text-center rounded-full text-sm font-semibold text-[#64748B] transition-all peer-checked:text-[#22c55e] peer-checked:bg-[#F0F2F8]" style="box-shadow: none;">Gelir</div>
             </label>
-            
+            <style>
+        .material-symbols-rounded {
+            font-family: "Material Symbols Rounded" !important;
+        }
+
+                input[name="tx-type"]:checked + div {
+                    box-shadow: 6px 6px 12px #e3e6ee, -6px -6px 12px rgba(255, 255, 255, 0.7) !important;
+                }
+            </style>
         </div>
 
         <!-- Input Area -->
@@ -3889,7 +4019,15 @@ input[name="payment-type"]:checked + div {
                     </label>
                 </div>
                 <!-- Inline style script for peer-checked box-shadow since tailwind arbitrary peer variants can be tricky in this setup -->
-                
+                <style>
+        .material-symbols-rounded {
+            font-family: "Material Symbols Rounded" !important;
+        }
+
+                    input[name="payment-type"]:checked + div {
+                        box-shadow: 6px 6px 12px #e3e6ee, -6px -6px 12px rgba(255, 255, 255, 0.7) !important;
+                    }
+                </style>
             </div>
             <!-- Icon Selection -->
             <div class="flex flex-col gap-1">
