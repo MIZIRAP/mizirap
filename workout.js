@@ -2299,8 +2299,10 @@ window.toggleMizAccordion = function(headerElement, key, type) {
     
     const content = headerElement.nextElementSibling;
     if (parent.classList.contains('expanded')) {
+        content.classList.add("expanded");
         content.style.maxHeight = content.scrollHeight + 500 + "px"; 
     } else {
+        content.classList.remove("expanded");
         content.style.maxHeight = null;
     }
     
