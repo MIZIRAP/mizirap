@@ -963,7 +963,7 @@ function renderSplitEditView() {
                                 </div>
                                 <div class="flex items-center gap-2 shrink-0">
                                     <span class="material-symbols-rounded text-[#1E293B] text-[16px] transition-transform chevron">expand_more</span>
-                                    <button class="p-1 transition-colors" data-action="removeExerciseFromSplit" data-split-id="${split.id}" data-day-idx="${dayIdx}" data-ex-idx="${exIdx}" onclick="event.stopPropagation()">
+                                    <button class="p-1 transition-colors" onclick="event.stopPropagation(); removeExerciseFromSplit('${split.id}', ${dayIdx}, ${exIdx})">
                                         <span class="material-symbols-rounded text-[#BA1A1A] text-[16px] pointer-events-none">delete</span>
                                     </button>
                                 </div>
@@ -996,11 +996,11 @@ function renderSplitEditView() {
                             <div class="bg-[#E8EAF0] px-2 py-1 rounded-[4px] flex items-center justify-center shrink-0" style="box-shadow: inset 2px 2px 4px rgba(0, 0, 0, 0.08), inset -2px -2px 4px rgba(255, 255, 255, 0.6);">
                                 <span class="text-[#712AE2] font-normal text-[10px] leading-[15px]">Gün ${dayIdx + 1}</span>
                             </div>
-                            <h3 class="font-medium text-[#181C20] text-[16px] leading-[24px] truncate select-none">${day.name}</h3>
+                            <input type="text" value="${day.name}" class="font-medium text-[#181C20] text-[16px] leading-[24px] bg-transparent outline-none w-[110px] truncate" onclick="event.stopPropagation()" onchange="updateSplitDayName('${split.id}', ${dayIdx}, this.value)" />
                         </div>
                         <div class="flex items-center gap-2 shrink-0">
                             <span class="material-symbols-rounded text-[#1E293B] text-[16px] transition-transform chevron">expand_more</span>
-                            <button class="p-1 transition-colors" data-action="removeDayFromSplit" data-split-id="${split.id}" data-day-idx="${dayIdx}" onclick="event.stopPropagation()">
+                            <button class="p-1 transition-colors" onclick="event.stopPropagation(); removeDayFromSplit('${split.id}', ${dayIdx})">
                                 <span class="material-symbols-rounded text-[#BA1A1A] text-[16px] pointer-events-none">delete</span>
                             </button>
                         </div>
@@ -1021,14 +1021,7 @@ function renderSplitEditView() {
         }
         
         let splitHeaderStyles = 'box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.08), -6px -6px 12px rgba(255, 255, 255, 0.6);';
-        let splitHeaderWrapperClass = 'accordion-header w-[342px] h-[72px] rounded-[24px] relative z-40 transition-all cursor-pointer';
-        
-        // Gradient border magic
-        if (isSplitOpen) {
-            splitHeaderWrapperClass += ' p-[2px] bg-gradient-to-r from-[#4648D4] to-[#20E0B0]';
-        } else {
-            splitHeaderWrapperClass += ' bg-[#E8EAF0]';
-        }
+        let splitHeaderWrapperClass = 'accordion-header w-[342px] h-[72px] rounded-[24px] relative z-40 transition-all cursor-pointer p-[2px] bg-gradient-to-r from-[#4648D4] to-[#20E0B0]';
 
         splitCard.innerHTML = `
             <!-- Split Header Wrapper -->
@@ -1058,7 +1051,26 @@ function renderSplitEditView() {
             </div>
         `;
         
+        
+        const headerEl = splitCard.querySelector('.accordion-header');
+        if(headerEl) {
+            let startX=0, startY=0;
+            headerEl.addEventListener('touchstart', e => {
+                startX = e.changedTouches[0].screenX;
+                startY = e.changedTouches[0].screenY;
+            }, {passive: true});
+            headerEl.addEventListener('touchend', e => {
+                let endX = e.changedTouches[0].screenX;
+                let endY = e.changedTouches[0].screenY;
+                if (startX - endX > 60 && Math.abs(startY - endY) < 40) {
+                    if(confirm("Bu programı silmek istediğinize emin misiniz?")) {
+                        deleteSplit(split.id);
+                    }
+                }
+            });
+        }
         mainContainer.appendChild(splitCard);
+
         
         if (split.days) {
             split.days.forEach((day, dayIdx) => {
@@ -1110,6 +1122,7 @@ function _initExSortable(listEl, splitId, dayIdx) {
             const day = split.days[dayIdx];
             const moved = day.exercises.splice(evt.oldIndex, 1)[0];
             day.exercises.splice(evt.newIndex, 0, moved);
+            persistSplitEdit(split);
             persistSplitEdit(split);
             // Re-render to update indices on buttons
             renderSplitEditView();
@@ -2373,3 +2386,12 @@ async function removeDayFromSplit(splitId, dayIdx) {
         alert("Gün silinirken bir hata oluştu.");
     }
 }
+
+
+window.updateSplitDayName = function(splitId, dayIdx, newName) {
+    const split = splits.find(s => s.id === splitId);
+    if(split && split.days[dayIdx]) {
+        split.days[dayIdx].name = newName;
+        persistSplitEdit(split);
+    }
+};
