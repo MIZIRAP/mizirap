@@ -2580,23 +2580,35 @@ function _spLoadMovement(idx) {
     setTimeout(() => _playBeep(1046, 0.25, 0.4), 360);
 }
 
-function _spRenderProgressStrip(currentIdx) {
-    const strip = document.getElementById('stretch-player-progress-strip');
-    if (!strip) return;
-    strip.innerHTML = _spMovements.map((_, i) => `
-        <div class="flex-1 h-1 rounded-full overflow-hidden" style="background:#E0E5EC;">
-            <div class="h-full rounded-full transition-all duration-300" style="${
-                i < currentIdx ? 'width:100%; background: linear-gradient(to right, #4648d4, #8a4cfc);' :
-                i === currentIdx ? 'width:100%; background: linear-gradient(to right, #4648d4, #8a4cfc);' :
-                'width:0%;'
-            }"></div>
-        </div>
-    `).join('');
-}
+function _spRenderProgressStrip(currentIdx) {}
 
 function _spUpdateTimerUI() {
     const timeEl = document.getElementById('stretch-player-time');
-    if (timeEl) timeEl.textContent = _spTimeLeft;
+    if (timeEl) {
+        let dispTime = _spTimeLeft;
+        const m = Math.floor(dispTime / 60);
+        const s = dispTime % 60;
+        timeEl.textContent = m > 0 ? `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}` : s.toString().padStart(2, '0');
+    }
+
+    const bar = document.getElementById('stretch-player-progress-bar');
+    if (bar && _spMovements && _spMovements.length > 0) {
+        let html = '';
+        const total = _spMovements.length;
+        for (let i = 0; i < total; i++) {
+            if (i < _spIdx) {
+                html += `<div class="h-1 flex-1 rounded-full bg-surface-variant overflow-hidden"><div class="h-full bg-primary w-full rounded-full"></div></div>`;
+            } else if (i === _spIdx) {
+                const totalDur = parseInt(_spMovements[i].duration) || 30;
+                const passed = totalDur - _spTimeLeft;
+                const pct = Math.max(0, Math.min(100, (passed / totalDur) * 100));
+                html += `<div class="h-1 flex-1 rounded-full bg-surface-variant overflow-hidden"><div class="h-full bg-primary rounded-full transition-all duration-1000 ease-linear" style="width: ${pct}%"></div></div>`;
+            } else {
+                html += `<div class="h-1 flex-1 rounded-full bg-surface-variant overflow-hidden"></div>`;
+            }
+        }
+        bar.innerHTML = html;
+    }
 }
 
 function _spStartTimer() {
@@ -2982,23 +2994,35 @@ function _cpLoadMovement(idx) {
     setTimeout(() => _playBeep(1046, 0.25, 0.4), 360);
 }
 
-function _cpRenderProgressStrip(currentIdx) {
-    const strip = document.getElementById('core-player-progress-strip');
-    if (!strip) return;
-    strip.innerHTML = _cpMovements.map((_, i) => `
-        <div class="flex-1 h-1 rounded-full overflow-hidden" style="background:#E0E5EC;">
-            <div class="h-full rounded-full transition-all duration-300" style="${
-                i < currentIdx ? 'width:100%; background: linear-gradient(to right, #4648d4, #22C55E);' :
-                i === currentIdx ? 'width:100%; background: linear-gradient(to right, #4648d4, #22C55E);' :
-                'width:0%;'
-            }"></div>
-        </div>
-    `).join('');
-}
+function _cpRenderProgressStrip(currentIdx) {}
 
 function _cpUpdateTimerUI() {
     const timeEl = document.getElementById('core-player-time');
-    if (timeEl) timeEl.textContent = _cpTimeLeft;
+    if (timeEl) {
+        let dispTime = _cpTimeLeft;
+        const m = Math.floor(dispTime / 60);
+        const s = dispTime % 60;
+        timeEl.textContent = m > 0 ? `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}` : s.toString().padStart(2, '0');
+    }
+
+    const bar = document.getElementById('core-player-progress-bar');
+    if (bar && _cpMovements && _cpMovements.length > 0) {
+        let html = '';
+        const total = _cpMovements.length;
+        for (let i = 0; i < total; i++) {
+            if (i < _cpIdx) {
+                html += `<div class="h-1 flex-1 rounded-full bg-surface-variant overflow-hidden"><div class="h-full bg-primary w-full rounded-full"></div></div>`;
+            } else if (i === _cpIdx) {
+                const totalDur = parseInt(_cpMovements[i].duration) || 30;
+                const passed = totalDur - _cpTimeLeft;
+                const pct = Math.max(0, Math.min(100, (passed / totalDur) * 100));
+                html += `<div class="h-1 flex-1 rounded-full bg-surface-variant overflow-hidden"><div class="h-full bg-primary rounded-full transition-all duration-1000 ease-linear" style="width: ${pct}%"></div></div>`;
+            } else {
+                html += `<div class="h-1 flex-1 rounded-full bg-surface-variant overflow-hidden"></div>`;
+            }
+        }
+        bar.innerHTML = html;
+    }
 }
 
 function _cpStartTimer() {
