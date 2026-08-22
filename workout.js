@@ -1896,7 +1896,17 @@ function filterStretches(category, btnElement) {
     // Set clicked chip to active
     btnElement.className = 'neo-inset px-5 py-2 rounded-full text-sm font-semibold text-on-surface whitespace-nowrap filter-chip active';
 
-    applyStretchFilters();
+    const sessionsSection = document.getElementById('stretch-sessions-section');
+    const listContainer = document.getElementById('stretch-list-container');
+    
+    if (category === 'Seanslar') {
+        if(sessionsSection) sessionsSection.classList.remove('hidden');
+        if(listContainer) listContainer.classList.add('hidden');
+    } else {
+        if(sessionsSection) sessionsSection.classList.add('hidden');
+        if(listContainer) listContainer.classList.remove('hidden');
+        applyStretchFilters();
+    }
 }
 
 function applyStretchFilters() {
@@ -2420,93 +2430,39 @@ function renderStretchSessions() {
 
     container.innerHTML = stretchSessions.map(session => {
         const isActive = session.id === activeStretchSessionId;
-        const mins = Math.floor((session.totalDuration || 0) / 60);
-        const secs = (session.totalDuration || 0) % 60;
+        const totalSec = (session.movements || []).reduce((acc, m) => acc + (parseInt(m.duration) || 0), 0);
+        const mins = Math.floor(totalSec / 60);
+        const secs = totalSec % 60;
         const durationStr = mins > 0 ? `${mins} dk ${secs > 0 ? secs + ' sn' : ''}` : `${secs} sn`;
         const moveCount = (session.movements || []).length;
 
+        const activeStyle = isActive ? "border-2 border-primary bg-primary/5" : "";
+
         return `
-        <div class="rounded-[32px] p-4 flex flex-col gap-3 border transition-colors ${isActive ? 'bg-gradient-to-r from-neon-purple to-neon-blue/8 border-primary/40' : 'bg-background shadow-neo-low border-surface-variant/20'}">
-            <!-- Header row -->
-            <div class="flex items-start justify-between gap-2">
-                <div class="flex-1">
-                    <div class="flex items-center gap-2">
-                        ${isActive ? `<span class="inline-flex items-center gap-1 bg-gradient-to-r from-neon-purple to-neon-blue text-white font-label-sm text-label-sm px-2 py-0.5 rounded-full text-[11px]">
-                            <span class="material-symbols-rounded text-[12px]" style="font-variation-settings:'FILL' 1;">check_circle</span> Aktif
-                        </span>` : ''}
-                        <h3 class="font-title-sm text-title-sm font-semibold text-on-surface">${escapeHtml(session.name)}</h3>
-                    </div>
-                    <div class="flex items-center gap-3 mt-1">
-                        <span class="flex items-center gap-1 text-on-surface-variant font-label-sm text-label-sm">
-                            <span class="material-symbols-rounded text-[14px]">timer</span> ${durationStr}
-                        </span>
-                        <span class="flex items-center gap-1 text-on-surface-variant font-label-sm text-label-sm">
-                            <span class="material-symbols-rounded text-[14px]">fitness_center</span> ${moveCount} hareket
-                        </span>
-                    </div>
+        <div class="neo-surface p-4 rounded-2xl flex items-center justify-between neo-button transition-all mb-3 ${activeStyle}" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);">
+            <div class="flex items-center gap-4">
+                <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface overflow-hidden font-bold text-lg">
+                    <span class="material-symbols-outlined text-primary">format_list_numbered</span>
                 </div>
-                <div class="flex items-center gap-1 flex-shrink-0">
-                    ${!isActive ? `<button data-action="setActiveStretchSession" data-session-id="${session.id}"
-                        class="text-on-surface-variant hover:text-neon-blue transition-colors p-1.5 rounded-full hover:bg-background shadow-neo-variant active:scale-95" title="Aktif Seans Yap">
-                        <span class="material-symbols-rounded text-[20px]">play_circle</span>
-                    </button>` : ''}
-                    <button data-action="editStretchSession" data-session-id="${session.id}"
-                        class="text-on-surface-variant hover:text-neon-blue transition-colors p-1.5 rounded-full hover:bg-background shadow-neo-variant active:scale-95">
-                        <span class="material-symbols-rounded text-[20px]">edit</span>
-                    </button>
-                    <button data-action="deleteStretchSession" data-session-id="${session.id}"
-                        class="text-on-surface-variant hover:text-error transition-colors p-1.5 rounded-full hover:bg-background shadow-neo-variant active:scale-95">
-                        <span class="material-symbols-rounded text-[20px]">delete</span>
-                    </button>
+                <div>
+                    <div class="flex items-center gap-2">
+                        ${isActive ? `<span class="material-symbols-rounded text-primary text-sm" style="font-variation-settings:'FILL' 1;">check_circle</span>` : ''}
+                        <h4 class="font-semibold text-body-md text-on-surface tracking-tight">${escapeHtml(session.name)}</h4>
+                    </div>
+                    <p class="text-xs text-on-surface-variant">${moveCount} Hareket • ${durationStr}</p>
                 </div>
             </div>
-            <!-- Movement Preview Strip -->
-            ${moveCount > 0 ? `
-            <div class="flex gap-1.5 overflow-x-auto hide-scrollbar">
-                ${(session.movements || []).map(m => `
-                    <div class="flex-shrink-0 flex flex-col items-center gap-1">
-                        <div class="w-10 h-10 rounded-full overflow-hidden bg-background shadow-neo-highest border border-surface-variant/30">
-                            ${m.imageBase64 ? `<img src="${m.imageBase64}" class="w-full h-full object-cover" alt="${escapeHtml(m.name)}"/>` : ''}
-                        </div>
-                    </div>
-                `).join('')}
-            </div>` : ''}
-        </div>`;
+            <div class="flex items-center gap-1">
+                <button data-action="deleteStretchSession" data-session-id="${session.id}" class="p-2 transition-colors flex items-center justify-center text-error/70 hover:text-error">
+                    <span class="material-symbols-outlined text-xl">delete</span>
+                </button>
+                ${!isActive ? `<button data-action="setActiveStretchSession" data-session-id="${session.id}" class="p-2 transition-colors flex items-center justify-center text-primary">
+                    <span class="material-symbols-outlined text-2xl" style="font-variation-settings: 'FILL' 1">play_circle</span>
+                </button>` : ''}
+            </div>
+        </div>
+        `;
     }).join('');
-}
-
-// ==========================================
-// STRETCH PLAYER
-// ==========================================
-
-let _spMovements = [];     // current session's movement list
-let _spIdx = 0;            // current movement index
-let _spTimeLeft = 0;       // seconds left for current movement
-let _spTotalTime = 0;      // total duration of current movement
-let _spInterval = null;    // setInterval handle
-let _spPaused = false;
-const CIRCUMFERENCE = 753.98; // 2 * π * 120
-
-let _audioCtx = null;
-function _playBeep(freq = 880, duration = 0.3, vol = 0.4) {
-    try {
-        if (!_audioCtx) {
-            _audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        }
-        if (_audioCtx.state === 'suspended') {
-            _audioCtx.resume();
-        }
-        const osc = _audioCtx.createOscillator();
-        const gain = _audioCtx.createGain();
-        osc.connect(gain);
-        gain.connect(_audioCtx.destination);
-        osc.frequency.value = freq;
-        osc.type = 'sine';
-        gain.gain.setValueAtTime(vol, _audioCtx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.001, _audioCtx.currentTime + duration);
-        osc.start(_audioCtx.currentTime);
-        osc.stop(_audioCtx.currentTime + duration);
-    } catch(e) {}
 }
 
 function _playFinishBeep() {
@@ -2739,118 +2695,39 @@ function renderCoreSessions() {
 
     container.innerHTML = coreSessions.map(session => {
         const isActive = session.id === activeCoreSessionId;
-        const totalSec = session.movements.reduce((acc, m) => acc + (parseInt(m.duration) || 0), 0);
+        const totalSec = (session.movements || []).reduce((acc, m) => acc + (parseInt(m.duration) || 0), 0);
         const mins = Math.floor(totalSec / 60);
         const secs = totalSec % 60;
         const durationStr = mins > 0 ? `${mins} dk ${secs > 0 ? secs + ' sn' : ''}` : `${secs} sn`;
         const moveCount = (session.movements || []).length;
 
+        const activeStyle = isActive ? "border-2 border-primary bg-primary/5" : "";
+
         return `
-        <div class="rounded-[32px] p-4 flex flex-col gap-3 border transition-colors ${isActive ? 'bg-gradient-to-r from-neon-purple to-neon-blue/8 border-primary/40' : 'bg-background shadow-neo-low border-surface-variant/20'}">
-            <!-- Header row -->
-            <div class="flex items-start justify-between gap-2">
-                <div class="flex-1">
-                    <div class="flex items-center gap-2">
-                        ${isActive ? `<span class="inline-flex items-center gap-1 bg-gradient-to-r from-neon-purple to-neon-blue text-white font-label-sm text-label-sm px-2 py-0.5 rounded-full text-[11px]">
-                            <span class="material-symbols-rounded text-[12px]" style="font-variation-settings:'FILL' 1;">check_circle</span> Aktif
-                        </span>` : ''}
-                        <h3 class="font-title-sm text-title-sm font-semibold text-on-surface">${escapeHtml(session.name)}</h3>
-                    </div>
-                    <div class="flex items-center gap-3 mt-1">
-                        <span class="flex items-center gap-1 text-on-surface-variant font-label-sm text-label-sm">
-                            <span class="material-symbols-rounded text-[14px]">timer</span> ${durationStr}
-                        </span>
-                        <span class="flex items-center gap-1 text-on-surface-variant font-label-sm text-label-sm">
-                            <span class="material-symbols-rounded text-[14px]">fitness_center</span> ${moveCount} hareket
-                        </span>
-                    </div>
+        <div class="neo-surface p-4 rounded-2xl flex items-center justify-between neo-button transition-all mb-3 ${activeStyle}" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);">
+            <div class="flex items-center gap-4">
+                <div class="w-12 h-12 rounded-full neo-inset flex items-center justify-center bg-surface-light text-on-surface overflow-hidden font-bold text-lg">
+                    <span class="material-symbols-outlined text-primary">format_list_numbered</span>
                 </div>
-                <div class="flex items-center gap-1 flex-shrink-0">
-                    ${!isActive ? `<button data-action="setActiveCoreSession" data-session-id="${session.id}"
-                        class="text-on-surface-variant hover:text-neon-blue transition-colors p-1.5 rounded-full hover:bg-background shadow-neo-variant active:scale-95" title="Aktif Seans Yap">
-                        <span class="material-symbols-rounded text-[20px]">play_circle</span>
-                    </button>` : ''}
-                    <button data-action="editCoreSession" data-session-id="${session.id}"
-                        class="text-on-surface-variant hover:text-neon-blue transition-colors p-1.5 rounded-full hover:bg-background shadow-neo-variant active:scale-95">
-                        <span class="material-symbols-rounded text-[20px]">edit</span>
-                    </button>
-                    <button data-action="deleteCoreSession" data-session-id="${session.id}"
-                        class="text-on-surface-variant hover:text-error transition-colors p-1.5 rounded-full hover:bg-background shadow-neo-variant active:scale-95">
-                        <span class="material-symbols-rounded text-[20px]">delete</span>
-                    </button>
+                <div>
+                    <div class="flex items-center gap-2">
+                        ${isActive ? `<span class="material-symbols-rounded text-primary text-sm" style="font-variation-settings:'FILL' 1;">check_circle</span>` : ''}
+                        <h4 class="font-semibold text-body-md text-on-surface tracking-tight">${escapeHtml(session.name)}</h4>
+                    </div>
+                    <p class="text-xs text-on-surface-variant">${moveCount} Hareket • ${durationStr}</p>
                 </div>
             </div>
-            <!-- Movement Preview Strip -->
-            ${moveCount > 0 ? `
-            <div class="flex gap-1.5 overflow-x-auto hide-scrollbar">
-                ${(session.movements || []).map(m => `
-                    <div class="flex-shrink-0 flex flex-col items-center gap-1">
-                        <div class="w-10 h-10 rounded-full overflow-hidden bg-background shadow-neo-highest border border-surface-variant/30">
-                            ${m.imageBase64 ? `<img src="${m.imageBase64}" class="w-full h-full object-cover" alt="${escapeHtml(m.name)}"/>` : ''}
-                        </div>
-                    </div>
-                `).join('')}
-            </div>` : ''}
+            <div class="flex items-center gap-1">
+                <button data-action="deleteCoreSession" data-session-id="${session.id}" class="p-2 transition-colors flex items-center justify-center text-error/70 hover:text-error">
+                    <span class="material-symbols-outlined text-xl">delete</span>
+                </button>
+                ${!isActive ? `<button data-action="setActiveCoreSession" data-session-id="${session.id}" class="p-2 transition-colors flex items-center justify-center text-primary">
+                    <span class="material-symbols-outlined text-2xl" style="font-variation-settings: 'FILL' 1">play_circle</span>
+                </button>` : ''}
+            </div>
         </div>
         `;
     }).join('');
-}
-
-function openAddCoreSessionModal() {
-    editingCoreSessionId = null;
-    coreSessionDraftMovements = [];
-    document.getElementById('core-session-name').value = '';
-    document.getElementById('core-session-modal-title').textContent = "Yeni Core Seansı";
-    
-    renderCoreSessionMovementPicker();
-    renderCoreSessionOrderedList();
-
-    const modal = document.getElementById('addCoreSessionModal');
-    const content = document.getElementById('addCoreSessionModalContent');
-    modal.classList.remove('hidden');
-    // small delay for transition
-    setTimeout(() => {
-        modal.classList.remove('opacity-0');
-        content.classList.remove('translate-y-full');
-    }, 10);
-}
-
-function closeAddCoreSessionModal() {
-    const modal = document.getElementById('addCoreSessionModal');
-    const content = document.getElementById('addCoreSessionModalContent');
-    
-    modal.classList.add('opacity-0');
-    content.classList.add('translate-y-full');
-    
-    setTimeout(() => {
-        modal.classList.add('hidden');
-    }, 300);
-}
-
-async function saveCoreSession() {
-    if (!currentUid) return;
-    
-    const name = document.getElementById('core-session-name').value.trim();
-    if (!name) { alert("Lütfen seans adı girin."); return; }
-    if (coreSessionDraftMovements.length === 0) { alert("En az 1 hareket seçmelisiniz."); return; }
-
-    const data = {
-        name,
-        movements: coreSessionDraftMovements
-    };
-
-    try {
-        if (editingCoreSessionId) {
-            await updateDoc(doc(db, "users", currentUid, "coreSessions", editingCoreSessionId), data).catch(e => { console.error('DB Error:', e); alert('Veritabanı işlemi sırasında bir hata oluştu.'); throw e; });
-        } else {
-            data.createdAt = serverTimestamp();
-            await addDoc(collection(db, "users", currentUid, "coreSessions"), data).catch(e => { console.error('DB Error:', e); alert('Veritabanı işlemi sırasında bir hata oluştu.'); throw e; });
-        }
-        closeAddCoreSessionModal();
-    } catch (e) {
-        console.error("Error saving core session: ", e);
-        alert("Kaydedilirken hata oluştu.");
-    }
 }
 
 async function deleteCoreSession(id) {
@@ -3206,7 +3083,17 @@ function filterCores(category, btnElement) {
     // Set clicked chip to active
     btnElement.className = 'neo-inset px-5 py-2 rounded-full text-sm font-semibold text-on-surface whitespace-nowrap filter-chip active';
 
-    applyCoreFilters();
+    const sessionsSection = document.getElementById('core-sessions-section');
+    const listContainer = document.getElementById('core-list-container');
+    
+    if (category === 'Seanslar') {
+        if(sessionsSection) sessionsSection.classList.remove('hidden');
+        if(listContainer) listContainer.classList.add('hidden');
+    } else {
+        if(sessionsSection) sessionsSection.classList.add('hidden');
+        if(listContainer) listContainer.classList.remove('hidden');
+        applyCoreFilters();
+    }
 }
 
 function applyCoreFilters() {
