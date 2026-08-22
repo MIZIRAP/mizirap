@@ -219,7 +219,7 @@ app/
 - **`.gitignore` eklendi:** `node_modules/`, `.DS_Store`, `*.orig`, `*.bak`, `scratchpad_*` — `node_modules` git tracking'den çıkarıldı
 - **`PROJECT_CONTEXT.md` oluşturuldu** (bu dosya)
 
-**Mevcut commit:** `e5ef269` (main branch)
+**Mevcut commit:** `357df10` (main branch)
 
 **Önerilen sonraki adımlar:**
 1. Core özelliğini planla: Library → Player navigasyonu, görsel upload, kas haritası entegrasyonu
