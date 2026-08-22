@@ -396,6 +396,16 @@ if (caloriesGoalBackdrop) {
         portionPlusBtn.onclick = () => { adjustAmount(10); };
     }
 
+    
+    if (portionGramDisplay) {
+        portionGramDisplay.addEventListener('input', (e) => {
+            let val = parseInt(e.target.value);
+            if (isNaN(val) || val < 0) val = 0;
+            tempPortionAmount = val;
+            updatePortionTotal();
+        });
+    }
+
     if (addFoodToLogBtn) {
         addFoodToLogBtn.onclick = async () => {
             let grams = tempPortionAmount;
@@ -644,7 +654,7 @@ window.openAddPortionModal = function(name, kcal100, macros) {
 
     if(portionModalTitle) portionModalTitle.textContent = name;
     tempPortionAmount = 100;
-    if(portionGramDisplay) portionGramDisplay.textContent = tempPortionAmount;
+    if(portionGramDisplay) portionGramDisplay.value = tempPortionAmount;
     updatePortionTotal();
 
     if(portionModal) {
@@ -685,7 +695,7 @@ function adjustAmount(amount) {
     tempPortionAmount += amount;
     if (tempPortionAmount < 0) tempPortionAmount = 0;
     if(portionGramDisplay) {
-        portionGramDisplay.textContent = tempPortionAmount;
+        portionGramDisplay.value = tempPortionAmount;
         portionGramDisplay.style.transform = 'scale(1.1)';
         setTimeout(() => portionGramDisplay.style.transform = 'scale(1)', 150);
     }
