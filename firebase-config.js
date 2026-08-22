@@ -1,8 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
 import { getAuth } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
 import { getFirestore, enableMultiTabIndexedDbPersistence } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
-import { getStorage } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-storage.js";
-
 export const firebaseConfig = {
   apiKey: "AIzaSyDsl5JcjYP9Q37iU1cVCA9THW_N3DU-CQw",
   authDomain: "mylife-bfacc.firebaseapp.com",
@@ -23,4 +21,3 @@ enableMultiTabIndexedDbPersistence(db).catch((err) => {
         console.warn("Offline persistence: The current browser does not support all of the features required to enable persistence.");
     }
 });
-export const storage = getStorage(app);
