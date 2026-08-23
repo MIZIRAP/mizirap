@@ -587,7 +587,7 @@ export function clearTools() {
     });
     if(window.setToolGender) window.setToolGender('m');
     if(document.getElementById('tool-activity-select')) document.getElementById('tool-activity-select').value = "1.2";
-    if(document.getElementById('tool-goal-select')) document.getElementById('tool-goal-select').value = "maintain";
+    if(document.getElementById('tool-goal-select')) document.getElementById('tool-goal-select').value = "koruma";
     if(document.getElementById('tool-workout-select')) document.getElementById('tool-workout-select').value = "hypertrophy";
     
     // Reset search
