@@ -1,5 +1,5 @@
 import { auth, db } from "./firebase-config.js";
-import { collection, doc, updateDoc, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+import { collection, doc, updateDoc, getDoc, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
 import { escapeHtml, formatDate, formatCurrency } from "./utils.js";
 import { calcBalance } from "./finance.js";
 
@@ -13,6 +13,69 @@ let currentMovies = [];
 export function initDashboard(uid) {
     // Only static rendering for now, updates come from other modules
     renderDashboard();
+    initWidgetSorting(uid);
+}
+
+let dashboardSortable = null;
+window.isEditMode = false;
+
+async function initWidgetSorting(uid) {
+    const grid = document.getElementById("dashboard-widgets-grid");
+    if (!grid) return;
+
+    // Load initial order
+    try {
+        const docRef = doc(db, "users", uid, "profile", "data");
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists() && docSnap.data().widgetOrder) {
+            const order = docSnap.data().widgetOrder;
+            order.forEach(id => {
+                const el = grid.querySelector(`[data-widget-id="${id}"]`);
+                if (el) grid.appendChild(el);
+            });
+        }
+    } catch(err) {
+        console.error("Sıralama yüklenemedi", err);
+    }
+
+    if (typeof Sortable !== 'undefined') {
+        dashboardSortable = new Sortable(grid, {
+            animation: 300,
+            delay: 500,
+            delayOnTouchOnly: true,
+            ghostClass: 'sortable-ghost',
+            dragClass: 'sortable-drag',
+            onChoose: function (evt) {
+                if (!window.isEditMode) {
+                    window.isEditMode = true;
+                    grid.classList.add('widget-edit-mode');
+                    dashboardSortable.option("delay", 0);
+                    if(navigator.vibrate) navigator.vibrate(50);
+                }
+            }
+        });
+
+        // Click outside to exit edit mode
+        document.addEventListener('click', async (e) => {
+            if (window.isEditMode) {
+                const isWidget = e.target.closest('[data-widget-id]');
+                if (!isWidget) {
+                    window.isEditMode = false;
+                    grid.classList.remove('widget-edit-mode');
+                    dashboardSortable.option("delay", 500);
+                    
+                    // Save new order
+                    const newOrder = Array.from(grid.children).map(child => child.dataset.widgetId).filter(Boolean);
+                    try {
+                        const docRef = doc(db, "users", uid, "profile", "data");
+                        await updateDoc(docRef, { widgetOrder: newOrder });
+                    } catch(err) {
+                        console.error("Sıralama kaydedilemedi", err);
+                    }
+                }
+            }
+        });
+    }
 }
 
 export function clearDashboard() {

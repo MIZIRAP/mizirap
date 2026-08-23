@@ -127,6 +127,11 @@ document.addEventListener("click", (e) => {
     const tab = e.target.closest(".nav-tab");
     if (!tab) return;
 
+    if (window.isEditMode) {
+        e.preventDefault();
+        return;
+    }
+
     const targetId = tab.dataset.target;
     if (!targetId) return;
 

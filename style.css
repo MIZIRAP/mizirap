@@ -45,3 +45,40 @@ input[type="number"]::-webkit-outer-spin-button {
 input[type="number"] {
   -moz-appearance: textfield;
 }
+
+/* Dashboard Widget Sorting Styles */
+@keyframes jiggle {
+  0% { transform: rotate(-1deg); }
+  50% { transform: rotate(1.5deg); }
+  100% { transform: rotate(-1deg); }
+}
+
+.widget-edit-mode [data-widget-id] {
+  animation: jiggle 0.3s infinite;
+  cursor: grab;
+  /* Disable nav-tab clicks visually and functionally */
+  pointer-events: none; 
+}
+
+/* Re-enable pointer events for the wrapper so SortableJS can grab it */
+.widget-edit-mode [data-widget-id] {
+  pointer-events: auto !important;
+}
+
+/* But block inner elements from getting clicks just in case */
+.widget-edit-mode [data-widget-id] * {
+  pointer-events: none;
+}
+
+.sortable-ghost {
+  opacity: 0.4;
+  transform: scale(0.95);
+}
+
+.sortable-drag {
+  transform: scale(1.05) !important;
+  box-shadow: 0 15px 30px rgba(0,0,0,0.15) !important;
+  opacity: 1 !important;
+  animation: none !important; /* stop jiggle while dragging */
+  cursor: grabbing !important;
+}

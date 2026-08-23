@@ -467,9 +467,9 @@
             </div>
 
             <!-- 2x2 Grid -->
-            <div class="grid grid-cols-2 gap-6">
+            <div id="dashboard-widgets-grid" class="grid grid-cols-2 gap-6">
                 <!-- Water -->
-                <div class="rounded-[24px] p-[1px] bg-gradient-to-br from-[#3B82F6] to-[#22C55E] cursor-pointer nav-tab" style="box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.08), -6px -6px 12px rgba(255, 255, 255, 0.8);" data-target="view-water">
+                <div data-widget-id="water" class="rounded-[24px] p-[1px] bg-gradient-to-br from-[#3B82F6] to-[#22C55E] cursor-pointer nav-tab" style="box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.08), -6px -6px 12px rgba(255, 255, 255, 0.8);" data-target="view-water">
                     <div class="bg-[#F0F2F8] rounded-[23px] p-5 flex flex-col items-center justify-center gap-3 aspect-square h-full">
                         <h3 class="text-[#181C20] font-[600] text-[14px] leading-[20px]" style="font-family: 'Plus Jakarta Sans', sans-serif;">Su Takibi</h3>
                         <div class="relative w-[96px] h-[96px] rounded-full flex items-center justify-center">
@@ -495,7 +495,7 @@
                 </div>
 
                 <!-- Kcal -->
-                <div class="rounded-[24px] p-[1px] bg-gradient-to-br from-[#A855F7] to-[#22C55E] cursor-pointer nav-tab" style="box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.08), -6px -6px 12px rgba(255, 255, 255, 0.8);" data-target="view-calories">
+                <div data-widget-id="calories" class="rounded-[24px] p-[1px] bg-gradient-to-br from-[#A855F7] to-[#22C55E] cursor-pointer nav-tab" style="box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.08), -6px -6px 12px rgba(255, 255, 255, 0.8);" data-target="view-calories">
                     <div class="bg-[#F0F2F8] rounded-[23px] p-5 flex flex-col items-center justify-center gap-3 aspect-square h-full">
                         <h3 class="text-[#181C20] font-[600] text-[14px] leading-[20px]" style="font-family: 'Plus Jakarta Sans', sans-serif;">Kalori Takibi</h3>
                         <div class="relative w-[96px] h-[96px] rounded-full flex items-center justify-center">
@@ -514,7 +514,7 @@
                 </div>
 
                 <!-- Reading -->
-                <div class="rounded-[24px] p-[1px] bg-gradient-to-br from-[#3B82F6] to-[#22C55E] cursor-pointer nav-tab" style="box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.08), -6px -6px 12px rgba(255, 255, 255, 0.8);" data-target="view-books">
+                <div data-widget-id="books" class="rounded-[24px] p-[1px] bg-gradient-to-br from-[#3B82F6] to-[#22C55E] cursor-pointer nav-tab" style="box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.08), -6px -6px 12px rgba(255, 255, 255, 0.8);" data-target="view-books">
                     <div class="bg-[#F0F2F8] rounded-[23px] p-5 flex flex-col justify-between aspect-square h-full relative">
                         <div class="flex justify-between items-start w-full relative z-10">
                             <div class="w-10 h-10 rounded-[16px] bg-[#F0F2F8] flex items-center justify-center" style="box-shadow: inset 4px 4px 8px rgba(0, 0, 0, 0.06), inset -4px -4px 8px rgba(255, 255, 255, 0.8);">
@@ -532,7 +532,7 @@
                 </div>
 
                 <!-- Watching -->
-                <div class="rounded-[24px] p-[1px] bg-gradient-to-br from-[#3B82F6] to-[#22C55E] cursor-pointer nav-tab" style="box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.08), -6px -6px 12px rgba(255, 255, 255, 0.8);" data-target="view-movies">
+                <div data-widget-id="movies" class="rounded-[24px] p-[1px] bg-gradient-to-br from-[#3B82F6] to-[#22C55E] cursor-pointer nav-tab" style="box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.08), -6px -6px 12px rgba(255, 255, 255, 0.8);" data-target="view-movies">
                     <div class="bg-[#F0F2F8] rounded-[23px] p-5 flex flex-col justify-between aspect-square h-full">
                         <div class="flex justify-between items-start w-full">
                             <div class="w-10 h-10 rounded-[16px] bg-[#F0F2F8] flex items-center justify-center" style="box-shadow: inset 4px 4px 8px rgba(0, 0, 0, 0.06), inset -4px -4px 8px rgba(255, 255, 255, 0.8);">
@@ -5281,6 +5281,6 @@
                 </button>
             </div>
         </div>
-</body>
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
 </body>
 </html>
