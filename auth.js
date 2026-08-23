@@ -160,7 +160,37 @@ export function setupAuthUI() {
 
     // Doğrulama e-postası tekrar gönder
     const btnResend = document.getElementById("btn-resend-verification");
+    const btnCheck = document.getElementById("btn-check-verification");
     const verificationMsg = document.getElementById("verification-message");
+    
+    if (btnCheck) {
+        btnCheck.addEventListener("click", async () => {
+            if (auth.currentUser) {
+                try {
+                    btnCheck.disabled = true;
+                    btnCheck.innerHTML = '<span class="material-symbols-rounded animate-spin">refresh</span> Kontrol ediliyor...';
+                    await auth.currentUser.reload();
+                    if (auth.currentUser.emailVerified) {
+                        window.location.reload();
+                    } else {
+                        if(verificationMsg) {
+                            verificationMsg.textContent = "Henüz doğrulanmamış. Lütfen e-postanı kontrol et.";
+                            verificationMsg.className = "text-error font-label-sm mt-4 min-h-[14px]";
+                        }
+                    }
+                } catch (err) {
+                    if(verificationMsg) {
+                        verificationMsg.textContent = turkceHataMesaji(err.code);
+                        verificationMsg.className = "text-error font-label-sm mt-4 min-h-[14px]";
+                    }
+                } finally {
+                    btnCheck.disabled = false;
+                    btnCheck.innerHTML = "Doğruladım, devam et";
+                }
+            }
+        });
+    }
+
     if (btnResend) {
         btnResend.addEventListener("click", async () => {
             if (auth.currentUser && !auth.currentUser.emailVerified) {

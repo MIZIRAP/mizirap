@@ -40,6 +40,10 @@ onAuthStateChanged(auth, async (user) => {
             authScreen.classList.add("hidden");
             authScreen.classList.remove("flex");
             appScreen.classList.remove("hidden");
+            
+            if (user.uid !== localStorage.getItem('uid')) {
+                clearProfile();
+            }
             localStorage.setItem('uid', user.uid);
 
             // Eğer isimsiz (anonim) girişse test kullanıcısı yaz, yoksa normal adı al

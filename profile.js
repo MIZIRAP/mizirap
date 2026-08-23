@@ -450,6 +450,19 @@ export function clearProfile() {
     if (bioEl) bioEl.value = "";
     if (dobEl) dobEl.value = "";
     
+    if (document.getElementById('profile-height')) document.getElementById('profile-height').value = "";
+    if (document.getElementById('profile-weight')) document.getElementById('profile-weight').value = "";
+    if (document.getElementById('profile-gender')) document.getElementById('profile-gender').value = "m";
+    if (document.getElementById('profile-activity')) document.getElementById('profile-activity').value = "1.2";
+    if (document.getElementById('profile-goal')) document.getElementById('profile-goal').value = "kilo_verme";
+    if (document.getElementById('profile-neck')) document.getElementById('profile-neck').value = "";
+    if (document.getElementById('profile-waist')) document.getElementById('profile-waist').value = "";
+    if (document.getElementById('profile-hip')) document.getElementById('profile-hip').value = "";
+    if (document.getElementById('profile-wrist')) document.getElementById('profile-wrist').value = "";
+    if (document.getElementById('profile-resting-hr')) document.getElementById('profile-resting-hr').value = "";
+
+    generateHealthSummary({});
+    
     const dsName = document.getElementById("dashboard-user-name");
     if(dsName) dsName.textContent = "";
 }
