@@ -770,6 +770,51 @@
                     <span class="text-[#181C20] font-[600] text-[16px]" style="font-family: 'Plus Jakarta Sans', sans-serif;">Hesapla</span>
                 </button>
             </div>
+
+            <!-- Araç Kartı 12: Dinlenme Süresi -->
+            <div class="bg-[#F0F2F8] rounded-[24px] p-6 flex flex-col gap-4 w-full" style="box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.08);">
+                <div class="flex flex-col gap-2">
+                    <div class="h-8 px-4 inline-flex items-center justify-center rounded-full bg-[#F0F2F8] self-start" style="box-shadow: inset 4px 4px 8px rgba(0, 0, 0, 0.06), inset -4px -4px 8px rgba(255, 255, 255, 0.8);">
+                        <span class="text-[#181C20] font-[600] text-[12px] uppercase tracking-[0.7px]" style="font-family: 'Plus Jakarta Sans', sans-serif;">PERFORMANS</span>
+                    </div>
+                    <h3 class="text-[#181C20] font-[700] text-[24px] leading-[32px] mt-1" style="font-family: 'Plus Jakarta Sans', sans-serif;">Dinlenme Süresi</h3>
+                    <p class="text-[#181C20] font-[400] text-[14px] leading-[20px]" style="font-family: 'Plus Jakarta Sans', sans-serif;">Antrenman hedefine göre set arası ideal dinlenme.</p>
+                </div>
+                <button class="w-full h-12 mt-1 rounded-[24px] bg-[#F0F2F8] flex items-center justify-center gap-2 active:scale-95 transition-transform" style="box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.08), -6px -6px 12px rgba(255, 255, 255, 0.8);" onclick="window.openTool('rest_time')">
+                    <span class="material-symbols-rounded text-[#181C20] text-[18px]">play_arrow</span>
+                    <span class="text-[#181C20] font-[600] text-[16px]" style="font-family: 'Plus Jakarta Sans', sans-serif;">Hesapla</span>
+                </button>
+            </div>
+
+            <!-- Araç Kartı 13: 1RM (Maksimum Güç) -->
+            <div class="bg-[#F0F2F8] rounded-[24px] p-6 flex flex-col gap-4 w-full" style="box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.08);">
+                <div class="flex flex-col gap-2">
+                    <div class="h-8 px-4 inline-flex items-center justify-center rounded-full bg-[#F0F2F8] self-start" style="box-shadow: inset 4px 4px 8px rgba(0, 0, 0, 0.06), inset -4px -4px 8px rgba(255, 255, 255, 0.8);">
+                        <span class="text-[#181C20] font-[600] text-[12px] uppercase tracking-[0.7px]" style="font-family: 'Plus Jakarta Sans', sans-serif;">PERFORMANS</span>
+                    </div>
+                    <h3 class="text-[#181C20] font-[700] text-[24px] leading-[32px] mt-1" style="font-family: 'Plus Jakarta Sans', sans-serif;">1RM Hesaplama</h3>
+                    <p class="text-[#181C20] font-[400] text-[14px] leading-[20px]" style="font-family: 'Plus Jakarta Sans', sans-serif;">Tek tekrarda kaldırabileceğin maksimum ağırlık.</p>
+                </div>
+                <button class="w-full h-12 mt-1 rounded-[24px] bg-[#F0F2F8] flex items-center justify-center gap-2 active:scale-95 transition-transform" style="box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.08), -6px -6px 12px rgba(255, 255, 255, 0.8);" onclick="window.openTool('onerm')">
+                    <span class="material-symbols-rounded text-[#181C20] text-[18px]">play_arrow</span>
+                    <span class="text-[#181C20] font-[600] text-[16px]" style="font-family: 'Plus Jakarta Sans', sans-serif;">Hesapla</span>
+                </button>
+            </div>
+
+            <!-- Araç Kartı 14: Vücut Tipi Analizi -->
+            <div class="bg-[#F0F2F8] rounded-[24px] p-6 flex flex-col gap-4 w-full" style="box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.08);">
+                <div class="flex flex-col gap-2">
+                    <div class="h-8 px-4 inline-flex items-center justify-center rounded-full bg-[#F0F2F8] self-start" style="box-shadow: inset 4px 4px 8px rgba(0, 0, 0, 0.06), inset -4px -4px 8px rgba(255, 255, 255, 0.8);">
+                        <span class="text-[#181C20] font-[600] text-[12px] uppercase tracking-[0.7px]" style="font-family: 'Plus Jakarta Sans', sans-serif;">SAĞLIK</span>
+                    </div>
+                    <h3 class="text-[#181C20] font-[700] text-[24px] leading-[32px] mt-1" style="font-family: 'Plus Jakarta Sans', sans-serif;">Vücut Tipi Analizi</h3>
+                    <p class="text-[#181C20] font-[400] text-[14px] leading-[20px]" style="font-family: 'Plus Jakarta Sans', sans-serif;">Genetik vücut tipini (Ektomorf vb.) öğren.</p>
+                </div>
+                <button class="w-full h-12 mt-1 rounded-[24px] bg-[#F0F2F8] flex items-center justify-center gap-2 active:scale-95 transition-transform" style="box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.08), -6px -6px 12px rgba(255, 255, 255, 0.8);" onclick="window.openTool('bodytype')">
+                    <span class="material-symbols-rounded text-[#181C20] text-[18px]">play_arrow</span>
+                    <span class="text-[#181C20] font-[600] text-[16px]" style="font-family: 'Plus Jakarta Sans', sans-serif;">Hesapla</span>
+                </button>
+            </div>
         </main>
 
         <!-- Dynamic Tool Bottom Sheet Overlay -->
@@ -912,6 +957,63 @@
                         </div>
                     </div>
                     
+                    <!-- Ağırlık (1RM için) -->
+                    <div id="input-row-weight_lifted" class="w-full rounded-[16px] p-4 flex items-center justify-between mb-2 hidden">
+                        <div class="flex flex-col">
+                            <span class="text-[#4A90E2] font-[700] text-[12px] uppercase" style="font-family: 'Plus Jakarta Sans', sans-serif;">AĞIRLIK</span>
+                            <div class="flex items-baseline gap-1 mt-1">
+                                <span id="tool-weight_lifted-display" class="text-[#1F2937] font-[700] text-[22px]" style="font-family: 'Plus Jakarta Sans', sans-serif;">60</span>
+                                <span class="text-[#4A90E2] font-[600] text-[14px]" style="font-family: 'Plus Jakarta Sans', sans-serif;">kg</span>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <button class="w-10 h-10 rounded-full flex items-center justify-center active:scale-95 transition-transform bg-[#F7F9FF]" style="box-shadow: 6px 6px 12px #E3E6EE, -6px -6px 12px #FFFFFF;" onclick="window.adjustToolInput('weight_lifted', -2.5)">
+                                <span class="material-symbols-rounded text-[#4A90E2] text-[20px]">remove</span>
+                            </button>
+                            <button class="w-10 h-10 rounded-full flex items-center justify-center active:scale-95 transition-transform bg-[#F7F9FF]" style="box-shadow: 6px 6px 12px #E3E6EE, -6px -6px 12px #FFFFFF;" onclick="window.adjustToolInput('weight_lifted', 2.5)">
+                                <span class="material-symbols-rounded text-[#50E3C2] text-[20px]">add</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Tekrar (1RM için) -->
+                    <div id="input-row-reps" class="w-full rounded-[16px] p-4 flex items-center justify-between mb-2 hidden">
+                        <div class="flex flex-col">
+                            <span class="text-[#4A90E2] font-[700] text-[12px] uppercase" style="font-family: 'Plus Jakarta Sans', sans-serif;">TEKRAR</span>
+                            <div class="flex items-baseline gap-1 mt-1">
+                                <span id="tool-reps-display" class="text-[#1F2937] font-[700] text-[22px]" style="font-family: 'Plus Jakarta Sans', sans-serif;">8</span>
+                                <span class="text-[#4A90E2] font-[600] text-[14px]" style="font-family: 'Plus Jakarta Sans', sans-serif;">tekrar</span>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <button class="w-10 h-10 rounded-full flex items-center justify-center active:scale-95 transition-transform bg-[#F7F9FF]" style="box-shadow: 6px 6px 12px #E3E6EE, -6px -6px 12px #FFFFFF;" onclick="window.adjustToolInput('reps', -1)">
+                                <span class="material-symbols-rounded text-[#4A90E2] text-[20px]">remove</span>
+                            </button>
+                            <button class="w-10 h-10 rounded-full flex items-center justify-center active:scale-95 transition-transform bg-[#F7F9FF]" style="box-shadow: 6px 6px 12px #E3E6EE, -6px -6px 12px #FFFFFF;" onclick="window.adjustToolInput('reps', 1)">
+                                <span class="material-symbols-rounded text-[#50E3C2] text-[20px]">add</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Bilek Çevresi (Vücut Tipi için) -->
+                    <div id="input-row-wrist" class="w-full rounded-[16px] p-4 flex items-center justify-between mb-2 hidden">
+                        <div class="flex flex-col">
+                            <span class="text-[#4A90E2] font-[700] text-[12px] uppercase" style="font-family: 'Plus Jakarta Sans', sans-serif;">BİLEK ÇEVRESİ</span>
+                            <div class="flex items-baseline gap-1 mt-1">
+                                <span id="tool-wrist-display" class="text-[#1F2937] font-[700] text-[22px]" style="font-family: 'Plus Jakarta Sans', sans-serif;">17</span>
+                                <span class="text-[#4A90E2] font-[600] text-[14px]" style="font-family: 'Plus Jakarta Sans', sans-serif;">cm</span>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <button class="w-10 h-10 rounded-full flex items-center justify-center active:scale-95 transition-transform bg-[#F7F9FF]" style="box-shadow: 6px 6px 12px #E3E6EE, -6px -6px 12px #FFFFFF;" onclick="window.adjustToolInput('wrist', -0.5)">
+                                <span class="material-symbols-rounded text-[#4A90E2] text-[20px]">remove</span>
+                            </button>
+                            <button class="w-10 h-10 rounded-full flex items-center justify-center active:scale-95 transition-transform bg-[#F7F9FF]" style="box-shadow: 6px 6px 12px #E3E6EE, -6px -6px 12px #FFFFFF;" onclick="window.adjustToolInput('wrist', 0.5)">
+                                <span class="material-symbols-rounded text-[#50E3C2] text-[20px]">add</span>
+                            </button>
+                        </div>
+                    </div>
+                    
                     <!-- Antrenman Süresi -->
                     <div id="input-row-training_time" class="w-full rounded-[16px] p-4 flex items-center justify-between">
                         <div class="flex flex-col">
@@ -950,6 +1052,15 @@
                         <option value="1.55">Orta Aktif (Haftada 3-5 Gün)</option>
                         <option value="1.725">Çok Aktif (Haftada 6-7 Gün)</option>
                         <option value="1.9">Ekstra Aktif (Günde 2x / Fiziksel İş)</option>
+                    </select>
+                </div>
+
+                <!-- Workout Type Selector -->
+                <div id="input-row-workout_type" class="w-full h-14 shrink-0 bg-[#F7F9FF] rounded-full flex items-center px-4 mb-4 hidden" style="box-shadow: inset 4px 4px 8px #E3E6EE, inset -4px -4px 8px #FFFFFF;">
+                    <select id="tool-workout-select" class="w-full bg-transparent border-none outline-none font-[600] text-[15px] text-[#1F2937]" style="font-family: 'Plus Jakarta Sans', sans-serif;" onchange="window.setToolWorkoutType(this.value)">
+                        <option value="hypertrophy" selected>Kas Gelişimi (Hipertrofi)</option>
+                        <option value="strength">Maksimum Güç (Kuvvet)</option>
+                        <option value="endurance">Dayanıklılık</option>
                     </select>
                 </div>
 

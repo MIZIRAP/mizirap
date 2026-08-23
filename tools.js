@@ -154,6 +154,37 @@ export const CalculatorEngine = {
         const fGrams = Math.round(fKcal / 9);
         
         return { value: targetCalorie, unit: 'kcal', text: `Karb: ${cGrams}g | Pro: ${pGrams}g | Yağ: ${fGrams}g` };
+    },
+
+    calculateRestTime: (workoutType) => {
+        if (workoutType === 'hypertrophy') return { value: '60-90', unit: 'sn', text: 'Kas gelişimi için ideal aralık' };
+        if (workoutType === 'strength') return { value: '3-5', unit: 'dk', text: 'Maksimum güç ve toparlanma' };
+        if (workoutType === 'endurance') return { value: '30-60', unit: 'sn', text: 'Kardiyovasküler kapasite artışı' };
+        return { value: '60', unit: 'sn', text: 'Genel dinlenme' };
+    },
+
+    calculateOneRM: (weightLifted, reps) => {
+        if (reps === 1) return { value: weightLifted.toFixed(1), unit: 'kg', text: 'Gerçek maksimum ağırlığınız' };
+        const rm = weightLifted * (1 + (reps / 30));
+        return { value: rm.toFixed(1), unit: 'kg', text: `%80'i: ${(rm * 0.8).toFixed(1)}kg (Hipertrofi için)` };
+    },
+
+    calculateBodyType: (wrist, height, gender) => {
+        const ratio = height / wrist;
+        let type = '';
+        let desc = '';
+        
+        if (gender === 'm') {
+            if (ratio > 10.4) { type = 'Ektomorf'; desc = 'İnce yapı, zor kilo alır'; }
+            else if (ratio >= 9.6) { type = 'Mezomorf'; desc = 'Atletik yapı, kolay kas yapar'; }
+            else { type = 'Endomorf'; desc = 'Geniş yapı, kolay yağlanır'; }
+        } else {
+            if (ratio > 11.0) { type = 'Ektomorf'; desc = 'İnce yapı, zor kilo alır'; }
+            else if (ratio >= 10.5) { type = 'Mezomorf'; desc = 'Atletik yapı, kolay kas yapar'; }
+            else { type = 'Endomorf'; desc = 'Geniş yapı, kolay yağlanır'; }
+        }
+        
+        return { value: type, unit: 'tipi', text: desc };
     }
 };
 
@@ -167,9 +198,13 @@ let inputs = {
     hip: 100,
     neck: 40,
     age: 25,
+    wrist: 17,
+    weight_lifted: 60,
+    reps: 8,
     training_time: 0,
     activity_level: 1.2,
     goal: 'maintain',
+    workout_type: 'hypertrophy',
     gender: 'm',
     tdee: 0, // dynamic
     targetCalorie: 0 // dynamic
@@ -239,6 +274,21 @@ const TOOLS_CONFIG = {
             CalculatorEngine.calculateCalorie(inputs.tdee, inputs.goal);
             return CalculatorEngine.calculateMacro(inputs.targetCalorie);
         }
+    },
+    'rest_time': {
+        title: 'Dinlenme Süresi',
+        fields: ['workout_type'],
+        calc: () => CalculatorEngine.calculateRestTime(inputs.workout_type)
+    },
+    'onerm': {
+        title: '1RM Hesaplama',
+        fields: ['weight_lifted', 'reps'],
+        calc: () => CalculatorEngine.calculateOneRM(inputs.weight_lifted, inputs.reps)
+    },
+    'bodytype': {
+        title: 'Vücut Tipi Analizi',
+        fields: ['wrist', 'height', 'gender'],
+        calc: () => CalculatorEngine.calculateBodyType(inputs.wrist, inputs.height, inputs.gender)
     }
 };
 
@@ -260,14 +310,14 @@ export function initTools() {
         document.getElementById('tool-result-text').textContent = 'Bekleniyor';
 
         // Show/hide fields
-        const allFields = ['height', 'weight', 'waist', 'hip', 'neck', 'age', 'training_time', 'activity_level', 'goal', 'gender'];
+        const allFields = ['height', 'weight', 'waist', 'hip', 'neck', 'age', 'wrist', 'weight_lifted', 'reps', 'training_time', 'activity_level', 'goal', 'workout_type', 'gender'];
         allFields.forEach(f => {
             const el = document.getElementById(`input-row-${f}`);
             if (el) {
                 if (config.fields.includes(f)) {
                     el.classList.remove('hidden');
                     // select elements and gender row have different default flex classes
-                    if(f === 'gender' || f === 'activity_level' || f === 'goal') {
+                    if(f === 'gender' || f === 'activity_level' || f === 'goal' || f === 'workout_type') {
                         el.classList.add('flex');
                     } else {
                         el.classList.add('flex');
@@ -280,7 +330,7 @@ export function initTools() {
         });
 
         // Hide/show the inputs container based on if any number input is shown
-        const numberInputs = config.fields.filter(f => !['gender', 'activity_level', 'goal'].includes(f));
+        const numberInputs = config.fields.filter(f => !['gender', 'activity_level', 'goal', 'workout_type'].includes(f));
         const container = document.getElementById('tool-inputs-container');
         if (numberInputs.length > 0) {
             container.classList.remove('hidden');
@@ -326,6 +376,15 @@ export function initTools() {
         
         if (type === 'neck' && inputs[type] < 20) inputs[type] = 20;
         if (type === 'neck' && inputs[type] > 80) inputs[type] = 80;
+        
+        if (type === 'wrist' && inputs[type] < 10) inputs[type] = 10;
+        if (type === 'wrist' && inputs[type] > 30) inputs[type] = 30;
+        
+        if (type === 'weight_lifted' && inputs[type] < 1) inputs[type] = 1;
+        if (type === 'weight_lifted' && inputs[type] > 500) inputs[type] = 500;
+        
+        if (type === 'reps' && inputs[type] < 1) inputs[type] = 1;
+        if (type === 'reps' && inputs[type] > 100) inputs[type] = 100;
         
         if (type === 'waist' && inputs[type] < 40) inputs[type] = 40;
         if (type === 'waist' && inputs[type] > 200) inputs[type] = 200;
@@ -387,6 +446,10 @@ export function initTools() {
         inputs.goal = val;
     };
 
+    window.setToolWorkoutType = (val) => {
+        inputs.workout_type = val;
+    };
+
     window.calculateTool = () => {
         if (!currentActiveTool) return;
         const config = TOOLS_CONFIG[currentActiveTool];
@@ -401,14 +464,16 @@ export function initTools() {
 export function clearTools() {
     inputs = { 
         height: 170, weight: 70, waist: 80, hip: 100, 
-        neck: 40, age: 25, training_time: 0, 
-        activity_level: 1.2, goal: 'maintain', gender: 'm',
+        neck: 40, age: 25, wrist: 17, weight_lifted: 60, reps: 8,
+        training_time: 0, activity_level: 1.2, goal: 'maintain', 
+        workout_type: 'hypertrophy', gender: 'm',
         tdee: 0, targetCalorie: 0
     };
-    ['height', 'weight', 'waist', 'hip', 'neck', 'age', 'training_time'].forEach(k => {
+    ['height', 'weight', 'waist', 'hip', 'neck', 'age', 'wrist', 'weight_lifted', 'reps', 'training_time'].forEach(k => {
         if(document.getElementById(`tool-${k}-display`)) document.getElementById(`tool-${k}-display`).textContent = inputs[k];
     });
     if(window.setToolGender) window.setToolGender('m');
     if(document.getElementById('tool-activity-select')) document.getElementById('tool-activity-select').value = "1.2";
     if(document.getElementById('tool-goal-select')) document.getElementById('tool-goal-select').value = "maintain";
+    if(document.getElementById('tool-workout-select')) document.getElementById('tool-workout-select').value = "hypertrophy";
 }
