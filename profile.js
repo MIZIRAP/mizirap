@@ -507,7 +507,7 @@ export function generateHealthSummary(data) {
     
     if (document.getElementById('summary-calorie')) document.getElementById('summary-calorie').textContent = `${calResult.value} kcal`;
     if (document.getElementById('summary-goal-text')) {
-        let goalText = data.goal === 'kilo_verme' ? '(Kilo Verme Hedefi)' : (data.goal === 'kilo_alma' ? '(Kilo Alma Hedefi)' : '(Koruma Hedefi)');
+        let goalText = (data.goal === 'kilo_verme' || data.goal === 'lose') ? '(Kilo Verme Hedefi)' : ((data.goal === 'kilo_alma' || data.goal === 'gain') ? '(Kilo Alma Hedefi)' : '(Koruma Hedefi)');
         document.getElementById('summary-goal-text').textContent = goalText;
     }
     
