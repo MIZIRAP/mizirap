@@ -75,9 +75,9 @@ async function loadProfile() {
 
 
 function updateAllProfileImages(url) {
-    if(!url) return;
+    const defaultUrl = "data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=";
     document.querySelectorAll('.user-profile-img').forEach(img => {
-        img.src = url;
+        img.src = url || defaultUrl;
     });
 }
 
@@ -437,6 +437,21 @@ if (document.readyState === 'loading') {
 export function clearProfile() {
     currentUid = null;
     currentPhotoUrl = null;
+    
+    updateAllProfileImages(null);
+    
+    const nameEl = document.getElementById('profile-name');
+    const emailEl = document.getElementById('profile-email');
+    const bioEl = document.getElementById('profile-bio');
+    const dobEl = document.getElementById('profile-dob');
+    
+    if (nameEl) nameEl.value = "";
+    if (emailEl) emailEl.textContent = "";
+    if (bioEl) bioEl.value = "";
+    if (dobEl) dobEl.value = "";
+    
+    const dsName = document.getElementById("dashboard-user-name");
+    if(dsName) dsName.textContent = "";
 }
 
 export function generateHealthSummary(data) {
