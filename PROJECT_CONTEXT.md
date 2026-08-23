@@ -39,7 +39,7 @@ Bu dosya, projeyi anlamak için gerekli temel mimari ve yapısal bilgileri içer
 *   **Finance (Tamamlandı)**: API destekli canlı kur, gelir/gider listesi ve çizgi grafikli (Chart.js vb.) gösterim.
 *   **Shopping (Tamamlandı)**: Pratik eklenebilir alışveriş listesi.
 *   **Books/Movies (Tamamlandı)**: Medya kayıtlarının ve son izlenenlerin arşivlenmesi.
-*   **Tools (Tamamlandı)**: Sağlık, performans ve beslenme hesaplayıcıları. Arama (filtreleme) özelliği barındırır.
+*   **Tools (Tamamlandı)**: Sağlık, performans ve beslenme kategorilerinde `CalculatorEngine` mimarisiyle çalışan toplam 14 hesaplayıcıyı barındırır. Canlı arama (filtreleme) özelliği aktiftir. Hesaplamalarda Profil'deki "Fiziksel Bilgiler" form verileri (boy, kilo vb.) otomatik kullanılır; elde edilen değerler "Sağlık Özeti" kartında görselleştirilir.
 
 ## 4. VERİ MODELİ
 Veriler, Firestore (NoSQL) yapısında her kullanıcıya ait alt koleksiyonlar şeklinde yapılandırılmıştır:
@@ -58,13 +58,12 @@ Veriler, Firestore (NoSQL) yapısında her kullanıcıya ait alt koleksiyonlar �
 *   **Loading UX**: "0" verilerinin yanıltıcı görünmesini engellemek için yükleme anlarında iskelet yükleyici (`...` vs.) tercih edilmiştir.
 
 ## 6. BİLİNEN SORUNLAR / YARIM KALANLAR
-*   **Race Condition (Zamanlama Sorunu)**: Antrenman bittiğinde anında `Dashboard` veya `History` ekranına dönüldüğünde verilerin henüz Firestore'a işlenememesi ihtimali.
-*   **Veri Doğrulama**: Metin ve rakamsal veri girişlerinde ileri düzey hatalı karakter kısıtlamaları (Edge Case validasyonları) bazı yerlerde eksik olabilir.
+*   **Veri Doğrulama**: Metin ve rakamsal veri girişlerinde ileri düzey hatalı karakter/limit kısıtlamaları (Edge Case validasyonları, ör. boy: 500cm gibi aşırı değerler) bazı yerlerde eksik bırakılmıştır (sadece temel `Number()` dönüşümü kullanılmaktadır).
 *   **Aktif Bug**: Sistem genelinde çalışmayı engelleyen (blocking) kritik bir sorun tespit edilmemiştir. Su takibi widget'ı metin formatı hatası, hesaplayıcı (calculator) UI bozulmaları ve widget sıralamalarındaki gecikme/flash sorunları başarıyla çözüldü.
 
 ## 7. SON DURUM
-*   **Tamamlanan En Son Geliştirme**: Ana sayfa üst (2x2) ve alt buton grupları için SortableJS tabanlı, uzun basarak (500ms) kişiselleştirilebilir sürükle-bırak sıralama özelliği eklendi. Araçlar (Tools) sayfasına canlı çalışan ve Türkçe karakter duyarlı bir arama (filtreleme) barı entegre edildi. Ayrıca çeşitli UI/UX ve native iOS/Touch davranış sorunları giderildi.
-*   **Olası Sonraki Adımlar**: Profil modülündeki ertelenen akordiyon geliştirmesi, performans/maliyet odaklı Firebase okuma-yazma (read/write) kotalarının düşürülmesi ve aktif seans yönetiminin test edilip cilalanması.
+*   **Tamamlanan En Son Geliştirme**: Profil modülünde "Fiziksel Bilgiler" formu ve "Sağlık Özeti" panosu eklendi. `CalculatorEngine` tabanlı 14 farklı hesaplama aracını içeren Tools sayfası kullanıma sunuldu. Ana sayfa widget grupları için SortableJS tabanlı, uzun basarak (500ms) sürükle-bırak sıralama özelliği (Faz 1-4) entegre edildi.
+*   **Olası Sonraki Adımlar**: Veri girişlerindeki eksik edge-case doğrulama/validasyon mekanizmalarının eklenmesi, performans odaklı Firestore okuma-yazma kotalarının düşürülmesi ve aktif antrenman seans yönetiminin test edilip cilalanması.
 
 ## 8. TERCİHLER / ÇALIŞMA TARZI NOTLARI
 *   **Otonom Çalışma**: Kullanıcının verdiği görevler onay ve izin istenmeden direkt uygulanır (bu talimatta istendiği üzere).
