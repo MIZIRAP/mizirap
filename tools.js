@@ -541,6 +541,37 @@ export function initTools() {
         document.getElementById('tool-result-unit').textContent = res.unit;
         document.getElementById('tool-result-text').textContent = res.text;
     };
+
+    // Tools Search Logic
+    const searchInput = document.getElementById('tools-search-input');
+    const emptyState = document.getElementById('tools-empty-state');
+    if (searchInput) {
+        searchInput.addEventListener('input', (e) => {
+            const query = e.target.value.toLocaleLowerCase('tr-TR');
+            const cards = document.querySelectorAll('#view-tools .tool-card-item');
+            let visibleCount = 0;
+
+            cards.forEach(card => {
+                const text = card.textContent.toLocaleLowerCase('tr-TR');
+                if (text.includes(query)) {
+                    card.style.display = 'flex';
+                    visibleCount++;
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+
+            if (emptyState) {
+                if (visibleCount === 0) {
+                    emptyState.classList.remove('hidden');
+                    emptyState.classList.add('flex');
+                } else {
+                    emptyState.classList.add('hidden');
+                    emptyState.classList.remove('flex');
+                }
+            }
+        });
+    }
 }
 
 export function clearTools() {
@@ -558,4 +589,17 @@ export function clearTools() {
     if(document.getElementById('tool-activity-select')) document.getElementById('tool-activity-select').value = "1.2";
     if(document.getElementById('tool-goal-select')) document.getElementById('tool-goal-select').value = "maintain";
     if(document.getElementById('tool-workout-select')) document.getElementById('tool-workout-select').value = "hypertrophy";
+    
+    // Reset search
+    const searchInput = document.getElementById('tools-search-input');
+    if (searchInput) {
+        searchInput.value = '';
+        const cards = document.querySelectorAll('#view-tools .tool-card-item');
+        cards.forEach(card => card.style.display = 'flex');
+        const emptyState = document.getElementById('tools-empty-state');
+        if (emptyState) {
+            emptyState.classList.add('hidden');
+            emptyState.classList.remove('flex');
+        }
+    }
 }

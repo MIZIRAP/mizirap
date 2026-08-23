@@ -608,8 +608,20 @@
         </header>
 
         <main class="w-full max-w-md mx-auto px-6 mt-4 flex flex-col gap-6">
+            <!-- Araçlar Arama Çubuğu -->
+            <div class="flex items-center gap-3 p-4 rounded-2xl bg-[#F0F2F8] w-full" style="box-shadow: rgb(209, 217, 230) 6px 6px 12px, rgb(255, 255, 255) -6px -6px 12px;">
+                <span class="material-symbols-rounded text-[#64748B]">search</span>
+                <input type="text" id="tools-search-input" placeholder="Araç ara..." class="bg-transparent border-none outline-none text-sm text-[#1E293B] w-full placeholder-[#64748B]">
+            </div>
+
+            <!-- Araç Bulunamadı Mesajı (Varsayılan Gizli) -->
+            <div id="tools-empty-state" class="hidden flex-col items-center justify-center py-10 opacity-70">
+                <span class="material-symbols-rounded text-4xl text-[#64748B] mb-2">search_off</span>
+                <p class="text-[#64748B] text-sm font-medium" style="font-family: 'Plus Jakarta Sans', sans-serif;">Araç bulunamadı</p>
+            </div>
+
             <!-- Araç Kartı 1: Vücut Kitle İndeksi -->
-            <div class="bg-[#F0F2F8] rounded-[24px] p-6 flex flex-col gap-4 w-full" style="box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.08);">
+            <div class="tool-card-item bg-[#F0F2F8] rounded-[24px] p-6 flex flex-col gap-4 w-full" style="box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.08);">
                 <div class="flex flex-col gap-2">
                     <div class="h-8 px-4 inline-flex items-center justify-center rounded-full bg-[#F0F2F8] self-start" style="box-shadow: inset 4px 4px 8px rgba(0, 0, 0, 0.06), inset -4px -4px 8px rgba(255, 255, 255, 0.8);">
                         <span class="text-[#181C20] font-[600] text-[12px] uppercase tracking-[0.7px]" style="font-family: 'Plus Jakarta Sans', sans-serif;">SAĞLIK</span>
@@ -624,7 +636,7 @@
             </div>
 
             <!-- Araç Kartı 2: Boy Kilo Endeksi -->
-            <div class="bg-[#F0F2F8] rounded-[24px] p-6 flex flex-col gap-4 w-full" style="box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.08);">
+            <div class="tool-card-item bg-[#F0F2F8] rounded-[24px] p-6 flex flex-col gap-4 w-full" style="box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.08);">
                 <div class="flex flex-col gap-2">
                     <div class="h-8 px-4 inline-flex items-center justify-center rounded-full bg-[#F0F2F8] self-start" style="box-shadow: inset 4px 4px 8px rgba(0, 0, 0, 0.06), inset -4px -4px 8px rgba(255, 255, 255, 0.8);">
                         <span class="text-[#181C20] font-[600] text-[12px] uppercase tracking-[0.7px]" style="font-family: 'Plus Jakarta Sans', sans-serif;">SAĞLIK</span>
@@ -639,7 +651,7 @@
             </div>
 
             <!-- Araç Kartı 3: İdeal Kilo -->
-            <div class="bg-[#F0F2F8] rounded-[24px] p-6 flex flex-col gap-4 w-full" style="box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.08);">
+            <div class="tool-card-item bg-[#F0F2F8] rounded-[24px] p-6 flex flex-col gap-4 w-full" style="box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.08);">
                 <div class="flex flex-col gap-2">
                     <div class="h-8 px-4 inline-flex items-center justify-center rounded-full bg-[#F0F2F8] self-start" style="box-shadow: inset 4px 4px 8px rgba(0, 0, 0, 0.06), inset -4px -4px 8px rgba(255, 255, 255, 0.8);">
                         <span class="text-[#181C20] font-[600] text-[12px] uppercase tracking-[0.7px]" style="font-family: 'Plus Jakarta Sans', sans-serif;">HEDEF</span>
@@ -654,7 +666,7 @@
             </div>
             
             <!-- Araç Kartı 4: Bel-Kalça Oranı -->
-            <div class="bg-[#F0F2F8] rounded-[24px] p-6 flex flex-col gap-4 w-full" style="box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.08);">
+            <div class="tool-card-item bg-[#F0F2F8] rounded-[24px] p-6 flex flex-col gap-4 w-full" style="box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.08);">
                 <div class="flex flex-col gap-2">
                     <div class="h-8 px-4 inline-flex items-center justify-center rounded-full bg-[#F0F2F8] self-start" style="box-shadow: inset 4px 4px 8px rgba(0, 0, 0, 0.06), inset -4px -4px 8px rgba(255, 255, 255, 0.8);">
                         <span class="text-[#181C20] font-[600] text-[12px] uppercase tracking-[0.7px]" style="font-family: 'Plus Jakarta Sans', sans-serif;">SAĞLIK</span>
@@ -669,7 +681,7 @@
             </div>
 
             <!-- Araç Kartı 5: Su İhtiyacı -->
-            <div class="bg-[#F0F2F8] rounded-[24px] p-6 flex flex-col gap-4 w-full" style="box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.08);">
+            <div class="tool-card-item bg-[#F0F2F8] rounded-[24px] p-6 flex flex-col gap-4 w-full" style="box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.08);">
                 <div class="flex flex-col gap-2">
                     <div class="h-8 px-4 inline-flex items-center justify-center rounded-full bg-[#F0F2F8] self-start" style="box-shadow: inset 4px 4px 8px rgba(0, 0, 0, 0.06), inset -4px -4px 8px rgba(255, 255, 255, 0.8);">
                         <span class="text-[#181C20] font-[600] text-[12px] uppercase tracking-[0.7px]" style="font-family: 'Plus Jakarta Sans', sans-serif;">HEDEF</span>
@@ -684,7 +696,7 @@
             </div>
             
             <!-- Araç Kartı 6: TDEE (Faz 2) -->
-            <div class="bg-[#F0F2F8] rounded-[24px] p-6 flex flex-col gap-4 w-full" style="box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.08);">
+            <div class="tool-card-item bg-[#F0F2F8] rounded-[24px] p-6 flex flex-col gap-4 w-full" style="box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.08);">
                 <div class="flex flex-col gap-2">
                     <div class="h-8 px-4 inline-flex items-center justify-center rounded-full bg-[#F0F2F8] self-start" style="box-shadow: inset 4px 4px 8px rgba(0, 0, 0, 0.06), inset -4px -4px 8px rgba(255, 255, 255, 0.8);">
                         <span class="text-[#181C20] font-[600] text-[12px] uppercase tracking-[0.7px]" style="font-family: 'Plus Jakarta Sans', sans-serif;">ENERJİ</span>
@@ -699,7 +711,7 @@
             </div>
 
             <!-- Araç Kartı 7: Kalp Hızı Bölgeleri -->
-            <div class="bg-[#F0F2F8] rounded-[24px] p-6 flex flex-col gap-4 w-full" style="box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.08);">
+            <div class="tool-card-item bg-[#F0F2F8] rounded-[24px] p-6 flex flex-col gap-4 w-full" style="box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.08);">
                 <div class="flex flex-col gap-2">
                     <div class="h-8 px-4 inline-flex items-center justify-center rounded-full bg-[#F0F2F8] self-start" style="box-shadow: inset 4px 4px 8px rgba(0, 0, 0, 0.06), inset -4px -4px 8px rgba(255, 255, 255, 0.8);">
                         <span class="text-[#181C20] font-[600] text-[12px] uppercase tracking-[0.7px]" style="font-family: 'Plus Jakarta Sans', sans-serif;">PERFORMANS</span>
@@ -714,7 +726,7 @@
             </div>
 
             <!-- Araç Kartı 8: Vücut Yağı Oranı -->
-            <div class="bg-[#F0F2F8] rounded-[24px] p-6 flex flex-col gap-4 w-full" style="box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.08);">
+            <div class="tool-card-item bg-[#F0F2F8] rounded-[24px] p-6 flex flex-col gap-4 w-full" style="box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.08);">
                 <div class="flex flex-col gap-2">
                     <div class="h-8 px-4 inline-flex items-center justify-center rounded-full bg-[#F0F2F8] self-start" style="box-shadow: inset 4px 4px 8px rgba(0, 0, 0, 0.06), inset -4px -4px 8px rgba(255, 255, 255, 0.8);">
                         <span class="text-[#181C20] font-[600] text-[12px] uppercase tracking-[0.7px]" style="font-family: 'Plus Jakarta Sans', sans-serif;">SAĞLIK</span>
@@ -729,7 +741,7 @@
             </div>
 
             <!-- Araç Kartı 9: Kalori Hesaplama -->
-            <div class="bg-[#F0F2F8] rounded-[24px] p-6 flex flex-col gap-4 w-full" style="box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.08);">
+            <div class="tool-card-item bg-[#F0F2F8] rounded-[24px] p-6 flex flex-col gap-4 w-full" style="box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.08);">
                 <div class="flex flex-col gap-2">
                     <div class="h-8 px-4 inline-flex items-center justify-center rounded-full bg-[#F0F2F8] self-start" style="box-shadow: inset 4px 4px 8px rgba(0, 0, 0, 0.06), inset -4px -4px 8px rgba(255, 255, 255, 0.8);">
                         <span class="text-[#181C20] font-[600] text-[12px] uppercase tracking-[0.7px]" style="font-family: 'Plus Jakarta Sans', sans-serif;">HEDEF</span>
@@ -744,7 +756,7 @@
             </div>
 
             <!-- Araç Kartı 10: Protein İhtiyacı -->
-            <div class="bg-[#F0F2F8] rounded-[24px] p-6 flex flex-col gap-4 w-full" style="box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.08);">
+            <div class="tool-card-item bg-[#F0F2F8] rounded-[24px] p-6 flex flex-col gap-4 w-full" style="box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.08);">
                 <div class="flex flex-col gap-2">
                     <div class="h-8 px-4 inline-flex items-center justify-center rounded-full bg-[#F0F2F8] self-start" style="box-shadow: inset 4px 4px 8px rgba(0, 0, 0, 0.06), inset -4px -4px 8px rgba(255, 255, 255, 0.8);">
                         <span class="text-[#181C20] font-[600] text-[12px] uppercase tracking-[0.7px]" style="font-family: 'Plus Jakarta Sans', sans-serif;">BESLENME</span>
@@ -759,7 +771,7 @@
             </div>
 
             <!-- Araç Kartı 11: Makro Hesaplama -->
-            <div class="bg-[#F0F2F8] rounded-[24px] p-6 flex flex-col gap-4 w-full" style="box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.08);">
+            <div class="tool-card-item bg-[#F0F2F8] rounded-[24px] p-6 flex flex-col gap-4 w-full" style="box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.08);">
                 <div class="flex flex-col gap-2">
                     <div class="h-8 px-4 inline-flex items-center justify-center rounded-full bg-[#F0F2F8] self-start" style="box-shadow: inset 4px 4px 8px rgba(0, 0, 0, 0.06), inset -4px -4px 8px rgba(255, 255, 255, 0.8);">
                         <span class="text-[#181C20] font-[600] text-[12px] uppercase tracking-[0.7px]" style="font-family: 'Plus Jakarta Sans', sans-serif;">BESLENME</span>
@@ -774,7 +786,7 @@
             </div>
 
             <!-- Araç Kartı 12: Dinlenme Süresi -->
-            <div class="bg-[#F0F2F8] rounded-[24px] p-6 flex flex-col gap-4 w-full" style="box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.08);">
+            <div class="tool-card-item bg-[#F0F2F8] rounded-[24px] p-6 flex flex-col gap-4 w-full" style="box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.08);">
                 <div class="flex flex-col gap-2">
                     <div class="h-8 px-4 inline-flex items-center justify-center rounded-full bg-[#F0F2F8] self-start" style="box-shadow: inset 4px 4px 8px rgba(0, 0, 0, 0.06), inset -4px -4px 8px rgba(255, 255, 255, 0.8);">
                         <span class="text-[#181C20] font-[600] text-[12px] uppercase tracking-[0.7px]" style="font-family: 'Plus Jakarta Sans', sans-serif;">PERFORMANS</span>
