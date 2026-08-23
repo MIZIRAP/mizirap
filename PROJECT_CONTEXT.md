@@ -32,13 +32,14 @@ Bu dosya, projeyi anlamak için gerekli temel mimari ve yapısal bilgileri içer
 
 ## 3. MODÜL / ÖZELLİK ENVANTERİ
 *   **Navigation (Tamamlandı)**: Sekme (tab) ve History API destekli, ekran kaydırmalı (swipe) navigasyon sistemi. Ana ekran `app.js` üzerinden yönetilir.
-*   **Dashboard (Tamamlandı)**: Tüm modüllere dair günlük verilerin neon kartlar halinde özetlendiği ana ekran.
+*   **Dashboard (Tamamlandı)**: Tüm modüllere dair günlük verilerin neon kartlar halinde özetlendiği ana ekran. SortableJS entegrasyonu ile widget'lar (üst 2x2 ve alt butonlar) uzun basılarak (500ms) sürükle-bırak ile kişiselleştirilebilir.
 *   **Workout (Tamamlandı)**: Özel "Split" yaratma, egzersiz kütüphanesinden seçim ve canlı seans kaydetme. Firestore tabanlı çalışır. Yakın zamanda kaydır-sil (swipe-to-delete) animasyonlarında "co-slide" iyileştirmesi yapılmıştır.
 *   **Calories (Tamamlandı)**: Makro bazlı giriş, kaydır-sil (swipe-to-delete) desteği ve porsiyon klavyesi ile güncel beslenme arşivi.
-*   **Water (Tamamlandı)**: Animasyonlu ilerleme çubuğu içeren sıvı takibi.
+*   **Water (Tamamlandı)**: Animasyonlu ilerleme çubuğu içeren sıvı takibi (Birim hataları onarıldı).
 *   **Finance (Tamamlandı)**: API destekli canlı kur, gelir/gider listesi ve çizgi grafikli (Chart.js vb.) gösterim.
 *   **Shopping (Tamamlandı)**: Pratik eklenebilir alışveriş listesi.
 *   **Books/Movies (Tamamlandı)**: Medya kayıtlarının ve son izlenenlerin arşivlenmesi.
+*   **Tools (Tamamlandı)**: Sağlık, performans ve beslenme hesaplayıcıları. Arama (filtreleme) özelliği barındırır.
 
 ## 4. VERİ MODELİ
 Veriler, Firestore (NoSQL) yapısında her kullanıcıya ait alt koleksiyonlar şeklinde yapılandırılmıştır:
@@ -57,13 +58,14 @@ Veriler, Firestore (NoSQL) yapısında her kullanıcıya ait alt koleksiyonlar �
 *   **Loading UX**: "0" verilerinin yanıltıcı görünmesini engellemek için yükleme anlarında iskelet yükleyici (`...` vs.) tercih edilmiştir.
 
 ## 6. BİLİNEN SORUNLAR / YARIM KALANLAR
+*   **Ertelenen Geliştirmeler**: Profil ayarlarında "Şifreyi değiştir" bölümünün akordiyon yapısına çevrilmesi, stabilite ve ana sayfa özelliklerine öncelik verildiği için ileri bir tarihe ertelendi.
 *   **Race Condition (Zamanlama Sorunu)**: Antrenman bittiğinde anında `Dashboard` veya `History` ekranına dönüldüğünde verilerin henüz Firestore'a işlenememesi ihtimali.
 *   **Veri Doğrulama**: Metin ve rakamsal veri girişlerinde ileri düzey hatalı karakter kısıtlamaları (Edge Case validasyonları) bazı yerlerde eksik olabilir.
-*   **Aktif Bug**: Sistem genelinde çalışmayı engelleyen (blocking) kritik bir sorun tespit edilmemiştir.
+*   **Aktif Bug**: Sistem genelinde çalışmayı engelleyen (blocking) kritik bir sorun tespit edilmemiştir. Su takibi widget'ı metin formatı hatası, hesaplayıcı (calculator) UI bozulmaları ve widget sıralamalarındaki gecikme/flash sorunları başarıyla çözüldü.
 
 ## 7. SON DURUM
-*   **Tamamlanan En Son Geliştirme**: Egzersiz (`workout.js`) modülündeki kaydır-sil (swipe-to-reveal delete) özelliği revize edilerek, gizli taşmaları önlemek adına buton ve kartın eşzamanlı kaydırıldığı "co-slide" yaklaşımına geçildi.
-*   **Olası Sonraki Adımlar**: Performans/maliyet odaklı Firebase okuma-yazma (read/write) kotalarının düşürülmesi ve aktif seans yönetiminin test edilip cilalanması.
+*   **Tamamlanan En Son Geliştirme**: Ana sayfa üst (2x2) ve alt buton grupları için SortableJS tabanlı, uzun basarak (500ms) kişiselleştirilebilir sürükle-bırak sıralama özelliği eklendi. Araçlar (Tools) sayfasına canlı çalışan ve Türkçe karakter duyarlı bir arama (filtreleme) barı entegre edildi. Ayrıca çeşitli UI/UX ve native iOS/Touch davranış sorunları giderildi.
+*   **Olası Sonraki Adımlar**: Profil modülündeki ertelenen akordiyon geliştirmesi, performans/maliyet odaklı Firebase okuma-yazma (read/write) kotalarının düşürülmesi ve aktif seans yönetiminin test edilip cilalanması.
 
 ## 8. TERCİHLER / ÇALIŞMA TARZI NOTLARI
 *   **Otonom Çalışma**: Kullanıcının verdiği görevler onay ve izin istenmeden direkt uygulanır (bu talimatta istendiği üzere).
