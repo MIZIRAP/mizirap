@@ -45,6 +45,9 @@ async function initWidgetSorting(uid) {
         }
     } catch(err) {
         console.error("Sıralama yüklenemedi", err);
+    } finally {
+        if (grid) grid.classList.remove('opacity-0');
+        if (bottomGrid) bottomGrid.classList.remove('opacity-0');
     }
 
     if (typeof Sortable !== 'undefined') {
@@ -111,6 +114,12 @@ export function clearDashboard() {
     currentWaterStats = { currentAmount: 0, dailyGoal: 2000 };
     currentCaloriesStats = { consumed: 0, goal: 2000 };
     currentBooks = [];
+    
+    // Reset grids to hidden state to prevent flash for next user
+    const grid = document.getElementById("dashboard-widgets-grid");
+    const bottomGrid = document.getElementById("dashboard-bottom-widgets");
+    if (grid) grid.classList.add('opacity-0');
+    if (bottomGrid) bottomGrid.classList.add('opacity-0');
 }
 
 export function updateDashboardWorkouts(workouts, activeSplitName = "Yapılmadı") {
