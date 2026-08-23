@@ -393,8 +393,6 @@ export function generateHealthSummary(data) {
         if (gridEl) {
             gridEl.innerHTML = `<div class="col-span-2 text-center p-4 bg-surface-variant/20 shadow-neo-inset rounded-2xl cursor-pointer hover:bg-surface-variant/30 transition-colors" onclick="document.getElementById('profile-height').scrollIntoView({behavior: 'smooth', block: 'center'}); setTimeout(() => { const h = document.getElementById('profile-height'); const w = document.getElementById('profile-weight'); const g = document.getElementById('profile-goal'); if (!h.value) h.focus(); else if (!w.value) w.focus(); else if (!g.value) g.focus(); }, 300);"><span class="text-sm font-semibold text-neon-blue">Sağlık özetini görmek için Boy, Kilo ve Hedefini gir →</span></div>`;
         }
-        if (document.getElementById('dashboard-water-text')) document.getElementById('dashboard-water-text').textContent = '-- L';
-        if (document.getElementById('dashboard-kcal-text')) document.getElementById('dashboard-kcal-text').textContent = '-- kcal';
         return;
     }
 
@@ -465,12 +463,10 @@ export function generateHealthSummary(data) {
         let goalText = data.goal === 'lose' ? 'Kilo Verme' : (data.goal === 'gain' ? 'Kilo Alma' : 'Koruma');
         document.getElementById('summary-goal-text').textContent = goalText;
     }
-    if (document.getElementById('dashboard-kcal-text')) document.getElementById('dashboard-kcal-text').textContent = `${calResult.value} kcal`;
     
     // Su & BMI & Body Type
     const waterResult = CalculatorEngine.calculateWater(data.weight, 0);
     if (document.getElementById('summary-water')) document.getElementById('summary-water').textContent = `${waterResult.value} L`;
-    if (document.getElementById('dashboard-water-text')) document.getElementById('dashboard-water-text').textContent = `${waterResult.value} L`;
     
     const bmiResult = CalculatorEngine.calculateBMI(data.weight, data.height);
     if (document.getElementById('summary-bmi')) document.getElementById('summary-bmi').textContent = `${bmiResult.value} (${bmiResult.text})`;
