@@ -434,6 +434,24 @@
     </div>
 </div>
 
+<!-- DOĞRULAMA EKRANI -->
+<div id="verification-screen" class="hidden min-h-[100dvh] items-center justify-center bg-surface-container-low p-6 z-50 relative">
+    <div class="w-full max-w-md bg-background shadow-neo rounded-[32px] p-6 shadow-md text-center">
+        <div class="w-16 h-16 mx-auto bg-neon-blue/10 text-neon-blue rounded-full flex items-center justify-center mb-4">
+            <span class="material-symbols-rounded text-3xl" style="font-variation-settings: 'FILL' 1;">mail</span>
+        </div>
+        <h2 class="font-display-sm text-on-surface mb-2">E-postanı Doğrula</h2>
+        <p class="text-on-surface-variant font-body-md mb-8">Hesabını güvenli bir şekilde kullanabilmen için e-posta adresini doğrulaman gerekiyor. Lütfen gelen kutunu (ve spam klasörünü) kontrol et.</p>
+        
+        <div class="flex flex-col gap-4">
+            <button id="btn-resend-verification" class="w-full bg-gradient-to-r from-neon-purple to-neon-blue text-white font-headline-sm text-body-lg py-4 rounded-[32px] shadow-sm hover:shadow-md transition-all active:scale-[0.98] flex items-center justify-center gap-2">Doğrulama E-postasını Tekrar Gönder</button>
+            <button class="logout-trigger w-full bg-surface-container-low text-on-surface font-headline-sm text-body-lg py-4 rounded-[32px] transition-all active:scale-[0.98] hover:bg-background shadow-neo hover:shadow-sm flex items-center justify-center gap-2">Çıkış Yap</button>
+        </div>
+        <p id="verification-message" class="text-neon-blue font-label-sm mt-4 min-h-[14px]"></p>
+    </div>
+</div>
+
+
 <!-- ANA UYGULAMA -->
 <div id="app-screen" class="min-h-[100dvh]">
 

@@ -25,6 +25,18 @@ setupAuthUI();
 onAuthStateChanged(auth, async (user) => {
     if (user) {
         try {
+            if (!user.isAnonymous && !user.emailVerified) {
+                authScreen.classList.add("hidden");
+                authScreen.classList.remove("flex");
+                appScreen.classList.add("hidden");
+                document.getElementById("verification-screen").classList.remove("hidden");
+                document.getElementById("verification-screen").classList.add("flex");
+                return;
+            } else {
+                document.getElementById("verification-screen").classList.add("hidden");
+                document.getElementById("verification-screen").classList.remove("flex");
+            }
+
             authScreen.classList.add("hidden");
             authScreen.classList.remove("flex");
             appScreen.classList.remove("hidden");
@@ -80,6 +92,8 @@ onAuthStateChanged(auth, async (user) => {
         authScreen.classList.remove("hidden");
         authScreen.classList.add("flex");
         appScreen.classList.add("hidden");
+        document.getElementById("verification-screen").classList.add("hidden");
+        document.getElementById("verification-screen").classList.remove("flex");
 
         // Temizlik işlemleri (Logout sonrası state sıfırlama)
         clearAllListeners();

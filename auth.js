@@ -1,5 +1,5 @@
 import { auth } from "./firebase-config.js";
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, updateProfile, GoogleAuthProvider, signInWithPopup, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, updateProfile, GoogleAuthProvider, signInWithPopup, sendPasswordResetEmail, sendEmailVerification } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
 
 const loginForm = document.getElementById("login-form");
 const registerForm = document.getElementById("register-form");
@@ -53,6 +53,7 @@ export function setupAuthUI() {
             try {
                 const cred = await createUserWithEmailAndPassword(auth, email, password);
                 await updateProfile(cred.user, { displayName: name });
+                await sendEmailVerification(cred.user);
             } catch (err) {
                 registerError.textContent = turkceHataMesaji(err.code);
             }
@@ -156,4 +157,31 @@ export function setupAuthUI() {
             signOut(auth);
         });
     });
+
+    // Doğrulama e-postası tekrar gönder
+    const btnResend = document.getElementById("btn-resend-verification");
+    const verificationMsg = document.getElementById("verification-message");
+    if (btnResend) {
+        btnResend.addEventListener("click", async () => {
+            if (auth.currentUser && !auth.currentUser.emailVerified) {
+                try {
+                    btnResend.disabled = true;
+                    btnResend.innerHTML = '<span class="material-symbols-rounded animate-spin">refresh</span> Gönderiliyor...';
+                    await sendEmailVerification(auth.currentUser);
+                    if(verificationMsg) {
+                        verificationMsg.textContent = "Doğrulama e-postası tekrar gönderildi. Lütfen gelen kutunu kontrol et.";
+                        verificationMsg.className = "text-neon-blue font-label-sm mt-4 min-h-[14px]";
+                    }
+                } catch (err) {
+                    if(verificationMsg) {
+                        verificationMsg.textContent = turkceHataMesaji(err.code);
+                        verificationMsg.className = "text-error font-label-sm mt-4 min-h-[14px]";
+                    }
+                } finally {
+                    btnResend.disabled = false;
+                    btnResend.innerHTML = 'Doğrulama E-postasını Tekrar Gönder';
+                }
+            }
+        });
+    }
 }
