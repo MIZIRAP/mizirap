@@ -31,7 +31,6 @@ async function loadProfile() {
         if (docSnap.exists()) {
             const data = docSnap.data();
             if (nameEl) nameEl.value = data.name || (auth.currentUser ? auth.currentUser.displayName : "") || "";
-            if (bioEl) bioEl.value = data.bio || "";
             if (dobEl) dobEl.value = data.dob || "";
             
             // Fiziksel Bilgiler
