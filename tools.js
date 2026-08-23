@@ -166,7 +166,12 @@ export const CalculatorEngine = {
             warningText = ' (⚠️ Kalan kalori negatif!)';
         }
         
-        return { value: targetCalorie, unit: 'kcal', text: `Karb: ${cGrams}g | Pro: ${pGrams}g | Yağ: ${fGrams}g${warningText}` };
+        return { 
+            value: targetCalorie, 
+            unit: 'kcal', 
+            text: `Karb: ${cGrams}g | Pro: ${pGrams}g | Yağ: ${fGrams}g${warningText}`,
+            raw: { p: pGrams, c: cGrams, f: fGrams }
+        };
     },
 
     calculateRestTime: (workoutType) => {

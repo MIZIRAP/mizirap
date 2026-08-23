@@ -3746,26 +3746,45 @@
             <!-- Sağlık Özeti Card -->
             <div id="profile-health-summary" class="w-full bg-background shadow-neo rounded-[32px] p-container-padding shadow-sm mb-6 flex flex-col gap-4">
                 <h3 class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider block ml-1 mb-2">Sağlık Özeti</h3>
-                <div id="profile-health-summary-grid" class="grid grid-cols-2 gap-4">
-                    <div class="flex flex-col gap-1 p-3 rounded-2xl bg-surface-variant/20 shadow-neo-inset">
-                        <span class="text-xs text-on-surface-variant uppercase tracking-wider font-semibold">TDEE (Kalori)</span>
-                        <span id="summary-tdee" class="text-lg font-bold text-neon-blue">-- kcal</span>
+                <div id="profile-health-summary-grid" class="flex flex-col gap-4">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="flex flex-col gap-1 p-3 rounded-2xl bg-surface-variant/20 shadow-neo-inset">
+                            <span class="text-xs text-on-surface-variant uppercase tracking-wider font-semibold">Hedef Kalori</span>
+                            <span id="summary-calorie" class="text-lg font-bold text-neon-blue">-- kcal</span>
+                            <span id="summary-goal-text" class="text-[10px] text-on-surface-variant font-medium mt-auto"></span>
+                        </div>
+                        <div class="flex flex-col gap-1 p-3 rounded-2xl bg-surface-variant/20 shadow-neo-inset">
+                            <span class="text-xs text-on-surface-variant uppercase tracking-wider font-semibold">Su İhtiyacı</span>
+                            <span id="summary-water" class="text-lg font-bold text-neon-blue">-- L</span>
+                        </div>
+                        <div class="flex flex-col gap-1 p-3 rounded-2xl bg-surface-variant/20 shadow-neo-inset">
+                            <span class="text-xs text-on-surface-variant uppercase tracking-wider font-semibold">VKİ</span>
+                            <span id="summary-bmi" class="text-lg font-bold text-on-surface">--</span>
+                        </div>
+                        <div class="flex flex-col gap-1 p-3 rounded-2xl bg-surface-variant/20 shadow-neo-inset">
+                            <span class="text-xs text-on-surface-variant uppercase tracking-wider font-semibold">Vücut Tipi</span>
+                            <span id="summary-bodytype" class="text-lg font-bold text-neon-purple cursor-pointer transition-colors hover:text-neon-blue" onclick="document.getElementById('profile-detailed-content').classList.remove('hidden'); document.getElementById('profile-detailed-icon').innerText='expand_less'; document.getElementById('profile-wrist').focus();">--</span>
+                        </div>
                     </div>
-                    <div class="flex flex-col gap-1 p-3 rounded-2xl bg-surface-variant/20 shadow-neo-inset">
-                        <span class="text-xs text-on-surface-variant uppercase tracking-wider font-semibold">Su İhtiyacı</span>
-                        <span id="summary-water" class="text-lg font-bold text-neon-blue">-- L</span>
-                    </div>
-                    <div class="flex flex-col gap-1 p-3 rounded-2xl bg-surface-variant/20 shadow-neo-inset">
-                        <span class="text-xs text-on-surface-variant uppercase tracking-wider font-semibold">Vücut Tipi</span>
-                        <span id="summary-bodytype" class="text-lg font-bold text-neon-purple cursor-pointer transition-colors hover:text-neon-blue" onclick="document.getElementById('profile-detailed-content').classList.remove('hidden'); document.getElementById('profile-detailed-icon').innerText = 'expand_less'; document.getElementById('profile-wrist').focus();">--</span>
-                    </div>
-                    <div class="flex flex-col gap-1 p-3 rounded-2xl bg-surface-variant/20 shadow-neo-inset">
-                        <span class="text-xs text-on-surface-variant uppercase tracking-wider font-semibold">G. Protein</span>
-                        <span id="summary-protein" class="text-lg font-bold text-neon-blue">-- g</span>
-                    </div>
-                    <div class="flex flex-col gap-1 p-3 rounded-2xl bg-surface-variant/20 shadow-neo-inset col-span-2">
-                        <span class="text-xs text-on-surface-variant uppercase tracking-wider font-semibold">Vücut Kitle İndeksi (VKİ)</span>
-                        <span id="summary-bmi" class="text-lg font-bold text-on-surface">--</span>
+                    <!-- Macros -->
+                    <div class="flex flex-col gap-2 p-3 rounded-2xl bg-surface-variant/20 shadow-neo-inset">
+                        <span class="text-xs text-on-surface-variant uppercase tracking-wider font-semibold">Günlük Makrolar</span>
+                        <div class="flex items-center justify-between mt-1">
+                            <div class="flex flex-col items-center flex-1">
+                                <span class="text-sm font-bold text-neon-blue" id="summary-carb">-- g</span>
+                                <span class="text-[10px] text-on-surface-variant uppercase font-medium mt-1">Karb</span>
+                            </div>
+                            <div class="w-px h-6 bg-outline-variant/30"></div>
+                            <div class="flex flex-col items-center flex-1">
+                                <span class="text-sm font-bold text-neon-blue" id="summary-protein">-- g</span>
+                                <span class="text-[10px] text-on-surface-variant uppercase font-medium mt-1">Pro</span>
+                            </div>
+                            <div class="w-px h-6 bg-outline-variant/30"></div>
+                            <div class="flex flex-col items-center flex-1">
+                                <span class="text-sm font-bold text-neon-blue" id="summary-fat">-- g</span>
+                                <span class="text-[10px] text-on-surface-variant uppercase font-medium mt-1">Yağ</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -3828,6 +3847,16 @@
                             <option value="1.55">Orta Aktif (Haftada 3-5 Gün)</option>
                             <option value="1.725">Çok Aktif (Haftada 6-7 Gün)</option>
                             <option value="1.9">Ekstra Aktif (Günde 2x / Fiziksel İş)</option>
+                        </select>
+                    </div>
+
+                    <div class="space-y-2">
+                        <label class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider block ml-1">Hedefin Ne?</label>
+                        <select id="profile-goal" class="w-full bg-surface-variant/30 text-on-surface font-body-lg text-body-lg rounded-[32px] px-4 py-3 border-0 focus:ring-2 focus:ring-primary transition-shadow placeholder-outline-variant shadow-neo-inset border-none bg-background appearance-none">
+                            <option value="" disabled selected>Hedefini Seç</option>
+                            <option value="lose">Kilo Vermek</option>
+                            <option value="maintain">Kilonu Korumak</option>
+                            <option value="gain">Kilo Almak</option>
                         </select>
                     </div>
 
