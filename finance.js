@@ -1,8 +1,7 @@
 import { auth, db } from "./firebase-config.js";
-import { formatDate, formatCurrency } from "./utils.js";
+import { formatDate, formatCurrency, escapeHtml, validatePositiveNumber } from "./utils.js";
 import { collection, doc, addDoc, setDoc, updateDoc, deleteDoc, getDocs, getDoc, query, orderBy, limit, serverTimestamp, onSnapshot, where } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
 import { registerListener } from "./listenerManager.js";
-import { validatePositiveNumber } from "./utils.js";
 import { COLLECTAPI_KEY } from "./api-config.js";
 
 let currentUid = null;
@@ -567,7 +566,7 @@ function renderTransactions(isFromScroll = false) {
                     <span class="material-symbols-rounded ${iconColor}">${cat.icon}</span>
                 </div>
                 <div class="flex flex-col min-w-0">
-                    <p class="text-sm font-bold text-[#1E293B] truncate">${tx.title}</p>
+                    <p class="text-sm font-bold text-[#1E293B] truncate">${escapeHtml(tx.title)}</p>
                     <div class="flex items-center gap-2">
                         <p class="text-xs text-[#64748B] whitespace-nowrap">${dateFormatted}</p>
                         <span class="text-[10px] px-1.5 py-0.5 rounded bg-[#E0E5EC] text-[#64748B] font-medium truncate max-w-[80px]">${pm.name}</span>
@@ -856,6 +855,10 @@ async function saveTransaction() {
         alert('Lütfen geçerli bir tutar girin (Sıfırdan büyük olmalıdır).');
         return;
     }
+    if(amount > 999999999) {
+        alert('Girdiğiniz tutar çok büyük.');
+        return;
+    }
     if(!title) {
         alert('Lütfen işlem adı girin.');
         return;
@@ -888,13 +891,29 @@ async function saveTransaction() {
             updatedAt: serverTimestamp()
         };
 
+        let dbPromise;
         if (currentEditFinanceTxId) {
-            await updateDoc(doc(db, "users", currentUid, "finance_transactions", currentEditFinanceTxId), txData).catch(e => { console.error('DB Error:', e); alert('Veritabanı işlemi sırasında bir hata oluştu.'); throw e; });
-            currentEditFinanceTxId = null;
+            dbPromise = updateDoc(doc(db, "users", currentUid, "finance_transactions", currentEditFinanceTxId), txData);
         } else {
             txData.createdAt = serverTimestamp();
-            await addDoc(collection(db, "users", currentUid, "finance_transactions"), txData).catch(e => { console.error('DB Error:', e); alert('Veritabanı işlemi sırasında bir hata oluştu.'); throw e; });
+            dbPromise = addDoc(collection(db, "users", currentUid, "finance_transactions"), txData);
         }
+        
+        const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error('OFFLINE_TIMEOUT')), 6000));
+        
+        try {
+            await Promise.race([dbPromise, timeoutPromise]);
+        } catch (err) {
+            if (err.message === 'OFFLINE_TIMEOUT') {
+                alert("Çevrimdışısın. İşlem cihaza kaydedildi, bağlantı geldiğinde senkronize edilecek.");
+            } else {
+                console.error('DB Error:', err); 
+                alert('Veritabanı işlemi sırasında bir hata oluştu.'); 
+                throw err;
+            }
+        }
+        
+        if (currentEditFinanceTxId) currentEditFinanceTxId = null;
 
         saveBtn.innerHTML = `<span class="material-symbols-rounded">check_circle</span> Eklendi!`;
         saveBtn.classList.add("bg-gradient-to-r", "from-neon-purple", "to-neon-blue-container", "text-white-container");

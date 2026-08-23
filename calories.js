@@ -363,7 +363,7 @@ if (caloriesGoalBackdrop) {
             }
             saveNewFoodBtn.disabled = true;
             try {
-                await addDoc(collection(db, "users", currentUid, "foodLibrary"), {
+                const dbPromise = addDoc(collection(db, "users", currentUid, "foodLibrary"), {
                     name: name,
                     kcal: tempNewFoodKcal,
                     protein: tempNewFoodProtein,
@@ -371,10 +371,18 @@ if (caloriesGoalBackdrop) {
                     yag: tempNewFoodYag,
                     createdAt: serverTimestamp()
                 });
+                const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error('OFFLINE_TIMEOUT')), 6000));
+                
+                await Promise.race([dbPromise, timeoutPromise]);
                 closeNewFoodModal();
             } catch (error) {
-                console.error("Besin eklerken hata:", error);
-                alert("Kaydedilemedi: " + error.message);
+                if (error.message === 'OFFLINE_TIMEOUT') {
+                    alert("Çevrimdışısın. Besin cihaza kaydedildi, bağlantı geldiğinde senkronize edilecek.");
+                    closeNewFoodModal();
+                } else {
+                    console.error("Besin eklerken hata:", error);
+                    alert("Kaydedilemedi: " + error.message);
+                }
             } finally {
                 saveNewFoodBtn.disabled = false;
             }
@@ -425,8 +433,9 @@ if (caloriesGoalBackdrop) {
 
             addFoodToLogBtn.disabled = true;
             try {
+                let dbPromise;
                 if (currentEditLogId) {
-                    await updateDoc(doc(db, "users", currentUid, "calorieLogs", currentEditLogId), {
+                    dbPromise = updateDoc(doc(db, "users", currentUid, "calorieLogs", currentEditLogId), {
                         amount: grams,
                         kcal: total,
                         protein: p,
@@ -444,11 +453,18 @@ if (caloriesGoalBackdrop) {
                         createdAt: serverTimestamp(),
                         type: "Food"
                     };
-                    await addDoc(collection(db, "users", currentUid, "calorieLogs"), logEntry);
+                    dbPromise = addDoc(collection(db, "users", currentUid, "calorieLogs"), logEntry);
                 }
+                
+                const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error('OFFLINE_TIMEOUT')), 6000));
+                await Promise.race([dbPromise, timeoutPromise]);
             } catch(err) {
-                console.error("Kayıt Hatası:", err);
-                alert('Kaydedilirken hata oluştu: ' + err.message);
+                if (err.message === 'OFFLINE_TIMEOUT') {
+                    alert("Çevrimdışısın. İşlem cihaza kaydedildi, bağlantı geldiğinde senkronize edilecek.");
+                } else {
+                    console.error("Kayıt Hatası:", err);
+                    alert('Kaydedilirken hata oluştu: ' + err.message);
+                }
             } finally {
                 currentEditLogId = null;
                 addFoodToLogBtn.disabled = false;

@@ -484,10 +484,10 @@ async function saveAddMovie() {
     };
 
     if (type === 'series') {
-        data.totalSeason = parseInt(addTotalSeason.value) || 1;
-        data.totalEpisode = parseInt(addTotalEpisode.value) || 1;
-        data.season = parseInt(addSeason.value) || 1;
-        data.episode = parseInt(addEpisode.value) || 1;
+        data.totalSeason = Math.max(1, parseInt(addTotalSeason.value) || 1);
+        data.totalEpisode = Math.max(1, parseInt(addTotalEpisode.value) || 1);
+        data.season = Math.max(1, parseInt(addSeason.value) || 1);
+        data.episode = Math.max(1, parseInt(addEpisode.value) || 1);
     }
 
     try {
@@ -566,10 +566,10 @@ async function saveEditMovie() {
     };
 
     if (type === 'series') {
-        data.totalSeason = parseInt(editTotalSeason.value) || 1;
-        data.totalEpisode = parseInt(editTotalEpisode.value) || 1;
-        data.season = parseInt(editSeason.value) || 1;
-        data.episode = parseInt(editEpisode.value) || 1;
+        data.totalSeason = Math.max(1, parseInt(editTotalSeason.value) || 1);
+        data.totalEpisode = Math.max(1, parseInt(editTotalEpisode.value) || 1);
+        data.season = Math.max(1, parseInt(editSeason.value) || 1);
+        data.episode = Math.max(1, parseInt(editEpisode.value) || 1);
     }
 
     try {
