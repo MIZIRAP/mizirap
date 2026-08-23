@@ -21,9 +21,9 @@ import {
 // ─── Utilities ─────────────────────────────────────────────────────────────
 export function calculateE1RM(weight, reps, rpe) {
     if (!weight || !reps) return 0;
-    const rir = rpe !== null ? (10 - rpe) : 0;
-    const estimatedMaxReps = reps + rir;
-    return Math.round(weight * (1 + estimatedMaxReps / 30) * 10) / 10;
+    const effectiveRpe = (rpe === null || rpe === undefined) ? 10 : rpe;
+    const rm = weight * (1 + (reps + (10 - effectiveRpe)) / 30);
+    return Math.round(rm * 10) / 10;
 }
 
 // ─── Module state ──────────────────────────────────────────────────────────
