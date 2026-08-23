@@ -58,7 +58,6 @@ Veriler, Firestore (NoSQL) yapısında her kullanıcıya ait alt koleksiyonlar �
 *   **Loading UX**: "0" verilerinin yanıltıcı görünmesini engellemek için yükleme anlarında iskelet yükleyici (`...` vs.) tercih edilmiştir.
 
 ## 6. BİLİNEN SORUNLAR / YARIM KALANLAR
-*   **Ertelenen Geliştirmeler**: Profil ayarlarında "Şifreyi değiştir" bölümünün akordiyon yapısına çevrilmesi, stabilite ve ana sayfa özelliklerine öncelik verildiği için ileri bir tarihe ertelendi.
 *   **Race Condition (Zamanlama Sorunu)**: Antrenman bittiğinde anında `Dashboard` veya `History` ekranına dönüldüğünde verilerin henüz Firestore'a işlenememesi ihtimali.
 *   **Veri Doğrulama**: Metin ve rakamsal veri girişlerinde ileri düzey hatalı karakter kısıtlamaları (Edge Case validasyonları) bazı yerlerde eksik olabilir.
 *   **Aktif Bug**: Sistem genelinde çalışmayı engelleyen (blocking) kritik bir sorun tespit edilmemiştir. Su takibi widget'ı metin formatı hatası, hesaplayıcı (calculator) UI bozulmaları ve widget sıralamalarındaki gecikme/flash sorunları başarıyla çözüldü.
