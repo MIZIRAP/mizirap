@@ -17,29 +17,38 @@ export function initDashboard(uid) {
 }
 
 let dashboardSortable = null;
+let bottomWidgetsSortable = null;
 window.isEditMode = false;
 
 async function initWidgetSorting(uid) {
     const grid = document.getElementById("dashboard-widgets-grid");
-    if (!grid) return;
+    const bottomGrid = document.getElementById("dashboard-bottom-widgets");
 
     // Load initial order
     try {
         const docRef = doc(db, "users", uid, "profile", "data");
         const docSnap = await getDoc(docRef);
-        if (docSnap.exists() && docSnap.data().widgetOrder) {
-            const order = docSnap.data().widgetOrder;
-            order.forEach(id => {
-                const el = grid.querySelector(`[data-widget-id="${id}"]`);
-                if (el) grid.appendChild(el);
-            });
+        if (docSnap.exists()) {
+            const data = docSnap.data();
+            if (data.widgetOrder && grid) {
+                data.widgetOrder.forEach(id => {
+                    const el = grid.querySelector(`[data-widget-id="${id}"]`);
+                    if (el) grid.appendChild(el);
+                });
+            }
+            if (data.bottomWidgetOrder && bottomGrid) {
+                data.bottomWidgetOrder.forEach(id => {
+                    const el = bottomGrid.querySelector(`[data-widget-id="${id}"]`);
+                    if (el) bottomGrid.appendChild(el);
+                });
+            }
         }
     } catch(err) {
         console.error("Sıralama yüklenemedi", err);
     }
 
     if (typeof Sortable !== 'undefined') {
-        dashboardSortable = new Sortable(grid, {
+        const sortableOptions = {
             animation: 300,
             delay: 500,
             delayOnTouchOnly: true,
@@ -48,12 +57,17 @@ async function initWidgetSorting(uid) {
             onChoose: function (evt) {
                 if (!window.isEditMode) {
                     window.isEditMode = true;
-                    grid.classList.add('widget-edit-mode');
-                    dashboardSortable.option("delay", 0);
+                    if (grid) grid.classList.add('widget-edit-mode');
+                    if (bottomGrid) bottomGrid.classList.add('widget-edit-mode');
+                    if (dashboardSortable) dashboardSortable.option("delay", 0);
+                    if (bottomWidgetsSortable) bottomWidgetsSortable.option("delay", 0);
                     if(navigator.vibrate) navigator.vibrate(50);
                 }
             }
-        });
+        };
+
+        if (grid) dashboardSortable = new Sortable(grid, sortableOptions);
+        if (bottomGrid) bottomWidgetsSortable = new Sortable(bottomGrid, sortableOptions);
 
         // Click outside to exit edit mode
         document.addEventListener('click', async (e) => {
@@ -61,14 +75,19 @@ async function initWidgetSorting(uid) {
                 const isWidget = e.target.closest('[data-widget-id]');
                 if (!isWidget) {
                     window.isEditMode = false;
-                    grid.classList.remove('widget-edit-mode');
-                    dashboardSortable.option("delay", 500);
+                    if (grid) grid.classList.remove('widget-edit-mode');
+                    if (bottomGrid) bottomGrid.classList.remove('widget-edit-mode');
+                    if (dashboardSortable) dashboardSortable.option("delay", 500);
+                    if (bottomWidgetsSortable) bottomWidgetsSortable.option("delay", 500);
                     
                     // Save new order
-                    const newOrder = Array.from(grid.children).map(child => child.dataset.widgetId).filter(Boolean);
+                    const updates = {};
+                    if (grid) updates.widgetOrder = Array.from(grid.children).map(child => child.dataset.widgetId).filter(Boolean);
+                    if (bottomGrid) updates.bottomWidgetOrder = Array.from(bottomGrid.children).map(child => child.dataset.widgetId).filter(Boolean);
+                    
                     try {
                         const docRef = doc(db, "users", uid, "profile", "data");
-                        await updateDoc(docRef, { widgetOrder: newOrder });
+                        await updateDoc(docRef, updates);
                     } catch(err) {
                         console.error("Sıralama kaydedilemedi", err);
                     }
