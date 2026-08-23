@@ -82,3 +82,14 @@ input[type="number"] {
   animation: none !important; /* stop jiggle while dragging */
   cursor: grabbing !important;
 }
+
+/* Prevent native long-press text selection and callouts on sortable widgets */
+[data-widget-id] {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+[data-widget-id] img,
+[data-widget-id] svg {
+  -webkit-user-drag: none;
+}

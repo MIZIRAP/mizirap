@@ -94,6 +94,14 @@ async function initWidgetSorting(uid) {
                 }
             }
         });
+
+        // Prevent native context menu on widgets (e.g. mobile long press text selection/image drag popup)
+        document.addEventListener('contextmenu', (e) => {
+            if (e.target.closest('[data-widget-id]')) {
+                e.preventDefault();
+            }
+        });
+
     }
 }
 
