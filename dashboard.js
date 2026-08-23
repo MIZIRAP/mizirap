@@ -54,7 +54,8 @@ async function initWidgetSorting(uid) {
         const sortableOptions = {
             animation: 300,
             delay: 500,
-            delayOnTouchOnly: true,
+            delayOnTouchOnly: false,
+            touchStartThreshold: 5,
             ghostClass: 'sortable-ghost',
             dragClass: 'sortable-drag',
             onChoose: function (evt) {
