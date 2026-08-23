@@ -68,6 +68,92 @@ export const CalculatorEngine = {
         const training = trainingMin * 12; // ml
         const totalLiters = (base + training) / 1000;
         return { value: totalLiters.toFixed(1), unit: 'L', text: `Temel: ${(base/1000).toFixed(1)}L + Spor: ${(training/1000).toFixed(1)}L` };
+    },
+
+    calculateHeartRate: (age) => {
+        const maxHR = 220 - age;
+        return { 
+            value: maxHR, 
+            unit: 'bpm', 
+            text: `Yağ Yak: ${Math.round(maxHR*0.6)}-${Math.round(maxHR*0.7)} | Kardiyo: ${Math.round(maxHR*0.7)}-${Math.round(maxHR*0.8)}` 
+        };
+    },
+
+    calculateBodyFat: (waist, neck, height, hip, gender) => {
+        let bodyFat = 0;
+        if (gender === 'm') {
+            bodyFat = 495 / (1.0324 - 0.19077 * Math.log10(waist - neck) + 0.15456 * Math.log10(height)) - 450;
+        } else {
+            bodyFat = 495 / (1.29579 - 0.35004 * Math.log10(waist + hip - neck) + 0.22100 * Math.log10(height)) - 450;
+        }
+        
+        let category = '';
+        if (gender === 'm') {
+            if(bodyFat < 6) category = 'Tehlikeli (Düşük)';
+            else if(bodyFat < 14) category = 'Atletik';
+            else if(bodyFat < 18) category = 'Fit';
+            else if(bodyFat < 25) category = 'Ortalama';
+            else category = 'Yüksek';
+        } else {
+            if(bodyFat < 14) category = 'Tehlikeli (Düşük)';
+            else if(bodyFat < 21) category = 'Atletik';
+            else if(bodyFat < 25) category = 'Fit';
+            else if(bodyFat < 32) category = 'Ortalama';
+            else category = 'Yüksek';
+        }
+        return { value: bodyFat.toFixed(1), unit: '%', text: category };
+    },
+
+    calculateTDEE: (weight, height, age, gender, activityLevel) => {
+        let bmr = 0;
+        if (gender === 'm') {
+            bmr = 10 * weight + 6.25 * height - 5 * age + 5;
+        } else {
+            bmr = 10 * weight + 6.25 * height - 5 * age - 161;
+        }
+        const tdee = Math.round(bmr * activityLevel);
+        inputs.tdee = tdee; // Downstream veri akışı için
+        return { value: tdee, unit: 'kcal', text: `BMR (Bazal Met.): ${Math.round(bmr)} kcal` };
+    },
+
+    calculateCalorie: (tdee, goal) => {
+        let target = tdee;
+        let text = 'Mevcut kilonu korursun';
+        if (goal === 'lose') {
+            target -= 500;
+            text = 'Haftada ~0.5kg yağ kaybı';
+        } else if (goal === 'gain') {
+            target += 500;
+            text = 'Haftada ~0.5kg kas/kilo alımı';
+        }
+        inputs.targetCalorie = target; // Downstream Makro için
+        return { value: target, unit: 'kcal', text: text };
+    },
+
+    calculateProtein: (weight, goal, activityLevel) => {
+        let multiplier = 0.8;
+        if (activityLevel >= 1.55) {
+            multiplier = 1.5;
+            if (goal === 'gain') multiplier = 2.0;
+            if (goal === 'lose') multiplier = 1.8;
+        } else {
+            if (goal === 'lose') multiplier = 1.2;
+            if (goal === 'gain') multiplier = 1.5;
+        }
+        const protein = Math.round(weight * multiplier);
+        return { value: protein, unit: 'g', text: `Tavsiye: ${multiplier.toFixed(1)}g / kg başına` };
+    },
+
+    calculateMacro: (targetCalorie) => {
+        const pKcal = targetCalorie * 0.20;
+        const cKcal = targetCalorie * 0.50;
+        const fKcal = targetCalorie * 0.30;
+        
+        const pGrams = Math.round(pKcal / 4);
+        const cGrams = Math.round(cKcal / 4);
+        const fGrams = Math.round(fKcal / 9);
+        
+        return { value: targetCalorie, unit: 'kcal', text: `Karb: ${cGrams}g | Pro: ${pGrams}g | Yağ: ${fGrams}g` };
     }
 };
 
@@ -79,8 +165,14 @@ let inputs = {
     weight: 70,
     waist: 80,
     hip: 100,
+    neck: 40,
+    age: 25,
     training_time: 0,
-    gender: 'm'
+    activity_level: 1.2,
+    goal: 'maintain',
+    gender: 'm',
+    tdee: 0, // dynamic
+    targetCalorie: 0 // dynamic
 };
 
 let currentActiveTool = null;
@@ -110,6 +202,43 @@ const TOOLS_CONFIG = {
         title: 'Günlük Su İhtiyacı',
         fields: ['weight', 'training_time'],
         calc: () => CalculatorEngine.calculateWater(inputs.weight, inputs.training_time)
+    },
+    'heartrate': {
+        title: 'Kalp Hızı Bölgeleri',
+        fields: ['age'],
+        calc: () => CalculatorEngine.calculateHeartRate(inputs.age)
+    },
+    'bodyfat': {
+        title: 'Vücut Yağı Oranı',
+        fields: ['height', 'waist', 'neck', 'hip', 'gender'],
+        calc: () => CalculatorEngine.calculateBodyFat(inputs.waist, inputs.neck, inputs.height, inputs.hip, inputs.gender)
+    },
+    'tdee': {
+        title: 'TDEE Hesaplama',
+        fields: ['weight', 'height', 'age', 'gender', 'activity_level'],
+        calc: () => CalculatorEngine.calculateTDEE(inputs.weight, inputs.height, inputs.age, inputs.gender, inputs.activity_level)
+    },
+    'calorie': {
+        title: 'Günlük Kalori İhtiyacı',
+        fields: ['weight', 'height', 'age', 'gender', 'activity_level', 'goal'],
+        calc: () => {
+            CalculatorEngine.calculateTDEE(inputs.weight, inputs.height, inputs.age, inputs.gender, inputs.activity_level);
+            return CalculatorEngine.calculateCalorie(inputs.tdee, inputs.goal);
+        }
+    },
+    'protein': {
+        title: 'Günlük Protein İhtiyacı',
+        fields: ['weight', 'activity_level', 'goal'],
+        calc: () => CalculatorEngine.calculateProtein(inputs.weight, inputs.goal, inputs.activity_level)
+    },
+    'macro': {
+        title: 'Makro Dağılımı',
+        fields: ['weight', 'height', 'age', 'gender', 'activity_level', 'goal'],
+        calc: () => {
+            CalculatorEngine.calculateTDEE(inputs.weight, inputs.height, inputs.age, inputs.gender, inputs.activity_level);
+            CalculatorEngine.calculateCalorie(inputs.tdee, inputs.goal);
+            return CalculatorEngine.calculateMacro(inputs.targetCalorie);
+        }
     }
 };
 
@@ -131,13 +260,18 @@ export function initTools() {
         document.getElementById('tool-result-text').textContent = 'Bekleniyor';
 
         // Show/hide fields
-        const allFields = ['height', 'weight', 'waist', 'hip', 'training_time', 'gender'];
+        const allFields = ['height', 'weight', 'waist', 'hip', 'neck', 'age', 'training_time', 'activity_level', 'goal', 'gender'];
         allFields.forEach(f => {
             const el = document.getElementById(`input-row-${f}`);
             if (el) {
                 if (config.fields.includes(f)) {
                     el.classList.remove('hidden');
-                    el.classList.add('flex');
+                    // select elements and gender row have different default flex classes
+                    if(f === 'gender' || f === 'activity_level' || f === 'goal') {
+                        el.classList.add('flex');
+                    } else {
+                        el.classList.add('flex');
+                    }
                 } else {
                     el.classList.add('hidden');
                     el.classList.remove('flex');
@@ -146,7 +280,7 @@ export function initTools() {
         });
 
         // Hide/show the inputs container based on if any number input is shown
-        const numberInputs = config.fields.filter(f => f !== 'gender');
+        const numberInputs = config.fields.filter(f => !['gender', 'activity_level', 'goal'].includes(f));
         const container = document.getElementById('tool-inputs-container');
         if (numberInputs.length > 0) {
             container.classList.remove('hidden');
@@ -187,6 +321,12 @@ export function initTools() {
         if (type === 'weight' && inputs[type] < 30) inputs[type] = 30;
         if (type === 'weight' && inputs[type] > 250) inputs[type] = 250;
         
+        if (type === 'age' && inputs[type] < 10) inputs[type] = 10;
+        if (type === 'age' && inputs[type] > 120) inputs[type] = 120;
+        
+        if (type === 'neck' && inputs[type] < 20) inputs[type] = 20;
+        if (type === 'neck' && inputs[type] > 80) inputs[type] = 80;
+        
         if (type === 'waist' && inputs[type] < 40) inputs[type] = 40;
         if (type === 'waist' && inputs[type] > 200) inputs[type] = 200;
         
@@ -216,16 +356,35 @@ export function initTools() {
             btnF.className = "flex-1 h-full rounded-full flex items-center justify-center active:scale-95 transition-all text-[#585A68]";
             btnF.style.boxShadow = "none";
         } else {
-            btnF.className = "flex-1 h-full rounded-full flex items-center justify-center active:scale-95 transition-all text-[#22C55E]";
+            btnF.className = "flex-1 h-full rounded-full flex items-center justify-center active:scale-95 transition-all text-[#F43F5E]";
             btnF.style.boxShadow = "6px 6px 12px #E3E6EE, -6px -6px 12px #FFFFFF";
             
             btnM.className = "flex-1 h-full rounded-full flex items-center justify-center active:scale-95 transition-all text-[#585A68]";
             btnM.style.boxShadow = "none";
         }
         
+        if (currentActiveTool === 'bodyfat') {
+            const hipRow = document.getElementById('input-row-hip');
+            if (gender === 'm') {
+                hipRow.classList.add('hidden');
+                hipRow.classList.remove('flex');
+            } else {
+                hipRow.classList.remove('hidden');
+                hipRow.classList.add('flex');
+            }
+        }
+        
         document.getElementById('tool-result-value').textContent = '--';
         document.getElementById('tool-result-unit').textContent = '';
         document.getElementById('tool-result-text').textContent = 'Bekleniyor';
+    };
+
+    window.setToolActivity = (val) => {
+        inputs.activity_level = parseFloat(val);
+    };
+
+    window.setToolGoal = (val) => {
+        inputs.goal = val;
     };
 
     window.calculateTool = () => {
@@ -240,9 +399,16 @@ export function initTools() {
 }
 
 export function clearTools() {
-    inputs = { height: 170, weight: 70, waist: 80, hip: 100, training_time: 0, gender: 'm' };
-    ['height', 'weight', 'waist', 'hip', 'training_time'].forEach(k => {
+    inputs = { 
+        height: 170, weight: 70, waist: 80, hip: 100, 
+        neck: 40, age: 25, training_time: 0, 
+        activity_level: 1.2, goal: 'maintain', gender: 'm',
+        tdee: 0, targetCalorie: 0
+    };
+    ['height', 'weight', 'waist', 'hip', 'neck', 'age', 'training_time'].forEach(k => {
         if(document.getElementById(`tool-${k}-display`)) document.getElementById(`tool-${k}-display`).textContent = inputs[k];
     });
     if(window.setToolGender) window.setToolGender('m');
+    if(document.getElementById('tool-activity-select')) document.getElementById('tool-activity-select').value = "1.2";
+    if(document.getElementById('tool-goal-select')) document.getElementById('tool-goal-select').value = "maintain";
 }
