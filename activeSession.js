@@ -19,7 +19,7 @@ import {
 } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js';
 
 // ─── Utilities ─────────────────────────────────────────────────────────────
-function calculateE1RM(weight, reps, rpe) {
+export function calculateE1RM(weight, reps, rpe) {
     if (!weight || !reps) return 0;
     const rir = rpe !== null ? (10 - rpe) : 0;
     const estimatedMaxReps = reps + rir;

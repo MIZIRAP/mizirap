@@ -1,3 +1,5 @@
+import { calculateE1RM } from './activeSession.js';
+
 // ==========================================
 // CALCULATOR ENGINE
 // ==========================================
@@ -141,19 +143,30 @@ export const CalculatorEngine = {
             if (goal === 'gain') multiplier = 1.5;
         }
         const protein = Math.round(weight * multiplier);
+        inputs.proteinGrams = protein; // Makro için kaydet
         return { value: protein, unit: 'g', text: `Tavsiye: ${multiplier.toFixed(1)}g / kg başına` };
     },
 
-    calculateMacro: (targetCalorie) => {
-        const pKcal = targetCalorie * 0.20;
-        const cKcal = targetCalorie * 0.50;
-        const fKcal = targetCalorie * 0.30;
+    calculateMacro: (targetCalorie, weight) => {
+        let pGrams = inputs.proteinGrams;
+        if (!pGrams) {
+            pGrams = Math.round(weight * 1.6); // Varsayılan
+        }
         
-        const pGrams = Math.round(pKcal / 4);
-        const cGrams = Math.round(cKcal / 4);
+        const fKcal = targetCalorie * 0.25;
         const fGrams = Math.round(fKcal / 9);
         
-        return { value: targetCalorie, unit: 'kcal', text: `Karb: ${cGrams}g | Pro: ${pGrams}g | Yağ: ${fGrams}g` };
+        const pKcal = pGrams * 4;
+        const remainingKcal = targetCalorie - fKcal - pKcal;
+        
+        let cGrams = Math.round(remainingKcal / 4);
+        
+        let warningText = '';
+        if (remainingKcal < 0) {
+            warningText = ' (⚠️ Kalan kalori negatif!)';
+        }
+        
+        return { value: targetCalorie, unit: 'kcal', text: `Karb: ${cGrams}g | Pro: ${pGrams}g | Yağ: ${fGrams}g${warningText}` };
     },
 
     calculateRestTime: (workoutType) => {
@@ -161,12 +174,6 @@ export const CalculatorEngine = {
         if (workoutType === 'strength') return { value: '3-5', unit: 'dk', text: 'Maksimum güç ve toparlanma' };
         if (workoutType === 'endurance') return { value: '30-60', unit: 'sn', text: 'Kardiyovasküler kapasite artışı' };
         return { value: '60', unit: 'sn', text: 'Genel dinlenme' };
-    },
-
-    calculateOneRM: (weightLifted, reps) => {
-        if (reps === 1) return { value: weightLifted.toFixed(1), unit: 'kg', text: 'Gerçek maksimum ağırlığınız' };
-        const rm = weightLifted * (1 + (reps / 30));
-        return { value: rm.toFixed(1), unit: 'kg', text: `%80'i: ${(rm * 0.8).toFixed(1)}kg (Hipertrofi için)` };
     },
 
     calculateBodyType: (wrist, height, gender) => {
@@ -272,7 +279,7 @@ const TOOLS_CONFIG = {
         calc: () => {
             CalculatorEngine.calculateTDEE(inputs.weight, inputs.height, inputs.age, inputs.gender, inputs.activity_level);
             CalculatorEngine.calculateCalorie(inputs.tdee, inputs.goal);
-            return CalculatorEngine.calculateMacro(inputs.targetCalorie);
+            return CalculatorEngine.calculateMacro(inputs.targetCalorie, inputs.weight);
         }
     },
     'rest_time': {
@@ -283,7 +290,10 @@ const TOOLS_CONFIG = {
     'onerm': {
         title: '1RM Hesaplama',
         fields: ['weight_lifted', 'reps'],
-        calc: () => CalculatorEngine.calculateOneRM(inputs.weight_lifted, inputs.reps)
+        calc: () => {
+            const rm = calculateE1RM(inputs.weight_lifted, inputs.reps, null);
+            return { value: rm, unit: 'kg', text: `%80'i: ${(rm * 0.8).toFixed(1)}kg (Hipertrofi için)` };
+        }
     },
     'bodytype': {
         title: 'Vücut Tipi Analizi',
