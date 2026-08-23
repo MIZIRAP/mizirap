@@ -1035,43 +1035,56 @@ function renderSplitEditView() {
                 </div>
             </div>
         `;
+        // --- Swipe-to-reveal delete: co-slide approach ---
+        // No overflow:hidden needed — button starts outside view (right:-80px)
+        // Card and button slide together so button is always adjacent to card's right edge
 
-
-        // Wrap card + delete button in a relative container (swipe-to-reveal pattern)
         const swipeWrapper = document.createElement('div');
-        swipeWrapper.className = 'relative w-full max-w-[342px] mx-auto overflow-hidden mb-1';
+        swipeWrapper.style.cssText = 'position: relative; width: 342px; margin: 0 auto 8px;';
 
-        // Make card sit above the delete button
-        splitCard.style.position = 'relative';
-        splitCard.style.zIndex = '1';
-        splitCard.className = splitCard.className.replace('mx-auto', '').trim();
-
-        // Red delete button hidden behind the card (right-0 = fully hidden initially)
+        // Delete button positioned just outside the card's right edge (hidden by default)
         const delBtn = document.createElement('button');
-        delBtn.className = 'absolute right-0 top-0 h-full w-[80px] bg-[#BA1A1A] text-white flex items-center justify-center z-0 active:bg-red-700 transition-colors';
-        delBtn.style.borderRadius = '0 24px 24px 0';
-        delBtn.innerHTML = `<span class="material-symbols-rounded text-white text-[24px]">delete</span>`;
+        delBtn.style.cssText = `
+            position: absolute;
+            right: -80px;
+            top: 0;
+            width: 80px;
+            height: 72px;
+            background: #BA1A1A;
+            border-radius: 0 24px 24px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 0;
+        `;
+        delBtn.innerHTML = `<span class="material-symbols-rounded" style="color:white;font-size:24px;">delete</span>`;
+
+        const resetSwipe = () => {
+            splitCard.style.transition = 'transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)';
+            delBtn.style.transition = 'transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)';
+            splitCard.style.transform = 'translateX(0px)';
+            delBtn.style.transform = 'translateX(0px)';
+        };
+
         delBtn.onclick = () => {
             if(confirm(`"${split.name}" programını silmek istediğinize emin misiniz?`)) {
                 deleteSplit(split.id);
             } else {
-                // Reset swipe on cancel
-                splitCard.style.transition = 'transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)';
-                splitCard.style.transform = 'translateX(0px)';
+                resetSwipe();
             }
         };
 
-        // Swipe gesture on the card itself
+        // Swipe gesture
         const headerEl = splitCard.querySelector('.accordion-header');
         if(headerEl) {
-            let startX = 0, startY = 0, currentX = 0, isDragging = false;
+            let startX = 0, currentX = 0, isDragging = false;
 
             headerEl.addEventListener('touchstart', e => {
                 startX = e.touches[0].clientX;
-                startY = e.touches[0].clientY;
                 currentX = startX;
                 isDragging = true;
                 splitCard.style.transition = 'none';
+                delBtn.style.transition = 'none';
             }, {passive: true});
 
             headerEl.addEventListener('touchmove', e => {
@@ -1080,29 +1093,32 @@ function renderSplitEditView() {
                 let diff = currentX - startX;
                 if(diff > 0) diff = 0;
                 if(diff < -80) diff = -80;
+                // Both slide together — button stays right next to card's right edge
                 splitCard.style.transform = `translateX(${diff}px)`;
+                delBtn.style.transform = `translateX(${diff}px)`;
             }, {passive: true});
 
-            headerEl.addEventListener('touchend', e => {
+            headerEl.addEventListener('touchend', () => {
                 if(!isDragging) return;
                 isDragging = false;
-                splitCard.style.transition = 'transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)';
                 const diff = currentX - startX;
                 if(diff < -40) {
-                    // Reveal delete icon
+                    // Snap open
+                    splitCard.style.transition = 'transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)';
+                    delBtn.style.transition = 'transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)';
                     splitCard.style.transform = 'translateX(-80px)';
-                    // Close swipe if user taps elsewhere
+                    delBtn.style.transform = 'translateX(-80px)';
+                    // Close if user taps outside
                     setTimeout(() => {
                         document.addEventListener('touchstart', function closeSwipe(evt) {
                             if(!swipeWrapper.contains(evt.target)) {
-                                splitCard.style.transition = 'transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)';
-                                splitCard.style.transform = 'translateX(0px)';
+                                resetSwipe();
                                 document.removeEventListener('touchstart', closeSwipe);
                             }
                         }, {passive: true});
                     }, 100);
                 } else {
-                    splitCard.style.transform = 'translateX(0px)';
+                    resetSwipe();
                 }
             });
         }
