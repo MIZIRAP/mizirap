@@ -116,8 +116,8 @@ export function initBooks(uid, onChangeCallback) {
             let status = "to_read";
             addStatusRadios.forEach(radio => { if(radio.checked) status = radio.value; });
 
-            if(!title || !author || totalPages <= 0) {
-                alert("Lütfen tüm alanları geçerli şekilde doldurun.");
+            if(!title || !author || totalPages <= 0 || totalPages > 10000) {
+                alert("Lütfen tüm alanları geçerli şekilde doldurun (En fazla 10.000 sayfa).");
                 return;
             }
 
@@ -154,8 +154,8 @@ export function initBooks(uid, onChangeCallback) {
             let status = "to_read";
             editStatusRadios.forEach(radio => { if(radio.checked) status = radio.value; });
 
-            if(!title || !author || totalPages <= 0) {
-                alert("Lütfen tüm alanları geçerli şekilde doldurun.");
+            if(!title || !author || totalPages <= 0 || totalPages > 10000) {
+                alert("Lütfen tüm alanları geçerli şekilde doldurun (En fazla 10.000 sayfa).");
                 return;
             }
 

@@ -14,6 +14,9 @@ let expenseChartInstance = null;
 
 let currentEditFinanceTxId = null;
 let currentTxType = 'expense';
+let isNewFinanceTx = false;
+let currentEditCategoryId = null;
+let currentEditPaymentId = null;
 
 let unsubCategories = null;
 let unsubPaymentMethods = null;
@@ -23,11 +26,21 @@ document.addEventListener('click', (e) => {
     const actionBtn = e.target.closest('[data-action]');
     if (!actionBtn) return;
     const action = actionBtn.getAttribute('data-action');
-    if (action === 'openAddTransactionModal') openModal('finance-add-tx-modal');
+    if (action === 'openAddTransactionModal') {
+        currentEditFinanceTxId = "tx_" + Date.now() + "_" + Math.floor(Math.random() * 10000);
+        isNewFinanceTx = true;
+        openModal('finance-add-tx-modal');
+    }
     else if (action === 'closeAddTransactionModal') closeModal('finance-add-tx-modal');
-    else if (action === 'openAddCategoryModal') openModal('finance-add-category-modal');
+    else if (action === 'openAddCategoryModal') {
+        currentEditCategoryId = "cat_" + Date.now() + "_" + Math.floor(Math.random() * 10000);
+        openModal('finance-add-category-modal');
+    }
     else if (action === 'closeAddCategoryModal') closeModal('finance-add-category-modal');
-    else if (action === 'openAddPaymentMethodModal') openModal('finance-add-payment-modal');
+    else if (action === 'openAddPaymentMethodModal') {
+        currentEditPaymentId = "pm_" + Date.now() + "_" + Math.floor(Math.random() * 10000);
+        openModal('finance-add-payment-modal');
+    }
     else if (action === 'openFinanceSettingsModal') openModal('finance-settings-modal');
     else if (action === 'closeFinanceSettingsModal') closeModal('finance-settings-modal');
     else if (action === 'closeAddPaymentMethodModal') closeModal('finance-add-payment-modal');
@@ -217,12 +230,12 @@ async function savePaymentMethod() {
     saveBtn.disabled = true;
 
     try {
-        await addDoc(collection(db, "users", currentUid, "finance_payment_methods"), {
+        await setDoc(doc(db, "users", currentUid, "finance_payment_methods", currentEditPaymentId), {
             name,
             type,
             icon,
             createdAt: serverTimestamp()
-        });
+        }, { merge: true });
 
         saveBtn.innerHTML = `<span class="material-symbols-rounded">check_circle</span> Eklendi!`;
         saveBtn.classList.add("bg-gradient-to-r", "from-neon-purple", "to-neon-blue-container", "text-white-container");
@@ -621,6 +634,7 @@ function renderTransactions(isFromScroll = false) {
             if (Math.abs(currentX - startX) < 5) {
                 e.stopPropagation();
                 currentEditFinanceTxId = tx.id;
+                isNewFinanceTx = false;
                 openModal('finance-add-tx-modal');
                 const titleEl = document.getElementById('tx-title');
                 const amtEl = document.getElementById('tx-amount');
@@ -717,12 +731,12 @@ async function saveCategory() {
     saveBtn.disabled = true;
 
     try {
-        await addDoc(collection(db, "users", currentUid, "finance_categories"), {
+        await setDoc(doc(db, "users", currentUid, "finance_categories", currentEditCategoryId), {
             name,
             icon,
             color,
             createdAt: serverTimestamp()
-        });
+        }, { merge: true });
 
         saveBtn.innerHTML = `<span class="material-symbols-rounded">check_circle</span> Eklendi!`;
         saveBtn.classList.add("bg-gradient-to-r", "from-neon-purple", "to-neon-blue-container", "text-white-container");
@@ -891,29 +905,26 @@ async function saveTransaction() {
             updatedAt: serverTimestamp()
         };
 
-        let dbPromise;
-        if (currentEditFinanceTxId) {
-            dbPromise = updateDoc(doc(db, "users", currentUid, "finance_transactions", currentEditFinanceTxId), txData);
-        } else {
+        if (isNewFinanceTx) {
             txData.createdAt = serverTimestamp();
-            dbPromise = addDoc(collection(db, "users", currentUid, "finance_transactions"), txData);
         }
+        let dbPromise = setDoc(doc(db, "users", currentUid, "finance_transactions", currentEditFinanceTxId), txData, { merge: true });
         
         const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error('OFFLINE_TIMEOUT')), 6000));
         
         try {
             await Promise.race([dbPromise, timeoutPromise]);
+            isNewFinanceTx = false; // Sonraki kaydetmeler update olur
         } catch (err) {
             if (err.message === 'OFFLINE_TIMEOUT') {
                 alert("Çevrimdışısın. İşlem cihaza kaydedildi, bağlantı geldiğinde senkronize edilecek.");
+                isNewFinanceTx = false;
             } else {
                 console.error('DB Error:', err); 
                 alert('Veritabanı işlemi sırasında bir hata oluştu.'); 
                 throw err;
             }
         }
-        
-        if (currentEditFinanceTxId) currentEditFinanceTxId = null;
 
         saveBtn.innerHTML = `<span class="material-symbols-rounded">check_circle</span> Eklendi!`;
         saveBtn.classList.add("bg-gradient-to-r", "from-neon-purple", "to-neon-blue-container", "text-white-container");

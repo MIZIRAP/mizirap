@@ -18,6 +18,8 @@ let weeklyLogs = [];
 let onChangeCb = null;
 let currentUid = null;
 let currentEditLogId = null;
+let isNewLog = false;
+let currentEditFoodId = null;
 
 // Modal Elements
 const addFoodModal = document.getElementById('addFoodModal');
@@ -363,14 +365,14 @@ if (caloriesGoalBackdrop) {
             }
             saveNewFoodBtn.disabled = true;
             try {
-                const dbPromise = addDoc(collection(db, "users", currentUid, "foodLibrary"), {
+                const dbPromise = setDoc(doc(db, "users", currentUid, "foodLibrary", currentEditFoodId), {
                     name: name,
                     kcal: tempNewFoodKcal,
                     protein: tempNewFoodProtein,
                     karb: tempNewFoodKarb,
                     yag: tempNewFoodYag,
                     createdAt: serverTimestamp()
-                });
+                }, { merge: true });
                 const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error('OFFLINE_TIMEOUT')), 6000));
                 
                 await Promise.race([dbPromise, timeoutPromise]);
@@ -433,31 +435,23 @@ if (caloriesGoalBackdrop) {
 
             addFoodToLogBtn.disabled = true;
             try {
-                let dbPromise;
-                if (currentEditLogId) {
-                    dbPromise = updateDoc(doc(db, "users", currentUid, "calorieLogs", currentEditLogId), {
-                        amount: grams,
-                        kcal: total,
-                        protein: p,
-                        karb: k,
-                        yag: y
-                    });
-                } else {
-                    const logEntry = {
-                        name: currentFoodName,
-                        amount: grams,
-                        kcal: total,
-                        protein: p,
-                        karb: k,
-                        yag: y,
-                        createdAt: serverTimestamp(),
-                        type: "Food"
-                    };
-                    dbPromise = addDoc(collection(db, "users", currentUid, "calorieLogs"), logEntry);
+                const logEntry = {
+                    name: currentFoodName,
+                    amount: grams,
+                    kcal: total,
+                    protein: p,
+                    karb: k,
+                    yag: y
+                };
+                if (isNewLog) {
+                    logEntry.createdAt = serverTimestamp();
+                    logEntry.type = "Food";
                 }
+                let dbPromise = setDoc(doc(db, "users", currentUid, "calorieLogs", currentEditLogId), logEntry, { merge: true });
                 
                 const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error('OFFLINE_TIMEOUT')), 6000));
                 await Promise.race([dbPromise, timeoutPromise]);
+                isNewLog = false;
             } catch(err) {
                 if (err.message === 'OFFLINE_TIMEOUT') {
                     alert("Çevrimdışısın. İşlem cihaza kaydedildi, bağlantı geldiğinde senkronize edilecek.");
@@ -523,6 +517,8 @@ function closeCaloriesGoalModal() {
 
 function openNewFoodModal() {
     if(!newFoodModal) return;
+
+    currentEditFoodId = "food_" + Date.now() + "_" + Math.floor(Math.random() * 10000);
 
     // Reset inputs
     tempNewFoodKcal = 100;
@@ -669,6 +665,9 @@ window.openAddPortionModal = function(name, kcal100, macros) {
     currentFoodName = name;
     currentKcalPer100g = kcal100;
     currentFoodMacros = macros || {karb: 0, protein: 0, yag: 0};
+
+    currentEditLogId = "log_" + Date.now() + "_" + Math.floor(Math.random() * 10000);
+    isNewLog = true;
 
     if(portionModalTitle) portionModalTitle.textContent = name;
     tempPortionAmount = 100;

@@ -74,7 +74,11 @@ export function initWater(uid, onChangeCallback) {
 
     function updateCustomModalUI() {
         if(customAmountDisplay) {
-            customAmountDisplay.textContent = tempCustomAmount;
+            if (customAmountDisplay.tagName === 'INPUT') {
+                customAmountDisplay.value = tempCustomAmount;
+            } else {
+                customAmountDisplay.textContent = tempCustomAmount;
+            }
             customAmountDisplay.style.transform = 'scale(1.1)';
             customAmountDisplay.style.transition = 'transform 0.15s ease-out';
             setTimeout(() => customAmountDisplay.style.transform = 'scale(1)', 150);
@@ -120,7 +124,7 @@ export function initWater(uid, onChangeCallback) {
 
     if(customPlusBtn) {
         customPlusBtn.onclick = () => {
-            if(tempCustomAmount < 2000) {
+            if(tempCustomAmount < 5000) {
                 tempCustomAmount += 50;
                 updateCustomModalUI();
             }
@@ -129,6 +133,24 @@ export function initWater(uid, onChangeCallback) {
 
     if(customCloseHandle) customCloseHandle.onclick = closeCustomModal;
     if(customBackdrop) customBackdrop.onclick = closeCustomModal;
+
+    if(customAmountDisplay && customAmountDisplay.tagName === 'INPUT') {
+        customAmountDisplay.addEventListener('input', (e) => {
+            let val = parseInt(e.target.value);
+            if (isNaN(val)) val = 0;
+            if (val > 5000) {
+                val = 5000;
+                e.target.value = val;
+            }
+            tempCustomAmount = val;
+        });
+        customAmountDisplay.addEventListener('blur', (e) => {
+            if (!e.target.value || parseInt(e.target.value) <= 0) {
+                tempCustomAmount = 250;
+                updateCustomModalUI();
+            }
+        });
+    }
 
     if(customSaveBtn) {
         customSaveBtn.onclick = async () => {
