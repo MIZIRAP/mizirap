@@ -245,12 +245,20 @@ function setupProfileEvents() {
     // Autosave Setup
     const fields = ['profile-name', 'profile-dob', 'profile-height', 'profile-weight', 'profile-gender', 'profile-activity', 'profile-goal', 'profile-neck', 'profile-waist', 'profile-hip', 'profile-wrist', 'profile-resting-hr'];
     
+    let autoSaveTimeout = null;
+
     fields.forEach(id => {
         const el = document.getElementById(id);
         if (el) {
             el.addEventListener('change', autoSaveProfile);
             if(el.tagName === 'INPUT') {
                 el.addEventListener('blur', autoSaveProfile);
+                el.addEventListener('input', () => {
+                    clearTimeout(autoSaveTimeout);
+                    autoSaveTimeout = setTimeout(() => {
+                        autoSaveProfile();
+                    }, 1000); // 1 saniye bekle ve kaydet
+                });
             }
         }
     });
