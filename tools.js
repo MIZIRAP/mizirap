@@ -121,10 +121,10 @@ export const CalculatorEngine = {
     calculateCalorie: (tdee, goal) => {
         let target = tdee;
         let text = 'Mevcut kilonu korursun';
-        if (goal === 'lose') {
+        if (goal === 'lose' || goal === 'kilo_verme') {
             target -= 500;
             text = 'Haftada ~0.5kg yağ kaybı';
-        } else if (goal === 'gain') {
+        } else if (goal === 'gain' || goal === 'kilo_alma') {
             target += 500;
             text = 'Haftada ~0.5kg kas/kilo alımı';
         }
@@ -136,11 +136,11 @@ export const CalculatorEngine = {
         let multiplier = 0.8;
         if (activityLevel >= 1.55) {
             multiplier = 1.5;
-            if (goal === 'gain') multiplier = 2.0;
-            if (goal === 'lose') multiplier = 1.8;
+            if (goal === 'gain' || goal === 'kilo_alma') multiplier = 2.0;
+            if (goal === 'lose' || goal === 'kilo_verme') multiplier = 1.8;
         } else {
-            if (goal === 'lose') multiplier = 1.2;
-            if (goal === 'gain') multiplier = 1.5;
+            if (goal === 'lose' || goal === 'kilo_verme') multiplier = 1.2;
+            if (goal === 'gain' || goal === 'kilo_alma') multiplier = 1.5;
         }
         const protein = Math.round(weight * multiplier);
         inputs.proteinGrams = protein; // Makro için kaydet

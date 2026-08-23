@@ -276,6 +276,16 @@ function setupProfileEvents() {
         return true;
     }
 
+    function validateProfileGoal(val) {
+        const errorEl = document.getElementById('profile-goal-error');
+        if (!val) { // Boş bırakıldı veya geçersiz
+            if (errorEl) errorEl.classList.remove('hidden');
+            return false;
+        }
+        if (errorEl) errorEl.classList.add('hidden');
+        return true;
+    }
+
     async function autoSaveProfile() {
         if (!currentUid) return;
         const nameEl = document.getElementById('profile-name');
@@ -297,7 +307,10 @@ function setupProfileEvents() {
         const vWr = validateProfileField('profile-wrist', wr, 10, 25);
         const vRhr = validateProfileField('profile-resting-hr', rhr, 30, 200);
 
-        const allValid = vH && vW && vN && vWa && vHi && vWr && vRhr;
+        const goalVal = document.getElementById('profile-goal')?.value || '';
+        const vGoal = validateProfileGoal(goalVal);
+
+        const allValid = vH && vW && vN && vWa && vHi && vWr && vRhr && vGoal;
 
         try {
             if (allValid) {
@@ -308,7 +321,7 @@ function setupProfileEvents() {
                     weight: w,
                     gender: document.getElementById('profile-gender')?.value || 'm',
                     activity: document.getElementById('profile-activity')?.value || '1.2',
-                    goal: document.getElementById('profile-goal')?.value || '',
+                    goal: goalVal,
                     neck: n,
                     waist: wa,
                     hip: hi,
@@ -324,7 +337,7 @@ function setupProfileEvents() {
                 weight: vW ? w : 0,
                 gender: document.getElementById('profile-gender')?.value || 'm',
                 activity: document.getElementById('profile-activity')?.value || '1.2',
-                goal: document.getElementById('profile-goal')?.value || '',
+                goal: vGoal ? goalVal : '',
                 neck: vN ? n : 0,
                 waist: vWa ? wa : 0,
                 hip: vHi ? hi : 0,
@@ -494,7 +507,7 @@ export function generateHealthSummary(data) {
     
     if (document.getElementById('summary-calorie')) document.getElementById('summary-calorie').textContent = `${calResult.value} kcal`;
     if (document.getElementById('summary-goal-text')) {
-        let goalText = data.goal === 'lose' ? 'Kilo Verme' : (data.goal === 'gain' ? 'Kilo Alma' : 'Koruma');
+        let goalText = data.goal === 'kilo_verme' ? '(Kilo Verme Hedefi)' : (data.goal === 'kilo_alma' ? '(Kilo Alma Hedefi)' : '(Koruma Hedefi)');
         document.getElementById('summary-goal-text').textContent = goalText;
     }
     
