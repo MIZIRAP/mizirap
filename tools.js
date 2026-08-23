@@ -158,6 +158,7 @@ export function initTools() {
         const sheet = document.getElementById('tool-sheet');
         
         overlay.classList.remove('hidden');
+        sheet.classList.remove('hidden');
         void overlay.offsetWidth; // reflow
         overlay.classList.remove('opacity-0');
         sheet.classList.remove('translate-y-full');
@@ -171,6 +172,7 @@ export function initTools() {
         sheet.classList.add('translate-y-full');
         setTimeout(() => {
             overlay.classList.add('hidden');
+            sheet.classList.add('hidden');
         }, 300);
         currentActiveTool = null;
     };
