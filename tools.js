@@ -319,6 +319,73 @@ export function initTools() {
         // Update title
         document.getElementById('tool-sheet-title').textContent = config.title;
 
+        // Auto-fill from profile if available
+        const profileMap = {
+            height: 'profile-height',
+            weight: 'profile-weight',
+            waist: 'profile-waist',
+            hip: 'profile-hip',
+            neck: 'profile-neck',
+            wrist: 'profile-wrist'
+        };
+        for (const [toolKey, profileId] of Object.entries(profileMap)) {
+            const el = document.getElementById(profileId);
+            if (el && el.value) {
+                const val = parseFloat(el.value);
+                if (!isNaN(val) && val > 0) {
+                    inputs[toolKey] = val;
+                    if(document.getElementById(`tool-${toolKey}-display`)) {
+                        document.getElementById(`tool-${toolKey}-display`).textContent = val;
+                    }
+                }
+            }
+        }
+        
+        // Handle age from dob
+        const dobEl = document.getElementById('profile-dob');
+        if (dobEl && dobEl.value) {
+            const parts = dobEl.value.split('.');
+            let ageVal = 25;
+            if (parts.length === 3) {
+                ageVal = new Date().getFullYear() - parseInt(parts[2], 10);
+            } else {
+                const dateObj = new Date(dobEl.value);
+                if(!isNaN(dateObj.getTime())) {
+                     ageVal = new Date().getFullYear() - dateObj.getFullYear();
+                }
+            }
+            if(!isNaN(ageVal) && ageVal > 0) {
+                inputs.age = ageVal;
+                if(document.getElementById('tool-age-display')) document.getElementById('tool-age-display').textContent = ageVal;
+            }
+        }
+        
+        // Handle gender, goal, activity
+        const genderEl = document.getElementById('profile-gender');
+        if (genderEl && genderEl.value) {
+            if(window.setToolGender) window.setToolGender(genderEl.value);
+        }
+        const goalEl = document.getElementById('profile-goal');
+        if (goalEl && goalEl.value) {
+            const sel = document.getElementById('tool-goal-select');
+            if (sel) {
+                sel.value = goalEl.value;
+                if(window.setToolGoal) window.setToolGoal(goalEl.value);
+                const textEl = document.getElementById('tool-goal-text');
+                if(textEl) textEl.textContent = sel.options[sel.selectedIndex].text;
+            }
+        }
+        const activityEl = document.getElementById('profile-activity');
+        if (activityEl && activityEl.value) {
+            const sel = document.getElementById('tool-activity-select');
+            if (sel) {
+                sel.value = activityEl.value;
+                if(window.setToolActivity) window.setToolActivity(activityEl.value);
+                const textEl = document.getElementById('tool-activity-text');
+                if(textEl) textEl.textContent = sel.options[sel.selectedIndex].text;
+            }
+        }
+
         // Reset result
         document.getElementById('tool-result-value').textContent = '--';
         document.getElementById('tool-result-unit').textContent = '';
