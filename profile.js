@@ -1,6 +1,7 @@
 import { db, auth } from "./firebase-config.js";
 import { doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
 import { updatePassword, EmailAuthProvider, reauthenticateWithCredential, updateProfile } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
+import { CalculatorEngine } from './tools.js';
 
 let currentUid = null;
 let currentPhotoUrl = null;
@@ -33,6 +34,20 @@ async function loadProfile() {
             if (nameEl) nameEl.value = data.name || (auth.currentUser ? auth.currentUser.displayName : "") || "";
             if (bioEl) bioEl.value = data.bio || "";
             if (dobEl) dobEl.value = data.dob || "";
+            
+            // Fiziksel Bilgiler
+            if (document.getElementById('profile-height')) document.getElementById('profile-height').value = data.height || "";
+            if (document.getElementById('profile-weight')) document.getElementById('profile-weight').value = data.weight || "";
+            if (document.getElementById('profile-gender')) document.getElementById('profile-gender').value = data.gender || "m";
+            if (document.getElementById('profile-activity')) document.getElementById('profile-activity').value = data.activity || "1.2";
+            if (document.getElementById('profile-neck')) document.getElementById('profile-neck').value = data.neck || "";
+            if (document.getElementById('profile-waist')) document.getElementById('profile-waist').value = data.waist || "";
+            if (document.getElementById('profile-hip')) document.getElementById('profile-hip').value = data.hip || "";
+            if (document.getElementById('profile-wrist')) document.getElementById('profile-wrist').value = data.wrist || "";
+            if (document.getElementById('profile-resting-hr')) document.getElementById('profile-resting-hr').value = data.restingHr || "";
+            
+            generateHealthSummary(data);
+
             if (data.photoUrl) {
                 currentPhotoUrl = data.photoUrl;
                 updateAllProfileImages(currentPhotoUrl);
@@ -184,10 +199,31 @@ function setupProfileEvents() {
                     name: nameEl.value.trim(),
                     bio: bioEl.value.trim(),
                     dob: dobEl.value.trim(),
+                    height: Number(document.getElementById('profile-height').value) || 0,
+                    weight: Number(document.getElementById('profile-weight').value) || 0,
+                    gender: document.getElementById('profile-gender').value,
+                    activity: document.getElementById('profile-activity').value,
+                    neck: Number(document.getElementById('profile-neck').value) || 0,
+                    waist: Number(document.getElementById('profile-waist').value) || 0,
+                    hip: Number(document.getElementById('profile-hip').value) || 0,
+                    wrist: Number(document.getElementById('profile-wrist').value) || 0,
+                    restingHr: Number(document.getElementById('profile-resting-hr').value) || 0,
                     photoUrl: currentPhotoUrl,
                     updatedAt: new Date()
                 }, { merge: true });
 
+                generateHealthSummary({
+                    height: Number(document.getElementById('profile-height').value) || 0,
+                    weight: Number(document.getElementById('profile-weight').value) || 0,
+                    gender: document.getElementById('profile-gender').value,
+                    activity: document.getElementById('profile-activity').value,
+                    neck: Number(document.getElementById('profile-neck').value) || 0,
+                    waist: Number(document.getElementById('profile-waist').value) || 0,
+                    hip: Number(document.getElementById('profile-hip').value) || 0,
+                    wrist: Number(document.getElementById('profile-wrist').value) || 0,
+                    restingHr: Number(document.getElementById('profile-resting-hr').value) || 0,
+                    dob: dobEl.value.trim()
+                });
 
                 saveBtn.innerHTML = `<span class="material-symbols-rounded" style="font-variation-settings: 'FILL' 1;">check_circle</span> Kaydedildi!`;
                 saveBtn.classList.add("bg-gradient-to-r from-neon-purple to-neon-blue-container", "text-white-container");
@@ -287,4 +323,56 @@ if (document.readyState === 'loading') {
 export function clearProfile() {
     currentUid = null;
     currentPhotoUrl = null;
+}
+
+export function generateHealthSummary(data) {
+    if (!data.weight || !data.height) {
+        const warningHTML = `<span class="text-sm text-outline cursor-pointer hover:text-neon-blue transition-colors" onclick="document.getElementById('profile-height').focus();">Eksik ölçüleri girin →</span>`;
+        if (document.getElementById('summary-tdee')) document.getElementById('summary-tdee').innerHTML = warningHTML;
+        if (document.getElementById('summary-water')) document.getElementById('summary-water').innerHTML = warningHTML;
+        if (document.getElementById('summary-bodytype')) document.getElementById('summary-bodytype').innerHTML = warningHTML;
+        if (document.getElementById('summary-protein')) document.getElementById('summary-protein').innerHTML = warningHTML;
+        if (document.getElementById('summary-bmi')) document.getElementById('summary-bmi').innerHTML = warningHTML;
+        if (document.getElementById('dashboard-water-text')) document.getElementById('dashboard-water-text').textContent = '-- L';
+        if (document.getElementById('dashboard-kcal-text')) document.getElementById('dashboard-kcal-text').textContent = '-- kcal';
+        return;
+    }
+
+    const defaultAge = 25;
+    let age = defaultAge;
+    if (data.dob) {
+        const parts = data.dob.split('.');
+        if (parts.length === 3) {
+            age = new Date().getFullYear() - parseInt(parts[2], 10);
+            if(isNaN(age)) age = defaultAge;
+        } else {
+            const dateObj = new Date(data.dob);
+            if(!isNaN(dateObj.getTime())) {
+                 age = new Date().getFullYear() - dateObj.getFullYear();
+            }
+        }
+    }
+    
+    const tdeeResult = CalculatorEngine.calculateTDEE(data.weight, data.height, age, data.gender, parseFloat(data.activity || "1.2"));
+    if (document.getElementById('summary-tdee')) document.getElementById('summary-tdee').textContent = `${tdeeResult.value} kcal`;
+    if (document.getElementById('dashboard-kcal-text')) document.getElementById('dashboard-kcal-text').textContent = `${tdeeResult.value} kcal`;
+    
+    const waterResult = CalculatorEngine.calculateWater(data.weight, 0);
+    if (document.getElementById('summary-water')) document.getElementById('summary-water').textContent = `${waterResult.value} L`;
+    if (document.getElementById('dashboard-water-text')) document.getElementById('dashboard-water-text').textContent = `${waterResult.value} L`;
+    
+    const bmiResult = CalculatorEngine.calculateBMI(data.weight, data.height);
+    if (document.getElementById('summary-bmi')) document.getElementById('summary-bmi').textContent = `${bmiResult.value} (${bmiResult.text})`;
+
+    const proteinResult = CalculatorEngine.calculateProtein(data.weight, 'maintain', parseFloat(data.activity || "1.2"));
+    if (document.getElementById('summary-protein')) document.getElementById('summary-protein').textContent = `${proteinResult.value} g`;
+    
+    if (!data.wrist) {
+        if (document.getElementById('summary-bodytype')) {
+            document.getElementById('summary-bodytype').innerHTML = `<span class="text-sm text-outline cursor-pointer hover:text-neon-blue transition-colors" onclick="document.getElementById('profile-detailed-content').classList.remove('hidden'); document.getElementById('profile-detailed-icon').innerText='expand_less'; document.getElementById('profile-wrist').focus();">Bilek ölçünü gir →</span>`;
+        }
+    } else {
+        const bodyTypeResult = CalculatorEngine.calculateBodyType(data.wrist, data.height, data.gender);
+        if (document.getElementById('summary-bodytype')) document.getElementById('summary-bodytype').textContent = bodyTypeResult.value;
+    }
 }
