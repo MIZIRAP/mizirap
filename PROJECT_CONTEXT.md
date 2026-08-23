@@ -62,7 +62,7 @@ Veriler, Firestore (NoSQL) yapısında her kullanıcıya ait alt koleksiyonlar �
 
 ## 7. SON DURUM
 *   **Tamamlanan En Son Geliştirme**: Profil modülünde "Fiziksel Bilgiler" formu ve "Sağlık Özeti" panosu eklendi. `CalculatorEngine` tabanlı 14 farklı hesaplama aracını içeren Tools sayfası kullanıma sunuldu. Ana sayfa widget grupları için SortableJS tabanlı, uzun basarak (500ms) sürükle-bırak sıralama özelliği (Faz 1-4) entegre edildi.
-*   **Olası Sonraki Adımlar**: Veri girişlerindeki eksik edge-case doğrulama/validasyon mekanizmalarının eklenmesi, performans odaklı Firestore okuma-yazma kotalarının düşürülmesi ve aktif antrenman seans yönetiminin test edilip cilalanması.
+*   **Olası Sonraki Adımlar**: Performans odaklı Firestore okuma-yazma kotalarının düşürülmesi ve aktif antrenman seans yönetiminin test edilip cilalanması.
 
 ## 8. TERCİHLER / ÇALIŞMA TARZI NOTLARI
 *   **Otonom Çalışma**: Kullanıcının verdiği görevler onay ve izin istenmeden direkt uygulanır (bu talimatta istendiği üzere).
