@@ -16,7 +16,6 @@ async function loadProfile() {
 
     const nameEl = document.getElementById('profile-name');
     const emailEl = document.getElementById('profile-email');
-    const bioEl = document.getElementById('profile-bio');
     const dobEl = document.getElementById('profile-dob');
 
     // Set email from Auth
@@ -242,6 +241,58 @@ function setupProfileEvents() {
         });
     }
 
+    // Autosave Setup
+    const fields = ['profile-name', 'profile-dob', 'profile-height', 'profile-weight', 'profile-gender', 'profile-activity', 'profile-neck', 'profile-waist', 'profile-hip', 'profile-wrist', 'profile-resting-hr'];
+    
+    fields.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+            el.addEventListener('change', autoSaveProfile);
+            if(el.tagName === 'INPUT') {
+                el.addEventListener('blur', autoSaveProfile);
+            }
+        }
+    });
+
+    async function autoSaveProfile() {
+        if (!currentUid) return;
+        const nameEl = document.getElementById('profile-name');
+        const dobEl = document.getElementById('profile-dob');
+        
+        try {
+            await setDoc(doc(db, "users", currentUid, "profile", "data"), {
+                name: nameEl ? nameEl.value.trim() : '',
+                dob: dobEl ? dobEl.value.trim() : '',
+                height: Number(document.getElementById('profile-height')?.value) || 0,
+                weight: Number(document.getElementById('profile-weight')?.value) || 0,
+                gender: document.getElementById('profile-gender')?.value || 'm',
+                activity: document.getElementById('profile-activity')?.value || '1.2',
+                neck: Number(document.getElementById('profile-neck')?.value) || 0,
+                waist: Number(document.getElementById('profile-waist')?.value) || 0,
+                hip: Number(document.getElementById('profile-hip')?.value) || 0,
+                wrist: Number(document.getElementById('profile-wrist')?.value) || 0,
+                restingHr: Number(document.getElementById('profile-resting-hr')?.value) || 0,
+                photoUrl: currentPhotoUrl,
+                updatedAt: new Date()
+            }, { merge: true });
+
+            generateHealthSummary({
+                height: Number(document.getElementById('profile-height')?.value) || 0,
+                weight: Number(document.getElementById('profile-weight')?.value) || 0,
+                gender: document.getElementById('profile-gender')?.value || 'm',
+                activity: document.getElementById('profile-activity')?.value || '1.2',
+                neck: Number(document.getElementById('profile-neck')?.value) || 0,
+                waist: Number(document.getElementById('profile-waist')?.value) || 0,
+                hip: Number(document.getElementById('profile-hip')?.value) || 0,
+                wrist: Number(document.getElementById('profile-wrist')?.value) || 0,
+                restingHr: Number(document.getElementById('profile-resting-hr')?.value) || 0,
+                dob: dobEl ? dobEl.value.trim() : ''
+            });
+        } catch (err) {
+            console.error("Auto-save failed:", err);
+        }
+    }
+
     const updatePasswordBtn = document.getElementById('profile-update-password-btn');
     if (updatePasswordBtn) {
         updatePasswordBtn.addEventListener('click', async () => {
@@ -326,16 +377,40 @@ export function clearProfile() {
 }
 
 export function generateHealthSummary(data) {
+    const gridEl = document.getElementById('profile-health-summary-grid');
+    
     if (!data.weight || !data.height) {
-        const warningHTML = `<span class="text-sm text-outline cursor-pointer hover:text-neon-blue transition-colors" onclick="document.getElementById('profile-height').focus();">Eksik ölçüleri girin →</span>`;
-        if (document.getElementById('summary-tdee')) document.getElementById('summary-tdee').innerHTML = warningHTML;
-        if (document.getElementById('summary-water')) document.getElementById('summary-water').innerHTML = warningHTML;
-        if (document.getElementById('summary-bodytype')) document.getElementById('summary-bodytype').innerHTML = warningHTML;
-        if (document.getElementById('summary-protein')) document.getElementById('summary-protein').innerHTML = warningHTML;
-        if (document.getElementById('summary-bmi')) document.getElementById('summary-bmi').innerHTML = warningHTML;
+        if (gridEl) {
+            gridEl.innerHTML = `<div class="col-span-2 text-center p-4 bg-surface-variant/20 shadow-neo-inset rounded-2xl cursor-pointer hover:bg-surface-variant/30 transition-colors" onclick="document.getElementById('profile-height').scrollIntoView({behavior: 'smooth', block: 'center'}); setTimeout(() => { const h = document.getElementById('profile-height'); const w = document.getElementById('profile-weight'); if (!h.value) h.focus(); else if (!w.value) w.focus(); }, 300);"><span class="text-sm font-semibold text-neon-blue">Sağlık özetini görmek için Boy, Kilo, Cinsiyet ve Aktivite Seviyeni gir →</span></div>`;
+        }
         if (document.getElementById('dashboard-water-text')) document.getElementById('dashboard-water-text').textContent = '-- L';
         if (document.getElementById('dashboard-kcal-text')) document.getElementById('dashboard-kcal-text').textContent = '-- kcal';
         return;
+    }
+
+    if (gridEl && gridEl.children.length === 1) {
+        gridEl.innerHTML = `
+            <div class="flex flex-col gap-1 p-3 rounded-2xl bg-surface-variant/20 shadow-neo-inset">
+                <span class="text-xs text-on-surface-variant uppercase tracking-wider font-semibold">TDEE (Kalori)</span>
+                <span id="summary-tdee" class="text-lg font-bold text-neon-blue">-- kcal</span>
+            </div>
+            <div class="flex flex-col gap-1 p-3 rounded-2xl bg-surface-variant/20 shadow-neo-inset">
+                <span class="text-xs text-on-surface-variant uppercase tracking-wider font-semibold">Su İhtiyacı</span>
+                <span id="summary-water" class="text-lg font-bold text-neon-blue">-- L</span>
+            </div>
+            <div class="flex flex-col gap-1 p-3 rounded-2xl bg-surface-variant/20 shadow-neo-inset">
+                <span class="text-xs text-on-surface-variant uppercase tracking-wider font-semibold">Vücut Tipi</span>
+                <span id="summary-bodytype" class="text-lg font-bold text-neon-purple cursor-pointer transition-colors hover:text-neon-blue" onclick="document.getElementById('profile-detailed-content').classList.remove('hidden'); document.getElementById('profile-detailed-icon').innerText='expand_less'; document.getElementById('profile-wrist').focus();">--</span>
+            </div>
+            <div class="flex flex-col gap-1 p-3 rounded-2xl bg-surface-variant/20 shadow-neo-inset">
+                <span class="text-xs text-on-surface-variant uppercase tracking-wider font-semibold">G. Protein</span>
+                <span id="summary-protein" class="text-lg font-bold text-neon-blue">-- g</span>
+            </div>
+            <div class="flex flex-col gap-1 p-3 rounded-2xl bg-surface-variant/20 shadow-neo-inset col-span-2">
+                <span class="text-xs text-on-surface-variant uppercase tracking-wider font-semibold">Vücut Kitle İndeksi (VKİ)</span>
+                <span id="summary-bmi" class="text-lg font-bold text-on-surface">--</span>
+            </div>
+        `;
     }
 
     const defaultAge = 25;
