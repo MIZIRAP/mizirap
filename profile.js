@@ -38,7 +38,13 @@ async function loadProfile() {
             if (document.getElementById('profile-weight')) document.getElementById('profile-weight').value = data.weight || "";
             if (document.getElementById('profile-gender')) document.getElementById('profile-gender').value = data.gender || "m";
             if (document.getElementById('profile-activity')) document.getElementById('profile-activity').value = data.activity || "1.2";
-            if (document.getElementById('profile-goal')) document.getElementById('profile-goal').value = data.goal || "";
+            if (document.getElementById('profile-goal')) {
+                let loadGoal = data.goal || "";
+                if (loadGoal === 'lose') loadGoal = 'kilo_verme';
+                if (loadGoal === 'maintain') loadGoal = 'koruma';
+                if (loadGoal === 'gain') loadGoal = 'kilo_alma';
+                document.getElementById('profile-goal').value = loadGoal;
+            }
             if (document.getElementById('profile-neck')) document.getElementById('profile-neck').value = data.neck || "";
             if (document.getElementById('profile-waist')) document.getElementById('profile-waist').value = data.waist || "";
             if (document.getElementById('profile-hip')) document.getElementById('profile-hip').value = data.hip || "";
