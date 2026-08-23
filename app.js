@@ -11,6 +11,7 @@ import { initMovies, clearMovies } from "./movies.js?v=1787428044";
 import { initProfile, clearProfile } from "./profile.js";
 import { initCalories, clearCalories } from "./calories.js";
 import { initHistory, clearHistory } from "./history.js";
+import { initTools, clearTools } from "./tools.js";
 import { clearAllListeners } from "./listenerManager.js";
 
 // ---------- DOM referansları ----------
@@ -68,6 +69,7 @@ onAuthStateChanged(auth, async (user) => {
 
             initProfile(user.uid);
             initHistory(user.uid);
+            initTools();
 
         } catch (err) {
             console.error("Login transition error:", err);
@@ -91,6 +93,7 @@ onAuthStateChanged(auth, async (user) => {
         clearProfile();
         clearCalories();
         clearHistory();
+        clearTools();
     }
 });
 
