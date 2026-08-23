@@ -262,40 +262,74 @@ function setupProfileEvents() {
         }
     });
 
+    function validateProfileField(id, val, min, max) {
+        const errorEl = document.getElementById(`${id}-error`);
+        if (val === 0) { 
+            if (errorEl) errorEl.classList.add('hidden');
+            return true;
+        }
+        if (isNaN(val) || val < min || val > max) {
+            if (errorEl) errorEl.classList.remove('hidden');
+            return false;
+        }
+        if (errorEl) errorEl.classList.add('hidden');
+        return true;
+    }
+
     async function autoSaveProfile() {
         if (!currentUid) return;
         const nameEl = document.getElementById('profile-name');
         const dobEl = document.getElementById('profile-dob');
         
+        const h = Number(document.getElementById('profile-height')?.value) || 0;
+        const w = Number(document.getElementById('profile-weight')?.value) || 0;
+        const n = Number(document.getElementById('profile-neck')?.value) || 0;
+        const wa = Number(document.getElementById('profile-waist')?.value) || 0;
+        const hi = Number(document.getElementById('profile-hip')?.value) || 0;
+        const wr = Number(document.getElementById('profile-wrist')?.value) || 0;
+        const rhr = Number(document.getElementById('profile-resting-hr')?.value) || 0;
+
+        const vH = validateProfileField('profile-height', h, 100, 250);
+        const vW = validateProfileField('profile-weight', w, 30, 300);
+        const vN = validateProfileField('profile-neck', n, 20, 60);
+        const vWa = validateProfileField('profile-waist', wa, 40, 200);
+        const vHi = validateProfileField('profile-hip', hi, 40, 200);
+        const vWr = validateProfileField('profile-wrist', wr, 10, 25);
+        const vRhr = validateProfileField('profile-resting-hr', rhr, 30, 200);
+
+        const allValid = vH && vW && vN && vWa && vHi && vWr && vRhr;
+
         try {
-            await setDoc(doc(db, "users", currentUid, "profile", "data"), {
-                name: nameEl ? nameEl.value.trim() : '',
-                dob: dobEl ? dobEl.value.trim() : '',
-                height: Number(document.getElementById('profile-height')?.value) || 0,
-                weight: Number(document.getElementById('profile-weight')?.value) || 0,
-                gender: document.getElementById('profile-gender')?.value || 'm',
-                activity: document.getElementById('profile-activity')?.value || '1.2',
-                goal: document.getElementById('profile-goal')?.value || '',
-                neck: Number(document.getElementById('profile-neck')?.value) || 0,
-                waist: Number(document.getElementById('profile-waist')?.value) || 0,
-                hip: Number(document.getElementById('profile-hip')?.value) || 0,
-                wrist: Number(document.getElementById('profile-wrist')?.value) || 0,
-                restingHr: Number(document.getElementById('profile-resting-hr')?.value) || 0,
-                photoUrl: currentPhotoUrl,
-                updatedAt: new Date()
-            }, { merge: true });
+            if (allValid) {
+                await setDoc(doc(db, "users", currentUid, "profile", "data"), {
+                    name: nameEl ? nameEl.value.trim() : '',
+                    dob: dobEl ? dobEl.value.trim() : '',
+                    height: h,
+                    weight: w,
+                    gender: document.getElementById('profile-gender')?.value || 'm',
+                    activity: document.getElementById('profile-activity')?.value || '1.2',
+                    goal: document.getElementById('profile-goal')?.value || '',
+                    neck: n,
+                    waist: wa,
+                    hip: hi,
+                    wrist: wr,
+                    restingHr: rhr,
+                    photoUrl: currentPhotoUrl,
+                    updatedAt: new Date()
+                }, { merge: true });
+            }
 
             generateHealthSummary({
-                height: Number(document.getElementById('profile-height')?.value) || 0,
-                weight: Number(document.getElementById('profile-weight')?.value) || 0,
+                height: vH ? h : 0,
+                weight: vW ? w : 0,
                 gender: document.getElementById('profile-gender')?.value || 'm',
                 activity: document.getElementById('profile-activity')?.value || '1.2',
                 goal: document.getElementById('profile-goal')?.value || '',
-                neck: Number(document.getElementById('profile-neck')?.value) || 0,
-                waist: Number(document.getElementById('profile-waist')?.value) || 0,
-                hip: Number(document.getElementById('profile-hip')?.value) || 0,
-                wrist: Number(document.getElementById('profile-wrist')?.value) || 0,
-                restingHr: Number(document.getElementById('profile-resting-hr')?.value) || 0,
+                neck: vN ? n : 0,
+                waist: vWa ? wa : 0,
+                hip: vHi ? hi : 0,
+                wrist: vWr ? wr : 0,
+                restingHr: vRhr ? rhr : 0,
                 dob: dobEl ? dobEl.value.trim() : ''
             });
         } catch (err) {

@@ -58,8 +58,7 @@ Veriler, Firestore (NoSQL) yapısında her kullanıcıya ait alt koleksiyonlar �
 *   **Loading UX**: "0" verilerinin yanıltıcı görünmesini engellemek için yükleme anlarında iskelet yükleyici (`...` vs.) tercih edilmiştir.
 
 ## 6. BİLİNEN SORUNLAR / YARIM KALANLAR
-*   **Veri Doğrulama**: Metin ve rakamsal veri girişlerinde ileri düzey hatalı karakter/limit kısıtlamaları (Edge Case validasyonları, ör. boy: 500cm gibi aşırı değerler) bazı yerlerde eksik bırakılmıştır (sadece temel `Number()` dönüşümü kullanılmaktadır).
-*   **Aktif Bug**: Sistem genelinde çalışmayı engelleyen (blocking) kritik bir sorun tespit edilmemiştir. Su takibi widget'ı metin formatı hatası, hesaplayıcı (calculator) UI bozulmaları ve widget sıralamalarındaki gecikme/flash sorunları başarıyla çözüldü.
+*   **Aktif Bug**: Sistem genelinde çalışmayı engelleyen (blocking) kritik bir sorun tespit edilmemiştir. Su takibi widget'ı metin formatı hatası, hesaplayıcı (calculator) UI bozulmaları, widget sıralamalarındaki flash sorunları ve veri doğrulama (edge case limit) eksiklikleri başarıyla çözüldü.
 
 ## 7. SON DURUM
 *   **Tamamlanan En Son Geliştirme**: Profil modülünde "Fiziksel Bilgiler" formu ve "Sağlık Özeti" panosu eklendi. `CalculatorEngine` tabanlı 14 farklı hesaplama aracını içeren Tools sayfası kullanıma sunuldu. Ana sayfa widget grupları için SortableJS tabanlı, uzun basarak (500ms) sürükle-bırak sıralama özelliği (Faz 1-4) entegre edildi.
