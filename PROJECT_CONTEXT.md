@@ -43,7 +43,7 @@ Bu dosya, projeyi anlamak için gerekli temel mimari ve yapısal bilgileri içer
 
 ## 4. VERİ MODELİ
 Veriler, Firestore (NoSQL) yapısında her kullanıcıya ait alt koleksiyonlar şeklinde yapılandırılmıştır:
-*   `users/{uid}`: Kullanıcının genel profil ve tercih bilgileri.
+*   `users/{uid}/profile/data`: Kullanıcının profil, genel hedef ve detaylı fiziksel bilgileri (boy, kilo, cinsiyet, aktivite_seviyesi, hedef, boyun, bel, kalça, bilek, dinlenik_nabız vb.).
 *   `users/{uid}/workouts`: Kaydedilmiş antrenman split'leri (planları).
 *   `users/{uid}/workoutLogs`: Tamamlanmış antrenman seanslarının tarihsel kayıtları.
 *   `users/{uid}/water`: Günlük su kayıtları.
