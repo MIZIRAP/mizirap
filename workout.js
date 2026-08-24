@@ -1167,7 +1167,6 @@ function _initExSortable(listEl, splitId, dayIdx) {
         forceFallback: true,
         fallbackOnBody: true,
         ghostClass: 'opacity-30',
-        chosenClass: 'bg-gradient-to-r from-neon-purple to-neon-blue-container/10',
         onEnd: function(evt) {
             console.log('Ex onEnd tetiklendi', evt);
             if (evt.oldIndex === evt.newIndex) return; // No change
