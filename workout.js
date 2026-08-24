@@ -104,7 +104,7 @@ export function initWorkout(uid, onChangeCallback) {
         }
     }));
 
-    const logsRef = query(collection(db, "users", uid, "workout_logs"), orderBy("dateStr", "desc"));
+    const logsRef = query(collection(db, "users", uid, "workout_logs"), orderBy("dateStr", "desc"), limit(50));
     unsubLogs = registerListener(onSnapshot(logsRef, (snap) => {
         const allLogs = snap.docs.map(d => ({ id: d.id, ...d.data() }));
 

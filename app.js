@@ -61,26 +61,26 @@ onAuthStateChanged(auth, async (user) => {
             initShopping(user.uid);
 
             initWorkout(user.uid, (workouts, activeSplitName) => {
-                updateDashboardWorkouts(workouts, activeSplitName);
+                requestAnimationFrame(() => updateDashboardWorkouts(workouts, activeSplitName));
             });
 
             initFinance(user.uid, (txs) => {
-                updateDashboardFinance(txs);
+                requestAnimationFrame(() => updateDashboardFinance(txs));
             });
 
             initWater(user.uid, (waterStats) => {
-                updateDashboardWater(waterStats);
+                requestAnimationFrame(() => updateDashboardWater(waterStats));
             });
             initCalories(user.uid, (caloriesStats) => {
-                updateDashboardCalories(caloriesStats);
+                requestAnimationFrame(() => updateDashboardCalories(caloriesStats));
             });
 
             initBooks(user.uid, (books) => {
-                updateDashboardBooks(books);
+                requestAnimationFrame(() => updateDashboardBooks(books));
             });
 
             initMovies(user.uid, (movies) => {
-                updateDashboardMovies(movies);
+                requestAnimationFrame(() => updateDashboardMovies(movies));
             });
 
             initProfile(user.uid);

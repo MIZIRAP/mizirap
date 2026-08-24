@@ -27,7 +27,7 @@ export function initWater(uid, onChangeCallback) {
     }));
 
     // Logs listener (last 7 days)
-    const logsRef = query(collection(db, "users", uid, "waterLogs"), orderBy("createdAt", "desc"));
+    const logsRef = query(collection(db, "users", uid, "waterLogs"), orderBy("createdAt", "desc"), limit(100));
     unsubscribeLogs = registerListener(onSnapshot(logsRef, (snap) => {
         // Fetch all logs to filter locally (since we need last 7 days and today)
         // For a huge app we might want to query where createdAt > 7 days ago, but this is fine for now

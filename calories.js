@@ -125,7 +125,7 @@ export function initCalories(uid, onChangeCallback) {
     }));
 
     // Listen to Logs (Only needed for daily tracking)
-    const logsRef = query(collection(db, "users", uid, "calorieLogs"), orderBy("createdAt", "desc"));
+    const logsRef = query(collection(db, "users", uid, "calorieLogs"), orderBy("createdAt", "desc"), limit(100));
     unsubscribeLogs = registerListener(onSnapshot(logsRef, (snap) => {
         const today = new Date();
         today.setHours(0,0,0,0);
