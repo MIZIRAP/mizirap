@@ -9,7 +9,7 @@ import { initWater, clearWater } from "./water.js";
 import { initBooks, clearBooks } from "./books.js?v=1787428044";
 import { initMovies, clearMovies } from "./movies.js?v=1787428044";
 import { initProfile, clearProfile } from "./profile.js?v=1787428045";
-import { initCalories, clearCalories } from "./calories.js";
+import { initCalories, clearCalories } from "./calories.js?v=1787428046";
 import { initHistory, clearHistory } from "./history.js";
 import { initTools, clearTools } from "./tools.js?v=1787428045";
 import { clearAllListeners } from "./listenerManager.js";

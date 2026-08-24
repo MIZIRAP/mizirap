@@ -303,13 +303,13 @@ if (caloriesGoalBackdrop) {
     if (newFoodKcalMinus) {
         newFoodKcalMinus.onclick = () => {
             if (tempNewFoodKcal > 10) tempNewFoodKcal -= 10;
-            if (newFoodKcalDisplay) newFoodKcalDisplay.textContent = tempNewFoodKcal;
+            if (newFoodKcalDisplay) newFoodKcalDisplay.value = tempNewFoodKcal;
         };
     }
     if (newFoodKcalPlus) {
         newFoodKcalPlus.onclick = () => {
             tempNewFoodKcal += 10;
-            if (newFoodKcalDisplay) newFoodKcalDisplay.textContent = tempNewFoodKcal;
+            if (newFoodKcalDisplay) newFoodKcalDisplay.value = tempNewFoodKcal;
         };
     }
 
@@ -317,13 +317,13 @@ if (caloriesGoalBackdrop) {
         newFoodProteinMinus.onclick = () => {
             if (tempNewFoodProtein > 1) tempNewFoodProtein -= 1;
             else tempNewFoodProtein = 0;
-            if (newFoodProteinDisplay) newFoodProteinDisplay.textContent = tempNewFoodProtein;
+            if (newFoodProteinDisplay) newFoodProteinDisplay.value = tempNewFoodProtein;
         };
     }
     if (newFoodProteinPlus) {
         newFoodProteinPlus.onclick = () => {
             tempNewFoodProtein += 1;
-            if (newFoodProteinDisplay) newFoodProteinDisplay.textContent = tempNewFoodProtein;
+            if (newFoodProteinDisplay) newFoodProteinDisplay.value = tempNewFoodProtein;
         };
     }
 
@@ -331,13 +331,13 @@ if (caloriesGoalBackdrop) {
         newFoodKarbMinus.onclick = () => {
             if (tempNewFoodKarb > 1) tempNewFoodKarb -= 1;
             else tempNewFoodKarb = 0;
-            if (newFoodKarbDisplay) newFoodKarbDisplay.textContent = tempNewFoodKarb;
+            if (newFoodKarbDisplay) newFoodKarbDisplay.value = tempNewFoodKarb;
         };
     }
     if (newFoodKarbPlus) {
         newFoodKarbPlus.onclick = () => {
             tempNewFoodKarb += 1;
-            if (newFoodKarbDisplay) newFoodKarbDisplay.textContent = tempNewFoodKarb;
+            if (newFoodKarbDisplay) newFoodKarbDisplay.value = tempNewFoodKarb;
         };
     }
 
@@ -345,14 +345,51 @@ if (caloriesGoalBackdrop) {
         newFoodYagMinus.onclick = () => {
             if (tempNewFoodYag > 1) tempNewFoodYag -= 1;
             else tempNewFoodYag = 0;
-            if (newFoodYagDisplay) newFoodYagDisplay.textContent = tempNewFoodYag;
+            if (newFoodYagDisplay) newFoodYagDisplay.value = tempNewFoodYag;
         };
     }
     if (newFoodYagPlus) {
         newFoodYagPlus.onclick = () => {
             tempNewFoodYag += 1;
-            if (newFoodYagDisplay) newFoodYagDisplay.textContent = tempNewFoodYag;
+            if (newFoodYagDisplay) newFoodYagDisplay.value = tempNewFoodYag;
         };
+    }
+
+    if (newFoodKcalDisplay) {
+        newFoodKcalDisplay.addEventListener('input', (e) => {
+            const val = parseInt(e.target.value, 10);
+            tempNewFoodKcal = isNaN(val) ? 0 : val;
+        });
+        newFoodKcalDisplay.addEventListener('blur', (e) => {
+            e.target.value = tempNewFoodKcal;
+        });
+    }
+    if (newFoodProteinDisplay) {
+        newFoodProteinDisplay.addEventListener('input', (e) => {
+            const val = parseInt(e.target.value, 10);
+            tempNewFoodProtein = isNaN(val) ? 0 : val;
+        });
+        newFoodProteinDisplay.addEventListener('blur', (e) => {
+            e.target.value = tempNewFoodProtein;
+        });
+    }
+    if (newFoodKarbDisplay) {
+        newFoodKarbDisplay.addEventListener('input', (e) => {
+            const val = parseInt(e.target.value, 10);
+            tempNewFoodKarb = isNaN(val) ? 0 : val;
+        });
+        newFoodKarbDisplay.addEventListener('blur', (e) => {
+            e.target.value = tempNewFoodKarb;
+        });
+    }
+    if (newFoodYagDisplay) {
+        newFoodYagDisplay.addEventListener('input', (e) => {
+            const val = parseInt(e.target.value, 10);
+            tempNewFoodYag = isNaN(val) ? 0 : val;
+        });
+        newFoodYagDisplay.addEventListener('blur', (e) => {
+            e.target.value = tempNewFoodYag;
+        });
     }
 
     if (saveNewFoodBtn) {
@@ -527,10 +564,10 @@ function openNewFoodModal() {
     tempNewFoodYag = 0;
 
     if (newFoodNameInput) newFoodNameInput.value = "";
-    if (newFoodKcalDisplay) newFoodKcalDisplay.textContent = tempNewFoodKcal;
-    if (newFoodProteinDisplay) newFoodProteinDisplay.textContent = tempNewFoodProtein;
-    if (newFoodKarbDisplay) newFoodKarbDisplay.textContent = tempNewFoodKarb;
-    if (newFoodYagDisplay) newFoodYagDisplay.textContent = tempNewFoodYag;
+    if (newFoodKcalDisplay) newFoodKcalDisplay.value = tempNewFoodKcal;
+    if (newFoodProteinDisplay) newFoodProteinDisplay.value = tempNewFoodProtein;
+    if (newFoodKarbDisplay) newFoodKarbDisplay.value = tempNewFoodKarb;
+    if (newFoodYagDisplay) newFoodYagDisplay.value = tempNewFoodYag;
 
     newFoodModal.classList.remove('hidden');
     // small delay for transition

@@ -3965,7 +3965,7 @@
                 <span class="material-symbols-rounded font-bold text-2xl" style="font-variation-settings: 'FILL' 1;">remove</span>
             </button>
             <div class="flex flex-col items-center justify-center w-32 h-32 rounded-full shadow-neumorphic-inset bg-[#F0F2F8]">
-                <span class="text-3xl font-extrabold text-gray-800" id="new-food-kcal-display">100</span>
+                <input type="number" inputmode="numeric" pattern="[0-9]*" class="text-3xl font-extrabold text-gray-800 bg-transparent text-center outline-none border-none focus:ring-0 m-0 p-0 w-24 appearance-none" id="new-food-kcal-display" value="100">
                 <span class="text-sm font-semibold text-silk-blue mt-1">kcal</span>
             </div>
             <button aria-label="Increase amount" class="neo-button w-14 h-14 rounded-full flex items-center justify-center bg-[#F0F2F8] text-silk-green focus:outline-none" id="new-food-kcal-plus">
@@ -3976,7 +3976,7 @@
             <div class="flex items-center justify-between bg-[#F0F2F8] p-4 rounded-2xl shadow-neumorphic-inset">
                 <div class="flex flex-col">
                     <span class="text-xs font-bold text-silk-blue uppercase">Protein</span>
-                    <div class="flex items-center gap-1"><span class="text-lg font-bold text-gray-800" id="new-food-protein-display">0</span><span class="text-xs text-gray-500">gr</span></div>
+                    <div class="flex items-center gap-1"><input type="number" inputmode="numeric" pattern="[0-9]*" class="text-lg font-bold text-gray-800 bg-transparent text-right outline-none border-none focus:ring-0 m-0 p-0 w-12 appearance-none" id="new-food-protein-display" value="0"><span class="text-xs text-gray-500">gr</span></div>
                 </div>
                 <div class="flex gap-2">
                     <button id="new-food-protein-minus" class="neo-button w-10 h-10 rounded-full flex items-center justify-center bg-[#F0F2F8] text-silk-blue"><span class="material-symbols-rounded text-xl">remove</span></button>
@@ -3986,7 +3986,7 @@
             <div class="flex items-center justify-between bg-[#F0F2F8] p-4 rounded-2xl shadow-neumorphic-inset">
                 <div class="flex flex-col">
                     <span class="text-xs font-bold text-silk-blue uppercase">Karbonhidrat</span>
-                    <div class="flex items-center gap-1"><span class="text-lg font-bold text-gray-800" id="new-food-karb-display">0</span><span class="text-xs text-gray-500">gr</span></div>
+                    <div class="flex items-center gap-1"><input type="number" inputmode="numeric" pattern="[0-9]*" class="text-lg font-bold text-gray-800 bg-transparent text-right outline-none border-none focus:ring-0 m-0 p-0 w-12 appearance-none" id="new-food-karb-display" value="0"><span class="text-xs text-gray-500">gr</span></div>
                 </div>
                 <div class="flex gap-2">
                     <button id="new-food-karb-minus" class="neo-button w-10 h-10 rounded-full flex items-center justify-center bg-[#F0F2F8] text-silk-blue"><span class="material-symbols-rounded text-xl">remove</span></button>
@@ -3996,7 +3996,7 @@
             <div class="flex items-center justify-between bg-[#F0F2F8] p-4 rounded-2xl shadow-neumorphic-inset">
                 <div class="flex flex-col">
                     <span class="text-xs font-bold text-silk-blue uppercase">Yağ</span>
-                    <div class="flex items-center gap-1"><span class="text-lg font-bold text-gray-800" id="new-food-yag-display">0</span><span class="text-xs text-gray-500">gr</span></div>
+                    <div class="flex items-center gap-1"><input type="number" inputmode="numeric" pattern="[0-9]*" class="text-lg font-bold text-gray-800 bg-transparent text-right outline-none border-none focus:ring-0 m-0 p-0 w-12 appearance-none" id="new-food-yag-display" value="0"><span class="text-xs text-gray-500">gr</span></div>
                 </div>
                 <div class="flex gap-2">
                     <button id="new-food-yag-minus" class="neo-button w-10 h-10 rounded-full flex items-center justify-center bg-[#F0F2F8] text-silk-blue"><span class="material-symbols-rounded text-xl">remove</span></button>
@@ -4108,7 +4108,7 @@
     </section>
 
 
-    <script type="module" src="app.js?v=1787431045"></script>
+    <script type="module" src="app.js?v=1787431046"></script>
 
 <!-- ================= FINANCE MODALS ================= -->
 <!-- Add Transaction Modal -->
