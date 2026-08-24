@@ -178,10 +178,14 @@ function _buildExState() {
     if (!_day || !_day.exercises) return;
 
     _day.exercises.forEach(ex => {
-        const draftSets = _sessionDoc?.exercises?.[ex.id]?.sets || [];
-        const prevSets = _prevData?.[ex.id]?.sets || [];
-        const defaultSets = ex.defaultSets || 3;
-        let targetSetCount = defaultSets;
+        let draftSets = _sessionDoc?.exercises?.[ex.id]?.sets || [];
+        let prevSets = _prevData?.[ex.id]?.sets || [];
+        if (!Array.isArray(draftSets)) draftSets = Object.values(draftSets);
+        if (!Array.isArray(prevSets)) prevSets = Object.values(prevSets);
+
+        const parsedDefault = parseInt(ex.defaultSets, 10);
+        const defaultSets = isNaN(parsedDefault) || parsedDefault <= 0 ? 3 : parsedDefault;
+        const targetSetCount = Math.max(defaultSets, draftSets.length);
 
         const sets = [];
         for (let i = 0; i < targetSetCount; i++) {
