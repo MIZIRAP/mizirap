@@ -908,8 +908,6 @@ function renderSplitEditView() {
 
         let daysHtml = '';
         if (!split.days || split.days.length === 0) {
-            daysHtml = `
-            <div class="flex flex-col items-center justify-center py-8 opacity-40">
             daysHtml = `<p class="text-label-sm text-on-surface-variant font-label-sm text-center w-full py-4">Henüz gün eklenmemiş</p>`;
         } else {
             daysHtml = `<div id="days-list-${split.id}" class="w-full flex flex-col items-center gap-3">`;
