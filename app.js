@@ -92,12 +92,38 @@ onAuthStateChanged(auth, async (user) => {
             alert("Giriş yapılırken bir hata oluştu: " + err.message);
         }
     } else {
+        // Eğer daha önceden uygulamaya girilmişse (DOM kirlenmiş olabilir), en temiz çıkış sayfa yenilemektir.
+        if (localStorage.getItem('uid')) {
+            localStorage.removeItem('uid');
+            window.location.reload();
+            return;
+        }
+
         // Oturum açılmamışsa auth-screen zaten default olarak açıktır.
         authScreen.classList.remove("hidden");
         authScreen.classList.add("flex");
         appScreen.classList.add("hidden");
         document.getElementById("verification-screen").classList.add("hidden");
         document.getElementById("verification-screen").classList.remove("flex");
+        
+        window.scrollTo(0, 0);
+        document.body.style.overflow = ''; // Modal vs. açık kaldıysa temizle
+
+        // Login formunu varsayılan yap
+        const loginForm = document.getElementById("login-form");
+        const registerForm = document.getElementById("register-form");
+        if (loginForm && registerForm) {
+            loginForm.classList.remove("hidden");
+            registerForm.classList.add("hidden");
+            document.querySelectorAll(".auth-tab").forEach(b => {
+                b.classList.remove("active", "text-on-surface");
+                b.classList.add("text-on-surface-variant");
+                if (b.dataset.auth === "login") {
+                    b.classList.add("active", "text-on-surface");
+                    b.classList.remove("text-on-surface-variant");
+                }
+            });
+        }
 
         // Temizlik işlemleri (Logout sonrası state sıfırlama)
         clearAllListeners();
