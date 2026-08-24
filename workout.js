@@ -910,12 +910,9 @@ function renderSplitEditView() {
         if (!split.days || split.days.length === 0) {
             daysHtml = `
             <div class="flex flex-col items-center justify-center py-8 opacity-40">
-                <span class="material-symbols-outlined text-on-surface-variant mb-2">calendar_today</span>
-                <p class="font-label-sm text-label-sm text-on-surface-variant">Henüz gün eklenmemiş</p>
-            </div>
-            `;
+            daysHtml = `<p class="text-label-sm text-on-surface-variant font-label-sm text-center w-full py-4">Henüz gün eklenmemiş</p>`;
         } else {
-            daysHtml = '<div class="flex flex-col w-full items-center">';
+            daysHtml = `<div id="days-list-${split.id}" class="w-full flex flex-col items-center gap-3">`;
             split.days.forEach((day, dayIdx) => {
                 const dayAccordionKey = `${split.id}-${dayIdx}`;
                 const isDayOpen = _openDayAccordions.has(dayAccordionKey);
@@ -940,7 +937,7 @@ function renderSplitEditView() {
                         <div class="exercise-card w-[282px] flex flex-col items-center ${isExOpen ? 'expanded' : ''} ex-drag-item" data-ex-idx="${exIdx}" data-split-id="${split.id}" data-day-idx="${dayIdx}">
                             <div class="accordion-header w-[282px] h-[56px] bg-[#E8EAF0] rounded-[12px] p-3 flex items-center justify-between cursor-pointer transition-all z-20 relative" style="box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.08), -4px -4px 8px rgba(255, 255, 255, 0.6);" onclick="toggleMizAccordion(this, '${exAccordionKey}', 'ex', event)">
                                 <div class="flex items-center gap-2">
-                                    <span class="material-symbols-rounded text-[#C7C4D7] text-[16px] cursor-grab drag-handle shrink-0 select-none touch-none">drag_indicator</span>
+                                    <span class="material-symbols-rounded text-[#C7C4D7] text-[16px] cursor-grab drag-handle shrink-0 select-none touch-none" style="touch-action: none; user-select: none;">drag_indicator</span>
                                     <div class="w-[40px] h-[40px] bg-[#E8EAF0] rounded-full flex items-center justify-center text-[#712AE2] font-bold text-[16px] shrink-0" style="box-shadow: inset 2px 2px 4px rgba(0, 0, 0, 0.08), inset -2px -2px 4px rgba(255, 255, 255, 0.6);">${initial}</div>
                                     <div class="flex flex-col">
                                         <h4 class="font-semibold text-[#181C20] text-[14px] leading-[21px] tracking-[0.7px] select-none">${ex.name}</h4>
@@ -974,11 +971,11 @@ function renderSplitEditView() {
                 }
 
                 daysHtml += `
-                <div class="day-card w-full flex flex-col items-center ${isDayOpen ? 'expanded' : ''}">
+                <div class="day-card w-full flex flex-col items-center ${isDayOpen ? 'expanded' : ''} day-drag-item" data-day-idx="${dayIdx}">
                     <!-- Day Header -->
-                    <div class="accordion-header w-[300px] h-[56px] bg-[#E8EAF0] rounded-[12px] px-4 flex items-center justify-between cursor-pointer transition-all z-30 relative" style="box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.08), -4px -4px 8px rgba(255, 255, 255, 0.6); ${dayIdx > 0 ? 'margin-top: 12px;' : ''}" onclick="toggleMizAccordion(this, '${dayAccordionKey}', 'day', event)">
+                    <div class="accordion-header w-[300px] h-[56px] bg-[#E8EAF0] rounded-[12px] px-4 flex items-center justify-between cursor-pointer transition-all z-30 relative" style="box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.08), -4px -4px 8px rgba(255, 255, 255, 0.6);" onclick="toggleMizAccordion(this, '${dayAccordionKey}', 'day', event)">
                         <div class="flex items-center gap-3">
-                            <span class="material-symbols-rounded text-[#C7C4D7] text-[16px] cursor-grab day-drag-handle shrink-0 select-none touch-none">drag_indicator</span>
+                            <span class="material-symbols-rounded text-[#C7C4D7] text-[16px] cursor-grab day-drag-handle shrink-0 select-none touch-none" style="touch-action: none; user-select: none;">drag_indicator</span>
                             <div class="bg-[#E8EAF0] px-2 py-1 rounded-[4px] flex items-center justify-center shrink-0" style="box-shadow: inset 2px 2px 4px rgba(0, 0, 0, 0.08), inset -2px -2px 4px rgba(255, 255, 255, 0.6);">
                                 <span class="text-[#712AE2] font-normal text-[10px] leading-[15px]">Gün ${dayIdx + 1}</span>
                             </div>
@@ -1124,6 +1121,9 @@ function renderSplitEditView() {
 
 
         if (split.days) {
+            const daysListEl = splitCard.querySelector(`#days-list-${split.id}`);
+            if (daysListEl) _initDaySortable(daysListEl, split.id);
+
             split.days.forEach((day, dayIdx) => {
                 const listEl = splitCard.querySelector(`#ex-list-${split.id}-${dayIdx}`);
                 if(listEl) _initExSortable(listEl, split.id, dayIdx);
@@ -1163,16 +1163,51 @@ function _initExSortable(listEl, splitId, dayIdx) {
     if(typeof Sortable === 'undefined') return;
 
     listEl._sortable = Sortable.create(listEl, {
+        group: 'exercises-group',
         handle: '.drag-handle',
         animation: 150,
+        delay: 200,
+        delayOnTouchOnly: true,
+        fallbackOnBody: true,
         ghostClass: 'opacity-30',
         chosenClass: 'bg-gradient-to-r from-neon-purple to-neon-blue-container/10',
         onEnd: function(evt) {
+            console.log('Ex onEnd tetiklendi', evt);
+            if (evt.oldIndex === evt.newIndex) return; // No change
             const split = splits.find(s => s.id === splitId);
             if(!split) return;
             const day = split.days[dayIdx];
             const moved = day.exercises.splice(evt.oldIndex, 1)[0];
             day.exercises.splice(evt.newIndex, 0, moved);
+            persistSplitEdit(split);
+            
+            // Re-render asynchronously to allow SortableJS to finish its cleanup
+            setTimeout(() => {
+                renderSplitEditView();
+            }, 10);
+        }
+    });
+}
+
+function _initDaySortable(listEl, splitId) {
+    if(listEl._sortable) { listEl._sortable.destroy(); }
+    if(typeof Sortable === 'undefined') return;
+
+    listEl._sortable = Sortable.create(listEl, {
+        group: 'days-group',
+        handle: '.day-drag-handle',
+        animation: 150,
+        delay: 200,
+        delayOnTouchOnly: true,
+        fallbackOnBody: true,
+        ghostClass: 'opacity-30',
+        onEnd: function(evt) {
+            console.log('Day onEnd tetiklendi', evt);
+            if (evt.oldIndex === evt.newIndex) return; // No change
+            const split = splits.find(s => s.id === splitId);
+            if(!split) return;
+            const moved = split.days.splice(evt.oldIndex, 1)[0];
+            split.days.splice(evt.newIndex, 0, moved);
             persistSplitEdit(split);
             
             // Re-render asynchronously to allow SortableJS to finish its cleanup
