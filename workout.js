@@ -1042,11 +1042,11 @@ function renderSplitEditView() {
         const swipeWrapper = document.createElement('div');
         swipeWrapper.style.cssText = 'position: relative; width: 342px; margin: 0 auto 8px;';
 
-        // Delete button positioned just outside the card's right edge (hidden by default)
+        // Delete button positioned under the right edge of the card (z-index 0)
         const delBtn = document.createElement('button');
         delBtn.style.cssText = `
             position: absolute;
-            right: -80px;
+            right: 0;
             top: 0;
             width: 80px;
             height: 72px;
@@ -1061,9 +1061,7 @@ function renderSplitEditView() {
 
         const resetSwipe = () => {
             splitCard.style.transition = 'transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)';
-            delBtn.style.transition = 'transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)';
             splitCard.style.transform = 'translateX(0px)';
-            delBtn.style.transform = 'translateX(0px)';
         };
 
         delBtn.onclick = () => {
@@ -1084,7 +1082,6 @@ function renderSplitEditView() {
                 currentX = startX;
                 isDragging = true;
                 splitCard.style.transition = 'none';
-                delBtn.style.transition = 'none';
             }, {passive: true});
 
             headerEl.addEventListener('touchmove', e => {
@@ -1093,9 +1090,8 @@ function renderSplitEditView() {
                 let diff = currentX - startX;
                 if(diff > 0) diff = 0;
                 if(diff < -80) diff = -80;
-                // Both slide together — button stays right next to card's right edge
+                // Card slides left, revealing the button underneath
                 splitCard.style.transform = `translateX(${diff}px)`;
-                delBtn.style.transform = `translateX(${diff}px)`;
             }, {passive: true});
 
             headerEl.addEventListener('touchend', () => {
@@ -1105,9 +1101,7 @@ function renderSplitEditView() {
                 if(diff < -40) {
                     // Snap open
                     splitCard.style.transition = 'transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)';
-                    delBtn.style.transition = 'transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)';
                     splitCard.style.transform = 'translateX(-80px)';
-                    delBtn.style.transform = 'translateX(-80px)';
                     // Close if user taps outside
                     setTimeout(() => {
                         document.addEventListener('touchstart', function closeSwipe(evt) {
