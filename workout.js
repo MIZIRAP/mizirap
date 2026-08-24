@@ -940,7 +940,7 @@ function renderSplitEditView() {
                         <div class="exercise-card w-[282px] flex flex-col items-center ${isExOpen ? 'expanded' : ''} ex-drag-item" data-ex-idx="${exIdx}" data-split-id="${split.id}" data-day-idx="${dayIdx}">
                             <div class="accordion-header w-[282px] h-[56px] bg-[#E8EAF0] rounded-[12px] p-3 flex items-center justify-between cursor-pointer transition-all z-20 relative" style="box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.08), -4px -4px 8px rgba(255, 255, 255, 0.6);" onclick="toggleMizAccordion(this, '${exAccordionKey}', 'ex', event)">
                                 <div class="flex items-center gap-2">
-                                    <span class="material-symbols-rounded text-[#C7C4D7] text-[16px] cursor-grab drag-handle shrink-0 select-none">drag_indicator</span>
+                                    <span class="material-symbols-rounded text-[#C7C4D7] text-[16px] cursor-grab drag-handle shrink-0 select-none touch-none">drag_indicator</span>
                                     <div class="w-[40px] h-[40px] bg-[#E8EAF0] rounded-full flex items-center justify-center text-[#712AE2] font-bold text-[16px] shrink-0" style="box-shadow: inset 2px 2px 4px rgba(0, 0, 0, 0.08), inset -2px -2px 4px rgba(255, 255, 255, 0.6);">${initial}</div>
                                     <div class="flex flex-col">
                                         <h4 class="font-semibold text-[#181C20] text-[14px] leading-[21px] tracking-[0.7px] select-none">${ex.name}</h4>
@@ -978,7 +978,7 @@ function renderSplitEditView() {
                     <!-- Day Header -->
                     <div class="accordion-header w-[300px] h-[56px] bg-[#E8EAF0] rounded-[12px] px-4 flex items-center justify-between cursor-pointer transition-all z-30 relative" style="box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.08), -4px -4px 8px rgba(255, 255, 255, 0.6); ${dayIdx > 0 ? 'margin-top: 12px;' : ''}" onclick="toggleMizAccordion(this, '${dayAccordionKey}', 'day', event)">
                         <div class="flex items-center gap-3">
-                            <span class="material-symbols-rounded text-[#C7C4D7] text-[16px] cursor-grab day-drag-handle shrink-0 select-none">drag_indicator</span>
+                            <span class="material-symbols-rounded text-[#C7C4D7] text-[16px] cursor-grab day-drag-handle shrink-0 select-none touch-none">drag_indicator</span>
                             <div class="bg-[#E8EAF0] px-2 py-1 rounded-[4px] flex items-center justify-center shrink-0" style="box-shadow: inset 2px 2px 4px rgba(0, 0, 0, 0.08), inset -2px -2px 4px rgba(255, 255, 255, 0.6);">
                                 <span class="text-[#712AE2] font-normal text-[10px] leading-[15px]">Gün ${dayIdx + 1}</span>
                             </div>
@@ -1174,9 +1174,11 @@ function _initExSortable(listEl, splitId, dayIdx) {
             const moved = day.exercises.splice(evt.oldIndex, 1)[0];
             day.exercises.splice(evt.newIndex, 0, moved);
             persistSplitEdit(split);
-            persistSplitEdit(split);
-            // Re-render to update indices on buttons
-            renderSplitEditView();
+            
+            // Re-render asynchronously to allow SortableJS to finish its cleanup
+            setTimeout(() => {
+                renderSplitEditView();
+            }, 10);
         }
     });
 }
@@ -1677,7 +1679,7 @@ function renderSessionOrderedList() {
     list.innerHTML = sessionDraftMovements.map((m, i) => `
         <div class="flex items-center gap-3 bg-background shadow-neo-low rounded-lg p-2 cursor-grab active:cursor-grabbing session-drag-item"
             draggable="true" data-drag-idx="${i}">
-            <span class="material-symbols-rounded text-outline text-[20px] select-none">drag_indicator</span>
+            <span class="material-symbols-rounded text-outline text-[20px] select-none touch-none">drag_indicator</span>
             <div class="w-10 h-10 rounded-full overflow-hidden flex-shrink-0 bg-background shadow-neo-highest">
                 ${m.imageBase64 ? `<img src="${m.imageBase64}" class="w-full h-full object-cover" alt="${escapeHtml(m.name)}"/>` : ''}
             </div>
@@ -2149,7 +2151,7 @@ function renderSessionSelectedExercises() {
         <div class="flex items-center justify-between p-2 bg-surface rounded-xl border border-outline-variant/30" data-id="${ex.instanceId}">
             <div class="flex items-center gap-3">
                 <div class="drag-handle cursor-grab active:cursor-grabbing text-on-surface-variant/50 hover:text-on-surface-variant p-1">
-                    <span class="material-symbols-rounded text-lg select-none">drag_indicator</span>
+                    <span class="material-symbols-rounded text-lg select-none touch-none">drag_indicator</span>
                 </div>
                 ${imgHtml}
                 <div>
