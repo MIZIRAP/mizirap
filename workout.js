@@ -1166,7 +1166,7 @@ function _initExSortable(listEl, splitId, dayIdx) {
         animation: 150,
         forceFallback: true,
         fallbackOnBody: true,
-        ghostClass: 'opacity-30',
+        ghostClass: 'ex-sortable-ghost',
         onEnd: function(evt) {
             console.log('Ex onEnd tetiklendi', evt);
             if (evt.oldIndex === evt.newIndex) return; // No change
@@ -1195,7 +1195,7 @@ function _initDaySortable(listEl, splitId) {
         animation: 150,
         forceFallback: true,
         fallbackOnBody: true,
-        ghostClass: 'opacity-30',
+        ghostClass: 'ex-sortable-ghost',
         onEnd: function(evt) {
             console.log('Day onEnd tetiklendi', evt);
             if (evt.oldIndex === evt.newIndex) return; // No change
