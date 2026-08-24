@@ -1,7 +1,7 @@
 import { db, auth } from "./firebase-config.js";
 import { doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
 import { updatePassword, EmailAuthProvider, reauthenticateWithCredential, updateProfile } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
-import { CalculatorEngine } from './tools.js';
+import { CalculatorEngine } from './tools.js?v=1787428045';
 
 let currentUid = null;
 let currentPhotoUrl = null;

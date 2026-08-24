@@ -3,15 +3,15 @@ import { onAuthStateChanged, signInAnonymously } from "https://www.gstatic.com/f
 import { setupAuthUI } from "./auth.js";
 import { initDashboard, clearDashboard, updateDashboardWorkouts, updateDashboardFinance, updateDashboardWater, updateDashboardBooks, updateDashboardMovies, updateDashboardCalories } from "./dashboard.js?v=1787428044";
 import { initShopping, clearShopping } from "./shopping.js";
-import { initWorkout, clearWorkout } from "./workout.js?v=1787428044";
+import { initWorkout, clearWorkout } from "./workout.js?v=1787428045";
 import { initFinance, clearFinance } from "./finance.js";
 import { initWater, clearWater } from "./water.js";
 import { initBooks, clearBooks } from "./books.js?v=1787428044";
 import { initMovies, clearMovies } from "./movies.js?v=1787428044";
-import { initProfile, clearProfile } from "./profile.js";
+import { initProfile, clearProfile } from "./profile.js?v=1787428045";
 import { initCalories, clearCalories } from "./calories.js";
 import { initHistory, clearHistory } from "./history.js";
-import { initTools, clearTools } from "./tools.js";
+import { initTools, clearTools } from "./tools.js?v=1787428045";
 import { clearAllListeners } from "./listenerManager.js";
 
 // ---------- DOM referansları ----------
