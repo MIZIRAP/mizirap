@@ -93,3 +93,14 @@ input[type="number"] {
 [data-widget-id] svg {
   -webkit-user-drag: none;
 }
+
+/* Completely hide the ghost element during drag to prevent leftover shadow/background */
+.ex-sortable-ghost {
+    opacity: 0 !important;
+    visibility: hidden !important;
+}
+.ex-sortable-ghost * {
+    opacity: 0 !important;
+    box-shadow: none !important;
+    background: transparent !important;
+}
