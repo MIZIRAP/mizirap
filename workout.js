@@ -1164,9 +1164,6 @@ function _initExSortable(listEl, splitId, dayIdx) {
         group: 'exercises-group',
         handle: '.drag-handle',
         animation: 150,
-        delay: 200,
-        delayOnTouchOnly: true,
-        fallbackOnBody: true,
         ghostClass: 'opacity-30',
         chosenClass: 'bg-gradient-to-r from-neon-purple to-neon-blue-container/10',
         onEnd: function(evt) {
@@ -1195,9 +1192,6 @@ function _initDaySortable(listEl, splitId) {
         group: 'days-group',
         handle: '.day-drag-handle',
         animation: 150,
-        delay: 200,
-        delayOnTouchOnly: true,
-        fallbackOnBody: true,
         ghostClass: 'opacity-30',
         onEnd: function(evt) {
             console.log('Day onEnd tetiklendi', evt);
