@@ -2230,10 +2230,19 @@ async function saveSession() {
 
 
 window.toggleMizAccordion = function(headerElement, key, type, event) {
+    const parent = headerElement.parentElement;
+
+    // Prevent accordion from opening/closing during a drag operation
+    if (parent.classList.contains('ex-sortable-ghost') || 
+        parent.classList.contains('sortable-drag') || 
+        parent.classList.contains('sortable-chosen')) {
+        return;
+    }
+
     if (event && (event.target.closest('button') || event.target.closest('.drag-handle') || event.target.closest('.day-drag-handle'))) {
         return;
     }
-    const parent = headerElement.parentElement;
+    
     parent.classList.toggle('expanded');
 
     // Update state sets
