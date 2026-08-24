@@ -1,5 +1,5 @@
 import { auth, db } from "./firebase-config.js";
-import { collection, doc, addDoc, setDoc, deleteDoc, updateDoc, onSnapshot, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+import { collection, doc, addDoc, setDoc, deleteDoc, updateDoc, onSnapshot, query, orderBy, limit, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
 import { escapeHtml, handleFormSubmit } from "./utils.js";
 import { registerListener } from "./listenerManager.js";
 
