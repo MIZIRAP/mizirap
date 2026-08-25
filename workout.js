@@ -933,9 +933,9 @@ function renderSplitEditView() {
 
                         exHtml += `
                         <div class="exercise-card w-[282px] flex flex-col items-center ${isExOpen ? 'expanded' : ''} ex-drag-item" data-ex-idx="${exIdx}" data-split-id="${split.id}" data-day-idx="${dayIdx}">
-                            <div class="accordion-header w-[282px] h-[56px] bg-[#E8EAF0] rounded-[12px] p-3 flex items-center justify-between cursor-pointer transition-all z-20 relative" style="box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.08), -4px -4px 8px rgba(255, 255, 255, 0.6);" onclick="toggleMizAccordion(this, '${exAccordionKey}', 'ex', event)">
+                            <div class="accordion-header w-[282px] h-[56px] bg-[#E8EAF0] rounded-[12px] p-3 flex items-center justify-between transition-all z-20 relative" style="box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.08), -4px -4px 8px rgba(255, 255, 255, 0.6);">
                                 <div class="flex items-center gap-2">
-                                    <span class="material-symbols-rounded text-[#C7C4D7] text-[16px] cursor-grab drag-handle shrink-0 select-none touch-none" style="touch-action: none; user-select: none;" onclick="event.stopPropagation();" onpointerdown="event.stopPropagation();" ontouchstart="event.stopPropagation();">drag_indicator</span>
+                                    <span class="material-symbols-rounded text-[#C7C4D7] text-[16px] cursor-grab drag-handle shrink-0 select-none" style="touch-action: none; user-select: none;">drag_indicator</span>
                                     <div class="w-[40px] h-[40px] bg-[#E8EAF0] rounded-full flex items-center justify-center text-[#712AE2] font-bold text-[16px] shrink-0" style="box-shadow: inset 2px 2px 4px rgba(0, 0, 0, 0.08), inset -2px -2px 4px rgba(255, 255, 255, 0.6);">${initial}</div>
                                     <div class="flex flex-col">
                                         <h4 class="font-semibold text-[#181C20] text-[14px] leading-[21px] tracking-[0.7px] select-none">${ex.name}</h4>
@@ -943,7 +943,7 @@ function renderSplitEditView() {
                                     </div>
                                 </div>
                                 <div class="flex items-center gap-2 shrink-0">
-                                    <span class="material-symbols-rounded text-[#1E293B] text-[16px] transition-transform chevron">expand_more</span>
+                                    <span class="material-symbols-rounded text-[#1E293B] text-[16px] transition-transform chevron cursor-pointer p-1" onclick="toggleMizAccordion(this.closest('.accordion-header'), '${exAccordionKey}', 'ex', event)">expand_more</span>
                                     <button class="p-1 transition-colors" data-action="removeExerciseFromSplit" data-split-id="${split.id}" data-day-idx="${dayIdx}" data-ex-idx="${exIdx}">
                                         <span class="material-symbols-rounded text-[#BA1A1A] text-[16px] pointer-events-none">delete</span>
                                     </button>
@@ -971,16 +971,16 @@ function renderSplitEditView() {
                 daysHtml += `
                 <div class="day-card w-full flex flex-col items-center ${isDayOpen ? 'expanded' : ''} day-drag-item" data-day-idx="${dayIdx}">
                     <!-- Day Header -->
-                    <div class="accordion-header w-[300px] h-[56px] bg-[#E8EAF0] rounded-[12px] px-4 flex items-center justify-between cursor-pointer transition-all z-30 relative" style="box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.08), -4px -4px 8px rgba(255, 255, 255, 0.6);" onclick="toggleMizAccordion(this, '${dayAccordionKey}', 'day', event)">
+                    <div class="accordion-header w-[300px] h-[56px] bg-[#E8EAF0] rounded-[12px] px-4 flex items-center justify-between transition-all z-30 relative" style="box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.08), -4px -4px 8px rgba(255, 255, 255, 0.6);">
                         <div class="flex items-center gap-3">
-                            <span class="material-symbols-rounded text-[#C7C4D7] text-[16px] cursor-grab day-drag-handle shrink-0 select-none touch-none" style="touch-action: none; user-select: none;" onclick="event.stopPropagation();" onpointerdown="event.stopPropagation();" ontouchstart="event.stopPropagation();">drag_indicator</span>
+                            <span class="material-symbols-rounded text-[#C7C4D7] text-[16px] cursor-grab day-drag-handle shrink-0 select-none" style="touch-action: none; user-select: none;">drag_indicator</span>
                             <div class="bg-[#E8EAF0] px-2 py-1 rounded-[4px] flex items-center justify-center shrink-0" style="box-shadow: inset 2px 2px 4px rgba(0, 0, 0, 0.08), inset -2px -2px 4px rgba(255, 255, 255, 0.6);">
                                 <span class="text-[#712AE2] font-normal text-[10px] leading-[15px]">Gün ${dayIdx + 1}</span>
                             </div>
                             <input type="text" value="${day.name}" class="font-medium text-[#181C20] text-[16px] leading-[24px] bg-transparent outline-none border-none focus:ring-0 shadow-none p-0 w-[110px] truncate" onclick="event.stopPropagation()" onchange="updateSplitDayName('${split.id}', ${dayIdx}, this.value)" />
                         </div>
                         <div class="flex items-center gap-2 shrink-0">
-                            <span class="material-symbols-rounded text-[#1E293B] text-[16px] transition-transform chevron">expand_more</span>
+                            <span class="material-symbols-rounded text-[#1E293B] text-[16px] transition-transform chevron cursor-pointer p-1" onclick="toggleMizAccordion(this.closest('.accordion-header'), '${dayAccordionKey}', 'day', event)">expand_more</span>
                             <button class="p-1 transition-colors" data-action="removeDayFromSplit" data-split-id="${split.id}" data-day-idx="${dayIdx}">
                                 <span class="material-symbols-rounded text-[#BA1A1A] text-[16px] pointer-events-none">delete</span>
                             </button>
