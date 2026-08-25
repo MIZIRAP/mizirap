@@ -1167,6 +1167,15 @@ function _initExSortable(listEl, splitId, dayIdx) {
         forceFallback: true,
         fallbackOnBody: true,
         ghostClass: 'ex-sortable-ghost',
+        onStart: function(evt) {
+            const item = evt.item;
+            item.classList.remove('expanded');
+            const content = item.querySelector('.accordion-content');
+            if (content) {
+                content.classList.remove('expanded');
+                content.style.maxHeight = '';
+            }
+        },
         onEnd: function(evt) {
             console.log('Ex onEnd tetiklendi', evt);
             if (evt.oldIndex === evt.newIndex) return; // No change
@@ -1195,7 +1204,16 @@ function _initDaySortable(listEl, splitId) {
         animation: 150,
         forceFallback: true,
         fallbackOnBody: true,
-        ghostClass: 'ex-sortable-ghost',
+        ghostClass: 'day-sortable-ghost',
+        onStart: function(evt) {
+            const item = evt.item;
+            item.classList.remove('expanded');
+            const content = item.querySelector('.accordion-content');
+            if (content) {
+                content.classList.remove('expanded');
+                content.style.maxHeight = '';
+            }
+        },
         onEnd: function(evt) {
             console.log('Day onEnd tetiklendi', evt);
             if (evt.oldIndex === evt.newIndex) return; // No change

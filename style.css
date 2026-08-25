@@ -104,3 +104,13 @@ input[type="number"] {
     box-shadow: none !important;
     background: transparent !important;
 }
+
+.day-sortable-ghost {
+    opacity: 0 !important;
+    visibility: hidden !important;
+}
+.day-sortable-ghost * {
+    opacity: 0 !important;
+    box-shadow: none !important;
+    background: transparent !important;
+}
