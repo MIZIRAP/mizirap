@@ -1156,6 +1156,8 @@ function toggleDayAccordion(key, headerBtn) {
     }
 };
 
+let _isDragging = false;
+
 function _initExSortable(listEl, splitId, dayIdx) {
     if(listEl._sortable) { listEl._sortable.destroy(); }
     if(typeof Sortable === 'undefined') return;
@@ -1168,6 +1170,7 @@ function _initExSortable(listEl, splitId, dayIdx) {
         fallbackOnBody: true,
         ghostClass: 'ex-sortable-ghost',
         onStart: function(evt) {
+            _isDragging = true;
             const item = evt.item;
             item.classList.remove('expanded');
             const content = item.querySelector('.accordion-content');
@@ -1177,6 +1180,8 @@ function _initExSortable(listEl, splitId, dayIdx) {
             }
         },
         onEnd: function(evt) {
+            // Keep drag lock active long enough to swallow the synthetic click
+            setTimeout(() => { _isDragging = false; }, 300);
             console.log('Ex onEnd tetiklendi', evt);
             if (evt.oldIndex === evt.newIndex) return; // No change
             const split = splits.find(s => s.id === splitId);
@@ -1206,6 +1211,7 @@ function _initDaySortable(listEl, splitId) {
         fallbackOnBody: true,
         ghostClass: 'day-sortable-ghost',
         onStart: function(evt) {
+            _isDragging = true;
             const item = evt.item;
             item.classList.remove('expanded');
             const content = item.querySelector('.accordion-content');
@@ -1215,6 +1221,8 @@ function _initDaySortable(listEl, splitId) {
             }
         },
         onEnd: function(evt) {
+            // Keep drag lock active long enough to swallow the synthetic click
+            setTimeout(() => { _isDragging = false; }, 300);
             console.log('Day onEnd tetiklendi', evt);
             if (evt.oldIndex === evt.newIndex) return; // No change
             const split = splits.find(s => s.id === splitId);
@@ -2248,10 +2256,15 @@ async function saveSession() {
 
 
 window.toggleMizAccordion = function(headerElement, key, type, event) {
+    // Global drag lock: SortableJS fires a synthetic click after drag ends;
+    // _isDragging stays true for 300ms after drag to swallow that event.
+    if (_isDragging) return;
+
     const parent = headerElement.parentElement;
 
     // Prevent accordion from opening/closing during a drag operation
     if (parent.classList.contains('ex-sortable-ghost') || 
+        parent.classList.contains('day-sortable-ghost') ||
         parent.classList.contains('sortable-drag') || 
         parent.classList.contains('sortable-chosen')) {
         return;
