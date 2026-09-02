@@ -662,14 +662,14 @@ if (caloriesGoalBackdrop) {
         quickAddSaveBtn.onclick = async () => {
             if (!currentUid) return;
             const name = quickAddName.value.trim();
-            const kcal = validatePositiveNumber(quickAddKcal.value);
-            const protein = validatePositiveNumber(quickAddProtein.value);
-            const karb = validatePositiveNumber(quickAddKarb.value);
-            const yag = validatePositiveNumber(quickAddYag.value);
-            const amount = validatePositiveNumber(quickAddGram.value);
+            const kcal = parseFloat(quickAddKcal.value) || 0;
+            const protein = parseFloat(quickAddProtein.value) || 0;
+            const karb = parseFloat(quickAddKarb.value) || 0;
+            const yag = parseFloat(quickAddYag.value) || 0;
+            const amount = parseFloat(quickAddGram.value) || 0;
             
-            if (!name || kcal <= 0) {
-                alert("Lütfen geçerli bir besin adı ve kalori girin.");
+            if (!name || kcal <= 0 || amount <= 0) {
+                alert("Lütfen geçerli bir besin adı, gram ve kalori girin.");
                 return;
             }
             
@@ -678,7 +678,7 @@ if (caloriesGoalBackdrop) {
             quickAddSaveBtn.innerHTML = "Ekleniyor...";
             try {
                 await addDoc(collection(db, "users", currentUid, "calorieLogs"), {
-                    foodName: name,
+                    name: name,
                     kcal: kcal,
                     protein: protein,
                     karb: karb,
