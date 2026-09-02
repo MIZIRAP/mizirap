@@ -3,9 +3,9 @@ import { onAuthStateChanged, signInAnonymously } from "https://www.gstatic.com/f
 import { setupAuthUI } from "./auth.js";
 import { initDashboard, clearDashboard } from "./dashboard.js?v=1787428044";
 import { initShopping, clearShopping } from "./shopping.js";
-import { initWorkout, clearWorkout } from "./workout.js?v=1787428061";
+import { initWorkout, clearWorkout } from "./workout.js?v=20260902";
 import { initFinance, clearFinance } from "./finance.js";
-import { initWater, clearWater } from "./water.js";
+import { initWater, clearWater } from "./water.js?v=20260902";
 import { initBooks, clearBooks } from "./books.js?v=1787428044";
 import { initMovies, clearMovies } from "./movies.js?v=1787428044";
 import { initProfile, clearProfile } from "./profile.js?v=1787428045";

@@ -376,7 +376,7 @@ function updateWaterUI() {
                         batch.delete(doc(db, "users", currentUid, "waterLogs", log.id));
                         
                         const summaryRef = doc(db, "users", currentUid, "summary", `daily-${getTodayString()}`);
-                        batch.set(summaryRef, { water: { currentAmount: increment(-log.amount) } }, { merge: true });
+                        batch.set(summaryRef, { water: { consumed: increment(-log.amount) } }, { merge: true });
                         
                         await batch.commit();
                     } catch(err) {
