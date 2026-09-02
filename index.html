@@ -3909,6 +3909,72 @@
         </div>
     </div>
 
+    <!-- Quick Add Modal (Hidden by default) -->
+    <div class="hidden fixed inset-0 z-[100] flex items-end justify-center" id="quickAddModal">
+        <!-- Backdrop -->
+        <div class="absolute inset-0 bg-black/10 backdrop-blur-sm z-10 transition-opacity duration-300 opacity-0" id="quick-add-backdrop"></div>
+        <!-- Modal Content -->
+        <div class="relative w-full max-w-sm bg-[#F0F2F8] rounded-t-[32px] shadow-[0_-8px_30px_rgba(0,0,0,0.05)] p-6 z-20 flex flex-col items-center transform transition-transform duration-300 translate-y-full pb-8 max-h-[90dvh] overflow-y-auto" id="quickAddModalContent">
+            <!-- Drag Handle (Mobile) -->
+            <div class="w-12 h-1.5 bg-gray-300 rounded-full mb-6 cursor-pointer" id="close-quick-add-handle"></div>
+            
+            <div class="flex justify-between items-center mb-6 w-full">
+                <h2 class="font-headline-md text-headline-md text-on-surface">Hızlı Ekle (Arama)</h2>
+                <button class="w-8 h-8 flex items-center justify-center bg-background shadow-neo rounded-full text-on-surface-variant hover:bg-surface-container-high transition-colors close-quick-add-modal-btn">
+                    <span class="material-symbols-rounded icon-md">close</span>
+                </button>
+            </div>
+
+            <!-- Arama Alanı -->
+            <div class="flex flex-col gap-2 w-full mb-4">
+                <div class="flex gap-2">
+                    <input id="quick-add-search-input" class="flex-1 bg-background focus:border-primary focus:ring-1 focus:ring-primary rounded-[32px] px-4 py-3 font-body-md text-body-md text-on-surface placeholder:text-outline outline-none transition-all shadow-neo-inset border-none bg-background" placeholder="Arama (Örn: Elma)" type="text">
+                    <button id="quick-add-search-btn" class="w-12 h-12 flex items-center justify-center rounded-full bg-[#F0F2F8] active:scale-95 transition-transform" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px #FFFFFF;">
+                        <span class="material-symbols-rounded text-primary">search</span>
+                    </button>
+                </div>
+                <div id="quick-add-search-results" class="flex flex-col gap-2 mt-2 max-h-40 overflow-y-auto hidden w-full px-1">
+                    <!-- Sonuçlar buraya dinamik eklenecek -->
+                </div>
+            </div>
+
+            <!-- Form Alanı -->
+            <div class="flex flex-col gap-4 w-full">
+                <div>
+                    <label class="block font-label-md text-label-md text-on-surface-variant mb-1 ml-1">Öğün/Besin Adı</label>
+                    <input id="quick-add-name" class="w-full bg-background focus:border-primary focus:ring-1 focus:ring-primary rounded-[32px] px-4 py-3 font-body-md text-body-md text-on-surface placeholder:text-outline outline-none transition-all shadow-neo-inset border-none rounded-xl bg-background " placeholder="Örn: Elma" type="text">
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block font-label-md text-label-md text-on-surface-variant mb-1 ml-1">Gram</label>
+                        <input id="quick-add-gram" class="w-full bg-background focus:border-primary focus:ring-1 focus:ring-primary rounded-[32px] px-4 py-3 font-body-md text-body-md text-on-surface placeholder:text-outline outline-none transition-all shadow-neo-inset border-none rounded-xl bg-background " placeholder="100" type="number" min="0">
+                    </div>
+                    <div>
+                        <label class="block font-label-md text-label-md text-on-surface-variant mb-1 ml-1">Kalori (kcal)</label>
+                        <input id="quick-add-kcal" class="w-full bg-background focus:border-primary focus:ring-1 focus:ring-primary rounded-[32px] px-4 py-3 font-body-md text-body-md text-on-surface placeholder:text-outline outline-none transition-all shadow-neo-inset border-none rounded-xl bg-background " placeholder="0" type="number" min="0">
+                    </div>
+                </div>
+                <div class="grid grid-cols-3 gap-3 mt-2">
+                    <div>
+                        <label class="block font-label-sm text-label-sm text-on-surface-variant mb-1 ml-1">Protein (g)</label>
+                        <input id="quick-add-protein" class="w-full bg-background focus:border-primary focus:ring-1 focus:ring-primary rounded-lg px-3 py-2 font-body-md text-body-md text-on-surface placeholder:text-outline outline-none transition-all text-center shadow-neo-inset border-none rounded-xl bg-background " placeholder="0" type="number" min="0">
+                    </div>
+                    <div>
+                        <label class="block font-label-sm text-label-sm text-on-surface-variant mb-1 ml-1">Karb (g)</label>
+                        <input id="quick-add-karb" class="w-full bg-background focus:border-primary focus:ring-1 focus:ring-primary rounded-lg px-3 py-2 font-body-md text-body-md text-on-surface placeholder:text-outline outline-none transition-all text-center shadow-neo-inset border-none rounded-xl bg-background " placeholder="0" type="number" min="0">
+                    </div>
+                    <div>
+                        <label class="block font-label-sm text-label-sm text-on-surface-variant mb-1 ml-1">Yağ (g)</label>
+                        <input id="quick-add-yag" class="w-full bg-background focus:border-primary focus:ring-1 focus:ring-primary rounded-lg px-3 py-2 font-body-md text-body-md text-on-surface placeholder:text-outline outline-none transition-all text-center shadow-neo-inset border-none rounded-xl bg-background " placeholder="0" type="number" min="0">
+                    </div>
+                </div>
+                <button id="quick-add-save-btn" class="w-full h-[56px] bg-gradient-to-r from-neon-purple to-neon-blue text-white rounded-full flex items-center justify-center gap-2 hover:opacity-95 active:scale-[0.98] transition-all shadow-sm font-label-md text-label-md tracking-wide">
+                    Kaydet
+                </button>
+            </div>
+        </div>
+    </div>
+
 
 <!-- Modal for Add Portion (Hidden by default) -->
 <div class="hidden fixed inset-0 z-[100] flex items-end justify-center" id="addPortionModal">

@@ -95,6 +95,25 @@ let tempNewFoodYag = 0;
 
 const foodSearchInput = document.getElementById('food-search-input');
 
+// Quick Add Modal Elements
+const quickAddBtn = document.getElementById('calories-quick-add-btn');
+const quickAddModal = document.getElementById('quickAddModal');
+const quickAddModalContent = document.getElementById('quickAddModalContent');
+const quickAddBackdrop = document.getElementById('quick-add-backdrop');
+const quickAddCloseHandle = document.getElementById('close-quick-add-handle');
+const quickAddCloseBtn = document.querySelector('.close-quick-add-modal-btn');
+const quickAddSearchInput = document.getElementById('quick-add-search-input');
+const quickAddSearchBtn = document.getElementById('quick-add-search-btn');
+const quickAddSearchResults = document.getElementById('quick-add-search-results');
+const quickAddName = document.getElementById('quick-add-name');
+const quickAddGram = document.getElementById('quick-add-gram');
+const quickAddKcal = document.getElementById('quick-add-kcal');
+const quickAddProtein = document.getElementById('quick-add-protein');
+const quickAddKarb = document.getElementById('quick-add-karb');
+const quickAddYag = document.getElementById('quick-add-yag');
+const quickAddSaveBtn = document.getElementById('quick-add-save-btn');
+let quickAddBase100g = null;
+
 let tempCaloriesGoal = 2000;
 let tempMacroProtein = 150;
 let tempMacroKarb = 250;
@@ -504,6 +523,164 @@ if (caloriesGoalBackdrop) {
                 currentEditLogId = null;
                 addFoodToLogBtn.disabled = false;
                 closeAddPortionModal();
+            }
+        };
+    }
+
+    // Quick Add Modal Events
+    if (quickAddBtn) {
+        quickAddBtn.onclick = () => {
+            quickAddModal.classList.remove('hidden');
+            setTimeout(() => {
+                if(quickAddBackdrop) quickAddBackdrop.classList.remove('opacity-0');
+                if(quickAddModalContent) {
+                    quickAddModalContent.classList.remove('translate-y-full');
+                    quickAddModalContent.classList.add('translate-y-0');
+                }
+            }, 10);
+            document.body.style.overflow = 'hidden';
+            resetQuickAddModal();
+        };
+    }
+
+    const closeQuickAddModal = () => {
+        if(quickAddBackdrop) quickAddBackdrop.classList.add('opacity-0');
+        if(quickAddModalContent) {
+            quickAddModalContent.classList.remove('translate-y-0');
+            quickAddModalContent.classList.add('translate-y-full');
+        }
+        setTimeout(() => {
+            quickAddModal.classList.add('hidden');
+            document.body.style.overflow = '';
+        }, 300);
+    };
+
+    if (quickAddBackdrop) quickAddBackdrop.onclick = closeQuickAddModal;
+    if (quickAddCloseHandle) quickAddCloseHandle.onclick = closeQuickAddModal;
+    if (quickAddCloseBtn) quickAddCloseBtn.onclick = closeQuickAddModal;
+
+    if (quickAddSearchBtn) {
+        quickAddSearchBtn.onclick = async () => {
+            const query = quickAddSearchInput.value.trim();
+            if (!query) return;
+            
+            quickAddSearchBtn.innerHTML = `<div class="animate-spin rounded-full h-5 w-5 border-b-2 border-primary"></div>`;
+            quickAddSearchResults.innerHTML = "";
+            quickAddSearchResults.classList.remove("hidden");
+            
+            try {
+                const url = `https://world.openfoodfacts.org/cgi/search.pl?search_terms=${encodeURIComponent(query)}&search_simple=1&action=process&json=1&page_size=10`;
+                const res = await fetch(url);
+                const data = await res.json();
+                
+                if (!data.products || data.products.length === 0) {
+                    quickAddSearchResults.innerHTML = `<div class="text-sm text-center p-2 text-on-surface/50">Sonuç bulunamadı. Manuel ekleyebilirsiniz.</div>`;
+                    return;
+                }
+                
+                data.products.forEach(p => {
+                    const name = p.product_name || "Bilinmeyen Ürün";
+                    const brand = p.brands ? `(${p.brands})` : "";
+                    const n = p.nutriments || {};
+                    const kcal = n["energy-kcal_100g"] || 0;
+                    const protein = n["proteins_100g"] || 0;
+                    const karb = n["carbohydrates_100g"] || 0;
+                    const yag = n["fat_100g"] || 0;
+                    
+                    const div = document.createElement("div");
+                    div.className = "p-3 bg-white rounded-xl shadow-sm border border-outline/10 cursor-pointer hover:bg-surface-container transition-colors";
+                    div.innerHTML = `
+                        <div class="font-semibold text-sm text-on-surface">${escapeHtml(name)} <span class="text-xs font-normal text-on-surface/60">${escapeHtml(brand)}</span></div>
+                        <div class="text-xs text-on-surface/70 mt-1">${Math.round(kcal)} kcal | P: ${Math.round(protein)}g | K: ${Math.round(karb)}g | Y: ${Math.round(yag)}g (100g için)</div>
+                    `;
+                    div.onclick = () => {
+                        quickAddName.value = name;
+                        quickAddGram.value = 100;
+                        quickAddBase100g = { kcal, protein, karb, yag };
+                        recalculateQuickAddMacros();
+                        quickAddSearchResults.classList.add("hidden");
+                    };
+                    quickAddSearchResults.appendChild(div);
+                });
+            } catch (err) {
+                quickAddSearchResults.innerHTML = `<div class="text-sm text-center p-2 text-red-500">Arama başarısız. Manuel ekleyebilirsiniz.</div>`;
+            } finally {
+                quickAddSearchBtn.innerHTML = `<span class="material-symbols-rounded text-primary">search</span>`;
+            }
+        };
+    }
+    
+    const recalculateQuickAddMacros = () => {
+        if (!quickAddBase100g) return;
+        const g = parseFloat(quickAddGram.value) || 0;
+        const multiplier = g / 100;
+        quickAddKcal.value = Math.round(quickAddBase100g.kcal * multiplier);
+        quickAddProtein.value = Math.round(quickAddBase100g.protein * multiplier);
+        quickAddKarb.value = Math.round(quickAddBase100g.karb * multiplier);
+        quickAddYag.value = Math.round(quickAddBase100g.yag * multiplier);
+    };
+
+    if (quickAddGram) {
+        quickAddGram.addEventListener('input', recalculateQuickAddMacros);
+    }
+    
+    const overrideBase = () => { quickAddBase100g = null; };
+    if(quickAddKcal) quickAddKcal.addEventListener('input', overrideBase);
+    if(quickAddProtein) quickAddProtein.addEventListener('input', overrideBase);
+    if(quickAddKarb) quickAddKarb.addEventListener('input', overrideBase);
+    if(quickAddYag) quickAddYag.addEventListener('input', overrideBase);
+
+    const resetQuickAddModal = () => {
+        if(quickAddSearchInput) quickAddSearchInput.value = "";
+        if(quickAddSearchResults) {
+            quickAddSearchResults.innerHTML = "";
+            quickAddSearchResults.classList.add("hidden");
+        }
+        if(quickAddName) quickAddName.value = "";
+        if(quickAddGram) quickAddGram.value = "100";
+        if(quickAddKcal) quickAddKcal.value = "";
+        if(quickAddProtein) quickAddProtein.value = "";
+        if(quickAddKarb) quickAddKarb.value = "";
+        if(quickAddYag) quickAddYag.value = "";
+        quickAddBase100g = null;
+    };
+
+    if (quickAddSaveBtn) {
+        quickAddSaveBtn.onclick = async () => {
+            if (!currentUid) return;
+            const name = quickAddName.value.trim();
+            const kcal = validatePositiveNumber(quickAddKcal.value);
+            const protein = validatePositiveNumber(quickAddProtein.value);
+            const karb = validatePositiveNumber(quickAddKarb.value);
+            const yag = validatePositiveNumber(quickAddYag.value);
+            const amount = validatePositiveNumber(quickAddGram.value);
+            
+            if (!name || kcal <= 0) {
+                alert("Lütfen geçerli bir besin adı ve kalori girin.");
+                return;
+            }
+            
+            quickAddSaveBtn.disabled = true;
+            const originalText = quickAddSaveBtn.innerHTML;
+            quickAddSaveBtn.innerHTML = "Ekleniyor...";
+            try {
+                await addDoc(collection(db, "users", currentUid, "calorieLogs"), {
+                    foodName: name,
+                    kcal: kcal,
+                    protein: protein,
+                    karb: karb,
+                    yag: yag,
+                    amount: amount,
+                    createdAt: serverTimestamp(),
+                    type: "Food"
+                });
+                closeQuickAddModal();
+            } catch (err) {
+                console.error("Hata:", err);
+                alert("Eklenemedi: " + err.message);
+            } finally {
+                quickAddSaveBtn.disabled = false;
+                quickAddSaveBtn.innerHTML = originalText;
             }
         };
     }
