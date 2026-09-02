@@ -1,7 +1,7 @@
 import { auth } from "./firebase-config.js";
 import { onAuthStateChanged, signInAnonymously } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
 import { setupAuthUI } from "./auth.js";
-import { initDashboard, clearDashboard, updateDashboardWorkouts, updateDashboardFinance, updateDashboardWater, updateDashboardBooks, updateDashboardMovies, updateDashboardCalories } from "./dashboard.js?v=1787428044";
+import { initDashboard, clearDashboard } from "./dashboard.js?v=1787428044";
 import { initShopping, clearShopping } from "./shopping.js";
 import { initWorkout, clearWorkout } from "./workout.js?v=1787428061";
 import { initFinance, clearFinance } from "./finance.js";
@@ -12,7 +12,7 @@ import { initProfile, clearProfile } from "./profile.js?v=1787428045";
 import { initCalories, clearCalories } from "./calories.js?v=1787428046";
 import { initHistory, clearHistory } from "./history.js";
 import { initTools, clearTools } from "./tools.js?v=1787428045";
-import { clearAllListeners } from "./listenerManager.js";
+import { clearAllListeners, unregisterFirestoreListener, resumeFirestoreListener } from "./listenerManager.js";
 
 // ---------- DOM referansları ----------
 const authScreen = document.getElementById("auth-screen");
@@ -59,30 +59,12 @@ onAuthStateChanged(auth, async (user) => {
             // Modülleri başlat
             initDashboard(user.uid);
             initShopping(user.uid);
-
-            initWorkout(user.uid, (workouts, activeSplitName) => {
-                requestAnimationFrame(() => updateDashboardWorkouts(workouts, activeSplitName));
-            });
-
-            initFinance(user.uid, (txs) => {
-                requestAnimationFrame(() => updateDashboardFinance(txs));
-            });
-
-            initWater(user.uid, (waterStats) => {
-                requestAnimationFrame(() => updateDashboardWater(waterStats));
-            });
-            initCalories(user.uid, (caloriesStats) => {
-                requestAnimationFrame(() => updateDashboardCalories(caloriesStats));
-            });
-
-            initBooks(user.uid, (books) => {
-                requestAnimationFrame(() => updateDashboardBooks(books));
-            });
-
-            initMovies(user.uid, (movies) => {
-                requestAnimationFrame(() => updateDashboardMovies(movies));
-            });
-
+            initWorkout(user.uid);
+            initFinance(user.uid);
+            initWater(user.uid);
+            initCalories(user.uid);
+            initBooks(user.uid);
+            initMovies(user.uid);
             initProfile(user.uid);
             initHistory(user.uid);
             initTools();
@@ -142,21 +124,29 @@ onAuthStateChanged(auth, async (user) => {
 });
 
 // ---------- Sekme (view) geçişleri (Uygulama İçi, History API Destekli) ----------
+let currentActiveView = "view-dashboard";
+
 window.showView = function(viewId) {
+    if (!document.getElementById(viewId)) {
+        viewId = "view-dashboard";
+    }
+
+    if (currentActiveView !== viewId) {
+        unregisterFirestoreListener(currentActiveView);
+    }
+
     document.querySelectorAll(".view").forEach(v => {
         v.classList.add("hidden");
     });
+    
     const target = document.getElementById(viewId);
     if(target) {
         target.classList.remove("hidden");
         window.scrollTo(0,0);
-    } else {
-        const dash = document.getElementById("view-dashboard");
-        if (dash) {
-            dash.classList.remove("hidden");
-            window.scrollTo(0,0);
-        }
     }
+
+    resumeFirestoreListener(viewId);
+    currentActiveView = viewId;
 };
 
 window.addEventListener("popstate", (e) => {

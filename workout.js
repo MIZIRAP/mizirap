@@ -1,7 +1,7 @@
 import { auth, db } from "./firebase-config.js";
 import { formatDate, formatCurrency } from "./utils.js";
 import { collection, doc, addDoc, setDoc, getDocs, getDoc, query, orderBy, limit, serverTimestamp, where, onSnapshot, updateDoc, deleteDoc, deleteField, writeBatch } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
-import { escapeHtml, handleFormSubmit } from "./utils.js";
+import { escapeHtml, handleFormSubmit, getTodayString } from "./utils.js";
 import { registerListener } from "./listenerManager.js";
 import { openActiveSession, closeActiveSession } from "./activeSession.js?v=1787302000";
 
@@ -9,6 +9,31 @@ let currentUid = null;
 let splits = [];
 let activeSplitId = null;
 let activeDayId = null;
+
+async function updateActiveSplitDb(newId) {
+    activeSplitId = newId;
+    if (newId) {
+        localStorage.setItem(`miz_activeSplit_${currentUid}`, newId);
+    } else {
+        localStorage.removeItem(`miz_activeSplit_${currentUid}`);
+    }
+
+    const batch = writeBatch(db);
+    
+    if (newId) {
+        batch.set(doc(db, "users", currentUid), { activeSplitId: newId }, { merge: true });
+    } else {
+        batch.set(doc(db, "users", currentUid), { activeSplitId: deleteField() }, { merge: true });
+    }
+
+    const activeSplit = splits.find(s => s.id === newId);
+    const activeSplitName = activeSplit ? activeSplit.name : "Yapılmadı";
+
+    const summaryRef = doc(db, "users", currentUid, "summary", `daily-${getTodayString()}`);
+    batch.set(summaryRef, { workout: { activeSplitName: activeSplitName } }, { merge: true });
+
+    await batch.commit().catch(e => { console.error('DB Error:', e); alert('Veritabanı işlemi sırasında bir hata oluştu.'); throw e; });
+}
 let currentWorkoutLog = null;
 let lastWorkoutLog = null;
 
@@ -1479,11 +1504,7 @@ async function saveNewSplit() {
         }
 
         if(splits.length === 1 || !activeSplitId) {
-            activeSplitId = newSplitId;
-            await setDoc(doc(db, "users", currentUid), {
-                activeSplitId: newSplitId
-            }, { merge: true });
-            localStorage.setItem(`miz_activeSplit_${currentUid}`, newSplitId);
+            await updateActiveSplitDb(newSplitId);
         }
 
         renderSplitEditView();
@@ -1561,13 +1582,8 @@ function selectSplit(splitId) {
 
 async function applySplitSelection() {
     if(!tempSelectedSplitId) return;
-    activeSplitId = tempSelectedSplitId;
-
     try {
-        await setDoc(doc(db, "users", currentUid), {
-            activeSplitId: activeSplitId
-        }, { merge: true });
-        localStorage.setItem(`miz_activeSplit_${currentUid}`, activeSplitId);
+        await updateActiveSplitDb(tempSelectedSplitId);
 
         if (typeof renderSplitEditView === 'function') renderSplitEditView();
         if (typeof renderSplitView === 'function') renderSplitView();
@@ -1615,14 +1631,8 @@ async function deleteSplit(splitId) {
         splits = splits.filter(s => s.id !== splitId);
 
         if(activeSplitId === splitId) {
-            activeSplitId = splits.length > 0 ? splits[0].id : null;
-            if(activeSplitId) {
-                await setDoc(doc(db, "users", currentUid), { activeSplitId }, { merge: true }).catch(e => { console.error('DB Error:', e); alert('Veritabanı işlemi sırasında bir hata oluştu.'); throw e; });
-                localStorage.setItem(`miz_activeSplit_${currentUid}`, activeSplitId);
-            } else {
-                await setDoc(doc(db, "users", currentUid), { activeSplitId: deleteField() }, { merge: true }).catch(e => { console.error('DB Error:', e); alert('Veritabanı işlemi sırasında bir hata oluştu.'); throw e; });
-                localStorage.removeItem(`miz_activeSplit_${currentUid}`);
-            }
+            const nextSplitId = splits.length > 0 ? splits[0].id : null;
+            await updateActiveSplitDb(nextSplitId);
         }
 
         if (typeof renderSplitEditView === 'function') renderSplitEditView();
@@ -2437,8 +2447,7 @@ async function saveSimpleNewSplit() {
         }
 
         if(splits.length === 1 || !activeSplitId) {
-            activeSplitId = newSplitId;
-            localStorage.setItem(`miz_activeSplit_${currentUid}`, activeSplitId);
+            await updateActiveSplitDb(newSplitId);
         }
 
         // Update all UI immediately — no refresh needed

@@ -1,9 +1,8 @@
 import { db } from "./firebase-config.js";
-import { collection, onSnapshot, serverTimestamp, doc, updateDoc, writeBatch, addDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
-import { escapeHtml } from "./utils.js";
-import { registerListener } from "./listenerManager.js";
+import { collection, onSnapshot, serverTimestamp, doc, updateDoc, writeBatch, addDoc, deleteDoc, query, orderBy, limit } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+import { escapeHtml, getTodayString } from "./utils.js";
+import { registerFirestoreListener, unregisterFirestoreListener } from "./listenerManager.js";
 
-let booksUnsubscribe = null;
 let currentBooks = [];
 let currentUid = null;
 let activeBook = null;
@@ -224,32 +223,31 @@ export function initBooks(uid, onChangeCallback) {
     }
 
     // Setup listener
-    if (booksUnsubscribe) {
-        booksUnsubscribe();
-    }
+    const booksRef = query(collection(db, "users", uid, "books"), orderBy("updatedAt", "desc"), limit(50));
+    
+    const setupBooksListener = () => {
+        return onSnapshot(booksRef, (snapshot) => {
+            currentBooks = [];
+            snapshot.forEach(docSnap => {
+                currentBooks.push({ id: docSnap.id, ...docSnap.data() });
+            });
 
-    const booksRef = collection(db, "users", uid, "books");
-    booksUnsubscribe = onSnapshot(booksRef, (snapshot) => {
-        currentBooks = [];
-        snapshot.forEach(docSnap => {
-            currentBooks.push({ id: docSnap.id, ...docSnap.data() });
+            // Sort by updatedAt descending
+            currentBooks.sort((a, b) => {
+                const timeA = a.updatedAt ? a.updatedAt.toMillis() : 0;
+                const timeB = b.updatedAt ? b.updatedAt.toMillis() : 0;
+                return timeB - timeA;
+            });
+
+            renderBooksView();
+
+            if (onChangeCb) onChangeCb(currentBooks);
+        }, (error) => {
+            console.error("Books Snapshot Error:", error);
         });
+    };
 
-        // Sort by updatedAt descending
-        currentBooks.sort((a, b) => {
-            const timeA = a.updatedAt ? a.updatedAt.toMillis() : 0;
-            const timeB = b.updatedAt ? b.updatedAt.toMillis() : 0;
-            return timeB - timeA;
-        });
-
-        renderBooksView();
-
-        if (onChangeCb) onChangeCb(currentBooks);
-    }, (error) => {
-        console.error("Books Snapshot Error:", error);
-    });
-
-    registerListener("books", booksUnsubscribe);
+    registerFirestoreListener("view-books", setupBooksListener);
 }
 
 async function updateActiveBookPages(newPages) {
@@ -270,6 +268,10 @@ async function updateActiveBookPages(newPages) {
             status: newStatus,
             updatedAt: serverTimestamp()
         });
+        
+        activeBook.readPages = newPages;
+        activeBook.status = newStatus;
+        await updateBookSummary();
     } catch(e) {
         console.error(e);
     }
@@ -304,6 +306,8 @@ function renderBooksView() {
             return 0;
         });
     }
+    
+    updateBookSummary();
 
     updateActiveBookUI();
     renderAllBooksList();
@@ -454,6 +458,7 @@ function renderAllBooksList() {
                     activeBook = book;
                     localStorage.setItem('lastActiveBookId_' + currentUid, activeBook.id);
                     renderBooksView();
+                    updateBookSummary();
                     if (onChangeCb) onChangeCb(currentBooks);
 
                     document.querySelectorAll('.card-content').forEach(el => {
@@ -497,6 +502,7 @@ function renderAllBooksList() {
                     activeBook = book;
                     localStorage.setItem('lastActiveBookId_' + currentUid, activeBook.id);
                     renderBooksView();
+                    updateBookSummary();
                     if (onChangeCb) onChangeCb(currentBooks);
 
                     document.querySelectorAll('.card-content').forEach(el => {
@@ -526,10 +532,30 @@ function renderAllBooksList() {
 }
 
 export function clearBooks() {
-    if (booksUnsubscribe) {
-        booksUnsubscribe();
-        booksUnsubscribe = null;
-    }
+    unregisterFirestoreListener("view-books");
     currentBooks = [];
     if(allListEl) allListEl.innerHTML = "";
 }
+
+async function updateBookSummary() {
+    if (!currentUid) return;
+    try {
+        const summaryRef = doc(db, "users", currentUid, "summary", `daily-${getTodayString()}`);
+        if (activeBook) {
+            await setDoc(summaryRef, {
+                books: {
+                    activeTitle: activeBook.title || "İsimsiz",
+                    readPages: activeBook.readPages || 0,
+                    totalPages: activeBook.totalPages || 0
+                }
+            }, { merge: true });
+        } else {
+            await setDoc(summaryRef, {
+                books: { activeTitle: "Aktif Kitap Yok", readPages: 0, totalPages: 0 }
+            }, { merge: true });
+        }
+    } catch(e) {
+        console.error("Book summary update error", e);
+    }
+}
+

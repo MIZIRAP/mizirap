@@ -54,9 +54,7 @@ let _sessionStartTs = null; // JS Date, derived from Firestore startedAt
 // Per-exercise local state: { [exerciseId]: { sets: [{weight,reps,rpe,status,e1rm,delta}], prevBest: {weight,reps} } }
 let _exState = {};
 
-// Debounce timers keyed by `${exId}_${setIdx}`
-const _debounceTimers = {};
-
+// Debounce timers keyed by `${exId}_${setIdx}` (Removed due to optimization)
 // ─── Init / Destroy ────────────────────────────────────────────────────────
 
 export async function openActiveSession(uid, splitId, dayId, dayObj) {
@@ -122,7 +120,6 @@ export function closeActiveSession() {
     _sessionId = null;
     _day = null;
     _exState = {};
-    Object.values(_debounceTimers).forEach(t => clearTimeout(t));
 }
 
 // Go back without finishing — session stays as in_progress in Firestore
@@ -439,7 +436,6 @@ function sessionStepWeight(exId, setIdx, delta) {
     set.weight = Math.max(0, Math.round((set.weight + delta) * 10) / 10);
     _refreshWeightRepsDisplay(exId, setIdx, set);
     _refreshE1RMDisplay(exId, setIdx, set);
-    _debounceSaveSet(exId, setIdx);
 };
 
 function sessionStepReps(exId, setIdx, delta) {
@@ -448,7 +444,6 @@ function sessionStepReps(exId, setIdx, delta) {
     set.reps = Math.max(1, set.reps + delta);
     _refreshWeightRepsDisplay(exId, setIdx, set);
     _refreshE1RMDisplay(exId, setIdx, set);
-    _debounceSaveSet(exId, setIdx);
 };
 
 function sessionSetRPE(exId, setIdx, rpe) {
@@ -457,7 +452,6 @@ function sessionSetRPE(exId, setIdx, rpe) {
     set.rpe = set.rpe === rpe ? null : rpe;
     _refreshRPEButtons(exId, setIdx, set);
     _refreshE1RMDisplay(exId, setIdx, set);
-    _debounceSaveSet(exId, setIdx);
 };
 
 
@@ -593,19 +587,7 @@ function _refreshRPEButtons(exId, setIdx, set) {
 
 // ─── Firestore persistence ─────────────────────────────────────────────────
 
-function _debounceSaveSet(exId, setIdx) {
-    const key = `${exId}_${setIdx}`;
-    if (_debounceTimers[key]) clearTimeout(_debounceTimers[key]);
-    _debounceTimers[key] = setTimeout(() => {
-        const set = _exState[exId]?.sets[setIdx];
-        if (set) {
-            _persistSet(exId, setIdx, set);
-        }
-        delete _debounceTimers[key];
-    }, 400);
-}
-
-async function _persistSet(exId, setIdx, set) {
+async function _persistSet(exId) {
     if (!_uid || !_sessionId) return;
     try {
         const sessionRef = doc(db, 'users', _uid, 'workout_logs', _sessionId);
@@ -661,8 +643,10 @@ window.completeSet = function(exId, setIdx) {
     if (state.activeSetIdx === setIdx) {
         state.activeSetIdx++;
 
-        // Persist the set immediately to Firestore
-        _persistSet(exId, setIdx, state.sets[setIdx]);
+        // Sadece tüm setler bittiyse (egzersiz bittiyse) ara-kayıt (checkpoint) al
+        if (state.activeSetIdx >= state.sets.length) {
+            _persistSet(exId);
+        }
 
         // Re-render sets to update UI states (collapses current, expands next)
         _renderSets(exId);

@@ -1,6 +1,6 @@
 import { auth, db } from "./firebase-config.js";
-import { collection, doc, addDoc, setDoc, deleteDoc, updateDoc, onSnapshot, query, orderBy, limit, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
-import { escapeHtml, handleFormSubmit } from "./utils.js";
+import { collection, doc, addDoc, setDoc, deleteDoc, updateDoc, onSnapshot, query, orderBy, limit, serverTimestamp, increment, writeBatch } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+import { escapeHtml, handleFormSubmit, getTodayString } from "./utils.js";
 import { registerListener } from "./listenerManager.js";
 
 let dailyGoal = 2000;
@@ -41,16 +41,63 @@ export function initWater(uid, onChangeCallback) {
     const btnCustom = document.getElementById("btn-water-custom");
     const btnEditGoal = document.getElementById("btn-edit-water-goal");
 
+    let pendingWaterAmount = 0;
+    let waterDebounceTimer = null;
+    let optimisticLogs = [];
+
     const addWaterLog = async (amount, type, icon) => {
-        try {
-            await addDoc(collection(db, "users", uid, "waterLogs"), {
-                amount, type, icon, createdAt: serverTimestamp()
-            });
-        } catch(err) {
-            console.error("Firestore test hatası:", err);
-            waterLogs.unshift({ amount, type, icon, createdAt: { toDate: () => new Date() } });
-            updateWaterUI();
-        }
+        // Optimistic UI updates
+        pendingWaterAmount += amount;
+        
+        const tempLog = {
+            id: 'temp_' + Date.now() + Math.random(),
+            amount: amount,
+            type: type,
+            icon: icon,
+            createdAt: { toDate: () => new Date() }
+        };
+        
+        waterLogs.unshift(tempLog);
+        optimisticLogs.push(tempLog);
+        
+        updateWaterUI(); // Re-render instantly
+
+        if (waterDebounceTimer) clearTimeout(waterDebounceTimer);
+        
+        waterDebounceTimer = setTimeout(async () => {
+            const amountToSave = pendingWaterAmount;
+            const logsToSave = [...optimisticLogs];
+            
+            // Sonraki tıklamalar için sıfırla
+            pendingWaterAmount = 0;
+            optimisticLogs = [];
+            
+            try {
+                const batch = writeBatch(db);
+                
+                logsToSave.forEach(log => {
+                    const newLogRef = doc(collection(db, "users", uid, "waterLogs"));
+                    batch.set(newLogRef, {
+                        amount: log.amount,
+                        type: log.type,
+                        icon: log.icon,
+                        createdAt: serverTimestamp()
+                    });
+                });
+                
+                const summaryRef = doc(db, "users", uid, "summary", `daily-${getTodayString()}`);
+                batch.set(summaryRef, { water: { currentAmount: increment(amountToSave) } }, { merge: true });
+                
+                await batch.commit();
+            } catch(err) {
+                console.error("Firestore test hatası:", err);
+                // Rollback
+                alert("İşlem geri alındı, bağlantınızı kontrol edin: " + err.message);
+                const failedIds = logsToSave.map(l => l.id);
+                waterLogs = waterLogs.filter(l => !failedIds.includes(l.id));
+                updateWaterUI();
+            }
+        }, 800);
     };
 
     if(btn250) btn250.onclick = () => addWaterLog(250, "Glass of Water", "local_drink");
@@ -156,9 +203,14 @@ export function initWater(uid, onChangeCallback) {
         customSaveBtn.onclick = async () => {
             if(tempCustomAmount > 0) {
                 try {
-                    await addDoc(collection(db, "users", uid, "waterLogs"), {
-                        amount: tempCustomAmount, type: "Custom", icon: "add", createdAt: serverTimestamp()
-                    });
+                    const batch = writeBatch(db);
+                    const newLogRef = doc(collection(db, "users", uid, "waterLogs"));
+                    batch.set(newLogRef, { amount: tempCustomAmount, type: "Custom", icon: "add", createdAt: serverTimestamp() });
+
+                    const summaryRef = doc(db, "users", uid, "summary", `daily-${getTodayString()}`);
+                    batch.set(summaryRef, { water: { currentAmount: increment(tempCustomAmount) } }, { merge: true });
+
+                    await batch.commit();
                 } catch(err) {
                     console.error("Firestore test hatası:", err);
                     waterLogs.unshift({ amount: tempCustomAmount, type: "Custom", icon: "add", createdAt: { toDate: () => new Date() } });
@@ -247,7 +299,13 @@ export function initWater(uid, onChangeCallback) {
         saveBtn.onclick = async () => {
             if(tempGoal > 0) {
                 try {
-                    await setDoc(doc(db, "users", uid, "settings", "water"), { dailyGoal: tempGoal }, { merge: true }).catch(e => { console.error('DB Error:', e); alert('Veritabanı işlemi sırasında bir hata oluştu.'); throw e; });
+                    const batch = writeBatch(db);
+                    batch.set(doc(db, "users", uid, "settings", "water"), { dailyGoal: tempGoal }, { merge: true });
+                    
+                    const summaryRef = doc(db, "users", uid, "summary", `daily-${getTodayString()}`);
+                    batch.set(summaryRef, { water: { dailyGoal: tempGoal } }, { merge: true });
+                    
+                    await batch.commit();
                 } catch (err) {
                     console.error("Firestore kaydetme hatası (Test modunda normaldir):", err);
                     // Test modu için yerel olarak güncelle
@@ -314,7 +372,13 @@ function updateWaterUI() {
                 delBtn.innerHTML = `<span class="material-symbols-rounded text-xl">delete</span>`;
                 delBtn.onclick = async () => {
                     try {
-                        await deleteDoc(doc(db, "users", currentUid, "waterLogs", log.id));
+                        const batch = writeBatch(db);
+                        batch.delete(doc(db, "users", currentUid, "waterLogs", log.id));
+                        
+                        const summaryRef = doc(db, "users", currentUid, "summary", `daily-${getTodayString()}`);
+                        batch.set(summaryRef, { water: { currentAmount: increment(-log.amount) } }, { merge: true });
+                        
+                        await batch.commit();
                     } catch(err) {
                         console.error("Silme Hatası:", err);
                         // local update for test

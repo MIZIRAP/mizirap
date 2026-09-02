@@ -5,6 +5,7 @@ import { CalculatorEngine } from './tools.js?v=1787428045';
 
 let currentUid = null;
 let currentPhotoUrl = null;
+let profileCache = null;
 
 export function initProfile(uid) {
     currentUid = uid;
@@ -24,12 +25,19 @@ async function loadProfile() {
     }
 
     try {
-        const docRef = doc(db, "users", currentUid, "profile", "data");
-        const docSnap = await getDoc(docRef).catch(e => { console.error('DB Error:', e); alert('Veritabanı işlemi sırasında bir hata oluştu.'); throw e; });
+        let data = profileCache;
 
+        if (!data) {
+            const docRef = doc(db, "users", currentUid, "profile", "data");
+            const docSnap = await getDoc(docRef).catch(e => { console.error('DB Error:', e); alert('Veritabanı işlemi sırasında bir hata oluştu.'); throw e; });
+            
+            if (docSnap.exists()) {
+                data = docSnap.data();
+                profileCache = data;
+            }
+        }
 
-        if (docSnap.exists()) {
-            const data = docSnap.data();
+        if (data) {
             if (nameEl) nameEl.value = data.name || (auth.currentUser ? auth.currentUser.displayName : "") || "";
             if (dobEl) dobEl.value = data.dob || "";
             
@@ -160,6 +168,11 @@ function setupProfileEvents() {
                     photoUrl: currentPhotoUrl,
                     updatedAt: new Date()
                 }, { merge: true });
+                
+                if (profileCache) {
+                    profileCache.photoUrl = currentPhotoUrl;
+                    profileCache.updatedAt = new Date();
+                }
 
                 // 5. Update Auth
                 if (auth.currentUser) {
@@ -199,8 +212,7 @@ function setupProfileEvents() {
             saveBtn.disabled = true;
 
             try {
-
-                await setDoc(doc(db, "users", currentUid, "profile", "data"), {
+                const newData = {
                     name: nameEl.value.trim(),
                     bio: bioEl.value.trim(),
                     dob: dobEl.value.trim(),
@@ -215,7 +227,11 @@ function setupProfileEvents() {
                     restingHr: Number(document.getElementById('profile-resting-hr').value) || 0,
                     photoUrl: currentPhotoUrl,
                     updatedAt: new Date()
-                }, { merge: true });
+                };
+
+                await setDoc(doc(db, "users", currentUid, "profile", "data"), newData, { merge: true });
+                
+                profileCache = { ...profileCache, ...newData };
 
                 generateHealthSummary({
                     height: Number(document.getElementById('profile-height').value) || 0,
@@ -320,7 +336,7 @@ function setupProfileEvents() {
 
         try {
             if (allValid) {
-                await setDoc(doc(db, "users", currentUid, "profile", "data"), {
+                const newData = {
                     name: nameEl ? nameEl.value.trim() : '',
                     dob: dobEl ? dobEl.value.trim() : '',
                     height: h,
@@ -335,7 +351,9 @@ function setupProfileEvents() {
                     restingHr: rhr,
                     photoUrl: currentPhotoUrl,
                     updatedAt: new Date()
-                }, { merge: true });
+                };
+                await setDoc(doc(db, "users", currentUid, "profile", "data"), newData, { merge: true });
+                profileCache = { ...profileCache, ...newData };
             }
 
             generateHealthSummary({
@@ -437,6 +455,7 @@ if (document.readyState === 'loading') {
 export function clearProfile() {
     currentUid = null;
     currentPhotoUrl = null;
+    profileCache = null;
     
     updateAllProfileImages(null);
     
