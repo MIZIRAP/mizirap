@@ -54,7 +54,9 @@ let _sessionStartTs = null; // JS Date, derived from Firestore startedAt
 // Per-exercise local state: { [exerciseId]: { sets: [{weight,reps,rpe,status,e1rm,delta}], prevBest: {weight,reps} } }
 let _exState = {};
 
-// Debounce timers keyed by `${exId}_${setIdx}` (Removed due to optimization)
+// Debounce timers keyed by `${exId}_${setIdx}`
+const _debounceTimers = {};
+
 // ─── Init / Destroy ────────────────────────────────────────────────────────
 
 export async function openActiveSession(uid, splitId, dayId, dayObj) {
@@ -120,6 +122,7 @@ export function closeActiveSession() {
     _sessionId = null;
     _day = null;
     _exState = {};
+    Object.values(_debounceTimers).forEach(t => clearTimeout(t));
 }
 
 // Go back without finishing — session stays as in_progress in Firestore
@@ -367,7 +370,7 @@ function _activeSetHTML(exId, setIdx, set, isCurrent = false, isCompleted = fals
                                 <button data-action="sessionStepWeight" data-ex-id="${exId}" data-set-idx="${setIdx}" data-delta="-2.5" class="w-10 h-10 neo-inset-circle flex items-center justify-center text-secondary neo-surface-interactive hover:text-primary transition-colors">
                                     <span class="material-symbols-rounded text-lg" data-icon="remove">remove</span>
                                 </button>
-                                <input type="number" step="0.5" class="font-title-lg text-title-lg w-16 text-center text-on-surface bg-transparent border-b border-surface-variant outline-none focus:border-primary" id="weight-val-${exId}-${setIdx}" value="${set.weight}" onchange="sessionManualWeight('${exId}', ${setIdx}, this.value)">
+                                <span class="font-title-lg text-title-lg w-12 text-center text-on-surface" id="weight-val-${exId}-${setIdx}">${set.weight}</span>
                                 <button data-action="sessionStepWeight" data-ex-id="${exId}" data-set-idx="${setIdx}" data-delta="2.5" class="w-10 h-10 neo-inset-circle flex items-center justify-center text-secondary neo-surface-interactive hover:text-primary transition-colors">
                                     <span class="material-symbols-rounded text-lg" data-icon="add">add</span>
                                 </button>
@@ -382,7 +385,7 @@ function _activeSetHTML(exId, setIdx, set, isCurrent = false, isCompleted = fals
                                 <button data-action="sessionStepReps" data-ex-id="${exId}" data-set-idx="${setIdx}" data-delta="-1" class="w-10 h-10 neo-inset-circle flex items-center justify-center text-secondary neo-surface-interactive hover:text-primary transition-colors">
                                     <span class="material-symbols-rounded text-lg" data-icon="remove">remove</span>
                                 </button>
-                                <input type="number" step="1" class="font-title-lg text-title-lg w-16 text-center text-on-surface bg-transparent border-b border-surface-variant outline-none focus:border-primary" id="reps-val-${exId}-${setIdx}" value="${set.reps}" onchange="sessionManualReps('${exId}', ${setIdx}, this.value)">
+                                <span class="font-title-lg text-title-lg w-12 text-center text-on-surface" id="reps-val-${exId}-${setIdx}">${set.reps}</span>
                                 <button data-action="sessionStepReps" data-ex-id="${exId}" data-set-idx="${setIdx}" data-delta="1" class="w-10 h-10 neo-inset-circle flex items-center justify-center text-secondary neo-surface-interactive hover:text-primary transition-colors">
                                     <span class="material-symbols-rounded text-lg" data-icon="add">add</span>
                                 </button>
@@ -436,6 +439,7 @@ function sessionStepWeight(exId, setIdx, delta) {
     set.weight = Math.max(0, Math.round((set.weight + delta) * 10) / 10);
     _refreshWeightRepsDisplay(exId, setIdx, set);
     _refreshE1RMDisplay(exId, setIdx, set);
+    _debounceSaveSet(exId, setIdx);
 };
 
 function sessionStepReps(exId, setIdx, delta) {
@@ -444,6 +448,7 @@ function sessionStepReps(exId, setIdx, delta) {
     set.reps = Math.max(1, set.reps + delta);
     _refreshWeightRepsDisplay(exId, setIdx, set);
     _refreshE1RMDisplay(exId, setIdx, set);
+    _debounceSaveSet(exId, setIdx);
 };
 
 function sessionSetRPE(exId, setIdx, rpe) {
@@ -452,6 +457,7 @@ function sessionSetRPE(exId, setIdx, rpe) {
     set.rpe = set.rpe === rpe ? null : rpe;
     _refreshRPEButtons(exId, setIdx, set);
     _refreshE1RMDisplay(exId, setIdx, set);
+    _debounceSaveSet(exId, setIdx);
 };
 
 
@@ -545,8 +551,8 @@ function _refreshWeightRepsDisplay(exId, setIdx, set) {
     const repsEl = document.getElementById(`reps-val-${exId}-${setIdx}`);
     const summaryEl = document.getElementById(`set-summary-${exId}-${setIdx}`);
 
-    if (weightEl) weightEl.value = set.weight;
-    if (repsEl) repsEl.value = set.reps;
+    if (weightEl) weightEl.textContent = set.weight;
+    if (repsEl) repsEl.textContent = set.reps;
 
     // Only update summary if it's not the "current set" label
     if (summaryEl && summaryEl.textContent !== 'Şu anki set') {
@@ -587,7 +593,19 @@ function _refreshRPEButtons(exId, setIdx, set) {
 
 // ─── Firestore persistence ─────────────────────────────────────────────────
 
-async function _persistSet(exId) {
+function _debounceSaveSet(exId, setIdx) {
+    const key = `${exId}_${setIdx}`;
+    if (_debounceTimers[key]) clearTimeout(_debounceTimers[key]);
+    _debounceTimers[key] = setTimeout(() => {
+        const set = _exState[exId]?.sets[setIdx];
+        if (set) {
+            _persistSet(exId, setIdx, set);
+        }
+        delete _debounceTimers[key];
+    }, 400);
+}
+
+async function _persistSet(exId, setIdx, set) {
     if (!_uid || !_sessionId) return;
     try {
         const sessionRef = doc(db, 'users', _uid, 'workout_logs', _sessionId);
@@ -643,29 +661,10 @@ window.completeSet = function(exId, setIdx) {
     if (state.activeSetIdx === setIdx) {
         state.activeSetIdx++;
 
-        // Sadece tüm setler bittiyse (egzersiz bittiyse) ara-kayıt (checkpoint) al
-        if (state.activeSetIdx >= state.sets.length) {
-            _persistSet(exId);
-        }
+        // Persist the set immediately to Firestore
+        _persistSet(exId, setIdx, state.sets[setIdx]);
 
         // Re-render sets to update UI states (collapses current, expands next)
         _renderSets(exId);
     }
 }
-
-window.sessionManualWeight = function(exId, setIdx, val) {
-    const set = _exState[exId]?.sets[setIdx];
-    if (!set) return;
-    set.weight = Math.max(0, parseFloat(val) || 0);
-    _refreshE1RMDisplay(exId, setIdx, set);
-    _persistSet(exId);
-};
-
-window.sessionManualReps = function(exId, setIdx, val) {
-    const set = _exState[exId]?.sets[setIdx];
-    if (!set) return;
-    set.reps = Math.max(1, parseInt(val, 10) || 1);
-    _refreshE1RMDisplay(exId, setIdx, set);
-    _persistSet(exId);
-};
-

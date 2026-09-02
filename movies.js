@@ -1,9 +1,9 @@
 import { db } from "./firebase-config.js";
-import { collection, onSnapshot, serverTimestamp, doc, updateDoc, writeBatch, addDoc, deleteDoc, query, orderBy, limit } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
-import { escapeHtml, getTodayString } from "./utils.js";
-import { registerFirestoreListener, unregisterFirestoreListener } from "./listenerManager.js";
-import { setDoc } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+import { collection, onSnapshot, serverTimestamp, doc, updateDoc, writeBatch, addDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+import { escapeHtml } from "./utils.js";
+import { registerListener } from "./listenerManager.js";
 
+let moviesUnsubscribe = null;
 let currentMovies = [];
 let currentUid = null;
 let activeMovie = null;
@@ -94,48 +94,46 @@ export function initMovies(uid, onChangeCallback) {
         activeMovie = JSON.parse(storedActive);
     }
 
-    const moviesRef = query(collection(db, "users", uid, "movies"), orderBy("updatedAt", "desc"), limit(50));
+    const moviesRef = collection(db, "users", uid, "movies");
 
-    const setupMoviesListener = () => {
-        return onSnapshot(moviesRef, (snapshot) => {
-            currentMovies = [];
-            snapshot.forEach(docSnap => {
-                currentMovies.push({ id: docSnap.id, ...docSnap.data() });
-            });
-
-            // Sort: activeMovie always first, then by updatedAt descending
-            currentMovies.sort((a, b) => {
-                if (activeMovie && a.id === activeMovie.id) return -1;
-                if (activeMovie && b.id === activeMovie.id) return 1;
-
-                const timeA = a.updatedAt ? a.updatedAt.toMillis() : 0;
-                const timeB = b.updatedAt ? b.updatedAt.toMillis() : 0;
-                return timeB - timeA;
-            });
-
-            // Ensure activeMovie is valid
-            if (currentMovies.length > 0) {
-                const foundActive = activeMovie ? currentMovies.find(m => m.id === activeMovie.id) : null;
-                if (foundActive) {
-                    activeMovie = foundActive;
-                } else {
-                    activeMovie = currentMovies[0];
-                    localStorage.setItem(`activeMovie_${currentUid}`, JSON.stringify(activeMovie));
-                }
-            } else {
-                activeMovie = null;
-                localStorage.removeItem(`activeMovie_${currentUid}`);
-            }
-
-            renderMoviesView();
-
-            if (onChangeCb) onChangeCb(currentMovies);
-        }, (error) => {
-            console.error("Filmler çekilemedi:", error);
+    moviesUnsubscribe = onSnapshot(moviesRef, (snapshot) => {
+        currentMovies = [];
+        snapshot.forEach(docSnap => {
+            currentMovies.push({ id: docSnap.id, ...docSnap.data() });
         });
-    };
 
-    registerFirestoreListener("view-movies", setupMoviesListener);
+        // Sort: activeMovie always first, then by updatedAt descending
+        currentMovies.sort((a, b) => {
+            if (activeMovie && a.id === activeMovie.id) return -1;
+            if (activeMovie && b.id === activeMovie.id) return 1;
+
+            const timeA = a.updatedAt ? a.updatedAt.toMillis() : 0;
+            const timeB = b.updatedAt ? b.updatedAt.toMillis() : 0;
+            return timeB - timeA;
+        });
+
+        // Ensure activeMovie is valid
+        if (currentMovies.length > 0) {
+            const foundActive = activeMovie ? currentMovies.find(m => m.id === activeMovie.id) : null;
+            if (foundActive) {
+                activeMovie = foundActive;
+            } else {
+                activeMovie = currentMovies[0];
+                localStorage.setItem(`activeMovie_${currentUid}`, JSON.stringify(activeMovie));
+            }
+        } else {
+            activeMovie = null;
+            localStorage.removeItem(`activeMovie_${currentUid}`);
+        }
+
+        renderMoviesView();
+
+        if (onChangeCb) onChangeCb(currentMovies);
+    }, (error) => {
+        console.error("Filmler çekilemedi:", error);
+    });
+
+    registerListener(moviesUnsubscribe);
 }
 
 function updateActiveMovieUI() {
@@ -186,8 +184,6 @@ function updateActiveMovieUI() {
         const offset = circumference - (percentage / 100) * circumference;
         progressCircle.style.strokeDashoffset = offset;
     }
-    
-    updateMovieSummary(percentage);
 }
 
 async function handleActiveMinus() {
@@ -599,39 +595,10 @@ async function deleteMovie() {
 }
 
 export function clearMovies() {
-    unregisterFirestoreListener("view-movies");
+    if(moviesUnsubscribe) moviesUnsubscribe();
     currentUid = null;
     currentMovies = [];
     activeMovie = null;
     currentEditingId = null;
     onChangeCb = null;
 }
-
-async function updateMovieSummary(percentage) {
-    if (!currentUid) return;
-    try {
-        const summaryRef = doc(db, "users", currentUid, "summary", `daily-${getTodayString()}`);
-        if (activeMovie) {
-            let detail = "";
-            if (activeMovie.type === 'movie') {
-                detail = activeMovie.status === 'completed' ? 'BİTTİ' : (activeMovie.status === 'watchlist' ? 'BEKLİYOR' : 'İZLİYOR');
-            } else {
-                detail = `S${(activeMovie.season || 1).toString().padStart(2, '0')} B${(activeMovie.episode || 1).toString().padStart(2, '0')}`;
-            }
-            await setDoc(summaryRef, {
-                movies: {
-                    activeTitle: activeMovie.title || "İsimsiz",
-                    detail: detail,
-                    percentage: percentage || 0
-                }
-            }, { merge: true });
-        } else {
-            await setDoc(summaryRef, {
-                movies: { activeTitle: "İçerik Seçin", detail: "--", percentage: 0 }
-            }, { merge: true });
-        }
-    } catch (e) {
-        console.error("Movie summary update error", e);
-    }
-}
-

@@ -1,6 +1,6 @@
 import { db } from "./firebase-config.js";
-import { collection, doc, addDoc, setDoc, updateDoc, deleteDoc, onSnapshot, query, orderBy, limit, where, serverTimestamp, increment, writeBatch, getDocsFromCache, getDocsFromServer, getDocs } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
-import { escapeHtml, validatePositiveNumber, getTodayString } from "./utils.js";
+import { collection, doc, addDoc, setDoc, updateDoc, deleteDoc, onSnapshot, query, orderBy, limit, where, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+import { escapeHtml, validatePositiveNumber } from "./utils.js";
 import { registerListener } from "./listenerManager.js";
 
 let dailyCalorieGoal = 2000;
@@ -143,8 +143,12 @@ export function initCalories(uid, onChangeCallback) {
         updateUIState();
     }));
 
-    // Listen to Food Library (Optimized with Cache)
-    loadFoodLibrary(uid);
+    // Listen to Food Library
+    const libRef = query(collection(db, "users", uid, "foodLibrary"), orderBy("createdAt", "desc"));
+    unsubscribeLibrary = registerListener(onSnapshot(libRef, (snap) => {
+        libraryFoods = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+        renderLibraryFoods();
+    }));
 
     // Listen to Weekly Calorie Logs (for chart)
     const oneWeekAgo = new Date();
@@ -160,28 +164,6 @@ export function initCalories(uid, onChangeCallback) {
     }));
 
     bindEvents();
-}
-
-async function loadFoodLibrary(uid) {
-    if (!uid) return;
-    const libRef = query(collection(db, "users", uid, "foodLibrary"), orderBy("createdAt", "desc"));
-    
-    try {
-        const snap = await getDocsFromCache(libRef);
-        if (snap.empty) {
-            throw new Error("cache miss"); // zorla catch bloğuna düşür
-        }
-        libraryFoods = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-    } catch (e) {
-        // Cache miss veya boş
-        try {
-            const snap = await getDocsFromServer(libRef);
-            libraryFoods = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-        } catch (serverErr) {
-            console.error("Yemek kütüphanesi çekilemedi:", serverErr);
-        }
-    }
-    renderLibraryFoods();
 }
 
 function bindEvents() {
@@ -288,20 +270,13 @@ if (caloriesGoalBackdrop) {
             if(!currentUid) return;
             caloriesGoalSave.disabled = true;
             try {
-                const batch = writeBatch(db);
-                const settingsData = {
+                await setDoc(doc(db, "users", currentUid, "settings", "calories"), {
                     dailyCalorieGoal: tempCaloriesGoal,
                     proteinGoal: tempMacroProtein,
                     karbGoal: tempMacroKarb,
                     yagGoal: tempMacroYag,
                     updatedAt: serverTimestamp()
-                };
-                batch.set(doc(db, "users", currentUid, "settings", "calories"), settingsData, { merge: true });
-                
-                const summaryRef = doc(db, "users", currentUid, "summary", `daily-${getTodayString()}`);
-                batch.set(summaryRef, { calories: { goal: tempCaloriesGoal } }, { merge: true });
-                
-                await batch.commit();
+                }, { merge: true });
                 closeCaloriesGoalModal();
             } catch (error) {
                 console.error("Hedef güncellenirken hata:", error);
@@ -438,37 +413,10 @@ if (caloriesGoalBackdrop) {
                 const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error('OFFLINE_TIMEOUT')), 6000));
                 
                 await Promise.race([dbPromise, timeoutPromise]);
-                
-                // Cache Invalidation (Manual memory update)
-                const newFood = {
-                    id: currentEditFoodId,
-                    name: name,
-                    kcal: tempNewFoodKcal,
-                    protein: tempNewFoodProtein,
-                    karb: tempNewFoodKarb,
-                    yag: tempNewFoodYag,
-                    createdAt: { toDate: () => new Date() }
-                };
-                libraryFoods.unshift(newFood);
-                renderLibraryFoods();
-                
                 closeNewFoodModal();
             } catch (error) {
                 if (error.message === 'OFFLINE_TIMEOUT') {
                     alert("Çevrimdışısın. Besin cihaza kaydedildi, bağlantı geldiğinde senkronize edilecek.");
-                    
-                    const newFood = {
-                        id: currentEditFoodId,
-                        name: name,
-                        kcal: tempNewFoodKcal,
-                        protein: tempNewFoodProtein,
-                        karb: tempNewFoodKarb,
-                        yag: tempNewFoodYag,
-                        createdAt: { toDate: () => new Date() }
-                    };
-                    libraryFoods.unshift(newFood);
-                    renderLibraryFoods();
-                    
                     closeNewFoodModal();
                 } else {
                     console.error("Besin eklerken hata:", error);
@@ -536,14 +484,7 @@ if (caloriesGoalBackdrop) {
                     logEntry.createdAt = serverTimestamp();
                     logEntry.type = "Food";
                 }
-                
-                const batch = writeBatch(db);
-                batch.set(doc(db, "users", currentUid, "calorieLogs", currentEditLogId), logEntry, { merge: true });
-                
-                const summaryRef = doc(db, "users", currentUid, "summary", `daily-${getTodayString()}`);
-                batch.set(summaryRef, { calories: { consumed: increment(total) } }, { merge: true });
-                
-                let dbPromise = batch.commit();
+                let dbPromise = setDoc(doc(db, "users", currentUid, "calorieLogs", currentEditLogId), logEntry, { merge: true });
                 
                 const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error('OFFLINE_TIMEOUT')), 6000));
                 await Promise.race([dbPromise, timeoutPromise]);
@@ -674,26 +615,12 @@ function renderLogs() {
         delBtn.className = "absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-red-500 rounded-2xl text-white flex items-center justify-center z-0 active:bg-red-600 transition-colors";
         delBtn.innerHTML = `<span class="material-symbols-rounded text-xl">delete</span>`;
         delBtn.onclick = async () => {
-            // Optimistic UI: Hemen yerel state'den çıkarıp UI'ı güncelle
-            const oldLogs = [...dailyLogs];
-            dailyLogs = dailyLogs.filter(l => l.id !== log.id);
-            renderLogs();
-            updateUIState();
-
             try {
-                const batch = writeBatch(db);
-                batch.delete(doc(db, "users", currentUid, "calorieLogs", log.id));
-                
-                const summaryRef = doc(db, "users", currentUid, "summary", `daily-${getTodayString()}`);
-                batch.set(summaryRef, { calories: { consumed: increment(-log.kcal) } }, { merge: true });
-                
-                await batch.commit();
+                await deleteDoc(doc(db, "users", currentUid, "calorieLogs", log.id));
             } catch(e) {
                 console.error("Silme Hatası", e);
-                // Rollback: Hata olursa geri al
-                alert("İşlem geri alındı, bağlantınızı kontrol edin: " + e.message);
-                dailyLogs = oldLogs;
-                renderLogs();
+                // local update for test
+                dailyLogs = dailyLogs.filter(l => l.id !== log.id);
                 updateUIState();
             }
         };
@@ -855,17 +782,11 @@ function renderLibraryFoods() {
         delBtn.className = "absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-red-500 rounded-2xl text-white flex items-center justify-center z-0 active:bg-red-600 transition-colors";
         delBtn.innerHTML = `<span class="material-symbols-rounded text-xl">delete</span>`;
         delBtn.onclick = async () => {
-            const oldFoods = [...libraryFoods];
-            libraryFoods = libraryFoods.filter(f => f.id !== food.id);
-            renderLibraryFoods();
-
             try {
                 await deleteDoc(doc(db, "users", currentUid, "foodLibrary", food.id));
             } catch(e) {
                 console.error("Silme Hatası", e);
-                alert('İşlem geri alındı, bağlantınızı kontrol edin: ' + e.message);
-                libraryFoods = oldFoods;
-                renderLibraryFoods();
+                alert('Silinirken hata oluştu: ' + e.message);
             }
         };
 

@@ -1,6 +1,6 @@
 import { auth, db } from "./firebase-config.js";
-import { formatDate, formatCurrency, escapeHtml, validatePositiveNumber, getTodayString } from "./utils.js";
-import { collection, doc, addDoc, setDoc, updateDoc, deleteDoc, getDocs, getDoc, query, orderBy, limit, serverTimestamp, onSnapshot, where, increment, writeBatch } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+import { formatDate, formatCurrency, escapeHtml, validatePositiveNumber } from "./utils.js";
+import { collection, doc, addDoc, setDoc, updateDoc, deleteDoc, getDocs, getDoc, query, orderBy, limit, serverTimestamp, onSnapshot, where } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
 import { registerListener } from "./listenerManager.js";
 import { COLLECTAPI_KEY } from "./api-config.js";
 
@@ -564,12 +564,7 @@ function renderTransactions(isFromScroll = false) {
         delBtn.onclick = async (e) => {
             e.stopPropagation();
             try {
-                const batch = writeBatch(db);
-                batch.delete(doc(db, "users", currentUid, "finance_transactions", tx.id));
-                const oldVal = tx.type === 'income' ? parseFloat(tx.amount) : -parseFloat(tx.amount);
-                const summaryRef = doc(db, "users", currentUid, "summary", `daily-${getTodayString()}`);
-                batch.set(summaryRef, { finance: { balance: increment(-oldVal) } }, { merge: true });
-                await batch.commit();
+                await deleteDoc(doc(db, "users", currentUid, "finance_transactions", tx.id)).catch(e => { console.error('DB Error:', e); alert('Veritabanı işlemi sırasında bir hata oluştu.'); throw e; });
             } catch(err) {
                 console.error("Silme Hatası:", err);
             }
@@ -910,30 +905,10 @@ async function saveTransaction() {
             updatedAt: serverTimestamp()
         };
 
-        let diff = 0;
         if (isNewFinanceTx) {
             txData.createdAt = serverTimestamp();
-            diff = type === 'income' ? amount : -amount;
-        } else {
-            const oldTx = financeTransactions.find(t => t.id === currentEditFinanceTxId);
-            if (oldTx) {
-                const oldVal = oldTx.type === 'income' ? parseFloat(oldTx.amount) : -parseFloat(oldTx.amount);
-                const newVal = type === 'income' ? amount : -amount;
-                diff = newVal - oldVal;
-            } else {
-                diff = type === 'income' ? amount : -amount;
-            }
         }
-
-        const batch = writeBatch(db);
-        batch.set(doc(db, "users", currentUid, "finance_transactions", currentEditFinanceTxId), txData, { merge: true });
-        
-        if (diff !== 0) {
-            const summaryRef = doc(db, "users", currentUid, "summary", `daily-${getTodayString()}`);
-            batch.set(summaryRef, { finance: { balance: increment(diff) } }, { merge: true });
-        }
-        
-        let dbPromise = batch.commit();
+        let dbPromise = setDoc(doc(db, "users", currentUid, "finance_transactions", currentEditFinanceTxId), txData, { merge: true });
         
         const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error('OFFLINE_TIMEOUT')), 6000));
         
