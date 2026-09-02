@@ -2,6 +2,7 @@ import { auth, db } from "./firebase-config.js";
 import { formatDate, formatCurrency, escapeHtml, validatePositiveNumber } from "./utils.js";
 import { collection, doc, addDoc, setDoc, updateDoc, deleteDoc, getDocs, getDoc, query, orderBy, limit, serverTimestamp, onSnapshot, where } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
 import { registerListener } from "./listenerManager.js";
+import { setSharedState } from "./sharedState.js";
 import { COLLECTAPI_KEY } from "./api-config.js";
 
 let currentUid = null;
@@ -73,10 +74,11 @@ export function initFinance(uid, onChangeCallback) {
 
     // 3. Load Transactions
     const txRef = collection(db, "users", uid, "finance_transactions");
-    const q = query(txRef, orderBy("dateStr", "desc"), limit(50));
+    const q = query(txRef, orderBy("dateStr", "desc"), limit(100));
 
     unsubTransactions = registerListener(onSnapshot(q, (snap) => {
         financeTransactions = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+        setSharedState('finance', financeTransactions);
         renderTransactions();
         renderTxModalOptions();
         if (typeof renderFinanceSettings !== "undefined") renderFinanceSettings();

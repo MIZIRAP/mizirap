@@ -138,6 +138,7 @@ export function clearWorkout() {
     splits = [];
     activeSplitId = null;
     activeDayId = null;
+    closeActiveSession();
 }
 
 function setupEventListeners() {
@@ -649,7 +650,7 @@ async function openExerciseHistory(triggerExId, exName) {
             let matchedExId = null;
             for(let id of targetIds) {
                 if(exData[id]) {
-                    matchedSets = exData[id];
+                    matchedSets = Array.isArray(exData[id]) ? exData[id] : (exData[id].sets || []);
                     matchedExId = id;
                     break;
                 }

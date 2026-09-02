@@ -2,6 +2,7 @@ import { auth, db } from "./firebase-config.js";
 import { collection, doc, updateDoc, getDoc, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
 import { escapeHtml, formatDate, formatCurrency } from "./utils.js";
 import { calcBalance } from "./finance.js";
+import { fetchSharedProfile, updateSharedProfile } from "./sharedState.js";
 
 let currentWorkouts = [];
 let currentTxs = [];
@@ -26,10 +27,8 @@ async function initWidgetSorting(uid) {
 
     // Load initial order
     try {
-        const docRef = doc(db, "users", uid, "profile", "data");
-        const docSnap = await getDoc(docRef);
-        if (docSnap.exists()) {
-            const data = docSnap.data();
+        const data = await fetchSharedProfile(uid);
+        if (data) {
             if (data.widgetOrder && grid) {
                 data.widgetOrder.forEach(id => {
                     const el = grid.querySelector(`[data-widget-id="${id}"]`);
@@ -92,6 +91,7 @@ async function initWidgetSorting(uid) {
                     try {
                         const docRef = doc(db, "users", uid, "profile", "data");
                         await updateDoc(docRef, updates);
+                        updateSharedProfile(updates);
                     } catch(err) {
                         console.error("Sıralama kaydedilemedi", err);
                     }

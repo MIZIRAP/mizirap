@@ -93,6 +93,7 @@ export async function openActiveSession(uid, splitId, dayId, dayObj) {
             dayId,
             dateStr: todayStr,
             status: 'in_progress',
+            createdAt: serverTimestamp(),
             startedAt: serverTimestamp(),
             exercises: {}
         };
@@ -150,7 +151,11 @@ async function _loadPreviousSessionData() {
         );
 
         if (lastDayLog && lastDayLog.exercises) {
-            _prevData = lastDayLog.exercises;
+            _prevData = {};
+            for (let k in lastDayLog.exercises) {
+                const exVal = lastDayLog.exercises[k];
+                _prevData[k] = Array.isArray(exVal) ? { sets: exVal } : exVal;
+            }
         }
 
         // For any exercise not found in that day's last session, search all past logs for the most recent usage
@@ -161,7 +166,8 @@ async function _loadPreviousSessionData() {
                         log.status === 'completed' && log.exercises && log.exercises[ex.id]
                     );
                     if (latestLogWithEx) {
-                        _prevData[ex.id] = latestLogWithEx.exercises[ex.id];
+                        const exVal = latestLogWithEx.exercises[ex.id];
+                        _prevData[ex.id] = Array.isArray(exVal) ? { sets: exVal } : exVal;
                     }
                 }
             }

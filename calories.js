@@ -2,6 +2,7 @@ import { db } from "./firebase-config.js";
 import { collection, doc, addDoc, setDoc, updateDoc, deleteDoc, onSnapshot, query, orderBy, limit, where, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
 import { escapeHtml, validatePositiveNumber } from "./utils.js";
 import { registerListener } from "./listenerManager.js";
+import { setSharedState } from "./sharedState.js";
 
 let dailyCalorieGoal = 2000;
 let proteinGoal = 110;
@@ -131,14 +132,17 @@ export function initCalories(uid, onChangeCallback) {
         today.setHours(0,0,0,0);
 
         dailyLogs = [];
+        const allLogsForHistory = [];
         snap.forEach(d => {
             const data = d.data();
+            allLogsForHistory.push({ id: d.id, ...data });
             if (data.createdAt && data.createdAt.toDate) {
                 if (data.createdAt.toDate() >= today) {
                     dailyLogs.push({ id: d.id, ...data });
                 }
             }
         });
+        setSharedState('calories', allLogsForHistory);
         renderLogs();
         updateUIState();
     }));

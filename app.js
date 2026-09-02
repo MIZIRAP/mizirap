@@ -13,6 +13,7 @@ import { initCalories, clearCalories } from "./calories.js?v=1787428046";
 import { initHistory, clearHistory } from "./history.js";
 import { initTools, clearTools } from "./tools.js?v=1787428045";
 import { clearAllListeners } from "./listenerManager.js";
+import { clearSharedState } from "./sharedState.js";
 
 // ---------- DOM referansları ----------
 const authScreen = document.getElementById("auth-screen");
@@ -43,6 +44,7 @@ onAuthStateChanged(auth, async (user) => {
             
             if (user.uid !== localStorage.getItem('uid')) {
                 clearProfile();
+                clearSharedState();
             }
             localStorage.setItem('uid', user.uid);
 
@@ -127,6 +129,7 @@ onAuthStateChanged(auth, async (user) => {
 
         // Temizlik işlemleri (Logout sonrası state sıfırlama)
         clearAllListeners();
+        clearSharedState();
         clearDashboard();
         clearShopping();
         clearWorkout();

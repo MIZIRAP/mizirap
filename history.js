@@ -2,6 +2,7 @@ import { formatDate, formatCurrency } from "./utils.js";
 import { db } from "./firebase-config.js";
 import { collection, query, orderBy, limit, onSnapshot } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
 import { registerListener } from "./listenerManager.js";
+import { getSharedState, subscribeSharedState } from "./sharedState.js";
 
 let unsubCalories = null;
 let unsubWater = null;
@@ -24,30 +25,34 @@ export function initHistory(uid) {
     if(unsubFinance) unsubFinance();
     if(unsubBooks) unsubBooks();
 
-    // Query past 30 days roughly or just limit to 100 docs each
-    const calRef = query(collection(db, "users", uid, "calorieLogs"), orderBy("createdAt", "desc"), limit(100));
-    unsubCalories = registerListener(onSnapshot(calRef, snap => {
-        rawCalories = snap.docs.map(d => d.data());
+    // Subscribe to shared state for calories, water, finance
+    rawCalories = getSharedState('calories') || [];
+    unsubCalories = registerListener(subscribeSharedState('calories', data => {
+        rawCalories = data;
         renderHistory();
     }));
 
-    const waterRef = query(collection(db, "users", uid, "waterLogs"), orderBy("createdAt", "desc"), limit(100));
-    unsubWater = registerListener(onSnapshot(waterRef, snap => {
-        rawWater = snap.docs.map(d => d.data());
+    rawWater = getSharedState('water') || [];
+    unsubWater = registerListener(subscribeSharedState('water', data => {
+        rawWater = data;
         renderHistory();
     }));
 
-    const finRef = query(collection(db, "users", uid, "finance_transactions"), orderBy("createdAt", "desc"), limit(100));
-    unsubFinance = registerListener(onSnapshot(finRef, snap => {
-        rawFinance = snap.docs.map(d => d.data());
+    rawFinance = getSharedState('finance') || [];
+    unsubFinance = registerListener(subscribeSharedState('finance', data => {
+        rawFinance = data;
         renderHistory();
     }));
 
+    // Keep independent Firestore listener for books
     const bookRef = query(collection(db, "users", uid, "book_logs"), orderBy("createdAt", "desc"), limit(100));
     unsubBooks = registerListener(onSnapshot(bookRef, snap => {
         rawBooks = snap.docs.map(d => d.data());
         renderHistory();
     }));
+
+    // Initial render in case data was already there
+    renderHistory();
 }
 
 export function clearHistory() {

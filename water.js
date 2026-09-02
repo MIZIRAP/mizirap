@@ -2,6 +2,7 @@ import { auth, db } from "./firebase-config.js";
 import { collection, doc, addDoc, setDoc, deleteDoc, updateDoc, onSnapshot, query, orderBy, limit, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
 import { escapeHtml, handleFormSubmit } from "./utils.js";
 import { registerListener } from "./listenerManager.js";
+import { setSharedState } from "./sharedState.js";
 
 let dailyGoal = 2000;
 let waterLogs = [];
@@ -32,6 +33,7 @@ export function initWater(uid, onChangeCallback) {
         // Fetch all logs to filter locally (since we need last 7 days and today)
         // For a huge app we might want to query where createdAt > 7 days ago, but this is fine for now
         waterLogs = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+        setSharedState('water', waterLogs);
         updateWaterUI();
     }));
 

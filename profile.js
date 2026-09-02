@@ -2,6 +2,7 @@ import { db, auth } from "./firebase-config.js";
 import { doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
 import { updatePassword, EmailAuthProvider, reauthenticateWithCredential, updateProfile } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
 import { CalculatorEngine } from './tools.js?v=1787428045';
+import { fetchSharedProfile, updateSharedProfile } from './sharedState.js';
 
 let currentUid = null;
 let currentPhotoUrl = null;
@@ -24,12 +25,9 @@ async function loadProfile() {
     }
 
     try {
-        const docRef = doc(db, "users", currentUid, "profile", "data");
-        const docSnap = await getDoc(docRef).catch(e => { console.error('DB Error:', e); alert('Veritabanı işlemi sırasında bir hata oluştu.'); throw e; });
+        const data = await fetchSharedProfile(currentUid).catch(e => { console.error('DB Error:', e); alert('Veritabanı işlemi sırasında bir hata oluştu.'); throw e; });
 
-
-        if (docSnap.exists()) {
-            const data = docSnap.data();
+        if (data && Object.keys(data).length > 0) {
             if (nameEl) nameEl.value = data.name || (auth.currentUser ? auth.currentUser.displayName : "") || "";
             if (dobEl) dobEl.value = data.dob || "";
             
@@ -155,11 +153,9 @@ function setupProfileEvents() {
 
                 currentPhotoUrl = base64Url;
 
-                // 4. Update Firestore
-                await setDoc(doc(db, "users", currentUid, "profile", "data"), {
-                    photoUrl: currentPhotoUrl,
-                    updatedAt: new Date()
-                }, { merge: true });
+                const updates = { photoUrl: currentPhotoUrl, updatedAt: new Date() };
+                await setDoc(doc(db, "users", currentUid, "profile", "data"), updates, { merge: true });
+                updateSharedProfile(updates);
 
                 // 5. Update Auth
                 if (auth.currentUser) {
@@ -200,7 +196,7 @@ function setupProfileEvents() {
 
             try {
 
-                await setDoc(doc(db, "users", currentUid, "profile", "data"), {
+                const updates = {
                     name: nameEl.value.trim(),
                     bio: bioEl.value.trim(),
                     dob: dobEl.value.trim(),
@@ -215,7 +211,9 @@ function setupProfileEvents() {
                     restingHr: Number(document.getElementById('profile-resting-hr').value) || 0,
                     photoUrl: currentPhotoUrl,
                     updatedAt: new Date()
-                }, { merge: true });
+                };
+                await setDoc(doc(db, "users", currentUid, "profile", "data"), updates, { merge: true });
+                updateSharedProfile(updates);
 
                 generateHealthSummary({
                     height: Number(document.getElementById('profile-height').value) || 0,
@@ -320,7 +318,7 @@ function setupProfileEvents() {
 
         try {
             if (allValid) {
-                await setDoc(doc(db, "users", currentUid, "profile", "data"), {
+                const updates = {
                     name: nameEl ? nameEl.value.trim() : '',
                     dob: dobEl ? dobEl.value.trim() : '',
                     height: h,
@@ -335,7 +333,9 @@ function setupProfileEvents() {
                     restingHr: rhr,
                     photoUrl: currentPhotoUrl,
                     updatedAt: new Date()
-                }, { merge: true });
+                };
+                await setDoc(doc(db, "users", currentUid, "profile", "data"), updates, { merge: true });
+                updateSharedProfile(updates);
             }
 
             generateHealthSummary({
