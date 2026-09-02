@@ -64,6 +64,17 @@ function renderShoppingList() {
     const activeItems = allShopping.filter(i => !i.done);
     const completedItems = allShopping.filter(i => i.done);
 
+    const activeSection = activeList.closest('section');
+    const completedSection = completedList.closest('section');
+
+    if (activeSection) {
+        activeSection.style.display = activeItems.length > 0 ? '' : 'none';
+    }
+    
+    if (completedSection) {
+        completedSection.style.display = completedItems.length > 0 ? '' : 'none';
+    }
+
     const dashboardCountLabel = document.getElementById("dashboard-shopping-count");
     if(dashboardCountLabel) dashboardCountLabel.textContent = `${activeItems.length} Ürün`;
 
