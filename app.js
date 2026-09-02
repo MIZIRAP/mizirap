@@ -1,9 +1,9 @@
 import { auth } from "./firebase-config.js";
 import { onAuthStateChanged, signInAnonymously } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
 import { setupAuthUI } from "./auth.js";
-import { initDashboard, clearDashboard } from "./dashboard.js?v=1787428044";
+import { initDashboard, clearDashboard } from "./dashboard.js?v=20260902_2";
 import { initShopping, clearShopping } from "./shopping.js";
-import { initWorkout, clearWorkout } from "./workout.js?v=20260902";
+import { initWorkout, clearWorkout } from "./workout.js?v=20260902_2";
 import { initFinance, clearFinance } from "./finance.js";
 import { initWater, clearWater } from "./water.js?v=20260902";
 import { initBooks, clearBooks } from "./books.js?v=1787428044";

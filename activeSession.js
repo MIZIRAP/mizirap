@@ -367,7 +367,7 @@ function _activeSetHTML(exId, setIdx, set, isCurrent = false, isCompleted = fals
                                 <button data-action="sessionStepWeight" data-ex-id="${exId}" data-set-idx="${setIdx}" data-delta="-2.5" class="w-10 h-10 neo-inset-circle flex items-center justify-center text-secondary neo-surface-interactive hover:text-primary transition-colors">
                                     <span class="material-symbols-rounded text-lg" data-icon="remove">remove</span>
                                 </button>
-                                <span class="font-title-lg text-title-lg w-12 text-center text-on-surface" id="weight-val-${exId}-${setIdx}">${set.weight}</span>
+                                <input type="number" step="0.5" class="font-title-lg text-title-lg w-16 text-center text-on-surface bg-transparent border-b border-surface-variant outline-none focus:border-primary" id="weight-val-${exId}-${setIdx}" value="${set.weight}" onchange="sessionManualWeight('${exId}', ${setIdx}, this.value)">
                                 <button data-action="sessionStepWeight" data-ex-id="${exId}" data-set-idx="${setIdx}" data-delta="2.5" class="w-10 h-10 neo-inset-circle flex items-center justify-center text-secondary neo-surface-interactive hover:text-primary transition-colors">
                                     <span class="material-symbols-rounded text-lg" data-icon="add">add</span>
                                 </button>
@@ -382,7 +382,7 @@ function _activeSetHTML(exId, setIdx, set, isCurrent = false, isCompleted = fals
                                 <button data-action="sessionStepReps" data-ex-id="${exId}" data-set-idx="${setIdx}" data-delta="-1" class="w-10 h-10 neo-inset-circle flex items-center justify-center text-secondary neo-surface-interactive hover:text-primary transition-colors">
                                     <span class="material-symbols-rounded text-lg" data-icon="remove">remove</span>
                                 </button>
-                                <span class="font-title-lg text-title-lg w-12 text-center text-on-surface" id="reps-val-${exId}-${setIdx}">${set.reps}</span>
+                                <input type="number" step="1" class="font-title-lg text-title-lg w-16 text-center text-on-surface bg-transparent border-b border-surface-variant outline-none focus:border-primary" id="reps-val-${exId}-${setIdx}" value="${set.reps}" onchange="sessionManualReps('${exId}', ${setIdx}, this.value)">
                                 <button data-action="sessionStepReps" data-ex-id="${exId}" data-set-idx="${setIdx}" data-delta="1" class="w-10 h-10 neo-inset-circle flex items-center justify-center text-secondary neo-surface-interactive hover:text-primary transition-colors">
                                     <span class="material-symbols-rounded text-lg" data-icon="add">add</span>
                                 </button>
@@ -545,8 +545,8 @@ function _refreshWeightRepsDisplay(exId, setIdx, set) {
     const repsEl = document.getElementById(`reps-val-${exId}-${setIdx}`);
     const summaryEl = document.getElementById(`set-summary-${exId}-${setIdx}`);
 
-    if (weightEl) weightEl.textContent = set.weight;
-    if (repsEl) repsEl.textContent = set.reps;
+    if (weightEl) weightEl.value = set.weight;
+    if (repsEl) repsEl.value = set.reps;
 
     // Only update summary if it's not the "current set" label
     if (summaryEl && summaryEl.textContent !== 'Şu anki set') {
@@ -652,3 +652,20 @@ window.completeSet = function(exId, setIdx) {
         _renderSets(exId);
     }
 }
+
+window.sessionManualWeight = function(exId, setIdx, val) {
+    const set = _exState[exId]?.sets[setIdx];
+    if (!set) return;
+    set.weight = Math.max(0, parseFloat(val) || 0);
+    _refreshE1RMDisplay(exId, setIdx, set);
+    _persistSet(exId);
+};
+
+window.sessionManualReps = function(exId, setIdx, val) {
+    const set = _exState[exId]?.sets[setIdx];
+    if (!set) return;
+    set.reps = Math.max(1, parseInt(val, 10) || 1);
+    _refreshE1RMDisplay(exId, setIdx, set);
+    _persistSet(exId);
+};
+

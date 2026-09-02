@@ -143,8 +143,9 @@ function updateDashboardUIFromSummary(data) {
     const waterText = document.getElementById("dashboard-water-text");
     const waterProg = document.getElementById("dash-prog-water");
     if(waterText && waterProg && data.water) {
-        waterText.innerHTML = `${data.water.consumed || 0}<span class="text-xs font-normal text-on-surface-variant">/${data.water.goal || 2000}ml</span>`;
-        let percent = (data.water.consumed || 0) / (data.water.goal || 2000) * 100;
+        const waterVal = data.water.consumed || data.water.currentAmount || 0;
+        waterText.innerHTML = `${waterVal}<span class="text-xs font-normal text-on-surface-variant">/${data.water.goal || 2000}ml</span>`;
+        let percent = waterVal / (data.water.goal || 2000) * 100;
         if (percent > 100) percent = 100;
         if (isNaN(percent)) percent = 0;
         waterProg.style.strokeDashoffset = circum - (percent / 100) * circum;
