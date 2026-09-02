@@ -212,7 +212,18 @@ function renderDashboard() {
     if(statWorkout) statWorkout.textContent = window._miz_active_split_name || "Yapılmadı";
 
     // Finans
-    const balance = calcBalance(currentTxs);
+    const now = new Date();
+    const targetMonth = now.getMonth();
+    const targetYear = now.getFullYear();
+    
+    const currentMonthTxs = currentTxs.filter(tx => {
+        if (!tx.dateStr) return false;
+        const d = new Date(tx.dateStr);
+        if (isNaN(d.getTime())) return false;
+        return d.getMonth() === targetMonth && d.getFullYear() === targetYear;
+    });
+
+    const balance = calcBalance(currentMonthTxs);
     const statBalance = document.getElementById("stat-balance");
     if(statBalance) statBalance.textContent = formatCurrency(balance);
 }
