@@ -67,9 +67,17 @@ function renderHistory() {
     const grouped = {};
 
     const processDoc = (doc, type) => {
-        if (!doc.createdAt) return;
-        const dateObj = doc.createdAt.toDate ? doc.createdAt.toDate() : new Date(doc.createdAt);
-        if(isNaN(dateObj)) return;
+        let dateObj;
+
+        if (type === 'finance' && doc.dateStr) {
+            dateObj = new Date(doc.dateStr);
+        }
+
+        if (!dateObj && doc.createdAt) {
+            dateObj = doc.createdAt.toDate ? doc.createdAt.toDate() : new Date(doc.createdAt);
+        }
+
+        if(!dateObj || isNaN(dateObj.getTime())) return;
 
         const dateKey = formatDate(dateObj);
 
