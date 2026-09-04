@@ -1004,8 +1004,8 @@ function renderSplitEditView() {
             daysHtml += `</div>`;
         }
 
-        let splitHeaderStyles = 'box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.08), -6px -6px 12px rgba(255, 255, 255, 0.6);';
-        let splitHeaderWrapperClass = 'accordion-header w-[342px] h-[72px] rounded-[24px] relative z-40 transition-all cursor-pointer p-[2px] bg-gradient-to-r from-[#4648D4] to-[#20E0B0]';
+        let splitHeaderStyles = 'box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);';
+        let splitHeaderWrapperClass = 'accordion-header w-[342px] h-[72px] rounded-2xl bg-[#F0F2F8] active:scale-[0.99] transition-transform cursor-pointer relative z-40';
 
         splitCard.innerHTML = `
             <!-- Split Header Wrapper -->
