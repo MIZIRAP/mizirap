@@ -269,8 +269,8 @@ function _renderSessionExercises() {
         card.innerHTML = `
             <button class="w-full p-4 flex items-center justify-between focus:outline-none" data-action="sessionToggleExAccordion" data-ex-id="${ex.id}">
                 <div class="flex items-center gap-4">
-                    <div class="w-12 h-12 rounded-full flex items-center justify-center bg-gradient-to-br from-purple-400 to-blue-400 text-white shadow-sm shrink-0">
-                        <span class="material-symbols-rounded text-2xl">fitness_center</span>
+                    <div class="w-12 h-12 rounded-full bg-[#F0F2F8] flex items-center justify-center shrink-0" style="box-shadow: inset 4px 4px 8px #D1D9E6, inset -4px -4px 8px rgba(255, 255, 255, 0.7);">
+                        <span class="material-symbols-rounded text-[#1E293B] text-xl">fitness_center</span>
                     </div>
                     <div class="text-left min-w-0">
                         <h3 class="font-title-sm text-title-sm text-on-surface mb-1 truncate">${escHtml(ex.name)}</h3>

@@ -1,4 +1,4 @@
-import { calculateE1RM } from './activeSession.js?v=1787302000';
+import { calculateE1RM } from './activeSession.js?v=202609045';
 
 // ==========================================
 // CALCULATOR ENGINE
