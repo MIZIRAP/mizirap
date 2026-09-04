@@ -126,7 +126,15 @@ function renderCalisthenics() {
     if (!container) return;
     
     if (!profile) {
-        container.innerHTML = ``;
+        container.innerHTML = `
+        <div class="flex flex-col gap-4 mt-8 mb-4">
+            <h2 class="text-xl font-bold text-[#1E293B]">Kalistenik Programı</h2>
+            <p class="text-sm font-medium text-[#64748B]">Kendi seviyene uygun dinamik vücut ağırlığı programını oluştur.</p>
+            <button onclick="document.getElementById('calisthenicsAssessmentModal').classList.remove('hidden')" class="w-full h-14 bg-gradient-to-r from-neon-purple to-neon-blue rounded-2xl text-white font-bold text-base flex items-center justify-center gap-2 active:scale-[0.98] transition-transform shadow-neo-lowest shadow-sm mt-2">
+                <span class="material-symbols-rounded">fitness_center</span>
+                Programını Oluştur
+            </button>
+        </div>`;
         return;
     }
 
@@ -209,9 +217,6 @@ export function initCalisthenics(uid) {
         } else {
             profile = null;
             renderCalisthenics();
-            // Show assessment modal on first load if not filled
-            const m = document.getElementById("calisthenicsAssessmentModal");
-            if (m) m.classList.remove("hidden");
         }
     }));
 }
