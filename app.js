@@ -12,6 +12,7 @@ import { initProfile, clearProfile } from "./profile.js?v=1787428045";
 import { initCalories, clearCalories } from "./calories.js?v=1787428046";
 import { initHistory, clearHistory } from "./history.js";
 import { initTools, clearTools } from "./tools.js?v=1787428045";
+import { initCalisthenics, clearCalisthenics } from "./calisthenics.js";
 import { clearAllListeners } from "./listenerManager.js";
 import { clearSharedState } from "./sharedState.js";
 
@@ -88,6 +89,7 @@ onAuthStateChanged(auth, async (user) => {
             initProfile(user.uid);
             initHistory(user.uid);
             initTools();
+            initCalisthenics(user.uid);
 
         } catch (err) {
             console.error("Login transition error:", err);
@@ -141,6 +143,7 @@ onAuthStateChanged(auth, async (user) => {
         clearCalories();
         clearHistory();
         clearTools();
+        clearCalisthenics();
     }
 });
 
