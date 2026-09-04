@@ -864,20 +864,16 @@ function openSplitEdit() {
     if (appScreen && splitEdit && splitEdit.parentNode !== appScreen) {
         appScreen.appendChild(splitEdit);
     }
-    // Hide workout home
-    document.getElementById('view-workout').classList.add('hidden');
-    // Hide all other views just in case
-    document.querySelectorAll('.view').forEach(v => {
-        if(v.id !== 'view-split-edit') v.classList.add('hidden');
-    });
-
-    document.getElementById('view-split-edit').classList.remove('hidden');
+    
+    // Push state and use showView to support hardware back button properly
+    history.pushState({view: 'view-split-edit'}, '', '?view=view-split-edit');
+    window.showView('view-split-edit');
+    
     renderSplitEditView();
 };
 
 function closeSplitEdit() {
-    document.getElementById('view-split-edit').classList.add('hidden');
-    document.getElementById('view-workout').classList.remove('hidden');
+    history.back();
     document.body.classList.remove("overflow-hidden");
 };
 
@@ -956,11 +952,11 @@ function renderSplitEditView() {
                             <!-- Ex Content -->
                             <div class="accordion-content w-[250px] bg-transparent pt-3 pb-3 flex flex-col gap-2 relative z-10 transition-all overflow-hidden ${isExOpen ? 'expanded' : ''}" style="margin-top: 0px; ${isExOpen ? 'max-height: 500px;' : ''}">
                                 <div class="flex items-center gap-4 w-[160px] h-[40px] mx-auto mt-2">
-                                    <button data-action="changeExerciseSets" data-split-id="${split.id}" data-day-idx="${dayIdx}" data-ex-idx="${exIdx}" data-delta="-1" class="w-10 h-10 rounded-full flex items-center justify-center bg-[rgba(255,255,255,0.002)]" style="box-shadow: inset 4px 4px 8px rgba(0, 0, 0, 0.08), inset -4px -4px 8px rgba(255, 255, 255, 0.6);">
+                                    <button data-action="changeExerciseSets" data-split-id="${split.id}" data-day-idx="${dayIdx}" data-ex-idx="${exIdx}" data-delta="-1" class="w-10 h-10 rounded-full flex items-center justify-center bg-[#F0F2F8]" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);">
                                         <div class="w-[14px] h-[2px] bg-[#5B5D6D] pointer-events-none"></div>
                                     </button>
                                     <span class="font-bold text-[24px] leading-[29px] tracking-[-0.48px] text-[#000000] min-w-[40px] text-center">${sets}</span>
-                                    <button data-action="changeExerciseSets" data-split-id="${split.id}" data-day-idx="${dayIdx}" data-ex-idx="${exIdx}" data-delta="1" class="w-10 h-10 rounded-full flex items-center justify-center bg-[rgba(255,255,255,0.002)]" style="box-shadow: inset 4px 4px 8px rgba(0, 0, 0, 0.08), inset -4px -4px 8px rgba(255, 255, 255, 0.6);">
+                                    <button data-action="changeExerciseSets" data-split-id="${split.id}" data-day-idx="${dayIdx}" data-ex-idx="${exIdx}" data-delta="1" class="w-10 h-10 rounded-full flex items-center justify-center bg-[#F0F2F8]" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);">
                                         <span class="material-symbols-rounded text-[#5B5D6D] text-[14px] font-bold pointer-events-none">add</span>
                                     </button>
                                 </div>
@@ -974,10 +970,10 @@ function renderSplitEditView() {
                 daysHtml += `
                 <div class="day-card w-full flex flex-col items-center ${isDayOpen ? 'expanded' : ''} day-drag-item" data-day-idx="${dayIdx}">
                     <!-- Day Header -->
-                    <div class="accordion-header w-[300px] h-[56px] bg-[#E8EAF0] rounded-[12px] px-4 flex items-center justify-between transition-all z-30 relative" style="box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.08), -4px -4px 8px rgba(255, 255, 255, 0.6);">
+                    <div class="accordion-header w-[300px] h-[56px] bg-[#F0F2F8] rounded-[12px] px-4 flex items-center justify-between transition-all z-30 relative" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);">
                         <div class="flex items-center gap-3">
                             <span class="material-symbols-rounded text-[#C7C4D7] text-[16px] cursor-grab day-drag-handle shrink-0 select-none" style="touch-action: none; user-select: none;">drag_indicator</span>
-                            <div class="bg-[#E8EAF0] px-2 py-1 rounded-[4px] flex items-center justify-center shrink-0" style="box-shadow: inset 2px 2px 4px rgba(0, 0, 0, 0.08), inset -2px -2px 4px rgba(255, 255, 255, 0.6);">
+                            <div class="bg-[#F0F2F8] px-2 py-1 rounded-[4px] flex items-center justify-center shrink-0" style="box-shadow: inset 2px 2px 5px #D1D9E6, inset -2px -2px 5px rgba(255, 255, 255, 0.7);">
                                 <span class="text-[#712AE2] font-normal text-[10px] leading-[15px]">Gün ${dayIdx + 1}</span>
                             </div>
                             <input type="text" value="${day.name}" class="font-medium text-[#181C20] text-[16px] leading-[24px] bg-transparent outline-none border-none focus:ring-0 shadow-none p-0 w-[110px] truncate" onclick="event.stopPropagation()" onchange="updateSplitDayName('${split.id}', ${dayIdx}, this.value)" />
@@ -991,10 +987,10 @@ function renderSplitEditView() {
                     </div>
 
                     <!-- Day Content -->
-                    <div class="accordion-content w-[294px] bg-[#E8EAF0] rounded-[8px] pt-[24px] pb-[12px] px-[12px] relative z-20 flex flex-col items-center transition-all overflow-hidden ${isDayOpen ? 'expanded' : ''}" style="margin-top: -12px; ${isDayOpen ? 'max-height: 2000px;' : ''}">
+                    <div class="accordion-content w-[294px] bg-[#F0F2F8] rounded-[8px] pt-[24px] pb-[12px] px-[12px] relative z-20 flex flex-col items-center transition-all overflow-hidden ${isDayOpen ? 'expanded' : ''}" style="margin-top: -12px; ${isDayOpen ? 'max-height: 2000px;' : ''}">
                         ${exHtml}
                         <!-- Add Exercise Button -->
-                        <button data-action="openExercisePickerForSplit" data-split-id="${split.id}" data-day-idx="${dayIdx}" class="mt-4 w-[156px] h-[40px] bg-[#F7F9FF] rounded-full flex items-center justify-center active:scale-95 transition-transform mx-auto shrink-0" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px #FFFFFF;">
+                        <button data-action="openExercisePickerForSplit" data-split-id="${split.id}" data-day-idx="${dayIdx}" class="mt-4 w-[156px] h-[40px] bg-[#F0F2F8] rounded-full flex items-center justify-center active:scale-95 transition-transform mx-auto shrink-0" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);">
                             <span class="font-bold text-[#1E293B] text-[12px] leading-[16px] tracking-[0.6px] uppercase pointer-events-none">Hareket Ekle</span>
                         </button>
                     </div>
@@ -1009,8 +1005,8 @@ function renderSplitEditView() {
 
         splitCard.innerHTML = `
             <!-- Split Header Wrapper -->
-            <div class="${splitHeaderWrapperClass}" style="${isSplitOpen ? 'box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.08), -6px -6px 12px rgba(255, 255, 255, 0.6);' : splitHeaderStyles}" onclick="toggleMizAccordion(this, '${split.id}', 'split', event)">
-                <div class="w-full h-full bg-[#E8EAF0] rounded-[22px] px-5 flex items-center justify-between">
+            <div class="${splitHeaderWrapperClass}" style="${isSplitOpen ? 'box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);' : splitHeaderStyles}" onclick="toggleMizAccordion(this, '${split.id}', 'split', event)">
+                <div class="w-full h-full bg-[#F0F2F8] rounded-[22px] px-5 flex items-center justify-between">
                     <div class="flex items-center gap-4">
                         <div class="w-12 h-12 rounded-full bg-[#F0F2F8] flex items-center justify-center shrink-0" style="box-shadow: inset 4px 4px 8px #D1D9E6, inset -4px -4px 8px rgba(255, 255, 255, 0.7);">
                             <span class="material-symbols-rounded text-[#1E293B] text-xl">fitness_center</span>
@@ -1024,11 +1020,11 @@ function renderSplitEditView() {
             </div>
 
             <!-- Split Content -->
-            <div class="accordion-content w-[342px] bg-[#E8EAF0] rounded-[16px] pt-[32px] px-[16px] pb-[16px] relative z-30 flex flex-col items-center transition-all overflow-hidden ${isSplitOpen ? 'expanded' : ''}" style="margin-top: -16px; ${isSplitOpen ? 'max-height: 5000px;' : ''}">
+            <div class="accordion-content w-[342px] bg-[#F0F2F8] rounded-[16px] pt-[32px] px-[16px] pb-[16px] relative z-30 flex flex-col items-center transition-all overflow-hidden ${isSplitOpen ? 'expanded' : ''}" style="margin-top: -16px; ${isSplitOpen ? 'max-height: 5000px;' : ''}">
                 ${daysHtml}
                 <!-- Add Day Button -->
                 <div class="w-full flex justify-center mt-6 mb-2">
-                    <button data-action="addDayToSplit" data-split-id="${split.id}" class="w-[127px] h-[40px] bg-[#F7F9FF] rounded-full flex items-center justify-center active:scale-95 transition-transform shrink-0" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px #FFFFFF;">
+                    <button data-action="addDayToSplit" data-split-id="${split.id}" class="w-[127px] h-[40px] bg-[#F0F2F8] rounded-full flex items-center justify-center active:scale-95 transition-transform shrink-0" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);">
                         <span class="font-bold text-[#1E293B] text-[12px] leading-[16px] tracking-[0.6px] uppercase pointer-events-none">Gün Ekle</span>
                     </button>
                 </div>
@@ -1598,7 +1594,9 @@ function openEditSplitView(splitId) {
     closeSplitModal();
 
     document.getElementById('view-split-edit').classList.add('hidden');
-    document.getElementById('view-create-split').classList.remove('hidden');
+    // If view-create-split exists, show it
+    const vcs = document.getElementById('view-create-split');
+    if(vcs) vcs.classList.remove('hidden');
 
     const headerTitle = document.querySelector('#view-create-split header h1');
     if(headerTitle) headerTitle.innerText = "Split Düzenle";

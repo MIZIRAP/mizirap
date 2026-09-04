@@ -182,8 +182,17 @@ document.addEventListener("click", (e) => {
     if (!targetId) return;
 
     e.preventDefault();
-    // Use replaceState for bottom navigation to prevent deep history stacks of tabs
-    // and avoid the back button taking the user to sub-pages like exercise-library.
-    history.replaceState({view: targetId}, "", "?view=" + targetId);
+    
+    // Check if we are currently on a sub-page of the Workout tab, and the user clicked the Workout tab.
+    // If so, act as a "Back" button instead of pushing a duplicate state.
+    const currentView = document.querySelector('.view:not(.hidden)');
+    const isWorkoutSubPage = currentView && (currentView.id === 'view-exercise-library' || currentView.id === 'view-split-edit');
+    if (targetId === 'view-workout' && isWorkoutSubPage) {
+        history.back();
+        return;
+    }
+
+    // Revert replaceState back to pushState so that the back button functions properly for the history stack.
+    history.pushState({view: targetId}, "", "?view=" + targetId);
     window.showView(targetId);
 });
