@@ -1,28 +1,33 @@
+﻿## CSS Derleme Notu
+Projeye yeni bir Tailwind class'ı eklediğinizde (HTML veya JS dosyaları içerisine), CSS'in güncellenmesi gerekir. Bu projede Node.js kullanılmadığı için Tailwind CLI bağımsız sürümü kullanılmaktadır:
+1. uild-css.bat dosyasına çift tıklayarak (veya terminalden) çalıştırın.
+2. 	ailwind-build.css dosyasının yeniden üretildiğinden emin olun ve dosyayı GitHub'a commitleyin.
+
 # Hayat Defteri
 
-Görev listesi, notlar ve finans takibini tek yerde toplayan, GitHub Pages üzerinde ücretsiz barındırılan, Firebase ile giriş sistemi ve veri saklama içeren kişisel web uygulaması.
+GÃ¶rev listesi, notlar ve finans takibini tek yerde toplayan, GitHub Pages Ã¼zerinde Ã¼cretsiz barÄ±ndÄ±rÄ±lan, Firebase ile giriÅŸ sistemi ve veri saklama iÃ§eren kiÅŸisel web uygulamasÄ±.
 
-## Kurulum adımları
+## Kurulum adÄ±mlarÄ±
 
-### 1. Firebase projesi oluştur
+### 1. Firebase projesi oluÅŸtur
 
-1. [console.firebase.google.com](https://console.firebase.google.com) adresine git, Google hesabınla giriş yap.
-2. **Add project** ile yeni bir proje oluştur (örn. `hayat-defteri`). Google Analytics'i kapatabilirsin, gerekmiyor.
-3. Proje açıldıktan sonra sol üstteki **⚙ Project settings > General** sekmesine git.
-4. **Your apps** bölümünde `</>` (Web) simgesine tıkla, uygulamana bir isim ver (örn. "hayat-defteri-web") ve kaydet.
-5. Karşına çıkan `firebaseConfig` nesnesini kopyala.
+1. [console.firebase.google.com](https://console.firebase.google.com) adresine git, Google hesabÄ±nla giriÅŸ yap.
+2. **Add project** ile yeni bir proje oluÅŸtur (Ã¶rn. `hayat-defteri`). Google Analytics'i kapatabilirsin, gerekmiyor.
+3. Proje aÃ§Ä±ldÄ±ktan sonra sol Ã¼stteki **âš™ Project settings > General** sekmesine git.
+4. **Your apps** bÃ¶lÃ¼mÃ¼nde `</>` (Web) simgesine tÄ±kla, uygulamana bir isim ver (Ã¶rn. "hayat-defteri-web") ve kaydet.
+5. KarÅŸÄ±na Ã§Ä±kan `firebaseConfig` nesnesini kopyala.
 
-### 2. Authentication'ı etkinleştir
+### 2. Authentication'Ä± etkinleÅŸtir
 
-1. Sol menüden **Build > Authentication**'a git.
+1. Sol menÃ¼den **Build > Authentication**'a git.
 2. **Get started** > **Sign-in method** sekmesi.
-3. **Email/Password**'ü seç ve etkinleştir.
+3. **Email/Password**'Ã¼ seÃ§ ve etkinleÅŸtir.
 
-### 3. Firestore veritabanını oluştur
+### 3. Firestore veritabanÄ±nÄ± oluÅŸtur
 
-1. Sol menüden **Build > Firestore Database**.
-2. **Create database** > *production mode* seç > sana en yakın bölgeyi (örn. `eur3` — Avrupa) seç.
-3. **Rules** sekmesine git, aşağıdaki kuralları yapıştır ve **Publish**'e bas:
+1. Sol menÃ¼den **Build > Firestore Database**.
+2. **Create database** > *production mode* seÃ§ > sana en yakÄ±n bÃ¶lgeyi (Ã¶rn. `eur3` â€” Avrupa) seÃ§.
+3. **Rules** sekmesine git, aÅŸaÄŸÄ±daki kurallarÄ± yapÄ±ÅŸtÄ±r ve **Publish**'e bas:
 
 ```
 rules_version = '2';
@@ -35,21 +40,21 @@ service cloud.firestore {
 }
 ```
 
-Bu kural, her kullanıcının **sadece kendi verisini** okuyup yazabilmesini sağlar.
+Bu kural, her kullanÄ±cÄ±nÄ±n **sadece kendi verisini** okuyup yazabilmesini saÄŸlar.
 
-### 4. Config'i projeye yapıştır
+### 4. Config'i projeye yapÄ±ÅŸtÄ±r
 
-`firebase-config.js` dosyasını aç, 2. adımda kopyaladığın bilgileri `BURAYA_...` yazan yerlere yapıştır.
+`firebase-config.js` dosyasÄ±nÄ± aÃ§, 2. adÄ±mda kopyaladÄ±ÄŸÄ±n bilgileri `BURAYA_...` yazan yerlere yapÄ±ÅŸtÄ±r.
 
-### 5. GitHub'a yükle ve Pages'i aç
+### 5. GitHub'a yÃ¼kle ve Pages'i aÃ§
 
 ```bash
-# Bu klasörde bir git reposu başlat
+# Bu klasÃ¶rde bir git reposu baÅŸlat
 git init
 git add .
-git commit -m "İlk sürüm: Hayat Defteri"
+git commit -m "Ä°lk sÃ¼rÃ¼m: Hayat Defteri"
 
-# GitHub'da yeni bir repo oluştur (github.com/new), sonra:
+# GitHub'da yeni bir repo oluÅŸtur (github.com/new), sonra:
 git remote add origin https://github.com/KULLANICI_ADIN/hayat-defteri.git
 git branch -M main
 git push -u origin main
@@ -60,33 +65,33 @@ Sonra GitHub'da reponun **Settings > Pages** sekmesine git:
 - **Branch**: `main` / `root`
 - **Save**
 
-Birkaç dakika içinde siten şu adreste yayına girer:
+BirkaÃ§ dakika iÃ§inde siten ÅŸu adreste yayÄ±na girer:
 `https://KULLANICI_ADIN.github.io/hayat-defteri/`
 
-### 6. (Opsiyonel) Kendi domain'ini bağla
+### 6. (Opsiyonel) Kendi domain'ini baÄŸla
 
-Domain aldıktan sonra (İnetmar, Natro vb.) DNS ayarlarına GitHub'ın verdiği A/CNAME kayıtlarını ekleyip, repo **Settings > Pages > Custom domain** kısmına domain'ini yazman yeterli.
+Domain aldÄ±ktan sonra (Ä°netmar, Natro vb.) DNS ayarlarÄ±na GitHub'Ä±n verdiÄŸi A/CNAME kayÄ±tlarÄ±nÄ± ekleyip, repo **Settings > Pages > Custom domain** kÄ±smÄ±na domain'ini yazman yeterli.
 
 ## Yerelde test etmek
 
-Tarayıcı güvenlik kısıtlamaları nedeniyle `index.html`'i doğrudan çift tıklayarak açmak modül importlarını engeller. Basit bir yerel sunucu ile aç:
+TarayÄ±cÄ± gÃ¼venlik kÄ±sÄ±tlamalarÄ± nedeniyle `index.html`'i doÄŸrudan Ã§ift tÄ±klayarak aÃ§mak modÃ¼l importlarÄ±nÄ± engeller. Basit bir yerel sunucu ile aÃ§:
 
 ```bash
 # Python varsa
 python3 -m http.server 8000
-# sonra tarayıcıda: http://localhost:8000
+# sonra tarayÄ±cÄ±da: http://localhost:8000
 ```
 
-## Sonraki adımlar / geliştirme fikirleri
+## Sonraki adÄ±mlar / geliÅŸtirme fikirleri
 
-- Görevlere kategori/etiket ekleme
-- Finans için aylık grafik (Chart.js ile kolayca eklenir)
+- GÃ¶revlere kategori/etiket ekleme
+- Finans iÃ§in aylÄ±k grafik (Chart.js ile kolayca eklenir)
 - Notlara arama/filtreleme
-- Karanlık mod
-- Görev hatırlatma bildirimleri (Firebase Cloud Messaging ile)
+- KaranlÄ±k mod
+- GÃ¶rev hatÄ±rlatma bildirimleri (Firebase Cloud Messaging ile)
 
 ## Maliyet
 
-- **GitHub Pages**: Ücretsiz
-- **Firebase**: Spark (ücretsiz) planı bu ölçekte fazlasıyla yeterli — günlük 50.000 okuma / 20.000 yazma limiti var, kişisel kullanım için sorun olmaz.
-- **Domain (opsiyonel)**: Yıllık ~150-500 TL
+- **GitHub Pages**: Ãœcretsiz
+- **Firebase**: Spark (Ã¼cretsiz) planÄ± bu Ã¶lÃ§ekte fazlasÄ±yla yeterli â€” gÃ¼nlÃ¼k 50.000 okuma / 20.000 yazma limiti var, kiÅŸisel kullanÄ±m iÃ§in sorun olmaz.
+- **Domain (opsiyonel)**: YÄ±llÄ±k ~150-500 TL
