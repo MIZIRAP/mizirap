@@ -267,7 +267,13 @@ document.addEventListener('click', async (e) => {
     if (action === 'openCalisthenicsModal') {
         e.preventDefault();
         const m = document.getElementById("calisthenicsAssessmentModal");
-        if(m) m.classList.remove("hidden");
+        if (m) {
+            m.classList.remove("hidden");
+            m.style.display = "flex";
+            m.style.zIndex = "99999";
+        } else {
+            alert("Sistem güncellemesi yapıldı ancak tarayıcınız eski sayfayı (HTML) gösteriyor. Lütfen sayfayı CTRL+F5 ile tamamen yenileyin veya önbelleği temizleyin.");
+        }
     }
     else if (action === 'calisthenicsAssessmentClose') {
         e.preventDefault();
