@@ -127,18 +127,36 @@ function renderCalisthenics() {
     
     if (!profile) {
         container.innerHTML = `
-        <button type="button" class="w-full text-left bg-[#F0F2F8] p-4 rounded-2xl flex items-center justify-between active:scale-[0.99] transition-transform mb-4" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);" onclick="const m = document.getElementById('calisthenicsAssessmentModal'); if(m) { m.classList.remove('hidden'); m.style.display='flex'; m.style.zIndex='99999'; } else { alert('Eski sayfa (HTML) önbellekte kalmış, lütfen sayfayı CTRL+F5 ile yenileyin!'); } return false;">
-            <div class="flex items-center gap-4">
-                <div class="w-10 h-10 rounded-full bg-[#F0F2F8] flex items-center justify-center shrink-0" style="box-shadow: inset 2px 2px 5px #D1D9E6, inset -2px -2px 5px rgba(255, 255, 255, 0.7);">
-                    <span class="material-symbols-rounded text-[#1E293B]">fitness_center</span>
+        <div class="bg-surface-bright w-full rounded-[32px] mb-8 mt-6 shadow-[0_8px_30px_rgb(0,0,0,0.08)] relative overflow-hidden flex flex-col">
+            <div class="flex items-center justify-between p-6 pb-4 border-b border-surface-variant/50">
+                <h2 class="text-xl font-bold text-on-surface">Kalistenik Seviye Belirleme</h2>
+            </div>
+            <div class="p-6 flex flex-col gap-6">
+                <p class="text-sm font-medium text-on-surface-variant">Sana en uygun programı üretebilmemiz için aşağıdaki bilgileri dürüstçe doldur.</p>
+                
+                <div class="flex flex-col gap-2">
+                    <label class="text-sm font-bold text-on-surface">Tek seferde max şınav:</label>
+                    <input id="cal-pushup-inline" type="number" class="w-full h-12 bg-[#E2E8F0] border-none rounded-2xl px-4 font-medium text-[#1E293B] placeholder-[#64748B] focus:ring-0" style="box-shadow: inset 4px 4px 8px #D1D9E6, inset -4px -4px 8px #FFFFFF;" placeholder="Örn: 5">
                 </div>
-                <div>
-                    <h4 class="font-bold text-sm text-[#1E293B]">Kalistenik Programı</h4>
-                    <p class="text-xs font-medium text-[#64748B] mt-0.5">Programını oluşturmak için tıkla</p>
+                <div class="flex flex-col gap-2">
+                    <label class="text-sm font-bold text-on-surface">Tek seferde max mekik:</label>
+                    <input id="cal-situp-inline" type="number" class="w-full h-12 bg-[#E2E8F0] border-none rounded-2xl px-4 font-medium text-[#1E293B] placeholder-[#64748B] focus:ring-0" style="box-shadow: inset 4px 4px 8px #D1D9E6, inset -4px -4px 8px #FFFFFF;" placeholder="Örn: 10">
+                </div>
+                <div class="flex flex-col gap-2">
+                    <label class="text-sm font-bold text-on-surface">Tek seferde max barfiks:</label>
+                    <input id="cal-pullup-inline" type="number" class="w-full h-12 bg-[#E2E8F0] border-none rounded-2xl px-4 font-medium text-[#1E293B] placeholder-[#64748B] focus:ring-0" style="box-shadow: inset 4px 4px 8px #D1D9E6, inset -4px -4px 8px #FFFFFF;" placeholder="Örn: 0">
+                </div>
+                <div class="flex flex-col gap-2">
+                    <label class="text-sm font-bold text-on-surface">Haftada kaç gün (3 veya 4):</label>
+                    <input id="cal-days-inline" type="number" min="3" max="4" class="w-full h-12 bg-[#E2E8F0] border-none rounded-2xl px-4 font-medium text-[#1E293B] placeholder-[#64748B] focus:ring-0" style="box-shadow: inset 4px 4px 8px #D1D9E6, inset -4px -4px 8px #FFFFFF;" placeholder="Örn: 3">
                 </div>
             </div>
-            <span class="material-symbols-rounded text-[#1E293B] shrink-0">chevron_right</span>
-        </button>`;
+            <div class="p-6 pt-4 border-t border-surface-variant/50">
+                <button data-action="saveCalisthenicsAssessmentInline" class="w-full h-14 bg-gradient-to-r from-neon-purple to-neon-blue rounded-2xl text-white font-bold text-base flex items-center justify-center gap-2 active:scale-[0.98] transition-transform" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px #FFFFFF;">
+                    Kaydet ve Programı Oluştur
+                </button>
+            </div>
+        </div>`;
         return;
     }
 
@@ -268,6 +286,41 @@ document.addEventListener('click', async (e) => {
         e.preventDefault();
         const m = document.getElementById("calisthenicsAssessmentModal");
         if(m) m.classList.add("hidden");
+    }
+    else if (action === 'saveCalisthenicsAssessmentInline') {
+        e.preventDefault();
+        const pInput = document.getElementById("cal-pushup-inline").value;
+        const sInput = document.getElementById("cal-situp-inline").value;
+        const puInput = document.getElementById("cal-pullup-inline").value;
+        const dInput = document.getElementById("cal-days-inline").value;
+
+        if (pInput === "" || sInput === "" || puInput === "") {
+            alert("Lütfen tüm alanları doldurun.");
+            return;
+        }
+
+        const btn = actionBtn;
+        const originalText = btn.innerHTML;
+        btn.innerHTML = "Kaydediliyor...";
+        btn.disabled = true;
+
+        const newProfile = {
+            maxPushups: parseInt(pInput),
+            maxSitups: parseInt(sInput),
+            maxPullups: parseInt(puInput),
+            daysPerWeek: parseInt(dInput),
+            currentMultiplier: 1.0,
+            updatedAt: serverTimestamp()
+        };
+
+        try {
+            await setDoc(doc(db, "users", currentUid, "calisthenics_profile", "main"), newProfile);
+        } catch(err) {
+            console.error(err);
+            alert("Hata oluştu.");
+            btn.innerHTML = originalText;
+            btn.disabled = false;
+        }
     }
     else if (action === 'saveCalisthenicsAssessment') {
         e.preventDefault();
