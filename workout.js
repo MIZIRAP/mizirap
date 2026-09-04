@@ -937,7 +937,9 @@ function renderSplitEditView() {
                             <div class="accordion-header w-[282px] h-[56px] bg-[#E8EAF0] rounded-[12px] p-3 flex items-center justify-between transition-all z-20 relative" style="box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.08), -4px -4px 8px rgba(255, 255, 255, 0.6);">
                                 <div class="flex items-center gap-2">
                                     <span class="material-symbols-rounded text-[#C7C4D7] text-[16px] cursor-grab drag-handle shrink-0 select-none" style="touch-action: none; user-select: none;">drag_indicator</span>
-                                    <div class="w-[40px] h-[40px] bg-[#E8EAF0] rounded-full flex items-center justify-center text-[#712AE2] font-bold text-[16px] shrink-0" style="box-shadow: inset 2px 2px 4px rgba(0, 0, 0, 0.08), inset -2px -2px 4px rgba(255, 255, 255, 0.6);">${initial}</div>
+                                    <div class="w-12 h-12 rounded-full bg-[#F0F2F8] flex items-center justify-center shrink-0" style="box-shadow: inset 4px 4px 8px #D1D9E6, inset -4px -4px 8px rgba(255, 255, 255, 0.7);">
+                                        <span class="material-symbols-rounded text-[#1E293B] text-xl">fitness_center</span>
+                                    </div>
                                     <div class="flex flex-col">
                                         <h4 class="font-semibold text-[#181C20] text-[14px] leading-[21px] tracking-[0.7px] select-none">${ex.name}</h4>
                                         <p class="font-normal text-[#585A68] text-[12px] leading-[17px] mt-[-1px]" id="sets-lbl-${split.id}-${dayIdx}-${exIdx}">${sets} set</p>
@@ -1010,8 +1012,8 @@ function renderSplitEditView() {
             <div class="${splitHeaderWrapperClass}" style="${isSplitOpen ? 'box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.08), -6px -6px 12px rgba(255, 255, 255, 0.6);' : splitHeaderStyles}" onclick="toggleMizAccordion(this, '${split.id}', 'split', event)">
                 <div class="w-full h-full bg-[#E8EAF0] rounded-[22px] px-5 flex items-center justify-between">
                     <div class="flex items-center gap-4">
-                        <div class="w-[48px] h-[48px] bg-[#E8EAF0] rounded-full flex items-center justify-center text-[#4648D4] font-bold text-[14px] leading-[21px] tracking-[0.7px] shrink-0" style="box-shadow: inset 4px 4px 8px rgba(0, 0, 0, 0.08), inset -4px -4px 8px rgba(255, 255, 255, 0.6);">
-                            ${splitInitial}
+                        <div class="w-12 h-12 rounded-full bg-[#F0F2F8] flex items-center justify-center shrink-0" style="box-shadow: inset 4px 4px 8px #D1D9E6, inset -4px -4px 8px rgba(255, 255, 255, 0.7);">
+                            <span class="material-symbols-rounded text-[#1E293B] text-xl">fitness_center</span>
                         </div>
                         <h2 class="font-bold text-[#181C20] text-[20px] leading-[26px] select-none" style="font-family: 'Plus Jakarta Sans', sans-serif;">${split.name}</h2>
                     </div>
