@@ -182,6 +182,8 @@ document.addEventListener("click", (e) => {
     if (!targetId) return;
 
     e.preventDefault();
-    history.pushState({view: targetId}, "", "?view=" + targetId);
+    // Use replaceState for bottom navigation to prevent deep history stacks of tabs
+    // and avoid the back button taking the user to sub-pages like exercise-library.
+    history.replaceState({view: targetId}, "", "?view=" + targetId);
     window.showView(targetId);
 });

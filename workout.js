@@ -934,10 +934,10 @@ function renderSplitEditView() {
 
                         exHtml += `
                         <div class="exercise-card w-[282px] flex flex-col items-center ${isExOpen ? 'expanded' : ''} ex-drag-item" data-ex-idx="${exIdx}" data-split-id="${split.id}" data-day-idx="${dayIdx}">
-                            <div class="accordion-header w-[282px] h-[56px] bg-[#E8EAF0] rounded-[12px] p-3 flex items-center justify-between transition-all z-20 relative" style="box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.08), -4px -4px 8px rgba(255, 255, 255, 0.6);">
+                            <div class="accordion-header w-[282px] h-[56px] bg-[#F0F2F8] rounded-[12px] p-3 flex items-center justify-between transition-all z-20 relative active:scale-[0.99]" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);">
                                 <div class="flex items-center gap-2">
                                     <span class="material-symbols-rounded text-[#C7C4D7] text-[16px] cursor-grab drag-handle shrink-0 select-none" style="touch-action: none; user-select: none;">drag_indicator</span>
-                                    <div class="w-12 h-12 rounded-full bg-[#F0F2F8] flex items-center justify-center shrink-0" style="box-shadow: inset 4px 4px 8px #D1D9E6, inset -4px -4px 8px rgba(255, 255, 255, 0.7);">
+                                    <div class="w-12 h-12 rounded-full bg-[#F0F2F8] flex items-center justify-center shrink-0" style="box-shadow: inset 2px 2px 5px #D1D9E6, inset -2px -2px 5px rgba(255, 255, 255, 0.7);">
                                         <span class="material-symbols-rounded text-[#1E293B] text-xl">fitness_center</span>
                                     </div>
                                     <div class="flex flex-col">
