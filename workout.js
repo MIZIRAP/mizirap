@@ -1437,9 +1437,10 @@ function renderExercisePickerList(category, searchTerm = '') {
 
     filtered.forEach(exName => {
         const btn = document.createElement('button');
-        btn.className = "w-full text-left p-3 rounded-[32px] hover:bg-background shadow-neo-high transition-colors flex items-center justify-between border-none hover:border-none shadow-neo-inset p-2 rounded";
+        btn.className = "w-full text-left p-4 rounded-2xl bg-[#F0F2F8] active:scale-[0.99] transition-transform flex items-center justify-between border-none mb-3";
+        btn.style.boxShadow = "4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7)";
         btn.innerHTML = `
-            <span class="font-body-md text-on-surface">${exName}</span>
+            <span class="font-semibold text-body-md text-on-surface tracking-tight">${exName}</span>
             <span class="material-symbols-rounded text-neon-blue">add_circle</span>
         `;
         btn.onclick = () => handlePickerSelect(exName);
