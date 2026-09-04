@@ -127,14 +127,18 @@ function renderCalisthenics() {
     
     if (!profile) {
         container.innerHTML = `
-        <div class="flex flex-col gap-4 mt-8 mb-4">
-            <h2 class="text-xl font-bold text-[#1E293B]">Kalistenik Programı</h2>
-            <p class="text-sm font-medium text-[#64748B]">Kendi seviyene uygun dinamik vücut ağırlığı programını oluştur.</p>
-            <button onclick="document.getElementById('calisthenicsAssessmentModal').classList.remove('hidden')" class="w-full h-14 bg-gradient-to-r from-neon-purple to-neon-blue rounded-2xl text-white font-bold text-base flex items-center justify-center gap-2 active:scale-[0.98] transition-transform shadow-neo-lowest shadow-sm mt-2">
-                <span class="material-symbols-rounded">fitness_center</span>
-                Programını Oluştur
-            </button>
-        </div>`;
+        <a href="#" class="bg-[#F0F2F8] p-4 rounded-2xl flex items-center justify-between active:scale-[0.99] transition-transform mb-4" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);" onclick="document.getElementById('calisthenicsAssessmentModal').classList.remove('hidden'); return false;">
+            <div class="flex items-center gap-4">
+                <div class="w-10 h-10 rounded-full bg-[#F0F2F8] flex items-center justify-center" style="box-shadow: inset 2px 2px 5px #D1D9E6, inset -2px -2px 5px rgba(255, 255, 255, 0.7);">
+                    <span class="material-symbols-rounded text-[#1E293B]">fitness_center</span>
+                </div>
+                <div>
+                    <h4 class="font-bold text-sm text-[#1E293B]">Kalistenik Programı</h4>
+                    <p class="text-xs font-medium text-[#64748B] mt-0.5">Programını oluşturmak için tıkla</p>
+                </div>
+            </div>
+            <span class="material-symbols-rounded text-[#1E293B]">chevron_right</span>
+        </a>`;
         return;
     }
 
