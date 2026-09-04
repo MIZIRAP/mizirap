@@ -127,7 +127,7 @@ function renderCalisthenics() {
     
     if (!profile) {
         container.innerHTML = `
-        <a href="#" class="bg-[#F0F2F8] p-4 rounded-2xl flex items-center justify-between active:scale-[0.99] transition-transform mb-4" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);" onclick="document.getElementById('calisthenicsAssessmentModal').classList.remove('hidden'); return false;">
+        <a href="#" data-action="openCalisthenicsModal" class="bg-[#F0F2F8] p-4 rounded-2xl flex items-center justify-between active:scale-[0.99] transition-transform mb-4" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);">
             <div class="flex items-center gap-4">
                 <div class="w-10 h-10 rounded-full bg-[#F0F2F8] flex items-center justify-center" style="box-shadow: inset 2px 2px 5px #D1D9E6, inset -2px -2px 5px rgba(255, 255, 255, 0.7);">
                     <span class="material-symbols-rounded text-[#1E293B]">fitness_center</span>
@@ -264,7 +264,7 @@ document.addEventListener('click', async (e) => {
     if (!actionBtn) return;
     const action = actionBtn.getAttribute('data-action');
 
-    if (action === 'calisthenicsAssessmentOpen') {
+    if (action === 'openCalisthenicsModal') {
         e.preventDefault();
         const m = document.getElementById("calisthenicsAssessmentModal");
         if(m) m.classList.remove("hidden");
