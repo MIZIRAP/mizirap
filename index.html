@@ -938,8 +938,6 @@
         </div>
     </section>
 
-    <!-- ================= KALİSTENİK BÖLÜMÜ ================= -->
-    <section id="calisthenics-container" class="w-full"></section>
 
     <section>
         <div class="flex flex-col gap-4 mt-6">
@@ -2634,7 +2632,7 @@
         </div>
 
         <!-- Bottom Sheet Demonstration Overlay -->
-        <div id="exercise-bottom-sheet" class="fixed inset-0 bg-black/30 z-[100] flex items-end opacity-0 pointer-events-none transition-opacity duration-300" onclick="closeExerciseSheetOnOutsideClick(event)">
+        <div id="exercise-bottom-sheet" class="fixed inset-0 bg-black/30 z-50 flex items-end opacity-0 pointer-events-none transition-opacity duration-300" onclick="closeExerciseSheetOnOutsideClick(event)">
             <div class="bg-background shadow-neo rounded-t-[24px] w-full max-w-md mx-auto shadow-2xl transform transition-transform translate-y-full duration-300 relative max-h-[90vh] flex flex-col" id="exercise-bottom-sheet-content">
                 <!-- Drag Handle -->
                 <div class="w-full flex justify-center pt-4 pb-2 cursor-pointer" onclick="closeExerciseSheet()">
@@ -2862,7 +2860,7 @@
         </main>
 
         <!-- Add Book Modal -->
-        <div class="hidden fixed inset-0 z-[100] flex flex-col justify-end items-center md:p-4" id="book-add-modal">
+        <div class="hidden fixed inset-0 z-50 flex flex-col justify-end items-center md:p-4" id="book-add-modal">
             <div class="absolute inset-0 bg-black/10 backdrop-blur-sm opacity-0 transition-opacity duration-300" id="book-add-backdrop"></div>
             <div class="bg-[#F0F2F8] w-full max-w-sm mx-auto rounded-t-[32px] md:rounded-[32px] shadow-[0_-8px_30px_rgba(0,0,0,0.05)] md:shadow-[0_10px_40px_rgba(0,0,0,0.08)] p-6 flex flex-col items-center transform transition-transform duration-300 translate-y-full z-10 pb-8 md:pb-6" id="book-add-modal-content">
                 <!-- Drag Handle (Mobile) -->
@@ -2910,7 +2908,7 @@
         </div>
 
         <!-- Edit Book Modal -->
-        <div class="hidden fixed inset-0 z-[100] flex flex-col justify-end items-center md:p-4" id="book-edit-modal">
+        <div class="hidden fixed inset-0 z-50 flex flex-col justify-end items-center md:p-4" id="book-edit-modal">
             <div class="absolute inset-0 bg-black/10 backdrop-blur-sm opacity-0 transition-opacity duration-300" id="book-edit-backdrop"></div>
             <div class="bg-[#F0F2F8] w-full max-w-sm mx-auto rounded-t-[32px] md:rounded-[32px] shadow-[0_-8px_30px_rgba(0,0,0,0.05)] md:shadow-[0_10px_40px_rgba(0,0,0,0.08)] p-6 flex flex-col items-center transform transition-transform duration-300 translate-y-full z-10 pb-8 md:pb-6" id="book-edit-modal-content">
                 <!-- Drag Handle (Mobile) -->
@@ -3063,7 +3061,7 @@
 
 
     <!-- Add Exercise Bottom Sheet -->
-    <div id="add-exercise-bottom-sheet" class="fixed inset-0 bg-black/30 z-[100] flex items-end opacity-0 pointer-events-none transition-opacity duration-300" onclick="closeAddExerciseSheetOnOutsideClick(event)">
+    <div id="add-exercise-bottom-sheet" class="fixed inset-0 bg-black/30 z-50 flex items-end opacity-0 pointer-events-none transition-opacity duration-300" onclick="closeAddExerciseSheetOnOutsideClick(event)">
         <div class="bg-background shadow-neo rounded-t-[24px] w-full max-w-md mx-auto shadow-2xl transform transition-transform translate-y-full duration-300 relative max-h-[90vh] flex flex-col" id="add-exercise-bottom-sheet-content">
             <!-- Drag Handle -->
             <div class="w-full flex justify-center pt-4 pb-2 cursor-pointer" onclick="closeAddExerciseSheet()">
@@ -3355,7 +3353,7 @@
 </section>
 
     <!-- ================= SU HEDEFİ MODALI ================= -->
-    <div class="hidden fixed inset-0 z-[100] flex items-end justify-center" id="water-goal-modal">
+    <div class="hidden fixed inset-0 z-50 flex items-end justify-center" id="water-goal-modal">
         <!-- Backdrop -->
         <div class="absolute inset-0 bg-black/10 backdrop-blur-sm z-10 opacity-0 transition-opacity duration-300" id="water-goal-backdrop"></div>
 
@@ -3385,7 +3383,7 @@
     </div>
 
     <!-- ================= ÖZEL MİKTAR MODALI ================= -->
-    <div class="hidden fixed inset-0 z-[100] flex items-end justify-center" id="water-custom-modal">
+    <div class="hidden fixed inset-0 z-50 flex items-end justify-center" id="water-custom-modal">
         <!-- Backdrop -->
         <div class="absolute inset-0 bg-black/10 backdrop-blur-sm z-10 opacity-0 transition-opacity duration-300" id="water-custom-backdrop"></div>
 
@@ -3415,7 +3413,7 @@
     </div>
 
     <!-- ================= KALORİ HEDEFİ MODALI ================= -->
-    <div class="hidden fixed inset-0 z-[100] flex items-end justify-center" id="calories-goal-modal">
+    <div class="hidden fixed inset-0 z-50 flex items-end justify-center" id="calories-goal-modal">
     <!-- Backdrop -->
     <div class="absolute inset-0 bg-black/10 backdrop-blur-sm z-10 transition-opacity duration-300 opacity-0" id="calories-goal-backdrop"></div>
 
@@ -3862,7 +3860,7 @@
 </section>
 
     <!-- Add Food Modal (Hidden by default) -->
-    <div class="hidden fixed inset-0 z-[100] flex items-end justify-center" id="addFoodModal">
+    <div class="hidden fixed inset-0 z-50 flex items-end justify-center" id="addFoodModal">
         <!-- Backdrop -->
         <div class="absolute inset-0 bg-black/10 backdrop-blur-sm z-10 transition-opacity duration-300 opacity-0" id="add-food-backdrop"></div>
         <!-- Modal Content -->
@@ -3912,7 +3910,7 @@
     </div>
 
     <!-- Quick Add Modal (Hidden by default) -->
-    <div class="hidden fixed inset-0 z-[100] flex items-end justify-center" id="quickAddModal">
+    <div class="hidden fixed inset-0 z-50 flex items-end justify-center" id="quickAddModal">
         <!-- Backdrop -->
         <div class="absolute inset-0 bg-black/10 backdrop-blur-sm z-10 transition-opacity duration-300 opacity-0" id="quick-add-backdrop"></div>
         <!-- Modal Content -->
@@ -3979,7 +3977,7 @@
 
 
 <!-- Modal for Add Portion (Hidden by default) -->
-<div class="hidden fixed inset-0 z-[100] flex items-end justify-center" id="addPortionModal">
+<div class="hidden fixed inset-0 z-50 flex items-end justify-center" id="addPortionModal">
     <!-- Backdrop -->
     <div class="absolute inset-0 bg-black/10 backdrop-blur-sm z-10 transition-opacity duration-300 opacity-0" id="add-portion-backdrop"></div>
     <!-- Modal Content -->
@@ -4010,7 +4008,7 @@
     </div>
 </div>
 <!-- Modal for Adding New Food to Library (Hidden by default) -->
-<div class="hidden fixed inset-0 z-[100] flex items-end justify-center" id="newFoodModal">
+<div class="hidden fixed inset-0 z-50 flex items-end justify-center" id="newFoodModal">
     <!-- Backdrop -->
     <div class="absolute inset-0 bg-black/10 backdrop-blur-sm z-10 transition-opacity duration-300 opacity-0" id="new-food-backdrop"></div>
 
@@ -4078,7 +4076,7 @@
 </div>
 
 <!-- New Split Modal (Hidden by default) -->
-<div class="fixed inset-0 z-[100] flex items-end sm:items-center justify-center bg-black/40 backdrop-blur-sm hidden opacity-0 transition-opacity duration-300" id="newSplitModal">
+<div class="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/40 backdrop-blur-sm hidden opacity-0 transition-opacity duration-300" id="newSplitModal">
     <div class="relative z-10 w-full max-w-md bg-background shadow-neo sm:rounded-[32px] rounded-t-2xl shadow-md flex flex-col max-h-[90dvh] transform translate-y-full transition-transform duration-300 ease-out" id="newSplitModalContent">
         <!-- Drag Handle Indicator -->
         <div class="w-full flex justify-center pt-3 pb-1 cursor-grab active:cursor-grabbing sm:hidden">
@@ -4176,12 +4174,12 @@
     </section>
 
 
-    <script type="module" src="app.js?v=20260904"></script>
+    <script type="module" src="app.js?v=202609042"></script>
 
 <!-- ================= FINANCE MODALS ================= -->
 <!-- Add Transaction Modal -->
 <!-- Add Transaction Modal -->
-<div id="finance-add-tx-modal" class="fixed inset-0 z-[100] hidden flex-col justify-end items-center md:p-4">
+<div id="finance-add-tx-modal" class="fixed inset-0 z-50 hidden flex-col justify-end items-center md:p-4">
     <div class="absolute inset-0 bg-black/10 backdrop-blur-sm opacity-0 transition-opacity duration-300 cursor-pointer" data-action="closeAddTransactionModal" id="finance-add-tx-backdrop"></div>
     <div class="bg-[#F0F2F8] w-full max-w-sm mx-auto rounded-t-[32px] md:rounded-[32px] shadow-[0_-8px_30px_rgba(0,0,0,0.05)] md:shadow-[0_10px_40px_rgba(0,0,0,0.08)] p-6 flex flex-col items-center transform transition-transform duration-300 translate-y-full z-10 pb-8 md:pb-6" id="finance-add-tx-content">
         <!-- Drag Handle (Mobile) -->
@@ -4275,7 +4273,7 @@
 
 
 <!-- Finance Settings Modal -->
-<div id="finance-settings-modal" class="fixed inset-0 z-[100] hidden flex-col justify-end items-center md:p-4">
+<div id="finance-settings-modal" class="fixed inset-0 z-50 hidden flex-col justify-end items-center md:p-4">
     <div class="absolute inset-0 bg-black/10 backdrop-blur-sm opacity-0 transition-opacity duration-300 cursor-pointer" data-action="closeFinanceSettingsModal" id="finance-settings-backdrop"></div>
     <div class="bg-[#F0F2F8] w-full max-w-sm mx-auto rounded-t-[32px] md:rounded-[32px] shadow-[0_-8px_30px_rgba(0,0,0,0.05)] md:shadow-[0_10px_40px_rgba(0,0,0,0.08)] p-6 flex flex-col items-center transform transition-transform duration-300 translate-y-full z-10 pb-8 md:pb-6" id="finance-settings-content" style="max-height: 90vh;">
         <!-- Drag Handle (Mobile) -->
@@ -4557,7 +4555,7 @@
 
     <script type="module" src="./movies.js"></script>
     <!-- Forgot Password Modal -->
-    <div class="hidden fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm" id="forgot-password-modal">
+    <div class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm" id="forgot-password-modal">
         <div class="bg-background shadow-neo w-full max-w-sm rounded-[32px] shadow-lg flex flex-col p-6 scale-95 opacity-0 transition-all duration-200" id="forgot-password-modal-content">
             <h3 class="font-headline-sm text-headline-sm text-on-surface mb-2">Şifre Sıfırlama</h3>
             <p class="font-body-md text-body-md text-on-surface-variant mb-4">Kayıtlı e-posta adresinizi girin, size bir sıfırlama bağlantısı gönderelim.</p>
@@ -5387,66 +5385,6 @@
                     </div>
                 </button>
             </div>
-<!-- Calisthenics Assessment Modal -->
-<div id="calisthenicsAssessmentModal" class="hidden fixed inset-0 z-[100] flex flex-col justify-end sm:items-center bg-black/40 backdrop-blur-sm transition-opacity duration-300">
-    <div class="bg-surface-bright w-full sm:max-w-[420px] rounded-t-[32px] sm:rounded-[32px] sm:mb-8 shadow-2xl relative overflow-hidden flex flex-col max-h-[90dvh] transition-transform duration-300 transform translate-y-0">
-        <div class="flex items-center justify-between p-6 pb-4 border-b border-surface-variant/50 shrink-0">
-            <h2 class="text-xl font-bold text-on-surface">Kalistenik Seviye Belirleme</h2>
-            <button data-action="calisthenicsAssessmentClose" class="w-8 h-8 flex items-center justify-center rounded-full bg-surface-container active:scale-95 transition-transform text-on-surface-variant hover:text-on-surface">
-                <span class="material-symbols-rounded">close</span>
-            </button>
-        </div>
-        <div class="p-6 overflow-y-auto flex-1 flex flex-col gap-6">
-            <p class="text-sm font-medium text-on-surface-variant">Sana en uygun programı üretebilmemiz için aşağıdaki bilgileri dürüstçe doldur.</p>
-            
-            <div class="flex flex-col gap-2">
-                <label class="text-sm font-bold text-on-surface">Tek seferde max şınav:</label>
-                <input id="cal-pushup" type="number" class="w-full h-12 bg-[#E2E8F0] border-none rounded-2xl px-4 font-medium text-[#1E293B] placeholder-[#64748B] focus:ring-0" style="box-shadow: inset 4px 4px 8px #D1D9E6, inset -4px -4px 8px #FFFFFF;" placeholder="Örn: 5">
-            </div>
-            <div class="flex flex-col gap-2">
-                <label class="text-sm font-bold text-on-surface">Tek seferde max mekik:</label>
-                <input id="cal-situp" type="number" class="w-full h-12 bg-[#E2E8F0] border-none rounded-2xl px-4 font-medium text-[#1E293B] placeholder-[#64748B] focus:ring-0" style="box-shadow: inset 4px 4px 8px #D1D9E6, inset -4px -4px 8px #FFFFFF;" placeholder="Örn: 10">
-            </div>
-            <div class="flex flex-col gap-2">
-                <label class="text-sm font-bold text-on-surface">Tek seferde max barfiks:</label>
-                <input id="cal-pullup" type="number" class="w-full h-12 bg-[#E2E8F0] border-none rounded-2xl px-4 font-medium text-[#1E293B] placeholder-[#64748B] focus:ring-0" style="box-shadow: inset 4px 4px 8px #D1D9E6, inset -4px -4px 8px #FFFFFF;" placeholder="Örn: 0">
-            </div>
-            <div class="flex flex-col gap-2">
-                <label class="text-sm font-bold text-on-surface">Haftada kaç gün (3 veya 4):</label>
-                <input id="cal-days" type="number" min="3" max="4" class="w-full h-12 bg-[#E2E8F0] border-none rounded-2xl px-4 font-medium text-[#1E293B] placeholder-[#64748B] focus:ring-0" style="box-shadow: inset 4px 4px 8px #D1D9E6, inset -4px -4px 8px #FFFFFF;" placeholder="Örn: 3">
-            </div>
-        </div>
-        <div class="p-6 pt-4 border-t border-surface-variant/50 shrink-0">
-            <button data-action="saveCalisthenicsAssessment" class="w-full h-14 bg-gradient-to-r from-neon-purple to-neon-blue rounded-2xl text-white font-bold text-base flex items-center justify-center gap-2 active:scale-[0.98] transition-transform" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px #FFFFFF;">
-                Kaydet ve Programı Oluştur
-            </button>
-        </div>
-    </div>
-</div>
 
-<!-- Calisthenics Feedback Modal -->
-<div id="calisthenicsFeedbackModal" class="hidden fixed inset-0 z-[100] flex flex-col justify-end sm:items-center bg-black/40 backdrop-blur-sm transition-opacity duration-300">
-    <div class="bg-[#F0F2F8] w-full sm:max-w-[420px] rounded-t-[32px] sm:rounded-[32px] sm:mb-8 shadow-2xl relative overflow-hidden flex flex-col max-h-[90dvh] transition-transform duration-300 transform translate-y-0">
-        <div class="p-8 flex flex-col items-center gap-6">
-            <div class="w-16 h-16 bg-gradient-to-r from-neon-purple to-neon-blue rounded-full flex items-center justify-center" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);">
-                <span class="material-symbols-rounded text-white text-3xl">celebration</span>
-            </div>
-            <h2 class="text-2xl font-bold text-[#1E293B] text-center">Haftayı Tamamladın!</h2>
-            <p class="text-center text-[#64748B] text-sm font-medium">Bu haftaki program genel olarak nasıldı? Gelecek haftanın zorluğunu buna göre ayarlayacağız.</p>
-            
-            <div class="flex flex-col gap-3 w-full mt-4">
-                <button data-action="submitCalisthenicsFeedback" data-type="easy" class="w-full h-14 bg-[#F0F2F8] rounded-2xl text-[#1E293B] font-bold text-base active:scale-[0.98] transition-transform" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px #FFFFFF;">
-                    Çok Kolaydı
-                </button>
-                <button data-action="submitCalisthenicsFeedback" data-type="normal" class="w-full h-14 bg-gradient-to-r from-neon-purple to-neon-blue rounded-2xl text-white font-bold text-base active:scale-[0.98] transition-transform" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);">
-                    Tam Kararında
-                </button>
-                <button data-action="submitCalisthenicsFeedback" data-type="hard" class="w-full h-14 bg-[#F0F2F8] rounded-2xl text-[#1E293B] font-bold text-base active:scale-[0.98] transition-transform" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px #FFFFFF;">
-                    Tükendim
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
 </body>
 </html>
