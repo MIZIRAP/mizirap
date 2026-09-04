@@ -1434,7 +1434,7 @@ function renderExercisePickerList(category, searchTerm = '') {
     filtered.forEach(exName => {
         const btn = document.createElement('button');
         btn.className = "w-full text-left p-4 rounded-2xl bg-[#F0F2F8] active:scale-[0.99] transition-transform flex items-center justify-between border-none mb-3";
-        btn.style.boxShadow = "4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7)";
+        btn.style.cssText = "background-color: #F0F2F8; box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7)";
         btn.innerHTML = `
             <span class="font-semibold text-body-md text-on-surface tracking-tight">${exName}</span>
             <span class="material-symbols-rounded text-neon-blue">add_circle</span>
@@ -1514,7 +1514,7 @@ function openSplitModal() {
         const isAct = split.id === activeSplitId;
         const div = document.createElement('div');
         div.className = `flex flex-col bg-[#F0F2F8] p-4 rounded-2xl active:scale-[0.99] transition-transform mb-4 ${isAct ? 'ring-2 ring-[#4A90E2]' : ''}`;
-        div.style.boxShadow = `4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7)`;
+        div.style.cssText = `background-color: #F0F2F8; box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7)`;
 
         div.innerHTML = `
             <div class="flex items-center justify-between mb-2" data-action="selectSplit" data-split-id="${split.id}">
