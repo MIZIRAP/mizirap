@@ -127,9 +127,9 @@ function renderCalisthenics() {
     
     if (!profile) {
         container.innerHTML = `
-        <a href="#" data-action="openCalisthenicsModal" class="bg-[#F0F2F8] p-4 rounded-2xl flex items-center justify-between active:scale-[0.99] transition-transform mb-4" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);">
+        <button type="button" class="w-full text-left bg-[#F0F2F8] p-4 rounded-2xl flex items-center justify-between active:scale-[0.99] transition-transform mb-4" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);" onclick="const m = document.getElementById('calisthenicsAssessmentModal'); if(m) { m.classList.remove('hidden'); m.style.display='flex'; m.style.zIndex='99999'; } else { alert('Eski sayfa (HTML) önbellekte kalmış, lütfen sayfayı CTRL+F5 ile yenileyin!'); } return false;">
             <div class="flex items-center gap-4">
-                <div class="w-10 h-10 rounded-full bg-[#F0F2F8] flex items-center justify-center" style="box-shadow: inset 2px 2px 5px #D1D9E6, inset -2px -2px 5px rgba(255, 255, 255, 0.7);">
+                <div class="w-10 h-10 rounded-full bg-[#F0F2F8] flex items-center justify-center shrink-0" style="box-shadow: inset 2px 2px 5px #D1D9E6, inset -2px -2px 5px rgba(255, 255, 255, 0.7);">
                     <span class="material-symbols-rounded text-[#1E293B]">fitness_center</span>
                 </div>
                 <div>
@@ -137,8 +137,8 @@ function renderCalisthenics() {
                     <p class="text-xs font-medium text-[#64748B] mt-0.5">Programını oluşturmak için tıkla</p>
                 </div>
             </div>
-            <span class="material-symbols-rounded text-[#1E293B]">chevron_right</span>
-        </a>`;
+            <span class="material-symbols-rounded text-[#1E293B] shrink-0">chevron_right</span>
+        </button>`;
         return;
     }
 
@@ -264,18 +264,7 @@ document.addEventListener('click', async (e) => {
     if (!actionBtn) return;
     const action = actionBtn.getAttribute('data-action');
 
-    if (action === 'openCalisthenicsModal') {
-        e.preventDefault();
-        const m = document.getElementById("calisthenicsAssessmentModal");
-        if (m) {
-            m.classList.remove("hidden");
-            m.style.display = "flex";
-            m.style.zIndex = "99999";
-        } else {
-            alert("Sistem güncellemesi yapıldı ancak tarayıcınız eski sayfayı (HTML) gösteriyor. Lütfen sayfayı CTRL+F5 ile tamamen yenileyin veya önbelleği temizleyin.");
-        }
-    }
-    else if (action === 'calisthenicsAssessmentClose') {
+    if (action === 'calisthenicsAssessmentClose') {
         e.preventDefault();
         const m = document.getElementById("calisthenicsAssessmentModal");
         if(m) m.classList.add("hidden");
