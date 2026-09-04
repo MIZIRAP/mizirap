@@ -749,8 +749,7 @@
     "sourceNote": "Doğrudan 100 ml değerleri girildi.",
     "status": "verified"
   }
-]
-[
+,
   {
     "id": "coca-cola-orijinal-tat-kutu-330-ml",
     "brand": "Coca-Cola",
@@ -826,8 +825,7 @@
     "sourceNote": "Doğrudan 100 g değerleri girildi.",
     "status": "verified"
   }
-]
-[
+,
   {
     "id": "torku-banada-kakaolu-findik-kremasi-400-g",
     "brand": "Torku",
@@ -903,8 +901,7 @@
     "sourceNote": "Farklılık Var: Standart tam buğday tava ekmeğinde kalori 229 kcal'dir. 251 kcal değeri Uno'nun farklı bir gurme serisine ait olabilir.",
     "status": "verified"
   }
-]
-[
+,
   {
     "id": "kizilay-dogal-maden-suyu-6x200-ml",
     "brand": "Kızılay",
@@ -980,9 +977,7 @@
     "sourceNote": "Hatalı: Saf tahinin 100 gramındaki yağ oranı çok daha yoğundur. Seyidoğlu ambalajında kalori 682 kcal, yağ ise 60.1 gramdır.",
     "status": "verified"
   }
-]
-
-[
+,
   {
     "id": "eti-cin-portakalli-biskuvi-114-g",
     "brand": "Eti",
@@ -1058,9 +1053,7 @@
     "sourceNote": "Hatalı: Calve orijinal ketçap ambalajında 100 gram için kalori 85 kcal, karbonhidrat ise 20 gramdır.",
     "status": "verified"
   }
-]
-
-[
+,
   {
     "id": "ulker-albeni-40-g",
     "brand": "Ülker",
@@ -1181,8 +1174,7 @@
     "fatPer100": 0.0,
     "status": "verified"
   }
-]
-[
+,
   {
     "id": "balparmak-suzme-cicek-bali-850-g",
     "brand": "Balparmak",
@@ -1303,8 +1295,7 @@
     "fatPer100": 0.1,
     "status": "verified"
   }
-]
-[
+,
   {
     "id": "eti-puf-kakaolu-18-g",
     "brand": "Eti",
@@ -1425,8 +1416,7 @@
     "fatPer100": 70.0,
     "status": "verified"
   }
-]
-[
+,
   {
     "id": "dost-tam-yagli-sut-1-l",
     "brand": "Dost",
@@ -1547,9 +1537,7 @@
     "fatPer100": 0.0,
     "status": "verified"
   }
-]
-
-[
+,
   {
     "id": "efsane-bugday-unu-2-kg",
     "brand": "Efsane",
@@ -1670,8 +1658,7 @@
     "fatPer100": 3.1,
     "status": "verified"
   }
-]
-[
+,
   {
     "id": "binevler-kasar-peyniri-500-g",
     "brand": "Binvezir",
@@ -1888,8 +1875,7 @@
     "fatPer100": 3.0,
     "status": "verified"
   }
-]
-[
+,
   {
     "id": "koska-tahin-pekmez-paketi-380-g",
     "brand": "Koska",
@@ -1914,8 +1900,7 @@
     "fatPer100": 1.2,
     "status": "verified"
   }
-]
-[
+,
   {
     "id": "birlik-kuru-fasulye-1-kg",
     "brand": "Birlik",
@@ -2036,8 +2021,7 @@
     "fatPer100": 0.0,
     "status": "verified"
   }
-]
-[
+,
   {
     "id": "mis-tam-yagli-sut-1-l",
     "brand": "Mis",
@@ -2156,6 +2140,127 @@
     "proteinPer100": 5.0,
     "carbsPer100": 4.0,
     "fatPer100": 17.0,
+    "status": "verified"
+  }
+,
+  {
+    "id": "ocean-whey-protein-cikolata-aromali-750-g",
+    "brand": "ProteinOcean",
+    "productName": "ProteinOcean Whey Protein Çikolata Aromalı 750 G",
+    "category": "Sporcu Ürünleri",
+    "basisUnit": "g",
+    "caloriesPer100": 347,
+    "proteinPer100": 77.0,
+    "carbsPer100": 6.7,
+    "fatPer100": 1.3,
+    "status": "verified"
+  },
+  {
+    "id": "ocean-whey-protein-vanilya-aromali-750-g",
+    "brand": "ProteinOcean",
+    "productName": "ProteinOcean Whey Protein Vanilya Aromalı 750 G",
+    "category": "Sporcu Ürünleri",
+    "basisUnit": "g",
+    "caloriesPer100": 345,
+    "proteinPer100": 76.0,
+    "carbsPer100": 6.4,
+    "fatPer100": 1.2,
+    "status": "verified"
+  },
+  {
+    "id": "ocean-whey-protein-cilek-aromali-750-g",
+    "brand": "ProteinOcean",
+    "productName": "ProteinOcean Whey Protein Çilek Aromalı 750 G",
+    "category": "Sporcu Ürünleri",
+    "basisUnit": "g",
+    "caloriesPer100": 346,
+    "proteinPer100": 76.0,
+    "carbsPer100": 6.8,
+    "fatPer100": 1.2,
+    "status": "verified"
+  },
+  {
+    "id": "ocean-pea-protein-sade-500-g",
+    "brand": "ProteinOcean",
+    "productName": "ProteinOcean Pea Protein Bezelye Proteini Sade 500 G",
+    "category": "Sporcu Ürünleri",
+    "basisUnit": "g",
+    "caloriesPer100": 374,
+    "proteinPer100": 81.3,
+    "carbsPer100": 1.3,
+    "fatPer100": 7.5,
+    "status": "verified"
+  },
+  {
+    "id": "ocean-pea-protein-cikolata-aromali-500-g",
+    "brand": "ProteinOcean",
+    "productName": "ProteinOcean Pea Protein Bezelye Proteini Çikolata Aromalı 500 G",
+    "category": "Sporcu Ürünleri",
+    "basisUnit": "g",
+    "caloriesPer100": 378,
+    "proteinPer100": 75.0,
+    "carbsPer100": 6.5,
+    "fatPer100": 7.2,
+    "status": "verified"
+  },
+  {
+    "id": "ocean-mass-gainer-cikolata-3000-g",
+    "brand": "ProteinOcean",
+    "productName": "ProteinOcean Mass Gainer Çikolata Aromalı 3000 G",
+    "category": "Sporcu Ürünleri",
+    "basisUnit": "g",
+    "caloriesPer100": 381,
+    "proteinPer100": 17.3,
+    "carbsPer100": 75.5,
+    "fatPer100": 1.1,
+    "status": "verified"
+  },
+  {
+    "id": "ocean-mass-gainer-muz-kavun-3000-g",
+    "brand": "ProteinOcean",
+    "productName": "ProteinOcean Mass Gainer Muz Aromalı 3000 G",
+    "category": "Sporcu Ürünleri",
+    "basisUnit": "g",
+    "caloriesPer100": 381,
+    "proteinPer100": 17.3,
+    "carbsPer100": 75.5,
+    "fatPer100": 1.1,
+    "status": "verified"
+  },
+  {
+    "id": "ocean-100-fistik-ezmesi-crispy-350-g",
+    "brand": "ProteinOcean",
+    "productName": "ProteinOcean %100 Yer Fıstığı Ezmesi Parçacıklı 350 G",
+    "category": "Protein Kaynakları",
+    "basisUnit": "g",
+    "caloriesPer100": 554,
+    "proteinPer100": 27.8,
+    "carbsPer100": 28.7,
+    "fatPer100": 39.6,
+    "status": "verified"
+  },
+  {
+    "id": "ocean-findikli-cikolatali-fistik-ezmesi-350-g",
+    "brand": "ProteinOcean",
+    "productName": "ProteinOcean Fındıklı ve Çikolatalı Protein Kreması 350 G",
+    "category": "Atıştırmalık",
+    "basisUnit": "g",
+    "caloriesPer100": 480,
+    "proteinPer100": 15.0,
+    "carbsPer100": 49.0,
+    "fatPer100": 29.5,
+    "status": "verified"
+  },
+  {
+    "id": "ocean-karamel-aromali-fistik-ezmesi-350-g",
+    "brand": "ProteinOcean",
+    "productName": "ProteinOcean Karamel Aromalı Fıstık Ezmesi 350 G",
+    "category": "Atıştırmalık",
+    "basisUnit": "g",
+    "caloriesPer100": 554,
+    "proteinPer100": 27.8,
+    "carbsPer100": 28.7,
+    "fatPer100": 39.6,
     "status": "verified"
   }
 ]
