@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="tr">
 <head>
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
@@ -517,9 +517,9 @@
                 <p class="text-[#64748B] text-sm font-medium" style="font-family: 'Plus Jakarta Sans', sans-serif;">Araç bulunamadı</p>
             </div>
 
-            <div class="grid grid-cols-2 gap-4 w-full">
+            <div id="tools-grid" class="grid grid-cols-2 gap-4 w-full opacity-0">
             <!-- Araç Kartı 1: Vücut Kitle İndeksi -->
-            <div class="tool-card-item rounded-[24px] p-[1px] bg-gradient-to-br from-[#3B82F6] to-[#22C55E] cursor-pointer" style="background-color: #F0F2F8; box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.08), -6px -6px 12px rgba(255, 255, 255, 0.8);" onclick="window.openTool('vki')">
+            <div class="tool-card-item rounded-[24px] p-[1px] bg-gradient-to-br from-[#3B82F6] to-[#22C55E] cursor-pointer" style="background-color: #F0F2F8; box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.08), -6px -6px 12px rgba(255, 255, 255, 0.8);" data-tool-id="vki" onclick="if(!window.isEditMode) window.openTool('vki')">
                 <div class="bg-[#F0F2F8] rounded-[23px] p-5 flex flex-col justify-between aspect-square h-full relative">
                     <div class="flex justify-between items-start w-full relative z-10">
                         <div class="w-10 h-10 rounded-[16px] bg-[#F0F2F8] flex items-center justify-center" style="background-color: #F0F2F8; box-shadow: inset 4px 4px 8px rgba(0, 0, 0, 0.06), inset -4px -4px 8px rgba(255, 255, 255, 0.8);">
@@ -538,7 +538,7 @@
             </div>
 
             <!-- Araç Kartı 2: Boy Kilo Endeksi -->
-            <div class="tool-card-item rounded-[24px] p-[1px] bg-gradient-to-br from-[#3B82F6] to-[#22C55E] cursor-pointer" style="background-color: #F0F2F8; box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.08), -6px -6px 12px rgba(255, 255, 255, 0.8);" onclick="window.openTool('broca')">
+            <div class="tool-card-item rounded-[24px] p-[1px] bg-gradient-to-br from-[#3B82F6] to-[#22C55E] cursor-pointer" style="background-color: #F0F2F8; box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.08), -6px -6px 12px rgba(255, 255, 255, 0.8);" data-tool-id="broca" onclick="if(!window.isEditMode) window.openTool('broca')">
                 <div class="bg-[#F0F2F8] rounded-[23px] p-5 flex flex-col justify-between aspect-square h-full relative">
                     <div class="flex justify-between items-start w-full relative z-10">
                         <div class="w-10 h-10 rounded-[16px] bg-[#F0F2F8] flex items-center justify-center" style="background-color: #F0F2F8; box-shadow: inset 4px 4px 8px rgba(0, 0, 0, 0.06), inset -4px -4px 8px rgba(255, 255, 255, 0.8);">
@@ -556,7 +556,7 @@
             </div>
 
             <!-- Araç Kartı 3: İdeal Kilo -->
-            <div class="tool-card-item rounded-[24px] p-[1px] bg-gradient-to-br from-[#3B82F6] to-[#22C55E] cursor-pointer" style="background-color: #F0F2F8; box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.08), -6px -6px 12px rgba(255, 255, 255, 0.8);" onclick="window.openTool('ideal')">
+            <div class="tool-card-item rounded-[24px] p-[1px] bg-gradient-to-br from-[#3B82F6] to-[#22C55E] cursor-pointer" style="background-color: #F0F2F8; box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.08), -6px -6px 12px rgba(255, 255, 255, 0.8);" data-tool-id="ideal" onclick="if(!window.isEditMode) window.openTool('ideal')">
                 <div class="bg-[#F0F2F8] rounded-[23px] p-5 flex flex-col justify-between aspect-square h-full relative">
                     <div class="flex justify-between items-start w-full relative z-10">
                         <div class="w-10 h-10 rounded-[16px] bg-[#F0F2F8] flex items-center justify-center" style="background-color: #F0F2F8; box-shadow: inset 4px 4px 8px rgba(0, 0, 0, 0.06), inset -4px -4px 8px rgba(255, 255, 255, 0.8);">
@@ -574,7 +574,7 @@
             </div>
 
             <!-- Araç Kartı 4: Bel-Kalça Oranı -->
-            <div class="tool-card-item rounded-[24px] p-[1px] bg-gradient-to-br from-[#3B82F6] to-[#22C55E] cursor-pointer" style="background-color: #F0F2F8; box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.08), -6px -6px 12px rgba(255, 255, 255, 0.8);" onclick="window.openTool('whr')">
+            <div class="tool-card-item rounded-[24px] p-[1px] bg-gradient-to-br from-[#3B82F6] to-[#22C55E] cursor-pointer" style="background-color: #F0F2F8; box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.08), -6px -6px 12px rgba(255, 255, 255, 0.8);" data-tool-id="whr" onclick="if(!window.isEditMode) window.openTool('whr')">
                 <div class="bg-[#F0F2F8] rounded-[23px] p-5 flex flex-col justify-between aspect-square h-full relative">
                     <div class="flex justify-between items-start w-full relative z-10">
                         <div class="w-10 h-10 rounded-[16px] bg-[#F0F2F8] flex items-center justify-center" style="background-color: #F0F2F8; box-shadow: inset 4px 4px 8px rgba(0, 0, 0, 0.06), inset -4px -4px 8px rgba(255, 255, 255, 0.8);">
@@ -592,7 +592,7 @@
             </div>
 
             <!-- Araç Kartı 5: Su İhtiyacı -->
-            <div class="tool-card-item rounded-[24px] p-[1px] bg-gradient-to-br from-[#3B82F6] to-[#22C55E] cursor-pointer" style="background-color: #F0F2F8; box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.08), -6px -6px 12px rgba(255, 255, 255, 0.8);" onclick="window.openTool('water')">
+            <div class="tool-card-item rounded-[24px] p-[1px] bg-gradient-to-br from-[#3B82F6] to-[#22C55E] cursor-pointer" style="background-color: #F0F2F8; box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.08), -6px -6px 12px rgba(255, 255, 255, 0.8);" data-tool-id="water" onclick="if(!window.isEditMode) window.openTool('water')">
                 <div class="bg-[#F0F2F8] rounded-[23px] p-5 flex flex-col justify-between aspect-square h-full relative">
                     <div class="flex justify-between items-start w-full relative z-10">
                         <div class="w-10 h-10 rounded-[16px] bg-[#F0F2F8] flex items-center justify-center" style="background-color: #F0F2F8; box-shadow: inset 4px 4px 8px rgba(0, 0, 0, 0.06), inset -4px -4px 8px rgba(255, 255, 255, 0.8);">
@@ -610,7 +610,7 @@
             </div>
             
             <!-- Araç Kartı 6: TDEE (Faz 2) -->
-            <div class="tool-card-item rounded-[24px] p-[1px] bg-gradient-to-br from-[#3B82F6] to-[#22C55E] cursor-pointer" style="background-color: #F0F2F8; box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.08), -6px -6px 12px rgba(255, 255, 255, 0.8);" onclick="window.openTool('tdee')">
+            <div class="tool-card-item rounded-[24px] p-[1px] bg-gradient-to-br from-[#3B82F6] to-[#22C55E] cursor-pointer" style="background-color: #F0F2F8; box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.08), -6px -6px 12px rgba(255, 255, 255, 0.8);" data-tool-id="tdee" onclick="if(!window.isEditMode) window.openTool('tdee')">
                 <div class="bg-[#F0F2F8] rounded-[23px] p-5 flex flex-col justify-between aspect-square h-full relative">
                     <div class="flex justify-between items-start w-full relative z-10">
                         <div class="w-10 h-10 rounded-[16px] bg-[#F0F2F8] flex items-center justify-center" style="background-color: #F0F2F8; box-shadow: inset 4px 4px 8px rgba(0, 0, 0, 0.06), inset -4px -4px 8px rgba(255, 255, 255, 0.8);">
@@ -628,7 +628,7 @@
             </div>
 
             <!-- Araç Kartı 7: Kalp Hızı Bölgeleri -->
-            <div class="tool-card-item rounded-[24px] p-[1px] bg-gradient-to-br from-[#3B82F6] to-[#22C55E] cursor-pointer" style="background-color: #F0F2F8; box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.08), -6px -6px 12px rgba(255, 255, 255, 0.8);" onclick="window.openTool('heartrate')">
+            <div class="tool-card-item rounded-[24px] p-[1px] bg-gradient-to-br from-[#3B82F6] to-[#22C55E] cursor-pointer" style="background-color: #F0F2F8; box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.08), -6px -6px 12px rgba(255, 255, 255, 0.8);" data-tool-id="heartrate" onclick="if(!window.isEditMode) window.openTool('heartrate')">
                 <div class="bg-[#F0F2F8] rounded-[23px] p-5 flex flex-col justify-between aspect-square h-full relative">
                     <div class="flex justify-between items-start w-full relative z-10">
                         <div class="w-10 h-10 rounded-[16px] bg-[#F0F2F8] flex items-center justify-center" style="background-color: #F0F2F8; box-shadow: inset 4px 4px 8px rgba(0, 0, 0, 0.06), inset -4px -4px 8px rgba(255, 255, 255, 0.8);">
@@ -646,7 +646,7 @@
             </div>
 
             <!-- Araç Kartı 8: Vücut Yağı Oranı -->
-            <div class="tool-card-item rounded-[24px] p-[1px] bg-gradient-to-br from-[#3B82F6] to-[#22C55E] cursor-pointer" style="background-color: #F0F2F8; box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.08), -6px -6px 12px rgba(255, 255, 255, 0.8);" onclick="window.openTool('bodyfat')">
+            <div class="tool-card-item rounded-[24px] p-[1px] bg-gradient-to-br from-[#3B82F6] to-[#22C55E] cursor-pointer" style="background-color: #F0F2F8; box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.08), -6px -6px 12px rgba(255, 255, 255, 0.8);" data-tool-id="bodyfat" onclick="if(!window.isEditMode) window.openTool('bodyfat')">
                 <div class="bg-[#F0F2F8] rounded-[23px] p-5 flex flex-col justify-between aspect-square h-full relative">
                     <div class="flex justify-between items-start w-full relative z-10">
                         <div class="w-10 h-10 rounded-[16px] bg-[#F0F2F8] flex items-center justify-center" style="background-color: #F0F2F8; box-shadow: inset 4px 4px 8px rgba(0, 0, 0, 0.06), inset -4px -4px 8px rgba(255, 255, 255, 0.8);">
@@ -664,7 +664,7 @@
             </div>
 
             <!-- Araç Kartı 9: Kalori Hesaplama -->
-            <div class="tool-card-item rounded-[24px] p-[1px] bg-gradient-to-br from-[#3B82F6] to-[#22C55E] cursor-pointer" style="background-color: #F0F2F8; box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.08), -6px -6px 12px rgba(255, 255, 255, 0.8);" onclick="window.openTool('calorie')">
+            <div class="tool-card-item rounded-[24px] p-[1px] bg-gradient-to-br from-[#3B82F6] to-[#22C55E] cursor-pointer" style="background-color: #F0F2F8; box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.08), -6px -6px 12px rgba(255, 255, 255, 0.8);" data-tool-id="calorie" onclick="if(!window.isEditMode) window.openTool('calorie')">
                 <div class="bg-[#F0F2F8] rounded-[23px] p-5 flex flex-col justify-between aspect-square h-full relative">
                     <div class="flex justify-between items-start w-full relative z-10">
                         <div class="w-10 h-10 rounded-[16px] bg-[#F0F2F8] flex items-center justify-center" style="background-color: #F0F2F8; box-shadow: inset 4px 4px 8px rgba(0, 0, 0, 0.06), inset -4px -4px 8px rgba(255, 255, 255, 0.8);">
@@ -682,7 +682,7 @@
             </div>
 
             <!-- Araç Kartı 10: Protein İhtiyacı -->
-            <div class="tool-card-item rounded-[24px] p-[1px] bg-gradient-to-br from-[#3B82F6] to-[#22C55E] cursor-pointer" style="background-color: #F0F2F8; box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.08), -6px -6px 12px rgba(255, 255, 255, 0.8);" onclick="window.openTool('protein')">
+            <div class="tool-card-item rounded-[24px] p-[1px] bg-gradient-to-br from-[#3B82F6] to-[#22C55E] cursor-pointer" style="background-color: #F0F2F8; box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.08), -6px -6px 12px rgba(255, 255, 255, 0.8);" data-tool-id="protein" onclick="if(!window.isEditMode) window.openTool('protein')">
                 <div class="bg-[#F0F2F8] rounded-[23px] p-5 flex flex-col justify-between aspect-square h-full relative">
                     <div class="flex justify-between items-start w-full relative z-10">
                         <div class="w-10 h-10 rounded-[16px] bg-[#F0F2F8] flex items-center justify-center" style="background-color: #F0F2F8; box-shadow: inset 4px 4px 8px rgba(0, 0, 0, 0.06), inset -4px -4px 8px rgba(255, 255, 255, 0.8);">
@@ -700,7 +700,7 @@
             </div>
 
             <!-- Araç Kartı 11: Makro Hesaplama -->
-            <div class="tool-card-item rounded-[24px] p-[1px] bg-gradient-to-br from-[#3B82F6] to-[#22C55E] cursor-pointer" style="background-color: #F0F2F8; box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.08), -6px -6px 12px rgba(255, 255, 255, 0.8);" onclick="window.openTool('macro')">
+            <div class="tool-card-item rounded-[24px] p-[1px] bg-gradient-to-br from-[#3B82F6] to-[#22C55E] cursor-pointer" style="background-color: #F0F2F8; box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.08), -6px -6px 12px rgba(255, 255, 255, 0.8);" data-tool-id="macro" onclick="if(!window.isEditMode) window.openTool('macro')">
                 <div class="bg-[#F0F2F8] rounded-[23px] p-5 flex flex-col justify-between aspect-square h-full relative">
                     <div class="flex justify-between items-start w-full relative z-10">
                         <div class="w-10 h-10 rounded-[16px] bg-[#F0F2F8] flex items-center justify-center" style="background-color: #F0F2F8; box-shadow: inset 4px 4px 8px rgba(0, 0, 0, 0.06), inset -4px -4px 8px rgba(255, 255, 255, 0.8);">
@@ -718,7 +718,7 @@
             </div>
 
             <!-- Araç Kartı 12: Dinlenme Süresi -->
-            <div class="tool-card-item rounded-[24px] p-[1px] bg-gradient-to-br from-[#3B82F6] to-[#22C55E] cursor-pointer" style="background-color: #F0F2F8; box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.08), -6px -6px 12px rgba(255, 255, 255, 0.8);" onclick="window.openTool('rest_time')">
+            <div class="tool-card-item rounded-[24px] p-[1px] bg-gradient-to-br from-[#3B82F6] to-[#22C55E] cursor-pointer" style="background-color: #F0F2F8; box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.08), -6px -6px 12px rgba(255, 255, 255, 0.8);" data-tool-id="rest_time" onclick="if(!window.isEditMode) window.openTool('rest_time')">
                 <div class="bg-[#F0F2F8] rounded-[23px] p-5 flex flex-col justify-between aspect-square h-full relative">
                     <div class="flex justify-between items-start w-full relative z-10">
                         <div class="w-10 h-10 rounded-[16px] bg-[#F0F2F8] flex items-center justify-center" style="background-color: #F0F2F8; box-shadow: inset 4px 4px 8px rgba(0, 0, 0, 0.06), inset -4px -4px 8px rgba(255, 255, 255, 0.8);">
@@ -736,7 +736,7 @@
             </div>
 
             <!-- Araç Kartı 13: 1RM (Maksimum Güç) -->
-            <div class="tool-card-item rounded-[24px] p-[1px] bg-gradient-to-br from-[#3B82F6] to-[#22C55E] cursor-pointer" style="background-color: #F0F2F8; box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.08), -6px -6px 12px rgba(255, 255, 255, 0.8);" onclick="window.openTool('onerm')">
+            <div class="tool-card-item rounded-[24px] p-[1px] bg-gradient-to-br from-[#3B82F6] to-[#22C55E] cursor-pointer" style="background-color: #F0F2F8; box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.08), -6px -6px 12px rgba(255, 255, 255, 0.8);" data-tool-id="onerm" onclick="if(!window.isEditMode) window.openTool('onerm')">
                 <div class="bg-[#F0F2F8] rounded-[23px] p-5 flex flex-col justify-between aspect-square h-full relative">
                     <div class="flex justify-between items-start w-full relative z-10">
                         <div class="w-10 h-10 rounded-[16px] bg-[#F0F2F8] flex items-center justify-center" style="background-color: #F0F2F8; box-shadow: inset 4px 4px 8px rgba(0, 0, 0, 0.06), inset -4px -4px 8px rgba(255, 255, 255, 0.8);">
@@ -754,7 +754,7 @@
             </div>
 
             <!-- Araç Kartı 14: Vücut Tipi Analizi -->
-            <div class="tool-card-item rounded-[24px] p-[1px] bg-gradient-to-br from-[#3B82F6] to-[#22C55E] cursor-pointer" style="background-color: #F0F2F8; box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.08), -6px -6px 12px rgba(255, 255, 255, 0.8);" onclick="window.openTool('bodytype')">
+            <div class="tool-card-item rounded-[24px] p-[1px] bg-gradient-to-br from-[#3B82F6] to-[#22C55E] cursor-pointer" style="background-color: #F0F2F8; box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.08), -6px -6px 12px rgba(255, 255, 255, 0.8);" data-tool-id="bodytype" onclick="if(!window.isEditMode) window.openTool('bodytype')">
                 <div class="bg-[#F0F2F8] rounded-[23px] p-5 flex flex-col justify-between aspect-square h-full relative">
                     <div class="flex justify-between items-start w-full relative z-10">
                         <div class="w-10 h-10 rounded-[16px] bg-[#F0F2F8] flex items-center justify-center" style="background-color: #F0F2F8; box-shadow: inset 4px 4px 8px rgba(0, 0, 0, 0.06), inset -4px -4px 8px rgba(255, 255, 255, 0.8);">
@@ -5300,6 +5300,7 @@
 
 </body>
 </html>
+
 
 
 

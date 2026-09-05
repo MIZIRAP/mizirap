@@ -87,7 +87,7 @@ onAuthStateChanged(auth, async (user) => {
 
             initProfile(user.uid);
             initHistory(user.uid);
-            initTools();
+            initTools(user.uid);
         } catch (err) {
             console.error("Login transition error:", err);
             alert("Giriş yapılırken bir hata oluştu: " + err.message);
@@ -196,3 +196,4 @@ document.addEventListener("click", (e) => {
     history.pushState({view: targetId}, "", "?view=" + targetId);
     window.showView(targetId);
 });
+

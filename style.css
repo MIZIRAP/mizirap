@@ -1,4 +1,4 @@
-/* Ambient shadows and transitions */
+﻿/* Ambient shadows and transitions */
 .interactive-card {
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
@@ -53,7 +53,7 @@ input[type="number"] {
   100% { transform: rotate(-1deg); }
 }
 
-.widget-edit-mode [data-widget-id] {
+.widget-edit-mode [data-widget-id], .widget-edit-mode [data-tool-id] {
   animation: jiggle 0.3s infinite;
   cursor: grab;
   /* Disable nav-tab clicks visually and functionally */
@@ -61,12 +61,12 @@ input[type="number"] {
 }
 
 /* Re-enable pointer events for the wrapper so SortableJS can grab it */
-.widget-edit-mode [data-widget-id] {
+.widget-edit-mode [data-widget-id], .widget-edit-mode [data-tool-id] {
   pointer-events: auto !important;
 }
 
 /* But block inner elements from getting clicks just in case */
-.widget-edit-mode [data-widget-id] * {
+.widget-edit-mode [data-widget-id], .widget-edit-mode [data-tool-id] * {
   pointer-events: none;
 }
 
@@ -114,3 +114,4 @@ input[type="number"] {
     box-shadow: none !important;
     background: transparent !important;
 }
+

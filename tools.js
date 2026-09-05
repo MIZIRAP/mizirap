@@ -1,3 +1,6 @@
+﻿import { auth, db } from "./firebase-config.js";
+import { fetchSharedProfile, updateSharedProfile } from "./sharedState.js";
+import { doc, updateDoc } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
 import { calculateE1RM } from './activeSession.js?v=202609045';
 
 // ==========================================
@@ -8,11 +11,11 @@ export const CalculatorEngine = {
         const heightM = heightCm / 100;
         const bmi = weight / (heightM * heightM);
         let category = '';
-        if (bmi < 18.5) category = 'Zayıf';
+        if (bmi < 18.5) category = 'ZayÄ±f';
         else if (bmi >= 18.5 && bmi < 25) category = 'Normal';
         else if (bmi >= 25 && bmi < 30) category = 'Fazla Kilolu';
         else category = 'Obez';
-        return { value: bmi.toFixed(1), unit: 'kg/m²', text: category };
+        return { value: bmi.toFixed(1), unit: 'kg/mÂ²', text: category };
     },
 
     calculateBroca: (heightCm, gender) => {
@@ -23,7 +26,7 @@ export const CalculatorEngine = {
         
         const min = (ideal * 0.9).toFixed(1);
         const max = (ideal * 1.1).toFixed(1);
-        return { value: ideal.toFixed(1), unit: 'kg', text: `Aralık: ${min} - ${max} kg` };
+        return { value: ideal.toFixed(1), unit: 'kg', text: `AralÄ±k: ${min} - ${max} kg` };
     },
 
     calculateIdealWeight: (heightCm, gender) => {
@@ -47,20 +50,20 @@ export const CalculatorEngine = {
         const min = Math.min(d, r, m, h).toFixed(1);
         const max = Math.max(d, r, m, h).toFixed(1);
         
-        return { value: avg.toFixed(1), unit: 'kg', text: `Aralık: ${min} - ${max} kg` };
+        return { value: avg.toFixed(1), unit: 'kg', text: `AralÄ±k: ${min} - ${max} kg` };
     },
 
     calculateWHR: (waist, hip, gender) => {
         const whr = waist / hip;
         let risk = '';
         if (gender === 'm') {
-            if (whr < 0.90) risk = 'Düşük Risk';
+            if (whr < 0.90) risk = 'DÃ¼ÅŸÃ¼k Risk';
             else if (whr <= 0.99) risk = 'Orta Risk';
-            else risk = 'Yüksek Risk';
+            else risk = 'YÃ¼ksek Risk';
         } else {
-            if (whr < 0.80) risk = 'Düşük Risk';
+            if (whr < 0.80) risk = 'DÃ¼ÅŸÃ¼k Risk';
             else if (whr <= 0.84) risk = 'Orta Risk';
-            else risk = 'Yüksek Risk';
+            else risk = 'YÃ¼ksek Risk';
         }
         return { value: whr.toFixed(2), unit: 'oran', text: risk };
     },
@@ -77,7 +80,7 @@ export const CalculatorEngine = {
         return { 
             value: maxHR, 
             unit: 'bpm', 
-            text: `Yağ Yak: ${Math.round(maxHR*0.6)}-${Math.round(maxHR*0.7)} | Kardiyo: ${Math.round(maxHR*0.7)}-${Math.round(maxHR*0.8)}` 
+            text: `YaÄŸ Yak: ${Math.round(maxHR*0.6)}-${Math.round(maxHR*0.7)} | Kardiyo: ${Math.round(maxHR*0.7)}-${Math.round(maxHR*0.8)}` 
         };
     },
 
@@ -91,17 +94,17 @@ export const CalculatorEngine = {
         
         let category = '';
         if (gender === 'm') {
-            if(bodyFat < 6) category = 'Tehlikeli (Düşük)';
+            if(bodyFat < 6) category = 'Tehlikeli (DÃ¼ÅŸÃ¼k)';
             else if(bodyFat < 14) category = 'Atletik';
             else if(bodyFat < 18) category = 'Fit';
             else if(bodyFat < 25) category = 'Ortalama';
-            else category = 'Yüksek';
+            else category = 'YÃ¼ksek';
         } else {
-            if(bodyFat < 14) category = 'Tehlikeli (Düşük)';
+            if(bodyFat < 14) category = 'Tehlikeli (DÃ¼ÅŸÃ¼k)';
             else if(bodyFat < 21) category = 'Atletik';
             else if(bodyFat < 25) category = 'Fit';
             else if(bodyFat < 32) category = 'Ortalama';
-            else category = 'Yüksek';
+            else category = 'YÃ¼ksek';
         }
         return { value: bodyFat.toFixed(1), unit: '%', text: category };
     },
@@ -114,7 +117,7 @@ export const CalculatorEngine = {
             bmr = 10 * weight + 6.25 * height - 5 * age - 161;
         }
         const tdee = Math.round(bmr * activityLevel);
-        inputs.tdee = tdee; // Downstream veri akışı için
+        inputs.tdee = tdee; // Downstream veri akÄ±ÅŸÄ± iÃ§in
         return { value: tdee, unit: 'kcal', text: `BMR (Bazal Met.): ${Math.round(bmr)} kcal` };
     },
 
@@ -123,12 +126,12 @@ export const CalculatorEngine = {
         let text = 'Mevcut kilonu korursun';
         if (goal === 'lose' || goal === 'kilo_verme') {
             target -= 500;
-            text = 'Haftada ~0.5kg yağ kaybı';
+            text = 'Haftada ~0.5kg yaÄŸ kaybÄ±';
         } else if (goal === 'gain' || goal === 'kilo_alma') {
             target += 500;
-            text = 'Haftada ~0.5kg kas/kilo alımı';
+            text = 'Haftada ~0.5kg kas/kilo alÄ±mÄ±';
         }
-        inputs.targetCalorie = target; // Downstream Makro için
+        inputs.targetCalorie = target; // Downstream Makro iÃ§in
         return { value: target, unit: 'kcal', text: text };
     },
 
@@ -143,14 +146,14 @@ export const CalculatorEngine = {
             if (goal === 'gain' || goal === 'kilo_alma') multiplier = 1.5;
         }
         const protein = Math.round(weight * multiplier);
-        inputs.proteinGrams = protein; // Makro için kaydet
-        return { value: protein, unit: 'g', text: `Tavsiye: ${multiplier.toFixed(1)}g / kg başına` };
+        inputs.proteinGrams = protein; // Makro iÃ§in kaydet
+        return { value: protein, unit: 'g', text: `Tavsiye: ${multiplier.toFixed(1)}g / kg baÅŸÄ±na` };
     },
 
     calculateMacro: (targetCalorie, weight) => {
         let pGrams = inputs.proteinGrams;
         if (!pGrams) {
-            pGrams = Math.round(weight * 1.6); // Varsayılan
+            pGrams = Math.round(weight * 1.6); // VarsayÄ±lan
         }
         
         const fKcal = targetCalorie * 0.25;
@@ -163,21 +166,21 @@ export const CalculatorEngine = {
         
         let warningText = '';
         if (remainingKcal < 0) {
-            warningText = ' (⚠️ Kalan kalori negatif!)';
+            warningText = ' (âš ï¸ Kalan kalori negatif!)';
         }
         
         return { 
             value: targetCalorie, 
             unit: 'kcal', 
-            text: `Karb: ${cGrams}g | Pro: ${pGrams}g | Yağ: ${fGrams}g${warningText}`,
+            text: `Karb: ${cGrams}g | Pro: ${pGrams}g | YaÄŸ: ${fGrams}g${warningText}`,
             raw: { p: pGrams, c: cGrams, f: fGrams }
         };
     },
 
     calculateRestTime: (workoutType) => {
-        if (workoutType === 'hypertrophy') return { value: '60-90', unit: 'sn', text: 'Kas gelişimi için ideal aralık' };
-        if (workoutType === 'strength') return { value: '3-5', unit: 'dk', text: 'Maksimum güç ve toparlanma' };
-        if (workoutType === 'endurance') return { value: '30-60', unit: 'sn', text: 'Kardiyovasküler kapasite artışı' };
+        if (workoutType === 'hypertrophy') return { value: '60-90', unit: 'sn', text: 'Kas geliÅŸimi iÃ§in ideal aralÄ±k' };
+        if (workoutType === 'strength') return { value: '3-5', unit: 'dk', text: 'Maksimum gÃ¼Ã§ ve toparlanma' };
+        if (workoutType === 'endurance') return { value: '30-60', unit: 'sn', text: 'KardiyovaskÃ¼ler kapasite artÄ±ÅŸÄ±' };
         return { value: '60', unit: 'sn', text: 'Genel dinlenme' };
     },
 
@@ -187,13 +190,13 @@ export const CalculatorEngine = {
         let desc = '';
         
         if (gender === 'm') {
-            if (ratio > 10.4) { type = 'Ektomorf'; desc = 'İnce yapı, zor kilo alır'; }
-            else if (ratio >= 9.6) { type = 'Mezomorf'; desc = 'Atletik yapı, kolay kas yapar'; }
-            else { type = 'Endomorf'; desc = 'Geniş yapı, kolay yağlanır'; }
+            if (ratio > 10.4) { type = 'Ektomorf'; desc = 'Ä°nce yapÄ±, zor kilo alÄ±r'; }
+            else if (ratio >= 9.6) { type = 'Mezomorf'; desc = 'Atletik yapÄ±, kolay kas yapar'; }
+            else { type = 'Endomorf'; desc = 'GeniÅŸ yapÄ±, kolay yaÄŸlanÄ±r'; }
         } else {
-            if (ratio > 11.0) { type = 'Ektomorf'; desc = 'İnce yapı, zor kilo alır'; }
-            else if (ratio >= 10.5) { type = 'Mezomorf'; desc = 'Atletik yapı, kolay kas yapar'; }
-            else { type = 'Endomorf'; desc = 'Geniş yapı, kolay yağlanır'; }
+            if (ratio > 11.0) { type = 'Ektomorf'; desc = 'Ä°nce yapÄ±, zor kilo alÄ±r'; }
+            else if (ratio >= 10.5) { type = 'Mezomorf'; desc = 'Atletik yapÄ±, kolay kas yapar'; }
+            else { type = 'Endomorf'; desc = 'GeniÅŸ yapÄ±, kolay yaÄŸlanÄ±r'; }
         }
         
         return { value: type, unit: 'tipi', text: desc };
@@ -226,7 +229,7 @@ let currentActiveTool = null;
 
 const TOOLS_CONFIG = {
     'vki': {
-        title: 'Vücut Kitle İndeksi',
+        title: 'VÃ¼cut Kitle Ä°ndeksi',
         fields: ['height', 'weight'],
         calc: () => CalculatorEngine.calculateBMI(inputs.weight, inputs.height)
     },
@@ -236,27 +239,27 @@ const TOOLS_CONFIG = {
         calc: () => CalculatorEngine.calculateBroca(inputs.height, inputs.gender)
     },
     'ideal': {
-        title: 'İdeal Kilo',
+        title: 'Ä°deal Kilo',
         fields: ['height', 'gender'],
         calc: () => CalculatorEngine.calculateIdealWeight(inputs.height, inputs.gender)
     },
     'whr': {
-        title: 'Bel-Kalça Oranı (WHR)',
+        title: 'Bel-KalÃ§a OranÄ± (WHR)',
         fields: ['waist', 'hip', 'gender'],
         calc: () => CalculatorEngine.calculateWHR(inputs.waist, inputs.hip, inputs.gender)
     },
     'water': {
-        title: 'Günlük Su İhtiyacı',
+        title: 'GÃ¼nlÃ¼k Su Ä°htiyacÄ±',
         fields: ['weight', 'training_time'],
         calc: () => CalculatorEngine.calculateWater(inputs.weight, inputs.training_time)
     },
     'heartrate': {
-        title: 'Kalp Hızı Bölgeleri',
+        title: 'Kalp HÄ±zÄ± BÃ¶lgeleri',
         fields: ['age'],
         calc: () => CalculatorEngine.calculateHeartRate(inputs.age)
     },
     'bodyfat': {
-        title: 'Vücut Yağı Oranı',
+        title: 'VÃ¼cut YaÄŸÄ± OranÄ±',
         fields: ['height', 'waist', 'neck', 'hip', 'gender'],
         calc: () => CalculatorEngine.calculateBodyFat(inputs.waist, inputs.neck, inputs.height, inputs.hip, inputs.gender)
     },
@@ -266,7 +269,7 @@ const TOOLS_CONFIG = {
         calc: () => CalculatorEngine.calculateTDEE(inputs.weight, inputs.height, inputs.age, inputs.gender, inputs.activity_level)
     },
     'calorie': {
-        title: 'Günlük Kalori İhtiyacı',
+        title: 'GÃ¼nlÃ¼k Kalori Ä°htiyacÄ±',
         fields: ['weight', 'height', 'age', 'gender', 'activity_level', 'goal'],
         calc: () => {
             CalculatorEngine.calculateTDEE(inputs.weight, inputs.height, inputs.age, inputs.gender, inputs.activity_level);
@@ -274,12 +277,12 @@ const TOOLS_CONFIG = {
         }
     },
     'protein': {
-        title: 'Günlük Protein İhtiyacı',
+        title: 'GÃ¼nlÃ¼k Protein Ä°htiyacÄ±',
         fields: ['weight', 'activity_level', 'goal'],
         calc: () => CalculatorEngine.calculateProtein(inputs.weight, inputs.goal, inputs.activity_level)
     },
     'macro': {
-        title: 'Makro Dağılımı',
+        title: 'Makro DaÄŸÄ±lÄ±mÄ±',
         fields: ['weight', 'height', 'age', 'gender', 'activity_level', 'goal'],
         calc: () => {
             CalculatorEngine.calculateTDEE(inputs.weight, inputs.height, inputs.age, inputs.gender, inputs.activity_level);
@@ -288,7 +291,7 @@ const TOOLS_CONFIG = {
         }
     },
     'rest_time': {
-        title: 'Dinlenme Süresi',
+        title: 'Dinlenme SÃ¼resi',
         fields: ['workout_type'],
         calc: () => CalculatorEngine.calculateRestTime(inputs.workout_type)
     },
@@ -297,22 +300,22 @@ const TOOLS_CONFIG = {
         fields: ['weight_lifted', 'reps'],
         calc: () => {
             const rm = calculateE1RM(inputs.weight_lifted, inputs.reps, null);
-            return { value: rm, unit: 'kg', text: `%80'i: ${(rm * 0.8).toFixed(1)}kg (Hipertrofi için)` };
+            return { value: rm, unit: 'kg', text: `%80'i: ${(rm * 0.8).toFixed(1)}kg (Hipertrofi iÃ§in)` };
         }
     },
     'bodytype': {
-        title: 'Vücut Tipi Analizi',
+        title: 'VÃ¼cut Tipi Analizi',
         fields: ['wrist', 'height', 'gender'],
         calc: () => CalculatorEngine.calculateBodyType(inputs.wrist, inputs.height, inputs.gender)
     }
 };
 
-export function initTools() {
+export function initTools(uid) { initToolsSorting(uid);
     window.openTool = (toolId) => {
         currentActiveTool = toolId;
         const config = TOOLS_CONFIG[toolId];
         if (!config) {
-            alert('Bu araç yakında eklenecek!');
+            alert('Bu araÃ§ yakÄ±nda eklenecek!');
             return;
         }
 
@@ -601,5 +604,73 @@ export function clearTools() {
             emptyState.classList.add('hidden');
             emptyState.classList.remove('flex');
         }
+    }
+}
+
+let toolsSortable = null;
+
+async function initToolsSorting(uid) {
+    if (!uid) return;
+    const grid = document.getElementById("tools-grid");
+    if (!grid) return;
+
+    try {
+        const data = await fetchSharedProfile(uid);
+        if (data && data.toolsOrder) {
+            data.toolsOrder.forEach(id => {
+                const el = grid.querySelector("[data-tool-id="${id}"]);
+                if (el) grid.appendChild(el);
+            });
+        }
+    } catch(err) {
+        console.error("Araç sıralaması çekilemedi", err);
+    } finally {
+        grid.classList.remove('opacity-0');
+    }
+
+    if (typeof Sortable !== 'undefined') {
+        const sortableOptions = {
+            animation: 300,
+            delay: 500,
+            delayOnTouchOnly: false,
+            touchStartThreshold: 5,
+            ghostClass: 'sortable-ghost',
+            dragClass: 'sortable-drag',
+            filter: '.hidden',
+            onChoose: function (evt) {
+                if (!window.isEditMode) {
+                    window.isEditMode = true;
+                    grid.classList.add('widget-edit-mode');
+                    if (toolsSortable) toolsSortable.option("delay", 0);
+                    if (navigator.vibrate) navigator.vibrate(50);
+                }
+            }
+        };
+        toolsSortable = new Sortable(grid, sortableOptions);
+
+        document.addEventListener('click', async (e) => {
+            if (grid.classList.contains('widget-edit-mode')) {
+                const isTool = e.target.closest('[data-tool-id]');
+                if (!isTool) {
+                    window.isEditMode = false;
+                    grid.classList.remove('widget-edit-mode');
+                    if (toolsSortable) toolsSortable.option("delay", 500);
+
+                    const updates = {
+                        toolsOrder: Array.from(grid.children)
+                            .filter(child => child.dataset && child.dataset.toolId)
+                            .map(child => child.dataset.toolId)
+                    };
+
+                    try {
+                        const docRef = doc(db, "users", uid, "profile", "data");
+                        await updateDoc(docRef, updates);
+                        updateSharedProfile(updates);
+                    } catch(err) {
+                        console.error("Araç sıralaması kaydedilemedi", err);
+                    }
+                }
+            }
+        });
     }
 }
