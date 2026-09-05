@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="tr">
 <head>
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
@@ -519,215 +519,219 @@
                 <p class="text-[#64748B] text-sm font-medium" style="font-family: 'Plus Jakarta Sans', sans-serif;">Araç bulunamadı</p>
             </div>
 
+            <div class="grid grid-cols-2 gap-4 w-full">
             <!-- Araç Kartı 1: Vücut Kitle İndeksi -->
-            <div class="tool-card-item bg-[#F0F2F8] rounded-[24px] p-6 flex flex-col gap-4 w-full" style="background-color: #F0F2F8; box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.08);">
-                <div class="flex flex-col gap-2">
-                    <div class="h-8 px-4 inline-flex items-center justify-center rounded-full bg-[#F0F2F8] self-start" style="background-color: #F0F2F8; box-shadow: inset 4px 4px 8px rgba(0, 0, 0, 0.06), inset -4px -4px 8px rgba(255, 255, 255, 0.8);">
-                        <span class="text-[#181C20] font-[600] text-[12px] uppercase tracking-[0.7px]" style="font-family: 'Plus Jakarta Sans', sans-serif;">SAĞLIK</span>
+            <div class="tool-card-item rounded-[24px] p-[1px] bg-gradient-to-br from-[#3B82F6] to-[#22C55E] cursor-pointer" style="background-color: #F0F2F8; box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.08), -6px -6px 12px rgba(255, 255, 255, 0.8);" onclick="window.openTool('vki')">
+                <div class="bg-[#F0F2F8] rounded-[23px] p-5 flex flex-col justify-between aspect-square h-full relative">
+                    <div class="flex justify-between items-start w-full relative z-10">
+                        <div class="w-10 h-10 rounded-[16px] bg-[#F0F2F8] flex items-center justify-center" style="background-color: #F0F2F8; box-shadow: inset 4px 4px 8px rgba(0, 0, 0, 0.06), inset -4px -4px 8px rgba(255, 255, 255, 0.8);">
+                            <span class="material-symbols-rounded text-[#3B82F6] text-[20px]">monitor_weight</span>
+                        </div>
                     </div>
-                    <h3 class="text-[#181C20] font-[700] text-[24px] leading-[32px] mt-1" style="font-family: 'Plus Jakarta Sans', sans-serif;">Vücut Kitle İndeksi</h3>
-                    <p class="text-[#181C20] font-[400] text-[14px] leading-[20px]" style="font-family: 'Plus Jakarta Sans', sans-serif;">Genel sağlık durumunu VKİ değeri ile analiz et.</p>
+                    <div class="mt-auto relative z-10">
+                        <h3 class="text-[#181C20] font-[600] text-[14px] leading-[20px]" style="font-family: 'Plus Jakarta Sans', sans-serif;">Vücut Kitle İndeksi</h3>
+                    </div>
+                    <!-- Arama filtresi için gizli etiketler -->
+                    <span class="hidden">Genel sağlık durumunu VKİ değeri ile analiz et. SAĞLIK</span>
                 </div>
-                <button class="w-full h-12 mt-1 rounded-[24px] bg-[#F0F2F8] flex items-center justify-center gap-2 active:scale-95 transition-transform" style="background-color: #F0F2F8; box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.08), -6px -6px 12px rgba(255, 255, 255, 0.8);" onclick="window.openTool('vki')">
-                    <span class="material-symbols-rounded text-[#181C20] text-[18px]">play_arrow</span>
-                    <span class="text-[#181C20] font-[600] text-[16px]" style="font-family: 'Plus Jakarta Sans', sans-serif;">Hesapla</span>
-                </button>
             </div>
 
             <!-- Araç Kartı 2: Boy Kilo Endeksi -->
-            <div class="tool-card-item bg-[#F0F2F8] rounded-[24px] p-6 flex flex-col gap-4 w-full" style="background-color: #F0F2F8; box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.08);">
-                <div class="flex flex-col gap-2">
-                    <div class="h-8 px-4 inline-flex items-center justify-center rounded-full bg-[#F0F2F8] self-start" style="background-color: #F0F2F8; box-shadow: inset 4px 4px 8px rgba(0, 0, 0, 0.06), inset -4px -4px 8px rgba(255, 255, 255, 0.8);">
-                        <span class="text-[#181C20] font-[600] text-[12px] uppercase tracking-[0.7px]" style="font-family: 'Plus Jakarta Sans', sans-serif;">SAĞLIK</span>
+            <div class="tool-card-item rounded-[24px] p-[1px] bg-gradient-to-br from-[#3B82F6] to-[#22C55E] cursor-pointer" style="background-color: #F0F2F8; box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.08), -6px -6px 12px rgba(255, 255, 255, 0.8);" onclick="window.openTool('broca')">
+                <div class="bg-[#F0F2F8] rounded-[23px] p-5 flex flex-col justify-between aspect-square h-full relative">
+                    <div class="flex justify-between items-start w-full relative z-10">
+                        <div class="w-10 h-10 rounded-[16px] bg-[#F0F2F8] flex items-center justify-center" style="background-color: #F0F2F8; box-shadow: inset 4px 4px 8px rgba(0, 0, 0, 0.06), inset -4px -4px 8px rgba(255, 255, 255, 0.8);">
+                            <span class="material-symbols-rounded text-[#3B82F6] text-[20px]">height</span>
+                        </div>
                     </div>
-                    <h3 class="text-[#181C20] font-[700] text-[24px] leading-[32px] mt-1" style="font-family: 'Plus Jakarta Sans', sans-serif;">Boy Kilo Endeksi</h3>
-                    <p class="text-[#181C20] font-[400] text-[14px] leading-[20px]" style="font-family: 'Plus Jakarta Sans', sans-serif;">Boyunuza göre ideal kilonuzda olup olmadığınızı öğrenin.</p>
+                    <div class="mt-auto relative z-10">
+                        <h3 class="text-[#181C20] font-[600] text-[14px] leading-[20px]" style="font-family: 'Plus Jakarta Sans', sans-serif;">Boy Kilo Endeksi</h3>
+                    </div>
+                    <span class="hidden">Boyunuza göre ideal kilonuzda olup olmadığınızı öğrenin. SAĞLIK</span>
                 </div>
-                <button class="w-full h-12 mt-1 rounded-[24px] bg-[#F0F2F8] flex items-center justify-center gap-2 active:scale-95 transition-transform" style="background-color: #F0F2F8; box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.08), -6px -6px 12px rgba(255, 255, 255, 0.8);" onclick="window.openTool('broca')">
-                    <span class="material-symbols-rounded text-[#181C20] text-[18px]">play_arrow</span>
-                    <span class="text-[#181C20] font-[600] text-[16px]" style="font-family: 'Plus Jakarta Sans', sans-serif;">Hesapla</span>
-                </button>
             </div>
 
             <!-- Araç Kartı 3: İdeal Kilo -->
-            <div class="tool-card-item bg-[#F0F2F8] rounded-[24px] p-6 flex flex-col gap-4 w-full" style="background-color: #F0F2F8; box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.08);">
-                <div class="flex flex-col gap-2">
-                    <div class="h-8 px-4 inline-flex items-center justify-center rounded-full bg-[#F0F2F8] self-start" style="background-color: #F0F2F8; box-shadow: inset 4px 4px 8px rgba(0, 0, 0, 0.06), inset -4px -4px 8px rgba(255, 255, 255, 0.8);">
-                        <span class="text-[#181C20] font-[600] text-[12px] uppercase tracking-[0.7px]" style="font-family: 'Plus Jakarta Sans', sans-serif;">HEDEF</span>
+            <div class="tool-card-item rounded-[24px] p-[1px] bg-gradient-to-br from-[#3B82F6] to-[#22C55E] cursor-pointer" style="background-color: #F0F2F8; box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.08), -6px -6px 12px rgba(255, 255, 255, 0.8);" onclick="window.openTool('ideal')">
+                <div class="bg-[#F0F2F8] rounded-[23px] p-5 flex flex-col justify-between aspect-square h-full relative">
+                    <div class="flex justify-between items-start w-full relative z-10">
+                        <div class="w-10 h-10 rounded-[16px] bg-[#F0F2F8] flex items-center justify-center" style="background-color: #F0F2F8; box-shadow: inset 4px 4px 8px rgba(0, 0, 0, 0.06), inset -4px -4px 8px rgba(255, 255, 255, 0.8);">
+                            <span class="material-symbols-rounded text-[#3B82F6] text-[20px]">accessibility_new</span>
+                        </div>
                     </div>
-                    <h3 class="text-[#181C20] font-[700] text-[24px] leading-[32px] mt-1" style="font-family: 'Plus Jakarta Sans', sans-serif;">İdeal Kilo</h3>
-                    <p class="text-[#181C20] font-[400] text-[14px] leading-[20px]" style="font-family: 'Plus Jakarta Sans', sans-serif;">Boy ve cinsiyetinize göre olman gereken sağlıklı kilo.</p>
+                    <div class="mt-auto relative z-10">
+                        <h3 class="text-[#181C20] font-[600] text-[14px] leading-[20px]" style="font-family: 'Plus Jakarta Sans', sans-serif;">İdeal Kilo</h3>
+                    </div>
+                    <span class="hidden">Boy ve cinsiyetinize göre olman gereken sağlıklı kilo. HEDEF</span>
                 </div>
-                <button class="w-full h-12 mt-1 rounded-[24px] bg-[#F0F2F8] flex items-center justify-center gap-2 active:scale-95 transition-transform" style="background-color: #F0F2F8; box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.08), -6px -6px 12px rgba(255, 255, 255, 0.8);" onclick="window.openTool('ideal')">
-                    <span class="material-symbols-rounded text-[#181C20] text-[18px]">play_arrow</span>
-                    <span class="text-[#181C20] font-[600] text-[16px]" style="font-family: 'Plus Jakarta Sans', sans-serif;">Hesapla</span>
-                </button>
             </div>
-            
+
             <!-- Araç Kartı 4: Bel-Kalça Oranı -->
-            <div class="tool-card-item bg-[#F0F2F8] rounded-[24px] p-6 flex flex-col gap-4 w-full" style="background-color: #F0F2F8; box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.08);">
-                <div class="flex flex-col gap-2">
-                    <div class="h-8 px-4 inline-flex items-center justify-center rounded-full bg-[#F0F2F8] self-start" style="background-color: #F0F2F8; box-shadow: inset 4px 4px 8px rgba(0, 0, 0, 0.06), inset -4px -4px 8px rgba(255, 255, 255, 0.8);">
-                        <span class="text-[#181C20] font-[600] text-[12px] uppercase tracking-[0.7px]" style="font-family: 'Plus Jakarta Sans', sans-serif;">SAĞLIK</span>
+            <div class="tool-card-item rounded-[24px] p-[1px] bg-gradient-to-br from-[#3B82F6] to-[#22C55E] cursor-pointer" style="background-color: #F0F2F8; box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.08), -6px -6px 12px rgba(255, 255, 255, 0.8);" onclick="window.openTool('whr')">
+                <div class="bg-[#F0F2F8] rounded-[23px] p-5 flex flex-col justify-between aspect-square h-full relative">
+                    <div class="flex justify-between items-start w-full relative z-10">
+                        <div class="w-10 h-10 rounded-[16px] bg-[#F0F2F8] flex items-center justify-center" style="background-color: #F0F2F8; box-shadow: inset 4px 4px 8px rgba(0, 0, 0, 0.06), inset -4px -4px 8px rgba(255, 255, 255, 0.8);">
+                            <span class="material-symbols-rounded text-[#3B82F6] text-[20px]">straighten</span>
+                        </div>
                     </div>
-                    <h3 class="text-[#181C20] font-[700] text-[24px] leading-[32px] mt-1" style="font-family: 'Plus Jakarta Sans', sans-serif;">Bel-Kalça Oranı</h3>
-                    <p class="text-[#181C20] font-[400] text-[14px] leading-[20px]" style="font-family: 'Plus Jakarta Sans', sans-serif;">Vücut tipinize göre sağlık riskinizi değerlendirin.</p>
+                    <div class="mt-auto relative z-10">
+                        <h3 class="text-[#181C20] font-[600] text-[14px] leading-[20px]" style="font-family: 'Plus Jakarta Sans', sans-serif;">Bel-Kalça Oranı</h3>
+                    </div>
+                    <span class="hidden">Vücut tipinize göre sağlık riskinizi değerlendirin. SAĞLIK</span>
                 </div>
-                <button class="w-full h-12 mt-1 rounded-[24px] bg-[#F0F2F8] flex items-center justify-center gap-2 active:scale-95 transition-transform" style="background-color: #F0F2F8; box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.08), -6px -6px 12px rgba(255, 255, 255, 0.8);" onclick="window.openTool('whr')">
-                    <span class="material-symbols-rounded text-[#181C20] text-[18px]">play_arrow</span>
-                    <span class="text-[#181C20] font-[600] text-[16px]" style="font-family: 'Plus Jakarta Sans', sans-serif;">Hesapla</span>
-                </button>
             </div>
 
             <!-- Araç Kartı 5: Su İhtiyacı -->
-            <div class="tool-card-item bg-[#F0F2F8] rounded-[24px] p-6 flex flex-col gap-4 w-full" style="background-color: #F0F2F8; box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.08);">
-                <div class="flex flex-col gap-2">
-                    <div class="h-8 px-4 inline-flex items-center justify-center rounded-full bg-[#F0F2F8] self-start" style="background-color: #F0F2F8; box-shadow: inset 4px 4px 8px rgba(0, 0, 0, 0.06), inset -4px -4px 8px rgba(255, 255, 255, 0.8);">
-                        <span class="text-[#181C20] font-[600] text-[12px] uppercase tracking-[0.7px]" style="font-family: 'Plus Jakarta Sans', sans-serif;">HEDEF</span>
+            <div class="tool-card-item rounded-[24px] p-[1px] bg-gradient-to-br from-[#3B82F6] to-[#22C55E] cursor-pointer" style="background-color: #F0F2F8; box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.08), -6px -6px 12px rgba(255, 255, 255, 0.8);" onclick="window.openTool('water')">
+                <div class="bg-[#F0F2F8] rounded-[23px] p-5 flex flex-col justify-between aspect-square h-full relative">
+                    <div class="flex justify-between items-start w-full relative z-10">
+                        <div class="w-10 h-10 rounded-[16px] bg-[#F0F2F8] flex items-center justify-center" style="background-color: #F0F2F8; box-shadow: inset 4px 4px 8px rgba(0, 0, 0, 0.06), inset -4px -4px 8px rgba(255, 255, 255, 0.8);">
+                            <span class="material-symbols-rounded text-[#3B82F6] text-[20px]">water_drop</span>
+                        </div>
                     </div>
-                    <h3 class="text-[#181C20] font-[700] text-[24px] leading-[32px] mt-1" style="font-family: 'Plus Jakarta Sans', sans-serif;">Su İhtiyacı</h3>
-                    <p class="text-[#181C20] font-[400] text-[14px] leading-[20px]" style="font-family: 'Plus Jakarta Sans', sans-serif;">Kilonuz ve antrenmanınıza göre günlük sıvı ihtiyacı.</p>
+                    <div class="mt-auto relative z-10">
+                        <h3 class="text-[#181C20] font-[600] text-[14px] leading-[20px]" style="font-family: 'Plus Jakarta Sans', sans-serif;">Su İhtiyacı</h3>
+                    </div>
+                    <span class="hidden">Kilonuz ve antrenmanınıza göre günlük sıvı ihtiyacı. HEDEF</span>
                 </div>
-                <button class="w-full h-12 mt-1 rounded-[24px] bg-[#F0F2F8] flex items-center justify-center gap-2 active:scale-95 transition-transform" style="background-color: #F0F2F8; box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.08), -6px -6px 12px rgba(255, 255, 255, 0.8);" onclick="window.openTool('water')">
-                    <span class="material-symbols-rounded text-[#181C20] text-[18px]">play_arrow</span>
-                    <span class="text-[#181C20] font-[600] text-[16px]" style="font-family: 'Plus Jakarta Sans', sans-serif;">Hesapla</span>
-                </button>
             </div>
             
             <!-- Araç Kartı 6: TDEE (Faz 2) -->
-            <div class="tool-card-item bg-[#F0F2F8] rounded-[24px] p-6 flex flex-col gap-4 w-full" style="background-color: #F0F2F8; box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.08);">
-                <div class="flex flex-col gap-2">
-                    <div class="h-8 px-4 inline-flex items-center justify-center rounded-full bg-[#F0F2F8] self-start" style="background-color: #F0F2F8; box-shadow: inset 4px 4px 8px rgba(0, 0, 0, 0.06), inset -4px -4px 8px rgba(255, 255, 255, 0.8);">
-                        <span class="text-[#181C20] font-[600] text-[12px] uppercase tracking-[0.7px]" style="font-family: 'Plus Jakarta Sans', sans-serif;">ENERJİ</span>
+            <div class="tool-card-item rounded-[24px] p-[1px] bg-gradient-to-br from-[#3B82F6] to-[#22C55E] cursor-pointer" style="background-color: #F0F2F8; box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.08), -6px -6px 12px rgba(255, 255, 255, 0.8);" onclick="window.openTool('tdee')">
+                <div class="bg-[#F0F2F8] rounded-[23px] p-5 flex flex-col justify-between aspect-square h-full relative">
+                    <div class="flex justify-between items-start w-full relative z-10">
+                        <div class="w-10 h-10 rounded-[16px] bg-[#F0F2F8] flex items-center justify-center" style="background-color: #F0F2F8; box-shadow: inset 4px 4px 8px rgba(0, 0, 0, 0.06), inset -4px -4px 8px rgba(255, 255, 255, 0.8);">
+                            <span class="material-symbols-rounded text-[#3B82F6] text-[20px]">local_fire_department</span>
+                        </div>
                     </div>
-                    <h3 class="text-[#181C20] font-[700] text-[24px] leading-[32px] mt-1" style="font-family: 'Plus Jakarta Sans', sans-serif;">TDEE Hesaplama</h3>
-                    <p class="text-[#181C20] font-[400] text-[14px] leading-[20px]" style="font-family: 'Plus Jakarta Sans', sans-serif;">Toplam günlük enerji harcamanı (TDEE) öğren.</p>
+                    <div class="mt-auto relative z-10">
+                        <h3 class="text-[#181C20] font-[600] text-[14px] leading-[20px]" style="font-family: 'Plus Jakarta Sans', sans-serif;">TDEE Hesaplama</h3>
+                    </div>
+                    <span class="hidden">Toplam günlük enerji harcamanı (TDEE) öğren. ENERJİ</span>
                 </div>
-                <button class="w-full h-12 mt-1 rounded-[24px] bg-[#F0F2F8] flex items-center justify-center gap-2 active:scale-95 transition-transform" style="background-color: #F0F2F8; box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.08), -6px -6px 12px rgba(255, 255, 255, 0.8);" onclick="window.openTool('tdee')">
-                    <span class="material-symbols-rounded text-[#181C20] text-[18px]">play_arrow</span>
-                    <span class="text-[#181C20] font-[600] text-[16px]" style="font-family: 'Plus Jakarta Sans', sans-serif;">Hesapla</span>
-                </button>
             </div>
 
             <!-- Araç Kartı 7: Kalp Hızı Bölgeleri -->
-            <div class="tool-card-item bg-[#F0F2F8] rounded-[24px] p-6 flex flex-col gap-4 w-full" style="background-color: #F0F2F8; box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.08);">
-                <div class="flex flex-col gap-2">
-                    <div class="h-8 px-4 inline-flex items-center justify-center rounded-full bg-[#F0F2F8] self-start" style="background-color: #F0F2F8; box-shadow: inset 4px 4px 8px rgba(0, 0, 0, 0.06), inset -4px -4px 8px rgba(255, 255, 255, 0.8);">
-                        <span class="text-[#181C20] font-[600] text-[12px] uppercase tracking-[0.7px]" style="font-family: 'Plus Jakarta Sans', sans-serif;">PERFORMANS</span>
+            <div class="tool-card-item rounded-[24px] p-[1px] bg-gradient-to-br from-[#3B82F6] to-[#22C55E] cursor-pointer" style="background-color: #F0F2F8; box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.08), -6px -6px 12px rgba(255, 255, 255, 0.8);" onclick="window.openTool('heartrate')">
+                <div class="bg-[#F0F2F8] rounded-[23px] p-5 flex flex-col justify-between aspect-square h-full relative">
+                    <div class="flex justify-between items-start w-full relative z-10">
+                        <div class="w-10 h-10 rounded-[16px] bg-[#F0F2F8] flex items-center justify-center" style="background-color: #F0F2F8; box-shadow: inset 4px 4px 8px rgba(0, 0, 0, 0.06), inset -4px -4px 8px rgba(255, 255, 255, 0.8);">
+                            <span class="material-symbols-rounded text-[#3B82F6] text-[20px]">favorite</span>
+                        </div>
                     </div>
-                    <h3 class="text-[#181C20] font-[700] text-[24px] leading-[32px] mt-1" style="font-family: 'Plus Jakarta Sans', sans-serif;">Kalp Hızı Bölgeleri</h3>
-                    <p class="text-[#181C20] font-[400] text-[14px] leading-[20px]" style="font-family: 'Plus Jakarta Sans', sans-serif;">Antrenman hedefine göre nabız aralığını bul.</p>
+                    <div class="mt-auto relative z-10">
+                        <h3 class="text-[#181C20] font-[600] text-[14px] leading-[20px]" style="font-family: 'Plus Jakarta Sans', sans-serif;">Kalp Hızı Bölgeleri</h3>
+                    </div>
+                    <span class="hidden">Antrenman hedefine göre nabız aralığını bul. PERFORMANS</span>
                 </div>
-                <button class="w-full h-12 mt-1 rounded-[24px] bg-[#F0F2F8] flex items-center justify-center gap-2 active:scale-95 transition-transform" style="background-color: #F0F2F8; box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.08), -6px -6px 12px rgba(255, 255, 255, 0.8);" onclick="window.openTool('heartrate')">
-                    <span class="material-symbols-rounded text-[#181C20] text-[18px]">play_arrow</span>
-                    <span class="text-[#181C20] font-[600] text-[16px]" style="font-family: 'Plus Jakarta Sans', sans-serif;">Hesapla</span>
-                </button>
             </div>
 
             <!-- Araç Kartı 8: Vücut Yağı Oranı -->
-            <div class="tool-card-item bg-[#F0F2F8] rounded-[24px] p-6 flex flex-col gap-4 w-full" style="background-color: #F0F2F8; box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.08);">
-                <div class="flex flex-col gap-2">
-                    <div class="h-8 px-4 inline-flex items-center justify-center rounded-full bg-[#F0F2F8] self-start" style="background-color: #F0F2F8; box-shadow: inset 4px 4px 8px rgba(0, 0, 0, 0.06), inset -4px -4px 8px rgba(255, 255, 255, 0.8);">
-                        <span class="text-[#181C20] font-[600] text-[12px] uppercase tracking-[0.7px]" style="font-family: 'Plus Jakarta Sans', sans-serif;">SAĞLIK</span>
+            <div class="tool-card-item rounded-[24px] p-[1px] bg-gradient-to-br from-[#3B82F6] to-[#22C55E] cursor-pointer" style="background-color: #F0F2F8; box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.08), -6px -6px 12px rgba(255, 255, 255, 0.8);" onclick="window.openTool('bodyfat')">
+                <div class="bg-[#F0F2F8] rounded-[23px] p-5 flex flex-col justify-between aspect-square h-full relative">
+                    <div class="flex justify-between items-start w-full relative z-10">
+                        <div class="w-10 h-10 rounded-[16px] bg-[#F0F2F8] flex items-center justify-center" style="background-color: #F0F2F8; box-shadow: inset 4px 4px 8px rgba(0, 0, 0, 0.06), inset -4px -4px 8px rgba(255, 255, 255, 0.8);">
+                            <span class="material-symbols-rounded text-[#3B82F6] text-[20px]">percent</span>
+                        </div>
                     </div>
-                    <h3 class="text-[#181C20] font-[700] text-[24px] leading-[32px] mt-1" style="font-family: 'Plus Jakarta Sans', sans-serif;">Vücut Yağı Oranı</h3>
-                    <p class="text-[#181C20] font-[400] text-[14px] leading-[20px]" style="font-family: 'Plus Jakarta Sans', sans-serif;">US Navy metodu ile yaklaşık yağ oranını hesapla.</p>
+                    <div class="mt-auto relative z-10">
+                        <h3 class="text-[#181C20] font-[600] text-[14px] leading-[20px]" style="font-family: 'Plus Jakarta Sans', sans-serif;">Vücut Yağı Oranı</h3>
+                    </div>
+                    <span class="hidden">US Navy metodu ile yaklaşık yağ oranını hesapla. SAĞLIK</span>
                 </div>
-                <button class="w-full h-12 mt-1 rounded-[24px] bg-[#F0F2F8] flex items-center justify-center gap-2 active:scale-95 transition-transform" style="background-color: #F0F2F8; box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.08), -6px -6px 12px rgba(255, 255, 255, 0.8);" onclick="window.openTool('bodyfat')">
-                    <span class="material-symbols-rounded text-[#181C20] text-[18px]">play_arrow</span>
-                    <span class="text-[#181C20] font-[600] text-[16px]" style="font-family: 'Plus Jakarta Sans', sans-serif;">Hesapla</span>
-                </button>
             </div>
 
             <!-- Araç Kartı 9: Kalori Hesaplama -->
-            <div class="tool-card-item bg-[#F0F2F8] rounded-[24px] p-6 flex flex-col gap-4 w-full" style="background-color: #F0F2F8; box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.08);">
-                <div class="flex flex-col gap-2">
-                    <div class="h-8 px-4 inline-flex items-center justify-center rounded-full bg-[#F0F2F8] self-start" style="background-color: #F0F2F8; box-shadow: inset 4px 4px 8px rgba(0, 0, 0, 0.06), inset -4px -4px 8px rgba(255, 255, 255, 0.8);">
-                        <span class="text-[#181C20] font-[600] text-[12px] uppercase tracking-[0.7px]" style="font-family: 'Plus Jakarta Sans', sans-serif;">HEDEF</span>
+            <div class="tool-card-item rounded-[24px] p-[1px] bg-gradient-to-br from-[#3B82F6] to-[#22C55E] cursor-pointer" style="background-color: #F0F2F8; box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.08), -6px -6px 12px rgba(255, 255, 255, 0.8);" onclick="window.openTool('calorie')">
+                <div class="bg-[#F0F2F8] rounded-[23px] p-5 flex flex-col justify-between aspect-square h-full relative">
+                    <div class="flex justify-between items-start w-full relative z-10">
+                        <div class="w-10 h-10 rounded-[16px] bg-[#F0F2F8] flex items-center justify-center" style="background-color: #F0F2F8; box-shadow: inset 4px 4px 8px rgba(0, 0, 0, 0.06), inset -4px -4px 8px rgba(255, 255, 255, 0.8);">
+                            <span class="material-symbols-rounded text-[#3B82F6] text-[20px]">local_dining</span>
+                        </div>
                     </div>
-                    <h3 class="text-[#181C20] font-[700] text-[24px] leading-[32px] mt-1" style="font-family: 'Plus Jakarta Sans', sans-serif;">Kalori Hesaplama</h3>
-                    <p class="text-[#181C20] font-[400] text-[14px] leading-[20px]" style="font-family: 'Plus Jakarta Sans', sans-serif;">Hedefine ulaşmak için günlük alman gereken kalori.</p>
+                    <div class="mt-auto relative z-10">
+                        <h3 class="text-[#181C20] font-[600] text-[14px] leading-[20px]" style="font-family: 'Plus Jakarta Sans', sans-serif;">Kalori Hesaplama</h3>
+                    </div>
+                    <span class="hidden">Hedefine ulaşmak için günlük alman gereken kalori. HEDEF</span>
                 </div>
-                <button class="w-full h-12 mt-1 rounded-[24px] bg-[#F0F2F8] flex items-center justify-center gap-2 active:scale-95 transition-transform" style="background-color: #F0F2F8; box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.08), -6px -6px 12px rgba(255, 255, 255, 0.8);" onclick="window.openTool('calorie')">
-                    <span class="material-symbols-rounded text-[#181C20] text-[18px]">play_arrow</span>
-                    <span class="text-[#181C20] font-[600] text-[16px]" style="font-family: 'Plus Jakarta Sans', sans-serif;">Hesapla</span>
-                </button>
             </div>
 
             <!-- Araç Kartı 10: Protein İhtiyacı -->
-            <div class="tool-card-item bg-[#F0F2F8] rounded-[24px] p-6 flex flex-col gap-4 w-full" style="background-color: #F0F2F8; box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.08);">
-                <div class="flex flex-col gap-2">
-                    <div class="h-8 px-4 inline-flex items-center justify-center rounded-full bg-[#F0F2F8] self-start" style="background-color: #F0F2F8; box-shadow: inset 4px 4px 8px rgba(0, 0, 0, 0.06), inset -4px -4px 8px rgba(255, 255, 255, 0.8);">
-                        <span class="text-[#181C20] font-[600] text-[12px] uppercase tracking-[0.7px]" style="font-family: 'Plus Jakarta Sans', sans-serif;">BESLENME</span>
+            <div class="tool-card-item rounded-[24px] p-[1px] bg-gradient-to-br from-[#3B82F6] to-[#22C55E] cursor-pointer" style="background-color: #F0F2F8; box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.08), -6px -6px 12px rgba(255, 255, 255, 0.8);" onclick="window.openTool('protein')">
+                <div class="bg-[#F0F2F8] rounded-[23px] p-5 flex flex-col justify-between aspect-square h-full relative">
+                    <div class="flex justify-between items-start w-full relative z-10">
+                        <div class="w-10 h-10 rounded-[16px] bg-[#F0F2F8] flex items-center justify-center" style="background-color: #F0F2F8; box-shadow: inset 4px 4px 8px rgba(0, 0, 0, 0.06), inset -4px -4px 8px rgba(255, 255, 255, 0.8);">
+                            <span class="material-symbols-rounded text-[#3B82F6] text-[20px]">egg_alt</span>
+                        </div>
                     </div>
-                    <h3 class="text-[#181C20] font-[700] text-[24px] leading-[32px] mt-1" style="font-family: 'Plus Jakarta Sans', sans-serif;">Protein İhtiyacı</h3>
-                    <p class="text-[#181C20] font-[400] text-[14px] leading-[20px]" style="font-family: 'Plus Jakarta Sans', sans-serif;">Kas gelişimi ve hedefin için günlük alman gereken protein.</p>
+                    <div class="mt-auto relative z-10">
+                        <h3 class="text-[#181C20] font-[600] text-[14px] leading-[20px]" style="font-family: 'Plus Jakarta Sans', sans-serif;">Protein İhtiyacı</h3>
+                    </div>
+                    <span class="hidden">Kas gelişimi ve hedefin için günlük alman gereken protein. BESLENME</span>
                 </div>
-                <button class="w-full h-12 mt-1 rounded-[24px] bg-[#F0F2F8] flex items-center justify-center gap-2 active:scale-95 transition-transform" style="background-color: #F0F2F8; box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.08), -6px -6px 12px rgba(255, 255, 255, 0.8);" onclick="window.openTool('protein')">
-                    <span class="material-symbols-rounded text-[#181C20] text-[18px]">play_arrow</span>
-                    <span class="text-[#181C20] font-[600] text-[16px]" style="font-family: 'Plus Jakarta Sans', sans-serif;">Hesapla</span>
-                </button>
             </div>
 
             <!-- Araç Kartı 11: Makro Hesaplama -->
-            <div class="tool-card-item bg-[#F0F2F8] rounded-[24px] p-6 flex flex-col gap-4 w-full" style="background-color: #F0F2F8; box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.08);">
-                <div class="flex flex-col gap-2">
-                    <div class="h-8 px-4 inline-flex items-center justify-center rounded-full bg-[#F0F2F8] self-start" style="background-color: #F0F2F8; box-shadow: inset 4px 4px 8px rgba(0, 0, 0, 0.06), inset -4px -4px 8px rgba(255, 255, 255, 0.8);">
-                        <span class="text-[#181C20] font-[600] text-[12px] uppercase tracking-[0.7px]" style="font-family: 'Plus Jakarta Sans', sans-serif;">BESLENME</span>
+            <div class="tool-card-item rounded-[24px] p-[1px] bg-gradient-to-br from-[#3B82F6] to-[#22C55E] cursor-pointer" style="background-color: #F0F2F8; box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.08), -6px -6px 12px rgba(255, 255, 255, 0.8);" onclick="window.openTool('macro')">
+                <div class="bg-[#F0F2F8] rounded-[23px] p-5 flex flex-col justify-between aspect-square h-full relative">
+                    <div class="flex justify-between items-start w-full relative z-10">
+                        <div class="w-10 h-10 rounded-[16px] bg-[#F0F2F8] flex items-center justify-center" style="background-color: #F0F2F8; box-shadow: inset 4px 4px 8px rgba(0, 0, 0, 0.06), inset -4px -4px 8px rgba(255, 255, 255, 0.8);">
+                            <span class="material-symbols-rounded text-[#3B82F6] text-[20px]">pie_chart</span>
+                        </div>
                     </div>
-                    <h3 class="text-[#181C20] font-[700] text-[24px] leading-[32px] mt-1" style="font-family: 'Plus Jakarta Sans', sans-serif;">Makro Hesaplama</h3>
-                    <p class="text-[#181C20] font-[400] text-[14px] leading-[20px]" style="font-family: 'Plus Jakarta Sans', sans-serif;">Hedef kalorine uygun dengeli makro dağılımı.</p>
+                    <div class="mt-auto relative z-10">
+                        <h3 class="text-[#181C20] font-[600] text-[14px] leading-[20px]" style="font-family: 'Plus Jakarta Sans', sans-serif;">Makro Hesaplama</h3>
+                    </div>
+                    <span class="hidden">Hedef kalorine uygun dengeli makro dağılımı. BESLENME</span>
                 </div>
-                <button class="w-full h-12 mt-1 rounded-[24px] bg-[#F0F2F8] flex items-center justify-center gap-2 active:scale-95 transition-transform" style="background-color: #F0F2F8; box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.08), -6px -6px 12px rgba(255, 255, 255, 0.8);" onclick="window.openTool('macro')">
-                    <span class="material-symbols-rounded text-[#181C20] text-[18px]">play_arrow</span>
-                    <span class="text-[#181C20] font-[600] text-[16px]" style="font-family: 'Plus Jakarta Sans', sans-serif;">Hesapla</span>
-                </button>
             </div>
 
             <!-- Araç Kartı 12: Dinlenme Süresi -->
-            <div class="tool-card-item bg-[#F0F2F8] rounded-[24px] p-6 flex flex-col gap-4 w-full" style="background-color: #F0F2F8; box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.08);">
-                <div class="flex flex-col gap-2">
-                    <div class="h-8 px-4 inline-flex items-center justify-center rounded-full bg-[#F0F2F8] self-start" style="background-color: #F0F2F8; box-shadow: inset 4px 4px 8px rgba(0, 0, 0, 0.06), inset -4px -4px 8px rgba(255, 255, 255, 0.8);">
-                        <span class="text-[#181C20] font-[600] text-[12px] uppercase tracking-[0.7px]" style="font-family: 'Plus Jakarta Sans', sans-serif;">PERFORMANS</span>
+            <div class="tool-card-item rounded-[24px] p-[1px] bg-gradient-to-br from-[#3B82F6] to-[#22C55E] cursor-pointer" style="background-color: #F0F2F8; box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.08), -6px -6px 12px rgba(255, 255, 255, 0.8);" onclick="window.openTool('rest_time')">
+                <div class="bg-[#F0F2F8] rounded-[23px] p-5 flex flex-col justify-between aspect-square h-full relative">
+                    <div class="flex justify-between items-start w-full relative z-10">
+                        <div class="w-10 h-10 rounded-[16px] bg-[#F0F2F8] flex items-center justify-center" style="background-color: #F0F2F8; box-shadow: inset 4px 4px 8px rgba(0, 0, 0, 0.06), inset -4px -4px 8px rgba(255, 255, 255, 0.8);">
+                            <span class="material-symbols-rounded text-[#3B82F6] text-[20px]">timer</span>
+                        </div>
                     </div>
-                    <h3 class="text-[#181C20] font-[700] text-[24px] leading-[32px] mt-1" style="font-family: 'Plus Jakarta Sans', sans-serif;">Dinlenme Süresi</h3>
-                    <p class="text-[#181C20] font-[400] text-[14px] leading-[20px]" style="font-family: 'Plus Jakarta Sans', sans-serif;">Antrenman hedefine göre set arası ideal dinlenme.</p>
+                    <div class="mt-auto relative z-10">
+                        <h3 class="text-[#181C20] font-[600] text-[14px] leading-[20px]" style="font-family: 'Plus Jakarta Sans', sans-serif;">Dinlenme Süresi</h3>
+                    </div>
+                    <span class="hidden">Antrenman hedefine göre set arası ideal dinlenme. PERFORMANS</span>
                 </div>
-                <button class="w-full h-12 mt-1 rounded-[24px] bg-[#F0F2F8] flex items-center justify-center gap-2 active:scale-95 transition-transform" style="background-color: #F0F2F8; box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.08), -6px -6px 12px rgba(255, 255, 255, 0.8);" onclick="window.openTool('rest_time')">
-                    <span class="material-symbols-rounded text-[#181C20] text-[18px]">play_arrow</span>
-                    <span class="text-[#181C20] font-[600] text-[16px]" style="font-family: 'Plus Jakarta Sans', sans-serif;">Hesapla</span>
-                </button>
             </div>
 
             <!-- Araç Kartı 13: 1RM (Maksimum Güç) -->
-            <div class="tool-card-item bg-[#F0F2F8] rounded-[24px] p-6 flex flex-col gap-4 w-full" style="background-color: #F0F2F8; box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.08);">
-                <div class="flex flex-col gap-2">
-                    <div class="h-8 px-4 inline-flex items-center justify-center rounded-full bg-[#F0F2F8] self-start" style="background-color: #F0F2F8; box-shadow: inset 4px 4px 8px rgba(0, 0, 0, 0.06), inset -4px -4px 8px rgba(255, 255, 255, 0.8);">
-                        <span class="text-[#181C20] font-[600] text-[12px] uppercase tracking-[0.7px]" style="font-family: 'Plus Jakarta Sans', sans-serif;">PERFORMANS</span>
+            <div class="tool-card-item rounded-[24px] p-[1px] bg-gradient-to-br from-[#3B82F6] to-[#22C55E] cursor-pointer" style="background-color: #F0F2F8; box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.08), -6px -6px 12px rgba(255, 255, 255, 0.8);" onclick="window.openTool('onerm')">
+                <div class="bg-[#F0F2F8] rounded-[23px] p-5 flex flex-col justify-between aspect-square h-full relative">
+                    <div class="flex justify-between items-start w-full relative z-10">
+                        <div class="w-10 h-10 rounded-[16px] bg-[#F0F2F8] flex items-center justify-center" style="background-color: #F0F2F8; box-shadow: inset 4px 4px 8px rgba(0, 0, 0, 0.06), inset -4px -4px 8px rgba(255, 255, 255, 0.8);">
+                            <span class="material-symbols-rounded text-[#3B82F6] text-[20px]">fitness_center</span>
+                        </div>
                     </div>
-                    <h3 class="text-[#181C20] font-[700] text-[24px] leading-[32px] mt-1" style="font-family: 'Plus Jakarta Sans', sans-serif;">1RM Hesaplama</h3>
-                    <p class="text-[#181C20] font-[400] text-[14px] leading-[20px]" style="font-family: 'Plus Jakarta Sans', sans-serif;">Tek tekrarda kaldırabileceğin maksimum ağırlık.</p>
+                    <div class="mt-auto relative z-10">
+                        <h3 class="text-[#181C20] font-[600] text-[14px] leading-[20px]" style="font-family: 'Plus Jakarta Sans', sans-serif;">1RM Hesaplama</h3>
+                    </div>
+                    <span class="hidden">Tek tekrarda kaldırabileceğin maksimum ağırlık. PERFORMANS</span>
                 </div>
-                <button class="w-full h-12 mt-1 rounded-[24px] bg-[#F0F2F8] flex items-center justify-center gap-2 active:scale-95 transition-transform" style="background-color: #F0F2F8; box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.08), -6px -6px 12px rgba(255, 255, 255, 0.8);" onclick="window.openTool('onerm')">
-                    <span class="material-symbols-rounded text-[#181C20] text-[18px]">play_arrow</span>
-                    <span class="text-[#181C20] font-[600] text-[16px]" style="font-family: 'Plus Jakarta Sans', sans-serif;">Hesapla</span>
-                </button>
             </div>
 
             <!-- Araç Kartı 14: Vücut Tipi Analizi -->
-            <div class="tool-card-item bg-[#F0F2F8] rounded-[24px] p-6 flex flex-col gap-4 w-full" style="background-color: #F0F2F8; box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.08);">
-                <div class="flex flex-col gap-2">
-                    <div class="h-8 px-4 inline-flex items-center justify-center rounded-full bg-[#F0F2F8] self-start" style="background-color: #F0F2F8; box-shadow: inset 4px 4px 8px rgba(0, 0, 0, 0.06), inset -4px -4px 8px rgba(255, 255, 255, 0.8);">
-                        <span class="text-[#181C20] font-[600] text-[12px] uppercase tracking-[0.7px]" style="font-family: 'Plus Jakarta Sans', sans-serif;">SAĞLIK</span>
+            <div class="tool-card-item rounded-[24px] p-[1px] bg-gradient-to-br from-[#3B82F6] to-[#22C55E] cursor-pointer" style="background-color: #F0F2F8; box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.08), -6px -6px 12px rgba(255, 255, 255, 0.8);" onclick="window.openTool('bodytype')">
+                <div class="bg-[#F0F2F8] rounded-[23px] p-5 flex flex-col justify-between aspect-square h-full relative">
+                    <div class="flex justify-between items-start w-full relative z-10">
+                        <div class="w-10 h-10 rounded-[16px] bg-[#F0F2F8] flex items-center justify-center" style="background-color: #F0F2F8; box-shadow: inset 4px 4px 8px rgba(0, 0, 0, 0.06), inset -4px -4px 8px rgba(255, 255, 255, 0.8);">
+                            <span class="material-symbols-rounded text-[#3B82F6] text-[20px]">boy</span>
+                        </div>
                     </div>
-                    <h3 class="text-[#181C20] font-[700] text-[24px] leading-[32px] mt-1" style="font-family: 'Plus Jakarta Sans', sans-serif;">Vücut Tipi Analizi</h3>
-                    <p class="text-[#181C20] font-[400] text-[14px] leading-[20px]" style="font-family: 'Plus Jakarta Sans', sans-serif;">Genetik vücut tipini (Ektomorf vb.) öğren.</p>
+                    <div class="mt-auto relative z-10">
+                        <h3 class="text-[#181C20] font-[600] text-[14px] leading-[20px]" style="font-family: 'Plus Jakarta Sans', sans-serif;">Vücut Tipi Analizi</h3>
+                    </div>
+                    <span class="hidden">Genetik vücut tipini (Ektomorf vb.) öğren. SAĞLIK</span>
                 </div>
-                <button class="w-full h-12 mt-1 rounded-[24px] bg-[#F0F2F8] flex items-center justify-center gap-2 active:scale-95 transition-transform" style="background-color: #F0F2F8; box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.08), -6px -6px 12px rgba(255, 255, 255, 0.8);" onclick="window.openTool('bodytype')">
-                    <span class="material-symbols-rounded text-[#181C20] text-[18px]">play_arrow</span>
-                    <span class="text-[#181C20] font-[600] text-[16px]" style="font-family: 'Plus Jakarta Sans', sans-serif;">Hesapla</span>
-                </button>
             </div>
+
+</div>
         </main>
 
     </section>
@@ -5270,3 +5274,4 @@
 
 </body>
 </html>
+
