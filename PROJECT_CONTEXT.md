@@ -68,3 +68,6 @@ Veriler, Firestore (NoSQL) yapısında her kullanıcıya ait alt koleksiyonlar �
 *   **Otonom Çalışma**: Kullanıcının verdiği görevler onay ve izin istenmeden direkt uygulanır (bu talimatta istendiği üzere).
 *   **Refactor/Güvenlik Pratiği**: Kod yapısında veya mimarisinde büyük değişikliğe gidilmeden önce `cleanup: checkpoint before cleanup` commit mesajı ile mevcut durumu proaktif olarak Git'e kaydetmek zorunludur.
 *   **Tasarım Kuralları**: Tasarım (padding, margin, shadow, colors) yapısı kesinlikle değiştirilemez. Yeni eklemeler sadece mevcudun kopyalanıp adapte edilmesiyle yapılır.
+
+## Geliştirici Notları
+Dosya düzenlerken PowerShell native cmdlet kullanma, UTF-8 encoding'i her zaman açıkça belirt (örn. -Encoding UTF8). Mümkünse native kod düzenleme (str_replace vb.) araçlarını tercih et.
