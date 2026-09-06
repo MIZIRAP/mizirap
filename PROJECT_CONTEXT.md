@@ -70,4 +70,6 @@ Veriler, Firestore (NoSQL) yapısında her kullanıcıya ait alt koleksiyonlar �
 *   **Tasarım Kuralları**: Tasarım (padding, margin, shadow, colors) yapısı kesinlikle değiştirilemez. Yeni eklemeler sadece mevcudun kopyalanıp adapte edilmesiyle yapılır.
 
 ## Geliştirici Notları
-Dosya düzenlerken PowerShell native cmdlet kullanma, UTF-8 encoding'i her zaman açıkça belirt (örn. -Encoding UTF8). Mümkünse native kod düzenleme (str_replace vb.) araçlarını tercih et.
+Dosya düzenlerken KESİNLİKLE PowerShell (`Get-Content`, `-replace`, `Set-Content` vs.) kullanma! PowerShell'in lokal (ör. Türkçe 857) code page sorunları yüzünden UTF-8 dosyalar bozulup mojibake (bozuk Türkçe karakterler) oluşmaktadır. 
+Her zaman kendi yerleşik kod düzenleme/ast (replace_file_content, str_replace vb.) araçlarını tercih et. 
+Ortam kaynaklı encoding sorunlarını önlemek adına PowerShell profil dosyasına (`$PROFILE`) `chcp 65001`, `$OutputEncoding` ve `[Console]::OutputEncoding` ayarları kalıcı olarak eklenmiştir.
