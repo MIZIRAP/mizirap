@@ -66,12 +66,12 @@ export function initMovies(uid, onChangeCallback) {
     if(editBackdrop) editBackdrop.onclick = closeEditModal;
     if(editCloseHandle) editCloseHandle.onclick = closeEditModal;
 
-        function updateAddSeriesFieldsVisibility() {
+    function updateAddSeriesFieldsVisibility() {
         const type = addType ? addType.value : 'series';
         const statusEl = document.querySelector('input[name="movie-add-status"]:checked');
         const status = statusEl ? statusEl.value : 'watching';
         if (type === 'series' && status === 'watching') {
-            if(addSeriesFields) if(typeof updateAddSeriesFieldsVisibility === 'function') updateAddSeriesFieldsVisibility();
+            if(addSeriesFields) addSeriesFields.style.display = 'flex';
         } else {
             if(addSeriesFields) addSeriesFields.style.display = 'none';
         }
