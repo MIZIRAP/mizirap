@@ -1,4 +1,4 @@
-import { db } from "./firebase-config.js";
+﻿import { db } from "./firebase-config.js";
 import { collection, onSnapshot, serverTimestamp, doc, updateDoc, writeBatch, addDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
 import { escapeHtml } from "./utils.js";
 import { registerListener } from "./listenerManager.js";
@@ -10,6 +10,15 @@ let activeMovie = null;
 let onChangeCb = null;
 
 let currentEditingId = null; // for edit modal
+
+let currentFilterCategory = 'Tümü';
+let currentSearchTerm = '';
+window.applyMovieFilters = (category, searchTerm) => {
+    currentFilterCategory = category;
+    currentSearchTerm = searchTerm;
+    renderMoviesView();
+};
+
 
 // DOM Elements - Main Screen
 const activeSeasonEl = document.getElementById("movie-active-season");
@@ -65,19 +74,35 @@ export function initMovies(uid, onChangeCallback) {
     if(editBackdrop) editBackdrop.onclick = closeEditModal;
     if(editCloseHandle) editCloseHandle.onclick = closeEditModal;
 
-    // Bind Type Toggles
-    if(addType) {
-        addType.onchange = () => {
-            if(addType.value === 'series') addSeriesFields.style.display = 'flex';
-            else addSeriesFields.style.display = 'none';
-        };
+        function updateAddSeriesFieldsVisibility() {
+        const type = addType ? addType.value : 'series';
+        const statusEl = document.querySelector('input[name="movie-add-status"]:checked');
+        const status = statusEl ? statusEl.value : 'watching';
+        if (type === 'series' && status === 'watching') {
+            if(addSeriesFields) if(typeof updateAddSeriesFieldsVisibility === 'function') updateAddSeriesFieldsVisibility();
+        } else {
+            if(addSeriesFields) addSeriesFields.style.display = 'none';
+        }
     }
-    if(editType) {
-        editType.onchange = () => {
-            if(editType.value === 'series') editSeriesFields.style.display = 'flex';
-            else editSeriesFields.style.display = 'none';
-        };
+
+    function updateEditSeriesFieldsVisibility() {
+        const type = editType ? editType.value : 'series';
+        const statusEl = document.querySelector('input[name="movie-edit-status"]:checked');
+        const status = statusEl ? statusEl.value : 'watching';
+        if (type === 'series' && status === 'watching') {
+            if(editSeriesFields) editSeriesFields.style.display = 'flex';
+        } else {
+            if(editSeriesFields) editSeriesFields.style.display = 'none';
+        }
     }
+
+    if(addType) addType.onchange = updateAddSeriesFieldsVisibility;
+    const addStatusRadios = document.querySelectorAll('input[name="movie-add-status"]');
+    addStatusRadios.forEach(radio => radio.addEventListener('change', updateAddSeriesFieldsVisibility));
+
+    if(editType) editType.onchange = updateEditSeriesFieldsVisibility;
+    const editStatusRadios = document.querySelectorAll('input[name="movie-edit-status"]');
+    editStatusRadios.forEach(radio => radio.addEventListener('change', updateEditSeriesFieldsVisibility));
 
     // Bind Saves
     if(addSaveBtn) addSaveBtn.onclick = saveAddMovie;
@@ -130,7 +155,7 @@ export function initMovies(uid, onChangeCallback) {
 
         if (onChangeCb) onChangeCb(currentMovies);
     }, (error) => {
-        console.error("Filmler çekilemedi:", error);
+        console.error("Filmler Ã§ekilemedi:", error);
     });
 
     registerListener(moviesUnsubscribe);
@@ -138,26 +163,26 @@ export function initMovies(uid, onChangeCallback) {
 
 function updateActiveMovieUI() {
     if (!activeMovie) {
-        if(activeTitleEl) activeTitleEl.textContent = "İçerik Seçin";
-        if(activeSeasonEl) activeSeasonEl.textContent = "FİLM / DİZİ";
+        if(activeTitleEl) activeTitleEl.textContent = "Ä°Ã§erik SeÃ§in";
+        if(activeSeasonEl) activeSeasonEl.textContent = "FÄ°LM / DÄ°ZÄ°";
         if(activeEpisodeEl) activeEpisodeEl.textContent = "--";
         if(progressCircle) progressCircle.style.strokeDashoffset = 314.159;
         return;
     }
 
-    if(activeTitleEl) activeTitleEl.textContent = activeMovie.title || "İsimsiz";
+    if(activeTitleEl) activeTitleEl.textContent = activeMovie.title || "Ä°simsiz";
 
     let percentage = 0;
     if (activeMovie.type === 'movie') {
-        if(activeSeasonEl) activeSeasonEl.textContent = "FİLM";
+        if(activeSeasonEl) activeSeasonEl.textContent = "FÄ°LM";
         if(activeMovie.status === 'completed') {
-            if(activeEpisodeEl) activeEpisodeEl.textContent = "BİTTİ";
+            if(activeEpisodeEl) activeEpisodeEl.textContent = "BÄ°TTÄ°";
             percentage = 100;
         } else if (activeMovie.status === 'watchlist') {
-            if(activeEpisodeEl) activeEpisodeEl.textContent = "BEKLİYOR";
+            if(activeEpisodeEl) activeEpisodeEl.textContent = "BEKLÄ°YOR";
             percentage = 0;
         } else {
-            if(activeEpisodeEl) activeEpisodeEl.textContent = "İZLİYOR";
+            if(activeEpisodeEl) activeEpisodeEl.textContent = "Ä°ZLÄ°YOR";
             percentage = 50;
         }
     } else {
@@ -248,19 +273,50 @@ function renderMoviesView() {
 
     allListEl.innerHTML = '';
 
-    if (currentMovies.length === 0) {
-        allListEl.innerHTML = `<p class="text-center text-[#64748B] py-8 text-sm">Henüz eklenmiş bir içerik yok.</p>`;
+    let displayedMovies = currentMovies.filter(movie => {
+        let shouldShow = true;
+        const type = movie.type;
+        const status = movie.status;
+
+        // Missing type or status means it's an old legacy entry
+        const isLegacy = (!type || !status);
+
+        if (currentFilterCategory === 'Tümü') {
+            shouldShow = true; // All show here, including legacy
+        } else if (currentFilterCategory === 'Film') {
+            shouldShow = (type === 'movie');
+        } else if (currentFilterCategory === 'Dizi') {
+            shouldShow = (type === 'series');
+        } else if (currentFilterCategory === 'İzlenenler') {
+            shouldShow = (status === 'completed');
+        } else if (currentFilterCategory === 'İzlenecekler') {
+            shouldShow = (status === 'watchlist');
+        } else if (currentFilterCategory === 'Devam Edenler') {
+            shouldShow = (status === 'watching');
+        }
+
+        if (shouldShow && currentSearchTerm !== '') {
+            const movieName = (movie.title || 'İsimsiz').toLowerCase();
+            if (!movieName.includes(currentSearchTerm)) {
+                shouldShow = false;
+            }
+        }
+        return shouldShow;
+    });
+
+    if (displayedMovies.length === 0) {
+        allListEl.innerHTML = <p class="text-center text-[#64748B] py-8 text-sm">Hiçbir içerik bulunamadı.</p>;
         return;
     }
 
-    currentMovies.forEach(movie => {
+    displayedMovies.forEach(movie => {
         const type = movie.type || 'series';
-        const title = escapeHtml(movie.title || 'İsimsiz');
+        const title = escapeHtml(movie.title || 'Ä°simsiz');
 
         let subtitleText = '';
         if (type === 'series') {
             const tEp = movie.totalEpisode ? ` / ${movie.totalEpisode}` : '';
-            subtitleText = `Sezon ${movie.season || 1} • Bölüm ${movie.episode || 1}${tEp}`;
+            subtitleText = `Sezon ${movie.season || 1} â€¢ BÃ¶lÃ¼m ${movie.episode || 1}${tEp}`;
         } else {
             subtitleText = `Film`;
         }
@@ -268,13 +324,13 @@ function renderMoviesView() {
         let statusText = "";
         let statusColor = "text-[#64748B]";
         if (movie.status === 'watchlist') {
-            statusText = "İstek Listesi";
+            statusText = "Ä°stek Listesi";
             statusColor = "text-[#F59E0B]";
         } else if (movie.status === 'completed') {
             statusText = "Bitti";
             statusColor = "text-[#22C55E]";
         } else {
-            statusText = "İzliyorum";
+            statusText = "Ä°zliyorum";
             statusColor = "text-[#3B82F6]";
         }
 
@@ -439,7 +495,7 @@ function openAddModal() {
     addTotalEpisode.value = 10;
     addSeason.value = 1;
     addEpisode.value = 1;
-    addSeriesFields.style.display = 'flex';
+    if(typeof updateAddSeriesFieldsVisibility === 'function') updateAddSeriesFieldsVisibility();
     document.querySelector('input[name="movie-add-status"][value="watching"]').checked = true;
 
     addModal.classList.remove('hidden');
@@ -470,7 +526,7 @@ function closeAddModal() {
 async function saveAddMovie() {
     if(!currentUid) return;
     const title = addTitle.value.trim();
-    if(!title) return alert("Lütfen içerik adını giriniz.");
+    if(!title) return alert("LÃ¼tfen iÃ§erik adÄ±nÄ± giriniz.");
 
     const type = addType.value;
     const status = document.querySelector('input[name="movie-add-status"]:checked').value;
@@ -495,7 +551,7 @@ async function saveAddMovie() {
         closeAddModal();
     } catch(e) {
         console.error(e);
-        alert("Eklenirken hata oluştu.");
+        alert("Eklenirken hata oluÅŸtu.");
     }
 }
 
@@ -523,6 +579,7 @@ function openEditModal(movie) {
     const s = movie.status || 'watching';
     const rb = document.querySelector(`input[name="movie-edit-status"][value="${s}"]`);
     if(rb) rb.checked = true;
+    if(typeof updateEditSeriesFieldsVisibility === 'function') updateEditSeriesFieldsVisibility();
 
     editModal.classList.remove('hidden');
     editModal.classList.add('flex');
@@ -553,7 +610,7 @@ function closeEditModal() {
 async function saveEditMovie() {
     if(!currentUid || !currentEditingId) return;
     const title = editTitle.value.trim();
-    if(!title) return alert("Lütfen içerik adını giriniz.");
+    if(!title) return alert("LÃ¼tfen iÃ§erik adÄ±nÄ± giriniz.");
 
     const type = editType.value;
     const status = document.querySelector('input[name="movie-edit-status"]:checked').value;
@@ -577,20 +634,20 @@ async function saveEditMovie() {
         closeEditModal();
     } catch(e) {
         console.error(e);
-        alert("Güncellenirken hata oluştu.");
+        alert("GÃ¼ncellenirken hata oluÅŸtu.");
     }
 }
 
 async function deleteMovie() {
     if(!currentUid || !currentEditingId) return;
-    if(!confirm("Bu içeriği silmek istediğinize emin misiniz?")) return;
+    if(!confirm("Bu iÃ§eriÄŸi silmek istediÄŸinize emin misiniz?")) return;
 
     try {
         await deleteDoc(doc(db, "users", currentUid, "movies", currentEditingId));
         closeEditModal();
     } catch(e) {
         console.error(e);
-        alert("Silinirken hata oluştu.");
+        alert("Silinirken hata oluÅŸtu.");
     }
 }
 
