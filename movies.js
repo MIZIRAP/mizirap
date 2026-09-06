@@ -305,7 +305,7 @@ function renderMoviesView() {
     });
 
     if (displayedMovies.length === 0) {
-        allListEl.innerHTML = <p class="text-center text-[#64748B] py-8 text-sm">Hiçbir içerik bulunamadı.</p>;
+        allListEl.innerHTML = `<p class="text-center text-[#64748B] py-8 text-sm">Hiçbir içerik bulunamadı.</p>`;
         return;
     }
 
