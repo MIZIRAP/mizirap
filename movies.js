@@ -489,14 +489,14 @@ function renderMoviesView() {
 // --- ADD MODAL ---
 function openAddModal() {
     if(!addModal) return;
-    addType.value = 'series';
+    addType.value = '';
     addTitle.value = '';
     addTotalSeason.value = 1;
     addTotalEpisode.value = 10;
     addSeason.value = 1;
     addEpisode.value = 1;
     if(typeof updateAddSeriesFieldsVisibility === 'function') updateAddSeriesFieldsVisibility();
-    document.querySelector('input[name="movie-add-status"][value="watching"]').checked = true;
+    document.querySelectorAll('input[name="movie-add-status"]').forEach(rb => rb.checked = false);
 
     addModal.classList.remove('hidden');
     addModal.classList.add('flex');
@@ -528,8 +528,10 @@ async function saveAddMovie() {
     const title = addTitle.value.trim();
     if(!title) return alert("LÃ¼tfen iÃ§erik adÄ±nÄ± giriniz.");
 
-    const type = addType.value;
-    const status = document.querySelector('input[name="movie-add-status"]:checked').value;
+        const type = addType.value;
+    const statusEl = document.querySelector('input[name="movie-add-status"]:checked');
+    if(!type || !statusEl) return alert("Lütfen tür ve durum seçiniz.");
+    const status = statusEl.value;
 
     const data = {
         title,
@@ -560,7 +562,7 @@ function openEditModal(movie) {
     if(!editModal) return;
     currentEditingId = movie.id;
 
-    editType.value = movie.type || 'series';
+    editType.value = movie.type || '';
     editTitle.value = movie.title || '';
     if (editType.value === 'series') {
         editSeriesFields.style.display = 'flex';
@@ -576,7 +578,7 @@ function openEditModal(movie) {
         editEpisode.value = 1;
     }
 
-    const s = movie.status || 'watching';
+    const s = movie.status || '';
     const rb = document.querySelector(`input[name="movie-edit-status"][value="${s}"]`);
     if(rb) rb.checked = true;
     if(typeof updateEditSeriesFieldsVisibility === 'function') updateEditSeriesFieldsVisibility();
@@ -612,8 +614,10 @@ async function saveEditMovie() {
     const title = editTitle.value.trim();
     if(!title) return alert("LÃ¼tfen iÃ§erik adÄ±nÄ± giriniz.");
 
-    const type = editType.value;
-    const status = document.querySelector('input[name="movie-edit-status"]:checked').value;
+        const type = editType.value;
+    const statusEl = document.querySelector('input[name="movie-edit-status"]:checked');
+    if(!type || !statusEl) return alert("Lütfen tür ve durum seçiniz.");
+    const status = statusEl.value;
 
     const data = {
         title,
