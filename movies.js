@@ -1,4 +1,4 @@
-﻿import { db } from "./firebase-config.js";
+import { db } from "./firebase-config.js";
 import { collection, onSnapshot, serverTimestamp, doc, updateDoc, writeBatch, addDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
 import { escapeHtml } from "./utils.js";
 import { registerListener } from "./listenerManager.js";
@@ -489,14 +489,14 @@ function renderMoviesView() {
 // --- ADD MODAL ---
 function openAddModal() {
     if(!addModal) return;
-    addType.value = 'series';
+    addType.value = '';
     addTitle.value = '';
     addTotalSeason.value = 1;
     addTotalEpisode.value = 10;
     addSeason.value = 1;
     addEpisode.value = 1;
     if(typeof updateAddSeriesFieldsVisibility === 'function') updateAddSeriesFieldsVisibility();
-    document.querySelector('input[name="movie-add-status"][value="watching"]').checked = true;
+    document.querySelectorAll('input[name="movie-add-status"]').forEach(rb => rb.checked = false);
 
     addModal.classList.remove('hidden');
     addModal.classList.add('flex');
@@ -560,7 +560,7 @@ function openEditModal(movie) {
     if(!editModal) return;
     currentEditingId = movie.id;
 
-    editType.value = movie.type || 'series';
+    editType.value = movie.type || '';
     editTitle.value = movie.title || '';
     if (editType.value === 'series') {
         editSeriesFields.style.display = 'flex';
@@ -576,9 +576,12 @@ function openEditModal(movie) {
         editEpisode.value = 1;
     }
 
-    const s = movie.status || 'watching';
-    const rb = document.querySelector(`input[name="movie-edit-status"][value="${s}"]`);
-    if(rb) rb.checked = true;
+    document.querySelectorAll('input[name="movie-edit-status"]').forEach(r => r.checked = false);
+    const s = movie.status || '';
+    if (s) {
+        const rb = document.querySelector(`input[name="movie-edit-status"][value="${s}"]`);
+        if(rb) rb.checked = true;
+    }
     if(typeof updateEditSeriesFieldsVisibility === 'function') updateEditSeriesFieldsVisibility();
 
     editModal.classList.remove('hidden');
