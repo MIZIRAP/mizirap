@@ -529,7 +529,9 @@ async function saveAddMovie() {
     if(!title) return alert("LÃ¼tfen iÃ§erik adÄ±nÄ± giriniz.");
 
     const type = addType.value;
-    const status = document.querySelector('input[name="movie-add-status"]:checked').value;
+    const statusEl = document.querySelector('input[name="movie-add-status"]:checked');
+    if (!type || !statusEl) return alert("Lütfen tür ve durum seçiniz.");
+    const status = statusEl.value;
 
     const data = {
         title,
@@ -616,7 +618,9 @@ async function saveEditMovie() {
     if(!title) return alert("LÃ¼tfen iÃ§erik adÄ±nÄ± giriniz.");
 
     const type = editType.value;
-    const status = document.querySelector('input[name="movie-edit-status"]:checked').value;
+    const statusEl = document.querySelector('input[name="movie-edit-status"]:checked');
+    if (!type || !statusEl) return alert("Lütfen tür ve durum seçiniz.");
+    const status = statusEl.value;
 
     const data = {
         title,
