@@ -335,12 +335,11 @@ function openAddModal() {
     document.querySelectorAll('input[name="movie-add-status"]').forEach(rb => rb.checked = false);
 
     addModal.classList.remove('hidden');
-    addModal.classList.add('flex');
+    // We add flex to show the modal container
     requestAnimationFrame(() => {
         if(addBackdrop) addBackdrop.classList.remove('opacity-0');
         if(addContent) {
-            addContent.classList.remove('scale-95', 'opacity-0');
-            addContent.classList.add('scale-100', 'opacity-100');
+            addContent.classList.remove('translate-y-full');
         }
     });
 }
@@ -348,12 +347,10 @@ function openAddModal() {
 function closeAddModal() {
     if(addBackdrop) addBackdrop.classList.add('opacity-0');
     if(addContent) {
-        addContent.classList.remove('scale-100', 'opacity-100');
-        addContent.classList.add('scale-95', 'opacity-0');
+        addContent.classList.add('translate-y-full');
     }
     setTimeout(() => {
         if(addModal) {
-            addModal.classList.remove('flex');
             addModal.classList.add('hidden');
         }
     }, 300);
