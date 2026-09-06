@@ -196,7 +196,7 @@ function renderDashboard() {
     const dashMoviesText = document.getElementById("dashboard-movies-text");
     if (dashMoviesText) {
         if (currentMovies && currentMovies.length > 0) {
-            const activeMovie = currentMovies[0]; // because we sort the active one to index 0 in movies.js
+            const activeMovie = currentMovies[0]; // most recently updated movie
             if (activeMovie.type === 'series') {
                 dashMoviesText.innerHTML = `<span class="text-sm font-bold text-on-surface">S${activeMovie.season || 1} B${activeMovie.episode || 1}</span>`;
             } else {

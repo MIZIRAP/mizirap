@@ -6,7 +6,6 @@ import { registerListener } from "./listenerManager.js";
 let moviesUnsubscribe = null;
 let currentMovies = [];
 let currentUid = null;
-let activeMovie = null;
 let onChangeCb = null;
 
 let currentEditingId = null; // for edit modal
@@ -21,13 +20,6 @@ window.applyMovieFilters = (category, searchTerm) => {
 
 
 // DOM Elements - Main Screen
-const activeSeasonEl = document.getElementById("movie-active-season");
-const activeEpisodeEl = document.getElementById("movie-active-episode");
-const activeMinusBtn = document.getElementById("movie-active-minus");
-const activePlusBtn = document.getElementById("movie-active-plus");
-const progressCircle = document.getElementById("movie-progress-circle");
-const activeTitleEl = document.getElementById("movie-active-title");
-
 const addMovieBtn = document.getElementById("add-movie-btn-new");
 const allListEl = document.getElementById("movies-all-list-new");
 
@@ -109,16 +101,6 @@ export function initMovies(uid, onChangeCallback) {
     if(editSaveBtn) editSaveBtn.onclick = saveEditMovie;
     if(editDeleteBtn) editDeleteBtn.onclick = deleteMovie;
 
-    // Bind Active Controls
-    if(activeMinusBtn) activeMinusBtn.onclick = handleActiveMinus;
-    if(activePlusBtn) activePlusBtn.onclick = handleActivePlus;
-
-    // Load active movie from local storage
-    const storedActive = localStorage.getItem(`activeMovie_${uid}`);
-    if (storedActive) {
-        activeMovie = JSON.parse(storedActive);
-    }
-
     const moviesRef = collection(db, "users", uid, "movies");
 
     moviesUnsubscribe = onSnapshot(moviesRef, (snapshot) => {
@@ -127,29 +109,12 @@ export function initMovies(uid, onChangeCallback) {
             currentMovies.push({ id: docSnap.id, ...docSnap.data() });
         });
 
-        // Sort: activeMovie always first, then by updatedAt descending
+        // Sort: by updatedAt descending
         currentMovies.sort((a, b) => {
-            if (activeMovie && a.id === activeMovie.id) return -1;
-            if (activeMovie && b.id === activeMovie.id) return 1;
-
             const timeA = a.updatedAt ? a.updatedAt.toMillis() : 0;
             const timeB = b.updatedAt ? b.updatedAt.toMillis() : 0;
             return timeB - timeA;
         });
-
-        // Ensure activeMovie is valid
-        if (currentMovies.length > 0) {
-            const foundActive = activeMovie ? currentMovies.find(m => m.id === activeMovie.id) : null;
-            if (foundActive) {
-                activeMovie = foundActive;
-            } else {
-                activeMovie = currentMovies[0];
-                localStorage.setItem(`activeMovie_${currentUid}`, JSON.stringify(activeMovie));
-            }
-        } else {
-            activeMovie = null;
-            localStorage.removeItem(`activeMovie_${currentUid}`);
-        }
 
         renderMoviesView();
 
@@ -161,114 +126,7 @@ export function initMovies(uid, onChangeCallback) {
     registerListener(moviesUnsubscribe);
 }
 
-function updateActiveMovieUI() {
-    if (!activeMovie) {
-        if(activeTitleEl) activeTitleEl.textContent = "İçerik Seçin";
-        if(activeSeasonEl) activeSeasonEl.textContent = "FİLM / DİZİ";
-        if(activeEpisodeEl) activeEpisodeEl.textContent = "--";
-        if(progressCircle) progressCircle.style.strokeDashoffset = 314.159;
-        return;
-    }
-
-    if(activeTitleEl) activeTitleEl.textContent = activeMovie.title || "İsimsiz";
-
-    let percentage = 0;
-    if (activeMovie.type === 'movie') {
-        if(activeSeasonEl) activeSeasonEl.textContent = "FİLM";
-        if(activeMovie.status === 'completed') {
-            if(activeEpisodeEl) activeEpisodeEl.textContent = "BİTTİ";
-            percentage = 100;
-        } else if (activeMovie.status === 'watchlist') {
-            if(activeEpisodeEl) activeEpisodeEl.textContent = "BEKLİYOR";
-            percentage = 0;
-        } else {
-            if(activeEpisodeEl) activeEpisodeEl.textContent = "İZLİYOR";
-            percentage = 50;
-        }
-    } else {
-        // Series
-        const season = activeMovie.season || 1;
-        const episode = activeMovie.episode || 1;
-        const totalSeason = activeMovie.totalSeason || 1;
-        const totalEpisode = activeMovie.totalEpisode || 1;
-
-        if(activeSeasonEl) activeSeasonEl.textContent = `SEZON ${season.toString().padStart(2, '0')}`;
-        if(activeEpisodeEl) activeEpisodeEl.textContent = `B${episode.toString().padStart(2, '0')}`;
-
-        // Use total episode for progress if available, otherwise just use a small calculation
-        if (totalEpisode > 1) {
-            percentage = Math.min((episode / totalEpisode) * 100, 100);
-        } else {
-            percentage = Math.min((episode % 20) * 5, 100);
-            if(episode > 0 && percentage === 0) percentage = 100;
-        }
-    }
-
-    if(progressCircle) {
-        const circumference = 314.159; // 2 * pi * 50
-        const offset = circumference - (percentage / 100) * circumference;
-        progressCircle.style.strokeDashoffset = offset;
-    }
-}
-
-async function handleActiveMinus() {
-    if(!activeMovie || !currentUid) return;
-
-    let updates = {};
-    if (activeMovie.type === 'series') {
-        let ep = (activeMovie.episode || 1) - 1;
-        if (ep < 0) ep = 0;
-        updates = { episode: ep, updatedAt: serverTimestamp() };
-    } else {
-        // Movie: cycle status down
-        let newStatus = 'watchlist';
-        if (activeMovie.status === 'completed') newStatus = 'watching';
-        else if (activeMovie.status === 'watching') newStatus = 'watchlist';
-        updates = { status: newStatus, updatedAt: serverTimestamp() };
-    }
-
-    // Optimistic UI update
-    activeMovie = { ...activeMovie, ...updates };
-    if(activeMovie.updatedAt) delete activeMovie.updatedAt; // Don't break sync logic if missing
-    updateActiveMovieUI();
-
-    try {
-        await updateDoc(doc(db, "users", currentUid, "movies", activeMovie.id), updates);
-    } catch(e) {
-        console.error(e);
-    }
-}
-
-async function handleActivePlus() {
-    if(!activeMovie || !currentUid) return;
-
-    let updates = {};
-    if (activeMovie.type === 'series') {
-        let ep = (activeMovie.episode || 0) + 1;
-        updates = { episode: ep, updatedAt: serverTimestamp() };
-    } else {
-        // Movie: cycle status up
-        let newStatus = 'completed';
-        if (activeMovie.status === 'watchlist') newStatus = 'watching';
-        else if (activeMovie.status === 'watching') newStatus = 'completed';
-        updates = { status: newStatus, updatedAt: serverTimestamp() };
-    }
-
-    // Optimistic UI update
-    activeMovie = { ...activeMovie, ...updates };
-    if(activeMovie.updatedAt) delete activeMovie.updatedAt;
-    updateActiveMovieUI();
-
-    try {
-        await updateDoc(doc(db, "users", currentUid, "movies", activeMovie.id), updates);
-    } catch(e) {
-        console.error(e);
-    }
-}
-
-
 function renderMoviesView() {
-    updateActiveMovieUI();
     if (!allListEl) return;
 
     allListEl.innerHTML = '';
@@ -335,7 +193,6 @@ function renderMoviesView() {
         }
 
         const iconStr = type === 'movie' ? 'movie' : 'live_tv';
-        const isActive = activeMovie && activeMovie.id === movie.id;
 
         const wrapper = document.createElement("div");
         wrapper.className = "relative w-full overflow-hidden rounded-2xl mb-4";
@@ -351,7 +208,7 @@ function renderMoviesView() {
 
         // Foreground Card
         const cardHtml = `
-            <div class="card-content relative z-10 bg-[#F7F9FF] rounded-2xl p-4 flex gap-4 items-center cursor-pointer transition-transform ${isActive ? 'border-2 border-silk-blue' : ''}" style="touch-action: pan-y; box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px #FFFFFF;" data-swiped="false">
+            <div class="card-content relative z-10 bg-[#F7F9FF] rounded-2xl p-4 flex gap-4 items-center cursor-pointer transition-transform" style="touch-action: pan-y; box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px #FFFFFF;" data-swiped="false">
                 <div class="w-12 h-12 shrink-0 rounded-xl bg-white flex items-center justify-center shadow-sm">
                     <span class="material-symbols-rounded text-[#3B82F6] text-2xl">${iconStr}</span>
                 </div>
@@ -452,27 +309,6 @@ function renderMoviesView() {
                 cardContent.style.transition = 'transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)';
                 cardContent.style.transform = isSwiped ? `translateX(${threshold}px)` : 'translateX(0px)';
              }
-        });
-
-        // Set as active on click (if not swiped)
-        cardContent.addEventListener('click', (e) => {
-            if (Math.abs(currentX - startX) < 5 && !isSwiped) {
-                activeMovie = movie;
-                localStorage.setItem(`activeMovie_${currentUid}`, JSON.stringify(activeMovie));
-
-                // Re-sort and re-render
-                currentMovies.sort((a, b) => {
-                    if (a.id === activeMovie.id) return -1;
-                    if (b.id === activeMovie.id) return 1;
-                    const timeA = a.updatedAt ? a.updatedAt.toMillis() : 0;
-                    const timeB = b.updatedAt ? b.updatedAt.toMillis() : 0;
-                    return timeB - timeA;
-                });
-                renderMoviesView();
-
-                // Notify dashboard right away
-                if (onChangeCb) onChangeCb(currentMovies);
-            }
         });
 
         // Actions
@@ -662,7 +498,6 @@ export function clearMovies() {
     if(moviesUnsubscribe) moviesUnsubscribe();
     currentUid = null;
     currentMovies = [];
-    activeMovie = null;
     currentEditingId = null;
     onChangeCb = null;
 }

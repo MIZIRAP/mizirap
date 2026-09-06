@@ -3064,19 +3064,8 @@
     <header class="w-full top-0 sticky z-40 max-w-md mx-auto px-container-padding py-4 bg-[#F0F2F8]"><div class="flex items-center justify-between w-full"><div class="w-10 h-10 shrink-0"></div><h1 class="text-h1 font-bold text-[#1E293B]">Film Dizi Takibi</h1><button class="w-10 h-10 flex items-center justify-center rounded-full bg-[#F0F2F8] active:scale-[0.98] transition-transform" style="background-color: #F0F2F8; box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);" title="Ayarlar"><span class="material-symbols-rounded text-[#1E293B]">settings</span></button></div></header>
     <!-- Main Content Container -->
     <main class="flex-1 w-full max-w-md mx-auto px-container-padding pb-32 flex flex-col gap-section-margin pt-4">
-        <!-- Circular Progress Section -->
-        <section class="flex flex-col items-center justify-center relative"><div class="relative w-64 h-64 flex items-center justify-center rounded-full bg-[#F0F2F8]" style="background-color: #F0F2F8; box-shadow: 10px 10px 20px #D1D9E6, -10px -10px 20px rgba(255, 255, 255, 0.7);"><svg class="absolute inset-0 w-full h-full" viewBox="0 0 120 120"><path d="M 10 60 Q 30 10 60 10 Q 90 10 110 60 Q 90 110 60 110 Q 30 110 10 60" fill="none" stroke="#E0E5EC" stroke-width="0.5" stroke-dasharray="2 2" opacity="0.3"></path><defs><linearGradient id="neonGradientMovies" x1="0%" x2="100%" y1="0%" y2="100%"><stop offset="0%" style="stop-color: rgb(168, 85, 247);"></stop><stop offset="100%" style="stop-color: rgb(59, 130, 246);"></stop></linearGradient></defs><circle cx="60" cy="60" fill="transparent" r="50" stroke="#E0E5EC" stroke-width="8"></circle><circle id="movie-progress-circle" cx="60" cy="60" fill="transparent" r="50" stroke="url(#neonGradientMovies)" stroke-dasharray="314.159" stroke-dashoffset="117.8" stroke-linecap="round" stroke-width="8" style="transition: stroke-dashoffset 0.3s ease; filter: drop-shadow(rgba(168, 85, 247, 0.6) 0px 0px 8px) drop-shadow(rgba(59, 130, 246, 0.4) 0px 0px 12px);" class="-rotate-90 origin-center"></circle></svg><div class="flex flex-col items-center z-10"><span id="movie-active-season" class="text-xs font-bold text-[#3B82F6] uppercase tracking-widest mb-1">Sezon 01</span><h2 id="movie-active-episode" class="text-4xl font-bold text-[#1E293B]">B06</h2></div></div><div class="flex gap-6 mt-8">
-        <button id="movie-active-minus" class="w-12 h-12 flex items-center justify-center rounded-2xl bg-[#F0F2F8] text-[#1E293B] font-bold text-xl active:scale-95 transition-transform" style="background-color: #F0F2F8; box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);">
-            <span class="material-symbols-rounded">remove</span>
-        </button>
-        <button id="movie-active-plus" class="w-12 h-12 flex items-center justify-center rounded-2xl bg-[#F0F2F8] text-[#1E293B] font-bold text-xl active:scale-95 transition-transform" style="background-color: #F0F2F8; box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);">
-            <span class="material-symbols-rounded">add</span>
-        </button>
-        </div><button id="movie-active-title" class="px-8 py-3 rounded-full bg-[#F0F2F8] text-[#1E293B] font-bold uppercase tracking-wider text-xs mt-4 truncate max-w-full" style="background-color: #F0F2F8; box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);">İçerik Seçin</button>
-        </section>
-
-                <!-- Search Box -->
-        <section class="pt-4">
+        <!-- Search Box -->
+        <section>
             <div class="neo-inset p-4 rounded-full flex items-center gap-3">
                 <span class="material-symbols-outlined text-on-surface-variant">search</span>
                 <input id="movie-search-input" oninput="handleMovieSearch(this.value)" class="bg-transparent border-none focus:ring-0 text-sm w-full p-0 text-on-surface" placeholder="Film/Dizi Ara..." type="text"/>
