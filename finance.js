@@ -270,8 +270,10 @@ function openModal(id) {
         const panel = el.querySelector("div.transform") || el.querySelector("div");
         if(panel) {
             panel.classList.remove("translate-y-full");
-            panel.classList.remove("scale-95", "opacity-0");
-            panel.classList.add("scale-100", "opacity-100");
+            if (panel.classList.contains("scale-95") || panel.classList.contains("scale-100")) {
+                panel.classList.remove("scale-95", "opacity-0");
+                panel.classList.add("scale-100", "opacity-100");
+            }
         }
 
         const backdrop = el.querySelector("[id$='-backdrop']");
