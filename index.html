@@ -4155,6 +4155,14 @@
             <h2 class="text-xl font-bold text-gray-800 mb-2">İşlem Gir</h2>
         </div>
 
+        <!-- Date -->
+        <div class="w-full flex flex-col gap-1 mb-6 px-2">
+            <label class="text-xs font-bold text-silk-blue uppercase px-2">TARİH</label>
+            <div class="flex items-center rounded-2xl p-4 shadow-neumorphic-inset bg-[#F0F2F8]">
+                <input id="tx-date" class="w-full bg-transparent border-none focus:ring-0 text-sm font-medium text-gray-800 p-0 appearance-none outline-none" type="date"/>
+            </div>
+        </div>
+
         <!-- Type Selection -->
         <div class="flex w-full gap-2 mb-6 px-1">
             <label class="relative flex-1 cursor-pointer">
@@ -4211,14 +4219,6 @@
                 <div class="flex gap-3 overflow-x-auto no-scrollbar snap-x px-2 py-1" id="tx-payment-container">
                     <!-- Dynamic Payment Methods will be injected here -->
                     <div class="text-sm text-[#64748B] italic w-full text-center py-2">Ödeme yöntemleri yükleniyor...</div>
-                </div>
-            </div>
-
-            <!-- Date -->
-            <div class="flex flex-col gap-1">
-                <label class="text-xs font-bold text-silk-blue uppercase px-2">TARİH</label>
-                <div class="flex items-center rounded-2xl p-4 shadow-neumorphic-inset bg-[#F0F2F8]">
-                    <input id="tx-date" class="w-full bg-transparent border-none focus:ring-0 text-sm font-medium text-gray-800 p-0 appearance-none outline-none" type="date"/>
                 </div>
             </div>
         </div>
