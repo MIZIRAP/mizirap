@@ -265,6 +265,10 @@ function openModal(id) {
     if (!el) return;
     el.classList.remove("hidden");
     el.classList.add("flex");
+    
+    // Add scroll lock
+    document.body.style.overflow = 'hidden';
+
     requestAnimationFrame(() => {
         el.classList.remove("opacity-0");
         const panel = el.querySelector("div.transform") || el.querySelector("div");
@@ -284,6 +288,9 @@ function openModal(id) {
 function closeModal(id) {
     const el = document.getElementById(id);
     if (!el) return;
+
+    // Remove scroll lock
+    document.body.style.overflow = '';
 
     const panel = el.querySelector("div.transform") || el.querySelector("div");
     if(panel) {
