@@ -30,6 +30,13 @@ document.addEventListener('click', (e) => {
     if (action === 'openAddTransactionModal') {
         currentEditFinanceTxId = "tx_" + Date.now() + "_" + Math.floor(Math.random() * 10000);
         isNewFinanceTx = true;
+        currentTxType = 'expense';
+        
+        const typeRadios = document.querySelectorAll('input[name="tx-type"]');
+        typeRadios.forEach(r => {
+            if(r.value === 'expense') r.checked = true;
+        });
+
         openModal('finance-add-tx-modal');
     }
     else if (action === 'closeAddTransactionModal') closeModal('finance-add-tx-modal');
