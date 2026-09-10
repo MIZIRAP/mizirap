@@ -790,11 +790,11 @@ export function renderTxModalOptions() {
             catContainer.innerHTML = '<div class="text-sm text-[#64748B] py-2 italic w-full text-center">Önce harcama türü ekleyin.</div>';
         } else {
             catContainer.innerHTML = financeCategories.map((c, idx) => `
-                <button class="tx-cat-btn flex flex-col items-center gap-2 p-4 rounded-2xl transition-all min-w-[80px] snap-center bg-[#F7F9FF] ${idx === 0 ? 'selected' : ''}"
+                <button class="tx-cat-btn flex flex-col items-center gap-1 p-2 px-3 rounded-2xl transition-all min-w-[64px] snap-center bg-[#F7F9FF] ${idx === 0 ? 'selected' : ''}"
                         style="box-shadow: ${idx === 0 ? selectedShadow : unselectedShadow};"
                         data-id="${c.id}">
-                    <span class="material-symbols-rounded ${idx === 0 ? 'text-[#22c55e]' : 'text-[#3B82F6]'}">${c.icon || 'category'}</span>
-                    <span class="text-xs font-bold ${idx === 0 ? 'text-[#1E293B]' : 'text-[#64748B]'} whitespace-nowrap">${c.name}</span>
+                    <span class="material-symbols-rounded text-[20px] ${idx === 0 ? 'text-[#22c55e]' : 'text-[#3B82F6]'}">${c.icon || 'category'}</span>
+                    <span class="text-[10px] font-bold ${idx === 0 ? 'text-[#1E293B]' : 'text-[#64748B]'} whitespace-nowrap">${c.name}</span>
                 </button>
             `).join('');
 
