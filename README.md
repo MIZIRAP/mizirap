@@ -52,3 +52,4 @@ kullanılmadığı için Tailwind CLI bağımsız sürümü kullanılmaktadır:
 1. build-css.bat dosyasına çift tıklayarak (veya terminalden) çalıştırın.
 2. tailwind-build.css dosyasının yeniden üretildiğinden emin olun ve
    dosyayı GitHub'a commit'leyin.
+ 
