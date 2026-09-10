@@ -825,11 +825,11 @@ export function renderTxModalOptions() {
             pmContainer.innerHTML = '<div class="text-sm text-[#64748B] py-2 italic w-full text-center">Önce ödeme yöntemi ekleyin.</div>';
         } else {
             pmContainer.innerHTML = financePaymentMethods.map((p, idx) => `
-                <button class="tx-pm-btn flex flex-col items-center gap-2 p-4 rounded-2xl transition-all min-w-[100px] snap-center bg-[#F7F9FF] ${idx === 0 ? 'selected' : ''}"
+                <button class="tx-pm-btn flex flex-row items-center gap-2 px-4 py-2 rounded-2xl transition-all min-w-max snap-center bg-[#F7F9FF] ${idx === 0 ? 'selected' : ''}"
                         style="box-shadow: ${idx === 0 ? selectedShadow : unselectedShadow};"
                         data-id="${p.id}">
-                    <span class="material-symbols-rounded ${idx === 0 ? 'text-[#22c55e]' : 'text-[#3B82F6]'}">${p.icon || 'credit_card'}</span>
-                    <span class="text-xs font-bold ${idx === 0 ? 'text-[#1E293B]' : 'text-[#64748B]'} whitespace-nowrap">${p.name}</span>
+                    <span class="material-symbols-rounded text-[20px] ${idx === 0 ? 'text-[#22c55e]' : 'text-[#3B82F6]'}">${p.icon || 'credit_card'}</span>
+                    <span class="text-[10px] font-bold ${idx === 0 ? 'text-[#1E293B]' : 'text-[#64748B]'} whitespace-nowrap">${p.name}</span>
                 </button>
             `).join('');
 
