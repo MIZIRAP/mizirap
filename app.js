@@ -108,7 +108,8 @@ onAuthStateChanged(auth, async (user) => {
         document.getElementById("verification-screen").classList.remove("flex");
         
         window.scrollTo(0, 0);
-        document.body.style.overflow = ''; // Modal vs. açık kaldıysa temizle
+        const appContainer = document.getElementById('app-container');
+        if (appContainer) appContainer.style.overflow = ''; // Modal vs. açık kaldıysa temizle
 
         // Login formunu varsayılan yap
         const loginForm = document.getElementById("login-form");

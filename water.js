@@ -89,7 +89,8 @@ export function initWater(uid, onChangeCallback) {
 
     function openCustomModal() {
         if(!customModal) return;
-        document.body.style.overflow = 'hidden';
+        const appContainer = document.getElementById('app-container');
+        if(appContainer) appContainer.style.overflow = 'hidden';
         tempCustomAmount = 250;
         updateCustomModalUI();
         customModal.classList.remove("hidden");
@@ -107,7 +108,8 @@ export function initWater(uid, onChangeCallback) {
 
     function closeCustomModal() {
         if(!customModal) return;
-        document.body.style.overflow = '';
+        const appContainer = document.getElementById('app-container');
+        if(appContainer) appContainer.style.overflow = '';
         if(customModalContent) {
             customModalContent.classList.remove("translate-y-0");
             customModalContent.classList.add("translate-y-full");
@@ -203,7 +205,8 @@ export function initWater(uid, onChangeCallback) {
 
     function openModal() {
         if(!modal) return;
-        document.body.style.overflow = 'hidden';
+        const appContainer = document.getElementById('app-container');
+        if(appContainer) appContainer.style.overflow = 'hidden';
         tempGoal = dailyGoal;
         updateModalUI();
         modal.classList.remove("hidden");
@@ -221,7 +224,8 @@ export function initWater(uid, onChangeCallback) {
 
     function closeModal() {
         if(!modal) return;
-        document.body.style.overflow = '';
+        const appContainer = document.getElementById('app-container');
+        if(appContainer) appContainer.style.overflow = '';
         modalContent.classList.remove("translate-y-0");
         modalContent.classList.add("translate-y-full");
         if(backdrop) {

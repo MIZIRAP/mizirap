@@ -209,7 +209,8 @@ function bindEvents() {
                     addFoodModalContent.classList.add('translate-y-0');
                 }
             }, 10);
-            document.body.style.overflow = 'hidden';
+            const appContainer = document.getElementById('app-container');
+            if(appContainer) appContainer.style.overflow = 'hidden';
         };
     });
 
@@ -540,7 +541,8 @@ if (caloriesGoalBackdrop) {
                     quickAddModalContent.classList.add('translate-y-0');
                 }
             }, 10);
-            document.body.style.overflow = 'hidden';
+            const appContainer = document.getElementById('app-container');
+            if(appContainer) appContainer.style.overflow = 'hidden';
             resetQuickAddModal();
 
             if (!trFoodLibrary) {
@@ -564,7 +566,8 @@ if (caloriesGoalBackdrop) {
         }
         setTimeout(() => {
             quickAddModal.classList.add('hidden');
-            document.body.style.overflow = '';
+            const appContainer = document.getElementById('app-container');
+            if(appContainer) appContainer.style.overflow = '';
         }, 300);
     };
 
@@ -730,7 +733,8 @@ function closeAddFoodModal() {
     addFoodModalContent.classList.add('translate-y-full');
     setTimeout(() => {
         addFoodModal.classList.add('hidden');
-        document.body.style.overflow = 'auto';
+        const appContainer = document.getElementById('app-container');
+        if(appContainer) appContainer.style.overflow = 'auto';
     }, 300);
 }
 

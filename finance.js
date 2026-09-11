@@ -274,7 +274,8 @@ function openModal(id) {
     el.classList.add("flex");
     
     // Add scroll lock
-    document.body.style.overflow = 'hidden';
+    const appContainer = document.getElementById('app-container');
+    if (appContainer) appContainer.style.overflow = 'hidden';
 
     requestAnimationFrame(() => {
         el.classList.remove("opacity-0");
@@ -297,7 +298,8 @@ function closeModal(id) {
     if (!el) return;
 
     // Remove scroll lock
-    document.body.style.overflow = '';
+    const appContainer = document.getElementById('app-container');
+    if (appContainer) appContainer.style.overflow = '';
 
     const panel = el.querySelector("div.transform") || el.querySelector("div");
     if(panel) {
