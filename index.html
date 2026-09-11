@@ -5371,6 +5371,24 @@
                 </button>
             </div>
 
+    <!-- Global Scroll Lock Fix for Modals -->
+    <style>
+        /* Engelleme: Popup icerigini asiri kaydirdiginda arkaplanin kaymasini durdur */
+        [id$="-content"], .overflow-y-auto {
+            overscroll-behavior: contain;
+            overscroll-behavior-y: contain;
+        }
+    </style>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Arka planda kaydirma denemelerini tamamen engelle
+            document.querySelectorAll('[id$="-backdrop"]').forEach(backdrop => {
+                backdrop.addEventListener('touchmove', (e) => {
+                    e.preventDefault();
+                }, { passive: false });
+            });
+        });
+    </script>
 </body>
 </html>
 

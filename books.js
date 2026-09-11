@@ -48,6 +48,7 @@ let currentEditId = null;
 // Helper function to open modal
 function openModal(modal, backdrop, content) {
     if(!modal) return;
+    document.body.style.overflow = 'hidden';
     modal.classList.remove("hidden");
     setTimeout(() => {
         if(backdrop) backdrop.classList.remove("opacity-0");
@@ -58,6 +59,7 @@ function openModal(modal, backdrop, content) {
 // Helper function to close modal
 function closeModal(modal, backdrop, content) {
     if(!modal) return;
+    document.body.style.overflow = '';
     if(backdrop) backdrop.classList.add("opacity-0");
     if(content) content.classList.add("translate-y-full");
     setTimeout(() => {

@@ -89,13 +89,16 @@ export function initWater(uid, onChangeCallback) {
 
     function openCustomModal() {
         if(!customModal) return;
+        document.body.style.overflow = 'hidden';
         tempCustomAmount = 250;
         updateCustomModalUI();
         customModal.classList.remove("hidden");
         // Trigger reflow
         void customModal.offsetWidth;
-        customModalContent.classList.remove("translate-y-full");
-        customModalContent.classList.add("translate-y-0");
+        if(customModalContent) {
+            customModalContent.classList.remove("translate-y-full");
+            customModalContent.classList.add("translate-y-0");
+        }
         if(customBackdrop) {
             customBackdrop.classList.remove("opacity-0");
             customBackdrop.classList.add("opacity-100");
@@ -104,8 +107,11 @@ export function initWater(uid, onChangeCallback) {
 
     function closeCustomModal() {
         if(!customModal) return;
-        customModalContent.classList.remove("translate-y-0");
-        customModalContent.classList.add("translate-y-full");
+        document.body.style.overflow = '';
+        if(customModalContent) {
+            customModalContent.classList.remove("translate-y-0");
+            customModalContent.classList.add("translate-y-full");
+        }
         if(customBackdrop) {
             customBackdrop.classList.remove("opacity-100");
             customBackdrop.classList.add("opacity-0");
@@ -197,13 +203,16 @@ export function initWater(uid, onChangeCallback) {
 
     function openModal() {
         if(!modal) return;
+        document.body.style.overflow = 'hidden';
         tempGoal = dailyGoal;
         updateModalUI();
         modal.classList.remove("hidden");
         // Trigger reflow
         void modal.offsetWidth;
-        modalContent.classList.remove("translate-y-full");
-        modalContent.classList.add("translate-y-0");
+        if(modalContent) {
+            modalContent.classList.remove("translate-y-full");
+            modalContent.classList.add("translate-y-0");
+        }
         if(backdrop) {
             backdrop.classList.remove("opacity-0");
             backdrop.classList.add("opacity-100");
@@ -212,6 +221,7 @@ export function initWater(uid, onChangeCallback) {
 
     function closeModal() {
         if(!modal) return;
+        document.body.style.overflow = '';
         modalContent.classList.remove("translate-y-0");
         modalContent.classList.add("translate-y-full");
         if(backdrop) {

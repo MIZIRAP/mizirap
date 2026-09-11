@@ -325,6 +325,7 @@ function renderMoviesView() {
 // --- ADD MODAL ---
 function openAddModal() {
     if(!addModal) return;
+    document.body.style.overflow = 'hidden';
     addType.value = '';
     addTitle.value = '';
     addTotalSeason.value = 1;
@@ -345,6 +346,7 @@ function openAddModal() {
 }
 
 function closeAddModal() {
+    document.body.style.overflow = '';
     if(addBackdrop) addBackdrop.classList.add('opacity-0');
     if(addContent) {
         addContent.classList.add('translate-y-full');
@@ -393,6 +395,7 @@ async function saveAddMovie() {
 // --- EDIT MODAL ---
 function openEditModal(movie) {
     if(!editModal) return;
+    document.body.style.overflow = 'hidden';
     currentEditingId = movie.id;
 
     editType.value = movie.type || '';
@@ -431,6 +434,7 @@ function openEditModal(movie) {
 }
 
 function closeEditModal() {
+    document.body.style.overflow = '';
     if(editBackdrop) editBackdrop.classList.add('opacity-0');
     if(editContent) {
         editContent.classList.remove('scale-100', 'opacity-100');
