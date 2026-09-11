@@ -4156,10 +4156,11 @@
         </div>
 
         <!-- Date -->
-        <div class="w-full flex flex-col gap-1 mb-6 px-2">
-            <label class="text-xs font-bold text-silk-blue uppercase px-2">TARİH</label>
-            <div class="flex items-center rounded-2xl p-4 shadow-neumorphic-inset bg-[#F0F2F8]">
-                <input id="tx-date" class="w-full bg-transparent border-none focus:ring-0 text-sm font-medium text-gray-800 p-0 appearance-none outline-none" type="date"/>
+        <div class="w-full flex justify-center mb-6">
+            <div class="relative inline-flex items-center gap-1 cursor-pointer bg-[#F0F2F8] py-1.5 px-3 rounded-full shadow-neo">
+                <span class="material-symbols-rounded text-[14px] text-[#64748B]">calendar_today</span>
+                <span id="tx-date-display" class="text-[11px] font-bold text-[#64748B] uppercase tracking-wider">Bugün</span>
+                <input id="tx-date" onchange="if(typeof updateFinanceDateDisplay === 'function') updateFinanceDateDisplay()" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" type="date"/>
             </div>
         </div>
 

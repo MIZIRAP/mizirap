@@ -863,7 +863,18 @@ export function renderTxModalOptions() {
         const dd = String(today.getDate()).padStart(2, '0');
         dateInput.value = `${yyyy}-${mm}-${dd}`;
     }
+    if (typeof updateFinanceDateDisplay === 'function') updateFinanceDateDisplay();
 }
+
+window.updateFinanceDateDisplay = function() {
+    const dateInput = document.getElementById('tx-date');
+    const dateDisplay = document.getElementById('tx-date-display');
+    if (dateInput && dateDisplay && dateInput.value) {
+        const d = new Date(dateInput.value);
+        const months = ["Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran", "Temmuz", "Ağustos", "Eylül", "Ekim", "Kasım", "Aralık"];
+        dateDisplay.textContent = `${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`;
+    }
+};
 
 async function saveTransaction() {
     if(!currentUid) return;
