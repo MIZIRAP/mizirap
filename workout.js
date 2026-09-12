@@ -2394,10 +2394,11 @@ function openSimpleNewSplitModal() {
         
         modal.classList.remove('hidden');
         if(input) { input.value = ""; } // clear input
-        // Small delay to allow display:block to apply before animating opacity/transform
+        // small delay for transition
         setTimeout(() => {
             if(backdrop) backdrop.classList.remove('opacity-0');
             content.classList.remove('translate-y-full');
+            content.classList.add('translate-y-0');
             if(input) input.focus();
         }, 10);
     }
@@ -2412,6 +2413,7 @@ function closeSimpleNewSplitModal() {
         if (appContainer) appContainer.style.overflow = '';
         
         if(backdrop) backdrop.classList.add('opacity-0');
+        content.classList.remove('translate-y-0');
         content.classList.add('translate-y-full');
         setTimeout(() => {
             modal.classList.add('hidden');
