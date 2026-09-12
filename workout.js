@@ -142,7 +142,9 @@ export function clearWorkout() {
 }
 
 function setupEventListeners() {
-    const saveSplitBtn = document.getElementById("save-split-btn"); if (saveSplitBtn) saveSplitBtn.onclick = saveSimpleNewSplit; const closeSplitModalBtn = document.getElementById("close-split-modal-btn"); if(closeSplitModalBtn) closeSplitModalBtn.onclick = closeSimpleNewSplitModal;
+    const saveSplitBtn = document.getElementById("save-split-btn"); if (saveSplitBtn) saveSplitBtn.onclick = saveSimpleNewSplit; 
+    const closeSplitModalBtn = document.getElementById("close-split-drag-handle"); if(closeSplitModalBtn) closeSplitModalBtn.onclick = closeSimpleNewSplitModal;
+    const splitBackdrop = document.getElementById("new-split-backdrop"); if(splitBackdrop) splitBackdrop.onclick = closeSimpleNewSplitModal;
 
 
     const saveWorkoutBtn = document.getElementById("workout-save-btn");
@@ -2384,13 +2386,17 @@ function openSimpleNewSplitModal() {
     const modal = document.getElementById('newSplitModal');
     const content = document.getElementById('newSplitModalContent');
     const input = document.getElementById('new-split-name');
+    const backdrop = document.getElementById('new-split-backdrop');
     
     if(modal && content) {
+        const appContainer = document.getElementById('app-container');
+        if (appContainer) appContainer.style.overflow = 'hidden';
+        
         modal.classList.remove('hidden');
         if(input) { input.value = ""; } // clear input
         // Small delay to allow display:block to apply before animating opacity/transform
         setTimeout(() => {
-            modal.classList.remove('opacity-0');
+            if(backdrop) backdrop.classList.remove('opacity-0');
             content.classList.remove('translate-y-full');
             if(input) input.focus();
         }, 10);
@@ -2400,8 +2406,12 @@ function openSimpleNewSplitModal() {
 function closeSimpleNewSplitModal() {
     const modal = document.getElementById('newSplitModal');
     const content = document.getElementById('newSplitModalContent');
+    const backdrop = document.getElementById('new-split-backdrop');
     if(modal && content) {
-        modal.classList.add('opacity-0');
+        const appContainer = document.getElementById('app-container');
+        if (appContainer) appContainer.style.overflow = '';
+        
+        if(backdrop) backdrop.classList.add('opacity-0');
         content.classList.add('translate-y-full');
         setTimeout(() => {
             modal.classList.add('hidden');

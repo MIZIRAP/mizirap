@@ -4046,30 +4046,30 @@
 </div>
 
 <!-- New Split Modal (Hidden by default) -->
-<div class="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/40 backdrop-blur-sm hidden opacity-0 transition-opacity duration-300" id="newSplitModal">
-    <div class="relative z-10 w-full max-w-md bg-background shadow-neo sm:rounded-[32px] rounded-t-2xl shadow-md flex flex-col max-h-[90dvh] transform translate-y-full transition-transform duration-300 ease-out" id="newSplitModalContent">
+<div class="fixed inset-0 z-50 flex items-end justify-center hidden" id="newSplitModal">
+    <!-- Modal Backdrop -->
+    <div id="new-split-backdrop" class="absolute inset-0 bg-black/10 backdrop-blur-sm z-10 opacity-0 transition-opacity duration-300"></div>
+
+    <!-- Modal Content -->
+    <div class="relative w-full max-w-sm bg-[#F0F2F8] rounded-t-[32px] shadow-[0_-8px_30px_rgba(0,0,0,0.05)] p-6 z-20 flex flex-col items-center transform transition-transform duration-300 translate-y-full pb-8" id="newSplitModalContent">
         <!-- Drag Handle Indicator -->
-        <div class="w-full flex justify-center pt-3 pb-1 cursor-grab active:cursor-grabbing sm:hidden">
-            <div class="w-12 h-1.5 bg-outline-variant/50 rounded-full"></div>
-        </div>
+        <div id="close-split-drag-handle" class="w-12 h-1.5 bg-gray-300 rounded-full mb-6 cursor-pointer"></div>
+        
         <!-- Header -->
-        <div class="flex justify-between items-center px-container-padding py-4 shrink-0 border-b border-surface-variant/30">
-            <h1 class="font-headline-sm text-headline-sm text-on-surface">Yeni Split Oluştur</h1>
-            <button class="w-10 h-10 flex items-center justify-center bg-background shadow-neo rounded-full text-on-surface-variant hover:bg-surface-container-high transition-colors active:scale-95" id="close-split-modal-btn">
-                <span class="material-symbols-rounded" style="font-variation-settings: 'wght' 400;">close</span>
-            </button>
-        </div>
+        <h1 class="text-xl font-bold text-gray-800 mb-6 text-center w-full">Yeni Split Oluştur</h1>
 
         <!-- Content -->
-        <div class="px-container-padding py-6 flex flex-col gap-6">
+        <div class="w-full flex flex-col gap-6">
             <div class="flex flex-col gap-2">
                 <label class="font-label-md text-label-md text-on-surface-variant ml-1">Split Adı</label>
-                <input class="w-full bg-surface-container-low border border-transparent focus:border-primary/30 outline-none rounded-[32px] py-3 px-4 font-body-lg text-body-lg text-on-surface transition-colors shadow-neo-inset border-none rounded-xl bg-background" id="new-split-name" placeholder="Örn: Push / Pull / Legs" type="text" autocomplete="off" />
+                <div class="w-full rounded-2xl shadow-neo-inset bg-[#F0F2F8] overflow-hidden">
+                    <input class="w-full px-4 py-3 bg-transparent text-sm text-gray-600 focus:outline-none placeholder-gray-400" id="new-split-name" placeholder="Örn: Push / Pull / Legs" type="text" autocomplete="off" />
+                </div>
             </div>
 
-            <button class="w-full h-[56px] bg-gradient-to-r from-neon-purple to-neon-blue text-white rounded-full flex items-center justify-center gap-2 hover:opacity-95 active:scale-[0.98] transition-all shadow-lg shadow-primary/20" id="save-split-btn">
-                <span class="font-label-md text-label-md text-body-lg font-body-lg">Oluştur</span>
-                <span class="material-symbols-rounded icon-md">add_circle</span>
+            <!-- CTA Button -->
+            <button id="save-split-btn" class="w-full py-4 px-6 rounded-full font-bold text-lg text-gray-800 gradient-border shadow-md focus:outline-none active:scale-[0.98] transition-transform flex items-center justify-center gap-2">
+                Oluştur<span class="material-symbols-rounded text-silk-blue" style="font-variation-settings: 'FILL' 1;">add_task</span>
             </button>
         </div>
     </div>
