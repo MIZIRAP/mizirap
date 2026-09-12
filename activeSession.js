@@ -13,7 +13,7 @@
 
 import { db } from './firebase-config.js';
 import {
-    doc, collection, setDoc, getDoc, getDocs,
+    doc, collection, setDoc, getDoc, getDocs, writeBatch,
     query, where, orderBy, limit,
     serverTimestamp, deleteDoc
 } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js';
@@ -479,6 +479,46 @@ function sessionAddSet(exId) {
     _renderSets(exId);
 };
 
+function getCategoryAndEquipment(exName) {
+    const data = window.EXERCISE_MUSCLE_MAPPING ? window.EXERCISE_MUSCLE_MAPPING[exName] : null;
+    let category = "Diğer";
+    if (data && data.primary && data.primary.length > 0) {
+        const catMapReverse = {
+            'chest': 'Göğüs',
+            'upper-back': 'Sırt',
+            'lower-back': 'Sırt',
+            'triceps': 'Triceps',
+            'abs': 'Karın',
+            'obliques': 'Karın',
+            'shoulders': 'Omuz',
+            'deltoids': 'Omuz',
+            'biceps': 'Biceps',
+            'legs': 'Bacak',
+            'quadriceps': 'Bacak',
+            'hamstrings': 'Bacak',
+            'glutes': 'Bacak',
+            'calves': 'Bacak'
+        };
+        category = catMapReverse[data.primary[0].toLowerCase()] || "Diğer";
+    }
+
+    let equipment = "Belirtilmedi";
+    const nameLower = exName.toLowerCase();
+    if (nameLower.includes("dumbbell")) equipment = "Dumbbell";
+    else if (nameLower.includes("barbell")) equipment = "Barbell";
+    else if (nameLower.includes("machine")) equipment = "Makine";
+    else if (nameLower.includes("cable")) equipment = "Kablo";
+    else if (nameLower.includes("smith")) equipment = "Smith Machine";
+    else if (nameLower.includes("band")) equipment = "Direnç Bandı";
+    else if (nameLower.includes("bodyweight") || nameLower.includes("push-up") || nameLower.includes("pull-up") || nameLower.includes("dip")) equipment = "Vücut Ağırlığı";
+
+    return { category, equipment };
+}
+
+function getSafeExerciseId(exName) {
+    return exName.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+}
+
 async function finishSession() {
     const btn = document.getElementById('session-finish-btn');
     if (btn) { btn.disabled = true; btn.textContent = 'Kaydediliyor...'; }
@@ -487,31 +527,209 @@ async function finishSession() {
         const elapsed = _sessionStartTs
             ? Math.floor((Date.now() - _sessionStartTs.getTime()) / 1000)
             : 0;
+            
+        const dateStr = new Date().toISOString().split('T')[0];
+        const currentMonthStr = dateStr.substring(0, 7);
+        const sessionName = _day ? _day.name : "İsimsiz Antrenman";
 
-        // Build exercises summary and auto-complete sets
+        // Build exercises summary and calculate progress updates
         const exercises = {};
+        const progressUpdates = {};
+
         if (_day && _day.exercises) {
             for (const ex of _day.exercises) {
                 const state = _exState[ex.id];
                 if (!state) continue;
 
-
+                const sets = state.sets.map(s => ({
+                    weight: s.weight,
+                    reps:   s.reps,
+                    rpe:    s.rpe
+                }));
+                
                 exercises[ex.id] = {
                     name: ex.name,
-                    sets: state.sets.map(s => ({
-                        weight: s.weight,
-                        reps:   s.reps,
-                        rpe:    s.rpe
-                    }))
+                    sets: sets
                 };
+                
+                // Progress calculations
+                let totalVolume = 0;
+                let maxWeight = 0;
+                let maxRepsAtMaxWeight = 0;
+                
+                for (const s of sets) {
+                    if (s.weight > 0 && s.reps > 0) {
+                        totalVolume += (s.weight * s.reps);
+                    }
+                    if (s.weight > maxWeight) {
+                        maxWeight = s.weight;
+                        maxRepsAtMaxWeight = s.reps;
+                    } else if (s.weight === maxWeight && s.reps > maxRepsAtMaxWeight) {
+                        maxRepsAtMaxWeight = s.reps;
+                    }
+                }
+                
+                const safeId = getSafeExerciseId(ex.name);
+                if (!progressUpdates[safeId]) {
+                    progressUpdates[safeId] = {
+                        name: ex.name,
+                        totalVolume: 0,
+                        maxWeight: 0,
+                        maxRepsAtMaxWeight: 0,
+                        sets: []
+                    };
+                }
+                
+                // Aggregate in case the same exercise is in the split multiple times
+                progressUpdates[safeId].totalVolume += totalVolume;
+                if (maxWeight > progressUpdates[safeId].maxWeight) {
+                    progressUpdates[safeId].maxWeight = maxWeight;
+                    progressUpdates[safeId].maxRepsAtMaxWeight = maxRepsAtMaxWeight;
+                } else if (maxWeight === progressUpdates[safeId].maxWeight && maxRepsAtMaxWeight > progressUpdates[safeId].maxRepsAtMaxWeight) {
+                    progressUpdates[safeId].maxRepsAtMaxWeight = maxRepsAtMaxWeight;
+                }
+                progressUpdates[safeId].sets.push(...sets);
             }
         }
 
-        await setDoc(
-            doc(db, 'users', _uid, 'workout_logs', _sessionId),
-            { status: 'completed', durationSeconds: elapsed, exercises },
-            { merge: true }
-        );
+        // PRE-READ PHASE
+        const indexRef = doc(db, 'users', _uid, 'summary', 'exerciseProgressIndex');
+        const indexSnap = await getDoc(indexRef);
+        let indexData = indexSnap.exists() ? indexSnap.data() : {
+            trackedExerciseCount: 0,
+            totalSessions: 0,
+            thisMonthVolume: 0,
+            lastMonthVolume: 0,
+            volumeChangePercent: 0,
+            lastMonthStr: currentMonthStr,
+            exercises: []
+        };
+        
+        if(!indexData.exercises) indexData.exercises = [];
+        if(!indexData.lastMonthStr) indexData.lastMonthStr = currentMonthStr;
+        if(typeof indexData.thisMonthVolume === 'undefined') indexData.thisMonthVolume = 0;
+        if(typeof indexData.lastMonthVolume === 'undefined') indexData.lastMonthVolume = 0;
+        if(typeof indexData.totalSessions === 'undefined') indexData.totalSessions = 0;
+        if(typeof indexData.trackedExerciseCount === 'undefined') indexData.trackedExerciseCount = 0;
+        
+        const progressDocs = {};
+        for (const safeId of Object.keys(progressUpdates)) {
+            const docRef = doc(db, 'users', _uid, 'exerciseProgress', safeId);
+            const docSnap = await getDoc(docRef);
+            progressDocs[safeId] = docSnap.exists() ? docSnap.data() : null;
+        }
+        
+        // BATCH PHASE
+        const batch = writeBatch(db);
+        
+        // 1. Session Log
+        const sessionRef = doc(db, 'users', _uid, 'workout_logs', _sessionId);
+        batch.set(sessionRef, { status: 'completed', durationSeconds: elapsed, exercises }, { merge: true });
+        
+        // Month transition logic
+        if (indexData.lastMonthStr !== currentMonthStr) {
+            const lastDateObj = new Date(indexData.lastMonthStr + "-01");
+            const currDateObj = new Date(currentMonthStr + "-01");
+            const monthDiff = (currDateObj.getFullYear() - lastDateObj.getFullYear()) * 12 + (currDateObj.getMonth() - lastDateObj.getMonth());
+            
+            if (monthDiff === 1) {
+                indexData.lastMonthVolume = indexData.thisMonthVolume || 0;
+            } else {
+                indexData.lastMonthVolume = 0; // Skipped months
+            }
+            indexData.thisMonthVolume = 0;
+            indexData.lastMonthStr = currentMonthStr;
+        }
+
+        let sessionTotalVolume = 0;
+        
+        // 2. Exercise Progress Details & Index Updates
+        for (const [safeId, update] of Object.entries(progressUpdates)) {
+            sessionTotalVolume += update.totalVolume;
+            
+            const existing = progressDocs[safeId];
+            const meta = getCategoryAndEquipment(update.name);
+            
+            // Check PR
+            let isPR = false;
+            let currentPR = existing && existing.personalRecord ? existing.personalRecord : { weight: 0, reps: 0 };
+            if (update.maxWeight > currentPR.weight) {
+                isPR = true;
+                currentPR = { weight: update.maxWeight, reps: update.maxRepsAtMaxWeight, date: dateStr };
+            } else if (update.maxWeight === currentPR.weight && update.maxRepsAtMaxWeight > currentPR.reps) {
+                isPR = true;
+                currentPR = { weight: update.maxWeight, reps: update.maxRepsAtMaxWeight, date: dateStr };
+            }
+            
+            // Check Max Volume
+            let maxVolume = existing && existing.maxVolume ? existing.maxVolume : { value: 0 };
+            if (update.totalVolume > maxVolume.value) {
+                maxVolume = { value: update.totalVolume, date: dateStr };
+            }
+            
+            const newEntry = {
+                date: dateStr,
+                sessionId: _sessionId,
+                sessionName: sessionName,
+                sets: update.sets,
+                totalVolume: update.totalVolume,
+                isPR: isPR
+            };
+            
+            let entries = existing && existing.entries ? existing.entries : [];
+            entries.push(newEntry);
+            
+            const progressRef = doc(db, 'users', _uid, 'exerciseProgress', safeId);
+            batch.set(progressRef, {
+                exerciseName: update.name,
+                category: meta.category,
+                equipment: meta.equipment,
+                firstLoggedDate: existing && existing.firstLoggedDate ? existing.firstLoggedDate : dateStr,
+                personalRecord: currentPR,
+                maxVolume: maxVolume,
+                entries: entries
+            }, { merge: true });
+            
+            // Update Index for this exercise
+            let idxEx = indexData.exercises.find(e => e.exerciseId === safeId);
+            if (!idxEx) {
+                idxEx = {
+                    exerciseId: safeId,
+                    exerciseName: update.name,
+                    category: meta.category,
+                    sparkline: []
+                };
+                indexData.exercises.push(idxEx);
+                indexData.trackedExerciseCount++;
+            }
+            
+            const lastVol = idxEx.lastVolume || 0;
+            idxEx.changePercent = lastVol > 0 ? ((update.totalVolume - lastVol) / lastVol) * 100 : 0;
+            idxEx.lastVolume = update.totalVolume;
+            idxEx.lastDate = dateStr;
+            idxEx.personalRecord = { weight: currentPR.weight, reps: currentPR.reps };
+            idxEx.isNewPR = isPR;
+            
+            if (!idxEx.sparkline) idxEx.sparkline = [];
+            idxEx.sparkline.push(update.totalVolume);
+            if (idxEx.sparkline.length > 8) {
+                idxEx.sparkline.shift();
+            }
+        }
+        
+        // Finalize index updates
+        indexData.totalSessions++;
+        indexData.thisMonthVolume += sessionTotalVolume;
+        if (indexData.lastMonthVolume > 0) {
+            indexData.volumeChangePercent = ((indexData.thisMonthVolume - indexData.lastMonthVolume) / indexData.lastMonthVolume) * 100;
+        } else {
+            indexData.volumeChangePercent = indexData.thisMonthVolume > 0 ? 100 : 0;
+        }
+        
+        batch.set(indexRef, indexData, { merge: true });
+        
+        // COMMIT BATCH
+        await batch.commit();
 
         _stopTimer();
 
