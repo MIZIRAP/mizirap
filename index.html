@@ -291,7 +291,7 @@
                     <label class="block font-label-md text-on-surface-variant">Şifre</label>
                     <a href="#" id="forgot-password-link" class="font-label-sm text-neon-blue hover:underline">Şifremi unuttum</a>
                 </div>
-                <input type="password" id="login-password" required class="w-full bg-background focus:border-primary focus:ring-1 focus:ring-primary rounded-lg py-3 px-4 font-body-md text-on-surface shadow-neo-inset border-none rounded-xl bg-background ">
+                <input type="password" autocomplete="current-password" id="login-password" required class="w-full bg-background focus:border-primary focus:ring-1 focus:ring-primary rounded-lg py-3 px-4 font-body-md text-on-surface shadow-neo-inset border-none rounded-xl bg-background ">
             </div>
             <p id="login-error" class="text-error font-label-sm min-h-[14px]"></p>
             <button type="submit" class="w-full bg-gradient-to-r from-neon-purple to-neon-blue text-white font-headline-sm text-body-lg py-4 rounded-[32px] shadow-sm hover:shadow-md transition-all active:scale-[0.98] flex items-center justify-center gap-2">Giriş yap</button>
@@ -317,7 +317,7 @@
             </div>
             <div>
                 <label class="block font-label-md text-on-surface-variant mb-1">Şifre <span class="font-normal">(en az 6 karakter)</span></label>
-                <input type="password" id="register-password" required minlength="6" class="w-full bg-background focus:border-primary focus:ring-1 focus:ring-primary rounded-lg py-3 px-4 font-body-md text-on-surface shadow-neo-inset border-none rounded-xl bg-background ">
+                <input type="password" autocomplete="new-password" id="register-password" required minlength="6" class="w-full bg-background focus:border-primary focus:ring-1 focus:ring-primary rounded-lg py-3 px-4 font-body-md text-on-surface shadow-neo-inset border-none rounded-xl bg-background ">
             </div>
             <p id="register-error" class="text-error font-label-sm min-h-[14px]"></p>
             <button type="submit" class="w-full bg-gradient-to-r from-neon-purple to-neon-blue text-white font-headline-sm text-body-lg py-4 rounded-[32px] shadow-sm hover:shadow-md transition-all active:scale-[0.98] flex items-center justify-center gap-2">Hesap oluştur</button>
@@ -3801,12 +3801,12 @@
                         <span id="profile-password-icon" class="material-symbols-rounded" style="font-variation-settings: 'FILL' 0;">expand_more</span>
                     </button>
                     
-                    <div id="profile-password-content" class="hidden space-y-6 pt-2">
+                    <form id="profile-password-content" class="hidden space-y-6 pt-2" onsubmit="event.preventDefault();">
 
                         <!-- Current Password -->
                     <div class="space-y-2">
                         <div class="relative">
-                            <input id="profile-current-password" class="w-full bg-surface-variant/30 text-on-surface font-body-lg text-body-lg rounded-[32px] pl-4 pr-10 py-3 border-0 focus:ring-2 focus:ring-primary transition-shadow placeholder-outline-variant shadow-neo-inset border-none rounded-xl bg-background " placeholder="Mevcut Şifre" type="password"/>
+                            <input id="profile-current-password" autocomplete="current-password" class="w-full bg-surface-variant/30 text-on-surface font-body-lg text-body-lg rounded-[32px] pl-4 pr-10 py-3 border-0 focus:ring-2 focus:ring-primary transition-shadow placeholder-outline-variant shadow-neo-inset border-none rounded-xl bg-background " placeholder="Mevcut Şifre" type="password"/>
                             <span class="material-symbols-rounded absolute right-3 top-1/2 -translate-y-1/2 text-on-surface-variant" style="font-variation-settings: 'FILL' 0;">lock</span>
                         </div>
                     </div>
@@ -3814,7 +3814,7 @@
                     <!-- New Password -->
                     <div class="space-y-2">
                         <div class="relative">
-                            <input id="profile-new-password" class="w-full bg-surface-variant/30 text-on-surface font-body-lg text-body-lg rounded-[32px] pl-4 pr-10 py-3 border-0 focus:ring-2 focus:ring-primary transition-shadow placeholder-outline-variant shadow-neo-inset border-none rounded-xl bg-background " placeholder="Yeni Şifre" type="password"/>
+                            <input id="profile-new-password" autocomplete="new-password" class="w-full bg-surface-variant/30 text-on-surface font-body-lg text-body-lg rounded-[32px] pl-4 pr-10 py-3 border-0 focus:ring-2 focus:ring-primary transition-shadow placeholder-outline-variant shadow-neo-inset border-none rounded-xl bg-background " placeholder="Yeni Şifre" type="password"/>
                             <span class="material-symbols-rounded absolute right-3 top-1/2 -translate-y-1/2 text-on-surface-variant" style="font-variation-settings: 'FILL' 0;">lock</span>
                         </div>
                     </div>
@@ -3822,7 +3822,7 @@
                     <!-- Confirm New Password -->
                     <div class="space-y-2">
                         <div class="relative">
-                            <input id="profile-confirm-password" class="w-full bg-surface-variant/30 text-on-surface font-body-lg text-body-lg rounded-[32px] pl-4 pr-10 py-3 border-0 focus:ring-2 focus:ring-primary transition-shadow placeholder-outline-variant shadow-neo-inset border-none rounded-xl bg-background " placeholder="Yeni Şifre (Tekrar)" type="password"/>
+                            <input id="profile-confirm-password" autocomplete="new-password" class="w-full bg-surface-variant/30 text-on-surface font-body-lg text-body-lg rounded-[32px] pl-4 pr-10 py-3 border-0 focus:ring-2 focus:ring-primary transition-shadow placeholder-outline-variant shadow-neo-inset border-none rounded-xl bg-background " placeholder="Yeni Şifre (Tekrar)" type="password"/>
                             <span class="material-symbols-rounded absolute right-3 top-1/2 -translate-y-1/2 text-on-surface-variant" style="font-variation-settings: 'FILL' 0;">lock</span>
                         </div>
                     </div>
@@ -3833,7 +3833,7 @@
                         Şifreyi Güncelle
                     </button>
                     <p id="profile-password-msg" class="text-sm text-center mt-2"></p>
-                    </div>
+                    </form>
                 </div>
 
                 <div class="pb-2">
