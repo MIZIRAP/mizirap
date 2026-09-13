@@ -34,7 +34,7 @@ let currentUid = null;
 
 export async function initDashboard(uid) {
     currentUid = uid;
-    initWidgetSorting(uid);
+
 
     const dailyRef = getDailySummaryRef(uid);
     
@@ -48,11 +48,20 @@ export async function initDashboard(uid) {
         console.error("Migration error:", e);
     }
 
+    // Sort widgets and initialize SortableJS before initial render
+    await initWidgetSorting(uid);
+
     // Listen to daily summary
     registerFirestoreListener('dashboard', onSnapshot(dailyRef, (docSnap) => {
         if (docSnap.exists()) {
             currentDashboardData = { ...currentDashboardData, ...docSnap.data() };
             renderDashboard();
+            
+            // Reveal dashboard once render is complete
+            const grid = document.getElementById("dashboard-widgets-grid");
+            const bottomGrid = document.getElementById("dashboard-bottom-widgets");
+            if (grid) grid.classList.remove('opacity-0');
+            if (bottomGrid) bottomGrid.classList.remove('opacity-0');
         }
     }));
 }
@@ -173,23 +182,24 @@ async function initWidgetSorting(uid) {
         const data = await fetchSharedProfile(uid);
         if (data) {
             if (data.widgetOrder && grid) {
+                const frag = document.createDocumentFragment();
                 data.widgetOrder.forEach(id => {
                     const el = grid.querySelector(`[data-widget-id="${id}"]`);
-                    if (el) grid.appendChild(el);
+                    if (el) frag.appendChild(el);
                 });
+                grid.appendChild(frag);
             }
             if (data.bottomWidgetOrder && bottomGrid) {
+                const frag = document.createDocumentFragment();
                 data.bottomWidgetOrder.forEach(id => {
                     const el = bottomGrid.querySelector(`[data-widget-id="${id}"]`);
-                    if (el) bottomGrid.appendChild(el);
+                    if (el) frag.appendChild(el);
                 });
+                bottomGrid.appendChild(frag);
             }
         }
     } catch(err) {
         console.error("Sıralama yüklenemedi", err);
-    } finally {
-        if (grid) grid.classList.remove('opacity-0');
-        if (bottomGrid) bottomGrid.classList.remove('opacity-0');
     }
 
     if (typeof Sortable !== 'undefined') {
