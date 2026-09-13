@@ -2663,12 +2663,13 @@ window.renderProgressList = function() {
         }
         
         let formattedDate = 'Tarih yok';
-        if (ex.lastSessionDate) {
+        const dateVal = ex.lastDate || ex.lastSessionDate;
+        if (dateVal) {
             let dateObj;
-            if (ex.lastSessionDate.seconds) {
-                dateObj = new Date(ex.lastSessionDate.seconds * 1000);
+            if (dateVal.seconds) {
+                dateObj = new Date(dateVal.seconds * 1000);
             } else {
-                dateObj = new Date(ex.lastSessionDate); // fallback string
+                dateObj = new Date(dateVal); // fallback string
             }
             if(!isNaN(dateObj)) {
                 formattedDate = dateObj.toLocaleDateString('tr-TR', { day: 'numeric', month: 'short' });

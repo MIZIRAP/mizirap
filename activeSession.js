@@ -650,6 +650,15 @@ async function finishSession() {
             const existing = progressDocs[safeId];
             const meta = getCategoryAndEquipment(update.name);
             
+            let entries = existing && existing.entries ? existing.entries : [];
+            let mergedThisDay = false;
+            let combinedVolumeForToday = update.totalVolume;
+            
+            if (entries.length > 0 && entries[entries.length - 1].date === dateStr) {
+                mergedThisDay = true;
+                combinedVolumeForToday = entries[entries.length - 1].totalVolume + update.totalVolume;
+            }
+            
             // Check PR
             let isPR = false;
             let currentPR = existing && existing.personalRecord ? existing.personalRecord : { weight: 0, reps: 0 };
@@ -661,23 +670,28 @@ async function finishSession() {
                 currentPR = { weight: update.maxWeight, reps: update.maxRepsAtMaxWeight, date: dateStr };
             }
             
-            // Check Max Volume
+            // Check Max Volume (based on combined daily volume)
             let maxVolume = existing && existing.maxVolume ? existing.maxVolume : { value: 0 };
-            if (update.totalVolume > maxVolume.value) {
-                maxVolume = { value: update.totalVolume, date: dateStr };
+            if (combinedVolumeForToday > maxVolume.value) {
+                maxVolume = { value: combinedVolumeForToday, date: dateStr };
             }
             
-            const newEntry = {
-                date: dateStr,
-                sessionId: _sessionId,
-                sessionName: sessionName,
-                sets: update.sets,
-                totalVolume: update.totalVolume,
-                isPR: isPR
-            };
-            
-            let entries = existing && existing.entries ? existing.entries : [];
-            entries.push(newEntry);
+            if (mergedThisDay) {
+                let lastEntry = entries[entries.length - 1];
+                lastEntry.sets.push(...update.sets);
+                lastEntry.totalVolume = combinedVolumeForToday;
+                lastEntry.isPR = lastEntry.isPR || isPR;
+            } else {
+                const newEntry = {
+                    date: dateStr,
+                    sessionId: _sessionId,
+                    sessionName: sessionName,
+                    sets: update.sets,
+                    totalVolume: update.totalVolume,
+                    isPR: isPR
+                };
+                entries.push(newEntry);
+            }
             
             const progressRef = doc(db, 'users', _uid, 'exerciseProgress', safeId);
             batch.set(progressRef, {
@@ -703,18 +717,33 @@ async function finishSession() {
                 indexData.trackedExerciseCount++;
             }
             
-            const lastVol = idxEx.lastVolume || 0;
-            idxEx.changePercent = lastVol > 0 ? ((update.totalVolume - lastVol) / lastVol) * 100 : 0;
-            idxEx.lastVolume = update.totalVolume;
+            if (!idxEx.sparkline) idxEx.sparkline = [];
+            
+            if (mergedThisDay && idxEx.sparkline.length > 0) {
+                idxEx.sparkline[idxEx.sparkline.length - 1] += update.totalVolume;
+                idxEx.lastVolume = (idxEx.lastVolume || 0) + update.totalVolume;
+                
+                if (idxEx.sparkline.length > 1) {
+                    const prevVol = idxEx.sparkline[idxEx.sparkline.length - 2];
+                    idxEx.changePercent = prevVol > 0 ? ((idxEx.lastVolume - prevVol) / prevVol) * 100 : 0;
+                } else {
+                    idxEx.changePercent = 0;
+                }
+                idxEx.isNewPR = idxEx.isNewPR || isPR;
+            } else {
+                const lastVol = idxEx.lastVolume || 0;
+                idxEx.changePercent = lastVol > 0 ? ((update.totalVolume - lastVol) / lastVol) * 100 : 0;
+                idxEx.lastVolume = update.totalVolume;
+                idxEx.isNewPR = isPR;
+                
+                idxEx.sparkline.push(update.totalVolume);
+                if (idxEx.sparkline.length > 8) {
+                    idxEx.sparkline.shift();
+                }
+            }
+            
             idxEx.lastDate = dateStr;
             idxEx.personalRecord = { weight: currentPR.weight, reps: currentPR.reps };
-            idxEx.isNewPR = isPR;
-            
-            if (!idxEx.sparkline) idxEx.sparkline = [];
-            idxEx.sparkline.push(update.totalVolume);
-            if (idxEx.sparkline.length > 8) {
-                idxEx.sparkline.shift();
-            }
         }
         
         // Finalize index updates
