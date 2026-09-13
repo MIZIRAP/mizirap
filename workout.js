@@ -2708,7 +2708,4 @@ window.renderProgressList = function() {
     listContainer.innerHTML = html;
 };
 
-window.openProgressDetail = function(exId, exName) {
-    console.log("Navigating to progress detail for:", exId, exName);
-    // TODO: BİR SONRAKİ GÖREV - Egzersiz detay ekranını açma mantığı buraya eklenecek.
-};
+
