@@ -43,32 +43,65 @@ export function initWater(uid) {
     const btnCustom = document.getElementById("btn-water-custom");
     const btnEditGoal = document.getElementById("btn-edit-water-goal");
 
-    const addWaterLog = async (amount, type, icon) => {
-        try {
-            const batch = writeBatch(db);
-            const logRef = doc(collection(db, "users", uid, "waterLogs"));
-            batch.set(logRef, {
-                amount, type, icon, createdAt: serverTimestamp()
-            });
+    let waterDebounceTimer = null;
+    let pendingWaterAmount = 0;
+    let pendingWaterType = "Water";
+    let pendingWaterIcon = "local_drink";
 
-            const today = new Date();
-            today.setHours(0,0,0,0);
-            const todaysLogs = waterLogs.filter(log => {
-                if(!log.createdAt || !log.createdAt.toDate) return false;
-                return log.createdAt.toDate() >= today;
-            });
-            const currentAmount = todaysLogs.reduce((sum, log) => sum + Number(log.amount), 0);
+    const addWaterLog = (amount, type, icon) => {
+        // Optimistic UI Update
+        waterLogs.unshift({ id: 'temp-' + Date.now(), amount, type, icon, createdAt: { toDate: () => new Date() } });
+        updateWaterUI();
 
-            batch.set(getDailySummaryRef(uid), {
-                waterAmount: currentAmount + amount
-            }, { merge: true });
-
-            await batch.commit();
-        } catch(err) {
-            console.error("Firestore error:", err);
-            waterLogs.unshift({ amount, type, icon, createdAt: { toDate: () => new Date() } });
-            updateWaterUI();
+        pendingWaterAmount += amount;
+        if (pendingWaterAmount >= 500) {
+            pendingWaterType = "Water Bottle";
+            pendingWaterIcon = "water_bottle";
+        } else {
+            pendingWaterType = type;
+            pendingWaterIcon = icon;
         }
+
+        if (waterDebounceTimer) clearTimeout(waterDebounceTimer);
+
+        waterDebounceTimer = setTimeout(async () => {
+            const amountToSave = pendingWaterAmount;
+            const typeToSave = pendingWaterType;
+            const iconToSave = pendingWaterIcon;
+            
+            pendingWaterAmount = 0;
+            
+            try {
+                const batch = writeBatch(db);
+                const logRef = doc(collection(db, "users", uid, "waterLogs"));
+                batch.set(logRef, {
+                    amount: amountToSave, 
+                    type: typeToSave, 
+                    icon: iconToSave, 
+                    createdAt: serverTimestamp()
+                });
+
+                const today = new Date();
+                today.setHours(0,0,0,0);
+                const todaysLogs = waterLogs.filter(log => {
+                    if (log.id && log.id.startsWith('temp-')) return false;
+                    if(!log.createdAt || !log.createdAt.toDate) return false;
+                    return log.createdAt.toDate() >= today;
+                });
+                const currentAmount = todaysLogs.reduce((sum, log) => sum + Number(log.amount), 0);
+
+                batch.set(getDailySummaryRef(uid), {
+                    waterAmount: currentAmount + amountToSave
+                }, { merge: true });
+
+                await batch.commit();
+            } catch(err) {
+                console.error("Firestore error:", err);
+                waterLogs = waterLogs.filter(log => !(log.id && log.id.startsWith('temp-')));
+                updateWaterUI();
+                alert("Su eklenirken bir hata oluştu.");
+            }
+        }, 800);
     };
 
     if(btn250) btn250.onclick = () => addWaterLog(250, "Glass of Water", "local_drink");
