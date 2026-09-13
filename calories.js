@@ -1,5 +1,5 @@
 import { db } from "./firebase-config.js";
-import { collection, doc, addDoc, setDoc, updateDoc, deleteDoc, onSnapshot, query, orderBy, limit, where, serverTimestamp, writeBatch } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+import { collection, doc, addDoc, setDoc, updateDoc, deleteDoc, onSnapshot, query, orderBy, limit, where, serverTimestamp, writeBatch, getDocsFromCache, getDocsFromServer } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
 import { escapeHtml, validatePositiveNumber } from "./utils.js";
 import { registerListener } from "./listenerManager.js";
 import { setSharedState } from "./sharedState.js";
@@ -14,8 +14,8 @@ let dailyLogs = [];
 let libraryFoods = [];
 let unsubscribeLogs = null;
 let unsubscribeSettings = null;
-let unsubscribeLibrary = null;
 let unsubWeeklyLogs = null;
+let libraryLoadedFromServer = false;
 let weeklyLogs = [];
 let currentUid = null;
 let currentEditLogId = null;
@@ -123,6 +123,25 @@ let tempMacroYag = 65;
 let currentKcalPer100g = 0;
 let currentFoodName = "";
 let currentFoodMacros = { karb: 0, protein: 0, yag: 0 };
+async function loadFoodLibrary(uid) {
+    const libRef = query(collection(db, "users", uid, "foodLibrary"), orderBy("createdAt", "desc"));
+    try {
+        const snap = await getDocsFromCache(libRef);
+        libraryFoods = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+        if (libraryFoods.length === 0 && !libraryLoadedFromServer) {
+            throw new Error("Cache empty");
+        }
+    } catch(e) {
+        try {
+            const snap = await getDocsFromServer(libRef);
+            libraryFoods = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+            libraryLoadedFromServer = true;
+        } catch (err) {
+            console.error("Food library load failed:", err);
+        }
+    }
+    renderLibraryFoods();
+}
 
 export function initCalories(uid) {
     currentUid = uid;
@@ -167,12 +186,8 @@ export function initCalories(uid) {
         updateUIState();
     }));
 
-    // Listen to Food Library
-    const libRef = query(collection(db, "users", uid, "foodLibrary"), orderBy("createdAt", "desc"));
-    unsubscribeLibrary = registerListener(onSnapshot(libRef, (snap) => {
-        libraryFoods = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-        renderLibraryFoods();
-    }));
+    // Load Food Library with Cache-First Strategy
+    loadFoodLibrary(uid);
 
     // Listen to Weekly Calorie Logs (for chart)
     const oneWeekAgo = new Date();
@@ -431,14 +446,23 @@ if (caloriesGoalBackdrop) {
             }
             saveNewFoodBtn.disabled = true;
             try {
-                const dbPromise = setDoc(doc(db, "users", currentUid, "foodLibrary", currentEditFoodId), {
+                const newData = {
                     name: name,
                     kcal: tempNewFoodKcal,
                     protein: tempNewFoodProtein,
                     karb: tempNewFoodKarb,
                     yag: tempNewFoodYag,
                     createdAt: serverTimestamp()
-                }, { merge: true });
+                };
+                const dbPromise = setDoc(doc(db, "users", currentUid, "foodLibrary", currentEditFoodId), newData, { merge: true });
+
+                const existingIndex = libraryFoods.findIndex(f => f.id === currentEditFoodId);
+                if (existingIndex > -1) {
+                    libraryFoods[existingIndex] = { ...libraryFoods[existingIndex], ...newData, createdAt: { toDate: () => new Date() } };
+                } else {
+                    libraryFoods.unshift({ id: currentEditFoodId, ...newData, createdAt: { toDate: () => new Date() } });
+                }
+                renderLibraryFoods();
                 const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error('OFFLINE_TIMEOUT')), 6000));
                 
                 await Promise.race([dbPromise, timeoutPromise]);
@@ -1052,10 +1076,16 @@ function renderLibraryFoods() {
         delBtn.className = "absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-red-500 rounded-2xl text-white flex items-center justify-center z-0 active:bg-red-600 transition-colors";
         delBtn.innerHTML = `<span class="material-symbols-rounded text-xl">delete</span>`;
         delBtn.onclick = async () => {
+            const backupFoods = [...libraryFoods];
+            libraryFoods = libraryFoods.filter(f => f.id !== food.id);
+            renderLibraryFoods();
+            
             try {
                 await deleteDoc(doc(db, "users", currentUid, "foodLibrary", food.id));
             } catch(e) {
                 console.error("Silme Hatası", e);
+                libraryFoods = backupFoods;
+                renderLibraryFoods();
                 alert('Silinirken hata oluştu: ' + e.message);
             }
         };
@@ -1214,7 +1244,7 @@ function updateUIState() {
 export function clearCalories() {
     if(unsubscribeLogs) unsubscribeLogs();
     if(unsubscribeSettings) unsubscribeSettings();
-    if(unsubscribeLibrary) unsubscribeLibrary();
+    if(unsubWeeklyLogs) unsubWeeklyLogs();
     dailyLogs = [];
     libraryFoods = [];
 }
