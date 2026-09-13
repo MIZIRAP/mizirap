@@ -1,5 +1,5 @@
 import { auth, db } from "./firebase-config.js";
-import { collection, doc, addDoc, updateDoc, deleteDoc, writeBatch, onSnapshot, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+import { collection, onSnapshot, serverTimestamp, addDoc, updateDoc, deleteDoc, doc, query, orderBy, limit, writeBatch } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
 import { escapeHtml, handleFormSubmit } from "./utils.js";
 import { registerListener } from "./listenerManager.js";
 
@@ -7,7 +7,7 @@ let allShopping = [];
 let unsubscribe = null;
 
 export function initShopping(uid) {
-    const shoppingRef = query(collection(db, "users", uid, "shoppingList"), orderBy("createdAt", "desc"));
+    const shoppingRef = query(collection(db, "users", uid, "shoppingList"), orderBy("createdAt", "desc"), limit(100));
     unsubscribe = registerListener(onSnapshot(shoppingRef, snap => {
         allShopping = snap.docs.map(d => ({ id: d.id, ...d.data() }));
         renderShoppingList();

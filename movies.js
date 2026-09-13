@@ -1,5 +1,5 @@
 import { db } from "./firebase-config.js";
-import { collection, onSnapshot, serverTimestamp, doc, updateDoc, writeBatch, addDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+import { collection, onSnapshot, serverTimestamp, doc, updateDoc, writeBatch, addDoc, deleteDoc, query, orderBy, limit } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
 import { escapeHtml } from "./utils.js";
 import { registerListener, registerFirestoreListener } from "./listenerManager.js";
 import { getDailySummaryRef } from "./dashboard.js";
@@ -105,7 +105,7 @@ export function initMovies(uid) {
 
 function startMoviesListener() {
     if (!currentUid) return;
-    const moviesRef = collection(db, "users", currentUid, "movies");
+    const moviesRef = query(collection(db, "users", currentUid, "movies"), orderBy("updatedAt", "desc"), limit(100));
 
     moviesUnsubscribe = registerFirestoreListener('movies', onSnapshot(moviesRef, (snapshot) => {
         currentMovies = [];

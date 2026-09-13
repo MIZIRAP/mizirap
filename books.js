@@ -1,5 +1,5 @@
 import { db } from "./firebase-config.js";
-import { collection, onSnapshot, serverTimestamp, doc, updateDoc, writeBatch, addDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+import { collection, onSnapshot, serverTimestamp, doc, updateDoc, writeBatch, addDoc, deleteDoc, query, orderBy, limit } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
 import { escapeHtml } from "./utils.js";
 import { registerListener, registerFirestoreListener } from "./listenerManager.js";
 import { getDailySummaryRef } from "./dashboard.js";
@@ -265,7 +265,7 @@ export function initBooks(uid) {
 
 function startBooksListener() {
     if (!currentUid) return;
-    const booksRef = collection(db, "users", currentUid, "books");
+    const booksRef = query(collection(db, "users", currentUid, "books"), orderBy("updatedAt", "desc"), limit(100));
     booksUnsubscribe = registerFirestoreListener('books', onSnapshot(booksRef, (snapshot) => {
         currentBooks = [];
         snapshot.forEach(docSnap => {
