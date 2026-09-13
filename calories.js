@@ -864,6 +864,15 @@ function renderLogs() {
         delBtn.className = "absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-red-500 rounded-2xl text-white flex items-center justify-center z-0 active:bg-red-600 transition-colors";
         delBtn.innerHTML = `<span class="material-symbols-rounded text-xl">delete</span>`;
         delBtn.onclick = async () => {
+            // Optimistic UI update
+            const backupLogs = [...dailyLogs];
+            const logIndex = dailyLogs.findIndex(l => l.id === log.id);
+            if (logIndex > -1) {
+                dailyLogs.splice(logIndex, 1);
+                updateUIState();
+                renderLogs();
+            }
+            
             try {
                 const batch = writeBatch(db);
                 batch.delete(doc(db, "users", currentUid, "calorieLogs", log.id));
@@ -872,15 +881,17 @@ function renderLogs() {
                 const todayStr = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
                 if (currentDateStr === todayStr) {
                     const currentConsumed = dailyLogs.reduce((sum, l) => sum + Number(l.kcal || 0), 0);
-                    batch.set(getDailySummaryRef(currentUid), { caloriesConsumed: Math.max(0, currentConsumed - Number(log.kcal || 0)) }, { merge: true });
+                    batch.set(getDailySummaryRef(currentUid), { caloriesConsumed: Math.max(0, currentConsumed) }, { merge: true });
                 }
 
                 await batch.commit();
             } catch(e) {
                 console.error("Silme Hatası", e);
-                // local update for test
-                dailyLogs = dailyLogs.filter(l => l.id !== log.id);
+                // Rollback
+                dailyLogs = backupLogs;
                 updateUIState();
+                renderLogs();
+                alert('Silinirken hata oluştu, işlem geri alındı.');
             }
         };
 
