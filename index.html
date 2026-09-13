@@ -879,11 +879,90 @@
                 </div>
                 <span class="material-symbols-rounded text-[#1E293B]">chevron_right</span>
             </a>
-
+            
+            <a href="#" class="bg-[#F0F2F8] p-4 rounded-2xl flex items-center justify-between active:scale-[0.99] transition-transform mt-3" style="background-color: #F0F2F8; box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);" onclick="history.pushState({view: 'view-progress'}, '', '?view=view-progress'); window.showView('view-progress'); if(window.loadProgressIndex) window.loadProgressIndex(); return false;">
+                <div class="flex items-center gap-4">
+                    <div class="w-10 h-10 rounded-full bg-[#F0F2F8] flex items-center justify-center" style="background-color: #F0F2F8; box-shadow: inset 2px 2px 5px #D1D9E6, inset -2px -2px 5px rgba(255, 255, 255, 0.7);">
+                        <span class="material-symbols-rounded text-[#1E293B]">show_chart</span>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-sm text-[#1E293B]">İlerleme Takibi</h4>
+                        <p class="text-xs font-medium text-[#64748B] mt-0.5">Geçmiş performans ve PR özetleri</p>
+                    </div>
+                </div>
+                <span class="material-symbols-rounded text-[#1E293B]">chevron_right</span>
+            </a>
         </div>
     </section>
 </main>
 </section>
+
+    <!-- ================= İLERLEME (PROGRESS) ================= -->
+    <section id="view-progress" class="view hidden bg-surface-light min-h-[100dvh] text-on-surface antialiased font-body-lg pb-[100px]">
+        <div class="max-w-md mx-auto relative h-full flex flex-col">
+            <!-- Header -->
+            <header class="w-full top-0 sticky z-40 max-w-md mx-auto px-container-padding py-4 bg-[#F0F2F8]">
+                <div class="flex items-center justify-between w-full">
+                    <button onclick="history.back()" class="w-10 h-10 flex items-center justify-center rounded-full bg-[#F0F2F8] active:scale-95 transition-transform" style="background-color: #F0F2F8; box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);">
+                        <span class="material-symbols-rounded text-[#1E293B]">arrow_back</span>
+                    </button>
+                    <h1 class="text-h1 font-bold text-[#1E293B]">İlerleme</h1>
+                    <div class="w-10 h-10 shrink-0"></div>
+                </div>
+            </header>
+
+            <main class="flex-1 px-6 flex flex-col pt-4 gap-6 pb-24">
+                
+                <!-- Summary Cards -->
+                <section class="grid grid-cols-3 gap-3">
+                    <div class="neo-surface-small p-3 flex flex-col items-center justify-center gap-1 text-center" style="background-color: #F0F2F8; box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7); border-radius: 12px;">
+                        <span class="text-[10px] font-bold text-[#64748B] uppercase tracking-wider">Takip Edilen</span>
+                        <span class="text-lg font-bold text-[#1E293B]" id="prog-stat-tracked">0</span>
+                    </div>
+                    <div class="neo-surface-small p-3 flex flex-col items-center justify-center gap-1 text-center" style="background-color: #F0F2F8; box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7); border-radius: 12px;">
+                        <span class="text-[10px] font-bold text-[#64748B] uppercase tracking-wider">Toplam</span>
+                        <span class="text-lg font-bold text-[#1E293B]" id="prog-stat-sessions">0</span>
+                    </div>
+                    <div class="neo-surface-small p-3 flex flex-col items-center justify-center gap-1 text-center" style="background-color: #F0F2F8; box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7); border-radius: 12px;">
+                        <span class="text-[10px] font-bold text-[#64748B] uppercase tracking-wider">Hacim</span>
+                        <span class="text-lg font-bold text-[#64748B]" id="prog-stat-volume">%0</span>
+                    </div>
+                </section>
+
+                <!-- Search Box -->
+                <section class="pt-2">
+                    <div class="neo-inset p-4 rounded-full flex items-center gap-3">
+                        <span class="material-symbols-outlined text-on-surface-variant">search</span>
+                        <input id="progress-search-input" class="bg-transparent border-none focus:ring-0 text-sm w-full p-0 text-on-surface" placeholder="Egzersiz Ara..." type="text" oninput="if(window.handleProgressSearch) window.handleProgressSearch(this.value)"/>
+                    </div>
+                </section>
+
+                <!-- Filter Chips -->
+                <section class="overflow-x-auto pb-2">
+                    <div class="flex gap-4 px-1" id="progress-filter-container">
+                        <button onclick="if(window.filterProgress) window.filterProgress('Tümü', this)" class="neo-inset px-5 py-2 rounded-full text-sm font-semibold text-on-surface whitespace-nowrap filter-chip active">Tümü</button>
+                        <button onclick="if(window.filterProgress) window.filterProgress('Göğüs', this)" class="neo-surface px-5 py-2 rounded-full text-sm font-semibold text-on-surface-variant whitespace-nowrap neo-button filter-chip">Göğüs</button>
+                        <button onclick="if(window.filterProgress) window.filterProgress('Sırt', this)" class="neo-surface px-5 py-2 rounded-full text-sm font-semibold text-on-surface-variant whitespace-nowrap neo-button filter-chip">Sırt</button>
+                        <button onclick="if(window.filterProgress) window.filterProgress('Omuz', this)" class="neo-surface px-5 py-2 rounded-full text-sm font-semibold text-on-surface-variant whitespace-nowrap neo-button filter-chip">Omuz</button>
+                        <button onclick="if(window.filterProgress) window.filterProgress('Biceps', this)" class="neo-surface px-5 py-2 rounded-full text-sm font-semibold text-on-surface-variant whitespace-nowrap neo-button filter-chip">Biceps</button>
+                        <button onclick="if(window.filterProgress) window.filterProgress('Triceps', this)" class="neo-surface px-5 py-2 rounded-full text-sm font-semibold text-on-surface-variant whitespace-nowrap neo-button filter-chip">Triceps</button>
+                        <button onclick="if(window.filterProgress) window.filterProgress('Bacak', this)" class="neo-surface px-5 py-2 rounded-full text-sm font-semibold text-on-surface-variant whitespace-nowrap neo-button filter-chip">Bacak</button>
+                        <button onclick="if(window.filterProgress) window.filterProgress('Karın', this)" class="neo-surface px-5 py-2 rounded-full text-sm font-semibold text-on-surface-variant whitespace-nowrap neo-button filter-chip">Karın</button>
+                        <button onclick="if(window.filterProgress) window.filterProgress('Kalça', this)" class="neo-surface px-5 py-2 rounded-full text-sm font-semibold text-on-surface-variant whitespace-nowrap neo-button filter-chip">Kalça</button>
+                    </div>
+                </section>
+
+                <!-- Exercise List Container -->
+                <div id="progress-list-container" class="flex flex-col gap-4 flex-1 pb-32">
+                    <div class="flex justify-center items-center py-8"><div class="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div></div>
+                </div>
+                
+                <!-- Info Note -->
+                <p class="text-center text-xs text-[#64748B] mt-4 px-4 leading-relaxed">Grafik metriği her seanstaki toplam hacmi (set × tekrar × ağırlık) gösterir.</p>
+                
+            </main>
+        </div>
+    </section>
 
     <!-- Edit Workout Template View -->
 

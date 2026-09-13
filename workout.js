@@ -2474,3 +2474,240 @@ async function saveSimpleNewSplit() {
         saveBtn.innerHTML = `<span class="font-label-md text-label-md text-body-lg font-body-lg">Oluştur</span><span class="material-symbols-rounded icon-md">add_circle</span>`;
     }
 }
+
+// ==========================================
+// PROGRESS (İLERLEME) VIEW LOGIC
+// ==========================================
+
+let globalProgressIndex = null;
+let currentProgressFilter = 'Tümü';
+let currentProgressSearch = '';
+
+window.loadProgressIndex = async function() {
+    if (!currentUid || !db) return;
+    try {
+        const { doc, getDoc } = await import('https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js');
+        const docRef = doc(db, "users", currentUid, "summary", "exerciseProgressIndex");
+        const docSnap = await getDoc(docRef);
+        
+        if (docSnap.exists()) {
+            globalProgressIndex = docSnap.data();
+        } else {
+            globalProgressIndex = {
+                trackedExerciseCount: 0,
+                totalSessions: 0,
+                volumeChangePercent: 0,
+                exercises: []
+            };
+        }
+        
+        // Update Summary Cards
+        document.getElementById('prog-stat-tracked').textContent = globalProgressIndex.trackedExerciseCount || 0;
+        document.getElementById('prog-stat-sessions').textContent = globalProgressIndex.totalSessions || 0;
+        
+        const volChange = globalProgressIndex.volumeChangePercent || 0;
+        const volEl = document.getElementById('prog-stat-volume');
+        if (volChange > 0) {
+            volEl.textContent = '+' + volChange + '%';
+            volEl.className = 'text-lg font-bold text-[#22C55E]';
+        } else if (volChange < 0) {
+            volEl.textContent = volChange + '%';
+            volEl.className = 'text-lg font-bold text-[#EF4444]';
+        } else {
+            volEl.textContent = '%0';
+            volEl.className = 'text-lg font-bold text-[#64748B]';
+        }
+        
+        // Initial render
+        window.renderProgressList();
+        
+    } catch(err) {
+        console.error("Progress Index yüklenirken hata:", err);
+    }
+};
+
+window.handleProgressSearch = function(val) {
+    currentProgressSearch = val.toLowerCase().trim();
+    window.renderProgressList();
+};
+
+window.filterProgress = function(category, btnEl) {
+    currentProgressFilter = category;
+    
+    // Update active class on chips
+    const container = document.getElementById('progress-filter-container');
+    if (container) {
+        container.querySelectorAll('button').forEach(btn => {
+            btn.classList.remove('active', 'neo-inset');
+            btn.classList.add('neo-surface', 'text-on-surface-variant');
+            btn.classList.remove('text-on-surface');
+        });
+        if (btnEl) {
+            btnEl.classList.add('active', 'neo-inset', 'text-on-surface');
+            btnEl.classList.remove('neo-surface', 'text-on-surface-variant');
+        }
+    }
+    
+    window.renderProgressList();
+};
+
+window.renderProgressList = function() {
+    const listContainer = document.getElementById('progress-list-container');
+    if (!listContainer) return;
+    
+    if (!globalProgressIndex || !globalProgressIndex.exercises || globalProgressIndex.exercises.length === 0) {
+        listContainer.innerHTML = '<div class="text-center text-sm text-[#64748B] py-8">Henüz veri yok. Antrenman tamamlayarak verilerinizi oluşturun.</div>';
+        return;
+    }
+    
+    // Filter
+    let filtered = globalProgressIndex.exercises;
+    
+    if (currentProgressFilter !== 'Tümü') {
+        filtered = filtered.filter(ex => {
+            // Check muscle map
+            if (window.EXERCISE_MUSCLE_MAPPING && window.EXERCISE_MUSCLE_MAPPING[ex.exerciseName]) {
+                const mapData = window.EXERCISE_MUSCLE_MAPPING[ex.exerciseName];
+                const TR_MAP = {
+                    'chest': 'Göğüs', 'upper-back': 'Sırt', 'lower-back': 'Bel', 'deltoids': 'Omuz', 
+                    'biceps': 'Biceps', 'triceps': 'Triceps', 'quadriceps': 'Bacak', 'hamstrings': 'Arka Bacak',
+                    'calves': 'Kalf', 'glutes': 'Kalça', 'core': 'Karın'
+                };
+                
+                let matches = false;
+                [...(mapData.primary||[]), ...(mapData.secondary||[])].forEach(m => {
+                    if (TR_MAP[m] === currentProgressFilter || (currentProgressFilter === 'Bacak' && (TR_MAP[m] === 'Arka Bacak' || TR_MAP[m] === 'Kalf'))) {
+                        matches = true;
+                    }
+                });
+                return matches;
+            }
+            return false;
+        });
+    }
+    
+    if (currentProgressSearch) {
+        filtered = filtered.filter(ex => ex.exerciseName.toLowerCase().includes(currentProgressSearch));
+    }
+    
+    // Sort by last volume descending? Or leave as is (already sorted probably).
+    filtered.sort((a,b) => (b.lastVolume || 0) - (a.lastVolume || 0));
+    
+    if (filtered.length === 0) {
+        listContainer.innerHTML = '<div class="text-center text-sm text-[#64748B] py-8">Sonuç bulunamadı.</div>';
+        return;
+    }
+    
+    let html = '';
+    
+    filtered.forEach(ex => {
+        // Calculate change badge
+        let changeHtml = '';
+        if (ex.isNewPR) {
+            changeHtml = `<div class="bg-amber-100 text-amber-700 text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wide flex items-center gap-1 shadow-sm"><span class="material-symbols-rounded text-[12px]">workspace_premium</span>Yeni PR!</div>`;
+        } else {
+            const ch = ex.volumeChangePercent || 0;
+            if (ch > 0) {
+                changeHtml = `<div class="text-[#22C55E] text-xs font-bold flex items-center"><span class="material-symbols-rounded text-[14px]">trending_up</span>%${ch}</div>`;
+            } else if (ch < 0) {
+                changeHtml = `<div class="text-[#EF4444] text-xs font-bold flex items-center"><span class="material-symbols-rounded text-[14px]">trending_down</span>%${Math.abs(ch)}</div>`;
+            } else {
+                changeHtml = `<div class="text-[#64748B] text-xs font-bold flex items-center"><span class="material-symbols-rounded text-[14px]">trending_flat</span>%0</div>`;
+            }
+        }
+        
+        // Sparkline SVG
+        let sparklineHtml = '';
+        if (ex.sparkline && ex.sparkline.length > 1) {
+            const width = 60;
+            const height = 24;
+            const points = ex.sparkline;
+            const min = Math.min(...points);
+            const max = Math.max(...points);
+            const range = (max - min) || 1;
+            
+            const polylinePoints = points.map((p, i) => {
+                const x = (i / (points.length - 1)) * width;
+                let y;
+                if (range === 0) {
+                   y = height / 2;
+                } else {
+                   y = height - ((p - min) / range) * height;
+                }
+                return `${x},${y}`;
+            }).join(' ');
+            
+            const color = (points[points.length-1] >= points[0]) ? '#22C55E' : '#EF4444';
+            
+            sparklineHtml = `
+            <svg width="${width}" height="${height}" viewBox="0 -2 ${width} ${height+4}" class="overflow-visible">
+                <polyline fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" points="${polylinePoints}" />
+            </svg>`;
+        }
+        
+        const prText = ex.personalRecord ? `PR: ${ex.personalRecord.weight}kg (${ex.personalRecord.reps} rep)` : '';
+        const initial = ex.exerciseName.charAt(0).toUpperCase();
+        
+        // Find category for badge
+        let catText = 'Diğer';
+        if (window.EXERCISE_MUSCLE_MAPPING && window.EXERCISE_MUSCLE_MAPPING[ex.exerciseName]) {
+            const mapData = window.EXERCISE_MUSCLE_MAPPING[ex.exerciseName];
+            if (mapData.primary && mapData.primary[0]) {
+                const TR_MAP = {
+                    'chest': 'Göğüs', 'upper-back': 'Sırt', 'lower-back': 'Bel', 'deltoids': 'Omuz', 
+                    'biceps': 'Biceps', 'triceps': 'Triceps', 'quadriceps': 'Bacak', 'hamstrings': 'Arka Bacak',
+                    'calves': 'Kalf', 'glutes': 'Kalça', 'core': 'Karın'
+                };
+                catText = TR_MAP[mapData.primary[0]] || 'Diğer';
+            }
+        }
+        
+        let formattedDate = 'Tarih yok';
+        if (ex.lastSessionDate) {
+            let dateObj;
+            if (ex.lastSessionDate.seconds) {
+                dateObj = new Date(ex.lastSessionDate.seconds * 1000);
+            } else {
+                dateObj = new Date(ex.lastSessionDate); // fallback string
+            }
+            if(!isNaN(dateObj)) {
+                formattedDate = dateObj.toLocaleDateString('tr-TR', { day: 'numeric', month: 'short' });
+            }
+        }
+        
+        html += `
+        <div onclick="openProgressDetail('${ex.exerciseId}', '${ex.exerciseName}')" class="bg-[#F0F2F8] p-4 rounded-[20px] active:scale-[0.99] transition-transform flex flex-col gap-3" style="background-color: #F0F2F8; box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center gap-2">
+                    <span class="bg-[#E2E8F0] text-[#475569] text-[10px] font-bold px-2 py-0.5 rounded-md uppercase tracking-wider">${catText}</span>
+                    <span class="text-[10px] font-medium text-[#94A3B8]">${formattedDate}</span>
+                </div>
+                ${sparklineHtml}
+            </div>
+            
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-full bg-[#F0F2F8] flex items-center justify-center text-[#1E293B] font-bold shrink-0" style="background-color: #F0F2F8; box-shadow: inset 2px 2px 5px #D1D9E6, inset -2px -2px 5px rgba(255, 255, 255, 0.7);">
+                    ${initial}
+                </div>
+                <div class="flex-1 min-w-0">
+                    <h4 class="font-bold text-sm text-[#1E293B] truncate">${ex.exerciseName}</h4>
+                    <div class="flex items-center justify-between mt-1">
+                        <div class="flex items-center gap-2">
+                            ${changeHtml}
+                            <span class="text-[10px] font-medium text-[#64748B] ml-1">${prText}</span>
+                        </div>
+                        <span class="text-xs font-bold text-[#1E293B]">${ex.lastVolume || 0} kg</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        `;
+    });
+    
+    listContainer.innerHTML = html;
+};
+
+window.openProgressDetail = function(exId, exName) {
+    console.log("Navigating to progress detail for:", exId, exName);
+    // TODO: BİR SONRAKİ GÖREV - Egzersiz detay ekranını açma mantığı buraya eklenecek.
+};
