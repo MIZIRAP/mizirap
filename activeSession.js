@@ -851,41 +851,36 @@ function _refreshRPEButtons(exId, setIdx, set) {
 
 // ─── Firestore persistence ─────────────────────────────────────────────────
 
+let _sessionSaveTimer = null;
+
 function _debounceSaveSet(exId, setIdx) {
-    const key = `${exId}_${setIdx}`;
-    if (_debounceTimers[key]) clearTimeout(_debounceTimers[key]);
-    _debounceTimers[key] = setTimeout(() => {
-        const set = _exState[exId]?.sets[setIdx];
-        if (set) {
-            _persistSet(exId, setIdx, set);
-        }
-        delete _debounceTimers[key];
-    }, 400);
+    if (_sessionSaveTimer) clearTimeout(_sessionSaveTimer);
+    _sessionSaveTimer = setTimeout(() => {
+        _persistSessionState();
+        _sessionSaveTimer = null;
+    }, 5000); // 5 seconds debounce
 }
 
-async function _persistSet(exId, setIdx, set) {
+async function _persistSessionState() {
     if (!_uid || !_sessionId) return;
     try {
         const sessionRef = doc(db, 'users', _uid, 'workout_logs', _sessionId);
-        // Build nested update path for this exercise's sets array
-        const state = _exState[exId];
-        if (!state) return;
+        
+        // Build full exercises object to merge
+        const exercises = {};
+        for (const [eId, state] of Object.entries(_exState)) {
+            exercises[eId] = {
+                sets: state.sets.map(s => ({
+                    weight: s.weight,
+                    reps: s.reps,
+                    rpe: s.rpe ?? null
+                }))
+            };
+        }
 
-        // We store the full sets array per exercise (simpler than nested array writes)
-        const setsData = state.sets.map(s => ({
-            weight: s.weight,
-            reps:   s.reps,
-            rpe:    s.rpe ?? null
-        }));
-
-        await setDoc(sessionRef, {
-            exercises: {
-                [exId]: { sets: setsData }
-            }
-        }, { merge: true });
+        await setDoc(sessionRef, { exercises }, { merge: true });
     } catch (e) {
-        console.error('[activeSession] _persistSet error:', e);
-        alert('Set veritabanına kaydedilemedi (Ağ veya yetki hatası): ' + e.message);
+        console.error('[activeSession] _persistSessionState error:', e);
     }
 }
 
