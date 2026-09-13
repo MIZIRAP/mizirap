@@ -1,7 +1,7 @@
 import { db } from "./firebase-config.js";
 import { collection, onSnapshot, serverTimestamp, doc, updateDoc, writeBatch, addDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
 import { escapeHtml } from "./utils.js";
-import { registerListener } from "./listenerManager.js";
+import { registerListener, registerFirestoreListener } from "./listenerManager.js";
 
 let moviesUnsubscribe = null;
 let currentMovies = [];
@@ -101,9 +101,14 @@ export function initMovies(uid, onChangeCallback) {
     if(editSaveBtn) editSaveBtn.onclick = saveEditMovie;
     if(editDeleteBtn) editDeleteBtn.onclick = deleteMovie;
 
-    const moviesRef = collection(db, "users", uid, "movies");
+    startMoviesListener();
+}
 
-    moviesUnsubscribe = onSnapshot(moviesRef, (snapshot) => {
+function startMoviesListener() {
+    if (!currentUid) return;
+    const moviesRef = collection(db, "users", currentUid, "movies");
+
+    moviesUnsubscribe = registerFirestoreListener('movies', onSnapshot(moviesRef, (snapshot) => {
         currentMovies = [];
         snapshot.forEach(docSnap => {
             currentMovies.push({ id: docSnap.id, ...docSnap.data() });
@@ -121,10 +126,14 @@ export function initMovies(uid, onChangeCallback) {
         if (onChangeCb) onChangeCb(currentMovies);
     }, (error) => {
         console.error("Filmler çekilemedi:", error);
-    });
-
-    registerListener(moviesUnsubscribe);
+    }));
 }
+
+document.addEventListener('viewChanged', (e) => {
+    if (e.detail.viewId === 'view-movies' || e.detail.viewId === 'view-dashboard') {
+        startMoviesListener();
+    }
+});
 
 function renderMoviesView() {
     if (!allListEl) return;

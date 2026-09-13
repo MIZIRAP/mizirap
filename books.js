@@ -1,7 +1,7 @@
 import { db } from "./firebase-config.js";
 import { collection, onSnapshot, serverTimestamp, doc, updateDoc, writeBatch, addDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
 import { escapeHtml } from "./utils.js";
-import { registerListener } from "./listenerManager.js";
+import { registerListener, registerFirestoreListener } from "./listenerManager.js";
 
 let booksUnsubscribe = null;
 let currentBooks = [];
@@ -228,12 +228,14 @@ export function initBooks(uid, onChangeCallback) {
     }
 
     // Setup listener
-    if (booksUnsubscribe) {
-        booksUnsubscribe();
-    }
+    startBooksListener();
 
-    const booksRef = collection(db, "users", uid, "books");
-    booksUnsubscribe = onSnapshot(booksRef, (snapshot) => {
+}
+
+function startBooksListener() {
+    if (!currentUid) return;
+    const booksRef = collection(db, "users", currentUid, "books");
+    booksUnsubscribe = registerFirestoreListener('books', onSnapshot(booksRef, (snapshot) => {
         currentBooks = [];
         snapshot.forEach(docSnap => {
             currentBooks.push({ id: docSnap.id, ...docSnap.data() });
@@ -251,10 +253,14 @@ export function initBooks(uid, onChangeCallback) {
         if (onChangeCb) onChangeCb(currentBooks);
     }, (error) => {
         console.error("Books Snapshot Error:", error);
-    });
-
-    registerListener("books", booksUnsubscribe);
+    }));
 }
+
+document.addEventListener('viewChanged', (e) => {
+    if (e.detail.viewId === 'view-books' || e.detail.viewId === 'view-dashboard') {
+        startBooksListener();
+    }
+});
 
 async function updateActiveBookPages(newPages) {
     if(!activeBook) return;

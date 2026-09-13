@@ -12,7 +12,7 @@ import { initProfile, clearProfile } from "./profile.js?v=1787428045";
 import { initCalories, clearCalories } from "./calories.js?v=1787428046";
 import { initHistory, clearHistory } from "./history.js";
 import { initTools, clearTools } from "./tools.js?v=1787428045";
-import { clearAllListeners } from "./listenerManager.js";
+import { clearAllListeners, clearAllFirestoreListeners } from "./listenerManager.js";
 import { clearSharedState } from "./sharedState.js";
 
 // ---------- DOM referansları ----------
@@ -146,6 +146,11 @@ onAuthStateChanged(auth, async (user) => {
 
 // ---------- Sekme (view) geçişleri (Uygulama İçi, History API Destekli) ----------
 window.showView = function(viewId) {
+    // Sekme değiştiğinde tüm açık Firestore onSnapshot aboneliklerini kapat (sızıntı hijyeni)
+    if (typeof clearAllFirestoreListeners === 'function') {
+        clearAllFirestoreListeners();
+    }
+
     document.querySelectorAll(".view").forEach(v => {
         v.classList.add("hidden");
     });
@@ -153,11 +158,13 @@ window.showView = function(viewId) {
     if(target) {
         target.classList.remove("hidden");
         window.scrollTo(0,0);
+        document.dispatchEvent(new CustomEvent('viewChanged', { detail: { viewId: viewId } }));
     } else {
         const dash = document.getElementById("view-dashboard");
         if (dash) {
             dash.classList.remove("hidden");
             window.scrollTo(0,0);
+            document.dispatchEvent(new CustomEvent('viewChanged', { detail: { viewId: "view-dashboard" } }));
         }
     }
 };
