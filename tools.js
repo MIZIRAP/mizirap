@@ -312,7 +312,7 @@ const TOOLS_CONFIG = {
 
 export function initTools(uid) {
     initToolsSorting(uid);
-    window.openTool = (toolId) => {
+    window.openTool = async (toolId) => {
         currentActiveTool = toolId;
         const config = TOOLS_CONFIG[toolId];
         if (!config) {
@@ -324,31 +324,44 @@ export function initTools(uid) {
         document.getElementById('tool-sheet-title').textContent = config.title;
 
         // Auto-fill from profile if available
-        const profileMap = {
-            height: 'profile-height',
-            weight: 'profile-weight',
-            waist: 'profile-waist',
-            hip: 'profile-hip',
-            neck: 'profile-neck',
-            wrist: 'profile-wrist'
-        };
-        for (const [toolKey, profileId] of Object.entries(profileMap)) {
-            const el = document.getElementById(profileId);
-            if (el && el.value) {
-                const val = parseFloat(el.value);
-                if (!isNaN(val) && val > 0) {
-                    inputs[toolKey] = val;
-                    if(document.getElementById(`tool-${toolKey}-display`)) {
-                        document.getElementById(`tool-${toolKey}-display`).textContent = val;
+        try {
+            const cachedProfile = await fetchSharedProfile(uid);
+            if (cachedProfile) {
+                const profileMap = {
+                    height: 'height',
+                    weight: 'weight',
+                    waist: 'waist',
+                    hip: 'hip',
+                    neck: 'neck',
+                    wrist: 'wrist'
+                };
+                for (const [toolKey, profileKey] of Object.entries(profileMap)) {
+                    if (cachedProfile[profileKey] !== undefined && cachedProfile[profileKey] !== null) {
+                        const val = parseFloat(cachedProfile[profileKey]);
+                        if (!isNaN(val) && val > 0) {
+                            inputs[toolKey] = val;
+                            if(document.getElementById(`tool-${toolKey}-display`)) {
+                                document.getElementById(`tool-${toolKey}-display`).textContent = val;
+                            }
+                        }
                     }
                 }
+                if (cachedProfile.dob) {
+                    inputs.dob = cachedProfile.dob;
+                }
+                if (cachedProfile.gender) {
+                    inputs.gender = cachedProfile.gender;
+                }
             }
+        } catch(e) {
+            console.error("Could not load cached profile for tools:", e);
         }
         
         // Handle age from dob
         const dobEl = document.getElementById('profile-dob');
-        if (dobEl && dobEl.value) {
-            const parts = dobEl.value.split('.');
+        const dobVal = inputs.dob || (dobEl ? dobEl.value : null);
+        if (dobVal) {
+            const parts = dobVal.split('.');
             let ageVal = 25;
             if (parts.length === 3) {
                 ageVal = new Date().getFullYear() - parseInt(parts[2], 10);
