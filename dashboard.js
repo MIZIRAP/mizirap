@@ -62,6 +62,10 @@ export async function initDashboard(uid) {
             const bottomGrid = document.getElementById("dashboard-bottom-widgets");
             if (grid) grid.classList.remove('opacity-0');
             if (bottomGrid) bottomGrid.classList.remove('opacity-0');
+
+            // Hide initial HTML loader
+            const loader = document.getElementById("dashboard-initial-loader");
+            if (loader) loader.classList.add('hidden');
         }
     }));
 }
