@@ -64,6 +64,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
     <script src="assets/exercises/muscle-map.js" defer></script>
 
+    <script type="module" src="exerciseDetail.js"></script>
     <script type="module" src="app.js?v=202609042"></script>
 
     <style>
@@ -965,6 +966,76 @@
     </section>
 
     <!-- Edit Workout Template View -->
+
+    <!-- ================= EXERCISE DETAIL VIEW ================= -->
+    <section id="view-exercise-detail" class="view hidden bg-surface-light min-h-[100dvh] text-on-surface antialiased font-body-lg pb-[100px]">
+        <div class="max-w-md mx-auto relative h-full flex flex-col">
+            <!-- Header -->
+            <header class="w-full top-0 sticky z-40 px-container-padding py-4 bg-[#F0F2F8]">
+                <div class="flex items-center gap-3 w-full">
+                    <button onclick="history.back()" class="w-10 h-10 flex items-center justify-center rounded-full bg-[#F0F2F8] active:scale-95 transition-transform shrink-0" style="background-color: #F0F2F8; box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);">
+                        <span class="material-symbols-rounded text-on-surface text-[20px]">arrow_back</span>
+                    </button>
+                    <div class="flex-1 flex flex-col min-w-0">
+                        <h1 id="ex-detail-name" class="text-xl font-bold text-on-surface truncate">Egzersiz Adı</h1>
+                        <div class="flex items-center gap-2 mt-0.5">
+                            <span id="ex-detail-cat" class="bg-[#E2E8F0] text-[#475569] text-[10px] font-bold px-2 py-0.5 rounded-md uppercase tracking-wider">Kategori</span>
+                            <span id="ex-detail-equip" class="bg-[#E2E8F0] text-[#475569] text-[10px] font-bold px-2 py-0.5 rounded-md uppercase tracking-wider">Ekipman</span>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <main class="flex-1 overflow-y-auto px-container-padding pb-6 space-y-6 mt-4">
+                
+                <!-- Summary 3-Grid -->
+                <div class="grid grid-cols-3 gap-3">
+                    <div class="bg-[#F0F2F8] p-3 rounded-2xl flex flex-col items-center justify-center text-center" style="box-shadow: inset 4px 4px 8px #D1D9E6, inset -4px -4px 8px rgba(255, 255, 255, 0.7);">
+                        <span class="text-[10px] font-bold text-[#64748B] uppercase tracking-wider">PR</span>
+                        <div id="ex-detail-pr" class="text-lg font-bold text-[#1E293B] mt-1 leading-tight">-</div>
+                    </div>
+                    <div class="bg-[#F0F2F8] p-3 rounded-2xl flex flex-col items-center justify-center text-center" style="box-shadow: inset 4px 4px 8px #D1D9E6, inset -4px -4px 8px rgba(255, 255, 255, 0.7);">
+                        <span class="text-[10px] font-bold text-[#64748B] uppercase tracking-wider">Max Hacim</span>
+                        <div id="ex-detail-max-vol" class="text-lg font-bold text-[#1E293B] mt-1 leading-tight">-</div>
+                    </div>
+                    <div class="bg-[#F0F2F8] p-3 rounded-2xl flex flex-col items-center justify-center text-center" style="box-shadow: inset 4px 4px 8px #D1D9E6, inset -4px -4px 8px rgba(255, 255, 255, 0.7);">
+                        <span class="text-[10px] font-bold text-[#64748B] uppercase tracking-wider">Seanslar</span>
+                        <div id="ex-detail-total-sessions" class="text-lg font-bold text-[#1E293B] mt-1 leading-tight">0</div>
+                    </div>
+                </div>
+
+                <!-- Chart Container -->
+                <div class="bg-[#F0F2F8] p-4 rounded-[24px]" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-sm font-bold text-on-surface">Hacim Trendi</h3>
+                        <div class="flex bg-[#F0F2F8] p-1 rounded-xl" style="box-shadow: inset 2px 2px 5px #D1D9E6, inset -2px -2px 5px rgba(255, 255, 255, 0.7);">
+                            <button id="ex-chart-filter-10" onclick="updateExChartFilter(10)" class="px-3 py-1 rounded-lg text-xs font-semibold text-[#1E293B] bg-[#F0F2F8] transition-all" style="box-shadow: 2px 2px 5px #D1D9E6, -2px -2px 5px rgba(255, 255, 255, 0.7);">Son 10</button>
+                            <button id="ex-chart-filter-20" onclick="updateExChartFilter(20)" class="px-3 py-1 rounded-lg text-xs font-semibold text-[#64748B] transition-all">Son 20</button>
+                            <button id="ex-chart-filter-all" onclick="updateExChartFilter('all')" class="px-3 py-1 rounded-lg text-xs font-semibold text-[#64748B] transition-all">Tümü</button>
+                        </div>
+                    </div>
+                    <div class="h-40 w-full relative">
+                        <canvas id="ex-detail-chart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Session History List -->
+                <div>
+                    <h3 class="text-sm font-bold text-on-surface mb-3 px-1">Seans Geçmişi</h3>
+                    <div id="ex-detail-history-list" class="flex flex-col gap-4">
+                        <!-- Items will be injected here -->
+                    </div>
+                    
+                    <div class="w-full mt-6 text-center">
+                        <button id="ex-detail-load-more" onclick="loadMoreExHistory()" class="hidden mx-auto bg-[#F0F2F8] px-6 py-2 rounded-full text-sm font-bold text-[#64748B] active:scale-95 transition-transform" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);">
+                            Daha Fazla Yükle
+                        </button>
+                    </div>
+                </div>
+
+            </main>
+        </div>
+    </section>
 
     <!-- ================= EGZERSİZ KÜTÜPHANESI ================= -->
     <section id="view-exercise-library" class="view hidden bg-surface-light min-h-[100dvh] text-on-surface antialiased font-body-lg pb-[100px]">
