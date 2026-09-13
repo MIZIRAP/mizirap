@@ -1,8 +1,9 @@
 import { db } from "./firebase-config.js";
-import { collection, doc, addDoc, setDoc, updateDoc, deleteDoc, onSnapshot, query, orderBy, limit, where, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+import { collection, doc, addDoc, setDoc, updateDoc, deleteDoc, onSnapshot, query, orderBy, limit, where, serverTimestamp, writeBatch } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
 import { escapeHtml, validatePositiveNumber } from "./utils.js";
 import { registerListener } from "./listenerManager.js";
 import { setSharedState } from "./sharedState.js";
+import { getDailySummaryRef } from "./dashboard.js";
 
 let dailyCalorieGoal = 2000;
 let proteinGoal = 110;
@@ -16,7 +17,6 @@ let unsubscribeSettings = null;
 let unsubscribeLibrary = null;
 let unsubWeeklyLogs = null;
 let weeklyLogs = [];
-let onChangeCb = null;
 let currentUid = null;
 let currentEditLogId = null;
 let isNewLog = false;
@@ -124,9 +124,8 @@ let currentKcalPer100g = 0;
 let currentFoodName = "";
 let currentFoodMacros = { karb: 0, protein: 0, yag: 0 };
 
-export function initCalories(uid, onChangeCallback) {
+export function initCalories(uid) {
     currentUid = uid;
-    onChangeCb = onChangeCallback;
 
     // Listen to Settings
     const settingsRef = doc(db, "users", uid, "settings", "calories");
@@ -296,13 +295,17 @@ if (caloriesGoalBackdrop) {
             if(!currentUid) return;
             caloriesGoalSave.disabled = true;
             try {
-                await setDoc(doc(db, "users", currentUid, "settings", "calories"), {
+                const batch = writeBatch(db);
+                const settingsRef = doc(db, "users", currentUid, "settings", "calories");
+                batch.set(settingsRef, {
                     dailyCalorieGoal: tempCaloriesGoal,
                     proteinGoal: tempMacroProtein,
                     karbGoal: tempMacroKarb,
                     yagGoal: tempMacroYag,
                     updatedAt: serverTimestamp()
                 }, { merge: true });
+                batch.set(getDailySummaryRef(currentUid), { caloriesGoal: tempCaloriesGoal }, { merge: true });
+                await batch.commit();
                 closeCaloriesGoalModal();
             } catch (error) {
                 console.error("Hedef güncellenirken hata:", error);
@@ -510,7 +513,21 @@ if (caloriesGoalBackdrop) {
                     logEntry.createdAt = serverTimestamp();
                     logEntry.type = "Food";
                 }
-                let dbPromise = setDoc(doc(db, "users", currentUid, "calorieLogs", currentEditLogId), logEntry, { merge: true });
+                
+                const batch = writeBatch(db);
+                batch.set(doc(db, "users", currentUid, "calorieLogs", currentEditLogId), logEntry, { merge: true });
+
+                const d = new Date();
+                const todayStr = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+                if (currentDateStr === todayStr) {
+                    const oldLog = dailyLogs.find(l => l.id === currentEditLogId);
+                    const oldCals = oldLog ? Number(oldLog.kcal || 0) : 0;
+                    const newCals = Number(logEntry.kcal || 0);
+                    const currentConsumed = dailyLogs.reduce((sum, l) => sum + Number(l.kcal || 0), 0);
+                    batch.set(getDailySummaryRef(currentUid), { caloriesConsumed: Math.max(0, currentConsumed - oldCals + newCals) }, { merge: true });
+                }
+                
+                let dbPromise = batch.commit();
                 
                 const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error('OFFLINE_TIMEOUT')), 6000));
                 await Promise.race([dbPromise, timeoutPromise]);
@@ -703,7 +720,9 @@ if (caloriesGoalBackdrop) {
             const originalText = quickAddSaveBtn.innerHTML;
             quickAddSaveBtn.innerHTML = "Ekleniyor...";
             try {
-                await addDoc(collection(db, "users", currentUid, "calorieLogs"), {
+                const batch = writeBatch(db);
+                const logRef = doc(collection(db, "users", currentUid, "calorieLogs"));
+                batch.set(logRef, {
                     name: name,
                     kcal: kcal,
                     protein: protein,
@@ -713,6 +732,15 @@ if (caloriesGoalBackdrop) {
                     createdAt: serverTimestamp(),
                     type: "Food"
                 });
+
+                const d = new Date();
+                const todayStr = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+                if (currentDateStr === todayStr) {
+                    const currentConsumed = dailyLogs.reduce((sum, log) => sum + Number(log.kcal || 0), 0);
+                    batch.set(getDailySummaryRef(currentUid), { caloriesConsumed: currentConsumed + kcal }, { merge: true });
+                }
+
+                await batch.commit();
                 closeQuickAddModal();
             } catch (err) {
                 console.error("Hata:", err);
@@ -837,7 +865,17 @@ function renderLogs() {
         delBtn.innerHTML = `<span class="material-symbols-rounded text-xl">delete</span>`;
         delBtn.onclick = async () => {
             try {
-                await deleteDoc(doc(db, "users", currentUid, "calorieLogs", log.id));
+                const batch = writeBatch(db);
+                batch.delete(doc(db, "users", currentUid, "calorieLogs", log.id));
+
+                const d = new Date();
+                const todayStr = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+                if (currentDateStr === todayStr) {
+                    const currentConsumed = dailyLogs.reduce((sum, l) => sum + Number(l.kcal || 0), 0);
+                    batch.set(getDailySummaryRef(currentUid), { caloriesConsumed: Math.max(0, currentConsumed - Number(log.kcal || 0)) }, { merge: true });
+                }
+
+                await batch.commit();
             } catch(e) {
                 console.error("Silme Hatası", e);
                 // local update for test
@@ -1160,8 +1198,6 @@ function updateUIState() {
         let percentage = Math.min((totalCaloriesConsumed / dailyCalorieGoal) * 100, 100);
         dashCalProg.style.width = `${percentage}%`;
     }
-
-    if (onChangeCb) onChangeCb({ totalCaloriesConsumed, dailyCalorieGoal });
 }
 
 export function clearCalories() {

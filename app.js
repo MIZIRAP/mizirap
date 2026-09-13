@@ -1,7 +1,7 @@
 import { auth } from "./firebase-config.js";
 import { onAuthStateChanged, signInAnonymously } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
 import { setupAuthUI } from "./auth.js";
-import { initDashboard, clearDashboard, updateDashboardWorkouts, updateDashboardFinance, updateDashboardWater, updateDashboardBooks, updateDashboardMovies, updateDashboardCalories } from "./dashboard.js?v=1787428044";
+import { initDashboard, clearDashboard } from "./dashboard.js?v=1787428044";
 import { initShopping, clearShopping } from "./shopping.js";
 import { initWorkout, clearWorkout } from "./workout.js?v=1787428061";
 import { initFinance, clearFinance } from "./finance.js";
@@ -62,28 +62,12 @@ onAuthStateChanged(auth, async (user) => {
             initDashboard(user.uid);
             initShopping(user.uid);
 
-            initWorkout(user.uid, (workouts, activeSplitName) => {
-                requestAnimationFrame(() => updateDashboardWorkouts(workouts, activeSplitName));
-            });
-
-            initFinance(user.uid, (txs) => {
-                requestAnimationFrame(() => updateDashboardFinance(txs));
-            });
-
-            initWater(user.uid, (waterStats) => {
-                requestAnimationFrame(() => updateDashboardWater(waterStats));
-            });
-            initCalories(user.uid, (caloriesStats) => {
-                requestAnimationFrame(() => updateDashboardCalories(caloriesStats));
-            });
-
-            initBooks(user.uid, (books) => {
-                requestAnimationFrame(() => updateDashboardBooks(books));
-            });
-
-            initMovies(user.uid, (movies) => {
-                requestAnimationFrame(() => updateDashboardMovies(movies));
-            });
+            initWorkout(user.uid);
+            initFinance(user.uid);
+            initWater(user.uid);
+            initCalories(user.uid);
+            initBooks(user.uid);
+            initMovies(user.uid);
 
             initProfile(user.uid);
             initHistory(user.uid);

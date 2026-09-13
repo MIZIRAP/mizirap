@@ -2,12 +2,12 @@ import { db } from "./firebase-config.js";
 import { collection, onSnapshot, serverTimestamp, doc, updateDoc, writeBatch, addDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
 import { escapeHtml } from "./utils.js";
 import { registerListener, registerFirestoreListener } from "./listenerManager.js";
+import { getDailySummaryRef } from "./dashboard.js";
 
 let booksUnsubscribe = null;
 let currentBooks = [];
 let currentUid = null;
 let activeBook = null;
-let onChangeCb = null;
 
 // DOM Elements - Main Screen
 const activePagesEl = document.getElementById("book-active-pages");
@@ -91,9 +91,8 @@ function openEditModal(book) {
     openModal(editModal, editModalBackdrop, editModalContent);
 }
 
-export function initBooks(uid, onChangeCallback) {
+export function initBooks(uid) {
     currentUid = uid;
-    onChangeCb = onChangeCallback;
 
     // Bind Add Quick Button
     if(addBookBtn) addBookBtn.onclick = openAddModal;
@@ -128,7 +127,9 @@ export function initBooks(uid, onChangeCallback) {
             try {
                 addSaveBtn.textContent = "...";
                 const booksRef = collection(db, "users", currentUid, "books");
-                await addDoc(booksRef, {
+                const batch = writeBatch(db);
+                const newDocRef = doc(booksRef);
+                batch.set(newDocRef, {
                     title,
                     author,
                     totalPages,
@@ -137,6 +138,11 @@ export function initBooks(uid, onChangeCallback) {
                     createdAt: serverTimestamp(),
                     updatedAt: serverTimestamp()
                 });
+                batch.set(getDailySummaryRef(currentUid), {
+                    activeBookRead: 0,
+                    activeBookTotal: totalPages
+                }, { merge: true });
+                await batch.commit();
                 closeModal(addModal, addModalBackdrop, addModalContent);
             } catch(e) {
                 console.error(e);
@@ -171,7 +177,8 @@ export function initBooks(uid, onChangeCallback) {
             try {
                 editSaveBtn.textContent = "...";
                 const docRef = doc(db, "users", currentUid, "books", currentEditId);
-                await updateDoc(docRef, {
+                const batch = writeBatch(db);
+                batch.update(docRef, {
                     title,
                     author,
                     totalPages,
@@ -179,6 +186,13 @@ export function initBooks(uid, onChangeCallback) {
                     status,
                     updatedAt: serverTimestamp()
                 });
+                // If it was the active book, update daily summary total
+                if (currentBooks[0] && currentBooks[0].id === currentEditId) {
+                    batch.set(getDailySummaryRef(currentUid), {
+                        activeBookTotal: totalPages
+                    }, { merge: true });
+                }
+                await batch.commit();
                 closeModal(editModal, editModalBackdrop, editModalContent);
             } catch(e) {
                 console.error(e);
@@ -197,7 +211,24 @@ export function initBooks(uid, onChangeCallback) {
             try {
                 editDeleteBtn.innerHTML = "...";
                 const docRef = doc(db, "users", currentUid, "books", currentEditId);
-                await deleteDoc(docRef);
+                const batch = writeBatch(db);
+                batch.delete(docRef);
+                
+                // If it was the active book, revert the active book to the next one if it exists
+                if (currentBooks[0] && currentBooks[0].id === currentEditId) {
+                    if (currentBooks[1]) {
+                        batch.set(getDailySummaryRef(currentUid), {
+                            activeBookRead: currentBooks[1].readPages || 0,
+                            activeBookTotal: currentBooks[1].totalPages || 1
+                        }, { merge: true });
+                    } else {
+                        batch.set(getDailySummaryRef(currentUid), {
+                            activeBookRead: 0,
+                            activeBookTotal: 0
+                        }, { merge: true });
+                    }
+                }
+                await batch.commit();
                 closeModal(editModal, editModalBackdrop, editModalContent);
             } catch(e) {
                 console.error(e);
@@ -250,7 +281,7 @@ function startBooksListener() {
 
         renderBooksView();
 
-        if (onChangeCb) onChangeCb(currentBooks);
+
     }, (error) => {
         console.error("Books Snapshot Error:", error);
     }));
@@ -275,11 +306,17 @@ async function updateActiveBookPages(newPages) {
             newStatus = "reading";
         }
 
-        await updateDoc(docRef, {
+        const batch = writeBatch(db);
+        batch.update(docRef, {
             readPages: newPages,
             status: newStatus,
             updatedAt: serverTimestamp()
         });
+        batch.set(getDailySummaryRef(currentUid), {
+            activeBookRead: newPages,
+            activeBookTotal: activeBook.totalPages || 1
+        }, { merge: true });
+        await batch.commit();
     } catch(e) {
         console.error(e);
     }
@@ -464,7 +501,7 @@ function renderAllBooksList() {
                     activeBook = book;
                     localStorage.setItem('lastActiveBookId_' + currentUid, activeBook.id);
                     renderBooksView();
-                    if (onChangeCb) onChangeCb(currentBooks);
+            
 
                     document.querySelectorAll('.card-content').forEach(el => {
                         el.style.transform = 'translateX(0px)';
@@ -507,7 +544,7 @@ function renderAllBooksList() {
                     activeBook = book;
                     localStorage.setItem('lastActiveBookId_' + currentUid, activeBook.id);
                     renderBooksView();
-                    if (onChangeCb) onChangeCb(currentBooks);
+            
 
                     document.querySelectorAll('.card-content').forEach(el => {
                         el.style.transform = 'translateX(0px)';

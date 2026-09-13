@@ -17,6 +17,7 @@ import {
     query, where, orderBy, limit,
     serverTimestamp, deleteDoc
 } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js';
+import { getDailySummaryRef } from './dashboard.js';
 
 // ─── Utilities ─────────────────────────────────────────────────────────────
 export function calculateE1RM(weight, reps, rpe) {
@@ -756,6 +757,10 @@ async function finishSession() {
         }
         
         batch.set(indexRef, indexData, { merge: true });
+
+        batch.set(getDailySummaryRef(_currentUid), {
+            activeSplitName: sessionName
+        }, { merge: true });
         
         // COMMIT BATCH
         await batch.commit();

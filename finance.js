@@ -1,12 +1,12 @@
 import { auth, db } from "./firebase-config.js";
 import { formatDate, formatCurrency, escapeHtml, validatePositiveNumber } from "./utils.js";
-import { collection, doc, addDoc, setDoc, updateDoc, deleteDoc, getDocs, getDoc, query, orderBy, limit, serverTimestamp, onSnapshot, where } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+import { collection, doc, addDoc, setDoc, updateDoc, deleteDoc, getDocs, getDoc, query, orderBy, limit, serverTimestamp, onSnapshot, where, writeBatch } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
 import { registerListener } from "./listenerManager.js";
 import { setSharedState } from "./sharedState.js";
+import { getDailySummaryRef } from "./dashboard.js";
 import { COLLECTAPI_KEY } from "./api-config.js";
 
 let currentUid = null;
-let callback = null;
 
 let financeCategories = [];
 let financePaymentMethods = [];
@@ -55,9 +55,8 @@ document.addEventListener('click', (e) => {
     else if (action === 'resetFinanceData') resetFinanceData();
 });
 
-export function initFinance(uid, onChangeCallback) {
+export function initFinance(uid) {
     currentUid = uid;
-    callback = onChangeCallback;
 
     // 1. Load Categories
     const categoriesRef = collection(db, "users", uid, "finance_categories");
@@ -90,7 +89,6 @@ export function initFinance(uid, onChangeCallback) {
         renderTxModalOptions();
         if (typeof renderFinanceSettings !== "undefined") renderFinanceSettings();
         if (typeof renderFinanceDetail !== "undefined") renderFinanceDetail();
-        if(callback) callback(financeTransactions);
     }));
 
     setupFinanceModals();
@@ -584,7 +582,22 @@ function renderTransactions(isFromScroll = false) {
         delBtn.onclick = async (e) => {
             e.stopPropagation();
             try {
-                await deleteDoc(doc(db, "users", currentUid, "finance_transactions", tx.id)).catch(e => { console.error('DB Error:', e); alert('Veritabanı işlemi sırasında bir hata oluştu.'); throw e; });
+                const batch = writeBatch(db);
+                batch.delete(doc(db, "users", currentUid, "finance_transactions", tx.id));
+                
+                const now = new Date();
+                const targetMonth = now.getMonth();
+                const targetYear = now.getFullYear();
+                const currentMonthTxs = financeTransactions.filter(t => {
+                    if (t.id === tx.id) return false;
+                    if (!t.dateStr) return false;
+                    const d = new Date(t.dateStr);
+                    if (isNaN(d.getTime())) return false;
+                    return d.getMonth() === targetMonth && d.getFullYear() === targetYear;
+                });
+                batch.set(getDailySummaryRef(currentUid), { monthlyBalance: calcBalance(currentMonthTxs) }, { merge: true });
+                
+                await batch.commit().catch(e => { console.error('DB Error:', e); alert('Veritabanı işlemi sırasında bir hata oluştu.'); throw e; });
             } catch(err) {
                 console.error("Silme Hatası:", err);
             }
@@ -939,7 +952,28 @@ async function saveTransaction() {
         if (isNewFinanceTx) {
             txData.createdAt = serverTimestamp();
         }
-        let dbPromise = setDoc(doc(db, "users", currentUid, "finance_transactions", currentEditFinanceTxId), txData, { merge: true });
+        
+        const batch = writeBatch(db);
+        batch.set(doc(db, "users", currentUid, "finance_transactions", currentEditFinanceTxId), txData, { merge: true });
+
+        const now = new Date();
+        const targetMonth = now.getMonth();
+        const targetYear = now.getFullYear();
+        const currentMonthTxs = financeTransactions.filter(tx => {
+            if (tx.id === currentEditFinanceTxId) return false;
+            if (!tx.dateStr) return false;
+            const d = new Date(tx.dateStr);
+            if (isNaN(d.getTime())) return false;
+            return d.getMonth() === targetMonth && d.getFullYear() === targetYear;
+        });
+
+        const txDate = new Date(txData.dateStr);
+        if (!isNaN(txDate.getTime()) && txDate.getMonth() === targetMonth && txDate.getFullYear() === targetYear) {
+            currentMonthTxs.push({ id: currentEditFinanceTxId, ...txData });
+        }
+        batch.set(getDailySummaryRef(currentUid), { monthlyBalance: calcBalance(currentMonthTxs) }, { merge: true });
+        
+        let dbPromise = batch.commit();
         
         const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error('OFFLINE_TIMEOUT')), 6000));
         

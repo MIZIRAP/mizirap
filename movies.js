@@ -2,13 +2,13 @@ import { db } from "./firebase-config.js";
 import { collection, onSnapshot, serverTimestamp, doc, updateDoc, writeBatch, addDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
 import { escapeHtml } from "./utils.js";
 import { registerListener, registerFirestoreListener } from "./listenerManager.js";
+import { getDailySummaryRef } from "./dashboard.js";
 
 let moviesUnsubscribe = null;
 let currentMovies = [];
 let currentUid = null;
 let onChangeCb = null;
-
-let currentEditingId = null; // for edit modal
+let activeMovie = null; // for edit modal
 
 let currentFilterCategory = 'Tümü';
 let currentSearchTerm = '';
@@ -53,9 +53,8 @@ const editSaveBtn = document.getElementById("movie-edit-save");
 const editDeleteBtn = document.getElementById("movie-edit-delete");
 
 
-export function initMovies(uid, onChangeCallback) {
+export function initMovies(uid) {
     currentUid = uid;
-    onChangeCb = onChangeCallback;
 
     // Bind Add Quick Button
     if(addMovieBtn) addMovieBtn.onclick = openAddModal;
@@ -122,8 +121,6 @@ function startMoviesListener() {
         });
 
         renderMoviesView();
-
-        if (onChangeCb) onChangeCb(currentMovies);
     }, (error) => {
         console.error("Filmler çekilemedi:", error);
     }));
@@ -395,11 +392,22 @@ async function saveAddMovie() {
     }
 
     try {
-        await addDoc(collection(db, "users", currentUid, "movies"), data);
+        const batch = writeBatch(db);
+        const newDocRef = doc(collection(db, "users", currentUid, "movies"));
+        batch.set(newDocRef, data);
+
+        batch.set(getDailySummaryRef(currentUid), {
+            activeMovieTitle: data.title,
+            activeMovieType: data.type,
+            activeMovieSeason: data.season || null,
+            activeMovieEpisode: data.episode || null
+        }, { merge: true });
+
+        await batch.commit();
         closeAddModal();
     } catch(e) {
         console.error(e);
-        alert("Eklenirken hata oluÅŸtu.");
+        alert("Eklenirken hata oluştu.");
     }
 }
 
@@ -408,7 +416,7 @@ function openEditModal(movie) {
     if(!editModal) return;
     const appContainer = document.getElementById('app-container');
     if(appContainer) appContainer.style.overflow = 'hidden';
-    currentEditingId = movie.id;
+    activeMovie = movie;
 
     editType.value = movie.type || '';
     editTitle.value = movie.title || '';
@@ -458,12 +466,12 @@ function closeEditModal() {
             editModal.classList.remove('flex');
             editModal.classList.add('hidden');
         }
-        currentEditingId = null;
+        activeMovie = null;
     }, 300);
 }
 
 async function saveEditMovie() {
-    if(!currentUid || !currentEditingId) return;
+    if(!currentUid || !activeMovie) return;
     const title = editTitle.value.trim();
     if(!title) return alert("Lütfen içerik adını giriniz.");
 
@@ -487,7 +495,20 @@ async function saveEditMovie() {
     }
 
     try {
-        await updateDoc(doc(db, "users", currentUid, "movies", currentEditingId), data);
+        const batch = writeBatch(db);
+        const docRef = doc(db, "users", currentUid, "movies", activeMovie.id);
+        batch.update(docRef, data);
+
+        if (currentMovies[0] && currentMovies[0].id === activeMovie.id) {
+            batch.set(getDailySummaryRef(currentUid), {
+                activeMovieTitle: data.title || currentMovies[0].title,
+                activeMovieType: data.type || currentMovies[0].type,
+                activeMovieSeason: data.season || currentMovies[0].season || null,
+                activeMovieEpisode: data.episode || currentMovies[0].episode || null
+            }, { merge: true });
+        }
+
+        await batch.commit();
         closeEditModal();
     } catch(e) {
         console.error(e);
@@ -496,11 +517,33 @@ async function saveEditMovie() {
 }
 
 async function deleteMovie() {
-    if(!currentUid || !currentEditingId) return;
+    if(!currentUid || !activeMovie) return;
     if(!confirm("Bu içeriği silmek istediğinize emin misiniz?")) return;
 
     try {
-        await deleteDoc(doc(db, "users", currentUid, "movies", currentEditingId));
+        const batch = writeBatch(db);
+        batch.delete(doc(db, "users", currentUid, "movies", activeMovie.id));
+
+        if (currentMovies[0] && currentMovies[0].id === activeMovie.id) {
+            if (currentMovies[1]) {
+                const next = currentMovies[1];
+                batch.set(getDailySummaryRef(currentUid), {
+                    activeMovieTitle: next.title,
+                    activeMovieType: next.type,
+                    activeMovieSeason: next.season || null,
+                    activeMovieEpisode: next.episode || null
+                }, { merge: true });
+            } else {
+                batch.set(getDailySummaryRef(currentUid), {
+                    activeMovieTitle: 'YOK',
+                    activeMovieType: null,
+                    activeMovieSeason: null,
+                    activeMovieEpisode: null
+                }, { merge: true });
+            }
+        }
+
+        await batch.commit();
         closeEditModal();
     } catch(e) {
         console.error(e);
@@ -511,7 +554,4 @@ async function deleteMovie() {
 export function clearMovies() {
     if(moviesUnsubscribe) moviesUnsubscribe();
     currentUid = null;
-    currentMovies = [];
-    currentEditingId = null;
-    onChangeCb = null;
 }

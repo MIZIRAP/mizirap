@@ -1,20 +1,163 @@
 import { auth, db } from "./firebase-config.js";
-import { collection, doc, updateDoc, getDoc, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+import { collection, doc, updateDoc, setDoc, getDoc, getDocs, onSnapshot, query, orderBy, where } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
 import { escapeHtml, formatDate, formatCurrency } from "./utils.js";
 import { calcBalance } from "./finance.js";
 import { fetchSharedProfile, updateSharedProfile } from "./sharedState.js";
+import { registerFirestoreListener } from "./listenerManager.js";
 
-let currentWorkouts = [];
-let currentTxs = [];
-let currentWaterStats = { currentAmount: 0, dailyGoal: 2000 };
-let currentCaloriesStats = { consumed: 0, goal: 2000 };
-let currentBooks = [];
-let currentMovies = [];
+// Helper for other modules to get the current daily summary doc reference
+export function getDailySummaryRef(uid) {
+    const d = new Date();
+    const yyyy = d.getFullYear();
+    const mm = String(d.getMonth() + 1).padStart(2, '0');
+    const dd = String(d.getDate()).padStart(2, '0');
+    const todayStr = `${yyyy}-${mm}-${dd}`;
+    return doc(db, 'users', uid, 'summary', `daily-${todayStr}`);
+}
 
-export function initDashboard(uid) {
-    // Only static rendering for now, updates come from other modules
-    renderDashboard();
+let currentDashboardData = {
+    waterAmount: 0,
+    waterGoal: 2000,
+    caloriesConsumed: 0,
+    caloriesGoal: 2000,
+    activeSplitName: "Yapılmadı",
+    monthlyBalance: 0,
+    activeBookRead: 0,
+    activeBookTotal: 0,
+    activeMovieTitle: 'YOK',
+    activeMovieSeason: null,
+    activeMovieEpisode: null,
+    activeMovieType: null
+};
+
+let currentUid = null;
+
+export async function initDashboard(uid) {
+    currentUid = uid;
     initWidgetSorting(uid);
+
+    const dailyRef = getDailySummaryRef(uid);
+    
+    // Check if daily document exists (Migration / Fallback logic)
+    try {
+        const snap = await getDoc(dailyRef);
+        if (!snap.exists()) {
+            await runDashboardMigration(uid, dailyRef);
+        }
+    } catch(e) {
+        console.error("Migration error:", e);
+    }
+
+    // Listen to daily summary
+    registerFirestoreListener('dashboard', onSnapshot(dailyRef, (docSnap) => {
+        if (docSnap.exists()) {
+            currentDashboardData = { ...currentDashboardData, ...docSnap.data() };
+            renderDashboard();
+        }
+    }));
+}
+
+async function runDashboardMigration(uid, dailyRef) {
+    // We fetch the current state from the db to initialize today's document
+    let initialData = { ...currentDashboardData };
+    
+    const d = new Date();
+    const todayStr = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+    
+    // 1. Water Settings
+    const waterSettingsSnap = await getDoc(doc(db, "users", uid, "settings", "water"));
+    if (waterSettingsSnap.exists()) {
+        initialData.waterGoal = waterSettingsSnap.data().dailyGoal || 2000;
+    }
+    
+    // 2. Water Today's logs
+    const startOfToday = new Date(d.getFullYear(), d.getMonth(), d.getDate());
+    const waterQ = query(collection(db, "users", uid, "waterLogs"));
+    const waterSnap = await getDocs(waterQ);
+    let todayWater = 0;
+    waterSnap.forEach(docSnap => {
+        const data = docSnap.data();
+        if (data.createdAt) {
+            const date = new Date(data.createdAt.seconds * 1000);
+            if (date >= startOfToday) {
+                todayWater += Number(data.amount || 0);
+            }
+        }
+    });
+    initialData.waterAmount = todayWater;
+    
+    // 3. Calories Settings
+    const calSettingsSnap = await getDoc(doc(db, "users", uid, "settings", "calories"));
+    if (calSettingsSnap.exists()) {
+        initialData.caloriesGoal = calSettingsSnap.data().dailyCalorieGoal || 2000;
+    }
+    
+    // 4. Calories Today's logs
+    const calQ = query(collection(db, "users", uid, "calorieLogs"), where("dateStr", "==", todayStr));
+    const calSnap = await getDocs(calQ);
+    let todayCals = 0;
+    calSnap.forEach(docSnap => {
+        todayCals += Number(docSnap.data().calories || 0);
+    });
+    initialData.caloriesConsumed = todayCals;
+    
+    // 5. Active Book
+    const booksQ = query(collection(db, "users", uid, "books"));
+    const booksSnap = await getDocs(booksQ);
+    let latestBook = null;
+    let latestTime = 0;
+    booksSnap.forEach(docSnap => {
+        const data = docSnap.data();
+        const time = data.updatedAt ? data.updatedAt.toMillis() : 0;
+        if (time > latestTime) {
+            latestTime = time;
+            latestBook = data;
+        }
+    });
+    if (latestBook) {
+        initialData.activeBookRead = latestBook.readPages || 0;
+        initialData.activeBookTotal = latestBook.totalPages || 0;
+    }
+    
+    // 6. Active Movie
+    const moviesQ = query(collection(db, "users", uid, "movies"));
+    const moviesSnap = await getDocs(moviesQ);
+    let latestMovie = null;
+    let latestMovieTime = 0;
+    moviesSnap.forEach(docSnap => {
+        const data = docSnap.data();
+        const time = data.updatedAt ? data.updatedAt.toMillis() : 0;
+        if (time > latestMovieTime) {
+            latestMovieTime = time;
+            latestMovie = data;
+        }
+    });
+    if (latestMovie) {
+        initialData.activeMovieTitle = latestMovie.title || '';
+        initialData.activeMovieType = latestMovie.type || 'movie';
+        initialData.activeMovieSeason = latestMovie.season || null;
+        initialData.activeMovieEpisode = latestMovie.episode || null;
+    }
+    
+    // 7. Finance Balance (Monthly)
+    const targetMonth = d.getMonth();
+    const targetYear = d.getFullYear();
+    const txQ = query(collection(db, "users", uid, "finance_transactions"));
+    const txSnap = await getDocs(txQ);
+    const monthTxs = [];
+    txSnap.forEach(docSnap => {
+        const tx = docSnap.data();
+        if (tx.dateStr) {
+            const tDate = new Date(tx.dateStr);
+            if (!isNaN(tDate.getTime()) && tDate.getMonth() === targetMonth && tDate.getFullYear() === targetYear) {
+                monthTxs.push(tx);
+            }
+        }
+    });
+    initialData.monthlyBalance = calcBalance(monthTxs);
+    
+    // Save to Firestore
+    await setDoc(dailyRef, initialData, { merge: true });
 }
 
 let dashboardSortable = null;
@@ -110,48 +253,26 @@ async function initWidgetSorting(uid) {
 }
 
 export function clearDashboard() {
-    currentWorkouts = [];
-    currentTxs = [];
-    currentWaterStats = { currentAmount: 0, dailyGoal: 2000 };
-    currentCaloriesStats = { consumed: 0, goal: 2000 };
-    currentBooks = [];
+    currentDashboardData = {
+        waterAmount: 0,
+        waterGoal: 2000,
+        caloriesConsumed: 0,
+        caloriesGoal: 2000,
+        activeSplitName: "Yapılmadı",
+        monthlyBalance: 0,
+        activeBookRead: 0,
+        activeBookTotal: 0,
+        activeMovieTitle: 'YOK',
+        activeMovieSeason: null,
+        activeMovieEpisode: null,
+        activeMovieType: null
+    };
     
     // Reset grids to hidden state to prevent flash for next user
     const grid = document.getElementById("dashboard-widgets-grid");
     const bottomGrid = document.getElementById("dashboard-bottom-widgets");
     if (grid) grid.classList.add('opacity-0');
     if (bottomGrid) bottomGrid.classList.add('opacity-0');
-}
-
-export function updateDashboardWorkouts(workouts, activeSplitName = "Yapılmadı") {
-    currentWorkouts = workouts;
-    window._miz_active_split_name = activeSplitName;
-    renderDashboard();
-}
-
-export function updateDashboardFinance(txs) {
-    currentTxs = txs;
-    renderDashboard();
-}
-
-export function updateDashboardWater(stats) {
-    currentWaterStats = stats;
-    renderDashboard();
-}
-
-export function updateDashboardCalories(stats) {
-    currentCaloriesStats = stats;
-    renderDashboard();
-}
-
-export function updateDashboardBooks(books) {
-    currentBooks = books;
-    renderDashboard();
-}
-
-export function updateDashboardMovies(movies) {
-    currentMovies = movies;
-    renderDashboard();
 }
 
 function renderDashboard() {
@@ -161,8 +282,8 @@ function renderDashboard() {
     const waterText = document.getElementById("dashboard-water-text");
     const waterProg = document.getElementById("dash-prog-water");
     if(waterText && waterProg) {
-        waterText.innerHTML = `${currentWaterStats.currentAmount}<span class="text-xs font-normal text-on-surface-variant">/${currentWaterStats.dailyGoal}ml</span>`;
-        let percent = currentWaterStats.currentAmount / currentWaterStats.dailyGoal * 100;
+        waterText.innerHTML = `${currentDashboardData.waterAmount}<span class="text-xs font-normal text-on-surface-variant">/${currentDashboardData.waterGoal}ml</span>`;
+        let percent = currentDashboardData.waterAmount / currentDashboardData.waterGoal * 100;
         if (percent > 100) percent = 100;
         if (isNaN(percent)) percent = 0;
         waterProg.style.strokeDashoffset = circum - (percent / 100) * circum;
@@ -172,8 +293,8 @@ function renderDashboard() {
     const calsText = document.getElementById("dashboard-calories-text");
     const calsProg = document.getElementById("dash-prog-cals");
     if(calsText && calsProg) {
-        calsText.innerHTML = `${currentCaloriesStats.totalCaloriesConsumed || 0}<span class="text-xs font-normal text-on-surface-variant">/${currentCaloriesStats.dailyCalorieGoal || 2000}</span>`;
-        let percent = (currentCaloriesStats.totalCaloriesConsumed || 0) / (currentCaloriesStats.dailyCalorieGoal || 2000) * 100;
+        calsText.innerHTML = `${currentDashboardData.caloriesConsumed || 0}<span class="text-xs font-normal text-on-surface-variant">/${currentDashboardData.caloriesGoal || 2000}</span>`;
+        let percent = (currentDashboardData.caloriesConsumed || 0) / (currentDashboardData.caloriesGoal || 2000) * 100;
         if (percent > 100) percent = 100;
         if (isNaN(percent)) percent = 0;
         calsProg.style.strokeDashoffset = circum - (percent / 100) * circum;
@@ -182,10 +303,9 @@ function renderDashboard() {
     // Okuma/Kitaplar
     const dashBooksText = document.getElementById("dashboard-books-text");
     if(dashBooksText) {
-        if(currentBooks.length > 0) {
-            const book = currentBooks[0];
-            const read = book.readPages || 0;
-            const total = book.totalPages || 1;
+        if(currentDashboardData.activeBookTotal > 0) {
+            const read = currentDashboardData.activeBookRead || 0;
+            const total = currentDashboardData.activeBookTotal || 1;
             dashBooksText.innerHTML = `<span class="text-2xl font-bold text-on-surface leading-none">${read}</span><span class="text-xs text-on-surface-variant mb-1">/${total} p.</span>`;
         } else {
             dashBooksText.innerHTML = `<span class="text-2xl font-bold text-on-surface leading-none">0</span><span class="text-xs text-on-surface-variant mb-1">/0 p.</span>`;
@@ -195,10 +315,9 @@ function renderDashboard() {
     // Dizi/Film
     const dashMoviesText = document.getElementById("dashboard-movies-text");
     if (dashMoviesText) {
-        if (currentMovies && currentMovies.length > 0) {
-            const activeMovie = currentMovies[0]; // most recently updated movie
-            if (activeMovie.type === 'series') {
-                dashMoviesText.innerHTML = `<span class="text-sm font-bold text-on-surface">S${activeMovie.season || 1} B${activeMovie.episode || 1}</span>`;
+        if (currentDashboardData.activeMovieTitle !== 'YOK' && currentDashboardData.activeMovieTitle !== '') {
+            if (currentDashboardData.activeMovieType === 'series') {
+                dashMoviesText.innerHTML = `<span class="text-sm font-bold text-on-surface">S${currentDashboardData.activeMovieSeason || 1} B${currentDashboardData.activeMovieEpisode || 1}</span>`;
             } else {
                 dashMoviesText.innerHTML = `<span class="text-sm font-bold text-on-surface">Film</span>`;
             }
@@ -209,21 +328,9 @@ function renderDashboard() {
 
     // Spor
     const statWorkout = document.getElementById("stat-workout-split");
-    if(statWorkout) statWorkout.textContent = window._miz_active_split_name || "Yapılmadı";
+    if(statWorkout) statWorkout.textContent = currentDashboardData.activeSplitName || "Yapılmadı";
 
     // Finans
-    const now = new Date();
-    const targetMonth = now.getMonth();
-    const targetYear = now.getFullYear();
-    
-    const currentMonthTxs = currentTxs.filter(tx => {
-        if (!tx.dateStr) return false;
-        const d = new Date(tx.dateStr);
-        if (isNaN(d.getTime())) return false;
-        return d.getMonth() === targetMonth && d.getFullYear() === targetYear;
-    });
-
-    const balance = calcBalance(currentMonthTxs);
     const statBalance = document.getElementById("stat-balance");
-    if(statBalance) statBalance.textContent = formatCurrency(balance);
+    if(statBalance) statBalance.textContent = formatCurrency(currentDashboardData.monthlyBalance || 0);
 }
