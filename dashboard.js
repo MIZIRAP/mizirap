@@ -42,6 +42,15 @@ export async function initDashboard(uid) {
     try {
         const snap = await getDoc(dailyRef);
         if (!snap.exists()) {
+            // Show empty widgets instantly while migration happens in background
+            renderDashboard();
+            const grid = document.getElementById("dashboard-widgets-grid");
+            const bottomGrid = document.getElementById("dashboard-bottom-widgets");
+            if (grid) grid.classList.remove('opacity-0');
+            if (bottomGrid) bottomGrid.classList.remove('opacity-0');
+            const loader = document.getElementById("dashboard-initial-loader");
+            if (loader) loader.classList.add('hidden');
+
             await runDashboardMigration(uid, dailyRef);
         }
     } catch(e) {
@@ -53,11 +62,15 @@ export async function initDashboard(uid) {
 
     // Listen to daily summary
     registerFirestoreListener('dashboard', onSnapshot(dailyRef, (docSnap) => {
-        if (docSnap.exists()) {
-            currentDashboardData = { ...currentDashboardData, ...docSnap.data() };
+        try {
+            if (docSnap.exists()) {
+                currentDashboardData = { ...currentDashboardData, ...docSnap.data() };
+            }
             renderDashboard();
-            
-            // Reveal dashboard once render is complete
+        } catch (err) {
+            console.error("Dashboard render error:", err);
+        } finally {
+            // Reveal dashboard once render is complete (or even if it fails)
             const grid = document.getElementById("dashboard-widgets-grid");
             const bottomGrid = document.getElementById("dashboard-bottom-widgets");
             if (grid) grid.classList.remove('opacity-0');
@@ -345,6 +358,10 @@ function renderDashboard() {
     if(statWorkout) statWorkout.textContent = currentDashboardData.activeSplitName || "Yapılmadı";
 
     // Finans
-    const statBalance = document.getElementById("stat-balance");
-    if(statBalance) statBalance.textContent = formatCurrency(currentDashboardData.monthlyBalance || 0);
+    try {
+        const statBalance = document.getElementById("stat-balance");
+        if(statBalance) statBalance.textContent = formatCurrency(Number(currentDashboardData.monthlyBalance) || 0);
+    } catch(e) {
+        console.error("Finance format error:", e);
+    }
 }
