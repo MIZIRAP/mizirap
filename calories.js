@@ -543,7 +543,7 @@ if (caloriesGoalBackdrop) {
 
                 const d = new Date();
                 const todayStr = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
-                if (currentDateStr === todayStr) {
+                if (todayStr === todayStr) {
                     const oldLog = dailyLogs.find(l => l.id === currentEditLogId);
                     const oldCals = oldLog ? Number(oldLog.kcal || 0) : 0;
                     const newCals = Number(logEntry.kcal || 0);
@@ -759,7 +759,7 @@ if (caloriesGoalBackdrop) {
 
                 const d = new Date();
                 const todayStr = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
-                if (currentDateStr === todayStr) {
+                if (todayStr === todayStr) {
                     const currentConsumed = dailyLogs.reduce((sum, log) => sum + Number(log.kcal || 0), 0);
                     batch.set(getDailySummaryRef(currentUid), { caloriesConsumed: currentConsumed + kcal }, { merge: true });
                 }
@@ -903,7 +903,7 @@ function renderLogs() {
 
                 const d = new Date();
                 const todayStr = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
-                if (currentDateStr === todayStr) {
+                if (todayStr === todayStr) {
                     const currentConsumed = dailyLogs.reduce((sum, l) => sum + Number(l.kcal || 0), 0);
                     batch.set(getDailySummaryRef(currentUid), { caloriesConsumed: Math.max(0, currentConsumed) }, { merge: true });
                 }
