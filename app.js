@@ -2,16 +2,9 @@ import { auth } from "./firebase-config.js";
 import { onAuthStateChanged, signInAnonymously } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
 import { setupAuthUI } from "./auth.js";
 import { initDashboard, clearDashboard } from "./dashboard.js?v=1787428044";
-import { initShopping, clearShopping } from "./shopping.js";
-import { initWorkout, clearWorkout } from "./workout.js?v=1787428061";
-import { initFinance, clearFinance } from "./finance.js";
 import { initWater, clearWater } from "./water.js";
-import { initBooks, clearBooks } from "./books.js?v=1787428044";
-import { initMovies, clearMovies } from "./movies.js?v=1787428044";
 import { initProfile, clearProfile } from "./profile.js?v=1787428045";
-import { initCalories, clearCalories } from "./calories.js?v=1787428046";
 import { initHistory, clearHistory } from "./history.js";
-import { initTools, clearTools } from "./tools.js?v=1787428045";
 import { clearAllListeners, clearAllFirestoreListeners } from "./listenerManager.js";
 import { clearSharedState } from "./sharedState.js";
 
@@ -60,18 +53,9 @@ onAuthStateChanged(auth, async (user) => {
 
             // Modülleri başlat
             initDashboard(user.uid);
-            initShopping(user.uid);
-
-            initWorkout(user.uid);
-            initFinance(user.uid);
             initWater(user.uid);
-            initCalories(user.uid);
-            initBooks(user.uid);
-            initMovies(user.uid);
-
             initProfile(user.uid);
             initHistory(user.uid);
-            initTools(user.uid);
         } catch (err) {
             console.error("Login transition error:", err);
             alert("Giriş yapılırken bir hata oluştu: " + err.message);
@@ -115,24 +99,91 @@ onAuthStateChanged(auth, async (user) => {
         clearAllListeners();
         clearSharedState();
         clearDashboard();
-        clearShopping();
-        clearWorkout();
-        clearFinance();
         clearWater();
-        clearBooks();
-        clearMovies();
         clearProfile();
-        clearCalories();
         clearHistory();
-        clearTools();
     }
 });
 
+// ---------- Lazy Load State ----------
+const loadedModules = {};
+
+// ---------- Global Proxy Fonksiyonlar ----------
+window.openProgressDetail = async function(exerciseId, exerciseName, category) {
+    try {
+        const { openProgressDetail } = await import('./exerciseDetail.js');
+        openProgressDetail(exerciseId, exerciseName, category);
+    } catch(err) {
+        console.error("exerciseDetail modülü yüklenemedi:", err);
+    }
+};
+
 // ---------- Sekme (view) geçişleri (Uygulama İçi, History API Destekli) ----------
-window.showView = function(viewId) {
+window.showView = async function(viewId) {
     // Sekme değiştiğinde tüm açık Firestore onSnapshot aboneliklerini kapat (sızıntı hijyeni)
     if (typeof clearAllFirestoreListeners === 'function') {
         clearAllFirestoreListeners();
+    }
+
+    const uid = localStorage.getItem('uid');
+    
+    // Lazy Load logic
+    if (uid && !loadedModules[viewId]) {
+        let loader = document.getElementById('lazy-loader');
+        if (!loader) {
+            loader = document.createElement('div');
+            loader.id = 'lazy-loader';
+            loader.className = 'fixed inset-0 z-[200] flex items-center justify-center bg-[#F0F2F8]/80 backdrop-blur-sm';
+            loader.innerHTML = '<div class="w-10 h-10 rounded-full border-4 border-[#D1D9E6] border-t-[#3B82F6] animate-spin"></div>';
+            document.body.appendChild(loader);
+        }
+
+        try {
+            switch (viewId) {
+                case 'view-workout': {
+                    const { initWorkout } = await import('./workout.js?v=1787428061');
+                    initWorkout(uid);
+                    break;
+                }
+                case 'view-calories': {
+                    const { initCalories } = await import('./calories.js?v=1787428046');
+                    initCalories(uid);
+                    break;
+                }
+                case 'view-finance': {
+                    const { initFinance } = await import('./finance.js');
+                    initFinance(uid);
+                    break;
+                }
+                case 'view-books': {
+                    const { initBooks } = await import('./books.js?v=1787428044');
+                    initBooks(uid);
+                    break;
+                }
+                case 'view-movies': {
+                    const { initMovies } = await import('./movies.js?v=1787428044');
+                    initMovies(uid);
+                    break;
+                }
+                case 'view-shopping': {
+                    const { initShopping } = await import('./shopping.js');
+                    initShopping(uid);
+                    break;
+                }
+                case 'view-tools': {
+                    const { initTools } = await import('./tools.js?v=1787428045');
+                    initTools(uid);
+                    break;
+                }
+            }
+            loadedModules[viewId] = true;
+        } catch (err) {
+            console.error(viewId, "lazy load hatası:", err);
+        } finally {
+            if (loader && document.body.contains(loader)) {
+                loader.remove();
+            }
+        }
     }
 
     document.querySelectorAll(".view").forEach(v => {
