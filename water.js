@@ -4,7 +4,6 @@ import { escapeHtml, handleFormSubmit } from "./utils.js";
 import { registerListener } from "./listenerManager.js";
 import { setSharedState } from "./sharedState.js";
 import { getDailySummaryRef } from "./dashboard.js";
-import { setSharedState } from "./sharedState.js";
 
 let dailyGoal = 2000;
 let waterLogs = [];
