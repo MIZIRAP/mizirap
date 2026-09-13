@@ -904,9 +904,7 @@
             <!-- Header -->
             <header class="w-full top-0 sticky z-40 max-w-md mx-auto px-container-padding py-4 bg-[#F0F2F8]">
                 <div class="flex items-center justify-between w-full">
-                    <button onclick="history.back()" class="w-10 h-10 flex items-center justify-center rounded-full bg-[#F0F2F8] active:scale-95 transition-transform" style="background-color: #F0F2F8; box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);">
-                        <span class="material-symbols-rounded text-[#1E293B]">arrow_back</span>
-                    </button>
+                    <div class="w-10 h-10 shrink-0"></div>
                     <h1 class="text-h1 font-bold text-[#1E293B]">İlerleme</h1>
                     <div class="w-10 h-10 shrink-0"></div>
                 </div>
@@ -969,18 +967,17 @@
     <section id="view-exercise-detail" class="view hidden bg-surface-light min-h-[100dvh] text-on-surface antialiased font-body-lg pb-[100px]">
         <div class="max-w-md mx-auto relative h-full flex flex-col">
             <!-- Header -->
-            <header class="w-full top-0 sticky z-40 px-container-padding py-4 bg-[#F0F2F8]">
-                <div class="flex items-center gap-3 w-full">
-                    <button onclick="history.back()" class="w-10 h-10 flex items-center justify-center rounded-full bg-[#F0F2F8] active:scale-95 transition-transform shrink-0" style="background-color: #F0F2F8; box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);">
-                        <span class="material-symbols-rounded text-on-surface text-[20px]">arrow_back</span>
-                    </button>
-                    <div class="flex-1 flex flex-col min-w-0">
-                        <h1 id="ex-detail-name" class="text-xl font-bold text-on-surface truncate">Egzersiz Adı</h1>
-                        <div class="flex items-center gap-2 mt-0.5">
+            <header class="w-full top-0 sticky z-40 max-w-md mx-auto px-container-padding py-4 bg-[#F0F2F8]">
+                <div class="flex items-center justify-between w-full">
+                    <div class="w-10 h-10 shrink-0"></div>
+                    <div class="flex-1 flex flex-col items-center min-w-0 mx-2 text-center">
+                        <h1 id="ex-detail-name" class="text-xl font-bold text-[#1E293B] truncate w-full">Egzersiz Adı</h1>
+                        <div class="flex items-center justify-center gap-2 mt-0.5">
                             <span id="ex-detail-cat" class="bg-[#E2E8F0] text-[#475569] text-[10px] font-bold px-2 py-0.5 rounded-md uppercase tracking-wider">Kategori</span>
                             <span id="ex-detail-equip" class="bg-[#E2E8F0] text-[#475569] text-[10px] font-bold px-2 py-0.5 rounded-md uppercase tracking-wider">Ekipman</span>
                         </div>
                     </div>
+                    <div class="w-10 h-10 shrink-0"></div>
                 </div>
             </header>
 
