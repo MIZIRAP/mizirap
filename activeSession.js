@@ -47,6 +47,8 @@ document.addEventListener('click', (e) => {
     else if (action === 'sessionStepWeight') sessionStepWeight(actionBtn.getAttribute('data-ex-id'), parseInt(actionBtn.getAttribute('data-set-idx'), 10), parseFloat(actionBtn.getAttribute('data-delta')));
     else if (action === 'sessionStepReps') sessionStepReps(actionBtn.getAttribute('data-ex-id'), parseInt(actionBtn.getAttribute('data-set-idx'), 10), parseFloat(actionBtn.getAttribute('data-delta')));
     else if (action === 'sessionSetRPE') sessionSetRPE(actionBtn.getAttribute('data-ex-id'), parseInt(actionBtn.getAttribute('data-set-idx'), 10), parseInt(actionBtn.getAttribute('data-rpe'), 10));
+    else if (action === 'sessionToggleSet') toggleSet(actionBtn);
+    else if (action === 'sessionCompleteSet') completeSet(actionBtn.getAttribute('data-ex-id'), parseInt(actionBtn.getAttribute('data-set-idx'), 10));
 });
 
 let _timerInterval = null;
@@ -360,7 +362,7 @@ function _activeSetHTML(exId, setIdx, set, isCurrent = false, isCompleted = fals
     const wrapperClass = isFuture ? 'opacity-50 pointer-events-none' : '';
 
     return `
-        <button class="w-full p-3 flex items-center justify-between focus:outline-none" onclick="toggleSet(this)">
+        <button class="w-full p-3 flex items-center justify-between focus:outline-none" data-action="sessionToggleSet">
             <div class="flex items-center gap-3">
                 <div class="w-8 h-8 rounded-full flex items-center justify-center ${numBgClass}">
                     ${isCompleted ? '<span class="material-symbols-rounded text-sm">check</span>' : `<span class="font-title-sm text-title-sm font-bold">${setIdx + 1}</span>`}
@@ -421,7 +423,7 @@ function _activeSetHTML(exId, setIdx, set, isCurrent = false, isCompleted = fals
                         <div class="neo-inset-pill px-4 py-2 inline-flex items-center">
                             <span class="font-label-sm text-label-sm font-bold text-tertiary" id="e1rm-display-${exId}-${setIdx}">Tahmini e1RM: ${e1rmDisplay}</span>
                         </div>
-                        ${isCurrent ? `<button class="px-5 py-2 rounded-full bg-primary text-white font-title-sm text-title-sm shadow-sm active:scale-95 transition-transform" onclick="completeSet('${exId}', ${setIdx})">Tamamla</button>` : ''}
+                        ${isCurrent ? `<button class="px-5 py-2 rounded-full bg-primary text-white font-title-sm text-title-sm shadow-sm active:scale-95 transition-transform" data-action="sessionCompleteSet" data-ex-id="${exId}" data-set-idx="${setIdx}">Tamamla</button>` : ''}
                     </div>
                 </div>
             </div>
@@ -924,19 +926,10 @@ function completeSet(exId, setIdx) {
     if (state.activeSetIdx === setIdx) {
         state.activeSetIdx++;
 
-        // Persist the set immediately to Firestore
-        _debounceSaveSet(exId, setIdx);
-
-        // Re-render sets to update UI states (collapses current, expands next)
+        // Re-render sets to update UI states (collapses current, expands next) IMMEDIATELY (Optimistic UI)
         _renderSets(exId);
+
+        // Persist the set to Firestore in the background
+        _debounceSaveSet(exId, setIdx);
     }
 }
-
-// Global Bindings
-window.completeSet = completeSet;
-window.toggleSet = toggleSet;
-window.sessionAddSet = sessionAddSet;
-window.sessionStepWeight = sessionStepWeight;
-window.sessionStepReps = sessionStepReps;
-window.sessionSetRPE = sessionSetRPE;
-window.sessionToggleExAccordion = sessionToggleExAccordion;
