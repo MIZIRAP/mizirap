@@ -249,16 +249,21 @@ function _updateTimerDisplay() {
 const _openExAccordions = new Set();
 
 function _renderSessionExercises() {
-    const container = document.getElementById('session-exercises-container');
-    if (!container || !_day) return;
-    container.innerHTML = '';
+    try {
+        const container = document.getElementById('session-exercises-container');
+        if (!container || !_day || !_day.exercises) return;
+        container.innerHTML = '';
 
-    _day.exercises.forEach((ex, exIdx) => {
-        const state = _exState[ex.id];
-        if (!state) return;
+        _day.exercises.forEach((ex, exIdx) => {
+            const state = _exState[ex.id];
+            if (!state) return;
 
-        const isOpen = _openExAccordions.has(ex.id);
-        const totalSets = state.sets.length;
+            if (exIdx === 0 && _openExAccordions.size === 0) {
+                _openExAccordions.add(ex.id);
+            }
+
+            const isOpen = _openExAccordions.has(ex.id);
+            const totalSets = state.sets.length;
         const prevLine = (state.prevBestWeight !== null)
             ? `Son antrenman: ${state.prevBestWeight}kg × ${state.prevBestReps} reps`
             : '';
@@ -291,9 +296,12 @@ function _renderSessionExercises() {
         if (isOpen) _renderSets(ex.id);
     });
 
-    // Wire up the finish button that lives in the header
-    const finishBtn = document.getElementById('session-finish-btn');
-    if (finishBtn) finishBtn.onclick = finishSession;
+        // Wire up the finish button that lives in the header
+        const finishBtn = document.getElementById('session-finish-btn');
+        if (finishBtn) finishBtn.onclick = finishSession;
+    } catch (error) {
+        console.error("Set render error:", error);
+    }
 }
 
 function _renderSets(exId) {
@@ -763,9 +771,7 @@ async function finishSession() {
             activeSplitName: sessionName
         }, { merge: true });
         
-        // COMMIT BATCH
-        await batch.commit();
-
+        // OPTIMISTIC UI
         _stopTimer();
 
         // Reset button
@@ -780,6 +786,9 @@ async function finishSession() {
 
         // Trigger a re-render of the workout summary
         if (typeof renderSplitView === 'function') renderSplitView();
+
+        // COMMIT BATCH IN BACKGROUND
+        await batch.commit();
 
     } catch (e) {
         console.error('[activeSession] finishSession error:', e);
