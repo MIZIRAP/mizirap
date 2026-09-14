@@ -7,7 +7,8 @@ import { initProfile, clearProfile } from "./profile.js?v=1787428045";
 import { initHistory, clearHistory } from "./history.js";
 import { clearAllListeners, clearAllFirestoreListeners } from "./listenerManager.js";
 import { clearSharedState } from "./sharedState.js";
-
+import { initWorkout } from "./workout.js";
+import "./activeSession.js";
 // ---------- DOM referansları ----------
 const authScreen = document.getElementById("auth-screen");
 const appScreen = document.getElementById("app-screen");
@@ -56,6 +57,7 @@ onAuthStateChanged(auth, async (user) => {
             initWater(user.uid);
             initProfile(user.uid);
             initHistory(user.uid);
+            initWorkout(user.uid);
         } catch (err) {
             console.error("Login transition error:", err);
             alert("Giriş yapılırken bir hata oluştu: " + err.message);
@@ -140,11 +142,6 @@ window.showView = async function(viewId) {
 
         try {
             switch (viewId) {
-                case 'view-workout': {
-                    const { initWorkout } = await import('./workout.js?v=1787428061');
-                    initWorkout(uid);
-                    break;
-                }
                 case 'view-calories': {
                     const { initCalories } = await import('./calories.js?v=1787428046');
                     initCalories(uid);
