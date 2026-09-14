@@ -1,7 +1,7 @@
 import { auth, db } from "./firebase-config.js";
 import { fetchSharedProfile, updateSharedProfile } from "./sharedState.js";
 import { doc, updateDoc } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
-import { calculateE1RM } from './activeSession.js?v=202609045';
+import { calculateE1RM } from './activeSession.js';
 
 // ==========================================
 // CALCULATOR ENGINE
