@@ -4307,7 +4307,7 @@
 <!-- Add Transaction Modal -->
 <div id="finance-add-tx-modal" class="fixed inset-0 z-50 flex items-end justify-center hidden">
     <div class="absolute inset-0 bg-black/10 backdrop-blur-sm z-10 opacity-0 transition-opacity duration-300 cursor-pointer" data-action="closeAddTransactionModal" id="finance-add-tx-backdrop"></div>
-    <div class="relative w-full max-w-sm bg-[#F0F2F8] rounded-t-[32px] shadow-[0_-8px_30px_rgba(0,0,0,0.05)] p-6 z-20 flex flex-col items-center transform transition-transform duration-300 translate-y-full pb-8" id="finance-add-tx-content">
+    <div class="relative w-full max-w-sm bg-[#F0F2F8] rounded-t-[32px] shadow-[0_-8px_30px_rgba(0,0,0,0.05)] p-6 z-20 flex flex-col items-center transform transition-transform duration-300 translate-y-full pb-8 overflow-y-auto" id="finance-add-tx-content" style="max-height: 90vh;">
         <!-- Drag Handle -->
         <div class="w-12 h-1.5 bg-gray-300 rounded-full mb-6 cursor-pointer" data-action="closeAddTransactionModal"></div>
         <div class="w-full text-center mb-6">
