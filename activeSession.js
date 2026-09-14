@@ -434,17 +434,23 @@ function _activeSetHTML(exId, setIdx, set, isCurrent = false, isCompleted = fals
 // ─── User actions (window.* for HTML onclick) ──────────────────────────────
 
 function sessionToggleExAccordion(exId, headerBtn) {
-    const body = headerBtn.nextElementSibling;
+    const card = headerBtn.closest('article');
+    if (!card) return;
+    
+    const body = card.querySelector('.accordion-body');
+    if (!body) return;
+
     const chevron = headerBtn.querySelector('.material-symbols-rounded.transition-transform');
-    if (!body || !body.classList.contains('accordion-body')) return;
 
     if (body.classList.contains('hidden')) {
         _openExAccordions.add(exId);
         body.classList.remove('hidden');
         if (chevron) chevron.classList.add('rotate-180');
         
-        const container = body.querySelector('.sets-container');
-        _renderSets(exId, container);
+        const setsContainer = body.querySelector('.sets-container');
+        if (setsContainer) {
+            _renderSets(exId, setsContainer);
+        }
     } else {
         _openExAccordions.delete(exId);
         body.classList.add('hidden');
