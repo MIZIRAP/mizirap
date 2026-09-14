@@ -7,7 +7,7 @@ import { initProfile, clearProfile } from "./profile.js?v=1787428045";
 import { initHistory, clearHistory } from "./history.js";
 import { clearAllListeners, clearAllFirestoreListeners } from "./listenerManager.js";
 import { clearSharedState } from "./sharedState.js";
-import { initWorkout } from "./workout.js";
+import { initWorkout, renderSplitView } from "./workout.js";
 import "./activeSession.js";
 // ---------- DOM referansları ----------
 const authScreen = document.getElementById("auth-screen");
@@ -190,6 +190,11 @@ window.showView = async function(viewId) {
     if(target) {
         target.classList.remove("hidden");
         window.scrollTo(0,0);
+        
+        if (viewId === 'view-workout') {
+            renderSplitView();
+        }
+
         document.dispatchEvent(new CustomEvent('viewChanged', { detail: { viewId: viewId } }));
     } else {
         const dash = document.getElementById("view-dashboard");

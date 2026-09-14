@@ -151,7 +151,7 @@ function setupEventListeners() {
     if (saveWorkoutBtn) saveWorkoutBtn.onclick = saveWorkoutSession;
 }
 
-function renderSplitView() {
+export function renderSplitView() {
     const titleEl = document.getElementById('workout-split-title');
     const descEl = document.getElementById('workout-split-desc');
     const dotsContainer = document.getElementById('workout-day-indicator');
