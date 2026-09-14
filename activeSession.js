@@ -926,14 +926,42 @@ function completeSet(exId, setIdx) {
     const state = _exState[exId];
     if (!state) return;
 
-    // Increment activeSetIdx to unlock the next set
-    if (state.activeSetIdx === setIdx) {
-        state.activeSetIdx++;
+    if (state.activeSetIdx !== setIdx) return;
 
-        // Re-render sets to update UI states (collapses current, expands next) IMMEDIATELY (Optimistic UI)
-        _renderSets(exId);
+    state.activeSetIdx++;
 
-        // Persist the set to Firestore in the background
-        _debounceSaveSet(exId, setIdx);
+    // Re-render sets immediately (Optimistic UI)
+    _renderSets(exId);
+
+    // Save IMMEDIATELY to Firestore — don't wait debounce
+    _persistSessionState();
+
+    // Check if all sets for this exercise are done
+    const allDone = state.activeSetIdx >= state.sets.length;
+    if (allDone && _day && _day.exercises) {
+        const exList = _day.exercises;
+        const curIdx = exList.findIndex(e => e.id === exId);
+        const nextEx = exList[curIdx + 1];
+
+        // Close current accordion
+        _openExAccordions.delete(exId);
+        const curBody = document.getElementById(`accordion-body-${exId}`);
+        const curChevron = document.getElementById(`chevron-${exId}`);
+        if (curBody) curBody.classList.add('hidden');
+        if (curChevron) curChevron.classList.remove('rotate-180');
+
+        // Open next accordion if exists
+        if (nextEx) {
+            _openExAccordions.add(nextEx.id);
+            const nextBody = document.getElementById(`accordion-body-${nextEx.id}`);
+            const nextChevron = document.getElementById(`chevron-${nextEx.id}`);
+            if (nextBody) nextBody.classList.remove('hidden');
+            if (nextChevron) nextChevron.classList.add('rotate-180');
+            _renderSets(nextEx.id);
+
+            // Smooth scroll to next exercise card
+            const nextCard = document.getElementById(`session-card-${nextEx.id}`);
+            if (nextCard) nextCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
     }
 }
