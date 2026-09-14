@@ -11,7 +11,7 @@
  * - Session timer persisted in Firestore (not localStorage)
  */
 
-import { db } from './firebase-config.js';
+import { db, auth } from './firebase-config.js';
 import {
     doc, collection, setDoc, getDoc, getDocs, writeBatch,
     query, where, orderBy, limit,
@@ -521,6 +521,7 @@ function getSafeExerciseId(exName) {
 }
 
 async function finishSession() {
+    if (!auth.currentUser) return;
     const btn = document.getElementById('session-finish-btn');
     if (btn) { btn.disabled = true; btn.textContent = 'Kaydediliyor...'; }
 
@@ -758,7 +759,7 @@ async function finishSession() {
         
         batch.set(indexRef, indexData, { merge: true });
 
-        batch.set(getDailySummaryRef(_currentUid), {
+        batch.set(getDailySummaryRef(auth.currentUser.uid), {
             activeSplitName: sessionName
         }, { merge: true });
         
