@@ -2,7 +2,7 @@
 <html lang="tr">
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="description" content="MIZIRAP: Kişisel antrenman, kalori, su ve yaşam takip asistanı.">
     <title>My Life Dashboard</title>
     <link href="tailwind-build.css?v=20260905" rel="stylesheet" />
@@ -27,6 +27,14 @@
     <style>
         .material-symbols-rounded {
             font-family: "Material Symbols Rounded" !important;
+        }
+
+        /* Mobil uygulama davranışı: çift tık zoom, metin boyutu değişimi engel */
+        html, body {
+            touch-action: manipulation;
+            -webkit-text-size-adjust: 100%;
+            text-size-adjust: 100%;
+            overscroll-behavior: none;
         }
 
         .view.hidden { display: none !important; }
