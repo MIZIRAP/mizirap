@@ -289,8 +289,8 @@ function _renderSessionExercises() {
                     <span class="material-symbols-rounded text-outline transition-transform duration-300 transform ${isOpen ? 'rotate-180' : ''}" id="chevron-${ex.id}">expand_more</span>
                 </div>
             </button>
-            <div id="accordion-body-${ex.id}" class="${isOpen ? '' : 'hidden'} border-t border-surface-variant/50">
-                <div class="flex flex-col gap-3 p-4 bg-surface-container-low" id="sets-container-${ex.id}"></div>
+            <div id="accordion-body-${ex.id}" class="${isOpen ? '' : 'hidden'} border-t border-surface-variant/50 accordion-body">
+                <div class="flex flex-col gap-3 p-4 bg-surface-container-low sets-container" id="sets-container-${ex.id}"></div>
             </div>
         `;
 
@@ -306,8 +306,8 @@ function _renderSessionExercises() {
     }
 }
 
-function _renderSets(exId) {
-    const container = document.getElementById(`sets-container-${exId}`);
+function _renderSets(exId, optionalContainer) {
+    const container = optionalContainer || document.getElementById(`sets-container-${exId}`);
     if (!container) return;
     container.innerHTML = '';
 
@@ -434,19 +434,21 @@ function _activeSetHTML(exId, setIdx, set, isCurrent = false, isCompleted = fals
 // ─── User actions (window.* for HTML onclick) ──────────────────────────────
 
 function sessionToggleExAccordion(exId, headerBtn) {
-    const body = document.getElementById(`accordion-body-${exId}`);
-    const chevron = document.getElementById(`chevron-${exId}`);
-    if (!body) return;
+    const body = headerBtn.nextElementSibling;
+    const chevron = headerBtn.querySelector('.material-symbols-rounded.transition-transform');
+    if (!body || !body.classList.contains('accordion-body')) return;
 
-    if (_openExAccordions.has(exId)) {
-        _openExAccordions.delete(exId);
-        body.classList.add('hidden');
-        if (chevron) chevron.classList.remove('rotate-180');
-    } else {
+    if (body.classList.contains('hidden')) {
         _openExAccordions.add(exId);
         body.classList.remove('hidden');
         if (chevron) chevron.classList.add('rotate-180');
-        _renderSets(exId);
+        
+        const container = body.querySelector('.sets-container');
+        _renderSets(exId, container);
+    } else {
+        _openExAccordions.delete(exId);
+        body.classList.add('hidden');
+        if (chevron) chevron.classList.remove('rotate-180');
     }
 };
 
