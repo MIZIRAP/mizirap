@@ -903,7 +903,7 @@ function escHtml(str) {
     return d.innerHTML;
 }
 
-window.toggleSet = function(button) {
+function toggleSet(button) {
     const content = button.nextElementSibling;
     const icon = button.querySelector('[data-icon="expand_more"]');
 
@@ -916,7 +916,7 @@ window.toggleSet = function(button) {
     }
 }
 
-window.completeSet = function(exId, setIdx) {
+function completeSet(exId, setIdx) {
     const state = _exState[exId];
     if (!state) return;
 
@@ -925,9 +925,18 @@ window.completeSet = function(exId, setIdx) {
         state.activeSetIdx++;
 
         // Persist the set immediately to Firestore
-        _persistSet(exId, setIdx, state.sets[setIdx]);
+        _debounceSaveSet(exId, setIdx);
 
         // Re-render sets to update UI states (collapses current, expands next)
         _renderSets(exId);
     }
 }
+
+// Global Bindings
+window.completeSet = completeSet;
+window.toggleSet = toggleSet;
+window.sessionAddSet = sessionAddSet;
+window.sessionStepWeight = sessionStepWeight;
+window.sessionStepReps = sessionStepReps;
+window.sessionSetRPE = sessionSetRPE;
+window.sessionToggleExAccordion = sessionToggleExAccordion;
