@@ -287,19 +287,18 @@ function _renderSessionExercises() {
                         </div>
                     </div>
                     <div class="flex items-center gap-3 shrink-0">
-                        <span class="material-symbols-rounded text-outline transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}" data-chevron>❯</span>
+                        <span class="material-symbols-rounded text-outline transition-transform duration-300 transform ${isOpen ? 'rotate-180' : ''}" id="chevron-${ex.id}">expand_more</span>
                     </div>
                 </button>
-                <div class="${isOpen ? '' : 'hidden'} border-t border-surface-variant/50 accordion-body">
-                    <div class="flex flex-col gap-3 p-4 bg-surface-container-low sets-container" id="sets-container-${ex.id}"></div>
+                <div id="accordion-body-${ex.id}" class="${isOpen ? '' : 'hidden'} border-t border-surface-variant/50">
+                    <div class="flex flex-col gap-3 p-4 bg-surface-container-low" id="sets-container-${ex.id}"></div>
                 </div>
             `;
 
             container.appendChild(card);
 
             if (isOpen) {
-                const setsContainer = card.querySelector('.sets-container');
-                _renderSets(ex.id, setsContainer);
+                _renderSets(ex.id);
             }
         } catch (err) {
             console.error('[render] exercise card error:', err);
@@ -439,27 +438,19 @@ function _activeSetHTML(exId, setIdx, set, isCurrent = false, isCompleted = fals
 // ─── User actions (window.* for HTML onclick) ──────────────────────────────
 
 function sessionToggleExAccordion(exId, headerBtn) {
-    const card = headerBtn.closest('article');
-    if (!card) return;
-    
-    const body = card.querySelector('.accordion-body');
+    const body = document.getElementById(`accordion-body-${exId}`);
+    const chevron = document.getElementById(`chevron-${exId}`);
     if (!body) return;
 
-    const chevron = headerBtn.querySelector('.material-symbols-rounded.transition-transform');
-
-    if (body.classList.contains('hidden')) {
-        _openExAccordions.add(exId);
-        body.classList.remove('hidden');
-        if (chevron) chevron.classList.add('rotate-180');
-        
-        const setsContainer = body.querySelector('.sets-container');
-        if (setsContainer) {
-            _renderSets(exId, setsContainer);
-        }
-    } else {
+    if (_openExAccordions.has(exId)) {
         _openExAccordions.delete(exId);
         body.classList.add('hidden');
         if (chevron) chevron.classList.remove('rotate-180');
+    } else {
+        _openExAccordions.add(exId);
+        body.classList.remove('hidden');
+        if (chevron) chevron.classList.add('rotate-180');
+        _renderSets(exId);
     }
 };
 
