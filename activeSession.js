@@ -68,6 +68,7 @@ export async function openActiveSession(uid, splitId, dayId, dayObj) {
     _dayId = dayId;
     _day = dayObj;
     _exState = {};
+    _openExAccordions.clear(); // reset accordion state for fresh session
 
     // Show the session view, hide workout home
     document.querySelectorAll('.view').forEach(v => v.classList.add('hidden'));
@@ -251,59 +252,63 @@ function _updateTimerDisplay() {
 const _openExAccordions = new Set();
 
 function _renderSessionExercises() {
-    try {
-        const container = document.getElementById('session-exercises-container');
-        if (!container || !_day || !_day.exercises) return;
-        container.innerHTML = '';
+    const container = document.getElementById('session-exercises-container');
+    if (!container || !_day || !_day.exercises) return;
+    container.innerHTML = '';
 
-        _day.exercises.forEach((ex, exIdx) => {
+    _day.exercises.forEach((ex, exIdx) => {
+        try {
             const state = _exState[ex.id];
-            if (!state) return;
+            if (!state) { console.warn('[render] state missing for', ex.id); return; }
 
+            // Auto-open first exercise when session starts
             if (exIdx === 0 && _openExAccordions.size === 0) {
                 _openExAccordions.add(ex.id);
             }
 
             const isOpen = _openExAccordions.has(ex.id);
-            const totalSets = state.sets.length;
-        const prevLine = (state.prevBestWeight !== null)
-            ? `Son antrenman: ${state.prevBestWeight}kg × ${state.prevBestReps} reps`
-            : '';
+            const prevLine = (state.prevBestWeight !== null)
+                ? `Son antrenman: ${state.prevBestWeight}kg × ${state.prevBestReps} reps`
+                : '';
 
-        const card = document.createElement('article');
-        card.className = 'neo-surface overflow-hidden mb-4';
-        card.id = `session-card-${ex.id}`;
+            const card = document.createElement('article');
+            card.className = 'neo-surface overflow-hidden mb-4';
+            card.id = `session-card-${ex.id}`;
 
-        card.innerHTML = `
-            <button class="w-full p-4 flex items-center justify-between focus:outline-none" data-action="sessionToggleExAccordion" data-ex-id="${ex.id}">
-                <div class="flex items-center gap-4">
-                    <div class="w-12 h-12 rounded-full bg-[#F0F2F8] flex items-center justify-center shrink-0" style="box-shadow: inset 4px 4px 8px #D1D9E6, inset -4px -4px 8px rgba(255, 255, 255, 0.7);">
-                        <span class="material-symbols-rounded text-[#1E293B] text-xl">fitness_center</span>
+            card.innerHTML = `
+                <button class="w-full p-4 flex items-center justify-between focus:outline-none" data-action="sessionToggleExAccordion" data-ex-id="${ex.id}">
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-full bg-[#F0F2F8] flex items-center justify-center shrink-0" style="box-shadow: inset 4px 4px 8px #D1D9E6, inset -4px -4px 8px rgba(255, 255, 255, 0.7);">
+                            <span class="material-symbols-rounded text-[#1E293B] text-xl">fitness_center</span>
+                        </div>
+                        <div class="text-left min-w-0">
+                            <h3 class="font-title-sm text-title-sm text-on-surface mb-1 truncate">${escHtml(ex.name)}</h3>
+                            <p class="font-body-sm text-body-sm text-text-secondary truncate">${prevLine}</p>
+                        </div>
                     </div>
-                    <div class="text-left min-w-0">
-                        <h3 class="font-title-sm text-title-sm text-on-surface mb-1 truncate">${escHtml(ex.name)}</h3>
-                        <p class="font-body-sm text-body-sm text-text-secondary truncate">${prevLine}</p>
+                    <div class="flex items-center gap-3 shrink-0">
+                        <span class="material-symbols-rounded text-outline transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}" data-chevron>❯</span>
                     </div>
+                </button>
+                <div class="${isOpen ? '' : 'hidden'} border-t border-surface-variant/50 accordion-body">
+                    <div class="flex flex-col gap-3 p-4 bg-surface-container-low sets-container" id="sets-container-${ex.id}"></div>
                 </div>
-                <div class="flex items-center gap-3 shrink-0">
-                    <span class="material-symbols-rounded text-outline transition-transform duration-300 transform ${isOpen ? 'rotate-180' : ''}" id="chevron-${ex.id}">expand_more</span>
-                </div>
-            </button>
-            <div id="accordion-body-${ex.id}" class="${isOpen ? '' : 'hidden'} border-t border-surface-variant/50 accordion-body">
-                <div class="flex flex-col gap-3 p-4 bg-surface-container-low sets-container" id="sets-container-${ex.id}"></div>
-            </div>
-        `;
+            `;
 
-        container.appendChild(card);
-        if (isOpen) _renderSets(ex.id);
+            container.appendChild(card);
+
+            if (isOpen) {
+                const setsContainer = card.querySelector('.sets-container');
+                _renderSets(ex.id, setsContainer);
+            }
+        } catch (err) {
+            console.error('[render] exercise card error:', err);
+        }
     });
 
-        // Wire up the finish button that lives in the header
-        const finishBtn = document.getElementById('session-finish-btn');
-        if (finishBtn) finishBtn.onclick = finishSession;
-    } catch (error) {
-        console.error("Set render error:", error);
-    }
+    // Wire up the finish button that lives in the header
+    const finishBtn = document.getElementById('session-finish-btn');
+    if (finishBtn) finishBtn.onclick = finishSession;
 }
 
 function _renderSets(exId, optionalContainer) {
