@@ -2730,42 +2730,82 @@ const confirmDeleteCancel = document.getElementById('confirm-delete-cancel');
 const confirmDeleteYes = document.getElementById('confirm-delete-yes');
 
 function openDeleteProgressModal() {
-    console.log('MODAL FUNCTION CALLED. globalProgressIndex:', globalProgressIndex);
-    if (!globalProgressIndex || !globalProgressIndex.exercises) {
-        console.log('EARLY RETURN: globalProgressIndex or exercises is null/undefined');
-        return;
-    }
-    
-    selectedProgressIds.clear();
-    updateDeleteProgressSubmitBtn();
-    
-    // Render list
-    let html = '';
-    globalProgressIndex.exercises.forEach(ex => {
-        html += `
-        <label class="flex items-center justify-between w-full neo-surface-inset rounded-2xl p-4 cursor-pointer" style="background-color: #F0F2F8; box-shadow: inset 4px 4px 8px #D1D9E6, inset -4px -4px 8px rgba(255, 255, 255, 0.7);">
-            <div class="flex items-center gap-3">
-                <input type="checkbox" class="w-5 h-5 rounded border-gray-300 text-[#3B82F6] focus:ring-[#3B82F6] delete-progress-checkbox" value="${ex.exerciseId}">
-                <span class="font-bold text-[#1E293B]">${ex.exerciseName}</span>
-            </div>
-        </label>
-        `;
-    });
-    deleteProgressList.innerHTML = html;
-    
-    document.querySelectorAll('.delete-progress-checkbox').forEach(cb => {
-        cb.addEventListener('change', (e) => {
-            if (e.target.checked) selectedProgressIds.add(e.target.value);
-            else selectedProgressIds.delete(e.target.value);
-            updateDeleteProgressSubmitBtn();
-        });
-    });
+    try {
+        console.log('MODAL FUNCTION CALLED. globalProgressIndex:', globalProgressIndex);
+        
+        // RE-FETCH ALL DOM ELEMENTS TO GUARANTEE LIVE REFERENCES
+        const liveModal = document.getElementById('deleteProgressModal');
+        const liveBackdrop = document.getElementById('delete-progress-backdrop');
+        const liveContent = document.getElementById('deleteProgressModalContent');
+        const liveList = document.getElementById('delete-progress-list');
+        const liveSubmitBtn = document.getElementById('delete-progress-submit');
+        const liveSubmitText = document.getElementById('delete-progress-submit-text');
+        
+        if (!liveModal || !liveBackdrop || !liveContent || !liveList) {
+            alert('CRITICAL ERROR: Modal DOM elements not found!');
+            return;
+        }
 
-    deleteProgressModal.classList.remove('hidden');
-    // Force reflow
-    void deleteProgressModal.offsetWidth;
-    deleteProgressBackdrop.classList.remove('opacity-0');
-    deleteProgressModalContent.classList.remove('translate-y-full');
+        if (!globalProgressIndex || !globalProgressIndex.exercises) {
+            console.log('EARLY RETURN: globalProgressIndex or exercises is null/undefined');
+            return;
+        }
+        
+        selectedProgressIds.clear();
+        
+        // Inline update submit btn
+        const count = selectedProgressIds.size;
+        document.getElementById('delete-progress-count').textContent = `${count} seçildi`;
+        if (liveSubmitBtn && liveSubmitText) {
+            liveSubmitBtn.disabled = true;
+            liveSubmitText.textContent = 'Sil';
+        }
+        
+        // Render list
+        let html = '';
+        globalProgressIndex.exercises.forEach(ex => {
+            html += `
+            <label class="flex items-center justify-between w-full neo-surface-inset rounded-2xl p-4 cursor-pointer" style="background-color: #F0F2F8; box-shadow: inset 4px 4px 8px #D1D9E6, inset -4px -4px 8px rgba(255, 255, 255, 0.7);">
+                <div class="flex items-center gap-3">
+                    <input type="checkbox" class="w-5 h-5 rounded border-gray-300 text-[#3B82F6] focus:ring-[#3B82F6] delete-progress-checkbox" value="${ex.exerciseId}">
+                    <span class="font-bold text-[#1E293B]">${ex.exerciseName}</span>
+                </div>
+            </label>
+            `;
+        });
+        liveList.innerHTML = html;
+        
+        document.querySelectorAll('.delete-progress-checkbox').forEach(cb => {
+            cb.addEventListener('change', (e) => {
+                if (e.target.checked) selectedProgressIds.add(e.target.value);
+                else selectedProgressIds.delete(e.target.value);
+                
+                const newCount = selectedProgressIds.size;
+                document.getElementById('delete-progress-count').textContent = `${newCount} seçildi`;
+                if (liveSubmitBtn && liveSubmitText) {
+                    if (newCount > 0) {
+                        liveSubmitBtn.disabled = false;
+                        liveSubmitText.textContent = `${newCount} Egzersizi Sil`;
+                    } else {
+                        liveSubmitBtn.disabled = true;
+                        liveSubmitText.textContent = 'Sil';
+                    }
+                }
+            });
+        });
+
+        console.log('BEFORE REMOVE HIDDEN:', liveModal.className);
+        liveModal.classList.remove('hidden');
+        // Force reflow
+        void liveModal.offsetWidth;
+        liveBackdrop.classList.remove('opacity-0');
+        liveContent.classList.remove('translate-y-full');
+        console.log('AFTER REMOVE HIDDEN:', liveModal.className);
+        
+    } catch (err) {
+        console.error('MODAL ERROR:', err);
+        alert('Modal açılırken hata oluştu: ' + err.message);
+    }
 }
 
 function closeDeleteProgressModal() {
