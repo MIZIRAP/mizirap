@@ -2796,11 +2796,18 @@ function openDeleteProgressModal() {
 
         console.log('BEFORE REMOVE HIDDEN:', liveModal.className);
         liveModal.classList.remove('hidden');
+        
         // Force reflow
         void liveModal.offsetWidth;
-        liveBackdrop.classList.remove('opacity-0');
-        liveContent.classList.remove('translate-y-full');
-        console.log('AFTER REMOVE HIDDEN:', liveModal.className);
+        
+        // Use setTimeout to ensure browser renders the display:flex before animating, fixing Safari/WebKit glitches
+        setTimeout(() => {
+            liveBackdrop.classList.remove('opacity-0');
+            liveBackdrop.classList.add('opacity-100');
+            liveContent.classList.remove('translate-y-full');
+            liveContent.classList.add('translate-y-0');
+            console.log('AFTER REMOVE HIDDEN:', liveModal.className);
+        }, 10);
         
     } catch (err) {
         console.error('MODAL ERROR:', err);
@@ -2809,10 +2816,21 @@ function openDeleteProgressModal() {
 }
 
 function closeDeleteProgressModal() {
-    deleteProgressBackdrop.classList.add('opacity-0');
-    deleteProgressModalContent.classList.add('translate-y-full');
+    const liveModal = document.getElementById('deleteProgressModal');
+    const liveBackdrop = document.getElementById('delete-progress-backdrop');
+    const liveContent = document.getElementById('deleteProgressModalContent');
+    
+    if(liveBackdrop) {
+        liveBackdrop.classList.remove('opacity-100');
+        liveBackdrop.classList.add('opacity-0');
+    }
+    if(liveContent) {
+        liveContent.classList.remove('translate-y-0');
+        liveContent.classList.add('translate-y-full');
+    }
+    
     setTimeout(() => {
-        deleteProgressModal.classList.add('hidden');
+        if(liveModal) liveModal.classList.add('hidden');
     }, 300);
 }
 
