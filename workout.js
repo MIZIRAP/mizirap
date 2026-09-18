@@ -2803,12 +2803,33 @@ if (deleteProgressSelectAll) {
     });
 }
 
-if (document.getElementById('btn-delete-progress')) {
-    document.getElementById('btn-delete-progress').addEventListener('click', openDeleteProgressModal);
-}
-if (closeDeleteProgressBtn) closeDeleteProgressBtn.addEventListener('click', closeDeleteProgressModal);
-if (closeDeleteProgressHandle) closeDeleteProgressHandle.addEventListener('click', closeDeleteProgressModal);
-if (deleteProgressBackdrop) deleteProgressBackdrop.addEventListener('click', closeDeleteProgressModal);
+// Event Delegation for Delete Progress Modals
+document.addEventListener('click', (e) => {
+    // Open Delete Progress Modal
+    if (e.target.closest('#btn-delete-progress')) {
+        openDeleteProgressModal();
+    }
+    
+    // Close Delete Progress Modal
+    if (e.target.closest('#close-delete-progress-btn') || 
+        e.target.closest('#close-delete-progress-handle') || 
+        e.target.matches('#delete-progress-backdrop')) {
+        closeDeleteProgressModal();
+    }
+    
+    // Open Confirm Modal
+    if (e.target.closest('#delete-progress-submit')) {
+        if (selectedProgressIds.size > 0) {
+            openConfirmDeleteModal();
+        }
+    }
+    
+    // Close Confirm Modal
+    if (e.target.closest('#confirm-delete-cancel') || 
+        e.target.matches('#confirm-delete-backdrop')) {
+        closeConfirmDeleteModal();
+    }
+});
 
 function openConfirmDeleteModal() {
     confirmDeleteModal.classList.remove('hidden');
@@ -2824,16 +2845,6 @@ function closeConfirmDeleteModal() {
         confirmDeleteModal.classList.add('hidden');
     }, 300);
 }
-
-if (deleteProgressSubmit) {
-    deleteProgressSubmit.addEventListener('click', () => {
-        if (selectedProgressIds.size > 0) {
-            openConfirmDeleteModal();
-        }
-    });
-}
-if (confirmDeleteCancel) confirmDeleteCancel.addEventListener('click', closeConfirmDeleteModal);
-if (confirmDeleteBackdrop) confirmDeleteBackdrop.addEventListener('click', closeConfirmDeleteModal);
 
 if (confirmDeleteYes) {
     confirmDeleteYes.addEventListener('click', async () => {
