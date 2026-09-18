@@ -37,9 +37,38 @@
             overscroll-behavior: none;
         }
 
-        /* Uygulama konteynerinin üst güvenli alan boşluğu */
+        /* ============================================
+           iOS Safe Area — Çentik / Dynamic Island
+           Kalıcı evrensel çözüm (tüm sayfa header'ları)
+           ============================================ */
+
+        /*
+         * KÖK NEDEN ANALİZİ:
+         * - Önceki commit: #app-container'a padding-top eklendi.
+         *   Bu YANLIŞ hedefti. #app-container scroll context'i olduğundan
+         *   padding-top sadece scroll içeriğini iter; sticky/fixed header
+         *   pozisyonlarını ETKİLEMEZ.
+         *
+         * DOĞRU ÇÖZÜM:
+         * - Sticky header'ların 'top' değeri safe-area kadar aşağı taşınmalı.
+         * - Fixed glass-nav için padding-top ile aynı etki sağlanıyor.
+         *
+         * KAPSAM:
+         * - Tüm .view section içindeki header elementleri (herhangi bir derinlikte)
+         * - Sadece app-screen içindekiler (modal sistemindeki header'lar kapsam dışı)
+         * - glass-nav (fixed, ayrı class ile zaten ele alınıyor)
+         */
+
+        /* Tüm sayfa header'ları: sticky top-0 → safe-area kadar aşağıya kaydır */
+        #app-screen .view header {
+            top: env(safe-area-inset-top, 0px) !important;
+            padding-top: max(16px, env(safe-area-inset-top, 0px)) !important;
+        }
+
+        /* app-container'a padding verilmez: scroll context padding,
+           sticky header'ları çentiğin altına taşımaz */
         #app-container {
-            padding-top: env(safe-area-inset-top);
+            /* NO padding-top — sticky headers self-position via 'top' above */
         }
 
         .view.hidden { display: none !important; }
@@ -119,11 +148,13 @@
             overflow: hidden;
         }
 
+        /* 3) Fixed nav (Aktif Antrenman ekranı) */
         .glass-nav {
             background: #F0F2F8;
             border-bottom: 1px solid rgba(199, 196, 215, 0.4);
-            /* iPhone notch / Dynamic Island için güvenli alan */
-            padding-top: max(16px, env(safe-area-inset-top));
+            /* iPhone notch / Dynamic Island: fixed header safe-area padding */
+            padding-top: max(16px, env(safe-area-inset-top, 0px));
+            -webkit-padding-before: max(16px, env(safe-area-inset-top, 0px));
         }
 
 .neo-surface {
