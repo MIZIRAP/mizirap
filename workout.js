@@ -2730,7 +2730,11 @@ const confirmDeleteCancel = document.getElementById('confirm-delete-cancel');
 const confirmDeleteYes = document.getElementById('confirm-delete-yes');
 
 function openDeleteProgressModal() {
-    if (!globalProgressIndex || !globalProgressIndex.exercises) return;
+    console.log('MODAL FUNCTION CALLED. globalProgressIndex:', globalProgressIndex);
+    if (!globalProgressIndex || !globalProgressIndex.exercises) {
+        console.log('EARLY RETURN: globalProgressIndex or exercises is null/undefined');
+        return;
+    }
     
     selectedProgressIds.clear();
     updateDeleteProgressSubmitBtn();
@@ -2804,9 +2808,13 @@ if (deleteProgressSelectAll) {
 }
 
 // Event Delegation for Delete Progress Modals
+window.__openDeleteProgressModal = openDeleteProgressModal;
+
 document.addEventListener('click', (e) => {
+    console.log('DELEGATION HANDLER FIRED', e.target);
     // Open Delete Progress Modal
     if (e.target.closest('#btn-delete-progress')) {
+        console.log('BUTTON MATCHED');
         openDeleteProgressModal();
     }
     
