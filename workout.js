@@ -2800,32 +2800,16 @@ function openDeleteProgressModal() {
         // Force reflow
         void liveModal.offsetWidth;
         
-        // EXTREME FALLBACK: Force CSS inline styles to guarantee visibility
-        liveModal.style.display = 'flex';
-        liveModal.style.visibility = 'visible';
-        liveModal.style.zIndex = '2147483647';
-        liveModal.style.position = 'fixed';
-        liveModal.style.top = '0';
-        liveModal.style.left = '0';
-        liveModal.style.width = '100vw';
-        liveModal.style.height = '100vh';
-        
         // Use setTimeout to ensure browser renders the display:flex before animating, fixing Safari/WebKit glitches
         setTimeout(() => {
             liveBackdrop.classList.remove('opacity-0');
             liveBackdrop.classList.add('opacity-100');
-            liveBackdrop.style.opacity = '1';
-            liveBackdrop.style.backgroundColor = 'rgba(0,0,0,0.5)';
             
             liveContent.classList.remove('translate-y-full');
             liveContent.classList.add('translate-y-0');
-            liveContent.style.transform = 'translateY(0)';
             
             console.log('AFTER REMOVE HIDDEN:', liveModal.className);
-            console.log('MODAL RECT:', liveModal.getBoundingClientRect());
-            console.log('CONTENT RECT:', liveContent.getBoundingClientRect());
-            console.log('PARENT ELEMENT:', liveModal.parentElement.tagName, liveModal.parentElement.className);
-        }, 50);
+        }, 10);
         
     } catch (err) {
         console.error('MODAL ERROR:', err);
