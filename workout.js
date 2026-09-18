@@ -1,4 +1,4 @@
-﻿import { auth, db } from "./firebase-config.js";
+import { auth, db } from "./firebase-config.js";
 import { formatDate, formatCurrency } from "./utils.js";
 import { collection, doc, addDoc, setDoc, getDocs, getDoc, query, orderBy, limit, serverTimestamp, where, onSnapshot, updateDoc, deleteDoc, deleteField, writeBatch } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
 import { escapeHtml, handleFormSubmit } from "./utils.js";
@@ -2738,14 +2738,14 @@ function openDeleteProgressModal() {
     // Render list
     let html = '';
     globalProgressIndex.exercises.forEach(ex => {
-        html += \
+        html += `
         <label class="flex items-center justify-between w-full neo-surface-inset rounded-2xl p-4 cursor-pointer" style="background-color: #F0F2F8; box-shadow: inset 4px 4px 8px #D1D9E6, inset -4px -4px 8px rgba(255, 255, 255, 0.7);">
             <div class="flex items-center gap-3">
-                <input type="checkbox" class="w-5 h-5 rounded border-gray-300 text-[#3B82F6] focus:ring-[#3B82F6] delete-progress-checkbox" value="\">
-                <span class="font-bold text-[#1E293B]">\</span>
+                <input type="checkbox" class="w-5 h-5 rounded border-gray-300 text-[#3B82F6] focus:ring-[#3B82F6] delete-progress-checkbox" value="${ex.exerciseId}">
+                <span class="font-bold text-[#1E293B]">${ex.exerciseName}</span>
             </div>
         </label>
-        \;
+        `;
     });
     deleteProgressList.innerHTML = html;
     
@@ -2774,11 +2774,11 @@ function closeDeleteProgressModal() {
 
 function updateDeleteProgressSubmitBtn() {
     const count = selectedProgressIds.size;
-    deleteProgressCount.textContent = \\ seçildi\;
+    deleteProgressCount.textContent = `${count} seçildi`;
     
     if (count > 0) {
         deleteProgressSubmit.disabled = false;
-        document.getElementById('delete-progress-submit-text').textContent = \\ Egzersizi Sil\;
+        document.getElementById('delete-progress-submit-text').textContent = `${count} Egzersizi Sil`;
     } else {
         deleteProgressSubmit.disabled = true;
         document.getElementById('delete-progress-submit-text').textContent = 'Sil';
@@ -2855,16 +2855,14 @@ if (confirmDeleteYes) {
             // Update the index
             const newExercises = globalProgressIndex.exercises.filter(ex => !selectedProgressIds.has(ex.exerciseId));
             
-            // Recalculate stats for index if needed (simplifying by just retaining new array)
-            // It's a bit complex to perfectly recalculate thisMonthVolume without full data, 
-            // but we'll update what we can easily.
             const indexRef = doc(db, 'users', currentUid, 'summary', 'exerciseProgressIndex');
             batch.set(indexRef, { exercises: newExercises, trackedExerciseCount: newExercises.length }, { merge: true });
             
             await batch.commit();
             
             // Update local state
-            globalProgressIndex.exercises = newExercises; globalProgressIndex.trackedExerciseCount = newExercises.length;
+            globalProgressIndex.exercises = newExercises; 
+            globalProgressIndex.trackedExerciseCount = newExercises.length;
             
             closeConfirmDeleteModal();
             closeDeleteProgressModal();
