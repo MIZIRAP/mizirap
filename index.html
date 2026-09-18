@@ -37,6 +37,11 @@
             overscroll-behavior: none;
         }
 
+        /* Uygulama konteynerinin üst güvenli alan boşluğu */
+        #app-container {
+            padding-top: env(safe-area-inset-top);
+        }
+
         .view.hidden { display: none !important; }
 
         /* Number input up/down oklarını gizle */
@@ -117,6 +122,8 @@
         .glass-nav {
             background: #F0F2F8;
             border-bottom: 1px solid rgba(199, 196, 215, 0.4);
+            /* iPhone notch / Dynamic Island için güvenli alan */
+            padding-top: max(16px, env(safe-area-inset-top));
         }
 
 .neo-surface {
