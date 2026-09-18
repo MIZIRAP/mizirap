@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="tr">
 <head>
     <meta charset="utf-8">
@@ -5592,6 +5592,54 @@
             });
         });
     </script>
+    <!-- Delete Progress Modal -->
+    <div class="hidden fixed inset-0 z-50 flex items-end justify-center" id="deleteProgressModal">
+        <!-- Backdrop -->
+        <div class="absolute inset-0 bg-black/10 backdrop-blur-sm z-10 transition-opacity duration-300 opacity-0" id="delete-progress-backdrop"></div>
+        <!-- Modal Content -->
+        <div class="relative w-full max-w-sm bg-[#F0F2F8] rounded-t-[32px] shadow-[0_-8px_30px_rgba(0,0,0,0.05)] p-6 z-20 flex flex-col items-center transform transition-transform duration-300 translate-y-full pb-8 max-h-[90dvh] overflow-y-auto" id="deleteProgressModalContent">
+            <!-- Drag Handle (Mobile) -->
+            <div class="w-12 h-1.5 bg-gray-300 rounded-full mb-6 cursor-pointer" id="close-delete-progress-handle"></div>
+            
+            <div class="w-full flex justify-between items-center mb-6 px-1">
+                <h2 class="text-xl font-bold text-[#1E293B]">İlerleme Verimi Sil</h2>
+                <button class="w-8 h-8 flex items-center justify-center neo-surface-small rounded-full text-gray-500 hover:text-gray-700 transition-colors" id="close-delete-progress-btn" style="background-color: #F0F2F8; box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);">
+                    <span class="material-symbols-rounded" style="font-size: 20px;">close</span>
+                </button>
+            </div>
+
+            <!-- Content -->
+            <div class="w-full flex flex-col gap-4">
+                <div class="flex justify-between items-center px-2">
+                    <span class="text-sm font-semibold text-gray-500" id="delete-progress-count">0 seçildi</span>
+                    <button class="text-sm font-bold text-[#3B82F6] hover:text-blue-600 transition-colors" id="delete-progress-select-all">Tümünü Seç</button>
+                </div>
+                
+                <div id="delete-progress-list" class="flex flex-col gap-3 w-full max-h-[45vh] overflow-y-auto px-1 py-1">
+                    <!-- Checkboxes injected here -->
+                </div>
+                
+                <button id="delete-progress-submit" class="w-full mt-2 py-4 rounded-full font-bold text-lg transition-all flex justify-center items-center gap-2 neo-surface-small text-red-500 disabled:opacity-50 disabled:text-gray-400" style="background-color: #F0F2F8; box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);" disabled>
+                    <span class="material-symbols-rounded">delete</span>
+                    <span id="delete-progress-submit-text">Sil</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Confirm Delete Modal -->
+    <div class="hidden fixed inset-0 z-[60] flex items-center justify-center" id="confirmDeleteModal">
+        <div class="absolute inset-0 bg-black/20 backdrop-blur-sm z-10 transition-opacity duration-300 opacity-0" id="confirm-delete-backdrop"></div>
+        <div class="relative w-full max-w-[300px] bg-[#F0F2F8] rounded-[32px] shadow-[0_10px_40px_rgba(0,0,0,0.08)] p-6 z-20 flex flex-col items-center transform transition-transform duration-300 scale-95 opacity-0" id="confirmDeleteModalContent">
+            <span class="material-symbols-rounded text-red-500 mb-3" style="font-size: 40px;">warning</span>
+            <h3 class="text-lg font-bold text-[#1E293B] mb-2 text-center">Emin misiniz?</h3>
+            <p class="text-sm text-gray-500 text-center mb-6 font-semibold">Bu işlem geri alınamaz. Seçilen veriler tamamen silinecektir.</p>
+            <div class="flex gap-3 w-full">
+                <button class="flex-1 py-3 rounded-full font-bold text-gray-600 neo-surface-small" id="confirm-delete-cancel" style="background-color: #F0F2F8; box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);">İptal</button>
+                <button class="flex-1 py-3 rounded-full font-bold text-red-500 neo-surface-inset" id="confirm-delete-yes" style="background-color: #F0F2F8; box-shadow: inset 4px 4px 8px #D1D9E6, inset -4px -4px 8px rgba(255, 255, 255, 0.7);">Sil</button>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
 

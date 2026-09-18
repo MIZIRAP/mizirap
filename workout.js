@@ -1,4 +1,4 @@
-import { auth, db } from "./firebase-config.js";
+﻿import { auth, db } from "./firebase-config.js";
 import { formatDate, formatCurrency } from "./utils.js";
 import { collection, doc, addDoc, setDoc, getDocs, getDoc, query, orderBy, limit, serverTimestamp, where, onSnapshot, updateDoc, deleteDoc, deleteField, writeBatch } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
 import { escapeHtml, handleFormSubmit } from "./utils.js";
@@ -2709,3 +2709,192 @@ window.renderProgressList = function() {
 };
 
 
+
+// ====== DELETE PROGRESS LOGIC ======
+let selectedProgressIds = new Set();
+
+const deleteProgressModal = document.getElementById('deleteProgressModal');
+const deleteProgressBackdrop = document.getElementById('delete-progress-backdrop');
+const deleteProgressModalContent = document.getElementById('deleteProgressModalContent');
+const closeDeleteProgressHandle = document.getElementById('close-delete-progress-handle');
+const closeDeleteProgressBtn = document.getElementById('close-delete-progress-btn');
+const deleteProgressList = document.getElementById('delete-progress-list');
+const deleteProgressSubmit = document.getElementById('delete-progress-submit');
+const deleteProgressCount = document.getElementById('delete-progress-count');
+const deleteProgressSelectAll = document.getElementById('delete-progress-select-all');
+
+const confirmDeleteModal = document.getElementById('confirmDeleteModal');
+const confirmDeleteBackdrop = document.getElementById('confirm-delete-backdrop');
+const confirmDeleteModalContent = document.getElementById('confirmDeleteModalContent');
+const confirmDeleteCancel = document.getElementById('confirm-delete-cancel');
+const confirmDeleteYes = document.getElementById('confirm-delete-yes');
+
+function openDeleteProgressModal() {
+    if (!globalProgressIndex || !globalProgressIndex.exercises) return;
+    
+    selectedProgressIds.clear();
+    updateDeleteProgressSubmitBtn();
+    
+    // Render list
+    let html = '';
+    globalProgressIndex.exercises.forEach(ex => {
+        html += \
+        <label class="flex items-center justify-between w-full neo-surface-inset rounded-2xl p-4 cursor-pointer" style="background-color: #F0F2F8; box-shadow: inset 4px 4px 8px #D1D9E6, inset -4px -4px 8px rgba(255, 255, 255, 0.7);">
+            <div class="flex items-center gap-3">
+                <input type="checkbox" class="w-5 h-5 rounded border-gray-300 text-[#3B82F6] focus:ring-[#3B82F6] delete-progress-checkbox" value="\">
+                <span class="font-bold text-[#1E293B]">\</span>
+            </div>
+        </label>
+        \;
+    });
+    deleteProgressList.innerHTML = html;
+    
+    document.querySelectorAll('.delete-progress-checkbox').forEach(cb => {
+        cb.addEventListener('change', (e) => {
+            if (e.target.checked) selectedProgressIds.add(e.target.value);
+            else selectedProgressIds.delete(e.target.value);
+            updateDeleteProgressSubmitBtn();
+        });
+    });
+
+    deleteProgressModal.classList.remove('hidden');
+    // Force reflow
+    void deleteProgressModal.offsetWidth;
+    deleteProgressBackdrop.classList.remove('opacity-0');
+    deleteProgressModalContent.classList.remove('translate-y-full');
+}
+
+function closeDeleteProgressModal() {
+    deleteProgressBackdrop.classList.add('opacity-0');
+    deleteProgressModalContent.classList.add('translate-y-full');
+    setTimeout(() => {
+        deleteProgressModal.classList.add('hidden');
+    }, 300);
+}
+
+function updateDeleteProgressSubmitBtn() {
+    const count = selectedProgressIds.size;
+    deleteProgressCount.textContent = \\ seçildi\;
+    
+    if (count > 0) {
+        deleteProgressSubmit.disabled = false;
+        document.getElementById('delete-progress-submit-text').textContent = \\ Egzersizi Sil\;
+    } else {
+        deleteProgressSubmit.disabled = true;
+        document.getElementById('delete-progress-submit-text').textContent = 'Sil';
+    }
+}
+
+if (deleteProgressSelectAll) {
+    deleteProgressSelectAll.addEventListener('click', () => {
+        if (!globalProgressIndex || !globalProgressIndex.exercises) return;
+        
+        const checkboxes = document.querySelectorAll('.delete-progress-checkbox');
+        if (selectedProgressIds.size === globalProgressIndex.exercises.length) {
+            // Deselect all
+            selectedProgressIds.clear();
+            checkboxes.forEach(cb => cb.checked = false);
+        } else {
+            // Select all
+            globalProgressIndex.exercises.forEach(ex => selectedProgressIds.add(ex.exerciseId));
+            checkboxes.forEach(cb => cb.checked = true);
+        }
+        updateDeleteProgressSubmitBtn();
+    });
+}
+
+if (document.getElementById('btn-delete-progress')) {
+    document.getElementById('btn-delete-progress').addEventListener('click', openDeleteProgressModal);
+}
+if (closeDeleteProgressBtn) closeDeleteProgressBtn.addEventListener('click', closeDeleteProgressModal);
+if (closeDeleteProgressHandle) closeDeleteProgressHandle.addEventListener('click', closeDeleteProgressModal);
+if (deleteProgressBackdrop) deleteProgressBackdrop.addEventListener('click', closeDeleteProgressModal);
+
+function openConfirmDeleteModal() {
+    confirmDeleteModal.classList.remove('hidden');
+    void confirmDeleteModal.offsetWidth;
+    confirmDeleteBackdrop.classList.remove('opacity-0');
+    confirmDeleteModalContent.classList.remove('opacity-0', 'scale-95');
+}
+
+function closeConfirmDeleteModal() {
+    confirmDeleteBackdrop.classList.add('opacity-0');
+    confirmDeleteModalContent.classList.add('opacity-0', 'scale-95');
+    setTimeout(() => {
+        confirmDeleteModal.classList.add('hidden');
+    }, 300);
+}
+
+if (deleteProgressSubmit) {
+    deleteProgressSubmit.addEventListener('click', () => {
+        if (selectedProgressIds.size > 0) {
+            openConfirmDeleteModal();
+        }
+    });
+}
+if (confirmDeleteCancel) confirmDeleteCancel.addEventListener('click', closeConfirmDeleteModal);
+if (confirmDeleteBackdrop) confirmDeleteBackdrop.addEventListener('click', closeConfirmDeleteModal);
+
+if (confirmDeleteYes) {
+    confirmDeleteYes.addEventListener('click', async () => {
+        if (!currentUid || selectedProgressIds.size === 0 || !globalProgressIndex) return;
+        
+        const originalText = confirmDeleteYes.textContent;
+        confirmDeleteYes.textContent = 'Siliniyor...';
+        confirmDeleteYes.disabled = true;
+        
+        try {
+            const batch = writeBatch(db);
+            
+            // Delete individual exercise progress docs
+            selectedProgressIds.forEach(id => {
+                const ref = doc(db, 'users', currentUid, 'exerciseProgress', id);
+                batch.delete(ref);
+            });
+            
+            // Update the index
+            const newExercises = globalProgressIndex.exercises.filter(ex => !selectedProgressIds.has(ex.exerciseId));
+            
+            // Recalculate stats for index if needed (simplifying by just retaining new array)
+            // It's a bit complex to perfectly recalculate thisMonthVolume without full data, 
+            // but we'll update what we can easily.
+            const indexRef = doc(db, 'users', currentUid, 'summary', 'exerciseProgressIndex');
+            batch.set(indexRef, { exercises: newExercises, trackedExerciseCount: newExercises.length }, { merge: true });
+            
+            await batch.commit();
+            
+            // Update local state
+            globalProgressIndex.exercises = newExercises; globalProgressIndex.trackedExerciseCount = newExercises.length;
+            
+            closeConfirmDeleteModal();
+            closeDeleteProgressModal();
+            
+            // Show toast (assuming showToast is available, or alert)
+            if (typeof showToast === 'function') {
+                showToast('İlerleme verileri silindi', 'success');
+            } else {
+                // simple fallback if toast is not available
+                const alertDiv = document.createElement('div');
+                alertDiv.className = 'fixed bottom-24 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white px-4 py-2 rounded-full shadow-lg z-[100] transition-opacity duration-300';
+                alertDiv.textContent = 'İlerleme verileri silindi';
+                document.body.appendChild(alertDiv);
+                setTimeout(() => {
+                    alertDiv.style.opacity = '0';
+                    setTimeout(() => alertDiv.remove(), 300);
+                }, 3000);
+            }
+            
+            // Refresh progress list
+            if (typeof window.renderProgressList === 'function') {
+                window.renderProgressList();
+            }
+            
+        } catch (error) {
+            console.error("Delete progress error:", error);
+            alert("Silinirken bir hata oluştu: " + error.message);
+        } finally {
+            confirmDeleteYes.textContent = originalText;
+            confirmDeleteYes.disabled = false;
+        }
+    });
+}
