@@ -544,7 +544,9 @@ async function finishSession() {
             ? Math.floor((Date.now() - _sessionStartTs.getTime()) / 1000)
             : 0;
             
-        const dateStr = new Date().toISOString().split('T')[0];
+        // Fix: Use local time for calendar day grouping (prevents UTC shift bugs where morning/afternoon split across UTC midnight)
+        const now = new Date();
+        const dateStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
         const currentMonthStr = dateStr.substring(0, 7);
         const sessionName = _day ? _day.name : "İsimsiz Antrenman";
 
