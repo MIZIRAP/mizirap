@@ -144,7 +144,21 @@ async function loadFoodLibrary(uid) {
 }
 
 export function initCalories(uid) {
+    if (!uid) return;
     currentUid = uid;
+    
+    // Fix: Move modals outside of #app-container so fixed positioning works relative to viewport
+    const modalsToTeleport = [
+        document.getElementById('addFoodModal'),
+        document.getElementById('quickAddModal'),
+        document.getElementById('addPortionModal'),
+        document.getElementById('newFoodModal')
+    ];
+    modalsToTeleport.forEach(modal => {
+        if (modal && modal.parentElement) {
+            document.body.appendChild(modal);
+        }
+    });
 
     // Listen to Settings
     const settingsRef = doc(db, "users", uid, "settings", "calories");
