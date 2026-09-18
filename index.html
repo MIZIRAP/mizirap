@@ -53,16 +53,15 @@
          * - Sticky header'ların 'top' değeri safe-area kadar aşağı taşınmalı.
          * - Fixed glass-nav için padding-top ile aynı etki sağlanıyor.
          *
-         * KAPSAM:
-         * - Tüm .view section içindeki header elementleri (herhangi bir derinlikte)
-         * - Sadece app-screen içindekiler (modal sistemindeki header'lar kapsam dışı)
-         * - glass-nav (fixed, ayrı class ile zaten ele alınıyor)
+        /* KAPSAM:
+         * - Tüm .view section içindeki header elementleri
+         * - glass-nav (ayrıca class ile belirtilmiş)
          */
 
-        /* Tüm sayfa header'ları: sticky top-0 → safe-area kadar aşağıya kaydır */
+        /* Tüm sayfa header'ları: top: 0'da kalır, iç padding çentik kadar artar */
         #app-screen .view header {
-            top: env(safe-area-inset-top, 0px) !important;
-            padding-top: max(16px, env(safe-area-inset-top, 0px)) !important;
+            top: 0 !important;
+            padding-top: calc(16px + env(safe-area-inset-top, 0px)) !important;
         }
 
         /* app-container'a padding verilmez: scroll context padding,
@@ -153,8 +152,8 @@
             background: #F0F2F8;
             border-bottom: 1px solid rgba(199, 196, 215, 0.4);
             /* iPhone notch / Dynamic Island: fixed header safe-area padding */
-            padding-top: max(16px, env(safe-area-inset-top, 0px));
-            -webkit-padding-before: max(16px, env(safe-area-inset-top, 0px));
+            padding-top: calc(16px + env(safe-area-inset-top, 0px));
+            -webkit-padding-before: calc(16px + env(safe-area-inset-top, 0px));
         }
 
 .neo-surface {
