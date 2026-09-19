@@ -215,6 +215,7 @@ function _buildExState() {
         const prevBest = _prevData?.[ex.id];
         _exState[ex.id] = {
             sets,
+            initialSetsSnapshot: JSON.stringify(sets),
             activeSetIdx: 0,
             prevBestWeight: prevBest?.sets?.[0]?.weight ?? null,
             prevBestReps:   prevBest?.sets?.[0]?.reps ?? null
@@ -559,23 +560,54 @@ async function finishSession() {
                 const state = _exState[ex.id];
                 if (!state) continue;
 
-                const sets = state.sets.map(s => ({
+                // DEEP COMPARISON: Check if this exercise was touched at all
+                // 1. Did they complete any sets? (activeSetIdx > 0 means isCompleted changed)
+                // 2. Did they change any weight/reps/rpe? (compare current sets to initial snapshot)
+                const currentSetsStr = JSON.stringify(state.sets);
+                const hasCompletedSets = state.activeSetIdx > 0;
+                const hasModifiedValues = currentSetsStr !== state.initialSetsSnapshot;
+
+                // If NO sets are completed AND NO values were changed, skip this exercise entirely!
+                if (!hasCompletedSets && !hasModifiedValues) {
+                    console.log(`[finishSession] Skipping unmodified exercise: ${ex.id}`);
+                    continue;
+                }
+
+                // WARNING: The volume calculation still counts ALL sets (even uncompleted ones) 
+                // if the exercise was modified. We should only count completed sets for volume!
+                // We'll slice the sets to only include the ones that were actually completed.
+                const completedSets = state.sets.slice(0, state.activeSetIdx).map(s => ({
                     weight: s.weight,
                     reps:   s.reps,
                     rpe:    s.rpe
                 }));
                 
+                // If they changed the weight/reps but never checked a single set, completedSets is empty.
+                // We save it to session log so their draft changes aren't lost, but we skip progress tracking
+                // if there's no volume to track.
+                
+                // For the session log (workout_logs), we keep ALL sets so their edits aren't lost if they view history
+                const sessionLogSets = state.sets.map(s => ({
+                    weight: s.weight,
+                    reps:   s.reps,
+                    rpe:    s.rpe
+                }));
+
                 exercises[ex.id] = {
                     name: ex.name,
-                    sets: sets
+                    sets: sessionLogSets
                 };
                 
-                // Progress calculations
+                if (completedSets.length === 0) {
+                    continue; // No completed sets to add to progress/volume index
+                }
+                
+                // Progress calculations ONLY use completed sets
                 let totalVolume = 0;
                 let maxWeight = 0;
                 let maxRepsAtMaxWeight = 0;
                 
-                for (const s of sets) {
+                for (const s of completedSets) {
                     if (s.weight > 0 && s.reps > 0) {
                         totalVolume += (s.weight * s.reps);
                     }
@@ -606,7 +638,7 @@ async function finishSession() {
                 } else if (maxWeight === progressUpdates[safeId].maxWeight && maxRepsAtMaxWeight > progressUpdates[safeId].maxRepsAtMaxWeight) {
                     progressUpdates[safeId].maxRepsAtMaxWeight = maxRepsAtMaxWeight;
                 }
-                progressUpdates[safeId].sets.push(...sets);
+                progressUpdates[safeId].sets.push(...completedSets);
             }
         }
 
@@ -642,6 +674,25 @@ async function finishSession() {
         
         // 1. Session Log
         const sessionRef = doc(db, 'users', _uid, 'workout_logs', _sessionId);
+        
+        if (Object.keys(exercises).length === 0) {
+            console.log('[finishSession] No modified exercises found. Deleting empty session log.');
+            batch.delete(sessionRef);
+            
+            // Navigate back to workout home
+            if (btn) {
+                btn.disabled = false;
+                btn.innerHTML = `<span class="material-symbols-rounded" style="font-size:16px">flag</span> Bitir`;
+            }
+            document.getElementById('view-active-session').classList.add('hidden');
+            document.getElementById('view-workout').classList.remove('hidden');
+            if (typeof renderSplitView === 'function') renderSplitView();
+            
+            await batch.commit();
+            _clearSession();
+            return; // EXIT EARLY! No progress/index updates.
+        }
+
         batch.set(sessionRef, { status: 'completed', durationSeconds: elapsed, exercises }, { merge: true });
         
         // Month transition logic
