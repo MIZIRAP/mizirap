@@ -569,7 +569,6 @@ async function finishSession() {
 
                 // If NO sets are completed AND NO values were changed, skip this exercise entirely!
                 if (!hasCompletedSets && !hasModifiedValues) {
-                    console.log(`[finishSession] Skipping unmodified exercise: ${ex.id}`);
                     continue;
                 }
 
@@ -676,7 +675,6 @@ async function finishSession() {
         const sessionRef = doc(db, 'users', _uid, 'workout_logs', _sessionId);
         
         if (Object.keys(exercises).length === 0) {
-            console.log('[finishSession] No modified exercises found. Deleting empty session log.');
             batch.delete(sessionRef);
             
             // Navigate back to workout home

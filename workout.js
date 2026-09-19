@@ -1183,7 +1183,7 @@ function _initExSortable(listEl, splitId, dayIdx) {
         onEnd: function(evt) {
             // Keep drag lock active long enough to swallow the synthetic click
             setTimeout(() => { _isDragging = false; }, 300);
-            console.log('Ex onEnd tetiklendi', evt);
+
             if (evt.oldIndex === evt.newIndex) return; // No change
             const split = splits.find(s => s.id === splitId);
             if(!split) return;
@@ -1224,7 +1224,7 @@ function _initDaySortable(listEl, splitId) {
         onEnd: function(evt) {
             // Keep drag lock active long enough to swallow the synthetic click
             setTimeout(() => { _isDragging = false; }, 300);
-            console.log('Day onEnd tetiklendi', evt);
+
             if (evt.oldIndex === evt.newIndex) return; // No change
             const split = splits.find(s => s.id === splitId);
             if(!split) return;
@@ -2736,7 +2736,7 @@ const confirmDeleteYes = document.getElementById('confirm-delete-yes');
 
 function openDeleteProgressModal() {
     try {
-        console.log('MODAL FUNCTION CALLED. globalProgressIndex:', globalProgressIndex);
+
         
         // RE-FETCH ALL DOM ELEMENTS TO GUARANTEE LIVE REFERENCES
         const liveModal = document.getElementById('deleteProgressModal');
@@ -2752,7 +2752,7 @@ function openDeleteProgressModal() {
         }
 
         if (!globalProgressIndex || !globalProgressIndex.exercises) {
-            console.log('EARLY RETURN: globalProgressIndex or exercises is null/undefined');
+
             return;
         }
         
@@ -2773,7 +2773,7 @@ function openDeleteProgressModal() {
             <label class="flex items-center justify-between w-full neo-surface-inset rounded-2xl p-4 cursor-pointer" style="background-color: #F0F2F8; box-shadow: inset 4px 4px 8px #D1D9E6, inset -4px -4px 8px rgba(255, 255, 255, 0.7);">
                 <div class="flex items-center gap-3">
                     <input type="checkbox" class="w-5 h-5 rounded border-gray-300 text-[#3B82F6] focus:ring-[#3B82F6] delete-progress-checkbox" value="${ex.exerciseId}">
-                    <span class="font-bold text-[#1E293B]">${ex.exerciseName}</span>
+                    <span class="font-bold text-[#1E293B]">${ex.exerciseName || ex.name || 'Bilinmeyen Egzersiz'}</span>
                 </div>
             </label>
             `;
@@ -2799,7 +2799,7 @@ function openDeleteProgressModal() {
             });
         });
 
-        console.log('BEFORE REMOVE HIDDEN:', liveModal.className);
+
         liveModal.classList.remove('hidden');
         
         // Force reflow
@@ -2813,7 +2813,7 @@ function openDeleteProgressModal() {
             liveContent.classList.remove('translate-y-full');
             liveContent.classList.add('translate-y-0');
             
-            console.log('AFTER REMOVE HIDDEN:', liveModal.className);
+
         }, 10);
         
     } catch (err) {
@@ -2876,10 +2876,10 @@ if (deleteProgressSelectAll) {
 window.__openDeleteProgressModal = openDeleteProgressModal;
 
 document.addEventListener('click', (e) => {
-    console.log('DELEGATION HANDLER FIRED', e.target);
+
     // Open Delete Progress Modal
     if (e.target.closest('#btn-delete-progress')) {
-        console.log('BUTTON MATCHED');
+
         openDeleteProgressModal();
     }
     
@@ -2936,17 +2936,41 @@ if (confirmDeleteYes) {
                 batch.delete(ref);
             });
             
-            // Update the index
+            // Update the index: remove deleted exercises and adjust volume statistics
             const newExercises = globalProgressIndex.exercises.filter(ex => !selectedProgressIds.has(ex.exerciseId));
+            const deletedExercises = globalProgressIndex.exercises.filter(ex => selectedProgressIds.has(ex.exerciseId));
+            
+            // Subtract deleted exercises' lastVolume from thisMonthVolume.
+            // We use lastVolume from the index (the most recent session's volume for that exercise)
+            // because the index does not store per-month breakdown per exercise.
+            // totalSessions is NOT decremented: it counts total workout sessions completed,
+            // not per-exercise sessions, so removing an exercise's data doesn't reduce session count.
+            let volumeToRemove = 0;
+            deletedExercises.forEach(ex => {
+                volumeToRemove += (ex.lastVolume || 0);
+            });
+            
+            let newThisMonthVolume = Math.max(0, (globalProgressIndex.thisMonthVolume || 0) - volumeToRemove);
+            const lastMonthVolume = globalProgressIndex.lastMonthVolume || 0;
+            let newVolumeChangePercent = lastMonthVolume > 0
+                ? ((newThisMonthVolume - lastMonthVolume) / lastMonthVolume) * 100
+                : (newThisMonthVolume > 0 ? 100 : 0);
             
             const indexRef = doc(db, 'users', currentUid, 'summary', 'exerciseProgressIndex');
-            batch.set(indexRef, { exercises: newExercises, trackedExerciseCount: newExercises.length }, { merge: true });
+            batch.set(indexRef, {
+                exercises: newExercises,
+                trackedExerciseCount: newExercises.length,
+                thisMonthVolume: newThisMonthVolume,
+                volumeChangePercent: newVolumeChangePercent
+            }, { merge: true });
             
             await batch.commit();
             
             // Update local state
-            globalProgressIndex.exercises = newExercises; 
+            globalProgressIndex.exercises = newExercises;
             globalProgressIndex.trackedExerciseCount = newExercises.length;
+            globalProgressIndex.thisMonthVolume = newThisMonthVolume;
+            globalProgressIndex.volumeChangePercent = newVolumeChangePercent;
             
             closeConfirmDeleteModal();
             closeDeleteProgressModal();

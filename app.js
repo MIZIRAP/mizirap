@@ -143,32 +143,32 @@ window.showView = async function(viewId) {
         try {
             switch (viewId) {
                 case 'view-calories': {
-                    const { initCalories } = await import('./calories.js?v=1787428046');
+                    const { initCalories } = await import('./calories.js?v=20260920');
                     initCalories(uid);
                     break;
                 }
                 case 'view-finance': {
-                    const { initFinance } = await import('./finance.js');
+                    const { initFinance } = await import('./finance.js?v=20260920');
                     initFinance(uid);
                     break;
                 }
                 case 'view-books': {
-                    const { initBooks } = await import('./books.js?v=1787428044');
+                    const { initBooks } = await import('./books.js?v=20260920');
                     initBooks(uid);
                     break;
                 }
                 case 'view-movies': {
-                    const { initMovies } = await import('./movies.js?v=1787428044');
+                    const { initMovies } = await import('./movies.js?v=20260920');
                     initMovies(uid);
                     break;
                 }
                 case 'view-shopping': {
-                    const { initShopping } = await import('./shopping.js');
+                    const { initShopping } = await import('./shopping.js?v=20260920');
                     initShopping(uid);
                     break;
                 }
                 case 'view-tools': {
-                    const { initTools } = await import('./tools.js?v=1787428045');
+                    const { initTools } = await import('./tools.js?v=20260920');
                     initTools(uid);
                     break;
                 }
