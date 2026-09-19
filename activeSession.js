@@ -680,6 +680,7 @@ async function finishSession() {
             batch.delete(sessionRef);
             
             // Navigate back to workout home
+            _stopTimer();
             if (btn) {
                 btn.disabled = false;
                 btn.innerHTML = `<span class="material-symbols-rounded" style="font-size:16px">flag</span> Bitir`;
@@ -689,7 +690,6 @@ async function finishSession() {
             if (typeof renderSplitView === 'function') renderSplitView();
             
             await batch.commit();
-            _clearSession();
             return; // EXIT EARLY! No progress/index updates.
         }
 
