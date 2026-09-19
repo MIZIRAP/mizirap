@@ -135,7 +135,7 @@ window.showView = async function(viewId) {
         if (!loader) {
             loader = document.createElement('div');
             loader.id = 'lazy-loader';
-            loader.className = 'fixed inset-0 z-[200] flex items-center justify-center bg-[#F0F2F8]/80 backdrop-blur-sm';
+            loader.className = 'fixed inset-0 z-[200] flex items-center justify-center bg-[#F0F2F8]';
             loader.innerHTML = '<div class="w-10 h-10 rounded-full border-4 border-[#D1D9E6] border-t-[#3B82F6] animate-spin"></div>';
             document.body.appendChild(loader);
         }
