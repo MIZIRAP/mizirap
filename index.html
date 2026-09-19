@@ -61,7 +61,7 @@
         /* Tüm sayfa header'ları: top: 0'da kalır, iç padding çentik kadar artar */
         #app-screen .view header {
             top: 0 !important;
-            padding-top: calc(16px + env(safe-area-inset-top, 0px)) !important;
+            padding-top: env(safe-area-inset-top, 20px) !important;
         }
 
         /* app-container'a padding verilmez: scroll context padding,
@@ -152,8 +152,8 @@
             background: #F0F2F8;
             border-bottom: 1px solid rgba(199, 196, 215, 0.4);
             /* iPhone notch / Dynamic Island: fixed header safe-area padding */
-            padding-top: calc(16px + env(safe-area-inset-top, 0px));
-            -webkit-padding-before: calc(16px + env(safe-area-inset-top, 0px));
+            padding-top: env(safe-area-inset-top, 20px) !important;
+            -webkit-padding-before: env(safe-area-inset-top, 20px) !important;
         }
 
 .neo-surface {
