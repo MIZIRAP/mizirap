@@ -2565,9 +2565,10 @@ window.renderProgressList = function() {
     
     if (currentProgressFilter !== 'Tümü') {
         filtered = filtered.filter(ex => {
+            const safeExName = ex.exerciseName || ex.name || '';
             // Check muscle map
-            if (window.EXERCISE_MUSCLE_MAPPING && window.EXERCISE_MUSCLE_MAPPING[ex.exerciseName]) {
-                const mapData = window.EXERCISE_MUSCLE_MAPPING[ex.exerciseName];
+            if (window.EXERCISE_MUSCLE_MAPPING && window.EXERCISE_MUSCLE_MAPPING[safeExName]) {
+                const mapData = window.EXERCISE_MUSCLE_MAPPING[safeExName];
                 const TR_MAP = {
                     'chest': 'Göğüs', 'upper-back': 'Sırt', 'lower-back': 'Bel', 'deltoids': 'Omuz', 
                     'biceps': 'Biceps', 'triceps': 'Triceps', 'quadriceps': 'Bacak', 'hamstrings': 'Arka Bacak',
@@ -2587,7 +2588,10 @@ window.renderProgressList = function() {
     }
     
     if (currentProgressSearch) {
-        filtered = filtered.filter(ex => ex.exerciseName.toLowerCase().includes(currentProgressSearch));
+        filtered = filtered.filter(ex => {
+            const safeExName = (ex.exerciseName || ex.name || '').toLowerCase();
+            return safeExName.includes(currentProgressSearch);
+        });
     }
     
     // Sort by last volume descending? Or leave as is (already sorted probably).
@@ -2606,7 +2610,7 @@ window.renderProgressList = function() {
         if (ex.isNewPR) {
             changeHtml = `<div class="bg-amber-100 text-amber-700 text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wide flex items-center gap-1 shadow-sm"><span class="material-symbols-rounded text-[12px]">workspace_premium</span>Yeni PR!</div>`;
         } else {
-            const ch = ex.volumeChangePercent || 0;
+            const ch = ex.changePercent ?? ex.volumeChangePercent ?? 0;
             if (ch > 0) {
                 changeHtml = `<div class="text-[#22C55E] text-xs font-bold flex items-center"><span class="material-symbols-rounded text-[14px]">trending_up</span>%${ch}</div>`;
             } else if (ch < 0) {
@@ -2645,13 +2649,14 @@ window.renderProgressList = function() {
             </svg>`;
         }
         
+        const safeExName = ex.exerciseName || ex.name || 'Bilinmeyen Egzersiz';
         const prText = ex.personalRecord ? `PR: ${ex.personalRecord.weight}kg (${ex.personalRecord.reps} rep)` : '';
-        const initial = ex.exerciseName.charAt(0).toUpperCase();
+        const initial = safeExName.charAt(0).toUpperCase();
         
         // Find category for badge
         let catText = 'Diğer';
-        if (window.EXERCISE_MUSCLE_MAPPING && window.EXERCISE_MUSCLE_MAPPING[ex.exerciseName]) {
-            const mapData = window.EXERCISE_MUSCLE_MAPPING[ex.exerciseName];
+        if (window.EXERCISE_MUSCLE_MAPPING && window.EXERCISE_MUSCLE_MAPPING[safeExName]) {
+            const mapData = window.EXERCISE_MUSCLE_MAPPING[safeExName];
             if (mapData.primary && mapData.primary[0]) {
                 const TR_MAP = {
                     'chest': 'Göğüs', 'upper-back': 'Sırt', 'lower-back': 'Bel', 'deltoids': 'Omuz', 
@@ -2677,7 +2682,7 @@ window.renderProgressList = function() {
         }
         
         html += `
-        <div onclick="openProgressDetail('${ex.exerciseId}', '${ex.exerciseName}')" class="bg-[#F0F2F8] p-4 rounded-[20px] active:scale-[0.99] transition-transform flex flex-col gap-3" style="background-color: #F0F2F8; box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);">
+        <div onclick="openProgressDetail('${ex.exerciseId}', '${safeExName.replace(/'/g, "\\'")}')" class="bg-[#F0F2F8] p-4 rounded-[20px] active:scale-[0.99] transition-transform flex flex-col gap-3" style="background-color: #F0F2F8; box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);">
             <div class="flex justify-between items-center">
                 <div class="flex items-center gap-2">
                     <span class="bg-[#E2E8F0] text-[#475569] text-[10px] font-bold px-2 py-0.5 rounded-md uppercase tracking-wider">${catText}</span>
@@ -2691,7 +2696,7 @@ window.renderProgressList = function() {
                     ${initial}
                 </div>
                 <div class="flex-1 min-w-0">
-                    <h4 class="font-bold text-sm text-[#1E293B] truncate">${ex.exerciseName}</h4>
+                    <h4 class="font-bold text-sm text-[#1E293B] truncate">${safeExName}</h4>
                     <div class="flex items-center justify-between mt-1">
                         <div class="flex items-center gap-2">
                             ${changeHtml}
