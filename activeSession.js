@@ -461,7 +461,7 @@ function sessionStepWeight(exId, setIdx, delta) {
     set.weight = Math.max(0, Math.round((set.weight + delta) * 10) / 10);
     _refreshWeightRepsDisplay(exId, setIdx, set);
     _refreshE1RMDisplay(exId, setIdx, set);
-    _debounceSaveSet(exId, setIdx);
+    _persistSessionState();
 };
 
 function sessionStepReps(exId, setIdx, delta) {
@@ -470,7 +470,7 @@ function sessionStepReps(exId, setIdx, delta) {
     set.reps = Math.max(1, set.reps + delta);
     _refreshWeightRepsDisplay(exId, setIdx, set);
     _refreshE1RMDisplay(exId, setIdx, set);
-    _debounceSaveSet(exId, setIdx);
+    _persistSessionState();
 };
 
 function sessionSetRPE(exId, setIdx, rpe) {
@@ -479,7 +479,7 @@ function sessionSetRPE(exId, setIdx, rpe) {
     set.rpe = set.rpe === rpe ? null : rpe;
     _refreshRPEButtons(exId, setIdx, set);
     _refreshE1RMDisplay(exId, setIdx, set);
-    _debounceSaveSet(exId, setIdx);
+    _persistSessionState();
 };
 
 
@@ -537,6 +537,14 @@ function getSafeExerciseId(exName) {
 
 async function finishSession() {
     if (!auth.currentUser) return;
+    
+    // Clear any pending debounced save since we are saving everything now
+    if (_sessionSaveTimer) {
+        clearTimeout(_sessionSaveTimer);
+        _sessionSaveTimer = null;
+        _persistPending = false;
+    }
+    
     const btn = document.getElementById('session-finish-btn');
     if (btn) { btn.disabled = true; btn.textContent = 'Kaydediliyor...'; }
 
@@ -919,16 +927,30 @@ function _refreshRPEButtons(exId, setIdx, set) {
 // ─── Firestore persistence ─────────────────────────────────────────────────
 
 let _sessionSaveTimer = null;
+let _persistPending = false;
 
-function _debounceSaveSet(exId, setIdx) {
+function _persistSessionState() {
+    _persistPending = true;
     if (_sessionSaveTimer) clearTimeout(_sessionSaveTimer);
     _sessionSaveTimer = setTimeout(() => {
-        _persistSessionState();
         _sessionSaveTimer = null;
-    }, 5000); // 5 seconds debounce
+        _persistPending = false;
+        _flushPersistSessionState();
+    }, 800); // 800ms debounce
 }
 
-async function _persistSessionState() {
+function flushPendingSessionState() {
+    if (_persistPending) {
+        if (_sessionSaveTimer) {
+            clearTimeout(_sessionSaveTimer);
+            _sessionSaveTimer = null;
+        }
+        _persistPending = false;
+        _flushPersistSessionState(); // Fire and forget
+    }
+}
+
+async function _flushPersistSessionState() {
     if (!_uid || !_sessionId) return;
     try {
         const sessionRef = doc(db, 'users', _uid, 'workout_logs', _sessionId);
@@ -950,6 +972,16 @@ async function _persistSessionState() {
         console.error('[activeSession] _persistSessionState error:', e);
     }
 }
+
+// Flush pending changes before the user leaves or switches tabs
+window.addEventListener('beforeunload', () => {
+    flushPendingSessionState();
+});
+document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'hidden') {
+        flushPendingSessionState();
+    }
+});
 
 
 // ─── Helper ────────────────────────────────────────────────────────────────
