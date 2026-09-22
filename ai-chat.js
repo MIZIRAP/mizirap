@@ -166,6 +166,14 @@ async function buildAiContext() {
         } else {
             context += `- Mevcut Finans Kategorileri: Yok\n`;
         }
+
+        const pmSnap = await getDocs(collection(db, "users", currentUid, "finance_payment_methods"));
+        if (!pmSnap.empty) {
+            const pmNames = pmSnap.docs.map(d => `'${d.data().name}' (ID: ${d.id})`);
+            context += `- Mevcut Ödeme Yöntemleri: ${pmNames.join(', ')}\n`;
+        } else {
+            context += `- Mevcut Ödeme Yöntemleri: Yok\n`;
+        }
     } catch(err) {
         console.error("Context build error:", err);
     }
@@ -176,15 +184,18 @@ async function buildAiContext() {
 const aiTools = [{
     function_declarations: [
         {
-            name: "addShoppingItem",
-            description: "Kullanıcının alışveriş/market listesine yeni bir öğe ekler.",
+            name: "addShoppingItems",
+            description: "Kullanıcının alışveriş/market listesine bir veya birden fazla öğe ekler.",
             parameters: {
                 type: "OBJECT",
                 properties: {
-                    itemName: { type: "STRING", description: "Alınacak ürünün adı (örn. Süt, Ekmek)" },
-                    quantity: { type: "STRING", description: "Varsa miktar (örn. 2 litre, 1 paket)" }
+                    items: { 
+                        type: "ARRAY", 
+                        items: { type: "STRING" },
+                        description: "Alınacak ürünlerin adları (örn. ['Süt', 'Ekmek'])" 
+                    }
                 },
-                required: ["itemName"]
+                required: ["items"]
             }
         },
         {
@@ -196,6 +207,7 @@ const aiTools = [{
                     amount: { type: "NUMBER", description: "İşlem tutarı (pozitif sayı)" },
                     type: { type: "STRING", description: "İşlem türü. Yalnızca 'expense' (gider) veya 'income' (gelir)." },
                     categoryId: { type: "STRING", description: "Mevcut Finans Kategorileri listesindeki uygun kategorinin ID'si. Yoksa boş bırakın." },
+                    paymentMethodId: { type: "STRING", description: "Mevcut Ödeme Yöntemleri listesindeki uygun ID. Yoksa boş bırakın." },
                     description: { type: "STRING", description: "İşlemin açıklaması" }
                 },
                 required: ["amount", "type", "description"]
@@ -300,9 +312,10 @@ window.showFunctionConfirmation = function(funcCall) {
     let title = "Bilinmeyen İşlem";
     let desc = "";
 
-    if (funcCall.name === "addShoppingItem") {
+    if (funcCall.name === "addShoppingItems") {
         title = "Alışveriş Listesine Ekle";
-        desc = `'${args.itemName}' eklensin mi?`;
+        const itemsList = args.items || [];
+        desc = `Şunlar eklensin mi: ${itemsList.join(', ')}?`;
     } else if (funcCall.name === "addFinanceTransaction") {
         title = "Finans İşlemi Ekle";
         const t = args.type === 'expense' ? 'Gider' : 'Gelir';
@@ -338,20 +351,38 @@ window.confirmFunctionCall = async function() {
     let message = "İşlem başarıyla tamamlandı.";
 
     try {
-        if (pendingFunctionCall.name === "addShoppingItem") {
-            await addDoc(collection(db, "users", currentUid, "shoppingList"), {
-                title: pendingFunctionCall.args.itemName,
-                done: false,
-                createdAt: serverTimestamp()
+        if (pendingFunctionCall.name === "addShoppingItems") {
+            const items = pendingFunctionCall.args.items || [];
+            if (!Array.isArray(items) || items.length === 0) throw new Error("Eklenecek ürün bulunamadı.");
+            
+            const promises = items.map(itemName => {
+                return addDoc(collection(db, "users", currentUid, "shoppingList"), {
+                    title: itemName,
+                    done: false,
+                    createdAt: serverTimestamp()
+                });
             });
+            await Promise.all(promises);
+            
         } else if (pendingFunctionCall.name === "addFinanceTransaction") {
+            const amount = parseFloat(pendingFunctionCall.args.amount);
+            if (isNaN(amount) || amount <= 0) throw new Error("Geçersiz veya eksik işlem tutarı.");
+            
+            let pmId = pendingFunctionCall.args.paymentMethodId;
+            if (!pmId) {
+                const pmSnap = await getDocs(collection(db, "users", currentUid, "finance_payment_methods"));
+                if (!pmSnap.empty) {
+                    pmId = pmSnap.docs[0].id;
+                }
+            }
+
             const dateStr = new Date().toISOString().split('T')[0];
             await addDoc(collection(db, "users", currentUid, "finance_transactions"), {
                 title: pendingFunctionCall.args.description || "AI İşlemi",
-                amount: parseFloat(pendingFunctionCall.args.amount) || 0,
+                amount: amount,
                 type: pendingFunctionCall.args.type === 'expense' ? 'expense' : 'income',
                 categoryId: pendingFunctionCall.args.categoryId || null,
-                paymentMethodId: null,
+                paymentMethodId: pmId || null,
                 dateStr: dateStr,
                 createdAt: serverTimestamp()
             });
@@ -360,6 +391,12 @@ window.confirmFunctionCall = async function() {
         console.error("Function exec error:", err);
         status = "error";
         message = err.message;
+        
+        const errCard = document.getElementById("pending-func-card");
+        if (errCard) errCard.innerHTML = `<p class="text-xs text-error font-bold text-center py-2">İşlem başarısız: ${err.message}</p>`;
+        
+        sendFunctionResponse(status, message);
+        return;
     }
 
     sendFunctionResponse(status, message);
