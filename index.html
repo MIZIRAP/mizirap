@@ -5674,17 +5674,17 @@
     </div>
 
     <!-- AI Chat Button -->
-    <button id="ai-chat-fab" class="fixed bottom-6 right-6 z-40 w-14 h-14 rounded-full flex items-center justify-center transition-transform hover:scale-105 active:scale-95" style="background-color: #F0F2F8; box-shadow: 6px 6px 12px #D1D9E6, -6px -6px 12px rgba(255, 255, 255, 0.7);" onclick="window.toggleAiChatPanel()">
+    <button id="ai-chat-fab" class="fixed w-14 h-14 rounded-full flex items-center justify-center transition-transform hover:scale-105 active:scale-95" style="bottom: 24px; right: 24px; z-index: 70; background-color: #F0F2F8; box-shadow: 6px 6px 12px #D1D9E6, -6px -6px 12px rgba(255, 255, 255, 0.7);" onclick="window.toggleAiChatPanel()">
         <span class="material-symbols-rounded text-neon-purple text-2xl">smart_toy</span>
     </button>
 
     <!-- AI Chat Panel -->
-    <div id="ai-chat-panel" class="hidden fixed inset-0 z-50 flex items-end justify-center pointer-events-none">
+    <div id="ai-chat-panel" class="hidden fixed inset-0 flex items-end justify-center" style="z-index: 80;">
         <!-- Backdrop -->
-        <div id="ai-chat-backdrop" class="absolute inset-0 bg-black/10 backdrop-blur-sm z-10 opacity-0 transition-opacity pointer-events-auto" onclick="window.toggleAiChatPanel()"></div>
+        <div id="ai-chat-backdrop" class="absolute inset-0 bg-black/10 backdrop-blur-sm z-10 opacity-0 transition-opacity" onclick="window.toggleAiChatPanel()"></div>
         
         <!-- Panel -->
-        <div id="ai-chat-content" class="relative w-full max-w-md bg-[#F0F2F8] rounded-t-[32px] shadow-[0_-8px_30px_rgba(0,0,0,0.05)] flex flex-col z-20 transform translate-y-full transition-transform duration-300 pointer-events-auto" style="height: 80dvh;">
+        <div id="ai-chat-content" class="relative w-full max-w-sm bg-[#F0F2F8] rounded-t-[32px] shadow-[0_-8px_30px_rgba(0,0,0,0.05)] flex flex-col z-20 transform translate-y-full transition-transform duration-300 max-h-[85dvh]" style="height: 600px;">
             
             <!-- Header -->
             <div class="flex items-center justify-between px-6 py-4 border-b border-outline-variant/30">
