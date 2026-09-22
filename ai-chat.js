@@ -154,7 +154,11 @@ window.sendAiMessage = async function() {
     chatInput.value = '';
     
     // Add to history
-    chatHistory.push({ role: "user", parts: [{ text }] });
+    if (chatHistory.length > 0 && chatHistory[chatHistory.length - 1].role === "user") {
+        chatHistory[chatHistory.length - 1].parts[0].text += "\n" + text;
+    } else {
+        chatHistory.push({ role: "user", parts: [{ text }] });
+    }
 
     // Show loading
     appendLoading();
@@ -183,7 +187,6 @@ window.sendAiMessage = async function() {
 
         if (!res.ok) {
             console.error("Gemini API Error:", data);
-            chatHistory.pop(); // remove user message on error
             if (res.status === 400 && data.error && data.error.message.includes('API key not valid')) {
                 appendMessage('model', 'API anahtarınız geçersiz görünüyor, Ayarlar\'dan kontrol edin.', true);
             } else {
@@ -202,7 +205,6 @@ window.sendAiMessage = async function() {
 
     } catch (err) {
         removeLoading();
-        chatHistory.pop();
         console.error("Gemini request failed:", err);
         appendMessage('model', 'Bağlantı hatası oluştu, lütfen tekrar deneyin.');
     } finally {
