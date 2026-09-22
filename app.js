@@ -9,6 +9,7 @@ import { clearAllListeners, clearAllFirestoreListeners } from "./listenerManager
 import { clearSharedState } from "./sharedState.js";
 import { initWorkout, renderSplitView } from "./workout.js";
 import "./activeSession.js";
+import { initAiChat } from "./ai-chat.js";
 // ---------- DOM referansları ----------
 const authScreen = document.getElementById("auth-screen");
 const appScreen = document.getElementById("app-screen");
@@ -58,6 +59,7 @@ onAuthStateChanged(auth, async (user) => {
             initProfile(user.uid);
             initHistory(user.uid);
             initWorkout(user.uid);
+            initAiChat(user.uid);
         } catch (err) {
             console.error("Login transition error:", err);
             alert("Giriş yapılırken bir hata oluştu: " + err.message);
