@@ -1,9 +1,12 @@
 import { db, auth } from "./firebase-config.js";
-import { doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+import { doc, getDoc, setDoc, collection, addDoc, serverTimestamp, getDocs } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+import { getProfileData } from "./sharedState.js";
+import { getDailySummaryRef } from "./dashboard.js";
 
 // State
 let geminiApiKey = null;
 let chatHistory = [];
+let currentUid = null;
 const systemInstruction = "Sen MIZIRAP adlı kişisel takip uygulamasının asistanısın. Kullanıcıya beslenme, spor/antrenman ve finans konularında yardımcı oluyorsun. Kısa, net ve Türkçe cevap ver.";
 
 // DOM Elements
@@ -23,6 +26,7 @@ export async function initAiChat(uid) {
     if (!uid) return;
     
     // Reset state on login
+    currentUid = uid;
     chatHistory = [];
     geminiApiKey = null;
     chatMessages.innerHTML = ''; // clear old messages
@@ -139,6 +143,69 @@ function removeLoading() {
     if (loading) loading.remove();
 }
 
+// Generate Context
+async function buildAiContext() {
+    if (!currentUid) return systemInstruction;
+    
+    let context = systemInstruction + "\n\nEk Bağlam:\n";
+    try {
+        const profile = await getProfileData(currentUid);
+        if (profile) {
+            context += `- Kullanıcı Profili: Kilo: ${profile.weight || 'Belirtilmemiş'}, Boy: ${profile.height || 'Belirtilmemiş'}, Hedef: ${profile.goal || 'Belirtilmemiş'}\n`;
+        }
+        const summarySnap = await getDoc(getDailySummaryRef(currentUid));
+        if (summarySnap.exists()) {
+            const sum = summarySnap.data();
+            context += `- Bugünkü Özet: Alınan Kalori: ${sum.consumedCalories || 0} kcal, Yakılan: ${sum.burnedCalories || 0} kcal, Su: ${sum.waterGlasses || 0} bardak\n`;
+        }
+        
+        const catSnap = await getDocs(collection(db, "users", currentUid, "finance_categories"));
+        if (!catSnap.empty) {
+            const catNames = catSnap.docs.map(d => `'${d.data().name}' (ID: ${d.id})`);
+            context += `- Mevcut Finans Kategorileri: ${catNames.join(', ')}\n`;
+        } else {
+            context += `- Mevcut Finans Kategorileri: Yok\n`;
+        }
+    } catch(err) {
+        console.error("Context build error:", err);
+    }
+    return context;
+}
+
+// Tool Declarations
+const aiTools = [{
+    function_declarations: [
+        {
+            name: "addShoppingItem",
+            description: "Kullanıcının alışveriş/market listesine yeni bir öğe ekler.",
+            parameters: {
+                type: "OBJECT",
+                properties: {
+                    itemName: { type: "STRING", description: "Alınacak ürünün adı (örn. Süt, Ekmek)" },
+                    quantity: { type: "STRING", description: "Varsa miktar (örn. 2 litre, 1 paket)" }
+                },
+                required: ["itemName"]
+            }
+        },
+        {
+            name: "addFinanceTransaction",
+            description: "Kullanıcının finans/gelir-gider tablosuna işlem ekler. (örn. 50 TL market harcadım)",
+            parameters: {
+                type: "OBJECT",
+                properties: {
+                    amount: { type: "NUMBER", description: "İşlem tutarı (pozitif sayı)" },
+                    type: { type: "STRING", description: "İşlem türü. Yalnızca 'expense' (gider) veya 'income' (gelir)." },
+                    categoryId: { type: "STRING", description: "Mevcut Finans Kategorileri listesindeki uygun kategorinin ID'si. Yoksa boş bırakın." },
+                    description: { type: "STRING", description: "İşlemin açıklaması" }
+                },
+                required: ["amount", "type", "description"]
+            }
+        }
+    ]
+}];
+
+let pendingFunctionCall = null;
+
 // Send Message logic
 window.sendAiMessage = async function() {
     const text = chatInput.value.trim();
@@ -168,11 +235,14 @@ window.sendAiMessage = async function() {
     try {
         const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key=${geminiApiKey}`;
         
+        const dynamicInstruction = await buildAiContext();
+        
         const payload = {
             system_instruction: {
-                parts: { text: systemInstruction }
+                parts: { text: dynamicInstruction }
             },
-            contents: chatHistory
+            contents: chatHistory,
+            tools: aiTools
         };
 
         const res = await fetch(url, {
@@ -195,8 +265,17 @@ window.sendAiMessage = async function() {
             return;
         }
 
-        const modelText = data.candidates?.[0]?.content?.parts?.[0]?.text;
-        if (modelText) {
+        const candidate = data.candidates?.[0];
+        const functionCallPart = candidate?.content?.parts?.find(p => p.functionCall);
+        const modelText = candidate?.content?.parts?.find(p => p.text)?.text;
+
+        if (functionCallPart) {
+            // Kaydet ki response dönebilelim
+            pendingFunctionCall = functionCallPart.functionCall;
+            // Modele ait çağrıyı history'ye olduğu gibi ekle (Gemini şartı)
+            chatHistory.push({ role: "model", parts: candidate.content.parts });
+            showFunctionConfirmation(pendingFunctionCall);
+        } else if (modelText) {
             appendMessage('model', modelText);
             chatHistory.push({ role: "model", parts: [{ text: modelText }] });
         } else {
@@ -208,11 +287,150 @@ window.sendAiMessage = async function() {
         console.error("Gemini request failed:", err);
         appendMessage('model', 'Bağlantı hatası oluştu, lütfen tekrar deneyin.');
     } finally {
-        chatSendBtn.disabled = false;
-        chatInput.disabled = false;
-        chatInput.focus();
+        if (!pendingFunctionCall) {
+            chatSendBtn.disabled = false;
+            chatInput.disabled = false;
+            chatInput.focus();
+        }
     }
 };
+
+window.showFunctionConfirmation = function(funcCall) {
+    const args = funcCall.args;
+    let title = "Bilinmeyen İşlem";
+    let desc = "";
+
+    if (funcCall.name === "addShoppingItem") {
+        title = "Alışveriş Listesine Ekle";
+        desc = `'${args.itemName}' eklensin mi?`;
+    } else if (funcCall.name === "addFinanceTransaction") {
+        title = "Finans İşlemi Ekle";
+        const t = args.type === 'expense' ? 'Gider' : 'Gelir';
+        desc = `${args.amount} TL ${t} olarak eklensin mi?\nAçıklama: ${args.description}`;
+    }
+
+    const msgDiv = document.createElement('div');
+    msgDiv.id = "pending-func-card";
+    msgDiv.className = `flex flex-col gap-2 p-4 rounded-2xl bg-[#F7F9FF] border border-outline-variant/30 w-[85%] mx-auto my-2`;
+    msgDiv.style.boxShadow = "4px 4px 8px #D1D9E6, -4px -4px 8px #FFFFFF";
+    
+    msgDiv.innerHTML = `
+        <div class="flex items-center gap-2 mb-1">
+            <span class="material-symbols-rounded text-neon-purple text-lg">psychology</span>
+            <span class="font-bold text-sm text-[#1E293B]">${title}</span>
+        </div>
+        <p class="text-sm text-[#64748B] mb-2 whitespace-pre-wrap">${desc}</p>
+        <div class="flex gap-3">
+            <button onclick="window.confirmFunctionCall()" class="flex-1 py-2 rounded-xl bg-neon-purple text-white text-xs font-bold transition-transform active:scale-95" style="box-shadow: 2px 2px 5px #D1D9E6, -2px -2px 5px #FFFFFF;">Evet</button>
+            <button onclick="window.rejectFunctionCall()" class="flex-1 py-2 rounded-xl bg-background text-[#64748B] text-xs font-bold transition-transform active:scale-95" style="box-shadow: inset 2px 2px 5px #D1D9E6, inset -2px -2px 5px #FFFFFF;">Hayır</button>
+        </div>
+    `;
+
+    chatMessages.appendChild(msgDiv);
+    setTimeout(() => { chatMessages.scrollTop = chatMessages.scrollHeight; }, 50);
+};
+
+window.confirmFunctionCall = async function() {
+    const card = document.getElementById("pending-func-card");
+    if (card) card.innerHTML = `<p class="text-xs text-neon-purple font-bold text-center py-2">Onaylandı, işleniyor...</p>`;
+    
+    let status = "success";
+    let message = "İşlem başarıyla tamamlandı.";
+
+    try {
+        if (pendingFunctionCall.name === "addShoppingItem") {
+            await addDoc(collection(db, "users", currentUid, "shoppingList"), {
+                title: pendingFunctionCall.args.itemName,
+                done: false,
+                createdAt: serverTimestamp()
+            });
+        } else if (pendingFunctionCall.name === "addFinanceTransaction") {
+            const dateStr = new Date().toISOString().split('T')[0];
+            await addDoc(collection(db, "users", currentUid, "finance_transactions"), {
+                title: pendingFunctionCall.args.description || "AI İşlemi",
+                amount: parseFloat(pendingFunctionCall.args.amount) || 0,
+                type: pendingFunctionCall.args.type === 'expense' ? 'expense' : 'income',
+                categoryId: pendingFunctionCall.args.categoryId || null,
+                paymentMethodId: null,
+                dateStr: dateStr,
+                createdAt: serverTimestamp()
+            });
+        }
+    } catch(err) {
+        console.error("Function exec error:", err);
+        status = "error";
+        message = err.message;
+    }
+
+    sendFunctionResponse(status, message);
+};
+
+window.rejectFunctionCall = function() {
+    const card = document.getElementById("pending-func-card");
+    if (card) card.innerHTML = `<p class="text-xs text-[#64748B] font-bold text-center py-2">İptal edildi.</p>`;
+    sendFunctionResponse("cancelled", "Kullanıcı işlemi reddetti.");
+};
+
+async function sendFunctionResponse(status, message) {
+    if (!pendingFunctionCall) return;
+
+    const card = document.getElementById("pending-func-card");
+    if (card) card.removeAttribute("id");
+
+    const responsePart = {
+        functionResponse: {
+            name: pendingFunctionCall.name,
+            response: { status: status, message: message }
+        }
+    };
+    if (pendingFunctionCall.id) responsePart.functionResponse.id = pendingFunctionCall.id;
+    if (pendingFunctionCall.call_id) responsePart.functionResponse.call_id = pendingFunctionCall.call_id;
+
+    chatHistory.push({ role: "user", parts: [responsePart] });
+    
+    pendingFunctionCall = null;
+    appendLoading();
+
+    try {
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key=${geminiApiKey}`;
+        const dynamicInstruction = await buildAiContext();
+        const payload = {
+            system_instruction: { parts: { text: dynamicInstruction } },
+            contents: chatHistory,
+            tools: aiTools
+        };
+
+        const res = await fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+        removeLoading();
+
+        if (!res.ok) {
+            console.error("Gemini API Error after func:", data);
+            appendMessage('model', \`Bir hata oluştu: \${data.error?.message || 'Bilinmeyen hata'}\`);
+            return;
+        }
+
+        const modelText = data.candidates?.[0]?.content?.parts?.[0]?.text;
+        if (modelText) {
+            appendMessage('model', modelText);
+            chatHistory.push({ role: "model", parts: [{ text: modelText }] });
+        } else {
+            appendMessage('model', 'İşlem tamamlandı.');
+        }
+    } catch (err) {
+        removeLoading();
+        console.error("Gemini req failed:", err);
+        appendMessage('model', 'Bağlantı hatası.');
+    } finally {
+        chatInput.disabled = false;
+        chatSendBtn.disabled = false;
+        chatInput.focus();
+    }
+}
 
 // Profile settings listener
 if (profileSaveAiBtn) {
