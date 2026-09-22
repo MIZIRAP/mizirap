@@ -1,6 +1,6 @@
 import { db, auth } from "./firebase-config.js";
 import { doc, getDoc, setDoc, collection, addDoc, serverTimestamp, getDocs } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
-import { getProfileData } from "./sharedState.js";
+import { fetchSharedProfile } from "./sharedState.js";
 import { getDailySummaryRef } from "./dashboard.js";
 
 // State
@@ -149,7 +149,7 @@ async function buildAiContext() {
     
     let context = systemInstruction + "\n\nEk Bağlam:\n";
     try {
-        const profile = await getProfileData(currentUid);
+        const profile = await fetchSharedProfile(currentUid);
         if (profile) {
             context += `- Kullanıcı Profili: Kilo: ${profile.weight || 'Belirtilmemiş'}, Boy: ${profile.height || 'Belirtilmemiş'}, Hedef: ${profile.goal || 'Belirtilmemiş'}\n`;
         }
