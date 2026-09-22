@@ -410,7 +410,7 @@ async function sendFunctionResponse(status, message) {
 
         if (!res.ok) {
             console.error("Gemini API Error after func:", data);
-            appendMessage('model', \`Bir hata oluştu: \${data.error?.message || 'Bilinmeyen hata'}\`);
+            appendMessage('model', `Bir hata oluştu: ${data.error?.message || 'Bilinmeyen hata'}`);
             return;
         }
 
