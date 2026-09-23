@@ -7,7 +7,7 @@ import { getDailySummaryRef } from "./dashboard.js";
 let geminiApiKey = null;
 let chatHistory = [];
 let currentUid = null;
-const systemInstruction = "Sen MIZIRAP adlı kişisel takip uygulamasının asistanısın. Kullanıcıya beslenme, spor/antrenman, su tüketimi ve finans konularında yardımcı oluyorsun. Kullanıcı bir yiyecek söylediğinde, bilinen ortalama besin değerlerine göre tahmini kalori/protein/karbonhidrat/yağ hesapla. Kısa, net ve Türkçe cevap ver.";
+const systemInstruction = "Sen MIZIRAP uygulamasının asistanısın. Türkçe, kısa ve öz yanıt ver. İşlem başarılıysa SADECE tek cümleyle onayla, uzun açıklama yapma. Yiyecek sorunulursa makrolarını (kcal/protein/karb/yağ) tahmin et.";
 
 // DOM Elements
 const chatPanel = document.getElementById('ai-chat-panel');
@@ -143,10 +143,18 @@ function removeLoading() {
     if (loading) loading.remove();
 }
 
-// Generate Context
+// Generate Context — cached for 60s to avoid repeated Firestore reads on every message
+let _cachedContext = null;
+let _cachedContextAt = 0;
+
 async function buildAiContext() {
     if (!currentUid) return systemInstruction;
-    
+
+    const now = Date.now();
+    if (_cachedContext && (now - _cachedContextAt) < 60_000) {
+        return _cachedContext;
+    }
+
     let context = systemInstruction + "\n\nEk Bağlam:\n";
     try {
         const profile = await fetchSharedProfile(currentUid);
@@ -158,7 +166,7 @@ async function buildAiContext() {
             const sum = summarySnap.data();
             context += `- Bugünkü Özet: Alınan Kalori: ${sum.consumedCalories || 0} kcal, Yakılan: ${sum.burnedCalories || 0} kcal, Su: ${sum.waterGlasses || 0} bardak\n`;
         }
-        
+
         const catSnap = await getDocs(collection(db, "users", currentUid, "finance_categories"));
         if (!catSnap.empty) {
             const catNames = catSnap.docs.map(d => `'${d.data().name}' (ID: ${d.id})`);
@@ -177,6 +185,9 @@ async function buildAiContext() {
     } catch(err) {
         console.error("Context build error:", err);
     }
+
+    _cachedContext = context;
+    _cachedContextAt = now;
     return context;
 }
 
@@ -278,11 +289,14 @@ window.sendAiMessage = async function(isSystemResponse = false) {
         
         const dynamicInstruction = await buildAiContext();
         
+        // Truncate history to last 10 turns to keep payload small and fast
+        const trimmedHistory = chatHistory.slice(-10);
+
         const payload = {
             system_instruction: {
                 parts: { text: dynamicInstruction }
             },
-            contents: chatHistory,
+            contents: trimmedHistory,
             tools: aiTools
         };
 
@@ -544,9 +558,11 @@ async function sendFunctionResponses(responsesPartArray) {
     try {
         const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash-lite:generateContent?key=${geminiApiKey}`;
         const dynamicInstruction = await buildAiContext();
+        // Truncate history to last 10 turns to keep payload small and fast
+        const trimmedHistory = chatHistory.slice(-10);
         const payload = {
             system_instruction: { parts: { text: dynamicInstruction } },
-            contents: chatHistory,
+            contents: trimmedHistory,
             tools: aiTools
         };
 
