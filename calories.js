@@ -1,5 +1,5 @@
 import { db } from "./firebase-config.js";
-import { collection, doc, addDoc, setDoc, updateDoc, deleteDoc, onSnapshot, query, orderBy, limit, where, serverTimestamp, writeBatch, getDocsFromCache, getDocsFromServer } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+import { collection, doc, addDoc, setDoc, updateDoc, deleteDoc, onSnapshot, query, orderBy, limit, where, serverTimestamp, writeBatch, getDocsFromCache, getDocsFromServer, increment } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
 import { escapeHtml, validatePositiveNumber } from "./utils.js";
 import { registerListener } from "./listenerManager.js";
 import { setSharedState } from "./sharedState.js";
@@ -917,9 +917,17 @@ function renderLogs() {
 
                 const d = new Date();
                 const todayStr = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
-                if (todayStr === todayStr) {
-                    const currentConsumed = dailyLogs.reduce((sum, l) => sum + Number(l.kcal || 0), 0);
-                    batch.set(getDailySummaryRef(currentUid), { caloriesConsumed: Math.max(0, currentConsumed) }, { merge: true });
+                
+                // If it's today's log, decrement today's summary
+                if (log.createdAt && log.createdAt.toDate) {
+                    const logDate = log.createdAt.toDate();
+                    const logDateStr = logDate.getFullYear() + '-' + String(logDate.getMonth() + 1).padStart(2, '0') + '-' + String(logDate.getDate()).padStart(2, '0');
+                    if (logDateStr === todayStr) {
+                        batch.set(getDailySummaryRef(currentUid), { caloriesConsumed: increment(-Number(log.kcal || 0)) }, { merge: true });
+                    }
+                } else {
+                    // Fallback to today if date missing
+                    batch.set(getDailySummaryRef(currentUid), { caloriesConsumed: increment(-Number(log.kcal || 0)) }, { merge: true });
                 }
 
                 await batch.commit();

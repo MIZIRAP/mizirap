@@ -243,27 +243,29 @@ const aiTools = [{
     ]
 }];
 
-let pendingFunctionCall = null;
+let pendingFunctionCalls = [];
 
 // Send Message logic
-window.sendAiMessage = async function() {
-    const text = chatInput.value.trim();
-    if (!text) return;
-    
-    if (!geminiApiKey) {
-        appendMessage('model', 'Sohbeti kullanmak için önce Ayarlar\'dan bir Gemini API anahtarı ekleyin.', true);
-        return;
-    }
+window.sendAiMessage = async function(isSystemResponse = false) {
+    if (!isSystemResponse) {
+        const text = chatInput.value.trim();
+        if (!text) return;
+        
+        if (!geminiApiKey) {
+            appendMessage('model', 'Sohbeti kullanmak için önce Ayarlar\'dan bir Gemini API anahtarı ekleyin.', true);
+            return;
+        }
 
-    // Add user message to UI
-    appendMessage('user', text);
-    chatInput.value = '';
-    
-    // Add to history
-    if (chatHistory.length > 0 && chatHistory[chatHistory.length - 1].role === "user") {
-        chatHistory[chatHistory.length - 1].parts[0].text += "\n" + text;
-    } else {
-        chatHistory.push({ role: "user", parts: [{ text }] });
+        // Add user message to UI
+        appendMessage('user', text);
+        chatInput.value = '';
+        
+        // Add to history
+        if (chatHistory.length > 0 && chatHistory[chatHistory.length - 1].role === "user" && !chatHistory[chatHistory.length - 1].parts[0].functionResponse) {
+            chatHistory[chatHistory.length - 1].parts[0].text += "\n" + text;
+        } else {
+            chatHistory.push({ role: "user", parts: [{ text }] });
+        }
     }
 
     // Show loading
@@ -305,15 +307,15 @@ window.sendAiMessage = async function() {
         }
 
         const candidate = data.candidates?.[0];
-        const functionCallPart = candidate?.content?.parts?.find(p => p.functionCall);
+        const functionCallParts = candidate?.content?.parts?.filter(p => p.functionCall) || [];
         const modelText = candidate?.content?.parts?.find(p => p.text)?.text;
 
-        if (functionCallPart) {
+        if (functionCallParts.length > 0) {
             // Kaydet ki response dönebilelim
-            pendingFunctionCall = functionCallPart.functionCall;
+            pendingFunctionCalls = functionCallParts.map(p => p.functionCall);
             // Modele ait çağrıyı history'ye olduğu gibi ekle (Gemini şartı)
             chatHistory.push({ role: "model", parts: candidate.content.parts });
-            showFunctionConfirmation(pendingFunctionCall);
+            showFunctionConfirmation(pendingFunctionCalls);
         } else if (modelText) {
             appendMessage('model', modelText);
             chatHistory.push({ role: "model", parts: [{ text: modelText }] });
@@ -326,7 +328,7 @@ window.sendAiMessage = async function() {
         console.error("Gemini request failed:", err);
         appendMessage('model', 'Bağlantı hatası oluştu, lütfen tekrar deneyin.');
     } finally {
-        if (!pendingFunctionCall) {
+        if (!pendingFunctionCalls || pendingFunctionCalls.length === 0) {
             chatSendBtn.disabled = false;
             chatInput.disabled = false;
             chatInput.focus();
@@ -334,26 +336,30 @@ window.sendAiMessage = async function() {
     }
 };
 
-window.showFunctionConfirmation = function(funcCall) {
-    const args = funcCall.args;
-    let title = "Bilinmeyen İşlem";
-    let desc = "";
+window.showFunctionConfirmation = function(funcCalls) {
+    let combinedTitle = "Çoklu İşlem Onayı";
+    if (funcCalls.length === 1) combinedTitle = "İşlem Onayı";
+    let descriptions = [];
+    
+    funcCalls.forEach((funcCall, index) => {
+        const args = funcCall.args;
+        let desc = "";
 
-    if (funcCall.name === "addShoppingItems") {
-        title = "Alışveriş Listesine Ekle";
-        const itemsList = args.items || [];
-        desc = `Şunlar eklensin mi: ${itemsList.join(', ')}?`;
-    } else if (funcCall.name === "addFinanceTransaction") {
-        title = "Finans İşlemi Ekle";
-        const t = args.type === 'expense' ? 'Gider' : 'Gelir';
-        desc = `${args.amount} TL ${t} olarak eklensin mi?\nAçıklama: ${args.description}`;
-    } else if (funcCall.name === "addWaterLog") {
-        title = "Su Ekle";
-        desc = `${args.amount} ml su eklensin mi?`;
-    } else if (funcCall.name === "addCalorieLog") {
-        title = "Besin/Kalori Ekle";
-        desc = `${args.foodName} eklensin mi?\nKalori: ${args.kcal} kcal\nAğırlık: ${args.grams} g\nMakrolar: ${args.protein || 0}g P, ${args.carbs || 0}g K, ${args.fat || 0}g Y`;
-    }
+        if (funcCall.name === "addShoppingItems") {
+            const itemsList = args.items || [];
+            let displayItems = itemsList;
+            if (typeof itemsList === "string") displayItems = [itemsList];
+            desc = `🛒 Alışveriş: ${displayItems.join(', ')}`;
+        } else if (funcCall.name === "addFinanceTransaction") {
+            const t = args.type === 'expense' ? 'Gider' : 'Gelir';
+            desc = `💰 Finans: ${args.amount} TL ${t} (${args.description})`;
+        } else if (funcCall.name === "addWaterLog") {
+            desc = `💧 Su: ${args.amount} ml`;
+        } else if (funcCall.name === "addCalorieLog") {
+            desc = `🍎 Besin: ${args.foodName} (${args.kcal} kcal)`;
+        }
+        descriptions.push(`${index + 1}) ${desc}`);
+    });
 
     const msgDiv = document.createElement('div');
     msgDiv.id = "pending-func-card";
@@ -363,9 +369,9 @@ window.showFunctionConfirmation = function(funcCall) {
     msgDiv.innerHTML = `
         <div class="flex items-center gap-2 mb-1">
             <span class="material-symbols-rounded text-neon-purple text-lg">psychology</span>
-            <span class="font-bold text-sm text-[#1E293B]">${title}</span>
+            <span class="font-bold text-sm text-[#1E293B]">${combinedTitle}</span>
         </div>
-        <p class="text-sm text-[#64748B] mb-2 whitespace-pre-wrap">${desc}</p>
+        <p class="text-sm text-[#64748B] mb-2 whitespace-pre-wrap">Şunlar eklensin mi?\n${descriptions.join('\n')}</p>
         <div class="flex gap-3">
             <button onclick="window.confirmFunctionCall()" class="flex-1 py-2 rounded-xl bg-neon-purple text-white text-xs font-bold transition-transform active:scale-95" style="box-shadow: 2px 2px 5px #D1D9E6, -2px -2px 5px #FFFFFF;">Evet</button>
             <button onclick="window.rejectFunctionCall()" class="flex-1 py-2 rounded-xl bg-background text-[#64748B] text-xs font-bold transition-transform active:scale-95" style="box-shadow: inset 2px 2px 5px #D1D9E6, inset -2px -2px 5px #FFFFFF;">Hayır</button>
@@ -380,148 +386,159 @@ window.confirmFunctionCall = async function() {
     const card = document.getElementById("pending-func-card");
     if (card) card.innerHTML = `<p class="text-xs text-neon-purple font-bold text-center py-2">Onaylandı, işleniyor...</p>`;
     
-    let status = "success";
-    let message = "İşlem başarıyla tamamlandı.";
+    let allResponses = [];
 
-    try {
-        if (pendingFunctionCall.name === "addShoppingItems") {
-            let items = pendingFunctionCall.args.items || [];
-            
-            // Güvenlik Ağı: Model array yerine string gönderirse
-            if (typeof items === "string") {
-                items = items.split(",").map(i => i.trim()).filter(i => i);
-            }
-            if (!Array.isArray(items) || items.length === 0) throw new Error("Eklenecek ürün bulunamadı.");
-            
-            // Eğer hala ["süt, ekmek, yumurta"] gibi tek elemanlı virgüllü liste geldiyse
-            let finalItems = [];
-            items.forEach(i => {
-                if (typeof i === 'string' && i.includes(',')) {
-                    finalItems.push(...i.split(",").map(x => x.trim()).filter(x => x));
-                } else if (typeof i === 'string') {
-                    finalItems.push(i.trim());
+    for (const funcCall of pendingFunctionCalls) {
+        let status = "success";
+        let message = "İşlem başarıyla tamamlandı.";
+
+        try {
+            if (funcCall.name === "addShoppingItems") {
+                let items = funcCall.args.items || [];
+                
+                if (typeof items === "string") {
+                    items = items.split(",").map(i => i.trim()).filter(i => i);
                 }
-            });
-            
-            const promises = finalItems.map(itemName => {
-                return addDoc(collection(db, "users", currentUid, "shoppingList"), {
-                    title: itemName,
-                    done: false,
+                if (!Array.isArray(items) || items.length === 0) throw new Error("Eklenecek ürün bulunamadı.");
+                
+                let finalItems = [];
+                items.forEach(i => {
+                    if (typeof i === 'string' && i.includes(',')) {
+                        finalItems.push(...i.split(",").map(x => x.trim()).filter(x => x));
+                    } else if (typeof i === 'string') {
+                        finalItems.push(i.trim());
+                    }
+                });
+                
+                const promises = finalItems.map(itemName => {
+                    return addDoc(collection(db, "users", currentUid, "shoppingList"), {
+                        title: itemName,
+                        done: false,
+                        createdAt: serverTimestamp()
+                    });
+                });
+                await Promise.all(promises);
+                
+            } else if (funcCall.name === "addFinanceTransaction") {
+                const amount = parseFloat(funcCall.args.amount);
+                if (isNaN(amount) || amount <= 0) throw new Error("Geçersiz veya eksik işlem tutarı.");
+                
+                let pmId = funcCall.args.paymentMethodId;
+                if (!pmId) {
+                    const pmSnap = await getDocs(collection(db, "users", currentUid, "finance_payment_methods"));
+                    if (!pmSnap.empty) {
+                        pmId = pmSnap.docs[0].id;
+                    }
+                }
+
+                const dateStr = new Date().toISOString().split('T')[0];
+                await addDoc(collection(db, "users", currentUid, "finance_transactions"), {
+                    title: funcCall.args.description || "AI İşlemi",
+                    amount: amount,
+                    type: funcCall.args.type === 'expense' ? 'expense' : 'income',
+                    categoryId: funcCall.args.categoryId || null,
+                    paymentMethodId: pmId || null,
+                    dateStr: dateStr,
                     createdAt: serverTimestamp()
                 });
-            });
-            await Promise.all(promises);
-            
-        } else if (pendingFunctionCall.name === "addFinanceTransaction") {
-            const amount = parseFloat(pendingFunctionCall.args.amount);
-            if (isNaN(amount) || amount <= 0) throw new Error("Geçersiz veya eksik işlem tutarı.");
-            
-            let pmId = pendingFunctionCall.args.paymentMethodId;
-            if (!pmId) {
-                const pmSnap = await getDocs(collection(db, "users", currentUid, "finance_payment_methods"));
-                if (!pmSnap.empty) {
-                    pmId = pmSnap.docs[0].id;
-                }
+            } else if (funcCall.name === "addWaterLog") {
+                const amount = parseFloat(funcCall.args.amount);
+                if (isNaN(amount) || amount <= 0) throw new Error("Geçersiz su miktarı.");
+                
+                const batch = writeBatch(db);
+                const logRef = doc(collection(db, "users", currentUid, "waterLogs"));
+                batch.set(logRef, {
+                    amount: amount,
+                    type: amount >= 500 ? "Water Bottle" : "Glass of Water",
+                    icon: amount >= 500 ? "water_bottle" : "local_drink",
+                    createdAt: serverTimestamp()
+                });
+
+                batch.set(getDailySummaryRef(currentUid), {
+                    waterAmount: increment(amount)
+                }, { merge: true });
+
+                await batch.commit();
+                
+            } else if (funcCall.name === "addCalorieLog") {
+                const args = funcCall.args;
+                const name = args.foodName;
+                const kcal = parseFloat(args.kcal) || 0;
+                const amount = parseFloat(args.grams) || 100;
+                const protein = parseFloat(args.protein) || 0;
+                const karb = parseFloat(args.carbs) || 0;
+                const yag = parseFloat(args.fat) || 0;
+
+                if (!name || kcal <= 0) throw new Error("Geçersiz besin adı veya kalori.");
+                
+                const batch = writeBatch(db);
+                const logRef = doc(collection(db, "users", currentUid, "calorieLogs"));
+                batch.set(logRef, {
+                    name: name,
+                    kcal: kcal,
+                    protein: protein,
+                    karb: karb,
+                    yag: yag,
+                    amount: amount,
+                    createdAt: serverTimestamp(),
+                    type: "Food"
+                });
+                
+                batch.set(getDailySummaryRef(currentUid), {
+                    caloriesConsumed: increment(kcal)
+                }, { merge: true });
+
+                await batch.commit();
             }
-
-            const dateStr = new Date().toISOString().split('T')[0];
-            await addDoc(collection(db, "users", currentUid, "finance_transactions"), {
-                title: pendingFunctionCall.args.description || "AI İşlemi",
-                amount: amount,
-                type: pendingFunctionCall.args.type === 'expense' ? 'expense' : 'income',
-                categoryId: pendingFunctionCall.args.categoryId || null,
-                paymentMethodId: pmId || null,
-                dateStr: dateStr,
-                createdAt: serverTimestamp()
-            });
-        } else if (pendingFunctionCall.name === "addWaterLog") {
-            const amount = parseFloat(pendingFunctionCall.args.amount);
-            if (isNaN(amount) || amount <= 0) throw new Error("Geçersiz su miktarı.");
-            
-            const batch = writeBatch(db);
-            const logRef = doc(collection(db, "users", currentUid, "waterLogs"));
-            batch.set(logRef, {
-                amount: amount,
-                type: amount >= 500 ? "Water Bottle" : "Glass of Water",
-                icon: amount >= 500 ? "water_bottle" : "local_drink",
-                createdAt: serverTimestamp()
-            });
-
-            batch.set(getDailySummaryRef(currentUid), {
-                waterAmount: increment(amount)
-            }, { merge: true });
-
-            await batch.commit();
-            
-        } else if (pendingFunctionCall.name === "addCalorieLog") {
-            const args = pendingFunctionCall.args;
-            const name = args.foodName;
-            const kcal = parseFloat(args.kcal) || 0;
-            const amount = parseFloat(args.grams) || 100;
-            const protein = parseFloat(args.protein) || 0;
-            const karb = parseFloat(args.carbs) || 0;
-            const yag = parseFloat(args.fat) || 0;
-
-            if (!name || kcal <= 0) throw new Error("Geçersiz besin adı veya kalori.");
-            
-            const batch = writeBatch(db);
-            const logRef = doc(collection(db, "users", currentUid, "calorieLogs"));
-            batch.set(logRef, {
-                name: name,
-                kcal: kcal,
-                protein: protein,
-                karb: karb,
-                yag: yag,
-                amount: amount,
-                createdAt: serverTimestamp(),
-                type: "Food"
-            });
-            
-            batch.set(getDailySummaryRef(currentUid), {
-                caloriesConsumed: increment(kcal)
-            }, { merge: true });
-
-            await batch.commit();
+        } catch(err) {
+            console.error("Function exec error:", err);
+            status = "error";
+            message = err.message || "Bilinmeyen bir hata oluştu.";
         }
-    } catch(err) {
-        console.error("Function exec error:", err);
-        status = "error";
-        message = err.message;
         
-        const errCard = document.getElementById("pending-func-card");
-        if (errCard) errCard.innerHTML = `<p class="text-xs text-error font-bold text-center py-2">İşlem başarısız: ${err.message}</p>`;
-        
-        sendFunctionResponse(status, message);
-        return;
+        const responsePart = {
+            functionResponse: {
+                name: funcCall.name,
+                response: { status, message }
+            }
+        };
+        if (funcCall.id) responsePart.functionResponse.id = funcCall.id;
+        if (funcCall.call_id) responsePart.functionResponse.call_id = funcCall.call_id;
+        allResponses.push(responsePart);
     }
-
-    sendFunctionResponse(status, message);
+    
+    sendFunctionResponses(allResponses);
 };
 
 window.rejectFunctionCall = function() {
     const card = document.getElementById("pending-func-card");
     if (card) card.innerHTML = `<p class="text-xs text-[#64748B] font-bold text-center py-2">İptal edildi.</p>`;
-    sendFunctionResponse("cancelled", "Kullanıcı işlemi reddetti.");
+    
+    let allResponses = [];
+    for (const funcCall of pendingFunctionCalls) {
+        const responsePart = {
+            functionResponse: {
+                name: funcCall.name,
+                response: { status: "cancelled", message: "Kullanıcı işlemi reddetti." }
+            }
+        };
+        if (funcCall.id) responsePart.functionResponse.id = funcCall.id;
+        if (funcCall.call_id) responsePart.functionResponse.call_id = funcCall.call_id;
+        allResponses.push(responsePart);
+    }
+    
+    sendFunctionResponses(allResponses);
 };
 
-async function sendFunctionResponse(status, message) {
-    if (!pendingFunctionCall) return;
+async function sendFunctionResponses(responsesPartArray) {
+    if (!pendingFunctionCalls || pendingFunctionCalls.length === 0) return;
 
     const card = document.getElementById("pending-func-card");
     if (card) card.removeAttribute("id");
 
-    const responsePart = {
-        functionResponse: {
-            name: pendingFunctionCall.name,
-            response: { status: status, message: message }
-        }
-    };
-    if (pendingFunctionCall.id) responsePart.functionResponse.id = pendingFunctionCall.id;
-    if (pendingFunctionCall.call_id) responsePart.functionResponse.call_id = pendingFunctionCall.call_id;
-
-    chatHistory.push({ role: "user", parts: [responsePart] });
+    chatHistory.push({ role: "user", parts: responsesPartArray });
     
-    pendingFunctionCall = null;
+    pendingFunctionCalls = [];
     appendLoading();
 
     try {

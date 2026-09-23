@@ -1,5 +1,5 @@
 import { auth, db } from "./firebase-config.js";
-import { collection, doc, addDoc, setDoc, deleteDoc, updateDoc, onSnapshot, query, orderBy, limit, serverTimestamp, writeBatch } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+import { collection, doc, addDoc, setDoc, deleteDoc, updateDoc, onSnapshot, query, orderBy, limit, serverTimestamp, writeBatch, increment } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
 import { escapeHtml, handleFormSubmit } from "./utils.js";
 import { registerListener } from "./listenerManager.js";
 import { setSharedState } from "./sharedState.js";
@@ -401,16 +401,8 @@ function updateWaterUI() {
                         const batch = writeBatch(db);
                         batch.delete(doc(db, "users", currentUid, "waterLogs", log.id));
 
-                        const today = new Date();
-                        today.setHours(0,0,0,0);
-                        const todaysLogs = waterLogs.filter(l => {
-                            if(!l.createdAt || !l.createdAt.toDate) return false;
-                            return l.createdAt.toDate() >= today;
-                        });
-                        const currentAmount = todaysLogs.reduce((sum, l) => sum + Number(l.amount), 0);
-
                         batch.set(getDailySummaryRef(currentUid), {
-                            waterAmount: Math.max(0, currentAmount - Number(log.amount))
+                            waterAmount: increment(-Number(log.amount))
                         }, { merge: true });
 
                         await batch.commit();
