@@ -61,6 +61,12 @@ export async function initDashboard(uid) {
     await initWidgetSorting(uid);
 
     // Listen to daily summary
+    startDashboardListener(uid);
+}
+
+function startDashboardListener(uid) {
+    if (!uid) return;
+    const dailyRef = getDailySummaryRef(uid);
     registerFirestoreListener('dashboard', onSnapshot(dailyRef, (docSnap) => {
         try {
             if (docSnap.exists()) {
@@ -82,6 +88,12 @@ export async function initDashboard(uid) {
         }
     }));
 }
+
+document.addEventListener('viewChanged', (e) => {
+    if (e.detail.viewId === 'view-dashboard') {
+        startDashboardListener(currentUid);
+    }
+});
 
 async function runDashboardMigration(uid, dailyRef) {
     // We fetch the current state from the db to initialize today's document

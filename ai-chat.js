@@ -91,7 +91,7 @@ function appendMessage(role, text, isWarning = false) {
         `;
     }
 
-    let bubbleClasses = `p-3 rounded-2xl text-sm ${role === 'user' ? 'bg-neon-purple text-white rounded-tr-sm' : 'bg-[#F0F2F8] text-on-surface rounded-tl-sm'}`;
+    let bubbleClasses = `p-3 rounded-2xl text-sm ${role === 'user' ? 'bg-gradient-to-r from-neon-purple to-neon-blue text-white rounded-tr-sm shadow-sm font-medium' : 'bg-[#F0F2F8] text-on-surface rounded-tl-sm'}`;
     let bubbleStyle = role === 'model' ? `box-shadow: inset 2px 2px 5px #D1D9E6, inset -2px -2px 5px rgba(255,255,255,0.7);` : '';
 
     if (isWarning) {
