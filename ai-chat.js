@@ -1,5 +1,5 @@
 import { db, auth } from "./firebase-config.js";
-import { doc, getDoc, setDoc, collection, addDoc, serverTimestamp, getDocs } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+import { doc, getDoc, setDoc, collection, addDoc, serverTimestamp, getDocs, writeBatch, increment } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
 import { fetchSharedProfile } from "./sharedState.js";
 import { getDailySummaryRef } from "./dashboard.js";
 
@@ -438,12 +438,21 @@ window.confirmFunctionCall = async function() {
             const amount = parseFloat(pendingFunctionCall.args.amount);
             if (isNaN(amount) || amount <= 0) throw new Error("Geçersiz su miktarı.");
             
-            await addDoc(collection(db, "users", currentUid, "waterLogs"), {
+            const batch = writeBatch(db);
+            const logRef = doc(collection(db, "users", currentUid, "waterLogs"));
+            batch.set(logRef, {
                 amount: amount,
                 type: amount >= 500 ? "Water Bottle" : "Glass of Water",
                 icon: amount >= 500 ? "water_bottle" : "local_drink",
                 createdAt: serverTimestamp()
             });
+
+            batch.set(getDailySummaryRef(currentUid), {
+                waterAmount: increment(amount)
+            }, { merge: true });
+
+            await batch.commit();
+            
         } else if (pendingFunctionCall.name === "addCalorieLog") {
             const args = pendingFunctionCall.args;
             const name = args.foodName;
@@ -455,7 +464,9 @@ window.confirmFunctionCall = async function() {
 
             if (!name || kcal <= 0) throw new Error("Geçersiz besin adı veya kalori.");
             
-            await addDoc(collection(db, "users", currentUid, "calorieLogs"), {
+            const batch = writeBatch(db);
+            const logRef = doc(collection(db, "users", currentUid, "calorieLogs"));
+            batch.set(logRef, {
                 name: name,
                 kcal: kcal,
                 protein: protein,
@@ -465,6 +476,12 @@ window.confirmFunctionCall = async function() {
                 createdAt: serverTimestamp(),
                 type: "Food"
             });
+            
+            batch.set(getDailySummaryRef(currentUid), {
+                caloriesConsumed: increment(kcal)
+            }, { merge: true });
+
+            await batch.commit();
         }
     } catch(err) {
         console.error("Function exec error:", err);
