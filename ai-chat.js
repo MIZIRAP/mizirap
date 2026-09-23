@@ -1,13 +1,14 @@
 import { db, auth } from "./firebase-config.js";
 import { doc, getDoc, setDoc, collection, addDoc, serverTimestamp, getDocs, writeBatch, increment } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
-import { fetchSharedProfile } from "./sharedState.js";
+import { fetchSharedProfile, updateSharedProfile } from "./sharedState.js";
 import { getDailySummaryRef } from "./dashboard.js";
 
 // State
 let geminiApiKey = null;
 let chatHistory = [];
 let currentUid = null;
-const systemInstruction = "Sen MIZIRAP uygulamasının asistanısın. Türkçe, kısa ve öz yanıt ver. İşlem başarılıysa SADECE tek cümleyle onayla, uzun açıklama yapma. Yiyecek sorunulursa makrolarını (kcal/protein/karb/yağ) tahmin et.";
+const systemInstruction = `Sen MIZIRAP uygulamasının asistanısın. Türkçe, kısa ve öz yanıt ver. İşlem başarılıysa SADECE tek cümleyle onayla, uzun açıklama yapma. Yiyecek sorunulursa makrolarını (kcal/protein/karb/yağ) tahmin et.
+Kullanıcı gün sonunda ne yediğini/içtiğini sorduğunda veya beslenme değerlendirmesi istediğinde, profildeki günlük kalori/makro hedefleri ile bugünkü tüketim verilerini karşılaştırarak yapıcı ve motive edici bir değerlendirme sun.`;
 
 // DOM Elements
 const chatPanel = document.getElementById('ai-chat-panel');
@@ -158,13 +159,33 @@ async function buildAiContext() {
     let context = systemInstruction + "\n\nEk Bağlam:\n";
     try {
         const profile = await fetchSharedProfile(currentUid);
-        if (profile) {
-            context += `- Kullanıcı Profili: Kilo: ${profile.weight || 'Belirtilmemiş'}, Boy: ${profile.height || 'Belirtilmemiş'}, Hedef: ${profile.goal || 'Belirtilmemiş'}\n`;
+        const isProfileIncomplete = !profile || !profile.weight || !profile.height || !profile.goal;
+
+        if (profile && !isProfileIncomplete) {
+            const goalLabel = profile.goal === 'kilo_verme' || profile.goal === 'lose' ? 'Kilo Verme'
+                : profile.goal === 'kilo_alma' || profile.goal === 'gain' ? 'Kilo Alma' : 'Koruma';
+            context += `- Kullanıcı Profili: Kilo: ${profile.weight} kg, Boy: ${profile.height} cm, Hedef: ${goalLabel}`;
+            if (profile.dob) {
+                const parts = profile.dob.split('.');
+                const year = parts.length === 3 ? parseInt(parts[2], 10) : NaN;
+                const age = isNaN(year) ? null : new Date().getFullYear() - year;
+                if (age) context += `, Yaş: ${age}`;
+            }
+            if (profile.activity) context += `, Aktivite Katsayısı: ${profile.activity}`;
+            context += '\n';
+        } else if (isProfileIncomplete) {
+            context += '- Kullanıcı Profili: EKSİK (boy/kilo/hedef girilmemiş)\n';
+            context += '- ONBOARDING TALİMATI: Kullanıcının profil bilgileri eksik. İlk mesajında MIZIRAP\'a hoş geldiniz de ve sana daha iyi tavsiyeler verebilmen için boy, kilo, yaş ve hedeflerini sormayı nazikçe teklif et. Kullanıcı yanıt verdiğinde bu bilgileri `updateUserProfile` aracıyla kaydet.\n';
         }
+
         const summarySnap = await getDoc(getDailySummaryRef(currentUid));
         if (summarySnap.exists()) {
             const sum = summarySnap.data();
-            context += `- Bugünkü Özet: Alınan Kalori: ${sum.consumedCalories || 0} kcal, Yakılan: ${sum.burnedCalories || 0} kcal, Su: ${sum.waterGlasses || 0} bardak\n`;
+            const consumedCal = sum.caloriesConsumed || sum.consumedCalories || 0;
+            const waterMl = sum.waterAmount || 0;
+            context += `- Bugünkü Beslenme: Alınan Kalori: ${consumedCal} kcal, Su: ${waterMl} ml`;
+            if (sum.burnedCalories) context += `, Yakılan: ${sum.burnedCalories} kcal`;
+            context += '\n';
         }
 
         const catSnap = await getDocs(collection(db, "users", currentUid, "finance_categories"));
@@ -249,6 +270,22 @@ const aiTools = [{
                     fat: { type: "NUMBER", description: "Tahmini toplam yağ (g)" }
                 },
                 required: ["foodName", "kcal", "grams"]
+            }
+        },
+        {
+            name: "updateUserProfile",
+            description: "Kullanıcının profilini günceller. Kullanıcı boy, kilo, yaş, hedef veya aktivite düzeyi gibi bilgilerini söylediğinde bu aracı çağır.",
+            parameters: {
+                type: "OBJECT",
+                properties: {
+                    weight:           { type: "NUMBER", description: "Kilo (kg)" },
+                    height:           { type: "NUMBER", description: "Boy (cm)" },
+                    age:              { type: "NUMBER", description: "Yaş (yıl)" },
+                    goal:             { type: "STRING", description: "Hedef: 'kilo_verme' (kilo vermek), 'kilo_alma' (kilo almak) veya 'kilo_koruma' (koruma)" },
+                    activity:         { type: "STRING", description: "Aktivite katsayısı: '1.2' (hareketsiz), '1.375' (hafif), '1.55' (orta), '1.725' (aktif), '1.9' (çok aktif)" },
+                    gender:           { type: "STRING", description: "Cinsiyet: 'm' (erkek) veya 'f' (kadın)" }
+                },
+                required: []
             }
         }
     ]
@@ -371,6 +408,15 @@ window.showFunctionConfirmation = function(funcCalls) {
             desc = `💧 Su: ${args.amount} ml`;
         } else if (funcCall.name === "addCalorieLog") {
             desc = `🍎 Besin: ${args.foodName} (${args.kcal} kcal)`;
+        } else if (funcCall.name === "updateUserProfile") {
+            const parts = [];
+            if (args.weight) parts.push(`Kilo: ${args.weight} kg`);
+            if (args.height) parts.push(`Boy: ${args.height} cm`);
+            if (args.age)    parts.push(`Yaş: ${args.age}`);
+            if (args.goal)   parts.push(`Hedef: ${args.goal}`);
+            if (args.activity) parts.push(`Aktivite: ${args.activity}`);
+            if (args.gender) parts.push(`Cinsiyet: ${args.gender === 'm' ? 'Erkek' : 'Kadın'}`);
+            desc = `👤 Profil Güncelleme: ${parts.join(', ') || 'Değişiklik yok'}`;
         }
         descriptions.push(`${index + 1}) ${desc}`);
     });
@@ -503,6 +549,25 @@ window.confirmFunctionCall = async function() {
                 }, { merge: true });
 
                 await batch.commit();
+            } else if (funcCall.name === "updateUserProfile") {
+                const args = funcCall.args;
+                const updates = {};
+                if (args.weight   != null) updates.weight   = Number(args.weight);
+                if (args.height   != null) updates.height   = Number(args.height);
+                if (args.goal     != null) updates.goal     = String(args.goal);
+                if (args.activity != null) updates.activity = String(args.activity);
+                if (args.gender   != null) updates.gender   = String(args.gender);
+                if (args.age      != null) {
+                    // Store age as birth year estimate in dob field for compatibility
+                    const birthYear = new Date().getFullYear() - Number(args.age);
+                    updates.dob = String(birthYear);
+                }
+                if (Object.keys(updates).length === 0) throw new Error("Güncellenecek alan bulunamadı.");
+                await setDoc(doc(db, "users", currentUid, "profile", "data"), updates, { merge: true });
+                updateSharedProfile(updates);
+                // Invalidate context cache so next message picks up new profile data
+                _cachedContext = null;
+                _cachedContextAt = 0;
             }
         } catch(err) {
             console.error("Function exec error:", err);
