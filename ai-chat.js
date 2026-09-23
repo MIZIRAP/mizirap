@@ -7,7 +7,7 @@ import { getDailySummaryRef } from "./dashboard.js";
 let geminiApiKey = null;
 let chatHistory = [];
 let currentUid = null;
-const systemInstruction = "Sen MIZIRAP adlı kişisel takip uygulamasının asistanısın. Kullanıcıya beslenme, spor/antrenman ve finans konularında yardımcı oluyorsun. Kısa, net ve Türkçe cevap ver.";
+const systemInstruction = "Sen MIZIRAP adlı kişisel takip uygulamasının asistanısın. Kullanıcıya beslenme, spor/antrenman, su tüketimi ve finans konularında yardımcı oluyorsun. Kullanıcı bir yiyecek söylediğinde, bilinen ortalama besin değerlerine göre tahmini kalori/protein/karbonhidrat/yağ hesapla. Kısa, net ve Türkçe cevap ver.";
 
 // DOM Elements
 const chatPanel = document.getElementById('ai-chat-panel');
@@ -185,7 +185,7 @@ const aiTools = [{
     function_declarations: [
         {
             name: "addShoppingItems",
-            description: "Kullanıcının alışveriş/market listesine bir veya birden fazla öğe ekler.",
+            description: "Kullanıcının alışveriş/market listesine bir veya birden fazla öğe ekler. Kullanıcı birden fazla ürün söylerse, HER BİRİNİ items array'inde AYRI bir string elemanı olarak gönder, ASLA tek bir virgülle ayrılmış string gönderme.",
             parameters: {
                 type: "OBJECT",
                 properties: {
@@ -211,6 +211,33 @@ const aiTools = [{
                     description: { type: "STRING", description: "İşlemin açıklaması" }
                 },
                 required: ["amount", "type", "description"]
+            }
+        },
+        {
+            name: "addWaterLog",
+            description: "Kullanıcının günlüğüne içtiği su miktarını (ml cinsinden) ekler.",
+            parameters: {
+                type: "OBJECT",
+                properties: {
+                    amount: { type: "NUMBER", description: "İçilen su miktarı (ml cinsinden, örn. 500)" }
+                },
+                required: ["amount"]
+            }
+        },
+        {
+            name: "addCalorieLog",
+            description: "Kullanıcının günlüğüne yediği yemeği ve tahmini besin değerlerini ekler. Kullanıcı bir yiyecek söylediğinde (örn. '1 orta boy elma'), bilinen ortalama besin değerlerine göre tahmini makroları hesaplayıp bu fonksiyonu çağırın.",
+            parameters: {
+                type: "OBJECT",
+                properties: {
+                    foodName: { type: "STRING", description: "Yiyeceğin adı (örn. Orta Boy Nektarin)" },
+                    kcal: { type: "NUMBER", description: "Tahmini toplam kalori (kcal)" },
+                    grams: { type: "NUMBER", description: "Tahmini ağırlık (gram cinsinden)" },
+                    protein: { type: "NUMBER", description: "Tahmini toplam protein (g)" },
+                    carbs: { type: "NUMBER", description: "Tahmini toplam karbonhidrat (g)" },
+                    fat: { type: "NUMBER", description: "Tahmini toplam yağ (g)" }
+                },
+                required: ["foodName", "kcal", "grams"]
             }
         }
     ]
@@ -320,6 +347,12 @@ window.showFunctionConfirmation = function(funcCall) {
         title = "Finans İşlemi Ekle";
         const t = args.type === 'expense' ? 'Gider' : 'Gelir';
         desc = `${args.amount} TL ${t} olarak eklensin mi?\nAçıklama: ${args.description}`;
+    } else if (funcCall.name === "addWaterLog") {
+        title = "Su Ekle";
+        desc = `${args.amount} ml su eklensin mi?`;
+    } else if (funcCall.name === "addCalorieLog") {
+        title = "Besin/Kalori Ekle";
+        desc = `${args.foodName} eklensin mi?\nKalori: ${args.kcal} kcal\nAğırlık: ${args.grams} g\nMakrolar: ${args.protein || 0}g P, ${args.carbs || 0}g K, ${args.fat || 0}g Y`;
     }
 
     const msgDiv = document.createElement('div');
@@ -352,10 +385,25 @@ window.confirmFunctionCall = async function() {
 
     try {
         if (pendingFunctionCall.name === "addShoppingItems") {
-            const items = pendingFunctionCall.args.items || [];
+            let items = pendingFunctionCall.args.items || [];
+            
+            // Güvenlik Ağı: Model array yerine string gönderirse
+            if (typeof items === "string") {
+                items = items.split(",").map(i => i.trim()).filter(i => i);
+            }
             if (!Array.isArray(items) || items.length === 0) throw new Error("Eklenecek ürün bulunamadı.");
             
-            const promises = items.map(itemName => {
+            // Eğer hala ["süt, ekmek, yumurta"] gibi tek elemanlı virgüllü liste geldiyse
+            let finalItems = [];
+            items.forEach(i => {
+                if (typeof i === 'string' && i.includes(',')) {
+                    finalItems.push(...i.split(",").map(x => x.trim()).filter(x => x));
+                } else if (typeof i === 'string') {
+                    finalItems.push(i.trim());
+                }
+            });
+            
+            const promises = finalItems.map(itemName => {
                 return addDoc(collection(db, "users", currentUid, "shoppingList"), {
                     title: itemName,
                     done: false,
@@ -385,6 +433,37 @@ window.confirmFunctionCall = async function() {
                 paymentMethodId: pmId || null,
                 dateStr: dateStr,
                 createdAt: serverTimestamp()
+            });
+        } else if (pendingFunctionCall.name === "addWaterLog") {
+            const amount = parseFloat(pendingFunctionCall.args.amount);
+            if (isNaN(amount) || amount <= 0) throw new Error("Geçersiz su miktarı.");
+            
+            await addDoc(collection(db, "users", currentUid, "waterLogs"), {
+                amount: amount,
+                type: amount >= 500 ? "Water Bottle" : "Glass of Water",
+                icon: amount >= 500 ? "water_bottle" : "local_drink",
+                createdAt: serverTimestamp()
+            });
+        } else if (pendingFunctionCall.name === "addCalorieLog") {
+            const args = pendingFunctionCall.args;
+            const name = args.foodName;
+            const kcal = parseFloat(args.kcal) || 0;
+            const amount = parseFloat(args.grams) || 100;
+            const protein = parseFloat(args.protein) || 0;
+            const karb = parseFloat(args.carbs) || 0;
+            const yag = parseFloat(args.fat) || 0;
+
+            if (!name || kcal <= 0) throw new Error("Geçersiz besin adı veya kalori.");
+            
+            await addDoc(collection(db, "users", currentUid, "calorieLogs"), {
+                name: name,
+                kcal: kcal,
+                protein: protein,
+                karb: karb,
+                yag: yag,
+                amount: amount,
+                createdAt: serverTimestamp(),
+                type: "Food"
             });
         }
     } catch(err) {
