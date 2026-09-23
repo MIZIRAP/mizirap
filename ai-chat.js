@@ -245,7 +245,7 @@ window.sendAiMessage = async function() {
     chatInput.disabled = true;
 
     try {
-        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key=${geminiApiKey}`;
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash-lite:generateContent?key=${geminiApiKey}`;
         
         const dynamicInstruction = await buildAiContext();
         
@@ -429,7 +429,7 @@ async function sendFunctionResponse(status, message) {
     appendLoading();
 
     try {
-        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key=${geminiApiKey}`;
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash-lite:generateContent?key=${geminiApiKey}`;
         const dynamicInstruction = await buildAiContext();
         const payload = {
             system_instruction: { parts: { text: dynamicInstruction } },
