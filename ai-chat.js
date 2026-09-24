@@ -333,7 +333,8 @@ let _isRequestInFlight = false;
 // ─── Retry / Timeout / Fallback helper ────────────────────────────────────
 const _PRIMARY_MODEL   = 'gemini-3.5-flash-lite';
 const _FALLBACK_MODEL  = 'gemini-3.6-flash';
-const _REQUEST_TIMEOUT_MS = 30_000; // 30 s per attempt
+const _REQUEST_TIMEOUT_MS = 30_000; // 30 s per attempt (hard cap)
+const _TOTAL_DEADLINE_MS  = 60_000; // 60 s toplam süre sınırı (tüm denemeler dahil)
 const _MAX_RETRIES = 3;
 const _RETRY_DELAYS = [1000, 2000, 4000]; // üstel bekleme (ms)
 
@@ -352,10 +353,10 @@ function _isPermanentError(status) {
     return status === 400 || status === 401 || status === 403 || status === 404;
 }
 
-// Tek fetch denemesi — AbortController ile zaman aşımı
-async function _fetchOnce(modelId, payload) {
+// Tek fetch denemesi — dışarıdan gelen timeoutMs ile AbortController
+async function _fetchOnce(modelId, payload, timeoutMs = _REQUEST_TIMEOUT_MS) {
     const controller = new AbortController();
-    const timer = setTimeout(() => controller.abort(), _REQUEST_TIMEOUT_MS);
+    const timer = setTimeout(() => controller.abort(), timeoutMs);
     try {
         const url = `https://generativelanguage.googleapis.com/v1beta/models/${modelId}:generateContent?key=${geminiApiKey}`;
         const res = await fetch(url, {
@@ -414,18 +415,28 @@ function _appendErrorWithRetry(onRetry) {
 }
 
 // Ana retry döngüsü: PRIMARY ile 3 deneme, sonra FALLBACK ile 1 deneme
+// _TOTAL_DEADLINE_MS: tüm denemeleri (istek + backoff + fallback) kapsayan sert sınır
 async function _geminiRequestWithRetry(payload) {
-    let lastErr = null;
+    let lastErr  = null;
     let lastData = null;
-    let lastStatus = null;
+
+    const deadline = Date.now() + _TOTAL_DEADLINE_MS; // mutlak bitiş zamanı
+
+    // Kalan süreyi ms olarak döndür; 0'ın altına düşmez
+    const remaining = () => Math.max(0, deadline - Date.now());
+
+    // Deadline'a göre kısaltılmış per-istek timeout
+    const cappedTimeout = () => Math.min(_REQUEST_TIMEOUT_MS, remaining());
 
     for (let attempt = 1; attempt <= _MAX_RETRIES; attempt++) {
+        // Deadline geçtiyse yeni deneme başlatma
+        if (remaining() <= 0) break;
+
         try {
-            const { res, data } = await _fetchOnce(_PRIMARY_MODEL, payload);
+            const { res, data } = await _fetchOnce(_PRIMARY_MODEL, payload, cappedTimeout());
             if (res.ok) return data; // başarı
 
-            lastStatus = res.status;
-            lastData   = data;
+            lastData = data;
 
             // Kalıcı hata — doğrudan fırlat
             if (_isPermanentError(res.status)) {
@@ -436,40 +447,42 @@ async function _geminiRequestWithRetry(payload) {
                 throw err;
             }
 
-            // Geçici hata — bekle ve tekrar dene
-            if (_isTransientError(res.status, data)) {
-                if (attempt < _MAX_RETRIES) {
-                    _showRetryToast(attempt);
-                    // Retry-After header'ına uy (varsa)
-                    const retryAfterHeader = res.headers?.get?.('Retry-After');
-                    const retryAfterMs = retryAfterHeader
-                        ? parseInt(retryAfterHeader, 10) * 1000
-                        : _RETRY_DELAYS[attempt - 1] + Math.random() * 500;
-                    await new Promise(r => setTimeout(r, retryAfterMs));
-                    continue;
-                }
+            // Geçici hata — deadline kalıyorsa bekle ve tekrar dene
+            if (_isTransientError(res.status, data) && attempt < _MAX_RETRIES) {
+                _showRetryToast(attempt);
+                const retryAfterHeader = res.headers?.get?.('Retry-After');
+                const wantedDelay = retryAfterHeader
+                    ? parseInt(retryAfterHeader, 10) * 1000
+                    : _RETRY_DELAYS[attempt - 1] + Math.random() * 500;
+                const actualDelay = Math.min(wantedDelay, remaining());
+                if (actualDelay <= 0) break; // süre kalmadı, döngüden çık
+                await new Promise(r => setTimeout(r, actualDelay));
+                continue;
             }
         } catch (err) {
             if (err.isPermanent) throw err; // kalıcı — yukarı taşı
             lastErr = err;
-            if (attempt < _MAX_RETRIES) {
+            if (attempt < _MAX_RETRIES && remaining() > 0) {
                 _showRetryToast(attempt);
-                const delay = _RETRY_DELAYS[attempt - 1] + Math.random() * 500;
-                await new Promise(r => setTimeout(r, delay));
+                const wantedDelay = _RETRY_DELAYS[attempt - 1] + Math.random() * 500;
+                const actualDelay = Math.min(wantedDelay, remaining());
+                if (actualDelay <= 0) break;
+                await new Promise(r => setTimeout(r, actualDelay));
             }
         }
     }
 
-    // Tüm PRIMARY denemeleri tükendi — FALLBACK modeli dene (tek)
-    try {
-        _showRetryToast('fallback');
-        const { res: fbRes, data: fbData } = await _fetchOnce(_FALLBACK_MODEL, payload);
-        if (fbRes.ok) return fbData;
-        // Fallback da başarısız
-        lastStatus = fbRes.status;
-        lastData   = fbData;
-    } catch (fbErr) {
-        lastErr = fbErr;
+    // PRIMARY denemeleri tükendi — yeterli süre varsa FALLBACK modeli dene (tek)
+    // Yeterli süre: en az 2 sn (bağlantı kurma payı)
+    if (remaining() >= 2_000) {
+        try {
+            _showRetryToast('fallback');
+            const { res: fbRes, data: fbData } = await _fetchOnce(_FALLBACK_MODEL, payload, cappedTimeout());
+            if (fbRes.ok) return fbData;
+            lastData = fbData;
+        } catch (fbErr) {
+            lastErr = fbErr;
+        }
     }
 
     // Her şey başarısız — anlamlı hata fırlat
