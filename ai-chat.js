@@ -2,6 +2,7 @@ import { db, auth } from "./firebase-config.js";
 import { doc, getDoc, setDoc, collection, addDoc, serverTimestamp, getDocs, writeBatch, increment, query, where } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
 import { fetchSharedProfile, updateSharedProfile } from "./sharedState.js";
 import { getDailySummaryRef } from "./dashboard.js";
+import { calcBalance } from "./finance.js";
 
 // State
 let geminiApiKey = null;
@@ -685,7 +686,7 @@ window.confirmFunctionCall = async function() {
             } else if (funcCall.name === "addFinanceTransaction") {
                 const amount = parseFloat(funcCall.args.amount);
                 if (isNaN(amount) || amount <= 0) throw new Error("Geçersiz veya eksik işlem tutarı.");
-                
+
                 let pmId = funcCall.args.paymentMethodId;
                 if (!pmId) {
                     const pmSnap = await getDocs(collection(db, "users", currentUid, "finance_payment_methods"));
@@ -694,16 +695,47 @@ window.confirmFunctionCall = async function() {
                     }
                 }
 
-                const dateStr = new Date().toISOString().split('T')[0];
-                await addDoc(collection(db, "users", currentUid, "finance_transactions"), {
+                // Yerel tarih kullan (UTC ile gün kayması olmasın)
+                const now = new Date();
+                const dateStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+
+                const txType = funcCall.args.type === 'expense' ? 'expense' : 'income';
+                const txData = {
                     title: funcCall.args.description || "AI İşlemi",
                     amount: amount,
-                    type: funcCall.args.type === 'expense' ? 'expense' : 'income',
+                    type: txType,
                     categoryId: funcCall.args.categoryId || null,
                     paymentMethodId: pmId || null,
                     dateStr: dateStr,
-                    createdAt: serverTimestamp()
+                    createdAt: serverTimestamp(),
+                    updatedAt: serverTimestamp()
+                };
+
+                // Mevcut bu ayki işlemleri oku (onSnapshot cache'den)
+                const targetMonth = now.getMonth();
+                const targetYear = now.getFullYear();
+                const txSnap = await getDocs(collection(db, "users", currentUid, "finance_transactions"));
+                const currentMonthTxs = [];
+                txSnap.forEach(d => {
+                    const tx = d.data();
+                    if (tx.dateStr) {
+                        const tDate = new Date(tx.dateStr);
+                        if (!isNaN(tDate.getTime()) && tDate.getMonth() === targetMonth && tDate.getFullYear() === targetYear) {
+                            currentMonthTxs.push(tx);
+                        }
+                    }
                 });
+                // Yeni işlemi de dahil et
+                currentMonthTxs.push(txData);
+
+                // Batch: işlemi yaz + dailySummary.monthlyBalance güncelle
+                const batch = writeBatch(db);
+                const newTxRef = doc(collection(db, "users", currentUid, "finance_transactions"));
+                batch.set(newTxRef, txData);
+                batch.set(getDailySummaryRef(currentUid), {
+                    monthlyBalance: calcBalance(currentMonthTxs)
+                }, { merge: true });
+                await batch.commit();
             } else if (funcCall.name === "addWaterLog") {
                 const amount = parseFloat(funcCall.args.amount);
                 if (isNaN(amount) || amount <= 0) throw new Error("Geçersiz su miktarı.");
