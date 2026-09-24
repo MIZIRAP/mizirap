@@ -328,9 +328,162 @@ const aiTools = [{
 }];
 
 let pendingFunctionCalls = [];
+let _isRequestInFlight = false;
+
+// ─── Retry / Timeout / Fallback helper ────────────────────────────────────
+const _PRIMARY_MODEL   = 'gemini-3.5-flash-lite';
+const _FALLBACK_MODEL  = 'gemini-3.6-flash';
+const _REQUEST_TIMEOUT_MS = 30_000; // 30 s per attempt
+const _MAX_RETRIES = 3;
+const _RETRY_DELAYS = [1000, 2000, 4000]; // üstel bekleme (ms)
+
+// Geçici hata mı? (yeniden denenebilir)
+function _isTransientError(status, data) {
+    if (!status) return true; // ağ hatası (fetch reject)
+    if (status === 503 || status === 429) return true;
+    const msg = (data?.error?.message || '').toLowerCase();
+    if (msg.includes('high demand') || msg.includes('unavailable') ||
+        msg.includes('resource_exhausted') || msg.includes('try again')) return true;
+    return false;
+}
+
+// Kalıcı hata mı? (deneme yapma)
+function _isPermanentError(status) {
+    return status === 400 || status === 401 || status === 403 || status === 404;
+}
+
+// Tek fetch denemesi — AbortController ile zaman aşımı
+async function _fetchOnce(modelId, payload) {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), _REQUEST_TIMEOUT_MS);
+    try {
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/${modelId}:generateContent?key=${geminiApiKey}`;
+        const res = await fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload),
+            signal: controller.signal
+        });
+        const data = await res.json();
+        return { res, data };
+    } catch (err) {
+        if (err.name === 'AbortError') {
+            throw Object.assign(new Error('timeout'), { isTimeout: true });
+        }
+        throw err;
+    } finally {
+        clearTimeout(timer);
+    }
+}
+
+// Yeniden deneme mesajını UI'da göster (varsa öncekini güncelle)
+function _showRetryToast(attempt) {
+    let el = document.getElementById('ai-retry-toast');
+    if (!el) {
+        el = document.createElement('div');
+        el.id = 'ai-retry-toast';
+        el.className = 'text-xs text-center text-on-surface-variant py-1 italic';
+        chatMessages.appendChild(el);
+    }
+    el.textContent = `Asistan şu an yoğun, tekrar deniyorum... (${attempt}/${_MAX_RETRIES})`;
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+
+function _removeRetryToast() {
+    const el = document.getElementById('ai-retry-toast');
+    if (el) el.remove();
+}
+
+// Tüm denemeler tükendikten sonra kullanıcı dostu hata + Tekrar dene butonu
+function _appendErrorWithRetry(onRetry) {
+    const msgDiv = document.createElement('div');
+    msgDiv.className = 'flex items-start gap-2 max-w-[85%]';
+    msgDiv.innerHTML = `
+        <div class="w-8 h-8 shrink-0 rounded-full flex items-center justify-center neo-surface-small mt-1" style="background-color: #F0F2F8; box-shadow: 2px 2px 4px #D1D9E6, -2px -2px 4px rgba(255,255,255,0.7);">
+            <span class="material-symbols-rounded text-neon-purple text-sm">smart_toy</span>
+        </div>
+        <div class="bg-[#F0F2F8] p-3 rounded-2xl rounded-tl-sm text-sm text-on-surface" style="box-shadow: inset 2px 2px 5px #D1D9E6, inset -2px -2px 5px rgba(255,255,255,0.7);">
+            <p class="mb-2">Asistan şu an yanıt veremiyor, biraz sonra tekrar dene.</p>
+            <button id="ai-retry-btn" class="px-3 py-1 bg-background text-neon-purple rounded-full text-xs font-bold neo-surface-small">Tekrar dene</button>
+        </div>
+    `;
+    chatMessages.appendChild(msgDiv);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+    const btn = document.getElementById('ai-retry-btn');
+    if (btn) btn.addEventListener('click', () => { msgDiv.remove(); onRetry(); });
+}
+
+// Ana retry döngüsü: PRIMARY ile 3 deneme, sonra FALLBACK ile 1 deneme
+async function _geminiRequestWithRetry(payload) {
+    let lastErr = null;
+    let lastData = null;
+    let lastStatus = null;
+
+    for (let attempt = 1; attempt <= _MAX_RETRIES; attempt++) {
+        try {
+            const { res, data } = await _fetchOnce(_PRIMARY_MODEL, payload);
+            if (res.ok) return data; // başarı
+
+            lastStatus = res.status;
+            lastData   = data;
+
+            // Kalıcı hata — doğrudan fırlat
+            if (_isPermanentError(res.status)) {
+                const err = new Error(data?.error?.message || 'Kalıcı API hatası');
+                err.isPermanent  = true;
+                err.status       = res.status;
+                err.apiErrorData = data;
+                throw err;
+            }
+
+            // Geçici hata — bekle ve tekrar dene
+            if (_isTransientError(res.status, data)) {
+                if (attempt < _MAX_RETRIES) {
+                    _showRetryToast(attempt);
+                    // Retry-After header'ına uy (varsa)
+                    const retryAfterHeader = res.headers?.get?.('Retry-After');
+                    const retryAfterMs = retryAfterHeader
+                        ? parseInt(retryAfterHeader, 10) * 1000
+                        : _RETRY_DELAYS[attempt - 1] + Math.random() * 500;
+                    await new Promise(r => setTimeout(r, retryAfterMs));
+                    continue;
+                }
+            }
+        } catch (err) {
+            if (err.isPermanent) throw err; // kalıcı — yukarı taşı
+            lastErr = err;
+            if (attempt < _MAX_RETRIES) {
+                _showRetryToast(attempt);
+                const delay = _RETRY_DELAYS[attempt - 1] + Math.random() * 500;
+                await new Promise(r => setTimeout(r, delay));
+            }
+        }
+    }
+
+    // Tüm PRIMARY denemeleri tükendi — FALLBACK modeli dene (tek)
+    try {
+        _showRetryToast('fallback');
+        const { res: fbRes, data: fbData } = await _fetchOnce(_FALLBACK_MODEL, payload);
+        if (fbRes.ok) return fbData;
+        // Fallback da başarısız
+        lastStatus = fbRes.status;
+        lastData   = fbData;
+    } catch (fbErr) {
+        lastErr = fbErr;
+    }
+
+    // Her şey başarısız — anlamlı hata fırlat
+    const finalErr = lastErr || new Error('Tüm denemeler başarısız');
+    finalErr.allRetriesExhausted = true;
+    throw finalErr;
+}
+// ──────────────────────────────────────────────────────────────────────────
 
 // Send Message logic
 window.sendAiMessage = async function(isSystemResponse = false) {
+    // Çift istek koruması: bir istek sürerken yenisini başlatma
+    if (_isRequestInFlight) return;
+
     if (!isSystemResponse) {
         const text = chatInput.value.trim();
         if (!text) return;
@@ -356,10 +509,9 @@ window.sendAiMessage = async function(isSystemResponse = false) {
     appendLoading();
     chatSendBtn.disabled = true;
     chatInput.disabled = true;
+    _isRequestInFlight = true;
 
     try {
-        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash-lite:generateContent?key=${geminiApiKey}`;
-        
         const dynamicInstruction = await buildAiContext();
         
         // Truncate history to last 10 turns to keep payload small and fast
@@ -373,25 +525,10 @@ window.sendAiMessage = async function(isSystemResponse = false) {
             tools: aiTools
         };
 
-        const res = await fetch(url, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload)
-        });
-
-        const data = await res.json();
+        const data = await _geminiRequestWithRetry(payload);
         
+        _removeRetryToast();
         removeLoading();
-
-        if (!res.ok) {
-            console.error("Gemini API Error:", data);
-            if (res.status === 400 && data.error && data.error.message.includes('API key not valid')) {
-                appendMessage('model', 'API anahtarınız geçersiz görünüyor, Ayarlar\'dan kontrol edin.', true);
-            } else {
-                appendMessage('model', `Bir hata oluştu: ${data.error?.message || 'Bilinmeyen hata'}`);
-            }
-            return;
-        }
 
         const candidate = data.candidates?.[0];
         const functionCallParts = candidate?.content?.parts?.filter(p => p.functionCall) || [];
@@ -411,10 +548,22 @@ window.sendAiMessage = async function(isSystemResponse = false) {
         }
 
     } catch (err) {
+        _removeRetryToast();
         removeLoading();
         console.error("Gemini request failed:", err);
-        appendMessage('model', 'Bağlantı hatası oluştu, lütfen tekrar deneyin.');
+
+        // API anahtarı geçersiz (kalıcı 400)
+        if (err.isPermanent && err.status === 400 &&
+            (err.apiErrorData?.error?.message || '').includes('API key not valid')) {
+            appendMessage('model', 'API anahtarınız geçersiz görünüyor, Ayarlar\'dan kontrol edin.', true);
+        } else if (err.allRetriesExhausted || err.isPermanent) {
+            // Tüm denemeler veya kalıcı hata — Tekrar dene butonu
+            _appendErrorWithRetry(() => window.sendAiMessage(true));
+        } else {
+            _appendErrorWithRetry(() => window.sendAiMessage(true));
+        }
     } finally {
+        _isRequestInFlight = false;
         if (!pendingFunctionCalls || pendingFunctionCalls.length === 0) {
             chatSendBtn.disabled = false;
             chatInput.disabled = false;
@@ -666,9 +815,9 @@ async function sendFunctionResponses(responsesPartArray) {
     
     pendingFunctionCalls = [];
     appendLoading();
+    _isRequestInFlight = true;
 
     try {
-        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash-lite:generateContent?key=${geminiApiKey}`;
         const dynamicInstruction = await buildAiContext();
         // Truncate history to last 10 turns to keep payload small and fast
         const trimmedHistory = chatHistory.slice(-10);
@@ -678,19 +827,9 @@ async function sendFunctionResponses(responsesPartArray) {
             tools: aiTools
         };
 
-        const res = await fetch(url, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload)
-        });
-        const data = await res.json();
+        const data = await _geminiRequestWithRetry(payload);
+        _removeRetryToast();
         removeLoading();
-
-        if (!res.ok) {
-            console.error("Gemini API Error after func:", data);
-            appendMessage('model', `Bir hata oluştu: ${data.error?.message || 'Bilinmeyen hata'}`);
-            return;
-        }
 
         const modelText = data.candidates?.[0]?.content?.parts?.[0]?.text;
         if (modelText) {
@@ -700,10 +839,12 @@ async function sendFunctionResponses(responsesPartArray) {
             appendMessage('model', 'İşlem tamamlandı.');
         }
     } catch (err) {
+        _removeRetryToast();
         removeLoading();
-        console.error("Gemini req failed:", err);
-        appendMessage('model', 'Bağlantı hatası.');
+        console.error("Gemini req failed after func:", err);
+        _appendErrorWithRetry(() => sendFunctionResponses(responsesPartArray));
     } finally {
+        _isRequestInFlight = false;
         chatInput.disabled = false;
         chatSendBtn.disabled = false;
         chatInput.focus();
