@@ -12,6 +12,8 @@ package-lock.json
 *.rej
 *.bak
 scratchpad_*
+*.tmp
+*.log
 
 # Build outputs
 dist/
