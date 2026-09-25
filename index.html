@@ -406,13 +406,6 @@
 
     <!-- ================= ÖZET (Dashboard) ================= -->
         <section id="view-dashboard" class="view active relative">
-        <!-- Initial HTML Loader -->
-        <div id="dashboard-initial-loader" class="absolute inset-0 z-[100] flex items-center justify-center bg-[#F0F2F8]">
-            <div class="flex flex-col items-center gap-4">
-                <div class="w-12 h-12 rounded-full border-4 border-[#D1D9E6] border-t-[#3B82F6] animate-spin"></div>
-                <p class="text-[#64748B] font-bold text-sm tracking-wider uppercase">Yükleniyor...</p>
-            </div>
-        </div>
 
         <!-- TopAppBar -->
         <header class="w-full top-0 sticky z-40 max-w-md mx-auto px-container-padding py-4 bg-[#F0F2F8]">
@@ -442,7 +435,7 @@
             </div>
 
             <!-- 2x2 Grid -->
-            <div id="dashboard-widgets-grid" class="grid grid-cols-2 gap-6 opacity-0 transition-opacity duration-300">
+            <div id="dashboard-widgets-grid" class="grid grid-cols-2 gap-6 transition-opacity duration-300">
                 <!-- Water -->
                 <div data-widget-id="water" class="rounded-[24px] p-[1px] bg-gradient-to-br from-[#3B82F6] to-[#22C55E] cursor-pointer nav-tab" style="background-color: #F0F2F8; box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.08), -6px -6px 12px rgba(255, 255, 255, 0.8);" data-target="view-water">
                     <div class="bg-[#F0F2F8] rounded-[23px] p-5 flex flex-col items-center justify-center gap-3 aspect-square h-full">
@@ -526,7 +519,7 @@
             </div>
 
             <!-- Bottom Widgets Container for Sorting -->
-            <div id="dashboard-bottom-widgets" class="flex flex-col gap-6 w-full opacity-0 transition-opacity duration-300">
+            <div id="dashboard-bottom-widgets" class="flex flex-col gap-6 w-full transition-opacity duration-300">
                 <!-- Finance Card -->
                 <div data-widget-id="finance-bottom" class="rounded-[24px] p-[1px] bg-gradient-to-br from-[#3B82F6] to-[#22C55E] cursor-pointer nav-tab" style="background-color: #F0F2F8; box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.08), -6px -6px 12px rgba(255, 255, 255, 0.8);" data-target="view-finance">
                 <div class="bg-[#F0F2F8] rounded-[23px] p-6 flex items-center justify-between h-[100px]">
@@ -591,7 +584,7 @@
                 <p class="text-[#64748B] text-sm font-medium" style="font-family: 'Plus Jakarta Sans', sans-serif;">Araç bulunamadı</p>
             </div>
 
-            <div id="tools-grid" class="grid grid-cols-2 gap-4 w-full opacity-0">
+            <div id="tools-grid" class="grid grid-cols-2 gap-4 w-full">
             <!-- Araç Kartı 1: Vücut Kitle İndeksi -->
             <div class="tool-card-item rounded-[24px] p-[1px] bg-gradient-to-br from-[#3B82F6] to-[#22C55E] cursor-pointer" style="background-color: #F0F2F8; box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.08), -6px -6px 12px rgba(255, 255, 255, 0.8);" data-tool-id="vki" onclick="if(!window.isEditMode) window.openTool('vki')">
                 <div class="bg-[#F0F2F8] rounded-[23px] p-5 flex flex-col justify-between aspect-square h-full relative">

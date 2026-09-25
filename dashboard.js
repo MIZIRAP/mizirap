@@ -44,10 +44,7 @@ export async function initDashboard(uid) {
         if (!snap.exists()) {
             // Show empty widgets instantly while migration happens in background
             renderDashboard();
-            const grid = document.getElementById("dashboard-widgets-grid");
-            const bottomGrid = document.getElementById("dashboard-bottom-widgets");
-            if (grid) grid.classList.remove('opacity-0');
-            if (bottomGrid) bottomGrid.classList.remove('opacity-0');
+            renderDashboard();
             const loader = document.getElementById("dashboard-initial-loader");
             if (loader) loader.classList.add('hidden');
 
@@ -77,10 +74,6 @@ function startDashboardListener(uid) {
             console.error("Dashboard render error:", err);
         } finally {
             // Reveal dashboard once render is complete (or even if it fails)
-            const grid = document.getElementById("dashboard-widgets-grid");
-            const bottomGrid = document.getElementById("dashboard-bottom-widgets");
-            if (grid) grid.classList.remove('opacity-0');
-            if (bottomGrid) bottomGrid.classList.remove('opacity-0');
 
             // Hide initial HTML loader
             const loader = document.getElementById("dashboard-initial-loader");
@@ -308,10 +301,6 @@ export function clearDashboard() {
     };
     
     // Reset grids to hidden state to prevent flash for next user
-    const grid = document.getElementById("dashboard-widgets-grid");
-    const bottomGrid = document.getElementById("dashboard-bottom-widgets");
-    if (grid) grid.classList.add('opacity-0');
-    if (bottomGrid) bottomGrid.classList.add('opacity-0');
 }
 
 function renderDashboard() {
