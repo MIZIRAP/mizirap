@@ -236,6 +236,22 @@ async function buildAiContext() {
         } else {
             context += `- Mevcut Ödeme Yöntemleri: Yok\n`;
         }
+
+        const booksSnap = await getDocs(collection(db, "users", currentUid, "books"));
+        if (!booksSnap.empty) {
+            const activeBooks = [];
+            booksSnap.forEach(d => {
+                const b = d.data();
+                if (b.status === 'reading') {
+                    activeBooks.push(`'${b.title}' (${b.readPages || 0}/${b.totalPages || '?'} sayfa)`);
+                }
+            });
+            if (activeBooks.length > 0) {
+                context += `- Okunan Kitaplar: ${activeBooks.join(', ')}\n`;
+            } else {
+                context += `- Okunan Kitaplar: Yok\n`;
+            }
+        }
     } catch(err) {
         console.error("Context build error:", err);
     }
@@ -381,14 +397,14 @@ const aiTools = [{
         },
         {
             name: "update_book_progress",
-            description: "Kullanıcının okuduğu bir kitabın kaldığı sayfasını günceller. Kullanıcı 'Şu kitapta X sayfaya geldim' dediğinde kullanılır.",
+            description: "Kullanıcının okuduğu bir kitabın kaldığı sayfasını günceller. Kullanıcı 'Şu kitapta X sayfaya geldim' veya 'kitapta 130. sayfadayım' dediğinde kullanılır.",
             parameters: {
                 type: "OBJECT",
                 properties: {
-                    title: { type: "STRING", description: "Kitabın adı (eşleşme için)" },
+                    title: { type: "STRING", description: "Kitabın adı (eşleşme için). Kullanıcı belirtmediyse boş bırak." },
                     page: { type: "NUMBER", description: "Kaldığı sayfa" }
                 },
-                required: ["title", "page"]
+                required: ["page"]
             }
         },
         {
@@ -989,18 +1005,30 @@ window.confirmFunctionCall = async function(isSilent = false) {
                 const args = funcCall.args;
                 const targetTitle = (args.title || "").toLowerCase();
                 const newPage = Number(args.page) || 0;
-                if (!targetTitle || newPage <= 0) throw new Error("Geçerli bir kitap adı ve sayfa girin.");
+                if (newPage <= 0) throw new Error("Lütfen geçerli bir sayfa numarası girin.");
                 
                 const snap = await getDocs(collection(db, "users", currentUid, "books"));
                 let matches = [];
-                snap.forEach(d => {
-                    const b = d.data();
-                    if (b.title && b.title.toLowerCase().includes(targetTitle)) {
-                        matches.push({ id: d.id, ...b });
-                    }
-                });
-                if (matches.length === 0) throw new Error("Eşleşen kitap bulunamadı.");
-                if (matches.length > 1) throw new Error(`Birden fazla kitap bulundu: ${matches.map(m=>m.title).join(', ')}. Lütfen daha spesifik olun.`);
+                
+                if (!targetTitle) {
+                    snap.forEach(d => {
+                        const b = d.data();
+                        if (b.status === "reading") {
+                            matches.push({ id: d.id, ...b });
+                        }
+                    });
+                    if (matches.length > 1) throw new Error("Birden fazla aktif kitap okuyorsunuz, lütfen hangisi olduğunu belirtin.");
+                    if (matches.length === 0) throw new Error("Şu an okuduğunuz bir kitap bulunmuyor.");
+                } else {
+                    snap.forEach(d => {
+                        const b = d.data();
+                        if (b.title && b.title.toLowerCase().includes(targetTitle)) {
+                            matches.push({ id: d.id, ...b });
+                        }
+                    });
+                    if (matches.length === 0) throw new Error("Eşleşen kitap bulunamadı.");
+                    if (matches.length > 1) throw new Error(`Birden fazla kitap bulundu: ${matches.map(m=>m.title).join(', ')}. Lütfen daha spesifik olun.`);
+                }
                 
                 const book = matches[0];
                 let safeReadPages = newPage;
