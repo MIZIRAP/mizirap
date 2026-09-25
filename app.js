@@ -9,7 +9,7 @@ import { clearAllListeners, clearAllFirestoreListeners } from "./listenerManager
 import { clearSharedState } from "./sharedState.js";
 import { initWorkout, renderSplitView } from "./workout.js";
 import "./activeSession.js";
-import { initAiChat } from "./ai-chat.js?v=20260925";
+import { initAiChat } from "./ai-chat.js?v=20260925-2";
 // ---------- DOM referansları ----------
 const authScreen = document.getElementById("auth-screen");
 const appScreen = document.getElementById("app-screen");

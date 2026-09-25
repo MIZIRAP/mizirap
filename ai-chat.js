@@ -164,32 +164,7 @@ async function buildAiContext() {
 
     let context = systemInstruction + "\n\nEk Bağlam:\n";
     try {
-        const profile = await fetchSharedProfile(currentUid);
-        const isProfileIncomplete = !profile || !profile.weight || !profile.height || !profile.goal;
-
-        if (profile && !isProfileIncomplete) {
-            const goalLabel = profile.goal === 'kilo_verme' || profile.goal === 'lose' ? 'Kilo Verme'
-                : profile.goal === 'kilo_alma' || profile.goal === 'gain' ? 'Kilo Alma' : 'Koruma';
-            context += `- Kullanıcı Profili: Kilo: ${profile.weight} kg, Boy: ${profile.height} cm, Hedef: ${goalLabel}`;
-            if (profile.dob) {
-                const parts = profile.dob.split('.');
-                const year = parts.length === 3 ? parseInt(parts[2], 10) : NaN;
-                const age = isNaN(year) ? null : new Date().getFullYear() - year;
-                if (age) context += `, Yaş: ${age}`;
-            }
-            if (profile.activity) context += `, Aktivite Katsayısı: ${profile.activity}`;
-            context += '\n';
-
-            const pGoal = profile.proteinGoal ? `${profile.proteinGoal}g` : 'Hesaplanmadı';
-            const cGoal = profile.carbGoal ? `${profile.carbGoal}g` : 'Hesaplanmadı';
-            const fGoal = profile.fatGoal ? `${profile.fatGoal}g` : 'Hesaplanmadı';
-            const calGoal = profile.dailyCalorieGoal ? `${profile.dailyCalorieGoal} kcal` : 'Hesaplanmadı';
-            const wGoal = profile.waterGoal ? `${profile.waterGoal} ml` : 'Hesaplanmadı';
-            context += `- Beslenme Hedefleri: Kalori: ${calGoal} | Su: ${wGoal} | Protein: ${pGoal} | Karp: ${cGoal} | Yağ: ${fGoal}\n`;
-        } else if (isProfileIncomplete) {
-            context += '- Kullanıcı Profili: EKSİK (boy/kilo/hedef girilmemiş)\n';
-            context += '- ONBOARDING TALİMATI: Kullanıcının profil bilgileri eksik. İlk mesajında MIZIRAP\'a hoş geldiniz de ve sana daha iyi tavsiyeler verebilmen için boy, kilo, yaş ve hedeflerini sormayı nazikçe teklif et. Kullanıcı yanıt verdiğinde bu bilgileri `update_profile_data` aracıyla kaydet.\n';
-        }
+    try {
 
         const todayStart = new Date();
         todayStart.setHours(0,0,0,0);
@@ -356,32 +331,7 @@ const aiTools = [{
                 required: ["waterGoal"]
             }
         },
-        {
-            name: "get_profile_data",
-            description: "Kullanıcının profildeki tüm kişisel/hedef verilerini (yaş, kilo, boy, aktivite seviyesi, hedefler vb.) okuyup döndürür.",
-            parameters: { type: "OBJECT", properties: {}, required: [] }
-        },
-        {
-            name: "update_profile_data",
-            description: "Kullanıcının fiziksel/kişisel profil bilgilerini veya beslenme hedeflerini günceller.",
-            parameters: {
-                type: "OBJECT",
-                properties: {
-                    weight:           { type: "NUMBER", description: "Vücut kilo (kg)" },
-                    height:           { type: "NUMBER", description: "Boy (cm)" },
-                    age:              { type: "NUMBER", description: "Yaş (yıl)" },
-                    weightGoal:       { type: "STRING", description: "Kilo hedefi: 'kilo_verme', 'kilo_alma', 'kilo_koruma'" },
-                    activity:         { type: "STRING", description: "Aktivite katsayısı: '1.2', '1.375', '1.55', '1.725', '1.9'" },
-                    gender:           { type: "STRING", description: "Cinsiyet: 'm' veya 'f'" },
-                    dailyCalorieGoal: { type: "NUMBER", description: "Günlük kalori hedefi (kcal). Kullanıcı 'kalori hedefimi X yap' dediğinde bu alanı doldur." },
-                    dailyWaterGoal:   { type: "NUMBER", description: "Günlük su hedefi (ml). Kullanıcı 'su hedefimi X yap' dediğinde bu alanı doldur." },
-                    proteinGoal:      { type: "NUMBER", description: "Günlük protein hedefi (gram)" },
-                    carbGoal:         { type: "NUMBER", description: "Günlük karbonhidrat hedefi (gram)" },
-                    fatGoal:          { type: "NUMBER", description: "Günlük yağ hedefi (gram)" }
-                },
-                required: []
-            }
-        },
+
         {
             name: "add_book",
             description: "Kullanıcının kitap listesine yeni bir kitap ekler.",
@@ -722,21 +672,12 @@ window.showFunctionConfirmation = function(funcCalls) {
             desc = `💧 Su: ${args.amount} ml`;
         } else if (funcCall.name === "addCalorieLog") {
             desc = `🍎 Besin: ${args.foodName} (${args.kcal} kcal)`;
-        } else if (funcCall.name === "get_calorie_goal" || funcCall.name === "get_water_goal" || funcCall.name === "get_profile_data") {
+        } else if (funcCall.name === "get_calorie_goal" || funcCall.name === "get_water_goal") {
             desc = `🔍 Veri Okuma: ${funcCall.name}`;
         } else if (funcCall.name === "update_calorie_goal") {
             desc = `🎯 Kalori Hedefi: ${args.calories} kcal`;
         } else if (funcCall.name === "update_water_goal") {
             desc = `💧 Su Hedefi: ${args.waterGoal} ml`;
-        } else if (funcCall.name === "update_profile_data") {
-            const parts = [];
-            if (args.weight) parts.push(`Kilo: ${args.weight} kg`);
-            if (args.height) parts.push(`Boy: ${args.height} cm`);
-            if (args.age)    parts.push(`Yaş: ${args.age}`);
-            if (args.weightGoal) parts.push(`Kilo Hedefi: ${args.weightGoal}`);
-            if (args.activity) parts.push(`Aktivite: ${args.activity}`);
-            if (args.gender) parts.push(`Cinsiyet: ${args.gender === 'm' ? 'Erkek' : 'Kadın'}`);
-            desc = `👤 Profil Güncelleme: ${parts.join(', ') || 'Değişiklik yok'}`;
         } else if (funcCall.name === "add_book") {
             desc = `📚 Kitap Ekle: ${args.title}`;
         } else if (funcCall.name === "update_book_progress") {
@@ -936,55 +877,6 @@ window.confirmFunctionCall = async function(isSilent = false) {
                 const batch = writeBatch(db);
                 batch.set(doc(db, "users", currentUid, "settings", "water"), { dailyGoal: newGoal, updatedAt: serverTimestamp() }, { merge: true });
                 batch.set(getDailySummaryRef(currentUid), { waterGoal: newGoal }, { merge: true });
-                await batch.commit();
-                _cachedContext = null; _cachedContextAt = 0;
-            } else if (funcCall.name === "get_profile_data") {
-                const docSnap = await getDoc(doc(db, "users", currentUid, "profile", "data"));
-                message = docSnap.exists() ? JSON.stringify(docSnap.data()) : JSON.stringify({ status: "profile_not_found" });
-            } else if (funcCall.name === "update_profile_data") {
-                const args = funcCall.args;
-                const profileUpdates = {};
-                if (args.weight     != null) profileUpdates.weight   = Number(args.weight);
-                if (args.height     != null) profileUpdates.height   = Number(args.height);
-                if (args.weightGoal != null) profileUpdates.goal     = String(args.weightGoal);
-                if (args.activity   != null) profileUpdates.activity = String(args.activity);
-                if (args.gender     != null) profileUpdates.gender   = String(args.gender);
-                if (args.age        != null) {
-                    const birthYear = new Date().getFullYear() - Number(args.age);
-                    profileUpdates.dob = String(birthYear);
-                }
-
-                // Kalori/su/makro hedefleri yanlislıkla buraya geldiyse dogru path'e yaz
-                const calorieUpdates = {};
-                if (args.dailyCalorieGoal != null) calorieUpdates.dailyCalorieGoal = Number(args.dailyCalorieGoal);
-                if (args.proteinGoal      != null) calorieUpdates.proteinGoal      = Number(args.proteinGoal);
-                if (args.carbGoal         != null) calorieUpdates.karbGoal         = Number(args.carbGoal);
-                if (args.fatGoal          != null) calorieUpdates.yagGoal          = Number(args.fatGoal);
-
-                const batch = writeBatch(db);
-                let wrote = false;
-
-                if (Object.keys(profileUpdates).length > 0) {
-                    batch.set(doc(db, "users", currentUid, "profile", "data"), profileUpdates, { merge: true });
-                    updateSharedProfile(profileUpdates);
-                    wrote = true;
-                }
-                if (Object.keys(calorieUpdates).length > 0) {
-                    calorieUpdates.updatedAt = serverTimestamp();
-                    batch.set(doc(db, "users", currentUid, "settings", "calories"), calorieUpdates, { merge: true });
-                    if (args.dailyCalorieGoal != null) {
-                        batch.set(getDailySummaryRef(currentUid), { caloriesGoal: Number(args.dailyCalorieGoal) }, { merge: true });
-                    }
-                    wrote = true;
-                }
-                if (args.dailyWaterGoal != null) {
-                    const wGoal = Number(args.dailyWaterGoal);
-                    batch.set(doc(db, "users", currentUid, "settings", "water"), { dailyGoal: wGoal, updatedAt: serverTimestamp() }, { merge: true });
-                    batch.set(getDailySummaryRef(currentUid), { waterGoal: wGoal }, { merge: true });
-                    wrote = true;
-                }
-
-                if (!wrote) throw new Error("Guncellenecek bir alan bulunamadi.");
                 await batch.commit();
                 _cachedContext = null; _cachedContextAt = 0;
 
