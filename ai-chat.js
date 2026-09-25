@@ -164,7 +164,6 @@ async function buildAiContext() {
 
     let context = systemInstruction + "\n\nEk Bağlam:\n";
     try {
-    try {
 
         const todayStart = new Date();
         todayStart.setHours(0,0,0,0);
