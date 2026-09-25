@@ -191,6 +191,21 @@ window.showView = async function(viewId) {
     const target = document.getElementById(viewId);
     if(target) {
         target.classList.remove("hidden");
+        
+        // Update Bottom Navbar Active States
+        document.querySelectorAll('#main-bottom-navbar .nav-tab').forEach(tab => {
+            const span = tab.querySelector('span');
+            if (tab.dataset.target === viewId) {
+                tab.style.boxShadow = 'inset 4px 4px 8px #D1D9E6, inset -4px -4px 8px #FFFFFF';
+                tab.classList.remove('text-[#64748B]');
+                if (span) span.style.color = '#3B82F6';
+            } else {
+                tab.style.boxShadow = '';
+                tab.classList.add('text-[#64748B]');
+                if (span) span.style.color = '';
+            }
+        });
+
         window.scrollTo(0,0);
         
         if (viewId === 'view-workout') {
