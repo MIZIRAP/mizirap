@@ -5666,31 +5666,39 @@
 
     <!-- AI Chat Button -->
     <!-- Main Floating Bottom Navbar -->
-    <div id="main-bottom-navbar" class="fixed flex items-center justify-between bg-[#F0F2F8]" style="bottom: max(env(safe-area-inset-bottom), 8px); left: 50%; transform: translateX(-50%); width: 90%; max-width: 380px; height: 72px; border-radius: 36px; z-index: 70; box-shadow: 6px 6px 12px #D1D9E6, -6px -6px 12px #FFFFFF;">
+    <div id="main-bottom-navbar" class="fixed flex items-center bg-[#F0F2F8] px-2" style="bottom: max(env(safe-area-inset-bottom), 16px); left: 50%; transform: translateX(-50%); width: 90%; max-width: 380px; height: 72px; border-radius: 36px; z-index: 70; box-shadow: 6px 6px 12px #D1D9E6, -6px -6px 12px #FFFFFF;">
         
-        <!-- Left Side (Flex-1) -->
-        <div class="flex-1 flex justify-center items-center h-full">
-            <!-- Araçlar -->
-            <div class="flex flex-col items-center justify-center gap-1 text-[#64748B] hover:text-[#3B82F6] transition-colors w-12 h-12 cursor-pointer nav-tab" data-target="view-tools">
-                <span class="material-symbols-outlined" style="font-size: 24px;">build</span>
-                <span class="font-semibold tracking-wide" style="font-size: 11px;">Araçlar</span>
+        <!-- Left Side: 4 Nav Items -->
+        <div class="flex-1 flex justify-between items-center px-3 h-full">
+            <!-- Active Item (Dashboard) -->
+            <div class="w-12 h-12 rounded-full flex items-center justify-center cursor-pointer nav-tab relative" data-target="view-dashboard" style="box-shadow: inset 4px 4px 8px #D1D9E6, inset -4px -4px 8px #FFFFFF;">
+                <span class="material-symbols-rounded" style="color: #A855F7; font-variation-settings: 'FILL' 1; font-size: 26px;">grid_view</span>
+            </div>
+            
+            <!-- Inactive Item (Water) -->
+            <div class="w-12 h-12 rounded-full flex items-center justify-center cursor-pointer nav-tab text-[#64748B] hover:text-[#A855F7] transition-colors" data-target="view-water">
+                <span class="material-symbols-rounded" style="font-variation-settings: 'FILL' 1; font-size: 26px;">water_drop</span>
+            </div>
+            
+            <!-- Inactive Item (Finance) -->
+            <div class="w-12 h-12 rounded-full flex items-center justify-center cursor-pointer nav-tab text-[#64748B] hover:text-[#A855F7] transition-colors" data-target="view-finance">
+                <span class="material-symbols-rounded" style="font-variation-settings: 'FILL' 1; font-size: 26px;">account_balance_wallet</span>
+            </div>
+            
+            <!-- Inactive Item (Workout) -->
+            <div class="w-12 h-12 rounded-full flex items-center justify-center cursor-pointer nav-tab text-[#64748B] hover:text-[#A855F7] transition-colors" data-target="view-workout">
+                <span class="material-symbols-rounded" style="font-variation-settings: 'FILL' 1; font-size: 26px;">fitness_center</span>
             </div>
         </div>
-
-        <!-- Center AI Button -->
-        <div class="relative shrink-0 flex items-center justify-center" style="transform: translateY(-20px); width: 64px;">
-            <button id="ai-chat-fab" onclick="window.toggleAiChatPanel()" class="w-16 h-16 rounded-full flex items-center justify-center bg-[#A855F7] text-white transition-transform hover:scale-105 active:scale-95 absolute" style="box-shadow: 0 10px 25px rgba(168, 85, 247, 0.45);">
-                <span class="material-symbols-rounded" style="font-size: 32px;">auto_awesome</span>
+        
+        <!-- Separator -->
+        <div class="w-[2px] h-[28px] bg-[#D1D9E6] mx-1 rounded-full opacity-60"></div>
+        
+        <!-- Right Side: AI Assistant -->
+        <div class="shrink-0 flex items-center justify-center px-2">
+            <button id="ai-chat-fab" onclick="window.toggleAiChatPanel()" class="w-[52px] h-[52px] rounded-full flex items-center justify-center text-white transition-transform hover:scale-105 active:scale-95" style="background: linear-gradient(135deg, #A855F7, #6366F1); box-shadow: 0 4px 15px rgba(168, 85, 247, 0.45);">
+                <span class="material-symbols-rounded" style="font-size: 28px; font-variation-settings: 'FILL' 1;">auto_awesome</span>
             </button>
-        </div>
-
-        <!-- Right Side (Flex-1) -->
-        <div class="flex-1 flex justify-center items-center h-full">
-            <!-- Alışveriş -->
-            <div class="flex flex-col items-center justify-center gap-1 text-[#64748B] hover:text-[#3B82F6] transition-colors w-12 h-12 cursor-pointer nav-tab" data-target="view-shopping">
-                <span class="material-symbols-outlined" style="font-size: 24px;">shopping_cart</span>
-                <span class="font-semibold tracking-wide" style="font-size: 11px;">Alışveriş</span>
-            </div>
         </div>
     </div>
 
