@@ -1,8 +1,8 @@
 import { db, auth } from "./firebase-config.js";
 import { doc, getDoc, setDoc, collection, addDoc, serverTimestamp, getDocs, writeBatch, increment, query, where } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
 import { fetchSharedProfile, updateSharedProfile } from "./sharedState.js";
-import { getDailySummaryRef } from "./dashboard.js";
-import { calcBalance } from "./finance.js";
+import { getDailySummaryRef } from "./dashboard.js?v=1787428044";
+import { calcBalance } from "./finance.js?v=20260920";
 
 // State
 let geminiApiKey = null;
@@ -13,7 +13,8 @@ Türkçe, kısa ve öz yanıt ver. İşlem başarılıysa SADECE tek cümleyle o
 Kullanıcı senden değerlendirme veya öneri istediğinde:
 1. Toplam kalori ve makro dağılımını (protein/karbonhidrat/yağ) hedefleriyle kıyasla.
 2. Eksik kalan makrolara (örn: protein veya sağlıklı yağ yetersizliğine) veya yetersiz su tüketimine dikkat çek.
-3. Pratik ve uygulanabilir besin önerilerinde bulun (Örn: 'Protein hedefin için akşam yemeğine süzme yoğurt veya ızgara somon ekleyebilirsin', 'Su hedeflenenin gerisinde, yatmadan önce 2 bardak daha içmeyi hedefleyelim').`;
+3. Pratik ve uygulanabilir besin önerilerinde bulun (Örn: 'Protein hedefin için akşam yemeğine süzme yoğurt veya ızgara somon ekleyebilirsin', 'Su hedeflenenin gerisinde, yatmadan önce 2 bardak daha içmeyi hedefleyelim').
+ARAÇ SEÇİM KURALI: Kullanıcı 'kalori hedefi', 'su hedefi', 'protein hedefi' gibi HEDEF ifadeleri kullanırsa update_calorie_goal veya update_water_goal kullan. Kullanıcı 'kilom', 'boyum', 'yaşım', 'cinsiyetim' gibi FİZİKSEL BİLGİ verirse update_profile_data kullan. İkisini ASLA karıştırma.`;
 
 // DOM Elements
 const chatPanel = document.getElementById('ai-chat-panel');
@@ -187,7 +188,7 @@ async function buildAiContext() {
             context += `- Beslenme Hedefleri: Kalori: ${calGoal} | Su: ${wGoal} | Protein: ${pGoal} | Karp: ${cGoal} | Yağ: ${fGoal}\n`;
         } else if (isProfileIncomplete) {
             context += '- Kullanıcı Profili: EKSİK (boy/kilo/hedef girilmemiş)\n';
-            context += '- ONBOARDING TALİMATI: Kullanıcının profil bilgileri eksik. İlk mesajında MIZIRAP\'a hoş geldiniz de ve sana daha iyi tavsiyeler verebilmen için boy, kilo, yaş ve hedeflerini sormayı nazikçe teklif et. Kullanıcı yanıt verdiğinde bu bilgileri `updateUserProfile` aracıyla kaydet.\n';
+            context += '- ONBOARDING TALİMATI: Kullanıcının profil bilgileri eksik. İlk mesajında MIZIRAP\'a hoş geldiniz de ve sana daha iyi tavsiyeler verebilmen için boy, kilo, yaş ve hedeflerini sormayı nazikçe teklif et. Kullanıcı yanıt verdiğinde bu bilgileri `update_profile_data` aracıyla kaydet.\n';
         }
 
         const todayStart = new Date();
@@ -311,7 +312,7 @@ const aiTools = [{
         },
         {
             name: "update_calorie_goal",
-            description: "Kullanıcının kalori (ve varsa makro) hedeflerini günceller. Kullanıcı 'hedefimi 2200 yap' gibi bir ifade kullandığında bu aracı çağırın.",
+            description: "Kullanıcının günlük kalori ve/veya makro (protein/karbonhidrat/yağ) HEDİFİNİ günceller. Kullanıcı 'kalori hedefimi X yap', 'protein hedefimi Y g yap' gibi ifadeler kullandığında BU araci kullan. Kullanıcının fiziksel bilgileri (boy/kilo/yaş) için bu araci KULLANMA — onlar için update_profile_data kullan.",
             parameters: {
                 type: "OBJECT",
                 properties: {
@@ -330,7 +331,7 @@ const aiTools = [{
         },
         {
             name: "update_water_goal",
-            description: "Kullanıcının günlük su hedefini günceller.",
+            description: "Kullanıcının günlük su içme HEDİFİNİ günceller. Kullanıcı 'su hedefimi X yap', 'günde X litre su içmek istiyorum' gibi ifadeler kullandığında BU araci kullan. Fiziksel bilgiler için bu araci KULLANMA.",
             parameters: {
                 type: "OBJECT",
                 properties: {
@@ -346,14 +347,14 @@ const aiTools = [{
         },
         {
             name: "update_profile_data",
-            description: "Kullanıcının fiziksel profil bilgilerini günceller. Kullanıcı boy, kilo, kilo alma/verme hedefi vb. söylediğinde çağırın.",
+            description: "Kullanıcının SADECE fiziksel/kişisel profil bilgilerini (boy, kilo, yaş, cinsiyet, aktivite seviyesi, kilo alma/verme/koruma hedefi) günceller. Kalori hedefi, su hedefi veya makro (protein/karbonhidrat/yağ) hedefleri için bu araci KULLANMA — bunlar için update_calorie_goal veya update_water_goal kullanılmalı.",
             parameters: {
                 type: "OBJECT",
                 properties: {
-                    weight:   { type: "NUMBER", description: "Kilo (kg)" },
-                    height:   { type: "NUMBER", description: "Boy (cm)" },
-                    age:      { type: "NUMBER", description: "Yaş (yıl)" },
-                    goal:     { type: "STRING", description: "Hedef: 'kilo_verme' (kilo vermek), 'kilo_alma' (kilo almak) veya 'kilo_koruma' (koruma)" },
+                    weight:   { type: "NUMBER", description: "Kilo (kg). Sayısal değer, örn: 75" },
+                    height:   { type: "NUMBER", description: "Boy (cm). Sayısal değer, örn: 178" },
+                    age:      { type: "NUMBER", description: "Yaş (yıl). Sayısal değer, örn: 28" },
+                    weightGoal: { type: "STRING", description: "KİLO YÖNETİM HEDEFİ — kilo vermek, almak veya korumak. Yalnızca: 'kilo_verme', 'kilo_alma', 'kilo_koruma'. Kalori veya su sayısı GİRMEZ." },
                     activity: { type: "STRING", description: "Aktivite katsayısı: '1.2' (hareketsiz), '1.375' (hafif), '1.55' (orta), '1.725' (aktif), '1.9' (çok aktif)" },
                     gender:   { type: "STRING", description: "Cinsiyet: 'm' (erkek) veya 'f' (kadın)" }
                 },
@@ -711,7 +712,7 @@ window.showFunctionConfirmation = function(funcCalls) {
             if (args.weight) parts.push(`Kilo: ${args.weight} kg`);
             if (args.height) parts.push(`Boy: ${args.height} cm`);
             if (args.age)    parts.push(`Yaş: ${args.age}`);
-            if (args.goal)   parts.push(`Hedef: ${args.goal}`);
+            if (args.weightGoal) parts.push(`Kilo Hedefi: ${args.weightGoal}`);
             if (args.activity) parts.push(`Aktivite: ${args.activity}`);
             if (args.gender) parts.push(`Cinsiyet: ${args.gender === 'm' ? 'Erkek' : 'Kadın'}`);
             desc = `👤 Profil Güncelleme: ${parts.join(', ') || 'Değişiklik yok'}`;
@@ -815,31 +816,20 @@ window.confirmFunctionCall = async function(isSilent = false) {
                     updatedAt: serverTimestamp()
                 };
 
-                // Mevcut bu ayki işlemleri oku (onSnapshot cache'den)
-                const targetMonth = now.getMonth();
-                const targetYear = now.getFullYear();
-                const txSnap = await getDocs(collection(db, "users", currentUid, "finance_transactions"));
-                const currentMonthTxs = [];
-                txSnap.forEach(d => {
-                    const tx = d.data();
-                    if (tx.dateStr) {
-                        const tDate = new Date(tx.dateStr);
-                        if (!isNaN(tDate.getTime()) && tDate.getMonth() === targetMonth && tDate.getFullYear() === targetYear) {
-                            currentMonthTxs.push(tx);
-                        }
-                    }
-                });
-                // Yeni işlemi de dahil et
-                currentMonthTxs.push(txData);
+                // Mevcut bakiyeyi oku, delta ekle (batch öncesi getDocs race condition'ı önler)
+                const sumSnap = await getDoc(getDailySummaryRef(currentUid));
+                const currentBalance = sumSnap.exists() ? (sumSnap.data().monthlyBalance || 0) : 0;
+                const delta = txType === 'income' ? amount : -amount;
 
                 // Batch: işlemi yaz + dailySummary.monthlyBalance güncelle
                 const batch = writeBatch(db);
                 const newTxRef = doc(collection(db, "users", currentUid, "finance_transactions"));
                 batch.set(newTxRef, txData);
                 batch.set(getDailySummaryRef(currentUid), {
-                    monthlyBalance: calcBalance(currentMonthTxs)
+                    monthlyBalance: currentBalance + delta
                 }, { merge: true });
                 await batch.commit();
+
             } else if (funcCall.name === "addWaterLog") {
                 const amount = parseFloat(funcCall.args.amount);
                 if (isNaN(amount) || amount <= 0) throw new Error("Geçersiz su miktarı.");
@@ -935,7 +925,7 @@ window.confirmFunctionCall = async function(isSilent = false) {
                 const updates = {};
                 if (args.weight   != null) updates.weight   = Number(args.weight);
                 if (args.height   != null) updates.height   = Number(args.height);
-                if (args.goal     != null) updates.goal     = String(args.goal);
+                if (args.weightGoal != null) updates.goal     = String(args.weightGoal);
                 if (args.activity != null) updates.activity = String(args.activity);
                 if (args.gender   != null) updates.gender   = String(args.gender);
                 if (args.age      != null) {
