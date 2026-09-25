@@ -145,7 +145,7 @@ window.showView = async function(viewId) {
         try {
             switch (viewId) {
                 case 'view-calories': {
-                    const { initCalories } = await import('./calories.js?v=20260925');
+                    const { initCalories } = await import('./calories.js?v=20260925-2');
                     initCalories(uid);
                     break;
                 }

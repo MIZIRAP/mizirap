@@ -124,9 +124,15 @@ let currentKcalPer100g = 0;
 let currentFoodName = "";
 let currentFoodMacros = { karb: 0, protein: 0, yag: 0 };
 function loadFoodLibrary(uid) {
-    const libRef = query(collection(db, "users", uid, "foodLibrary"), orderBy("createdAt", "desc"));
+    const libRef = collection(db, "users", uid, "foodLibrary");
     registerListener(onSnapshot(libRef, (snap) => {
-        libraryFoods = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+        let foods = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+        foods.sort((a, b) => {
+            const timeA = (a.createdAt && a.createdAt.toMillis) ? a.createdAt.toMillis() : 0;
+            const timeB = (b.createdAt && b.createdAt.toMillis) ? b.createdAt.toMillis() : 0;
+            return timeB - timeA;
+        });
+        libraryFoods = foods;
         renderLibraryFoods();
     }, (err) => {
         console.error("Food library load failed:", err);
