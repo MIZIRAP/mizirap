@@ -123,24 +123,14 @@ let tempMacroYag = 65;
 let currentKcalPer100g = 0;
 let currentFoodName = "";
 let currentFoodMacros = { karb: 0, protein: 0, yag: 0 };
-async function loadFoodLibrary(uid) {
+function loadFoodLibrary(uid) {
     const libRef = query(collection(db, "users", uid, "foodLibrary"), orderBy("createdAt", "desc"));
-    try {
-        const snap = await getDocsFromCache(libRef);
+    registerListener(onSnapshot(libRef, (snap) => {
         libraryFoods = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-        if (libraryFoods.length === 0 && !libraryLoadedFromServer) {
-            throw new Error("Cache empty");
-        }
-    } catch(e) {
-        try {
-            const snap = await getDocsFromServer(libRef);
-            libraryFoods = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-            libraryLoadedFromServer = true;
-        } catch (err) {
-            console.error("Food library load failed:", err);
-        }
-    }
-    renderLibraryFoods();
+        renderLibraryFoods();
+    }, (err) => {
+        console.error("Food library load failed:", err);
+    }));
 }
 
 export function initCalories(uid) {
