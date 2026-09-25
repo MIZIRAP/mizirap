@@ -59,6 +59,7 @@ Antrenman, kalori, su, finans, kitap/film ve alışveriş takibini tek çatı al
 5. **DÜŞÜK:** Aktif antrenman (workout) seans yönetiminin test edilip edge case'lerinin çözülmesi.
 
 ## 9. Geliştirici Kısıtlamaları (BUNLARI ASLA YAPMA)
+*   **Yanlış Branch'e Push Yapma (ÇOK KRİTİK):** Canlı site (GitHub Pages) `main` branch'inden beslenmektedir. Yaptığınız düzeltmelerin ve özelliklerin kullanıcının canlı sitesine yansıması için çalışmalarınızı mutlaka `main` branch'ine pushlamalı veya çalıştığınız dalı iş bitiminde `main` ile birleştirip (merge) pushlamalısınız.
 *   **PowerShell Düzenlemesi:** Dosyaları değiştirmek için `Set-Content` veya `-replace` ASLA KULLANMA.
 *   **Tasarım Dışına Çıkma:** Yeni modüller mevcut yapıların kopyalanıp uyarlanmasıyla yapılmalı, düz ve klasik buton/kart tasarımları kullanılmamalıdır.
 *   **Veri Migration'ı:** Aksi açıkça istenmedikçe Firestore üzerindeki mevcut kullanıcı veri yapısını değiştirecek köklü hareketlerden kaçın.
