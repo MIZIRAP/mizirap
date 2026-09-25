@@ -31,6 +31,7 @@ Antrenman, kalori, su, finans, kitap/film ve alışveriş takibini tek çatı al
     *   Beslenme koçu ve onboarding senaryoları eklendi.
     *   `gemini-3.5-flash-lite` modeline geçiş yapılarak kapasite optimize edildi, maliyet ve kota verimliliği artırıldı.
     *   **Dayanıklılık (Resilience):** AI istekleri için 30 saniye per-request timeout, 3 tekrar deneme (üstel beklemeli), `gemini-3.6-flash` yedek modeli kullanımı ve toplam 60 saniyelik limit mekanizması (deadline) kuruldu.
+    *   **Gelişmiş Veri Okuma/Yazma:** AI asistanına yeni fonksiyon çağrıları (kalori/su hedefleri, kitap ve film/dizi ilerleme güncellemeleri, okuma modları) eklenerek Dashboard entegrasyonu sağlandı.
 *   **Temizlik ve Optimizasyon:** Kullanılmayan `.tmp` ve `headers.txt` gibi dosyalar temizlendi ve `.gitignore` ile yoksayıldı.
 
 ## 5. Önemli Teknik ve Tasarım Kararları
@@ -49,12 +50,11 @@ Antrenman, kalori, su, finans, kitap/film ve alışveriş takibini tek çatı al
 ## 7. Bilinen Sorunlar ve Teknik Borç
 *   **AI Yanıt Gecikmesi (Latency):** AI asistanı bir mesaj aldığında sırasıyla profil, kalori, özet, kategori ve ödeme yöntemi verilerini (5 ayrı `await`) okur, bu da API çağrısı başlamadan önce ciddi bir yavaşlamaya neden olur. Şu an `debug/assistant-latency` dalında loglama (ölçüm) aşamasındadır.
 *   **Tarayıcı Önbellekleme Sorunu:** Uygulamada `sw.js` (Service Worker) bulunmamakta, `app.js` ise `?v=20260920` gibi statik bir cache-buster ile çağrılmaktadır. JS dosyalarında yapılan son değişikliklerin canlıya yansıması için kullanıcıların "hard refresh" yapması gerekmektedir.
-*   **Finans Senkronizasyon Bug'ı:** AI asistan ile finans işlemi eklendiğinde işlem sadece listeye yazılmakta, Dashboard'daki günlük özeti güncellememektedir. Çözümü `fix/assistant-finance-sync` dalında push edilmiş ancak henüz `main`'e merge edilmemiştir.
+*   **(ÇÖZÜLDÜ) Finans Senkronizasyon Bug'ı:** AI asistan ile finans işlemi eklendiğinde Dashboard'daki günlük özetin güncellenmeme sorunu çözülerek ana dala (main) aktarıldı.
 
 ## 8. Açık TODO'lar ve Öncelik Sırası
 1. **YÜKSEK:** AI gecikme testlerinin sonuçlarını alıp (ardışık Firestore okumalarını paralelleştirerek veya streaming kullanarak) gecikmeyi azaltmak.
-2. **YÜKSEK:** `fix/assistant-finance-sync` PR'ını main'e birleştirmek.
-3. **ORTA:** `index.html`'deki statik cache-buster parametresini otomatik hale getirmek veya PWA Service Worker ile dinamik güncellemeleri sağlamak.
+2. **ORTA:** `index.html`'deki statik cache-buster parametresini otomatik hale getirmek veya PWA Service Worker ile dinamik güncellemeleri sağlamak.
 4. **DÜŞÜK:** Performans odaklı Firestore okuma-yazma kotalarının azaltılması.
 5. **DÜŞÜK:** Aktif antrenman (workout) seans yönetiminin test edilip edge case'lerinin çözülmesi.
 

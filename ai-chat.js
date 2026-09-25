@@ -305,24 +305,111 @@ const aiTools = [{
             }
         },
         {
-            name: "updateUserProfile",
-            description: "Kullanıcının profilini veya beslenme hedeflerini günceller. Kullanıcı boy, kilo, hedef, su hedefi, makro hedefleri (protein, karb, yağ) gibi bilgilerini söylediğinde bu aracı çağır.",
+            name: "get_calorie_goal",
+            description: "Kullanıcının güncel günlük kalori hedefini ve bugüne kadar tükettiği kaloriyi okuyup döndürür.",
+            parameters: { type: "OBJECT", properties: {}, required: [] }
+        },
+        {
+            name: "update_calorie_goal",
+            description: "Kullanıcının kalori (ve varsa makro) hedeflerini günceller. Kullanıcı 'hedefimi 2200 yap' gibi bir ifade kullandığında bu aracı çağırın.",
             parameters: {
                 type: "OBJECT",
                 properties: {
-                    weight:           { type: "NUMBER", description: "Kilo (kg)" },
-                    height:           { type: "NUMBER", description: "Boy (cm)" },
-                    age:              { type: "NUMBER", description: "Yaş (yıl)" },
-                    goal:             { type: "STRING", description: "Hedef: 'kilo_verme' (kilo vermek), 'kilo_alma' (kilo almak) veya 'kilo_koruma' (koruma)" },
-                    activity:         { type: "STRING", description: "Aktivite katsayısı: '1.2' (hareketsiz), '1.375' (hafif), '1.55' (orta), '1.725' (aktif), '1.9' (çok aktif)" },
-                    gender:           { type: "STRING", description: "Cinsiyet: 'm' (erkek) veya 'f' (kadın)" },
-                    waterGoal:        { type: "NUMBER", description: "Günlük su hedefi (ml cinsinden, örn: 3000)" },
-                    proteinGoal:      { type: "NUMBER", description: "Günlük protein hedefi (gram)" },
-                    carbGoal:         { type: "NUMBER", description: "Günlük karbonhidrat hedefi (gram)" },
-                    fatGoal:          { type: "NUMBER", description: "Günlük yağ hedefi (gram)" },
-                    dailyCalorieGoal: { type: "NUMBER", description: "Günlük toplam kalori hedefi (kcal)" }
+                    calories: { type: "NUMBER", description: "Günlük toplam kalori hedefi (kcal)" },
+                    protein: { type: "NUMBER", description: "Günlük protein hedefi (gram)" },
+                    carbs: { type: "NUMBER", description: "Günlük karbonhidrat hedefi (gram)" },
+                    fat: { type: "NUMBER", description: "Günlük yağ hedefi (gram)" }
+                },
+                required: ["calories"]
+            }
+        },
+        {
+            name: "get_water_goal",
+            description: "Kullanıcının güncel günlük su hedefini ve bugün içtiği su miktarını okuyup döndürür.",
+            parameters: { type: "OBJECT", properties: {}, required: [] }
+        },
+        {
+            name: "update_water_goal",
+            description: "Kullanıcının günlük su hedefini günceller.",
+            parameters: {
+                type: "OBJECT",
+                properties: {
+                    waterGoal: { type: "NUMBER", description: "Günlük su hedefi (ml cinsinden, örn: 3000)" }
+                },
+                required: ["waterGoal"]
+            }
+        },
+        {
+            name: "get_profile_data",
+            description: "Kullanıcının profildeki tüm kişisel/hedef verilerini (yaş, kilo, boy, aktivite seviyesi, hedefler vb.) okuyup döndürür.",
+            parameters: { type: "OBJECT", properties: {}, required: [] }
+        },
+        {
+            name: "update_profile_data",
+            description: "Kullanıcının fiziksel profil bilgilerini günceller. Kullanıcı boy, kilo, kilo alma/verme hedefi vb. söylediğinde çağırın.",
+            parameters: {
+                type: "OBJECT",
+                properties: {
+                    weight:   { type: "NUMBER", description: "Kilo (kg)" },
+                    height:   { type: "NUMBER", description: "Boy (cm)" },
+                    age:      { type: "NUMBER", description: "Yaş (yıl)" },
+                    goal:     { type: "STRING", description: "Hedef: 'kilo_verme' (kilo vermek), 'kilo_alma' (kilo almak) veya 'kilo_koruma' (koruma)" },
+                    activity: { type: "STRING", description: "Aktivite katsayısı: '1.2' (hareketsiz), '1.375' (hafif), '1.55' (orta), '1.725' (aktif), '1.9' (çok aktif)" },
+                    gender:   { type: "STRING", description: "Cinsiyet: 'm' (erkek) veya 'f' (kadın)" }
                 },
                 required: []
+            }
+        },
+        {
+            name: "add_book",
+            description: "Kullanıcının kitap listesine yeni bir kitap ekler.",
+            parameters: {
+                type: "OBJECT",
+                properties: {
+                    title: { type: "STRING", description: "Kitabın adı" },
+                    author: { type: "STRING", description: "Yazarı" },
+                    totalPages: { type: "NUMBER", description: "Toplam sayfa sayısı" }
+                },
+                required: ["title"]
+            }
+        },
+        {
+            name: "update_book_progress",
+            description: "Kullanıcının okuduğu bir kitabın kaldığı sayfasını günceller. Kullanıcı 'Şu kitapta X sayfaya geldim' dediğinde kullanılır.",
+            parameters: {
+                type: "OBJECT",
+                properties: {
+                    title: { type: "STRING", description: "Kitabın adı (eşleşme için)" },
+                    page: { type: "NUMBER", description: "Kaldığı sayfa" }
+                },
+                required: ["title", "page"]
+            }
+        },
+        {
+            name: "add_media",
+            description: "Kullanıcının listesine yeni bir film veya dizi ekler.",
+            parameters: {
+                type: "OBJECT",
+                properties: {
+                    title: { type: "STRING", description: "İçeriğin adı" },
+                    type: { type: "STRING", description: "İçerik türü: 'movie' (film) veya 'series' (dizi)" },
+                    status: { type: "STRING", description: "İzleme durumu: 'watchlist' (izlenecek), 'watching' (izliyorum), 'completed' (bitti)" }
+                },
+                required: ["title", "type", "status"]
+            }
+        },
+        {
+            name: "update_media_status",
+            description: "Kullanıcının listesindeki bir film veya dizinin durumunu (veya bölümünü) günceller.",
+            parameters: {
+                type: "OBJECT",
+                properties: {
+                    title: { type: "STRING", description: "İçeriğin adı (eşleşme için)" },
+                    status: { type: "STRING", description: "Yeni izleme durumu: 'watchlist', 'watching' veya 'completed'." },
+                    season: { type: "NUMBER", description: "Şu anki sezon (dizi ise)" },
+                    episode: { type: "NUMBER", description: "Şu anki bölüm (dizi ise)" }
+                },
+                required: ["title", "status"]
             }
         }
     ]
@@ -553,7 +640,13 @@ window.sendAiMessage = async function(isSystemResponse = false) {
             pendingFunctionCalls = functionCallParts.map(p => p.functionCall);
             // Modele ait çağrıyı history'ye olduğu gibi ekle (Gemini şartı)
             chatHistory.push({ role: "model", parts: candidate.content.parts });
-            showFunctionConfirmation(pendingFunctionCalls);
+            
+            const isReadOnly = pendingFunctionCalls.every(fc => fc.name.startsWith("get_"));
+            if (isReadOnly) {
+                window.confirmFunctionCall(true);
+            } else {
+                showFunctionConfirmation(pendingFunctionCalls);
+            }
         } else if (modelText) {
             appendMessage('model', modelText);
             chatHistory.push({ role: "model", parts: [{ text: modelText }] });
@@ -607,7 +700,13 @@ window.showFunctionConfirmation = function(funcCalls) {
             desc = `💧 Su: ${args.amount} ml`;
         } else if (funcCall.name === "addCalorieLog") {
             desc = `🍎 Besin: ${args.foodName} (${args.kcal} kcal)`;
-        } else if (funcCall.name === "updateUserProfile") {
+        } else if (funcCall.name === "get_calorie_goal" || funcCall.name === "get_water_goal" || funcCall.name === "get_profile_data") {
+            desc = `🔍 Veri Okuma: ${funcCall.name}`;
+        } else if (funcCall.name === "update_calorie_goal") {
+            desc = `🎯 Kalori Hedefi: ${args.calories} kcal`;
+        } else if (funcCall.name === "update_water_goal") {
+            desc = `💧 Su Hedefi: ${args.waterGoal} ml`;
+        } else if (funcCall.name === "update_profile_data") {
             const parts = [];
             if (args.weight) parts.push(`Kilo: ${args.weight} kg`);
             if (args.height) parts.push(`Boy: ${args.height} cm`);
@@ -615,12 +714,15 @@ window.showFunctionConfirmation = function(funcCalls) {
             if (args.goal)   parts.push(`Hedef: ${args.goal}`);
             if (args.activity) parts.push(`Aktivite: ${args.activity}`);
             if (args.gender) parts.push(`Cinsiyet: ${args.gender === 'm' ? 'Erkek' : 'Kadın'}`);
-            if (args.waterGoal) parts.push(`Su Hedefi: ${args.waterGoal} ml`);
-            if (args.proteinGoal) parts.push(`Protein: ${args.proteinGoal}g`);
-            if (args.carbGoal) parts.push(`Karp: ${args.carbGoal}g`);
-            if (args.fatGoal) parts.push(`Yağ: ${args.fatGoal}g`);
-            if (args.dailyCalorieGoal) parts.push(`Kalori: ${args.dailyCalorieGoal} kcal`);
             desc = `👤 Profil Güncelleme: ${parts.join(', ') || 'Değişiklik yok'}`;
+        } else if (funcCall.name === "add_book") {
+            desc = `📚 Kitap Ekle: ${args.title}`;
+        } else if (funcCall.name === "update_book_progress") {
+            desc = `📖 Kitap İlerlemesi: ${args.title} (${args.page}. sayfa)`;
+        } else if (funcCall.name === "add_media") {
+            desc = `🎬 Medya Ekle: ${args.title}`;
+        } else if (funcCall.name === "update_media_status") {
+            desc = `📺 Medya Durumu: ${args.title} (${args.status})`;
         }
         descriptions.push(`${index + 1}) ${desc}`);
     });
@@ -646,9 +748,11 @@ window.showFunctionConfirmation = function(funcCalls) {
     setTimeout(() => { chatMessages.scrollTop = chatMessages.scrollHeight; }, 50);
 };
 
-window.confirmFunctionCall = async function() {
-    const card = document.getElementById("pending-func-card");
-    if (card) card.innerHTML = `<p class="text-xs text-neon-purple font-bold text-center py-2">Onaylandı, işleniyor...</p>`;
+window.confirmFunctionCall = async function(isSilent = false) {
+    if (!isSilent) {
+        const card = document.getElementById("pending-func-card");
+        if (card) card.innerHTML = `<p class="text-xs text-neon-purple font-bold text-center py-2">Onaylandı, işleniyor...</p>`;
+    }
     
     let allResponses = [];
 
@@ -784,7 +888,49 @@ window.confirmFunctionCall = async function() {
                 }, { merge: true });
 
                 await batch.commit();
-            } else if (funcCall.name === "updateUserProfile") {
+            } else if (funcCall.name === "get_calorie_goal") {
+                const settingsRef = doc(db, "users", currentUid, "settings", "calories");
+                const docSnap = await getDoc(settingsRef);
+                const sumSnap = await getDoc(getDailySummaryRef(currentUid));
+                let goal = 2000, consumed = 0;
+                if (docSnap.exists() && docSnap.data().dailyCalorieGoal) goal = docSnap.data().dailyCalorieGoal;
+                if (sumSnap.exists() && sumSnap.data().caloriesConsumed) consumed = sumSnap.data().caloriesConsumed;
+                message = JSON.stringify({ dailyCalorieGoal: goal, caloriesConsumedToday: consumed });
+            } else if (funcCall.name === "update_calorie_goal") {
+                const args = funcCall.args;
+                const newGoal = Number(args.calories);
+                if (!newGoal || newGoal <= 0) throw new Error("Geçersiz kalori hedefi.");
+                
+                const updates = { dailyCalorieGoal: newGoal, updatedAt: serverTimestamp() };
+                if (args.protein != null) updates.proteinGoal = Number(args.protein);
+                if (args.carbs != null) updates.karbGoal = Number(args.carbs);
+                if (args.fat != null) updates.yagGoal = Number(args.fat);
+
+                const batch = writeBatch(db);
+                batch.set(doc(db, "users", currentUid, "settings", "calories"), updates, { merge: true });
+                batch.set(getDailySummaryRef(currentUid), { caloriesGoal: newGoal }, { merge: true });
+                await batch.commit();
+                _cachedContext = null; _cachedContextAt = 0;
+            } else if (funcCall.name === "get_water_goal") {
+                const settingsRef = doc(db, "users", currentUid, "settings", "water");
+                const docSnap = await getDoc(settingsRef);
+                const sumSnap = await getDoc(getDailySummaryRef(currentUid));
+                let goal = 2000, consumed = 0;
+                if (docSnap.exists() && docSnap.data().dailyGoal) goal = docSnap.data().dailyGoal;
+                if (sumSnap.exists() && sumSnap.data().waterAmount) consumed = sumSnap.data().waterAmount;
+                message = JSON.stringify({ dailyWaterGoal: goal, waterConsumedToday: consumed });
+            } else if (funcCall.name === "update_water_goal") {
+                const newGoal = Number(funcCall.args.waterGoal);
+                if (!newGoal || newGoal <= 0) throw new Error("Geçersiz su hedefi.");
+                const batch = writeBatch(db);
+                batch.set(doc(db, "users", currentUid, "settings", "water"), { dailyGoal: newGoal, updatedAt: serverTimestamp() }, { merge: true });
+                batch.set(getDailySummaryRef(currentUid), { waterGoal: newGoal }, { merge: true });
+                await batch.commit();
+                _cachedContext = null; _cachedContextAt = 0;
+            } else if (funcCall.name === "get_profile_data") {
+                const docSnap = await getDoc(doc(db, "users", currentUid, "profile", "data"));
+                message = docSnap.exists() ? JSON.stringify(docSnap.data()) : JSON.stringify({ status: "profile_not_found" });
+            } else if (funcCall.name === "update_profile_data") {
                 const args = funcCall.args;
                 const updates = {};
                 if (args.weight   != null) updates.weight   = Number(args.weight);
@@ -793,22 +939,118 @@ window.confirmFunctionCall = async function() {
                 if (args.activity != null) updates.activity = String(args.activity);
                 if (args.gender   != null) updates.gender   = String(args.gender);
                 if (args.age      != null) {
-                    // Store age as birth year estimate in dob field for compatibility
                     const birthYear = new Date().getFullYear() - Number(args.age);
                     updates.dob = String(birthYear);
                 }
-                if (args.waterGoal != null) updates.waterGoal = Number(args.waterGoal);
-                if (args.proteinGoal != null) updates.proteinGoal = Number(args.proteinGoal);
-                if (args.carbGoal != null) updates.carbGoal = Number(args.carbGoal);
-                if (args.fatGoal != null) updates.fatGoal = Number(args.fatGoal);
-                if (args.dailyCalorieGoal != null) updates.dailyCalorieGoal = Number(args.dailyCalorieGoal);
-
-                if (Object.keys(updates).length === 0) throw new Error("Güncellenecek alan bulunamadı.");
+                if (Object.keys(updates).length === 0) throw new Error("Güncellenecek profil alanı bulunamadı.");
                 await setDoc(doc(db, "users", currentUid, "profile", "data"), updates, { merge: true });
                 updateSharedProfile(updates);
-                // Invalidate context cache so next message picks up new profile data
-                _cachedContext = null;
-                _cachedContextAt = 0;
+                _cachedContext = null; _cachedContextAt = 0;
+            } else if (funcCall.name === "add_book") {
+                const args = funcCall.args;
+                if (!args.title) throw new Error("Kitap adı gerekli.");
+                const data = {
+                    title: args.title.trim(),
+                    author: args.author ? args.author.trim() : "",
+                    totalPages: args.totalPages ? Number(args.totalPages) : 0,
+                    readPages: 0,
+                    status: "to_read",
+                    createdAt: serverTimestamp(),
+                    updatedAt: serverTimestamp()
+                };
+                await addDoc(collection(db, "users", currentUid, "books"), data);
+            } else if (funcCall.name === "update_book_progress") {
+                const args = funcCall.args;
+                const targetTitle = (args.title || "").toLowerCase();
+                const newPage = Number(args.page) || 0;
+                if (!targetTitle || newPage <= 0) throw new Error("Geçerli bir kitap adı ve sayfa girin.");
+                
+                const snap = await getDocs(collection(db, "users", currentUid, "books"));
+                let matches = [];
+                snap.forEach(d => {
+                    const b = d.data();
+                    if (b.title && b.title.toLowerCase().includes(targetTitle)) {
+                        matches.push({ id: d.id, ...b });
+                    }
+                });
+                if (matches.length === 0) throw new Error("Eşleşen kitap bulunamadı.");
+                if (matches.length > 1) throw new Error(`Birden fazla kitap bulundu: ${matches.map(m=>m.title).join(', ')}. Lütfen daha spesifik olun.`);
+                
+                const book = matches[0];
+                let safeReadPages = newPage;
+                let total = book.totalPages || 0;
+                if (total > 0 && safeReadPages > total) safeReadPages = total;
+                let status = "reading";
+                if (total > 0 && safeReadPages >= total) status = "finished";
+                
+                const batch = writeBatch(db);
+                batch.update(doc(db, "users", currentUid, "books", book.id), {
+                    readPages: safeReadPages,
+                    status: status,
+                    updatedAt: serverTimestamp()
+                });
+                batch.set(getDailySummaryRef(currentUid), {
+                    activeBookTotal: total,
+                    activeBookRead: safeReadPages
+                }, { merge: true });
+                await batch.commit();
+            } else if (funcCall.name === "add_media") {
+                const args = funcCall.args;
+                if (!args.title || !args.type || !args.status) throw new Error("Başlık, tür ve durum gerekli.");
+                const data = {
+                    title: args.title.trim(),
+                    type: args.type === "series" ? "series" : "movie",
+                    status: ["watchlist", "watching", "completed"].includes(args.status) ? args.status : "watchlist",
+                    createdAt: serverTimestamp(),
+                    updatedAt: serverTimestamp()
+                };
+                if (data.type === "series") {
+                    data.totalSeason = 1; data.totalEpisode = 1; data.season = 1; data.episode = 1;
+                }
+                const batch = writeBatch(db);
+                const newRef = doc(collection(db, "users", currentUid, "movies"));
+                batch.set(newRef, data);
+                batch.set(getDailySummaryRef(currentUid), {
+                    activeMovieTitle: data.title,
+                    activeMovieType: data.type,
+                    activeMovieSeason: data.season || null,
+                    activeMovieEpisode: data.episode || null
+                }, { merge: true });
+                await batch.commit();
+            } else if (funcCall.name === "update_media_status") {
+                const args = funcCall.args;
+                const targetTitle = (args.title || "").toLowerCase();
+                if (!targetTitle) throw new Error("Medya adı gerekli.");
+                const newStatus = ["watchlist", "watching", "completed"].includes(args.status) ? args.status : null;
+                
+                const snap = await getDocs(collection(db, "users", currentUid, "movies"));
+                let matches = [];
+                snap.forEach(d => {
+                    const m = d.data();
+                    if (m.title && m.title.toLowerCase().includes(targetTitle)) {
+                        matches.push({ id: d.id, ...m });
+                    }
+                });
+                if (matches.length === 0) throw new Error("Eşleşen film/dizi bulunamadı.");
+                if (matches.length > 1) throw new Error(`Birden fazla eşleşme bulundu: ${matches.map(m=>m.title).join(', ')}.`);
+                
+                const media = matches[0];
+                const updates = { updatedAt: serverTimestamp() };
+                if (newStatus) updates.status = newStatus;
+                if (media.type === "series") {
+                    if (args.season) updates.season = Number(args.season);
+                    if (args.episode) updates.episode = Number(args.episode);
+                }
+                
+                const batch = writeBatch(db);
+                batch.update(doc(db, "users", currentUid, "movies", media.id), updates);
+                batch.set(getDailySummaryRef(currentUid), {
+                    activeMovieTitle: media.title,
+                    activeMovieType: media.type,
+                    activeMovieSeason: updates.season || media.season || null,
+                    activeMovieEpisode: updates.episode || media.episode || null
+                }, { merge: true });
+                await batch.commit();
             }
         } catch(err) {
             console.error("Function exec error:", err);
