@@ -5676,9 +5676,40 @@
     </div>
 
     <!-- AI Chat Button -->
-    <button id="ai-chat-fab" class="fixed w-14 h-14 rounded-full flex items-center justify-center transition-transform hover:scale-105 active:scale-95" style="bottom: 24px; right: 24px; z-index: 70; background-color: #F0F2F8; box-shadow: 6px 6px 12px #D1D9E6, -6px -6px 12px rgba(255, 255, 255, 0.7);" onclick="window.toggleAiChatPanel()">
-        <span class="material-symbols-rounded text-neon-purple text-2xl">smart_toy</span>
-    </button>
+    <!-- Main Floating Bottom Navbar -->
+    <div id="main-bottom-navbar" class="fixed bottom-4 left-1/2 -translate-x-1/2 w-[92%] max-w-[420px] h-[72px] rounded-[36px] flex items-center justify-between px-6 bg-[#F0F2F8]" style="z-index: 70; box-shadow: 6px 6px 12px #D1D9E6, -6px -6px 12px #FFFFFF;">
+        
+        <!-- Özet -->
+        <button class="flex flex-col items-center justify-center gap-1 text-[#64748B] hover:text-[#3B82F6] transition-colors">
+            <span class="material-symbols-outlined text-[24px]">grid_view</span>
+            <span class="text-[11px] font-semibold tracking-wide">Özet</span>
+        </button>
+
+        <!-- Kalori & Su -->
+        <button class="flex flex-col items-center justify-center gap-1 text-[#64748B] hover:text-[#3B82F6] transition-colors pr-3">
+            <span class="material-symbols-outlined text-[24px]">local_fire_department</span>
+            <span class="text-[11px] font-semibold tracking-wide">Kalori & Su</span>
+        </button>
+
+        <!-- Center AI Button -->
+        <div class="relative flex items-center justify-center -translate-y-5">
+            <button id="ai-chat-fab" onclick="window.toggleAiChatPanel()" class="w-16 h-16 rounded-full flex items-center justify-center bg-[#A855F7] text-white transition-transform hover:scale-105 active:scale-95" style="box-shadow: 0 10px 25px rgba(168, 85, 247, 0.45);">
+                <span class="material-symbols-rounded text-[32px]">auto_awesome</span>
+            </button>
+        </div>
+
+        <!-- Antrenman -->
+        <button class="flex flex-col items-center justify-center gap-1 text-[#64748B] hover:text-[#3B82F6] transition-colors pl-3">
+            <span class="material-symbols-outlined text-[24px]">fitness_center</span>
+            <span class="text-[11px] font-semibold tracking-wide">Antrenman</span>
+        </button>
+
+        <!-- Finans -->
+        <button class="flex flex-col items-center justify-center gap-1 text-[#64748B] hover:text-[#3B82F6] transition-colors">
+            <span class="material-symbols-outlined text-[24px]">account_balance_wallet</span>
+            <span class="text-[11px] font-semibold tracking-wide">Finans</span>
+        </button>
+    </div>
 
     <!-- AI Chat Panel -->
     <div id="ai-chat-panel" class="hidden fixed inset-0 flex items-end justify-center" style="z-index: 80;">
