@@ -1,4 +1,4 @@
-﻿/* Ambient shadows and transitions */
+/* Ambient shadows and transitions */
 .interactive-card {
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
@@ -31,6 +31,7 @@ body {
     transition: stroke-dashoffset 0.35s;
     transform: rotate(-90deg);
     transform-origin: 50% 50%;
+    will-change: stroke-dashoffset;
 }
 
 
