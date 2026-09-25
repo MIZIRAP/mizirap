@@ -36,6 +36,8 @@ onAuthStateChanged(auth, async (user) => {
             authScreen.classList.add("hidden");
             authScreen.classList.remove("flex");
             appScreen.classList.remove("hidden");
+            // iOS Safari'de 100dvh hesabını auth callback sonrası yeniden tetikle
+            requestAnimationFrame(() => { window.scrollTo(0, 0); });
             
             if (user.uid !== localStorage.getItem('uid')) {
                 clearProfile();
