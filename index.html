@@ -5669,19 +5669,13 @@
     <!-- Main Floating Bottom Navbar -->
     <div id="main-bottom-navbar" class="fixed flex items-center justify-between bg-[#F0F2F8]" style="bottom: 16px; left: 50%; transform: translateX(-50%); width: 96%; max-width: 440px; height: 72px; border-radius: 36px; z-index: 70; box-shadow: 6px 6px 12px #D1D9E6, -6px -6px 12px #FFFFFF;">
         
-        <!-- Left Side (Flex-1 for centering) -->
+        <!-- Left Side (2 Slots) -->
         <div class="flex-1 flex justify-evenly items-center h-full">
-            <!-- Özet -->
-            <button class="flex flex-col items-center justify-center gap-1 text-[#64748B] hover:text-[#3B82F6] transition-colors">
-                <span class="material-symbols-outlined" style="font-size: 24px;">grid_view</span>
-                <span class="font-semibold tracking-wide" style="font-size: 11px;">Özet</span>
-            </button>
-
-            <!-- Kalori & Su -->
-            <button class="flex flex-col items-center justify-center gap-1 text-[#64748B] hover:text-[#3B82F6] transition-colors">
-                <span class="material-symbols-outlined" style="font-size: 24px;">local_fire_department</span>
-                <span class="font-semibold tracking-wide" style="font-size: 11px;">Kalori & Su</span>
-            </button>
+            <!-- Empty Slot 1 -->
+            <div class="w-12 h-12"></div>
+            
+            <!-- Empty Slot 2 -->
+            <div class="w-12 h-12"></div>
         </div>
 
         <!-- Center AI Button -->
@@ -5691,25 +5685,16 @@
             </button>
         </div>
 
-        <!-- Right Side (Flex-1 for centering) -->
+        <!-- Right Side (2 Slots) -->
         <div class="flex-1 flex justify-evenly items-center h-full">
-            <!-- Antrenman -->
-            <button class="flex flex-col items-center justify-center gap-1 text-[#64748B] hover:text-[#3B82F6] transition-colors">
-                <span class="material-symbols-outlined" style="font-size: 24px;">fitness_center</span>
-                <span class="font-semibold tracking-wide" style="font-size: 11px;">Antrenman</span>
-            </button>
+            <!-- Empty Slot 3 -->
+            <div class="w-12 h-12"></div>
 
-            <!-- Finans -->
-            <button class="flex flex-col items-center justify-center gap-1 text-[#64748B] hover:text-[#3B82F6] transition-colors">
-                <span class="material-symbols-outlined" style="font-size: 24px;">account_balance_wallet</span>
-                <span class="font-semibold tracking-wide" style="font-size: 11px;">Finans</span>
-            </button>
-
-            <!-- Alışveriş -->
-            <button class="flex flex-col items-center justify-center gap-1 text-[#64748B] hover:text-[#3B82F6] transition-colors">
+            <!-- Alışveriş (Slot 4) -->
+            <div class="flex flex-col items-center justify-center gap-1 text-[#64748B] hover:text-[#3B82F6] transition-colors w-12 h-12 cursor-pointer nav-tab" data-target="view-shopping">
                 <span class="material-symbols-outlined" style="font-size: 24px;">shopping_cart</span>
                 <span class="font-semibold tracking-wide" style="font-size: 11px;">Alışveriş</span>
-            </button>
+            </div>
         </div>
     </div>
 
