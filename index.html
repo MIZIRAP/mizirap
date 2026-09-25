@@ -534,16 +534,7 @@
 
 
 
-                <!-- Araçlar Button -->
-                <div data-widget-id="tools-bottom" class="rounded-[24px] p-[1px] bg-gradient-to-br from-[#3B82F6] to-[#22C55E] cursor-pointer nav-tab" style="background-color: #F0F2F8; box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.08), -6px -6px 12px rgba(255, 255, 255, 0.8);" data-target="view-tools">
-                <div class="bg-[#F0F2F8] rounded-[23px] p-5 h-[80px] w-full flex items-center justify-between transition-all">
-                    <div class="flex items-center gap-4">
-                        <div class="w-10 h-10 rounded-[16px] bg-[#F0F2F8] flex items-center justify-center shrink-0" style="background-color: #F0F2F8; box-shadow: inset 4px 4px 8px rgba(0, 0, 0, 0.06), inset -4px -4px 8px rgba(255, 255, 255, 0.8);">
-                            <span class="material-symbols-rounded text-[#A855F7] text-[20px]">build</span>
-                        </div>
-                        <span class="text-[#181C20] font-[600] text-[18px] leading-[28px]" style="font-family: 'Plus Jakarta Sans', sans-serif;">Araçlar</span>
-                    </div>
-                </div></main>
+                </main>
     </section>
     <!-- ================= ARAÇLAR ================= -->
     <section id="view-tools" class="view hidden bg-[#F7F9FF] text-[#1E293B] min-h-[100dvh] pb-[128px]">
@@ -5671,8 +5662,11 @@
         
         <!-- Left Side (2 Slots) -->
         <div class="flex-1 flex justify-evenly items-center h-full">
-            <!-- Empty Slot 1 -->
-            <div class="w-12 h-12"></div>
+            <!-- Araçlar (Slot 1) -->
+            <div class="flex flex-col items-center justify-center gap-1 text-[#64748B] hover:text-[#3B82F6] transition-colors w-12 h-12 cursor-pointer nav-tab" data-target="view-tools">
+                <span class="material-symbols-outlined" style="font-size: 24px;">build</span>
+                <span class="font-semibold tracking-wide" style="font-size: 11px;">Araçlar</span>
+            </div>
             
             <!-- Empty Slot 2 -->
             <div class="w-12 h-12"></div>
