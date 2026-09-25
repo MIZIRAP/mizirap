@@ -39,12 +39,9 @@
             font-family: "Material Symbols Rounded" !important;
         }
 
-        /* iOS Safari Sticky Header Blur Fix */
+        /* iOS Safari Sticky Header GPU Compositing (prevents subpixel blur) */
         header.sticky {
-            -webkit-transform: translate3d(0, 0, 0);
-            transform: translate3d(0, 0, 0);
-            -webkit-backface-visibility: hidden;
-            backface-visibility: hidden;
+            will-change: transform;
         }
 
         /* Mobil uygulama davranışı: çift tık zoom, metin boyutu değişimi engel */
