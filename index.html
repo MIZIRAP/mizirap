@@ -39,7 +39,13 @@
             font-family: "Material Symbols Rounded" !important;
         }
 
-
+        /* iOS Safari Sticky Header Blur Fix */
+        header.sticky {
+            -webkit-transform: translate3d(0, 0, 0);
+            transform: translate3d(0, 0, 0);
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+        }
 
         /* Mobil uygulama davranışı: çift tık zoom, metin boyutu değişimi engel */
         html, body {
@@ -5658,10 +5664,9 @@
         </div>
     </div>
 
-    </div> <!-- End of app-container -->
-
+    <!-- AI Chat Button -->
     <!-- Main Floating Bottom Navbar -->
-    <div id="main-bottom-navbar" class="fixed flex items-center bg-[#F0F2F8] px-2" style="bottom: 16px; margin-bottom: env(safe-area-inset-bottom, 0px); left: 50%; transform: translateX(-50%); width: 90%; max-width: 380px; height: 72px; border-radius: 36px; z-index: 70; box-shadow: 6px 6px 12px #D1D9E6, -6px -6px 12px #FFFFFF;">
+    <div id="main-bottom-navbar" class="fixed flex items-center bg-[#F0F2F8] px-2" style="bottom: max(env(safe-area-inset-bottom), 16px); left: 50%; transform: translateX(-50%); width: 90%; max-width: 380px; height: 72px; border-radius: 36px; z-index: 70; box-shadow: 6px 6px 12px #D1D9E6, -6px -6px 12px #FFFFFF;">
         
         <!-- Left Side: 4 Nav Items -->
         <div class="flex-1 flex justify-between items-center px-3 h-full">
@@ -5736,6 +5741,7 @@
                 </form>
             </div>
         </div>
+    </div>
 </body>
 </html>
 
