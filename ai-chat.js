@@ -347,16 +347,21 @@ const aiTools = [{
         },
         {
             name: "update_profile_data",
-            description: "Kullanıcının SADECE fiziksel/kişisel profil bilgilerini (boy, kilo, yaş, cinsiyet, aktivite seviyesi, kilo alma/verme/koruma hedefi) günceller. Kalori hedefi, su hedefi veya makro (protein/karbonhidrat/yağ) hedefleri için bu araci KULLANMA — bunlar için update_calorie_goal veya update_water_goal kullanılmalı.",
+            description: "Kullanıcının fiziksel/kişisel profil bilgilerini veya beslenme hedeflerini günceller.",
             parameters: {
                 type: "OBJECT",
                 properties: {
-                    weight:   { type: "NUMBER", description: "Kilo (kg). Sayısal değer, örn: 75" },
-                    height:   { type: "NUMBER", description: "Boy (cm). Sayısal değer, örn: 178" },
-                    age:      { type: "NUMBER", description: "Yaş (yıl). Sayısal değer, örn: 28" },
-                    weightGoal: { type: "STRING", description: "KİLO YÖNETİM HEDEFİ — kilo vermek, almak veya korumak. Yalnızca: 'kilo_verme', 'kilo_alma', 'kilo_koruma'. Kalori veya su sayısı GİRMEZ." },
-                    activity: { type: "STRING", description: "Aktivite katsayısı: '1.2' (hareketsiz), '1.375' (hafif), '1.55' (orta), '1.725' (aktif), '1.9' (çok aktif)" },
-                    gender:   { type: "STRING", description: "Cinsiyet: 'm' (erkek) veya 'f' (kadın)" }
+                    weight:           { type: "NUMBER", description: "Vücut kilo (kg)" },
+                    height:           { type: "NUMBER", description: "Boy (cm)" },
+                    age:              { type: "NUMBER", description: "Yaş (yıl)" },
+                    weightGoal:       { type: "STRING", description: "Kilo hedefi: 'kilo_verme', 'kilo_alma', 'kilo_koruma'" },
+                    activity:         { type: "STRING", description: "Aktivite katsayısı: '1.2', '1.375', '1.55', '1.725', '1.9'" },
+                    gender:           { type: "STRING", description: "Cinsiyet: 'm' veya 'f'" },
+                    dailyCalorieGoal: { type: "NUMBER", description: "Günlük kalori hedefi (kcal). Kullanıcı 'kalori hedefimi X yap' dediğinde bu alanı doldur." },
+                    dailyWaterGoal:   { type: "NUMBER", description: "Günlük su hedefi (ml). Kullanıcı 'su hedefimi X yap' dediğinde bu alanı doldur." },
+                    proteinGoal:      { type: "NUMBER", description: "Günlük protein hedefi (gram)" },
+                    carbGoal:         { type: "NUMBER", description: "Günlük karbonhidrat hedefi (gram)" },
+                    fatGoal:          { type: "NUMBER", description: "Günlük yağ hedefi (gram)" }
                 },
                 required: []
             }
@@ -922,20 +927,51 @@ window.confirmFunctionCall = async function(isSilent = false) {
                 message = docSnap.exists() ? JSON.stringify(docSnap.data()) : JSON.stringify({ status: "profile_not_found" });
             } else if (funcCall.name === "update_profile_data") {
                 const args = funcCall.args;
-                const updates = {};
-                if (args.weight   != null) updates.weight   = Number(args.weight);
-                if (args.height   != null) updates.height   = Number(args.height);
-                if (args.weightGoal != null) updates.goal     = String(args.weightGoal);
-                if (args.activity != null) updates.activity = String(args.activity);
-                if (args.gender   != null) updates.gender   = String(args.gender);
-                if (args.age      != null) {
+                const profileUpdates = {};
+                if (args.weight     != null) profileUpdates.weight   = Number(args.weight);
+                if (args.height     != null) profileUpdates.height   = Number(args.height);
+                if (args.weightGoal != null) profileUpdates.goal     = String(args.weightGoal);
+                if (args.activity   != null) profileUpdates.activity = String(args.activity);
+                if (args.gender     != null) profileUpdates.gender   = String(args.gender);
+                if (args.age        != null) {
                     const birthYear = new Date().getFullYear() - Number(args.age);
-                    updates.dob = String(birthYear);
+                    profileUpdates.dob = String(birthYear);
                 }
-                if (Object.keys(updates).length === 0) throw new Error("Güncellenecek profil alanı bulunamadı.");
-                await setDoc(doc(db, "users", currentUid, "profile", "data"), updates, { merge: true });
-                updateSharedProfile(updates);
+
+                // Kalori/su/makro hedefleri yanlislıkla buraya geldiyse dogru path'e yaz
+                const calorieUpdates = {};
+                if (args.dailyCalorieGoal != null) calorieUpdates.dailyCalorieGoal = Number(args.dailyCalorieGoal);
+                if (args.proteinGoal      != null) calorieUpdates.proteinGoal      = Number(args.proteinGoal);
+                if (args.carbGoal         != null) calorieUpdates.karbGoal         = Number(args.carbGoal);
+                if (args.fatGoal          != null) calorieUpdates.yagGoal          = Number(args.fatGoal);
+
+                const batch = writeBatch(db);
+                let wrote = false;
+
+                if (Object.keys(profileUpdates).length > 0) {
+                    batch.set(doc(db, "users", currentUid, "profile", "data"), profileUpdates, { merge: true });
+                    updateSharedProfile(profileUpdates);
+                    wrote = true;
+                }
+                if (Object.keys(calorieUpdates).length > 0) {
+                    calorieUpdates.updatedAt = serverTimestamp();
+                    batch.set(doc(db, "users", currentUid, "settings", "calories"), calorieUpdates, { merge: true });
+                    if (args.dailyCalorieGoal != null) {
+                        batch.set(getDailySummaryRef(currentUid), { caloriesGoal: Number(args.dailyCalorieGoal) }, { merge: true });
+                    }
+                    wrote = true;
+                }
+                if (args.dailyWaterGoal != null) {
+                    const wGoal = Number(args.dailyWaterGoal);
+                    batch.set(doc(db, "users", currentUid, "settings", "water"), { dailyGoal: wGoal, updatedAt: serverTimestamp() }, { merge: true });
+                    batch.set(getDailySummaryRef(currentUid), { waterGoal: wGoal }, { merge: true });
+                    wrote = true;
+                }
+
+                if (!wrote) throw new Error("Guncellenecek bir alan bulunamadi.");
+                await batch.commit();
                 _cachedContext = null; _cachedContextAt = 0;
+
             } else if (funcCall.name === "add_book") {
                 const args = funcCall.args;
                 if (!args.title) throw new Error("Kitap adı gerekli.");
