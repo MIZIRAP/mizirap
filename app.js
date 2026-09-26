@@ -7,7 +7,7 @@ import { initProfile, clearProfile } from "./profile.js?v=1787428045";
 import { initHistory, clearHistory } from "./history.js";
 import { clearAllListeners, clearAllFirestoreListeners } from "./listenerManager.js";
 import { clearSharedState } from "./sharedState.js";
-import { initWorkout, renderSplitView } from "./workout.js";
+import { initWorkout, renderSplitView } from "./workout.js?v=20260926-1";
 import "./activeSession.js";
 import { initAiChat } from "./ai-chat.js?v=20260925-4";
 // ---------- DOM referansları ----------
