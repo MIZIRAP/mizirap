@@ -5400,6 +5400,68 @@
 
 <!-- ===================== CORE PLAYER ===================== -->
 
+    <!-- EXERCISE PICKER MODAL -->
+    <div id="modal-exercise-picker" class="fixed inset-0 bg-black/30 z-50 hidden flex items-end opacity-0 pointer-events-none transition-opacity duration-300" onclick="if(event.target===this)closeExercisePickerModal()">
+        <div id="exercise-picker-content" class="bg-[#F0F2F8] shadow-neo rounded-t-[36px] w-full max-w-md mx-auto shadow-2xl transform transition-transform translate-y-full duration-300 relative max-h-[90vh] flex flex-col" style="box-shadow: 0 -10px 30px rgba(0,0,0,0.1);">
+            <!-- Drag Handle -->
+            <div class="w-full flex justify-center pt-4 pb-2 cursor-pointer" onclick="closeExercisePickerModal()">
+                <div class="w-12 h-1.5 bg-[#C7C4D7] rounded-full opacity-60"></div>
+            </div>
+
+            <!-- Header -->
+            <div class="px-6 pb-4 flex justify-between items-center">
+                <h2 class="text-[#1E293B] text-[20px] font-bold">Hareket Ekle</h2>
+                <button onclick="closeExercisePickerModal()" class="w-10 h-10 rounded-full flex items-center justify-center text-[#64748B] hover:text-[#1E293B] bg-[#F0F2F8] transition-colors" style="box-shadow: inset 4px 4px 8px #D1D9E6, inset -4px -4px 8px #FFFFFF;">
+                    <span class="material-symbols-rounded">close</span>
+                </button>
+            </div>
+
+            <!-- Search -->
+            <div class="px-6 pb-3">
+                <div class="relative flex items-center shadow-neo-inset rounded-2xl h-[48px] px-4">
+                    <span class="material-symbols-rounded text-on-surface-variant text-[20px] mr-2">search</span>
+                    <input type="text" id="exercise-picker-search" placeholder="Egzersiz ara..." class="flex-1 bg-transparent border-none outline-none text-on-surface text-[14px] placeholder:text-on-surface-variant h-full p-0">
+                </div>
+            </div>
+
+            <!-- Categories -->
+            <div class="flex gap-2 overflow-x-auto hide-scrollbar px-6 pb-3" id="exercise-picker-categories">
+                <button class="px-4 py-1.5 rounded-full bg-gradient-to-r from-neon-purple to-neon-blue text-white font-label-sm whitespace-nowrap" data-action="filterPickerCategory" data-category="Tümü">Tümü</button>
+                <button class="px-4 py-1.5 rounded-full shadow-neo text-on-surface-variant font-label-sm whitespace-nowrap" data-action="filterPickerCategory" data-category="Göğüs">Göğüs</button>
+                <button class="px-4 py-1.5 rounded-full shadow-neo text-on-surface-variant font-label-sm whitespace-nowrap" data-action="filterPickerCategory" data-category="Sırt">Sırt</button>
+                <button class="px-4 py-1.5 rounded-full shadow-neo text-on-surface-variant font-label-sm whitespace-nowrap" data-action="filterPickerCategory" data-category="Omuz">Omuz</button>
+                <button class="px-4 py-1.5 rounded-full shadow-neo text-on-surface-variant font-label-sm whitespace-nowrap" data-action="filterPickerCategory" data-category="Bacak">Bacak</button>
+                <button class="px-4 py-1.5 rounded-full shadow-neo text-on-surface-variant font-label-sm whitespace-nowrap" data-action="filterPickerCategory" data-category="Biceps">Biceps</button>
+                <button class="px-4 py-1.5 rounded-full shadow-neo text-on-surface-variant font-label-sm whitespace-nowrap" data-action="filterPickerCategory" data-category="Triceps">Triceps</button>
+                <button class="px-4 py-1.5 rounded-full shadow-neo text-on-surface-variant font-label-sm whitespace-nowrap" data-action="filterPickerCategory" data-category="Karın">Karın</button>
+            </div>
+
+            <!-- List – scrollable, ~3 items tall -->
+            <div class="overflow-y-auto px-6 flex flex-col gap-2 pb-2 no-scrollbar" style="max-height: 210px;" id="exercise-picker-list">
+                <!-- Populated by JS -->
+            </div>
+
+            <!-- Bottom Action Bar -->
+            <div class="px-6 pt-3 pb-4 border-t border-surface-variant/30 mt-2">
+                <!-- Set Counter -->
+                <div class="flex items-center justify-between shadow-neo-inset rounded-2xl p-3 mb-3">
+                    <button onclick="window.adjustPickerSets(-1)" class="w-10 h-10 rounded-xl shadow-neo flex items-center justify-center active:scale-95 transition-transform">
+                        <span class="material-symbols-rounded text-on-surface-variant">remove</span>
+                    </button>
+                    <span class="font-bold text-on-surface-variant text-[13px] tracking-wider">SET <span id="picker-set-count" class="text-[22px] text-on-surface">3</span></span>
+                    <button onclick="window.adjustPickerSets(1)" class="w-10 h-10 rounded-xl shadow-neo flex items-center justify-center active:scale-95 transition-transform">
+                        <span class="material-symbols-rounded text-on-surface-variant">add</span>
+                    </button>
+                </div>
+
+                <button onclick="window.commitSelectedExercise()" class="w-full h-[56px] bg-gradient-to-r from-neon-purple to-neon-blue text-white rounded-full flex items-center justify-center gap-2 active:scale-[0.98] transition shadow-lg shadow-primary/20">
+                    <span class="material-symbols-rounded text-[20px]">add</span>
+                    <span class="font-label-md text-body-lg font-bold">Hareketi Ekle</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
         <!-- Dynamic Tool Bottom Sheet Overlay -->
         <div id="tool-sheet-overlay" class="fixed inset-0 bg-black/40 z-50 hidden opacity-0 transition-opacity duration-300" onclick="window.closeTool()"></div>
 
@@ -5813,67 +5875,6 @@
                         <span class="material-symbols-rounded">send</span>
                     </button>
                 </form>
-            </div>
-        </div>
-    </div>
-    <!-- EXERCISE PICKER MODAL – direct child of body, no stacking context trapping -->
-    <div id="modal-exercise-picker" class="fixed inset-0 bg-black/30 hidden items-end opacity-0 pointer-events-none transition-opacity duration-300" style="z-index: 99999;" onclick="if(event.target===this)closeExercisePickerModal()">
-        <div id="exercise-picker-content" class="bg-[#F0F2F8] w-full max-w-md mx-auto transform transition-transform translate-y-full duration-300 flex flex-col" style="border-radius: 36px 36px 0 0; margin-bottom: calc(104px + env(safe-area-inset-bottom, 0px)); max-height: calc(90dvh - 104px - env(safe-area-inset-bottom, 0px)); box-shadow: 0 -10px 30px rgba(0,0,0,0.1); z-index: 99999;">
-            <!-- Drag Handle -->
-            <div class="w-full flex justify-center pt-4 pb-2 cursor-pointer" onclick="closeExercisePickerModal()">
-                <div class="w-12 h-1.5 bg-[#C7C4D7] rounded-full opacity-60"></div>
-            </div>
-
-            <!-- Header -->
-            <div class="px-6 pb-4 flex justify-between items-center">
-                <h2 class="text-[#1E293B] text-[20px] font-bold">Hareket Ekle</h2>
-                <button onclick="closeExercisePickerModal()" class="w-10 h-10 rounded-full flex items-center justify-center text-[#64748B] hover:text-[#1E293B] bg-[#F0F2F8] transition-colors" style="box-shadow: inset 4px 4px 8px #D1D9E6, inset -4px -4px 8px #FFFFFF;">
-                    <span class="material-symbols-rounded">close</span>
-                </button>
-            </div>
-
-            <!-- Search -->
-            <div class="px-6 pb-3">
-                <div class="relative flex items-center shadow-neo-inset rounded-2xl h-[48px] px-4">
-                    <span class="material-symbols-rounded text-on-surface-variant text-[20px] mr-2">search</span>
-                    <input type="text" id="exercise-picker-search" placeholder="Egzersiz ara..." class="flex-1 bg-transparent border-none outline-none text-on-surface text-[14px] placeholder:text-on-surface-variant h-full p-0">
-                </div>
-            </div>
-
-            <!-- Categories -->
-            <div class="flex gap-2 overflow-x-auto hide-scrollbar px-6 pb-3" id="exercise-picker-categories">
-                <button class="px-4 py-1.5 rounded-full bg-gradient-to-r from-neon-purple to-neon-blue text-white font-label-sm whitespace-nowrap" data-action="filterPickerCategory" data-category="Tümü">Tümü</button>
-                <button class="px-4 py-1.5 rounded-full shadow-neo text-on-surface-variant font-label-sm whitespace-nowrap" data-action="filterPickerCategory" data-category="Göğüs">Göğüs</button>
-                <button class="px-4 py-1.5 rounded-full shadow-neo text-on-surface-variant font-label-sm whitespace-nowrap" data-action="filterPickerCategory" data-category="Sırt">Sırt</button>
-                <button class="px-4 py-1.5 rounded-full shadow-neo text-on-surface-variant font-label-sm whitespace-nowrap" data-action="filterPickerCategory" data-category="Omuz">Omuz</button>
-                <button class="px-4 py-1.5 rounded-full shadow-neo text-on-surface-variant font-label-sm whitespace-nowrap" data-action="filterPickerCategory" data-category="Bacak">Bacak</button>
-                <button class="px-4 py-1.5 rounded-full shadow-neo text-on-surface-variant font-label-sm whitespace-nowrap" data-action="filterPickerCategory" data-category="Biceps">Biceps</button>
-                <button class="px-4 py-1.5 rounded-full shadow-neo text-on-surface-variant font-label-sm whitespace-nowrap" data-action="filterPickerCategory" data-category="Triceps">Triceps</button>
-                <button class="px-4 py-1.5 rounded-full shadow-neo text-on-surface-variant font-label-sm whitespace-nowrap" data-action="filterPickerCategory" data-category="Karın">Karın</button>
-            </div>
-
-            <!-- List – scrollable, ~3 items tall -->
-            <div class="overflow-y-auto px-6 flex flex-col gap-2 pb-2 no-scrollbar" style="max-height: 210px;" id="exercise-picker-list">
-                <!-- Populated by JS -->
-            </div>
-
-            <!-- Bottom Action Bar -->
-            <div class="px-6 pt-3 pb-4 border-t border-surface-variant/30 mt-2">
-                <!-- Set Counter -->
-                <div class="flex items-center justify-between shadow-neo-inset rounded-2xl p-3 mb-3">
-                    <button onclick="window.adjustPickerSets(-1)" class="w-10 h-10 rounded-xl shadow-neo flex items-center justify-center active:scale-95 transition-transform">
-                        <span class="material-symbols-rounded text-on-surface-variant">remove</span>
-                    </button>
-                    <span class="font-bold text-on-surface-variant text-[13px] tracking-wider">SET <span id="picker-set-count" class="text-[22px] text-on-surface">3</span></span>
-                    <button onclick="window.adjustPickerSets(1)" class="w-10 h-10 rounded-xl shadow-neo flex items-center justify-center active:scale-95 transition-transform">
-                        <span class="material-symbols-rounded text-on-surface-variant">add</span>
-                    </button>
-                </div>
-
-                <button onclick="window.commitSelectedExercise()" class="w-full h-[56px] bg-gradient-to-r from-neon-purple to-neon-blue text-white rounded-full flex items-center justify-center gap-2 active:scale-[0.98] transition shadow-lg shadow-primary/20">
-                    <span class="material-symbols-rounded text-[20px]">add</span>
-                    <span class="font-label-md text-body-lg font-bold">Hareketi Ekle</span>
-                </button>
             </div>
         </div>
     </div>
