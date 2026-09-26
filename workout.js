@@ -393,8 +393,109 @@ export function renderSplitView() {
                 }
             }
         }
+        
+        // --- Render Other Splits ---
+        const otherSplitsList = document.getElementById('other-splits-list');
+        const otherSplitsSection = document.getElementById('other-splits-section');
+        
+        if (otherSplitsList && otherSplitsSection) {
+            const inactiveSplits = splits.filter(s => s.id !== activeSplitId);
+            if (inactiveSplits.length === 0) {
+                otherSplitsSection.classList.add('hidden');
+            } else {
+                otherSplitsSection.classList.remove('hidden');
+                otherSplitsList.innerHTML = '';
+                
+                inactiveSplits.forEach(split => {
+                    let totalEx = 0;
+                    if(split.days) {
+                        split.days.forEach(d => totalEx += (d.exercises ? d.exercises.length : 0));
+                    }
+                    const daysCount = split.days ? split.days.length : 0;
+                    
+                    const cardHtml = `
+                    <div class="neon-card rounded-[32px]">
+                        <div class="neon-card-inner bg-[#F0F2F8] p-5 flex flex-col gap-5 relative overflow-hidden" style="border-radius: 29px; box-shadow: 8px 8px 16px #D1D9E6, -8px -8px 16px rgba(255, 255, 255, 0.7);">
+                            
+                            <!-- Top Header (Badge & Actions) -->
+                            <div class="flex items-center justify-between">
+                                <!-- Badge -->
+                                <div class="flex items-center gap-1.5 bg-[#F1F5F9] text-[#64748B] px-3 py-1.5 rounded-full shadow-sm">
+                                    <div class="w-2 h-2 rounded-full bg-[#94A3B8] opacity-80"></div>
+                                    <span class="text-[10px] font-bold uppercase tracking-wider">BEKLEMEDE</span>
+                                </div>
+                                <!-- Actions -->
+                                <div class="flex items-center gap-3">
+                                    <button onclick="if(window.openEditSplitView) window.openEditSplitView('${split.id}')" class="w-9 h-9 flex items-center justify-center rounded-2xl bg-[#F0F2F8] active:scale-95 transition-transform text-[#64748B] hover:text-[#1E293B]" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);">
+                                        <span class="material-symbols-rounded text-[15px]">edit</span>
+                                    </button>
+                                    <button onclick="if(window.deleteSplit) window.deleteSplit('${split.id}')" class="w-9 h-9 flex items-center justify-center rounded-2xl bg-[#F0F2F8] active:scale-95 transition-transform text-red-500 hover:text-red-600" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);">
+                                        <span class="material-symbols-rounded text-[15px]">delete</span>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Title & Subtitle -->
+                            <div class="mt-1">
+                                <h3 class="text-xl font-bold text-[#1E293B] mb-1">${split.name}</h3>
+                                <p class="text-xs font-medium text-[#64748B]">Özel Antrenman Şablonu</p>
+                            </div>
+
+                            <!-- Stats (Days & Exercises) -->
+                            <div class="grid grid-cols-2 gap-4">
+                                <div class="bg-[#F0F2F8] rounded-2xl p-4 flex flex-col items-center justify-center gap-1" style="box-shadow: inset 4px 4px 8px #D1D9E6, inset -4px -4px 8px rgba(255, 255, 255, 0.7);">
+                                    <span class="text-[11px] font-medium text-[#64748B]">Haftalık</span>
+                                    <span class="text-[15px] font-bold text-[#1E293B]">${daysCount} Gün</span>
+                                </div>
+                                <div class="bg-[#F0F2F8] rounded-2xl p-4 flex flex-col items-center justify-center gap-1" style="box-shadow: inset 4px 4px 8px #D1D9E6, inset -4px -4px 8px rgba(255, 255, 255, 0.7);">
+                                    <span class="text-[11px] font-medium text-[#64748B]">Egzersiz</span>
+                                    <span class="text-[15px] font-bold text-[#1E293B]">${totalEx} Hareket</span>
+                                </div>
+                            </div>
+                            
+                            <!-- Make Active Button -->
+                            <button onclick="if(window.makeSplitActive) window.makeSplitActive('${split.id}')" class="w-full py-3.5 mt-1 rounded-2xl bg-[#F0F2F8] flex items-center justify-center gap-2 active:scale-[0.98] transition-transform text-[#712AE2] font-bold text-[14px]" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);">
+                                <span class="material-symbols-rounded text-[18px]">check_circle</span>
+                                <span>Bu Programı Aktif Yap</span>
+                            </button>
+                        </div>
+                    </div>
+                    `;
+                    otherSplitsList.insertAdjacentHTML('beforeend', cardHtml);
+                });
+            }
+        }
     }
 }
+
+window.makeSplitActive = async function(splitId) {
+    if(!currentUid || !splitId) return;
+    
+    try {
+        activeSplitId = splitId;
+        
+        const { setDoc, doc } = await import("https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js");
+        const { db } = await import("./firebase-config.js?v=20260926-1");
+        
+        await setDoc(doc(db, "users", currentUid), {
+            activeSplitId: activeSplitId
+        }, { merge: true });
+        
+        localStorage.setItem(`miz_activeSplit_${currentUid}`, activeSplitId);
+        
+        // Pick first day
+        const activeSplit = splits.find(s => s.id === activeSplitId);
+        if(activeSplit && activeSplit.days && activeSplit.days.length > 0) {
+            activeDayId = activeSplit.days[0].id;
+            localStorage.setItem(`miz_activeDay_${currentUid}`, activeDayId);
+        }
+        
+        renderSplitView();
+    } catch(e) {
+        console.error(e);
+        alert("Aktif program değiştirilemedi.");
+    }
+};
 
 window.updateExerciseSets = function(dayId, exId, change) {
     if(!activeSplitId) return;
