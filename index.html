@@ -5817,8 +5817,8 @@
         </div>
     </div>
     <!-- EXERCISE PICKER MODAL – direct child of body, no stacking context trapping -->
-    <div id="modal-exercise-picker" class="fixed inset-0 bg-black/30 z-[500] hidden items-end opacity-0 pointer-events-none transition-opacity duration-300" onclick="if(event.target===this)closeExercisePickerModal()">
-        <div id="exercise-picker-content" class="bg-[#F0F2F8] w-full max-w-md mx-auto transform transition-transform translate-y-full duration-300 flex flex-col" style="border-radius: 36px 36px 0 0; margin-bottom: calc(104px + env(safe-area-inset-bottom, 0px)); max-height: calc(90dvh - 104px - env(safe-area-inset-bottom, 0px)); box-shadow: 0 -10px 30px rgba(0,0,0,0.1);">
+    <div id="modal-exercise-picker" class="fixed inset-0 bg-black/30 hidden items-end opacity-0 pointer-events-none transition-opacity duration-300" style="z-index: 99999;" onclick="if(event.target===this)closeExercisePickerModal()">
+        <div id="exercise-picker-content" class="bg-[#F0F2F8] w-full max-w-md mx-auto transform transition-transform translate-y-full duration-300 flex flex-col" style="border-radius: 36px 36px 0 0; margin-bottom: calc(104px + env(safe-area-inset-bottom, 0px)); max-height: calc(90dvh - 104px - env(safe-area-inset-bottom, 0px)); box-shadow: 0 -10px 30px rgba(0,0,0,0.1); z-index: 99999;">
             <!-- Drag Handle -->
             <div class="w-full flex justify-center pt-4 pb-2 cursor-pointer" onclick="closeExercisePickerModal()">
                 <div class="w-12 h-1.5 bg-[#C7C4D7] rounded-full opacity-60"></div>
