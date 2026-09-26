@@ -5396,37 +5396,64 @@
     <!-- CREATE SPLIT VIEW -->
 
     <!-- EXERCISE PICKER MODAL -->
-    <div id="modal-exercise-picker" class="hidden fixed inset-0 z-[70] flex items-center justify-center font-body-md">
-        <div class="absolute inset-0 bg-on-background/40 backdrop-blur-sm z-40 transition-opacity duration-300" data-action="closeExercisePickerModal"></div>
-        <div class="relative bg-background shadow-neo w-full h-[90vh] md:max-w-md mx-auto md:rounded-t-2xl rounded-t-2xl shadow-xl z-50 flex flex-col overflow-hidden mt-auto md:mt-0">
+    <div id="modal-exercise-picker" class="hidden fixed inset-0 z-[70] flex items-end opacity-0 pointer-events-none transition-opacity duration-300 font-body-md">
+        <div class="absolute inset-0 bg-black/30 backdrop-blur-sm z-40 transition-opacity duration-300" onclick="closeExercisePickerModal()"></div>
+        <div class="relative bg-[#F0F2F8] shadow-neo w-full max-w-md mx-auto rounded-t-[32px] shadow-2xl z-50 flex flex-col overflow-hidden mt-auto max-h-[90vh] transform transition-transform translate-y-full duration-300" id="exercise-picker-content">
+            <!-- Drag Handle -->
+            <div class="w-full flex justify-center pt-4 pb-2 cursor-pointer" onclick="closeExercisePickerModal()">
+                <div class="w-12 h-1.5 bg-[#C7C4D7] rounded-full opacity-60"></div>
+            </div>
+
             <!-- Header -->
-            <div class="px-lg pt-lg pb-sm flex flex-col gap-2 sticky top-0 bg-background shadow-neo z-10 border-b border-surface-container-highest">
-                <div class="flex items-center justify-between">
-                    <h2 class="font-title-lg text-title-lg text-on-surface">Egzersiz Seç</h2>
-                    <button data-action="closeExercisePickerModal" class="text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest p-sm rounded-full transition-colors w-10 h-10 flex items-center justify-center">
-                        <span class="material-symbols-rounded">close</span>
-                    </button>
-                </div>
-                <div class="relative">
-                    <span class="material-symbols-rounded absolute left-3 top-1/2 -translate-y-1/2 text-outline">search</span>
-                    <input type="text" id="exercise-picker-search" placeholder="Egzersiz ara..." class="w-full bg-surface-container-low rounded-[32px] py-3 pl-10 pr-4 text-body-md outline-none focus:ring-0 shadow-neo-inset border-none rounded-xl bg-background ">
-                </div>
-                <!-- Categories filter -->
-                <div class="flex gap-2 overflow-x-auto hide-scrollbar py-2" id="exercise-picker-categories">
-                    <button class="px-4 py-1.5 rounded-full bg-gradient-to-r from-neon-purple to-neon-blue text-white font-label-sm whitespace-nowrap" data-action="filterPickerCategory" data-category="Tümü">Tümü</button>
-                    <button class="px-4 py-1.5 rounded-full text-on-surface-variant font-label-sm whitespace-nowrap" data-action="filterPickerCategory" data-category="Göğüs">Göğüs</button>
-                    <button class="px-4 py-1.5 rounded-full text-on-surface-variant font-label-sm whitespace-nowrap" data-action="filterPickerCategory" data-category="Sırt">Sırt</button>
-                    <button class="px-4 py-1.5 rounded-full text-on-surface-variant font-label-sm whitespace-nowrap" data-action="filterPickerCategory" data-category="Omuz">Omuz</button>
-                    <button class="px-4 py-1.5 rounded-full text-on-surface-variant font-label-sm whitespace-nowrap" data-action="filterPickerCategory" data-category="Bacak">Bacak</button>
-                    <button class="px-4 py-1.5 rounded-full text-on-surface-variant font-label-sm whitespace-nowrap" data-action="filterPickerCategory" data-category="Biceps">Biceps</button>
-                    <button class="px-4 py-1.5 rounded-full text-on-surface-variant font-label-sm whitespace-nowrap" data-action="filterPickerCategory" data-category="Triceps">Triceps</button>
-                    <button class="px-4 py-1.5 rounded-full text-on-surface-variant font-label-sm whitespace-nowrap" data-action="filterPickerCategory" data-category="Karın">Karın</button>
+            <div class="px-6 pb-3 flex justify-between items-center z-10">
+                <h2 class="font-bold text-[#1E293B] text-[20px]">Hareket Ekle</h2>
+                <button onclick="closeExercisePickerModal()" class="w-9 h-9 rounded-full flex items-center justify-center text-[#64748B] bg-[#F0F2F8] active:scale-95 transition-transform" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);">
+                    <span class="material-symbols-rounded text-[20px]">close</span>
+                </button>
+            </div>
+            
+            <div class="px-6 pb-2">
+                <div class="relative flex items-center bg-[#E2E8F0] rounded-2xl h-[48px] px-4" style="box-shadow: inset 4px 4px 8px #D1D9E6, inset -4px -4px 8px #FFFFFF;">
+                    <span class="material-symbols-rounded text-[#94A3B8] text-[20px] mr-2">search</span>
+                    <input type="text" id="exercise-picker-search" placeholder="Egzersiz veya ekipman ara..." class="flex-1 bg-transparent border-none outline-none focus:ring-0 text-[#1E293B] text-[14px] font-medium placeholder:text-[#94A3B8] placeholder:font-normal h-full p-0">
                 </div>
             </div>
 
+            <!-- Categories filter -->
+            <div class="flex gap-3 overflow-x-auto hide-scrollbar px-6 py-3" id="exercise-picker-categories">
+                <button class="px-5 py-2 rounded-full bg-neon-purple text-white font-bold text-[13px] shadow-md whitespace-nowrap active:scale-95 transition-transform" data-action="filterPickerCategory" data-category="Tümü">Tümü</button>
+                <button class="px-5 py-2 rounded-full bg-[#F0F2F8] text-[#64748B] font-bold text-[13px] whitespace-nowrap active:scale-95 transition-transform" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255,255,255,0.7);" data-action="filterPickerCategory" data-category="Göğüs">Göğüs</button>
+                <button class="px-5 py-2 rounded-full bg-[#F0F2F8] text-[#64748B] font-bold text-[13px] whitespace-nowrap active:scale-95 transition-transform" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255,255,255,0.7);" data-action="filterPickerCategory" data-category="Sırt">Sırt</button>
+                <button class="px-5 py-2 rounded-full bg-[#F0F2F8] text-[#64748B] font-bold text-[13px] whitespace-nowrap active:scale-95 transition-transform" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255,255,255,0.7);" data-action="filterPickerCategory" data-category="Omuz">Omuz</button>
+                <button class="px-5 py-2 rounded-full bg-[#F0F2F8] text-[#64748B] font-bold text-[13px] whitespace-nowrap active:scale-95 transition-transform" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255,255,255,0.7);" data-action="filterPickerCategory" data-category="Bacak">Bacak</button>
+            </div>
+
             <!-- List -->
-            <div class="flex-1 overflow-y-auto p-4 flex flex-col gap-2" id="exercise-picker-list">
+            <div class="flex-1 overflow-y-auto px-6 py-2 flex flex-col gap-3 pb-6" id="exercise-picker-list">
                 <!-- Populated by JS -->
+            </div>
+            
+            <!-- Bottom Action Bar -->
+            <div class="bg-[#F0F2F8] px-6 py-5 flex flex-col gap-4 border-t border-[#D1D9E6] z-10 rounded-t-[32px] mt-2" style="box-shadow: 0 -4px 10px rgba(0,0,0,0.02);">
+                <!-- Set Counter -->
+                <div class="flex items-center justify-between bg-[#E2E8F0] rounded-[24px] p-2" style="box-shadow: inset 4px 4px 8px #D1D9E6, inset -4px -4px 8px #FFFFFF;">
+                    <button class="w-[72px] h-[44px] rounded-[16px] bg-[#F0F2F8] flex items-center justify-center active:scale-95 transition-transform" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255,255,255,0.7);" onclick="window.adjustPickerSets(-1)">
+                        <span class="material-symbols-rounded text-[#64748B]">remove</span>
+                    </button>
+                    
+                    <div class="flex flex-col items-center justify-center">
+                        <span class="text-[14px] font-bold text-[#64748B] tracking-wider">SET <span id="picker-set-count" class="text-[20px] text-[#1E293B]">3</span></span>
+                    </div>
+                    
+                    <button class="w-[72px] h-[44px] rounded-[16px] bg-[#F0F2F8] flex items-center justify-center active:scale-95 transition-transform" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255,255,255,0.7);" onclick="window.adjustPickerSets(1)">
+                        <span class="material-symbols-rounded text-[#64748B]">add</span>
+                    </button>
+                </div>
+                
+                <button class="w-full h-[56px] rounded-full bg-neon-purple text-white font-bold text-[16px] flex items-center justify-center gap-2 active:scale-[0.98] transition-transform shadow-[0_8px_16px_rgba(113,42,226,0.25)]" onclick="window.commitSelectedExercise()">
+                    <span class="material-symbols-rounded text-[20px] font-bold">add</span>
+                    Hareketi Ekle
+                </button>
             </div>
         </div>
     </div>

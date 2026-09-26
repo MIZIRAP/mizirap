@@ -1473,26 +1473,50 @@ function removeExerciseFromSplit(splitId, dayIdx, exIdx) {
 };
 
 function openExercisePickerForSplit(splitId, dayIdx) {
-    // "Yeni Split Oluştur" formundaki picker'ı yeniden kullanıyoruz,
-    // ama callback'i aktif split'e yazacak şekilde yönlendiriyoruz.
     currentPickerDayId = `__split__${splitId}__day__${dayIdx}`;
-    document.getElementById('modal-exercise-picker').classList.remove('hidden');
+    window.selectedExerciseForPicker = null;
+    window.selectedSetsForPicker = 3;
+    const countEl = document.getElementById('picker-set-count');
+    if(countEl) countEl.innerText = "3";
+
+    const modal = document.getElementById('modal-exercise-picker');
+    const content = document.getElementById('exercise-picker-content');
+    
+    modal.classList.remove('hidden');
+    setTimeout(() => {
+        modal.classList.remove('opacity-0', 'pointer-events-none');
+        if(content) content.classList.remove('translate-y-full');
+    }, 10);
+
     renderExercisePickerList('Tümü');
 
     const searchInput = document.getElementById('exercise-picker-search');
     if(searchInput) {
         searchInput.value = '';
-        searchInput.oninput = (e) => renderExercisePickerList('Tümü', e.target.value);
+        searchInput.oninput = (e) => {
+            const activeBtn = document.querySelector('#exercise-picker-categories button.bg-neon-purple');
+            const cat = activeBtn ? activeBtn.getAttribute('data-category') : 'Tümü';
+            renderExercisePickerList(cat, e.target.value);
+        };
     }
 };
 
-// Picker'daki "ekle" butonuna basıldığında çağrılan mevcut fonksiyonu override et
-const _origPickerClick = window._origPickerClick;
-function handlePickerSelect(exName) {
+window.adjustPickerSets = function(change) {
+    window.selectedSetsForPicker = (window.selectedSetsForPicker || 3) + change;
+    if(window.selectedSetsForPicker < 1) window.selectedSetsForPicker = 1;
+    const el = document.getElementById('picker-set-count');
+    if(el) el.innerText = window.selectedSetsForPicker;
+};
+
+window.commitSelectedExercise = function() {
+    if(!window.selectedExerciseForPicker) {
+        alert("Lütfen bir hareket seçin!");
+        return;
+    }
+    
     if(!currentPickerDayId) return;
 
     if(currentPickerDayId.startsWith('__split__')) {
-        // Mevcut split'e ekle
         const parts = currentPickerDayId.split('__');
         const splitId = parts[2];
         const dayIdx = parseInt(parts[4]);
@@ -1500,27 +1524,37 @@ function handlePickerSelect(exName) {
         if(split) {
             split.days[dayIdx].exercises.push({
                 id: `e${Date.now()}_${Math.floor(Math.random()*1000)}`,
-                name: exName,
-                defaultSets: 3
+                name: window.selectedExerciseForPicker,
+                sets: window.selectedSetsForPicker,
+                defaultSets: window.selectedSetsForPicker
             });
             persistSplitEdit(split);
             closeExercisePickerModal();
-            renderSplitEditView();
+            renderSplitView();
+            if(typeof renderSplitEditView === 'function') renderSplitEditView();
         }
     } else {
-        // Yeni split formuna ekle
         const day = newSplitDays.find(d => d.id === currentPickerDayId);
         if(day) {
             day.exercises.push({
                 id: `e${Date.now()}_${Math.floor(Math.random()*1000)}`,
-                name: exName,
-                defaultSets: 3
+                name: window.selectedExerciseForPicker,
+                sets: window.selectedSetsForPicker,
+                defaultSets: window.selectedSetsForPicker
             });
             closeExercisePickerModal();
-            renderCreateSplitDays();
+            if(typeof renderCreateSplitDays === 'function') renderCreateSplitDays();
         }
     }
-}
+};
+
+window.handlePickerSelect = function(exName) {
+    window.selectedExerciseForPicker = exName;
+    const activeBtn = document.querySelector('#exercise-picker-categories button.bg-neon-purple');
+    const cat = activeBtn ? activeBtn.getAttribute('data-category') : 'Tümü';
+    const searchInput = document.getElementById('exercise-picker-search');
+    renderExercisePickerList(cat, searchInput ? searchInput.value : '');
+};
 
 // Picker listesi render fonksiyonu içindeki onclick'i override et
 function patchPickerListClick() {
@@ -1589,16 +1623,35 @@ function openExercisePicker(dayId) {
 };
 
 function closeExercisePickerModal() {
-    document.getElementById('modal-exercise-picker').classList.add('hidden');
-    currentPickerDayId = null;
+    const modal = document.getElementById('modal-exercise-picker');
+    const content = document.getElementById('exercise-picker-content');
+    
+    if(content) content.classList.add('translate-y-full');
+    if(modal) modal.classList.add('opacity-0', 'pointer-events-none');
+    
+    setTimeout(() => {
+        if(modal) modal.classList.add('hidden');
+        currentPickerDayId = null;
+    }, 300);
 };
+
+window.closeExercisePickerModal = closeExercisePickerModal;
 
 function filterPickerCategory(cat, btnElement) {
     const buttons = document.querySelectorAll('#exercise-picker-categories button');
     buttons.forEach(b => {
-        b.className = "px-4 py-1.5 rounded-full border-none text-on-surface-variant font-label-sm whitespace-nowrap";
+        b.className = "px-5 py-2 rounded-full bg-[#F0F2F8] text-[#64748B] font-bold text-[13px] whitespace-nowrap active:scale-95 transition-transform";
+        b.style.boxShadow = "4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255,255,255,0.7)";
     });
-    if(btnElement) btnElement.className = "px-4 py-1.5 rounded-full bg-gradient-to-r from-neon-purple to-neon-blue text-white font-label-sm whitespace-nowrap";
+    
+    if (!btnElement) {
+        btnElement = Array.from(buttons).find(b => b.getAttribute('data-category') === cat);
+    }
+    
+    if(btnElement) {
+        btnElement.className = "px-5 py-2 rounded-full bg-neon-purple text-white font-bold text-[13px] shadow-md whitespace-nowrap active:scale-95 transition-transform";
+        btnElement.style.boxShadow = "";
+    }
 
     const searchInput = document.getElementById('exercise-picker-search');
     renderExercisePickerList(cat, searchInput ? searchInput.value : '');
@@ -1644,14 +1697,52 @@ function renderExercisePickerList(category, searchTerm = '') {
     }
 
     filtered.forEach(exName => {
-        const btn = document.createElement('button');
-        btn.className = "w-full text-left p-4 rounded-2xl bg-[#F0F2F8] active:scale-[0.99] transition-transform flex items-center justify-between border-none mb-3";
-        btn.style.cssText = "background-color: #F0F2F8; box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7)";
-        btn.innerHTML = `
-            <span class="font-semibold text-body-md text-on-surface tracking-tight">${exName}</span>
-            <span class="material-symbols-rounded text-neon-blue">add_circle</span>
-        `;
-        btn.onclick = () => handlePickerSelect(exName);
+        const isSelected = window.selectedExerciseForPicker === exName;
+        
+        // Get localized region
+        let region = "Tüm Vücut";
+        const mapObj = window.EXERCISE_MUSCLE_MAPPING[exName];
+        if (mapObj && mapObj.primary && mapObj.primary.length > 0) {
+            const raw = mapObj.primary[0];
+            const mapTr = {
+                'chest': 'Göğüs', 'upper-back': 'Sırt', 'deltoids': 'Omuz', 'triceps': 'Triceps', 'biceps': 'Biceps',
+                'glutes': 'Kalça', 'quadriceps': 'Ön Bacak', 'hamstrings': 'Arka Bacak', 'calves': 'Kalf', 'core': 'Karın',
+                'forearms': 'Ön Kol', 'traps': 'Trapez'
+            };
+            region = mapTr[raw] || raw;
+        }
+
+        const btn = document.createElement('div');
+        
+        if (isSelected) {
+            btn.className = "w-full p-4 rounded-2xl bg-[#F0F2F8] border border-neon-purple flex items-center justify-between transition-colors";
+            btn.innerHTML = `
+                <div class="flex items-center gap-3 min-w-0">
+                    <span class="material-symbols-rounded text-neon-purple text-[20px] shrink-0">check_circle</span>
+                    <div class="flex flex-col truncate min-w-0">
+                        <span class="font-bold text-[15px] text-[#1E293B] truncate">${exName}</span>
+                        <span class="text-[12px] text-neon-purple truncate">${region}</span>
+                    </div>
+                </div>
+                <div class="shrink-0 bg-white rounded-full px-3 py-1 shadow-sm">
+                    <span class="text-[11px] font-bold text-neon-purple">Seçili</span>
+                </div>
+            `;
+        } else {
+            btn.className = "w-full p-4 rounded-2xl bg-[#F0F2F8] flex items-center justify-between active:scale-[0.99] transition-transform cursor-pointer border border-transparent";
+            btn.style.boxShadow = "4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7)";
+            btn.innerHTML = `
+                <div class="flex flex-col truncate min-w-0 flex-1 pr-4">
+                    <span class="font-bold text-[15px] text-[#1E293B] truncate">${exName}</span>
+                    <span class="text-[12px] text-[#94A3B8] truncate">${region}</span>
+                </div>
+                <div class="w-8 h-8 rounded-xl bg-[#F0F2F8] flex items-center justify-center shrink-0" style="box-shadow: 2px 2px 5px #D1D9E6, -2px -2px 5px rgba(255,255,255,0.7);">
+                    <span class="material-symbols-rounded text-[#64748B] text-[16px]">add</span>
+                </div>
+            `;
+            btn.onclick = () => window.handlePickerSelect(exName);
+        }
+        
         list.appendChild(btn);
     });
 }
