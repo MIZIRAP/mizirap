@@ -422,7 +422,7 @@ export function renderSplitView() {
                                 <!-- Badge -->
                                 <div class="flex items-center gap-1.5 bg-[#F1F5F9] text-[#64748B] px-2.5 py-1 rounded-full shadow-sm">
                                     <div class="w-1.5 h-1.5 rounded-full bg-[#94A3B8] opacity-80"></div>
-                                    <span class="text-[9px] font-bold uppercase tracking-wider">BEKLEMEDE</span>
+                                    <span class="text-[9px] font-bold tracking-wider">pasif</span>
                                 </div>
                                 <!-- Actions -->
                                 <div class="flex items-center gap-2">
@@ -470,9 +470,6 @@ window.makeSplitActive = async function(splitId) {
     
     try {
         activeSplitId = splitId;
-        
-        const { setDoc, doc } = await import("https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js");
-        const { db } = await import("./firebase-config.js?v=20260926-1");
         
         await setDoc(doc(db, "users", currentUid), {
             activeSplitId: activeSplitId
