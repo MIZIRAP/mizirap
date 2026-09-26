@@ -258,15 +258,12 @@ export function renderSplitView() {
         // Render Exercises List for Active Day
         const exListContainer = document.getElementById('edit-split-exercises-list');
         const dayTitleEl = document.getElementById('edit-split-day-title');
-        const dayExCountEl = document.getElementById('edit-split-day-ex-count');
         const addExBtn = document.getElementById('btn-add-exercise-to-day');
         
         if (exListContainer) {
             const currentDayObj = activeSplit.days.find(d => d.id === activeDayId) || activeSplit.days[0];
             if (currentDayObj) {
                 if (dayTitleEl) dayTitleEl.innerText = currentDayObj.name + " Egzersiz Akışı";
-                const exCount = currentDayObj.exercises ? currentDayObj.exercises.length : 0;
-                if (dayExCountEl) dayExCountEl.innerText = exCount + " Hareket";
                 
                 if (addExBtn) {
                     const dayIdx = activeSplit.days.findIndex(d => d.id === currentDayObj.id);
@@ -277,14 +274,54 @@ export function renderSplitView() {
                 
                 exListContainer.innerHTML = '';
                 if (currentDayObj.exercises && currentDayObj.exercises.length > 0) {
-                    currentDayObj.exercises.forEach(ex => {
-                        const targetBadge = ex.target ? ex.target : 'Tüm Vücut';
-                        const sets = ex.sets || 0;
-                        const reps = ex.reps || '8-10';
-                        const weight = ex.weight || '0';
+                    currentDayObj.exercises.forEach((ex, exIdx) => {
+                        let targetBadge = 'Tüm Vücut';
+                        const mapObj = window.EXERCISE_MUSCLE_MAPPING ? window.EXERCISE_MUSCLE_MAPPING[ex.name] : null;
+                        if (mapObj && mapObj.primary && mapObj.primary.length > 0) {
+                            const raw = mapObj.primary[0];
+                            const mapTr = {
+                                'chest': 'Göğüs', 'upper-back': 'Sırt', 'deltoids': 'Omuz', 'triceps': 'Triceps', 'biceps': 'Biceps',
+                                'glutes': 'Kalça', 'quadriceps': 'Ön Bacak', 'hamstrings': 'Arka Bacak', 'calves': 'Kalf', 'core': 'Karın',
+                                'forearms': 'Ön Kol', 'traps': 'Trapez'
+                            };
+                            targetBadge = mapTr[raw] || raw;
+                        }
                         
+                        const wrapper = document.createElement('div');
+                        wrapper.className = "relative mb-1 w-full mx-auto";
+                        wrapper.style.borderRadius = "24px";
+                        
+                        // Actions Container (Edit and Delete)
+                        const actionsDiv = document.createElement('div');
+                        actionsDiv.className = "absolute top-0 right-0 h-full flex items-center justify-end z-0";
+                        actionsDiv.style.width = "100px";
+                        
+                        const editBtn = document.createElement('button');
+                        editBtn.className = "h-full w-[50px] flex items-center justify-center";
+                        editBtn.style.backgroundColor = "#712AE2";
+                        editBtn.style.borderRadius = "24px 0 0 24px";
+                        editBtn.innerHTML = `<span class="material-symbols-rounded text-white text-[20px]">edit</span>`;
+                        // Edit is inactive for now
+                        
+                        const delBtn = document.createElement('button');
+                        delBtn.className = "h-full w-[50px] flex items-center justify-center";
+                        delBtn.style.backgroundColor = "#BA1A1A";
+                        delBtn.style.borderRadius = "0 24px 24px 0";
+                        delBtn.innerHTML = `<span class="material-symbols-rounded text-white text-[20px]">delete</span>`;
+                        
+                        delBtn.onclick = () => {
+                            if(confirm('Bu hareketi silmek istediğinize emin misiniz?')) {
+                                currentDayObj.exercises.splice(exIdx, 1);
+                                if (typeof persistSplitEdit === 'function') persistSplitEdit(activeSplit);
+                                renderSplitView();
+                            }
+                        };
+                        
+                        actionsDiv.appendChild(editBtn);
+                        actionsDiv.appendChild(delBtn);
+
                         const exDiv = document.createElement('div');
-                        exDiv.className = "bg-[#F0F2F8] rounded-[24px] p-4 flex items-center gap-3 relative mb-1";
+                        exDiv.className = "bg-[#F0F2F8] rounded-[24px] p-4 flex items-center gap-3 relative z-10 w-full";
                         exDiv.style.boxShadow = "4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7)";
                         
                         exDiv.innerHTML = `
@@ -292,21 +329,56 @@ export function renderSplitView() {
                                 <span class="material-symbols-rounded text-neon-blue text-[20px]">fitness_center</span>
                             </div>
                             <div class="flex-1 min-w-0 flex flex-col justify-center">
-                                <h4 class="text-[14px] font-bold text-[#1E293B] truncate">${ex.name}</h4>
-                                <div class="flex items-center gap-2 mt-1">
-                                    <div class="flex items-center gap-1.5 bg-[#F0F2F8] rounded-full px-1.5 py-0.5" style="box-shadow: 2px 2px 5px #D1D9E6, -2px -2px 5px rgba(255,255,255,0.7);">
-                                        <button class="text-[#64748B] hover:text-[#1E293B] active:scale-95 flex items-center justify-center w-5 h-5" onclick="window.updateExerciseSets('${currentDayObj.id}', '${ex.id}', -1)"><span class="material-symbols-rounded text-[14px]">remove</span></button>
-                                        <span class="text-[11px] font-bold text-[#1E293B] w-3 text-center">${sets}</span>
-                                        <button class="text-[#64748B] hover:text-[#1E293B] active:scale-95 flex items-center justify-center w-5 h-5" onclick="window.updateExerciseSets('${currentDayObj.id}', '${ex.id}', 1)"><span class="material-symbols-rounded text-[14px]">add</span></button>
-                                    </div>
-                                    <span class="text-[11px] font-bold text-neon-purple truncate">Set x ${reps} • ${weight} kg</span>
-                                </div>
+                                <h4 class="text-[15px] font-bold text-[#1E293B] truncate">${ex.name}</h4>
                             </div>
-                            <div class="shrink-0 bg-[#F0F2F8] rounded-full px-2.5 py-1 flex items-center justify-center" style="box-shadow: inset 2px 2px 5px #D1D9E6, inset -2px -2px 5px rgba(255,255,255,0.7);">
-                                <span class="text-[10px] font-medium text-[#64748B]">${targetBadge}</span>
+                            <div class="shrink-0 bg-[#F0F2F8] rounded-full px-3 py-1.5 flex items-center justify-center" style="box-shadow: inset 2px 2px 5px #D1D9E6, inset -2px -2px 5px rgba(255,255,255,0.7);">
+                                <span class="text-[11px] font-bold text-[#64748B]">${targetBadge}</span>
                             </div>
                         `;
-                        exListContainer.appendChild(exDiv);
+                        
+                        // Swipe logic
+                        let startX = 0;
+                        let currentX = 0;
+                        let isDragging = false;
+                        
+                        exDiv.addEventListener('touchstart', (e) => {
+                            startX = e.touches[0].clientX;
+                            currentX = startX;
+                            isDragging = true;
+                            exDiv.style.transition = 'none';
+                        }, {passive: true});
+                        
+                        exDiv.addEventListener('touchmove', (e) => {
+                            if (!isDragging) return;
+                            currentX = e.touches[0].clientX;
+                            let diff = currentX - startX;
+                            if (diff > 0) diff = 0;
+                            if (diff < -100) diff = -100;
+                            exDiv.style.transform = `translateX(${diff}px)`;
+                        }, {passive: true});
+                        
+                        exDiv.addEventListener('touchend', (e) => {
+                            isDragging = false;
+                            exDiv.style.transition = 'transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)';
+                            let diff = currentX - startX;
+                            if (diff < -50) {
+                                exDiv.style.transform = `translateX(-100px)`;
+                                setTimeout(() => {
+                                    document.addEventListener('touchstart', function closeSwipe(evt) {
+                                        if (!wrapper.contains(evt.target)) {
+                                            exDiv.style.transform = `translateX(0px)`;
+                                            document.removeEventListener('touchstart', closeSwipe);
+                                        }
+                                    }, {passive: true});
+                                }, 100);
+                            } else {
+                                exDiv.style.transform = `translateX(0px)`;
+                            }
+                        });
+                        
+                        wrapper.appendChild(actionsDiv);
+                        wrapper.appendChild(exDiv);
+                        exListContainer.appendChild(wrapper);
                     });
                 } else {
                     exListContainer.innerHTML = `
