@@ -889,8 +889,9 @@
     <div class="flex items-center justify-between w-full">
         <div class="w-10 h-10 shrink-0"></div>
         <h1 class="text-h1 font-bold text-[#1E293B]">Spor</h1>
-        <!-- Settings button removed per user request -->
-        <div class="w-10 h-10 shrink-0"></div>
+        <button data-action="openSplitEdit" class="w-10 h-10 flex items-center justify-center rounded-full bg-[#F0F2F8] active:scale-95 transition-transform" style="background-color: #F0F2F8; box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);">
+            <span class="material-symbols-rounded text-[#1E293B] pointer-events-none">settings</span>
+        </button>
     </div>
 </header>
 
@@ -5327,7 +5328,27 @@
 
 
 </div>
-    <!-- view-split-edit removed per user request -->
+    <!-- SPLIT EDIT VIEW -->
+        <section id="view-split-edit" class="view hidden bg-[#E8EAF0] min-h-[100dvh] text-on-background font-body-md pb-[100px] overflow-y-auto">
+        <!-- Top Navigation Container -->
+        <header class="w-full top-0 sticky z-40 max-w-md mx-auto px-container-padding py-4 bg-[#F0F2F8]">
+            <div class="flex items-center justify-between w-full">
+                <!-- Leading Action (Geri Butonu) -->
+                <div class="w-10 h-10 shrink-0"></div>
+                <!-- Headline -->
+                <h1 class="text-h1 font-bold text-[#1E293B]">Split Programlarım</h1>
+                <!-- Trailing Action -->
+                <button data-action="closeSplitSelectionAndOpenModal" aria-label="Yeni Ekle" class="w-10 h-10 flex items-center justify-center rounded-full bg-[#F0F2F8] active:scale-[0.98] transition-transform shrink-0" style="background-color: #F0F2F8; box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);">
+                    <span class="material-symbols-rounded text-[#1E293B]">add</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- Main Content Canvas -->
+        <main class="w-full max-w-md mx-auto px-6 pb-24 flex flex-col gap-6" id="split-edit-main-container">
+            <!-- Dynamically populated by JS -->
+        </main>
+    </section>
 
     <!-- SPLIT SELECTION MODAL -->
     <div id="modal-split-change" class="hidden fixed inset-0 z-[102] flex items-center justify-center font-body-md">
@@ -5382,7 +5403,71 @@
 
 <!-- ===================== CORE PLAYER ===================== -->
 
-    <!-- modal-new-split removed per user request -->
+    <!-- YENİ PROGRAM OLUŞTUR MODALI -->
+    <div class="hidden fixed inset-0 z-50 flex items-end justify-center" id="modal-new-split">
+        <!-- Backdrop -->
+        <div class="absolute inset-0 bg-black/10 backdrop-blur-sm z-10 transition-opacity duration-300 opacity-0" id="new-split-backdrop-empty" onclick="if(window.closeNewSplitModal) window.closeNewSplitModal()"></div>
+
+        <!-- Modal Content -->
+        <div class="mzr-sheet-content relative w-full max-w-sm bg-[#F0F2F8] rounded-t-[32px] shadow-[0_-8px_30px_rgba(0,0,0,0.05)] p-6 z-20 flex flex-col items-center transform transition-transform duration-300 translate-y-full pb-8" id="new-split-content">
+            <!-- Drag Handle (Mobile) -->
+            <div class="w-12 h-1.5 bg-gray-300 rounded-full mb-6 cursor-pointer" onclick="if(window.closeNewSplitModal) window.closeNewSplitModal()"></div>
+            
+            <div class="w-full text-center mb-6">
+                <h2 class="text-xl font-bold text-gray-800">Yeni Program Oluştur</h2>
+            </div>
+            
+            <!-- Hızlı Şablonlar -->
+            <div class="w-full mb-6">
+                <h3 class="text-xs font-bold text-[#64748B] mb-3 uppercase tracking-wider pl-1">Hızlı Şablon Seç</h3>
+                <div class="grid grid-cols-2 gap-3">
+                    <button onclick="if(window.fillSplitTemplate) window.fillSplitTemplate('ppl')" class="py-3 rounded-[16px] bg-[#F0F2F8] text-[#1E293B] font-bold text-xs active:scale-95 transition-transform flex items-center justify-center gap-1.5" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);">
+                        <span class="material-symbols-rounded text-[16px] text-neon-purple">bolt</span>
+                        PPL
+                    </button>
+                    <button onclick="if(window.fillSplitTemplate) window.fillSplitTemplate('upper_lower')" class="py-3 rounded-[16px] bg-[#F0F2F8] text-[#1E293B] font-bold text-xs active:scale-95 transition-transform flex items-center justify-center gap-1.5" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);">
+                        <span class="material-symbols-rounded text-[16px] text-neon-purple">fitness_center</span>
+                        Upper / Lower
+                    </button>
+                    <button onclick="if(window.fillSplitTemplate) window.fillSplitTemplate('full_body')" class="py-3 rounded-[16px] bg-[#F0F2F8] text-[#1E293B] font-bold text-xs active:scale-95 transition-transform flex items-center justify-center gap-1.5" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);">
+                        <span class="material-symbols-rounded text-[16px] text-neon-purple">accessibility_new</span>
+                        Full Body
+                    </button>
+                    <button onclick="if(window.fillSplitTemplate) window.fillSplitTemplate('split')" class="py-3 rounded-[16px] bg-[#F0F2F8] text-[#1E293B] font-bold text-xs active:scale-95 transition-transform flex items-center justify-center gap-1.5" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);">
+                        <span class="material-symbols-rounded text-[16px] text-neon-purple">view_quilt</span>
+                        Split (Bölgesel)
+                    </button>
+                </div>
+            </div>
+
+            <!-- Program Adı -->
+            <div class="w-full mb-4">
+                <label class="block text-xs font-bold text-[#64748B] mb-2 uppercase tracking-wider pl-1">Program Adı</label>
+                <div class="bg-[#F0F2F8] p-1 rounded-2xl flex items-center" style="box-shadow: inset 4px 4px 8px #D1D9E6, inset -4px -4px 8px rgba(255, 255, 255, 0.7);">
+                    <div class="w-10 h-10 flex items-center justify-center text-[#64748B]">
+                        <span class="material-symbols-rounded text-[20px]">edit_document</span>
+                    </div>
+                    <input type="text" id="new-split-name-input" placeholder="Örn: Yaz Hedefi" class="flex-1 bg-transparent border-none outline-none text-[#1E293B] font-bold text-sm h-10 pr-4 placeholder:text-[#94A3B8]">
+                </div>
+            </div>
+
+            <!-- Program Notu / Odak Alanı -->
+            <div class="w-full mb-8">
+                <label class="block text-xs font-bold text-[#64748B] mb-2 uppercase tracking-wider pl-1">Program Notu / Odak Alanı</label>
+                <div class="bg-[#F0F2F8] p-1 rounded-2xl flex items-center" style="box-shadow: inset 4px 4px 8px #D1D9E6, inset -4px -4px 8px rgba(255, 255, 255, 0.7);">
+                    <div class="w-10 h-10 flex items-center justify-center text-[#64748B]">
+                        <span class="material-symbols-rounded text-[20px]">description</span>
+                    </div>
+                    <input type="text" id="new-split-note-input" placeholder="Örn: İtme ve çekme odaklı" class="flex-1 bg-transparent border-none outline-none text-[#1E293B] font-medium text-sm h-10 pr-4 placeholder:text-[#94A3B8]">
+                </div>
+            </div>
+
+            <!-- Kaydet Butonu -->
+            <button onclick="if(window.createNewSplitFromPopup) window.createNewSplitFromPopup()" class="w-full py-4 px-6 rounded-full font-bold text-lg text-gray-800 gradient-border shadow-md focus:outline-none active:scale-[0.98] transition-transform flex items-center justify-center gap-2">
+                Programı Kaydet <span class="material-symbols-rounded text-silk-blue" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+            </button>
+        </div>
+    </div>
 
     <!-- YENİ HAREKET EKLEME MODALI (Kalori Modalı Yapısında, İçi Boş) -->
     <div class="hidden fixed inset-0 z-50 flex items-end justify-center" id="modal-exercise-picker">
