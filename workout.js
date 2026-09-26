@@ -1476,20 +1476,16 @@ function openExercisePickerForSplit(splitId, dayIdx) {
     currentPickerDayId = `__split__${splitId}__day__${dayIdx}`;
     window.selectedExerciseForPicker = null;
     window.selectedSetsForPicker = 3;
-    const countEl = document.getElementById('picker-set-count');
-    if(countEl) countEl.innerText = "3";
 
     const modal = document.getElementById('modal-exercise-picker');
+    const backdrop = document.getElementById('exercise-picker-backdrop');
     const content = document.getElementById('exercise-picker-content');
     
-    modal.classList.remove('hidden');
-    modal.classList.add('flex');
-    modal.classList.remove('pointer-events-none');
-    modal.classList.add('opacity-100');
-    modal.classList.remove('opacity-0');
+    if (modal) modal.classList.remove('hidden');
     
     setTimeout(() => {
-        if(content) {
+        if (backdrop) backdrop.classList.remove('opacity-0');
+        if (content) {
             content.classList.remove('translate-y-full');
             content.classList.add('translate-y-0');
         }
@@ -1619,20 +1615,16 @@ function openExercisePicker(dayId) {
     currentPickerDayId = dayId;
     window.selectedExerciseForPicker = null;
     window.selectedSetsForPicker = 3;
-    const countEl = document.getElementById('picker-set-count');
-    if(countEl) countEl.innerText = "3";
     
     const modal = document.getElementById('modal-exercise-picker');
+    const backdrop = document.getElementById('exercise-picker-backdrop');
     const content = document.getElementById('exercise-picker-content');
     
-    modal.classList.remove('hidden');
-    modal.classList.add('flex');
-    modal.classList.remove('pointer-events-none');
-    modal.classList.add('opacity-100');
-    modal.classList.remove('opacity-0');
+    if (modal) modal.classList.remove('hidden');
     
     setTimeout(() => {
-        if(content) {
+        if (backdrop) backdrop.classList.remove('opacity-0');
+        if (content) {
             content.classList.remove('translate-y-full');
             content.classList.add('translate-y-0');
         }
@@ -1651,19 +1643,17 @@ function openExercisePicker(dayId) {
 
 function closeExercisePickerModal() {
     const modal = document.getElementById('modal-exercise-picker');
+    const backdrop = document.getElementById('exercise-picker-backdrop');
     const content = document.getElementById('exercise-picker-content');
     
-    if(content) {
-        content.classList.add('translate-y-full');
+    if (backdrop) backdrop.classList.add('opacity-0');
+    if (content) {
         content.classList.remove('translate-y-0');
+        content.classList.add('translate-y-full');
     }
     
     setTimeout(() => {
-        if(modal) {
-            modal.classList.remove('opacity-100');
-            modal.classList.add('opacity-0');
-            modal.classList.add('pointer-events-none');
-            modal.classList.remove('flex');
+        if (modal) {
             modal.classList.add('hidden');
         }
         currentPickerDayId = null;
@@ -1694,6 +1684,7 @@ function filterPickerCategory(cat, btnElement) {
 
 function renderExercisePickerList(category, searchTerm = '') {
     const list = document.getElementById('exercise-picker-list');
+    if (!list) return;
     list.innerHTML = '';
 
     if(!window.EXERCISE_MUSCLE_MAPPING) {

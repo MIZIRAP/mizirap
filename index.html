@@ -5400,6 +5400,27 @@
 
 <!-- ===================== CORE PLAYER ===================== -->
 
+    <!-- YENİ HAREKET EKLEME MODALI (Kalori Modalı Yapısında, İçi Boş) -->
+    <div class="hidden fixed inset-0 z-50 flex items-end justify-center" id="modal-exercise-picker">
+        <!-- Backdrop -->
+        <div class="absolute inset-0 bg-black/10 backdrop-blur-sm z-10 transition-opacity duration-300 opacity-0" id="exercise-picker-backdrop" onclick="closeExercisePickerModal()"></div>
+
+        <!-- Modal Content -->
+        <div class="mzr-sheet-content relative w-full max-w-sm bg-[#F0F2F8] rounded-t-[32px] shadow-[0_-8px_30px_rgba(0,0,0,0.05)] p-6 z-20 flex flex-col items-center transform transition-transform duration-300 translate-y-full pb-8" id="exercise-picker-content">
+            <!-- Drag Handle (Mobile) -->
+            <div class="w-12 h-1.5 bg-gray-300 rounded-full mb-6 cursor-pointer" onclick="closeExercisePickerModal()"></div>
+            
+            <div class="w-full text-center mb-6">
+                <h2 class="text-xl font-bold text-gray-800 mb-2">Hareket Ekle</h2>
+            </div>
+            
+            <!-- İçi tamamen boş bırakıldı -->
+            <div class="w-full flex-1 flex flex-col gap-4 min-h-[300px]">
+                <!-- İçerik buraya gelecek -->
+            </div>
+        </div>
+    </div>
+
 
 
         <!-- Dynamic Tool Bottom Sheet Overlay -->
