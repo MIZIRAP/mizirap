@@ -1143,6 +1143,7 @@ function renderSplitEditView() {
                         const initial = (ex.name || 'E').charAt(0).toUpperCase();
                         const sets = ex.defaultSets || 3;
 
+                        exHtml += `
                         <div class="relative w-full shrink-0 flex justify-center mb-3">
                             <!-- Background Actions -->
                             <div class="absolute right-[calc(50%-141px)] top-0 h-[56px] flex items-center gap-2 z-0 pr-2">
