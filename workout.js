@@ -59,6 +59,9 @@ document.addEventListener('click', (e) => {
     else if (action === 'openExercisePickerForSplit') {
         openExercisePickerForSplit(actionBtn.getAttribute('data-split-id'), parseInt(actionBtn.getAttribute('data-day-idx')));
     }
+    else if (action === 'editExerciseForSplit') {
+        editExerciseForSplit(actionBtn.getAttribute('data-split-id'), parseInt(actionBtn.getAttribute('data-day-idx')), parseInt(actionBtn.getAttribute('data-ex-idx')));
+    }
     else if (action === 'toggleFav') {
         toggleFavorite(e, actionBtn);
     }
@@ -1140,37 +1143,28 @@ function renderSplitEditView() {
                         const initial = (ex.name || 'E').charAt(0).toUpperCase();
                         const sets = ex.defaultSets || 3;
 
-                        exHtml += `
-                        <div class="exercise-card w-[282px] flex flex-col items-center ${isExOpen ? 'expanded' : ''} ex-drag-item" data-ex-idx="${exIdx}" data-split-id="${split.id}" data-day-idx="${dayIdx}">
-                            <div class="accordion-header w-[282px] h-[56px] bg-[#F0F2F8] rounded-[12px] p-3 flex items-center justify-between transition-all z-20 relative active:scale-[0.99]" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);">
+                        <div class="relative w-full shrink-0 flex justify-center mb-3">
+                            <!-- Background Actions -->
+                            <div class="absolute right-[calc(50%-141px)] top-0 h-[56px] flex items-center gap-2 z-0 pr-2">
+                                <button class="w-12 h-12 bg-[#F0F2F8] shadow-neumorphic rounded-2xl text-silk-blue flex items-center justify-center active:scale-95 transition-transform" data-action="editExerciseForSplit" data-split-id="${split.id}" data-day-idx="${dayIdx}" data-ex-idx="${exIdx}">
+                                    <span class="material-symbols-rounded text-xl pointer-events-none">edit</span>
+                                </button>
+                                <button class="w-12 h-12 bg-red-500 rounded-2xl text-white flex items-center justify-center active:bg-red-600 transition-colors" data-action="removeExerciseFromSplit" data-split-id="${split.id}" data-day-idx="${dayIdx}" data-ex-idx="${exIdx}">
+                                    <span class="material-symbols-rounded text-xl pointer-events-none">delete</span>
+                                </button>
+                            </div>
+                            
+                            <!-- Foreground Card -->
+                            <div class="exercise-card w-[282px] h-[56px] bg-[#F0F2F8] rounded-[12px] p-3 flex items-center justify-between z-10 relative transition-transform duration-300 swipeable-ex-card ex-drag-item" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);" data-ex-idx="${exIdx}" data-split-id="${split.id}" data-day-idx="${dayIdx}">
                                 <div class="flex items-center gap-2">
                                     <span class="material-symbols-rounded text-[#C7C4D7] text-[16px] cursor-grab drag-handle shrink-0 select-none" style="touch-action: none; user-select: none;">drag_indicator</span>
-                                    <div class="w-12 h-12 rounded-full bg-[#F0F2F8] flex items-center justify-center shrink-0" style="box-shadow: inset 2px 2px 5px #D1D9E6, inset -2px -2px 5px rgba(255, 255, 255, 0.7);">
-                                        <span class="material-symbols-rounded text-[#1E293B] text-xl">fitness_center</span>
+                                    <div class="w-10 h-10 rounded-full bg-[#F0F2F8] flex items-center justify-center shrink-0" style="box-shadow: inset 2px 2px 5px #D1D9E6, inset -2px -2px 5px rgba(255, 255, 255, 0.7);">
+                                        <span class="material-symbols-rounded text-silk-blue text-lg">fitness_center</span>
                                     </div>
-                                    <div class="flex flex-col">
-                                        <h4 class="font-semibold text-[#181C20] text-[14px] leading-[21px] tracking-[0.7px] select-none">${ex.name}</h4>
-                                        <p class="font-normal text-[#585A68] text-[12px] leading-[17px] mt-[-1px]" id="sets-lbl-${split.id}-${dayIdx}-${exIdx}">${sets} set</p>
+                                    <div class="flex flex-col max-w-[170px]">
+                                        <h4 class="font-semibold text-gray-800 text-[13px] leading-tight truncate select-none">${ex.name}</h4>
+                                        <p class="font-bold text-silk-blue text-[11px] mt-0.5" id="sets-lbl-${split.id}-${dayIdx}-${exIdx}">${sets} set</p>
                                     </div>
-                                </div>
-                                <div class="flex items-center gap-2 shrink-0">
-                                    <span class="material-symbols-rounded text-[#1E293B] text-[16px] transition-transform chevron cursor-pointer p-1" onclick="toggleMizAccordion(this.closest('.accordion-header'), '${exAccordionKey}', 'ex', event)">expand_more</span>
-                                    <button class="p-1 transition-colors" data-action="removeExerciseFromSplit" data-split-id="${split.id}" data-day-idx="${dayIdx}" data-ex-idx="${exIdx}">
-                                        <span class="material-symbols-rounded text-[#BA1A1A] text-[16px] pointer-events-none">delete</span>
-                                    </button>
-                                </div>
-                            </div>
-
-                            <!-- Ex Content -->
-                            <div class="accordion-content w-[250px] bg-transparent pt-3 pb-3 flex flex-col gap-2 relative z-10 transition-all overflow-hidden ${isExOpen ? 'expanded' : ''}" style="margin-top: 0px; ${isExOpen ? 'max-height: 500px;' : ''}">
-                                <div class="flex items-center gap-4 w-[160px] h-[40px] mx-auto mt-2">
-                                    <button data-action="changeExerciseSets" data-split-id="${split.id}" data-day-idx="${dayIdx}" data-ex-idx="${exIdx}" data-delta="-1" class="w-10 h-10 rounded-full flex items-center justify-center bg-[#F0F2F8]" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);">
-                                        <div class="w-[14px] h-[2px] bg-[#5B5D6D] pointer-events-none"></div>
-                                    </button>
-                                    <span class="font-bold text-[24px] leading-[29px] tracking-[-0.48px] text-[#000000] min-w-[40px] text-center">${sets}</span>
-                                    <button data-action="changeExerciseSets" data-split-id="${split.id}" data-day-idx="${dayIdx}" data-ex-idx="${exIdx}" data-delta="1" class="w-10 h-10 rounded-full flex items-center justify-center bg-[#F0F2F8]" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);">
-                                        <span class="material-symbols-rounded text-[#5B5D6D] text-[14px] font-bold pointer-events-none">add</span>
-                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -1335,7 +1329,29 @@ function renderSplitEditView() {
 
             split.days.forEach((day, dayIdx) => {
                 const listEl = splitCard.querySelector(`#ex-list-${split.id}-${dayIdx}`);
-                if(listEl) _initExSortable(listEl, split.id, dayIdx);
+                if(listEl) {
+                    _initExSortable(listEl, split.id, dayIdx);
+                    
+                    const exCards = listEl.querySelectorAll('.swipeable-ex-card');
+                    exCards.forEach(card => {
+                        let startX, currentX;
+                        card.addEventListener('touchstart', (e) => {
+                            if(e.target.closest('.drag-handle')) return; 
+                            startX = e.touches[0].clientX;
+                        }, {passive: true});
+                        card.addEventListener('touchmove', (e) => {
+                            if (!startX || e.target.closest('.drag-handle')) return;
+                            currentX = e.touches[0].clientX;
+                            const diff = startX - currentX;
+                            if (diff > 10) {
+                                card.style.transform = 'translateX(-110px)';
+                            } else if (diff < -10) {
+                                card.style.transform = 'translateX(0px)';
+                            }
+                        }, {passive: true});
+                        card.addEventListener('touchend', () => { startX = null; currentX = null; });
+                    });
+                }
             });
         }
     });
@@ -1474,12 +1490,15 @@ function removeExerciseFromSplit(splitId, dayIdx, exIdx) {
 
 function openExercisePickerForSplit(splitId, dayIdx) {
     currentPickerDayId = `__split__${splitId}__day__${dayIdx}`;
+    window.editModeForSplit = null;
     window.selectedExerciseForPicker = null;
     window.selectedSetsForPicker = 3;
 
     const modal = document.getElementById('modal-exercise-picker');
     const backdrop = document.getElementById('exercise-picker-backdrop');
     const content = document.getElementById('exercise-picker-content');
+    const title = modal.querySelector('h2');
+    if (title) title.innerText = "Hareket Ekle";
     
     if (modal) modal.classList.remove('hidden');
     
@@ -1504,6 +1523,37 @@ function openExercisePickerForSplit(splitId, dayIdx) {
     }
 };
 
+function editExerciseForSplit(splitId, dayIdx, exIdx) {
+    const split = splits.find(s => s.id === splitId);
+    if (!split) return;
+    const ex = split.days[dayIdx].exercises[exIdx];
+    
+    currentPickerDayId = `__split__${splitId}__day__${dayIdx}`;
+    window.editModeForSplit = { splitId, dayIdx, exIdx };
+    window.selectedExerciseForPicker = ex.name;
+    window.selectedSetsForPicker = ex.defaultSets || ex.sets || 3;
+
+    const countEl = document.getElementById('picker-set-count');
+    if (countEl) countEl.innerText = window.selectedSetsForPicker;
+
+    const modal = document.getElementById('modal-exercise-picker');
+    const backdrop = document.getElementById('exercise-picker-backdrop');
+    const content = document.getElementById('exercise-picker-content');
+    const title = modal.querySelector('h2');
+    if (title) title.innerText = "Hareket Düzenle";
+    
+    if (modal) modal.classList.remove('hidden');
+    
+    setTimeout(() => {
+        if (backdrop) backdrop.classList.remove('opacity-0');
+        if (content) {
+            content.classList.remove('translate-y-full');
+            content.classList.add('translate-y-0');
+        }
+    }, 10);
+    renderExercisePickerList('Tümü');
+}
+
 window.adjustPickerSets = function(change) {
     window.selectedSetsForPicker = (window.selectedSetsForPicker || 3) + change;
     if(window.selectedSetsForPicker < 1) window.selectedSetsForPicker = 1;
@@ -1525,12 +1575,20 @@ window.commitSelectedExercise = function() {
         const dayIdx = parseInt(parts[4]);
         const split = splits.find(s => s.id === splitId);
         if(split) {
-            split.days[dayIdx].exercises.push({
-                id: `e${Date.now()}_${Math.floor(Math.random()*1000)}`,
-                name: window.selectedExerciseForPicker,
-                sets: window.selectedSetsForPicker,
-                defaultSets: window.selectedSetsForPicker
-            });
+            if (window.editModeForSplit && window.editModeForSplit.exIdx !== undefined) {
+                // Edit existing exercise
+                const exIdx = window.editModeForSplit.exIdx;
+                split.days[dayIdx].exercises[exIdx].defaultSets = window.selectedSetsForPicker;
+                split.days[dayIdx].exercises[exIdx].sets = window.selectedSetsForPicker;
+            } else {
+                // Add new exercise
+                split.days[dayIdx].exercises.push({
+                    id: `e${Date.now()}_${Math.floor(Math.random()*1000)}`,
+                    name: window.selectedExerciseForPicker,
+                    sets: window.selectedSetsForPicker,
+                    defaultSets: window.selectedSetsForPicker
+                });
+            }
             persistSplitEdit(split);
             closeExercisePickerModal();
             renderSplitView();
