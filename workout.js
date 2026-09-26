@@ -1483,9 +1483,16 @@ function openExercisePickerForSplit(splitId, dayIdx) {
     const content = document.getElementById('exercise-picker-content');
     
     modal.classList.remove('hidden');
+    modal.classList.add('flex');
+    modal.classList.remove('pointer-events-none');
+    modal.classList.add('opacity-100');
+    modal.classList.remove('opacity-0');
+    
     setTimeout(() => {
-        modal.classList.remove('opacity-0', 'pointer-events-none');
-        if(content) content.classList.remove('translate-y-full');
+        if(content) {
+            content.classList.remove('translate-y-full');
+            content.classList.add('translate-y-0');
+        }
     }, 10);
 
     renderExercisePickerList('Tümü');
@@ -1494,7 +1501,7 @@ function openExercisePickerForSplit(splitId, dayIdx) {
     if(searchInput) {
         searchInput.value = '';
         searchInput.oninput = (e) => {
-            const activeBtn = document.querySelector('#exercise-picker-categories button.bg-neon-purple');
+            const activeBtn = document.querySelector('#exercise-picker-categories button[data-active="true"]');
             const cat = activeBtn ? activeBtn.getAttribute('data-category') : 'Tümü';
             renderExercisePickerList(cat, e.target.value);
         };
@@ -1610,7 +1617,27 @@ function removeExerciseFromNewDay(dayIndex, exIndex) {
 
 function openExercisePicker(dayId) {
     currentPickerDayId = dayId;
-    document.getElementById('modal-exercise-picker').classList.remove('hidden');
+    window.selectedExerciseForPicker = null;
+    window.selectedSetsForPicker = 3;
+    const countEl = document.getElementById('picker-set-count');
+    if(countEl) countEl.innerText = "3";
+    
+    const modal = document.getElementById('modal-exercise-picker');
+    const content = document.getElementById('exercise-picker-content');
+    
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+    modal.classList.remove('pointer-events-none');
+    modal.classList.add('opacity-100');
+    modal.classList.remove('opacity-0');
+    
+    setTimeout(() => {
+        if(content) {
+            content.classList.remove('translate-y-full');
+            content.classList.add('translate-y-0');
+        }
+    }, 10);
+
     renderExercisePickerList('Tümü');
 
     const searchInput = document.getElementById('exercise-picker-search');
@@ -1626,11 +1653,19 @@ function closeExercisePickerModal() {
     const modal = document.getElementById('modal-exercise-picker');
     const content = document.getElementById('exercise-picker-content');
     
-    if(content) content.classList.add('translate-y-full');
-    if(modal) modal.classList.add('opacity-0', 'pointer-events-none');
+    if(content) {
+        content.classList.add('translate-y-full');
+        content.classList.remove('translate-y-0');
+    }
     
     setTimeout(() => {
-        if(modal) modal.classList.add('hidden');
+        if(modal) {
+            modal.classList.remove('opacity-100');
+            modal.classList.add('opacity-0');
+            modal.classList.add('pointer-events-none');
+            modal.classList.remove('flex');
+            modal.classList.add('hidden');
+        }
         currentPickerDayId = null;
     }, 300);
 };
@@ -1640,8 +1675,8 @@ window.closeExercisePickerModal = closeExercisePickerModal;
 function filterPickerCategory(cat, btnElement) {
     const buttons = document.querySelectorAll('#exercise-picker-categories button');
     buttons.forEach(b => {
-        b.className = "px-5 py-2 rounded-full bg-[#F0F2F8] text-[#64748B] font-bold text-[13px] whitespace-nowrap active:scale-95 transition-transform";
-        b.style.boxShadow = "4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255,255,255,0.7)";
+        b.className = "px-4 py-1.5 rounded-full shadow-neo text-on-surface-variant font-label-sm whitespace-nowrap";
+        b.removeAttribute('data-active');
     });
     
     if (!btnElement) {
@@ -1649,8 +1684,8 @@ function filterPickerCategory(cat, btnElement) {
     }
     
     if(btnElement) {
-        btnElement.className = "px-5 py-2 rounded-full bg-neon-purple text-white font-bold text-[13px] shadow-md whitespace-nowrap active:scale-95 transition-transform";
-        btnElement.style.boxShadow = "";
+        btnElement.className = "px-4 py-1.5 rounded-full bg-gradient-to-r from-neon-purple to-neon-blue text-white font-label-sm whitespace-nowrap";
+        btnElement.setAttribute('data-active', 'true');
     }
 
     const searchInput = document.getElementById('exercise-picker-search');
