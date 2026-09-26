@@ -988,11 +988,54 @@
             </header>
 
             <main class="flex-1 px-6 flex flex-col pt-4 gap-6 pb-24">
-                <div class="flex flex-col items-center justify-center h-full text-center mt-20">
-                    <span class="material-symbols-rounded text-6xl text-[#64748B] mb-4 opacity-50">construction</span>
-                    <h3 class="text-lg font-bold text-[#1E293B]">Çok Yakında</h3>
-                    <p class="text-sm text-[#64748B] mt-2">Bu sayfa yapım aşamasındadır.</p>
-                </div>
+                <section class="flex flex-col gap-4">
+                    <div class="neon-card rounded-[32px]">
+                        <div class="neon-card-inner bg-[#F0F2F8] p-5 flex flex-col gap-5 relative overflow-hidden" style="border-radius: 29px; box-shadow: 8px 8px 16px #D1D9E6, -8px -8px 16px rgba(255, 255, 255, 0.7);">
+                            
+                            <!-- Top Header (Badge & Actions) -->
+                            <div class="flex items-center justify-between">
+                                <!-- Badge -->
+                                <div class="flex items-center gap-1.5 bg-[#E1F5E8] text-[#10B981] px-3 py-1.5 rounded-full shadow-sm">
+                                    <div class="w-2 h-2 rounded-full bg-[#10B981] opacity-80"></div>
+                                    <span class="text-[10px] font-bold uppercase tracking-wider">AKTİF PROGRAM</span>
+                                </div>
+                                <!-- Actions -->
+                                <div class="flex items-center gap-3">
+                                    <button class="w-9 h-9 flex items-center justify-center rounded-2xl bg-[#F0F2F8] active:scale-95 transition-transform text-[#64748B] hover:text-[#1E293B]" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);">
+                                        <span class="material-symbols-rounded text-[18px]">edit</span>
+                                    </button>
+                                    <button class="w-9 h-9 flex items-center justify-center rounded-2xl bg-[#F0F2F8] active:scale-95 transition-transform text-[#64748B] hover:text-[#1E293B]" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);">
+                                        <span class="material-symbols-rounded text-[18px]">content_copy</span>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Title & Subtitle -->
+                            <div class="mt-1">
+                                <h3 class="text-xl font-bold text-[#1E293B] mb-1" id="edit-split-title">Program Adı</h3>
+                                <p class="text-xs font-medium text-[#64748B]" id="edit-split-desc">Özel Antrenman Şablonu</p>
+                            </div>
+
+                            <!-- Stats (Days & Exercises) -->
+                            <div class="grid grid-cols-2 gap-4">
+                                <div class="bg-[#F0F2F8] rounded-2xl p-4 flex flex-col items-center justify-center gap-1" style="box-shadow: inset 4px 4px 8px #D1D9E6, inset -4px -4px 8px rgba(255, 255, 255, 0.7);">
+                                    <span class="text-[11px] font-medium text-[#64748B]">Haftalık</span>
+                                    <span class="text-[15px] font-bold text-[#1E293B]" id="edit-split-days-count">0 Gün</span>
+                                </div>
+                                <div class="bg-[#F0F2F8] rounded-2xl p-4 flex flex-col items-center justify-center gap-1" style="box-shadow: inset 4px 4px 8px #D1D9E6, inset -4px -4px 8px rgba(255, 255, 255, 0.7);">
+                                    <span class="text-[11px] font-medium text-[#64748B]">Egzersiz</span>
+                                    <span class="text-[15px] font-bold text-[#1E293B]" id="edit-split-exercises-count">0 Hareket</span>
+                                </div>
+                            </div>
+
+                            <!-- Days Tabs -->
+                            <div class="flex items-center gap-3 overflow-x-auto hide-scrollbar pt-2 pb-2" id="edit-split-days-tabs">
+                                <!-- JS will populate this -->
+                            </div>
+
+                        </div>
+                    </div>
+                </section>
             </main>
         </div>
     </section>

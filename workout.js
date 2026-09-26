@@ -157,11 +157,24 @@ export function renderSplitView() {
     const dotsContainers = document.querySelectorAll('.sync-split-indicator');
     const dashNameEl = document.getElementById('stat-workout-split');
 
+    const editTitleEl = document.getElementById('edit-split-title');
+    const editDescEl = document.getElementById('edit-split-desc');
+    const editDaysCountEl = document.getElementById('edit-split-days-count');
+    const editExCountEl = document.getElementById('edit-split-exercises-count');
+    const editTabsContainer = document.getElementById('edit-split-days-tabs');
+
     if (!activeSplitId || splits.length === 0) {
         titleEls.forEach(el => el.innerText = "Split Bulunamadı");
         descEls.forEach(el => el.innerText = "Henüz bir program oluşturmadınız.");
         dotsContainers.forEach(el => el.innerHTML = "");
         if(dashNameEl) dashNameEl.innerText = "Yapılmadı";
+        
+        if(editTitleEl) editTitleEl.innerText = "Program Yok";
+        if(editDescEl) editDescEl.innerText = "-";
+        if(editDaysCountEl) editDaysCountEl.innerText = "0 Gün";
+        if(editExCountEl) editExCountEl.innerText = "0 Hareket";
+        if(editTabsContainer) editTabsContainer.innerHTML = "";
+        
         return;
     }
 
@@ -203,6 +216,44 @@ export function renderSplitView() {
                 container.appendChild(bar);
             });
         });
+    }
+
+    // --- Edit Split Card Updating ---
+    if(editTitleEl) editTitleEl.innerText = activeSplit.name;
+    if(editDescEl) editDescEl.innerText = "Özel Antrenman Şablonu";
+    
+    if(editDaysCountEl && activeSplit.days) {
+        editDaysCountEl.innerText = activeSplit.days.length + " Gün";
+        let totalEx = 0;
+        activeSplit.days.forEach(d => totalEx += (d.exercises ? d.exercises.length : 0));
+        if(editExCountEl) editExCountEl.innerText = totalEx + " Hareket";
+        
+        if (editTabsContainer) {
+            editTabsContainer.innerHTML = '';
+            activeSplit.days.forEach((day, idx) => {
+                const isActive = day.id === activeDayId;
+                const btn = document.createElement('button');
+                
+                if (isActive) {
+                    btn.className = "px-5 py-2.5 rounded-full bg-gradient-to-r from-neon-purple to-neon-blue text-white font-bold text-[13px] shadow-md whitespace-nowrap active:scale-95 transition-transform flex items-center gap-1.5";
+                    btn.innerHTML = `<span class="material-symbols-rounded text-[16px]">local_fire_department</span> ${day.name}`;
+                } else {
+                    btn.className = "px-5 py-2.5 rounded-full bg-[#F0F2F8] text-[#64748B] font-bold text-[13px] whitespace-nowrap active:scale-95 transition-transform";
+                    btn.style.boxShadow = "4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255,255,255,0.7)";
+                    btn.innerText = day.name;
+                }
+                
+                btn.onclick = () => selectActiveDay(day.id);
+                editTabsContainer.appendChild(btn);
+            });
+            
+            // Add '+' button
+            const addBtn = document.createElement('button');
+            addBtn.className = "w-10 h-10 rounded-full bg-[#F0F2F8] text-[#64748B] flex items-center justify-center shrink-0 active:scale-95 transition-transform ml-1";
+            addBtn.style.boxShadow = "4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255,255,255,0.7)";
+            addBtn.innerHTML = `<span class="material-symbols-rounded text-[18px]">add</span>`;
+            editTabsContainer.appendChild(addBtn);
+        }
     }
 }
 
