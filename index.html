@@ -46,9 +46,18 @@
 
         /* Bottom-sheet modal: sabit çerçeve + iç scroll, navbar arkasına gömülmez */
         .mzr-sheet-content {
-            max-height: calc(90dvh - 72px - max(env(safe-area-inset-bottom), 16px));
+            max-height: calc(90dvh - 104px - env(safe-area-inset-bottom, 0px));
             overflow-y: auto;
-            padding-bottom: calc(104px + env(safe-area-inset-bottom, 0px));
+            border-radius: 36px !important;
+            width: 90% !important;
+            max-width: 380px !important;
+            margin-bottom: calc(104px + env(safe-area-inset-bottom, 0px));
+            padding-bottom: 24px !important;
+            box-shadow: 6px 6px 12px #D1D9E6, -6px -6px 12px #FFFFFF !important;
+        }
+
+        .mzr-sheet-content.translate-y-full {
+            transform: translateY(calc(100% + 104px + env(safe-area-inset-bottom, 0px))) !important;
         }
 
         /* Mobil uygulama davranışı: çift tık zoom, metin boyutu değişimi engel */
