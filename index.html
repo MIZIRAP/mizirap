@@ -955,10 +955,47 @@
                 </div>
                 <span class="material-symbols-rounded text-[#1E293B]">chevron_right</span>
             </a>
+            
+            <a href="#" class="bg-[#F0F2F8] p-4 rounded-2xl flex items-center justify-between active:scale-[0.99] transition-transform mt-3" style="background-color: #F0F2F8; box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);" onclick="history.pushState({view: 'view-my-splits'}, '', '?view=view-my-splits'); window.showView('view-my-splits'); return false;">
+                <div class="flex items-center gap-4">
+                    <div class="w-10 h-10 rounded-full bg-[#F0F2F8] flex items-center justify-center" style="background-color: #F0F2F8; box-shadow: inset 2px 2px 5px #D1D9E6, inset -2px -2px 5px rgba(255, 255, 255, 0.7);">
+                        <span class="material-symbols-rounded text-[#1E293B]">fitness_center</span>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-sm text-[#1E293B]">Split Programlarım</h4>
+                        <p class="text-xs font-medium text-[#64748B] mt-0.5">Oluşturduğunuz tüm antrenman şablonları</p>
+                    </div>
+                </div>
+                <span class="material-symbols-rounded text-[#1E293B]">chevron_right</span>
+            </a>
         </div>
     </section>
 </main>
 </section>
+
+    <!-- ================= SPLIT PROGRAMLARIM ================= -->
+    <section id="view-my-splits" class="view hidden bg-surface-light min-h-[100dvh] text-on-surface antialiased font-body-lg pb-[100px]">
+        <div class="max-w-md mx-auto relative h-full flex flex-col">
+            <!-- Header -->
+            <header class="w-full top-0 sticky z-40 max-w-md mx-auto px-container-padding py-4 bg-[#F0F2F8]">
+                <div class="flex items-center justify-between w-full">
+                    <button class="w-10 h-10 shrink-0 flex items-center justify-center neo-surface-small rounded-full text-[#1E293B] hover:text-[#3B82F6] transition-colors" onclick="history.back()" style="background-color: #F0F2F8; box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);">
+                        <span class="material-symbols-rounded">arrow_back</span>
+                    </button>
+                    <h1 class="text-h1 font-bold text-[#1E293B]">Split Programlarım</h1>
+                    <div class="w-10 h-10 shrink-0"></div>
+                </div>
+            </header>
+
+            <main class="flex-1 px-6 flex flex-col pt-4 gap-6 pb-24">
+                <div class="flex flex-col items-center justify-center h-full text-center mt-20">
+                    <span class="material-symbols-rounded text-6xl text-[#64748B] mb-4 opacity-50">construction</span>
+                    <h3 class="text-lg font-bold text-[#1E293B]">Çok Yakında</h3>
+                    <p class="text-sm text-[#64748B] mt-2">Bu sayfa yapım aşamasındadır.</p>
+                </div>
+            </main>
+        </div>
+    </section>
 
     <!-- ================= İLERLEME (PROGRESS) ================= -->
     <section id="view-progress" class="view hidden bg-surface-light min-h-[100dvh] text-on-surface antialiased font-body-lg pb-[100px]">
