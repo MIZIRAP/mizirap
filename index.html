@@ -5418,7 +5418,7 @@
 
 <!-- ===================== CORE PLAYER ===================== -->
 
-    <!-- YENİ PROGRAM OLUŞTUR MODALI (İçi Boş) -->
+    <!-- YENİ PROGRAM OLUŞTUR MODALI -->
     <div class="hidden fixed inset-0 z-50 flex items-end justify-center" id="modal-new-split">
         <!-- Backdrop -->
         <div class="absolute inset-0 bg-black/10 backdrop-blur-sm z-10 transition-opacity duration-300 opacity-0" id="new-split-backdrop-empty" onclick="if(window.closeNewSplitModal) window.closeNewSplitModal()"></div>
@@ -5430,13 +5430,58 @@
             
             <div class="w-full text-center mb-6">
                 <h2 class="text-xl font-bold text-gray-800">Yeni Program Oluştur</h2>
-                <p class="text-sm text-gray-500 mt-1">İçerik buraya gelecek</p>
             </div>
             
-            <!-- İçerik Alanı (Boş) -->
-            <div class="w-full flex-1 min-h-[200px] flex items-center justify-center border-2 border-dashed border-gray-300 rounded-2xl mb-4">
-                <span class="text-gray-400 font-medium">Tasarım Alanı</span>
+            <!-- Hızlı Şablonlar -->
+            <div class="w-full mb-6">
+                <h3 class="text-xs font-bold text-[#64748B] mb-3 uppercase tracking-wider pl-1">Hızlı Şablon Seç</h3>
+                <div class="grid grid-cols-2 gap-3">
+                    <button onclick="if(window.fillSplitTemplate) window.fillSplitTemplate('ppl')" class="py-3 rounded-[16px] bg-[#F0F2F8] text-[#1E293B] font-bold text-xs active:scale-95 transition-transform flex items-center justify-center gap-1.5" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);">
+                        <span class="material-symbols-rounded text-[16px] text-neon-purple">bolt</span>
+                        PPL
+                    </button>
+                    <button onclick="if(window.fillSplitTemplate) window.fillSplitTemplate('upper_lower')" class="py-3 rounded-[16px] bg-[#F0F2F8] text-[#1E293B] font-bold text-xs active:scale-95 transition-transform flex items-center justify-center gap-1.5" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);">
+                        <span class="material-symbols-rounded text-[16px] text-neon-purple">fitness_center</span>
+                        Upper / Lower
+                    </button>
+                    <button onclick="if(window.fillSplitTemplate) window.fillSplitTemplate('full_body')" class="py-3 rounded-[16px] bg-[#F0F2F8] text-[#1E293B] font-bold text-xs active:scale-95 transition-transform flex items-center justify-center gap-1.5" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);">
+                        <span class="material-symbols-rounded text-[16px] text-neon-purple">accessibility_new</span>
+                        Full Body
+                    </button>
+                    <button onclick="if(window.fillSplitTemplate) window.fillSplitTemplate('split')" class="py-3 rounded-[16px] bg-[#F0F2F8] text-[#1E293B] font-bold text-xs active:scale-95 transition-transform flex items-center justify-center gap-1.5" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);">
+                        <span class="material-symbols-rounded text-[16px] text-neon-purple">view_quilt</span>
+                        Split (Bölgesel)
+                    </button>
+                </div>
             </div>
+
+            <!-- Program Adı -->
+            <div class="w-full mb-4">
+                <label class="block text-xs font-bold text-[#64748B] mb-2 uppercase tracking-wider pl-1">Program Adı</label>
+                <div class="bg-[#F0F2F8] p-1 rounded-2xl flex items-center" style="box-shadow: inset 4px 4px 8px #D1D9E6, inset -4px -4px 8px rgba(255, 255, 255, 0.7);">
+                    <div class="w-10 h-10 flex items-center justify-center text-[#64748B]">
+                        <span class="material-symbols-rounded text-[20px]">edit_document</span>
+                    </div>
+                    <input type="text" id="new-split-name-input" placeholder="Örn: Yaz Hedefi" class="flex-1 bg-transparent border-none outline-none text-[#1E293B] font-bold text-sm h-10 pr-4 placeholder:text-[#94A3B8]">
+                </div>
+            </div>
+
+            <!-- Program Notu / Odak Alanı -->
+            <div class="w-full mb-8">
+                <label class="block text-xs font-bold text-[#64748B] mb-2 uppercase tracking-wider pl-1">Program Notu / Odak Alanı</label>
+                <div class="bg-[#F0F2F8] p-1 rounded-2xl flex items-center" style="box-shadow: inset 4px 4px 8px #D1D9E6, inset -4px -4px 8px rgba(255, 255, 255, 0.7);">
+                    <div class="w-10 h-10 flex items-center justify-center text-[#64748B]">
+                        <span class="material-symbols-rounded text-[20px]">description</span>
+                    </div>
+                    <input type="text" id="new-split-note-input" placeholder="Örn: İtme ve çekme odaklı" class="flex-1 bg-transparent border-none outline-none text-[#1E293B] font-medium text-sm h-10 pr-4 placeholder:text-[#94A3B8]">
+                </div>
+            </div>
+
+            <!-- Kaydet Butonu -->
+            <button onclick="if(window.createNewSplitFromPopup) window.createNewSplitFromPopup()" class="w-full py-4 rounded-2xl bg-[#712AE2] flex items-center justify-center gap-2 active:scale-95 transition-transform text-white font-bold text-[15px] shadow-[0_8px_16px_rgba(113,42,226,0.25)]">
+                <span class="material-symbols-rounded text-[20px]">save</span>
+                <span>Programı Kaydet</span>
+            </button>
         </div>
     </div>
 

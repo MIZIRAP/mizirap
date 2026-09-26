@@ -3531,3 +3531,77 @@ window.closeNewSplitModal = function() {
         }, 300);
     }
 };
+
+window.fillSplitTemplate = function(type) {
+    const nameInput = document.getElementById('new-split-name-input');
+    const noteInput = document.getElementById('new-split-note-input');
+    if(!nameInput || !noteInput) return;
+    
+    switch(type) {
+        case 'ppl':
+            nameInput.value = 'PPL Programı';
+            noteInput.value = 'İtme, Çekme ve Bacak odaklı';
+            break;
+        case 'upper_lower':
+            nameInput.value = 'Upper / Lower';
+            noteInput.value = 'Üst vücut ve Alt vücut odaklı';
+            break;
+        case 'full_body':
+            nameInput.value = 'Full Body';
+            noteInput.value = 'Tüm vücut odaklı';
+            break;
+        case 'split':
+            nameInput.value = 'Split Program';
+            noteInput.value = 'Bölgesel kas grupları odaklı';
+            break;
+    }
+};
+
+window.createNewSplitFromPopup = async function() {
+    if(!currentUid) return;
+    
+    const nameInput = document.getElementById('new-split-name-input');
+    const noteInput = document.getElementById('new-split-note-input');
+    const name = nameInput ? nameInput.value.trim() : '';
+    
+    if(!name) {
+        alert("Lütfen program adını giriniz.");
+        return;
+    }
+    
+    try {
+        const newSplitId = "split_" + Date.now();
+        const newSplit = {
+            id: newSplitId,
+            name: name,
+            days: []
+        };
+        
+        splits.push(newSplit);
+        
+        await setDoc(doc(db, "users", currentUid, "splits", newSplitId), newSplit);
+        
+        if(splits.length === 1 || !activeSplitId) {
+            activeSplitId = newSplitId;
+            await setDoc(doc(db, "users", currentUid), {
+                activeSplitId: newSplitId
+            }, { merge: true });
+            localStorage.setItem(`miz_activeSplit_${currentUid}`, activeSplitId);
+        }
+        
+        if(window.closeNewSplitModal) window.closeNewSplitModal();
+        
+        if(nameInput) nameInput.value = '';
+        if(noteInput) noteInput.value = '';
+        
+        renderSplitView();
+        
+        setTimeout(() => {
+            if(window.openEditSplitView) window.openEditSplitView(newSplitId);
+        }, 400);
+        
+    } catch(e) {
+        console.error("Yeni program oluşturulamadı:", e);
+        alert("Yeni program oluşturulamadı.");
+    }
+};
