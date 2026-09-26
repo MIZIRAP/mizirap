@@ -254,7 +254,92 @@ export function renderSplitView() {
             addBtn.innerHTML = `<span class="material-symbols-rounded text-[18px]">add</span>`;
             editTabsContainer.appendChild(addBtn);
         }
+
+        // Render Exercises List for Active Day
+        const exListContainer = document.getElementById('edit-split-exercises-list');
+        const dayTitleEl = document.getElementById('edit-split-day-title');
+        const dayExCountEl = document.getElementById('edit-split-day-ex-count');
+        const addExBtn = document.getElementById('btn-add-exercise-to-day');
+        
+        if (exListContainer) {
+            const currentDayObj = activeSplit.days.find(d => d.id === activeDayId) || activeSplit.days[0];
+            if (currentDayObj) {
+                if (dayTitleEl) dayTitleEl.innerText = currentDayObj.name + " Egzersiz Akışı";
+                const exCount = currentDayObj.exercises ? currentDayObj.exercises.length : 0;
+                if (dayExCountEl) dayExCountEl.innerText = exCount + " Hareket";
+                
+                if (addExBtn) {
+                    const dayIdx = activeSplit.days.findIndex(d => d.id === currentDayObj.id);
+                    addExBtn.setAttribute('data-action', 'openExercisePickerForSplit');
+                    addExBtn.setAttribute('data-split-id', activeSplit.id);
+                    addExBtn.setAttribute('data-day-idx', dayIdx);
+                }
+                
+                exListContainer.innerHTML = '';
+                if (currentDayObj.exercises && currentDayObj.exercises.length > 0) {
+                    currentDayObj.exercises.forEach(ex => {
+                        const targetBadge = ex.target ? ex.target : 'Tüm Vücut';
+                        const sets = ex.sets || 0;
+                        const reps = ex.reps || '8-10';
+                        const weight = ex.weight || '0';
+                        
+                        const exDiv = document.createElement('div');
+                        exDiv.className = "bg-[#F0F2F8] rounded-[24px] p-4 flex items-center gap-3 relative mb-1";
+                        exDiv.style.boxShadow = "4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7)";
+                        
+                        exDiv.innerHTML = `
+                            <div class="w-11 h-11 rounded-2xl flex items-center justify-center shrink-0 bg-[#E2E8F0]" style="box-shadow: inset 2px 2px 5px #D1D9E6, inset -2px -2px 5px #FFFFFF;">
+                                <span class="material-symbols-rounded text-neon-blue text-[20px]">fitness_center</span>
+                            </div>
+                            <div class="flex-1 min-w-0 flex flex-col justify-center">
+                                <h4 class="text-[14px] font-bold text-[#1E293B] truncate">${ex.name}</h4>
+                                <div class="flex items-center gap-2 mt-1">
+                                    <div class="flex items-center gap-1.5 bg-[#F0F2F8] rounded-full px-1.5 py-0.5" style="box-shadow: 2px 2px 5px #D1D9E6, -2px -2px 5px rgba(255,255,255,0.7);">
+                                        <button class="text-[#64748B] hover:text-[#1E293B] active:scale-95 flex items-center justify-center w-5 h-5" onclick="window.updateExerciseSets('${currentDayObj.id}', '${ex.id}', -1)"><span class="material-symbols-rounded text-[14px]">remove</span></button>
+                                        <span class="text-[11px] font-bold text-[#1E293B] w-3 text-center">${sets}</span>
+                                        <button class="text-[#64748B] hover:text-[#1E293B] active:scale-95 flex items-center justify-center w-5 h-5" onclick="window.updateExerciseSets('${currentDayObj.id}', '${ex.id}', 1)"><span class="material-symbols-rounded text-[14px]">add</span></button>
+                                    </div>
+                                    <span class="text-[11px] font-bold text-neon-purple truncate">Set x ${reps} • ${weight} kg</span>
+                                </div>
+                            </div>
+                            <div class="shrink-0 bg-[#F0F2F8] rounded-full px-2.5 py-1 flex items-center justify-center" style="box-shadow: inset 2px 2px 5px #D1D9E6, inset -2px -2px 5px rgba(255,255,255,0.7);">
+                                <span class="text-[10px] font-medium text-[#64748B]">${targetBadge}</span>
+                            </div>
+                        `;
+                        exListContainer.appendChild(exDiv);
+                    });
+                } else {
+                    exListContainer.innerHTML = `
+                        <div class="flex flex-col items-center justify-center py-6 text-center">
+                            <span class="material-symbols-rounded text-4xl text-[#64748B] opacity-50 mb-2">fitness_center</span>
+                            <p class="text-sm text-[#64748B]">Bu güne henüz hareket eklenmedi.</p>
+                        </div>
+                    `;
+                }
+            }
+        }
     }
+}
+
+window.updateExerciseSets = function(dayId, exId, change) {
+    if(!activeSplitId) return;
+    const split = splits.find(s => s.id === activeSplitId);
+    if(!split) return;
+    const day = split.days.find(d => d.id === dayId);
+    if(!day) return;
+    const ex = day.exercises.find(e => e.id === exId);
+    if(!ex) return;
+    
+    let sets = parseInt(ex.sets || 0);
+    sets += change;
+    if(sets < 1) sets = 1;
+    ex.sets = sets;
+    
+    // Auto save
+    if (typeof persistSplitEdit === 'function') {
+        persistSplitEdit(split);
+    }
+    renderSplitView();
 }
 
 function selectActiveDay(dayId) {
