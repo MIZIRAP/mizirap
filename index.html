@@ -906,9 +906,9 @@
             <div class="flex justify-between items-start">
                 <div>
                     <h2 class="text-xs font-bold text-[#64748B] uppercase tracking-wider mb-1">WORKOUT</h2>
-                    <h3 class="text-2xl font-bold text-[#1E293B] mb-2" id="workout-split-title">Push Day</h3>
-                    <p class="text-sm font-medium text-[#64748B]" id="workout-split-desc">Göğüs, Omuz ve Triceps odaklı antrenman</p>
-                    <div class="flex items-center gap-2 mt-4" id="workout-day-indicator"></div>
+                    <h3 class="text-2xl font-bold text-[#1E293B] mb-2 sync-split-title" id="workout-split-title">Push Day</h3>
+                    <p class="text-sm font-medium text-[#64748B] sync-split-desc" id="workout-split-desc">Göğüs, Omuz ve Triceps odaklı antrenman</p>
+                    <div class="flex items-center gap-2 mt-4 sync-split-indicator" id="workout-day-indicator"></div>
                 </div>
                 <div class="w-12 h-12 rounded-full bg-[#F0F2F8] flex items-center justify-center shrink-0" style="background-color: #F0F2F8; box-shadow: inset 4px 4px 8px #D1D9E6, inset -4px -4px 8px rgba(255, 255, 255, 0.7);">
                     <span class="material-symbols-rounded text-[#1E293B] text-xl">fitness_center</span>
@@ -988,11 +988,33 @@
             </header>
 
             <main class="flex-1 px-6 flex flex-col pt-4 gap-6 pb-24">
-                <div class="flex flex-col items-center justify-center h-full text-center mt-20">
-                    <span class="material-symbols-rounded text-6xl text-[#64748B] mb-4 opacity-50">construction</span>
-                    <h3 class="text-lg font-bold text-[#1E293B]">Çok Yakında</h3>
-                    <p class="text-sm text-[#64748B] mt-2">Bu sayfa yapım aşamasındadır.</p>
-                </div>
+                <section class="flex flex-col gap-4">
+                    <div class="neon-card rounded-[32px]" style="border-radius: 32px;">
+                        <div class="neon-card-inner bg-[#F0F2F8] p-6 flex flex-col gap-4 relative overflow-hidden" style="border-radius: 29px; box-shadow: 8px 8px 16px #D1D9E6, -8px -8px 16px rgba(255, 255, 255, 0.7);">
+
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <h2 class="text-xs font-bold text-[#64748B] uppercase tracking-wider mb-1">WORKOUT</h2>
+                                <h3 class="text-2xl font-bold text-[#1E293B] mb-2 sync-split-title">Push Day</h3>
+                                <p class="text-sm font-medium text-[#64748B] sync-split-desc">Göğüs, Omuz ve Triceps odaklı antrenman</p>
+                                <div class="flex items-center gap-2 mt-4 sync-split-indicator"></div>
+                            </div>
+                            <div class="w-12 h-12 rounded-full bg-[#F0F2F8] flex items-center justify-center shrink-0" style="background-color: #F0F2F8; box-shadow: inset 4px 4px 8px #D1D9E6, inset -4px -4px 8px rgba(255, 255, 255, 0.7);">
+                                <span class="material-symbols-rounded text-[#1E293B] text-xl">fitness_center</span>
+                            </div>
+                        </div>
+
+                        <button data-action="startActiveSession" class="w-full py-4 mt-2 rounded-2xl bg-[#F0F2F8] flex items-center justify-center gap-2 active:scale-[0.98] transition-transform" style="background-color: #F0F2F8; box-shadow: inset 4px 4px 8px #D1D9E6, inset -4px -4px 8px rgba(255, 255, 255, 0.7);">
+                            <span class="material-symbols-rounded text-[#1E293B]">play_arrow</span>
+                            <span class="font-bold text-[#1E293B]">Antrenmanı Başlat</span>
+                        </button>
+
+                        <div class="text-center mt-2">
+                            <a href="#" class="text-xs font-medium text-[#64748B] hover:text-[#1E293B] transition-colors" onclick="openSplitSelectionModal(); return false;">Farklı bir program seç</a>
+                        </div>
+                        </div>
+                    </div>
+                </section>
             </main>
         </div>
     </section>

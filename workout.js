@@ -152,15 +152,15 @@ function setupEventListeners() {
 }
 
 export function renderSplitView() {
-    const titleEl = document.getElementById('workout-split-title');
-    const descEl = document.getElementById('workout-split-desc');
-    const dotsContainer = document.getElementById('workout-day-indicator');
+    const titleEls = document.querySelectorAll('.sync-split-title');
+    const descEls = document.querySelectorAll('.sync-split-desc');
+    const dotsContainers = document.querySelectorAll('.sync-split-indicator');
     const dashNameEl = document.getElementById('stat-workout-split');
 
     if (!activeSplitId || splits.length === 0) {
-        if(titleEl) titleEl.innerText = "Split Bulunamadı";
-        if(descEl) descEl.innerText = "Henüz bir program oluşturmadınız.";
-        if(dotsContainer) dotsContainer.innerHTML = "";
+        titleEls.forEach(el => el.innerText = "Split Bulunamadı");
+        descEls.forEach(el => el.innerText = "Henüz bir program oluşturmadınız.");
+        dotsContainers.forEach(el => el.innerHTML = "");
         if(dashNameEl) dashNameEl.innerText = "Yapılmadı";
         return;
     }
@@ -182,24 +182,26 @@ export function renderSplitView() {
 
     const currentDay = activeSplit.days.find(d => d.id === activeDayId) || (activeSplit.days.length > 0 ? activeSplit.days[0] : null);
     if(currentDay) {
-        if(titleEl) titleEl.innerText = "Bugün: " + currentDay.name;
-        if(descEl) descEl.innerText = (currentDay.exercises ? currentDay.exercises.length : 0) + " Hareket içeren antrenman";
+        titleEls.forEach(el => el.innerText = "Bugün: " + currentDay.name);
+        descEls.forEach(el => el.innerText = (currentDay.exercises ? currentDay.exercises.length : 0) + " Hareket içeren antrenman");
     }
 
-    if(dotsContainer && activeSplit.days) {
-        dotsContainer.innerHTML = '';
-        activeSplit.days.forEach((day, idx) => {
-            const isActive = day.id === activeDayId;
-            const bar = document.createElement('button');
-            const shadowStyle = isActive
-                ? 'box-shadow: 2px 2px 5px #D1D9E6, -2px -2px 5px #FFFFFF;'
-                : 'box-shadow: inset 2px 2px 5px #D1D9E6, inset -2px -2px 5px #FFFFFF;';
-            const bgClass = isActive ? 'bg-gradient-to-r from-neon-purple to-neon-blue' : 'bg-[#E2E8F0]';
-            bar.className = `h-2 rounded-full transition-all duration-300 cursor-pointer ${bgClass} ${isActive ? 'w-10' : 'w-6 opacity-80 hover:opacity-100'}`;
-            bar.style = shadowStyle;
-            bar.title = day.name;
-            bar.onclick = () => selectActiveDay(day.id);
-            dotsContainer.appendChild(bar);
+    if(activeSplit.days) {
+        dotsContainers.forEach(container => {
+            container.innerHTML = '';
+            activeSplit.days.forEach((day, idx) => {
+                const isActive = day.id === activeDayId;
+                const bar = document.createElement('button');
+                const shadowStyle = isActive
+                    ? 'box-shadow: 2px 2px 5px #D1D9E6, -2px -2px 5px #FFFFFF;'
+                    : 'box-shadow: inset 2px 2px 5px #D1D9E6, inset -2px -2px 5px #FFFFFF;';
+                const bgClass = isActive ? 'bg-gradient-to-r from-neon-purple to-neon-blue' : 'bg-[#E2E8F0]';
+                bar.className = `h-2 rounded-full transition-all duration-300 cursor-pointer ${bgClass} ${isActive ? 'w-10' : 'w-6 opacity-80 hover:opacity-100'}`;
+                bar.style = shadowStyle;
+                bar.title = day.name;
+                bar.onclick = () => selectActiveDay(day.id);
+                container.appendChild(bar);
+            });
         });
     }
 }
