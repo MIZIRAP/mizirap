@@ -1665,7 +1665,7 @@ window.closeExercisePickerModal = closeExercisePickerModal;
 function filterPickerCategory(cat, btnElement) {
     const buttons = document.querySelectorAll('#exercise-picker-categories button');
     buttons.forEach(b => {
-        b.className = "px-4 py-1.5 rounded-full shadow-neo text-on-surface-variant font-label-sm whitespace-nowrap";
+        b.className = "px-4 py-2 rounded-full font-bold text-sm bg-[#F0F2F8] text-gray-600 shadow-neumorphic whitespace-nowrap transition-all";
         b.removeAttribute('data-active');
     });
     
@@ -1674,7 +1674,7 @@ function filterPickerCategory(cat, btnElement) {
     }
     
     if(btnElement) {
-        btnElement.className = "px-4 py-1.5 rounded-full bg-gradient-to-r from-neon-purple to-neon-blue text-white font-label-sm whitespace-nowrap";
+        btnElement.className = "px-4 py-2 rounded-full font-bold text-sm bg-silk-blue text-white shadow-md whitespace-nowrap transition-all";
         btnElement.setAttribute('data-active', 'true');
     }
 
@@ -1741,29 +1741,28 @@ function renderExercisePickerList(category, searchTerm = '') {
         const btn = document.createElement('div');
         
         if (isSelected) {
-            btn.className = "w-full p-4 rounded-2xl bg-[#F0F2F8] border border-neon-purple flex items-center justify-between transition-colors";
+            btn.className = "w-full p-4 rounded-2xl bg-[#F0F2F8] shadow-neumorphic-inset flex items-center justify-between transition-colors";
             btn.innerHTML = `
-                <div class="flex items-center gap-3 min-w-0">
-                    <span class="material-symbols-rounded text-neon-purple text-[20px] shrink-0">check_circle</span>
+                <div class="flex items-center gap-3 min-w-0 flex-1 pr-4">
+                    <span class="material-symbols-rounded text-silk-blue text-[20px] shrink-0" style="font-variation-settings: 'FILL' 1;">check_circle</span>
                     <div class="flex flex-col truncate min-w-0">
-                        <span class="font-bold text-[15px] text-[#1E293B] truncate">${exName}</span>
-                        <span class="text-[12px] text-neon-purple truncate">${region}</span>
+                        <span class="font-bold text-[15px] text-gray-800 truncate">${exName}</span>
+                        <span class="text-[12px] font-bold text-silk-blue truncate">${region}</span>
                     </div>
                 </div>
-                <div class="shrink-0 bg-white rounded-full px-3 py-1 shadow-sm">
-                    <span class="text-[11px] font-bold text-neon-purple">Seçili</span>
+                <div class="shrink-0 bg-[#F0F2F8] shadow-neumorphic rounded-full px-3 py-1">
+                    <span class="text-[11px] font-bold text-silk-blue">Seçili</span>
                 </div>
             `;
         } else {
-            btn.className = "w-full p-4 rounded-2xl bg-[#F0F2F8] flex items-center justify-between active:scale-[0.99] transition-transform cursor-pointer border border-transparent";
-            btn.style.boxShadow = "4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7)";
+            btn.className = "w-full p-4 rounded-2xl bg-[#F0F2F8] shadow-neumorphic flex items-center justify-between active:scale-[0.99] transition-transform cursor-pointer";
             btn.innerHTML = `
                 <div class="flex flex-col truncate min-w-0 flex-1 pr-4">
-                    <span class="font-bold text-[15px] text-[#1E293B] truncate">${exName}</span>
-                    <span class="text-[12px] text-[#94A3B8] truncate">${region}</span>
+                    <span class="font-bold text-gray-800 text-[15px] truncate">${exName}</span>
+                    <span class="text-[12px] font-semibold text-gray-500 truncate">${region}</span>
                 </div>
-                <div class="w-8 h-8 rounded-xl bg-[#F0F2F8] flex items-center justify-center shrink-0" style="box-shadow: 2px 2px 5px #D1D9E6, -2px -2px 5px rgba(255,255,255,0.7);">
-                    <span class="material-symbols-rounded text-[#64748B] text-[16px]">add</span>
+                <div class="w-8 h-8 rounded-full bg-[#F0F2F8] shadow-neumorphic flex items-center justify-center shrink-0 text-silk-blue">
+                    <span class="material-symbols-rounded text-[18px]">add</span>
                 </div>
             `;
             btn.onclick = () => window.handlePickerSelect(exName);

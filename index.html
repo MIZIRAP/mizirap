@@ -5410,14 +5410,54 @@
             <!-- Drag Handle (Mobile) -->
             <div class="w-12 h-1.5 bg-gray-300 rounded-full mb-6 cursor-pointer" onclick="closeExercisePickerModal()"></div>
             
-            <div class="w-full text-center mb-6">
-                <h2 class="text-xl font-bold text-gray-800 mb-2">Hareket Ekle</h2>
+            <div class="w-full text-center mb-4">
+                <h2 class="text-xl font-bold text-gray-800">Hareket Ekle</h2>
             </div>
             
-            <!-- İçi tamamen boş bırakıldı -->
-            <div class="w-full flex-1 flex flex-col gap-4 min-h-[300px]">
-                <!-- İçerik buraya gelecek -->
+            <!-- Arama -->
+            <div class="w-full bg-[#F0F2F8] p-4 rounded-2xl shadow-neumorphic-inset flex items-center gap-3 mb-4">
+                <span class="material-symbols-rounded text-gray-400">search</span>
+                <input type="text" id="exercise-picker-search" placeholder="Hareket ara..." class="bg-transparent border-none outline-none w-full text-gray-700 text-sm focus:ring-0 p-0">
             </div>
+
+            <!-- Kategoriler -->
+            <div class="flex gap-2 overflow-x-auto hide-scrollbar w-full pb-2 mb-4" id="exercise-picker-categories">
+                <button class="px-4 py-2 rounded-full font-bold text-sm bg-silk-blue text-white shadow-md whitespace-nowrap transition-all" data-action="filterPickerCategory" data-category="Tümü">Tümü</button>
+                <button class="px-4 py-2 rounded-full font-bold text-sm bg-[#F0F2F8] text-gray-600 shadow-neumorphic whitespace-nowrap transition-all" data-action="filterPickerCategory" data-category="Göğüs">Göğüs</button>
+                <button class="px-4 py-2 rounded-full font-bold text-sm bg-[#F0F2F8] text-gray-600 shadow-neumorphic whitespace-nowrap transition-all" data-action="filterPickerCategory" data-category="Sırt">Sırt</button>
+                <button class="px-4 py-2 rounded-full font-bold text-sm bg-[#F0F2F8] text-gray-600 shadow-neumorphic whitespace-nowrap transition-all" data-action="filterPickerCategory" data-category="Omuz">Omuz</button>
+                <button class="px-4 py-2 rounded-full font-bold text-sm bg-[#F0F2F8] text-gray-600 shadow-neumorphic whitespace-nowrap transition-all" data-action="filterPickerCategory" data-category="Bacak">Bacak</button>
+                <button class="px-4 py-2 rounded-full font-bold text-sm bg-[#F0F2F8] text-gray-600 shadow-neumorphic whitespace-nowrap transition-all" data-action="filterPickerCategory" data-category="Biceps">Biceps</button>
+                <button class="px-4 py-2 rounded-full font-bold text-sm bg-[#F0F2F8] text-gray-600 shadow-neumorphic whitespace-nowrap transition-all" data-action="filterPickerCategory" data-category="Triceps">Triceps</button>
+                <button class="px-4 py-2 rounded-full font-bold text-sm bg-[#F0F2F8] text-gray-600 shadow-neumorphic whitespace-nowrap transition-all" data-action="filterPickerCategory" data-category="Karın">Karın</button>
+            </div>
+
+            <!-- Hareket Listesi -->
+            <div class="w-full overflow-y-auto hide-scrollbar flex flex-col gap-3 mb-6" style="max-height: 230px;" id="exercise-picker-list">
+                <!-- Populated by JS -->
+            </div>
+
+            <!-- Set Sayacı -->
+            <div class="w-full flex items-center justify-between bg-[#F0F2F8] p-4 rounded-2xl shadow-neumorphic-inset mb-6">
+                <span class="text-xs font-bold text-silk-blue uppercase ml-2">Set Sayısı</span>
+                <div class="flex items-center gap-4">
+                    <button onclick="window.adjustPickerSets(-1)" class="neo-button w-10 h-10 rounded-full flex items-center justify-center bg-[#F0F2F8] text-silk-blue">
+                        <span class="material-symbols-rounded text-xl">remove</span>
+                    </button>
+                    <div class="flex items-center gap-1">
+                        <span class="text-xl font-bold text-gray-800" id="picker-set-count">3</span>
+                    </div>
+                    <button onclick="window.adjustPickerSets(1)" class="neo-button w-10 h-10 rounded-full flex items-center justify-center bg-[#F0F2F8] text-silk-green">
+                        <span class="material-symbols-rounded text-xl">add</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- CTA Button -->
+            <button onclick="window.commitSelectedExercise()" class="w-full py-4 px-6 rounded-full font-bold text-lg text-gray-800 gradient-border shadow-md focus:outline-none active:scale-[0.98] transition-transform flex items-center justify-center gap-2">
+                Hareketi Kaydet 
+                <span class="material-symbols-rounded text-silk-blue" style="font-variation-settings: 'FILL' 1;">add_circle</span>
+            </button>
         </div>
     </div>
 
