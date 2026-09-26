@@ -5396,8 +5396,8 @@
     <!-- CREATE SPLIT VIEW -->
 
     <!-- EXERCISE PICKER MODAL -->
-    <div id="modal-exercise-picker" class="fixed inset-0 bg-black/30 z-[80] hidden items-end opacity-0 pointer-events-none transition-opacity duration-300" onclick="if(event.target===this)closeExercisePickerModal()">
-        <div id="exercise-picker-content" class="mzr-sheet-content bg-background shadow-neo w-full mx-auto shadow-2xl transform transition-transform translate-y-full duration-300 flex flex-col" style="border-radius: 36px !important;">
+    <div id="modal-exercise-picker" class="fixed inset-0 bg-black/30 z-[200] hidden items-end opacity-0 pointer-events-none transition-opacity duration-300" onclick="if(event.target===this)closeExercisePickerModal()">
+        <div id="exercise-picker-content" class="bg-background shadow-neo w-full max-w-md mx-auto shadow-2xl transform transition-transform translate-y-full duration-300 flex flex-col" style="border-radius: 36px 36px 0 0; margin-bottom: calc(104px + env(safe-area-inset-bottom, 0px)); max-height: calc(90dvh - 104px - env(safe-area-inset-bottom, 0px));">
             <!-- Drag Handle -->
             <div class="w-full flex justify-center pt-4 pb-2 cursor-pointer" onclick="closeExercisePickerModal()">
                 <div class="w-12 h-1.5 bg-outline-variant rounded-full opacity-60"></div>
