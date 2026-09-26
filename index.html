@@ -5818,16 +5818,16 @@
     </div>
     <!-- EXERCISE PICKER MODAL – direct child of body, no stacking context trapping -->
     <div id="modal-exercise-picker" class="fixed inset-0 bg-black/30 z-[500] hidden items-end opacity-0 pointer-events-none transition-opacity duration-300" onclick="if(event.target===this)closeExercisePickerModal()">
-        <div id="exercise-picker-content" class="bg-background shadow-neo w-full max-w-md mx-auto shadow-2xl transform transition-transform translate-y-full duration-300 flex flex-col" style="border-radius: 36px 36px 0 0; margin-bottom: calc(104px + env(safe-area-inset-bottom, 0px)); max-height: calc(90dvh - 104px - env(safe-area-inset-bottom, 0px));">
+        <div id="exercise-picker-content" class="bg-[#F0F2F8] w-full max-w-md mx-auto transform transition-transform translate-y-full duration-300 flex flex-col" style="border-radius: 36px 36px 0 0; margin-bottom: calc(104px + env(safe-area-inset-bottom, 0px)); max-height: calc(90dvh - 104px - env(safe-area-inset-bottom, 0px)); box-shadow: 0 -10px 30px rgba(0,0,0,0.1);">
             <!-- Drag Handle -->
             <div class="w-full flex justify-center pt-4 pb-2 cursor-pointer" onclick="closeExercisePickerModal()">
-                <div class="w-12 h-1.5 bg-outline-variant rounded-full opacity-60"></div>
+                <div class="w-12 h-1.5 bg-[#C7C4D7] rounded-full opacity-60"></div>
             </div>
 
             <!-- Header -->
             <div class="px-6 pb-4 flex justify-between items-center">
-                <h2 class="font-headline-md text-on-surface text-xl font-bold">Hareket Ekle</h2>
-                <button onclick="closeExercisePickerModal()" class="w-10 h-10 rounded-full flex items-center justify-center text-on-surface-variant shadow-neo-inset hover:bg-surface-container-low transition-colors">
+                <h2 class="text-[#1E293B] text-[20px] font-bold">Hareket Ekle</h2>
+                <button onclick="closeExercisePickerModal()" class="w-10 h-10 rounded-full flex items-center justify-center text-[#64748B] hover:text-[#1E293B] bg-[#F0F2F8] transition-colors" style="box-shadow: inset 4px 4px 8px #D1D9E6, inset -4px -4px 8px #FFFFFF;">
                     <span class="material-symbols-rounded">close</span>
                 </button>
             </div>
