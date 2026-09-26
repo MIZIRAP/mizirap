@@ -1063,6 +1063,14 @@
                         <!-- JS will populate other splits here -->
                     </div>
                 </section>
+
+                <!-- Yeni Program Oluştur Butonu -->
+                <div class="px-2 mt-8 mb-6">
+                    <button class="w-full py-4 rounded-[24px] bg-[#F0F2F8] flex items-center justify-center gap-3 active:scale-[0.98] transition-transform text-[#712AE2] font-bold text-lg" style="box-shadow: 6px 6px 12px #D1D9E6, -6px -6px 12px rgba(255, 255, 255, 0.7);" onclick="if(window.openNewSplitModal) window.openNewSplitModal()">
+                        <span class="material-symbols-rounded text-2xl">add_box</span>
+                        <span>Yeni Program Oluştur</span>
+                    </button>
+                </div>
             </main>
         </div>
     </section>
@@ -5409,6 +5417,28 @@
 
 
 <!-- ===================== CORE PLAYER ===================== -->
+
+    <!-- YENİ PROGRAM OLUŞTUR MODALI (İçi Boş) -->
+    <div class="hidden fixed inset-0 z-50 flex items-end justify-center" id="modal-new-split">
+        <!-- Backdrop -->
+        <div class="absolute inset-0 bg-black/10 backdrop-blur-sm z-10 transition-opacity duration-300 opacity-0" id="new-split-backdrop-empty" onclick="if(window.closeNewSplitModal) window.closeNewSplitModal()"></div>
+
+        <!-- Modal Content -->
+        <div class="mzr-sheet-content relative w-full max-w-sm bg-[#F0F2F8] rounded-t-[32px] shadow-[0_-8px_30px_rgba(0,0,0,0.05)] p-6 z-20 flex flex-col items-center transform transition-transform duration-300 translate-y-full pb-8" id="new-split-content">
+            <!-- Drag Handle (Mobile) -->
+            <div class="w-12 h-1.5 bg-gray-300 rounded-full mb-6 cursor-pointer" onclick="if(window.closeNewSplitModal) window.closeNewSplitModal()"></div>
+            
+            <div class="w-full text-center mb-6">
+                <h2 class="text-xl font-bold text-gray-800">Yeni Program Oluştur</h2>
+                <p class="text-sm text-gray-500 mt-1">İçerik buraya gelecek</p>
+            </div>
+            
+            <!-- İçerik Alanı (Boş) -->
+            <div class="w-full flex-1 min-h-[200px] flex items-center justify-center border-2 border-dashed border-gray-300 rounded-2xl mb-4">
+                <span class="text-gray-400 font-medium">Tasarım Alanı</span>
+            </div>
+        </div>
+    </div>
 
     <!-- YENİ HAREKET EKLEME MODALI (Kalori Modalı Yapısında, İçi Boş) -->
     <div class="hidden fixed inset-0 z-50 flex items-end justify-center" id="modal-exercise-picker">

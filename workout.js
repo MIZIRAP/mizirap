@@ -264,11 +264,12 @@ export function renderSplitView() {
         const addExBtn = document.getElementById('btn-add-exercise-to-day');
         
         if (exListContainer) {
-            const currentDayObj = activeSplit.days.find(d => d.id === activeDayId) || activeSplit.days[0];
+            const currentDayObj = (activeSplit.days && activeSplit.days.length > 0) ? (activeSplit.days.find(d => d.id === activeDayId) || activeSplit.days[0]) : null;
             if (currentDayObj) {
                 if (dayTitleEl) dayTitleEl.innerText = currentDayObj.name + " Egzersiz Akışı";
                 
                 if (addExBtn) {
+                    addExBtn.classList.remove('hidden');
                     const dayIdx = activeSplit.days.findIndex(d => d.id === currentDayObj.id);
                     addExBtn.setAttribute('data-action', 'openExercisePickerForSplit');
                     addExBtn.setAttribute('data-split-id', activeSplit.id);
@@ -391,6 +392,15 @@ export function renderSplitView() {
                         </div>
                     `;
                 }
+            } else {
+                if (dayTitleEl) dayTitleEl.innerText = "Program Boş";
+                if (addExBtn) addExBtn.classList.add('hidden');
+                exListContainer.innerHTML = `
+                    <div class="flex flex-col items-center justify-center py-6 text-center">
+                        <span class="material-symbols-rounded text-4xl text-[#64748B] opacity-50 mb-2">event_busy</span>
+                        <p class="text-sm text-[#64748B]">Bu programa henüz gün eklenmemiş.</p>
+                    </div>
+                `;
             }
         }
         
@@ -3484,3 +3494,40 @@ if (confirmDeleteYes) {
         }
     });
 }
+
+// --- NEW SPLIT MODAL LOGIC ---
+window.openNewSplitModal = function() {
+    const modal = document.getElementById('modal-new-split');
+    const backdrop = document.getElementById('new-split-backdrop-empty');
+    const content = document.getElementById('new-split-content');
+    
+    if (modal && backdrop && content) {
+        modal.classList.remove('hidden');
+        // Trigger reflow
+        void modal.offsetWidth;
+        
+        backdrop.classList.remove('opacity-0');
+        backdrop.classList.add('opacity-100');
+        
+        content.classList.remove('translate-y-full');
+        content.classList.add('translate-y-0');
+    }
+};
+
+window.closeNewSplitModal = function() {
+    const modal = document.getElementById('modal-new-split');
+    const backdrop = document.getElementById('new-split-backdrop-empty');
+    const content = document.getElementById('new-split-content');
+    
+    if (modal && backdrop && content) {
+        backdrop.classList.remove('opacity-100');
+        backdrop.classList.add('opacity-0');
+        
+        content.classList.remove('translate-y-0');
+        content.classList.add('translate-y-full');
+        
+        setTimeout(() => {
+            modal.classList.add('hidden');
+        }, 300);
+    }
+};
