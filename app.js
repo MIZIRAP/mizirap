@@ -1,15 +1,15 @@
 import { auth } from "./firebase-config.js";
 import { onAuthStateChanged, signInAnonymously } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
 import { setupAuthUI } from "./auth.js";
-import { initDashboard, clearDashboard } from "./dashboard.js?v=1787428044";
+import { initDashboard, clearDashboard } from "./dashboard.js";
 import { initWater, clearWater } from "./water.js";
-import { initProfile, clearProfile } from "./profile.js?v=1787428045";
+import { initProfile, clearProfile } from "./profile.js";
 import { initHistory, clearHistory } from "./history.js";
 import { clearAllListeners, clearAllFirestoreListeners } from "./listenerManager.js";
 import { clearSharedState } from "./sharedState.js";
-import { initWorkout, renderSplitView } from "./workout.js?v=20260926-1";
+import { initWorkout, renderSplitView } from "./workout.js";
 import "./activeSession.js";
-import { initAiChat } from "./ai-chat.js?v=20260925-4";
+import { initAiChat } from "./ai-chat.js";
 // ---------- DOM referansları ----------
 const authScreen = document.getElementById("auth-screen");
 const appScreen = document.getElementById("app-screen");
@@ -147,32 +147,32 @@ window.showView = async function(viewId) {
         try {
             switch (viewId) {
                 case 'view-calories': {
-                    const { initCalories } = await import('./calories.js?v=20260925-2');
+                    const { initCalories } = await import('./calories.js');
                     initCalories(uid);
                     break;
                 }
                 case 'view-finance': {
-                    const { initFinance } = await import('./finance.js?v=20260920');
+                    const { initFinance } = await import('./finance.js');
                     initFinance(uid);
                     break;
                 }
                 case 'view-books': {
-                    const { initBooks } = await import('./books.js?v=20260920');
+                    const { initBooks } = await import('./books.js');
                     initBooks(uid);
                     break;
                 }
                 case 'view-movies': {
-                    const { initMovies } = await import('./movies.js?v=20260920');
+                    const { initMovies } = await import('./movies.js');
                     initMovies(uid);
                     break;
                 }
                 case 'view-shopping': {
-                    const { initShopping } = await import('./shopping.js?v=20260920');
+                    const { initShopping } = await import('./shopping.js');
                     initShopping(uid);
                     break;
                 }
                 case 'view-tools': {
-                    const { initTools } = await import('./tools.js?v=20260920');
+                    const { initTools } = await import('./tools.js');
                     initTools(uid);
                     break;
                 }

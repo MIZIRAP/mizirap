@@ -1,8 +1,8 @@
 import { db, auth } from "./firebase-config.js";
 import { doc, getDoc, setDoc, collection, addDoc, serverTimestamp, getDocs, writeBatch, increment, query, where } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
 import { fetchSharedProfile, updateSharedProfile } from "./sharedState.js";
-import { getDailySummaryRef } from "./dashboard.js?v=1787428044";
-import { calcBalance } from "./finance.js?v=20260920";
+import { getDailySummaryRef } from "./dashboard.js";
+import { calcBalance } from "./finance.js";
 import { aiCreateNewProgram, aiAddDayToProgram, aiAddExerciseToDay, aiDeleteDay, aiGetSplits } from "./workout.js";
 
 // State
