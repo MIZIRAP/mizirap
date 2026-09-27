@@ -14,7 +14,7 @@
       ".firebaserc"
     ],
     "predeploy": [
-      ".\\build-css.bat"
+      "npm run build-css"
     ],
     "rewrites": [
       {
