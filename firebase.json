@@ -13,9 +13,7 @@
       "input.css",
       ".firebaserc"
     ],
-    "predeploy": [
-      "npm run build-css"
-    ],
+
     "rewrites": [
       {
         "source": "**",
