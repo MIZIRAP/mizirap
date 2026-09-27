@@ -3,7 +3,7 @@ import { doc, getDoc, setDoc, collection, addDoc, serverTimestamp, getDocs, writ
 import { fetchSharedProfile, updateSharedProfile } from "./sharedState.js";
 import { getDailySummaryRef } from "./dashboard.js";
 import { calcBalance } from "./finance.js";
-import { aiCreateNewProgram, aiAddDayToProgram, aiAddExerciseToDay, aiDeleteDay, aiGetSplits } from "./workout.js";
+import { aiCreateNewProgram, aiAddDayToProgram, aiAddExerciseToDay, aiDeleteDay, aiGetSplits, aiGetUserWorkoutContext, aiRemoveExerciseFromDay, aiUpdateExerciseSets } from "./workout.js";
 
 // State
 let geminiApiKey = null;
@@ -15,7 +15,8 @@ Kullanıcı senden değerlendirme veya öneri istediğinde:
 1. Toplam kalori ve makro dağılımını (protein/karbonhidrat/yağ) hedefleriyle kıyasla.
 2. Eksik kalan makrolara (örn: protein veya sağlıklı yağ yetersizliğine) veya yetersiz su tüketimine dikkat çek.
 3. Pratik ve uygulanabilir besin önerilerinde bulun (Örn: 'Protein hedefin için akşam yemeğine süzme yoğurt veya ızgara somon ekleyebilirsin', 'Su hedeflenenin gerisinde, yatmadan önce 2 bardak daha içmeyi hedefleyelim').
-ARAÇ SEÇİM KURALI: Kullanıcı 'kalori hedefi', 'su hedefi', 'protein hedefi' gibi HEDEF ifadeleri kullanırsa update_calorie_goal veya update_water_goal kullan. Kullanıcı 'kilom', 'boyum', 'yaşım', 'cinsiyetim' gibi FİZİKSEL BİLGİ verirse update_profile_data kullan. İkisini ASLA karıştırma.`;
+ARAÇ SEÇİM KURALI: Kullanıcı 'kalori hedefi', 'su hedefi', 'protein hedefi' gibi HEDEF ifadeleri kullanırsa update_calorie_goal veya update_water_goal kullan. Kullanıcı 'kilom', 'boyum', 'yaşım', 'cinsiyetim' gibi FİZİKSEL BİLGİ verirse update_profile_data kullan. İkisini ASLA karıştırma.
+PROGRAM OLUŞTURMA KURALI: Kullanıcı program veya hareket oluşturmanı istediğinde (örn. 'PPL oluştur'), önce get_user_workout_context aracını çağırarak kullanıcının geçmiş antrenman verilerini ve mevcut programlarını incele. Kullanıcının daha önce yaptığı hareketleri dikkate alarak makul, kişiselleştirilmiş bir program/hareket seti oluştur. Eğer 'PPL oluştur' gibi kısa bir istekte bulunursa detay sormadan sırasıyla: 1) create_new_program ile programı oluştur, 2) add_day_to_program ile günleri ekle, 3) add_exercise_to_day ile her güne makul hareketleri geçmiş verilerine dayanarak peş peşe ekle. İşlem bitince ne oluşturduğunu özetle. Eğer kullanıcının özel bir isteği varsa (örn. 'sadece dambıl') bu kısıtlamaya uy.`;
 
 // DOM Elements
 const chatPanel = document.getElementById('ai-chat-panel');
@@ -439,6 +440,38 @@ const aiTools = [{
             name: "list_programs",
             description: "Kullanıcının mevcut tüm programlarını ve içerdiği günleri listeler. Kullanıcı 'programlarımı göster' dediğinde bunu kullan.",
             parameters: { type: "OBJECT", properties: {}, required: [] }
+        },
+        {
+            name: "get_user_workout_context",
+            description: "Kullanıcının geçmiş antrenman verilerini (sık yaptığı hareketler) ve mevcut programlarını okur. Program veya hareket oluşturmadan/önermeden önce bu aracı çağır.",
+            parameters: { type: "OBJECT", properties: {}, required: [] }
+        },
+        {
+            name: "remove_exercise_from_day",
+            description: "Bir güne ait bir hareketi siler.",
+            parameters: {
+                type: "OBJECT",
+                properties: {
+                    program_name: { type: "STRING", description: "Program adı" },
+                    day_name: { type: "STRING", description: "Gün adı" },
+                    exercise_name: { type: "STRING", description: "Silinecek hareket adı" }
+                },
+                required: ["program_name", "day_name", "exercise_name"]
+            }
+        },
+        {
+            name: "update_exercise_sets",
+            description: "Bir hareketin set sayısını günceller.",
+            parameters: {
+                type: "OBJECT",
+                properties: {
+                    program_name: { type: "STRING", description: "Program adı" },
+                    day_name: { type: "STRING", description: "Gün adı" },
+                    exercise_name: { type: "STRING", description: "Hareket adı" },
+                    new_sets: { type: "NUMBER", description: "Yeni set sayısı" }
+                },
+                required: ["program_name", "day_name", "exercise_name", "new_sets"]
+            }
         }
     ]
 }];
@@ -1071,7 +1104,9 @@ window.confirmFunctionCall = async function(isSilent = false) {
             } else if (funcCall.name === "create_new_program") {
                 const id = await aiCreateNewProgram(funcCall.args.name, funcCall.args.template, funcCall.args.note);
                 message = `Program '${funcCall.args.name}' başarıyla oluşturuldu. ID: ${id}`;
-            } else if (funcCall.name === "add_day_to_program" || funcCall.name === "add_exercise_to_day" || funcCall.name === "delete_day") {
+            } else if (funcCall.name === "get_user_workout_context") {
+                message = JSON.stringify(aiGetUserWorkoutContext());
+            } else if (["add_day_to_program", "add_exercise_to_day", "delete_day", "remove_exercise_from_day", "update_exercise_sets"].includes(funcCall.name)) {
                 const args = funcCall.args;
                 const splits = aiGetSplits();
                 const pname = (args.program_name || "").toLowerCase();
@@ -1096,6 +1131,12 @@ window.confirmFunctionCall = async function(isSilent = false) {
                             } else if (funcCall.name === "delete_day") {
                                 await aiDeleteDay(split.id, dayIdx);
                                 message = `'${split.days[dayIdx].name}' başarıyla silindi.`;
+                            } else if (funcCall.name === "remove_exercise_from_day") {
+                                await aiRemoveExerciseFromDay(split.id, dayIdx, args.exercise_name);
+                                message = `'${args.exercise_name}' başarıyla silindi.`;
+                            } else if (funcCall.name === "update_exercise_sets") {
+                                await aiUpdateExerciseSets(split.id, dayIdx, args.exercise_name, args.new_sets);
+                                message = `'${args.exercise_name}' set sayısı ${args.new_sets} olarak güncellendi.`;
                             }
                         }
                     }

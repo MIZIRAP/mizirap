@@ -4025,3 +4025,68 @@ export function aiGetSplits() {
     return splits;
 }
 
+export function aiGetUserWorkoutContext() {
+    const logs = window._miz_last_workout_logs || [];
+    const exerciseCounts = {};
+    logs.forEach(log => {
+        if(log.exercises) {
+            log.exercises.forEach(ex => {
+                if(ex.name) {
+                    const n = ex.name.trim();
+                    exerciseCounts[n] = (exerciseCounts[n] || 0) + 1;
+                }
+            });
+        }
+    });
+    const frequentExercises = Object.entries(exerciseCounts)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 20)
+        .map(e => e[0]);
+    
+    return {
+        existing_programs: splits.map(s => ({ name: s.name, days: s.days.map(d => d.name) })),
+        frequent_exercises: frequentExercises,
+        recent_logs_count: logs.length
+    };
+}
+
+export async function aiRemoveExerciseFromDay(splitId, dayIdx, exerciseName) {
+    if(!auth.currentUser) throw new Error("Giriş yapmadınız.");
+    const splitIndex = splits.findIndex(s => s.id === splitId);
+    if(splitIndex === -1) throw new Error("Program bulunamadı.");
+    const split = splits[splitIndex];
+    if(!split.days[dayIdx]) throw new Error("Gün bulunamadı.");
+    
+    const day = split.days[dayIdx];
+    const ename = exerciseName.toLowerCase();
+    const exIdx = day.exercises.findIndex(e => e.name.toLowerCase().includes(ename));
+    if(exIdx === -1) throw new Error("Hareket bulunamadı.");
+    
+    day.exercises.splice(exIdx, 1);
+    
+    const docRef = doc(db, "users", currentUid, "splits", splitId);
+    await updateDoc(docRef, { days: split.days, updatedAt: serverTimestamp() });
+    if (window.renderSplitEditView) window.renderSplitEditView();
+    if (window.renderSplitView) window.renderSplitView();
+}
+
+export async function aiUpdateExerciseSets(splitId, dayIdx, exerciseName, newSets) {
+    if(!auth.currentUser) throw new Error("Giriş yapmadınız.");
+    const splitIndex = splits.findIndex(s => s.id === splitId);
+    if(splitIndex === -1) throw new Error("Program bulunamadı.");
+    const split = splits[splitIndex];
+    if(!split.days[dayIdx]) throw new Error("Gün bulunamadı.");
+    
+    const day = split.days[dayIdx];
+    const ename = exerciseName.toLowerCase();
+    const exIdx = day.exercises.findIndex(e => e.name.toLowerCase().includes(ename));
+    if(exIdx === -1) throw new Error("Hareket bulunamadı.");
+    
+    day.exercises[exIdx].sets = newSets;
+    day.exercises[exIdx].defaultSets = newSets;
+    
+    const docRef = doc(db, "users", currentUid, "splits", splitId);
+    await updateDoc(docRef, { days: split.days, updatedAt: serverTimestamp() });
+    if (window.renderSplitEditView) window.renderSplitEditView();
+    if (window.renderSplitView) window.renderSplitView();
+}
