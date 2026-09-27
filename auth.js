@@ -108,12 +108,18 @@ export function setupAuthUI() {
             forgotModal.classList.remove("hidden");
             void forgotModal.offsetWidth;
             const content = document.getElementById("forgot-password-modal-content");
-            if(content) content.classList.remove("opacity-0", "scale-95");
+            if(content) {
+                content.classList.remove("opacity-0", "scale-95");
+                content.classList.add("opacity-100", "scale-100");
+            }
         });
 
         const closeForgotModal = () => {
             const content = document.getElementById("forgot-password-modal-content");
-            if(content) content.classList.add("opacity-0", "scale-95");
+            if(content) {
+                content.classList.remove("opacity-100", "scale-100");
+                content.classList.add("opacity-0", "scale-95");
+            }
             setTimeout(() => forgotModal.classList.add("hidden"), 200);
         };
 
