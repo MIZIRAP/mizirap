@@ -276,26 +276,22 @@ export function renderSplitView() {
                 animation: 150,
                 delay: 200,
                 delayOnTouchOnly: true,
-                onStart: function(evt) {
-                    const trash = document.getElementById('drag-trash-can');
-                    if(trash) {
-                        trash.classList.remove('opacity-0', 'pointer-events-none', 'translate-y-10', 'scale-90');
-                        trash.classList.add('opacity-100', 'pointer-events-auto', 'translate-y-0', 'scale-100');
-                    }
-                },
                 onEnd: async function (evt) {
-                    const trash = document.getElementById('drag-trash-can');
-                    if(trash) {
-                        trash.classList.add('opacity-0', 'pointer-events-none', 'translate-y-10', 'scale-90');
-                        trash.classList.remove('opacity-100', 'pointer-events-auto', 'translate-y-0', 'scale-100');
-                    }
-                    
                     const touch = evt.originalEvent.changedTouches ? evt.originalEvent.changedTouches[0] : evt.originalEvent;
                     const x = touch.clientX;
                     const y = touch.clientY;
-                    const trashRect = trash ? trash.getBoundingClientRect() : {left:0, right:0, top:0, bottom:0};
                     
-                    if (trash && x >= trashRect.left && x <= trashRect.right && y >= trashRect.top && y <= trashRect.bottom) {
+                    const rect = sortableDiv.getBoundingClientRect();
+                    const margin = 50;
+                    
+                    const isOutside = (
+                        x < rect.left - margin || 
+                        x > rect.right + margin || 
+                        y < rect.top - margin || 
+                        y > rect.bottom + margin
+                    );
+                    
+                    if (isOutside) {
                         evt.item.remove();
                         const dayId = evt.item.dataset.dayId;
                         activeSplit.days = activeSplit.days.filter(d => d.id !== dayId);
@@ -567,20 +563,7 @@ export function renderSplitView() {
                         animation: 150,
                         delay: 200,
                         delayOnTouchOnly: true,
-                        onStart: function(evt) {
-                            const trash = document.getElementById('drag-trash-can');
-                            if(trash) {
-                                trash.classList.remove('opacity-0', 'pointer-events-none', 'translate-y-10', 'scale-90');
-                                trash.classList.add('opacity-100', 'pointer-events-auto', 'translate-y-0', 'scale-100');
-                            }
-                        },
                         onEnd: async function (evt) {
-                            const trash = document.getElementById('drag-trash-can');
-                            if(trash) {
-                                trash.classList.add('opacity-0', 'pointer-events-none', 'translate-y-10', 'scale-90');
-                                trash.classList.remove('opacity-100', 'pointer-events-auto', 'translate-y-0', 'scale-100');
-                            }
-                            
                             const splitId = container.dataset.splitId;
                             const split = splits.find(s => s.id === splitId);
                             if (!split) return;
@@ -588,9 +571,18 @@ export function renderSplitView() {
                             const touch = evt.originalEvent.changedTouches ? evt.originalEvent.changedTouches[0] : evt.originalEvent;
                             const x = touch.clientX;
                             const y = touch.clientY;
-                            const trashRect = trash ? trash.getBoundingClientRect() : {left:0, right:0, top:0, bottom:0};
                             
-                            if (trash && x >= trashRect.left && x <= trashRect.right && y >= trashRect.top && y <= trashRect.bottom) {
+                            const rect = container.getBoundingClientRect();
+                            const margin = 50;
+                            
+                            const isOutside = (
+                                x < rect.left - margin || 
+                                x > rect.right + margin || 
+                                y < rect.top - margin || 
+                                y > rect.bottom + margin
+                            );
+                            
+                            if (isOutside) {
                                 evt.item.remove();
                                 const dayId = evt.item.dataset.dayId;
                                 split.days = split.days.filter(d => d.id !== dayId);
