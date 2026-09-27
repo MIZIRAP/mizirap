@@ -393,7 +393,11 @@ export function renderSplitView() {
                     
                     if (isOutside) {
                         const dayId = evt.item.dataset.dayId;
-                        if (dayId === getActiveSessionDayId()) {
+                        
+                        const inProgressLog = (window._miz_last_workout_logs || []).find(l => l.status === 'in_progress');
+                        const currentActiveDayId = inProgressLog ? inProgressLog.dayId : getActiveSessionDayId();
+                        
+                        if (dayId === currentActiveDayId) {
                             alert("Bu gün şu anda aktif antrenmanda kullanılıyor, önce antrenmanı sonlandırmalısınız.");
                             if (window.renderSplitView) window.renderSplitView();
                             return;
@@ -748,7 +752,11 @@ export function renderSplitView() {
                             
                             if (isOutside) {
                                 const dayId = evt.item.dataset.dayId;
-                                if (dayId === getActiveSessionDayId()) {
+                                
+                                const inProgressLog = (window._miz_last_workout_logs || []).find(l => l.status === 'in_progress');
+                                const currentActiveDayId = inProgressLog ? inProgressLog.dayId : getActiveSessionDayId();
+                                
+                                if (dayId === currentActiveDayId) {
                                     alert("Bu gün şu anda aktif antrenmanda kullanılıyor, önce antrenmanı sonlandırmalısınız.");
                                     if (window.renderMySplitsView) window.renderMySplitsView();
                                     return;
