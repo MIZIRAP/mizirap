@@ -258,6 +258,9 @@ export function renderSplitView() {
             addBtn.className = "w-10 h-10 rounded-full bg-[#F0F2F8] text-[#64748B] flex items-center justify-center shrink-0 active:scale-95 transition-transform ml-1";
             addBtn.style.boxShadow = "4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255,255,255,0.7)";
             addBtn.innerHTML = `<span class="material-symbols-rounded text-[18px]">add</span>`;
+            addBtn.onclick = () => {
+                if (window.openNewDayModal) window.openNewDayModal(activeSplit.id);
+            };
             editTabsContainer.appendChild(addBtn);
         }
 
@@ -466,6 +469,22 @@ export function renderSplitView() {
                                     <span class="text-[10px] font-medium text-[#64748B]">Egzersiz</span>
                                     <span class="text-[13px] font-bold text-[#1E293B]">${totalEx} Hareket</span>
                                 </div>
+                            </div>
+                            
+                            <!-- Days Tabs -->
+                            <div class="flex items-center gap-3 overflow-x-auto hide-scrollbar pt-3 pb-1">
+                                ${
+                                    (split.days && split.days.length > 0)
+                                        ? split.days.map(day => `
+                                            <button class="px-5 py-2.5 rounded-full bg-[#F0F2F8] text-[#64748B] font-bold text-[13px] whitespace-nowrap active:scale-95 transition-transform" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255,255,255,0.7)">
+                                                ${day.name}
+                                            </button>
+                                        `).join('')
+                                        : ''
+                                }
+                                <button onclick="if(window.openNewDayModal) window.openNewDayModal('${split.id}')" class="w-10 h-10 rounded-full bg-[#F0F2F8] text-[#64748B] flex items-center justify-center shrink-0 active:scale-95 transition-transform ml-1" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255,255,255,0.7)">
+                                    <span class="material-symbols-rounded text-[18px]">add</span>
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -3437,6 +3456,42 @@ window.closeNewSplitModal = function() {
     const modal = document.getElementById('modal-new-split');
     const backdrop = document.getElementById('new-split-backdrop-empty');
     const content = document.getElementById('new-split-content');
+    
+    if (modal && backdrop && content) {
+        backdrop.classList.remove('opacity-100');
+        backdrop.classList.add('opacity-0');
+        
+        content.classList.remove('translate-y-0');
+        content.classList.add('translate-y-full');
+        
+        setTimeout(() => {
+            modal.classList.add('hidden');
+        }, 300);
+    }
+};
+
+window.openNewDayModal = function(splitId) {
+    window.addingDayToSplitId = splitId;
+    const modal = document.getElementById('modal-new-day');
+    const backdrop = document.getElementById('new-day-backdrop');
+    const content = document.getElementById('new-day-content');
+    
+    if (modal && backdrop && content) {
+        modal.classList.remove('hidden');
+        void modal.offsetWidth; // Trigger reflow
+        
+        backdrop.classList.remove('opacity-0');
+        backdrop.classList.add('opacity-100');
+        
+        content.classList.remove('translate-y-full');
+        content.classList.add('translate-y-0');
+    }
+};
+
+window.closeNewDayModal = function() {
+    const modal = document.getElementById('modal-new-day');
+    const backdrop = document.getElementById('new-day-backdrop');
+    const content = document.getElementById('new-day-content');
     
     if (modal && backdrop && content) {
         backdrop.classList.remove('opacity-100');
