@@ -704,7 +704,7 @@ window.sendAiMessage = async function(isSystemResponse = false) {
             
             const isReadOnly = pendingFunctionCalls.every(fc => 
                 fc.name.startsWith("get_") || 
-                ["list_programs", "create_new_program", "add_day_to_program", "add_exercise_to_day", "delete_day"].includes(fc.name)
+                ["list_programs", "create_new_program", "add_day_to_program", "add_exercise_to_day", "delete_day", "remove_exercise_from_day", "update_exercise_sets"].includes(fc.name)
             );
             
             if (isReadOnly) {
@@ -1188,7 +1188,7 @@ async function sendFunctionResponses(responsesPartArray) {
     const card = document.getElementById("pending-func-card");
     if (card) card.removeAttribute("id");
 
-    chatHistory.push({ role: "user", parts: responsesPartArray });
+    chatHistory.push({ role: "function", parts: responsesPartArray });
     
     pendingFunctionCalls = [];
     appendLoading();
@@ -1208,8 +1208,25 @@ async function sendFunctionResponses(responsesPartArray) {
         _removeRetryToast();
         removeLoading();
 
-        const modelText = data.candidates?.[0]?.content?.parts?.[0]?.text;
-        if (modelText) {
+        const candidate = data.candidates?.[0];
+        const functionCallParts = candidate?.content?.parts?.filter(p => p.functionCall) || [];
+        const modelText = candidate?.content?.parts?.find(p => p.text)?.text;
+
+        if (functionCallParts.length > 0) {
+            pendingFunctionCalls = functionCallParts.map(p => p.functionCall);
+            chatHistory.push({ role: "model", parts: candidate.content.parts });
+            
+            const isReadOnly = pendingFunctionCalls.every(fc => 
+                fc.name.startsWith("get_") || 
+                ["list_programs", "create_new_program", "add_day_to_program", "add_exercise_to_day", "delete_day", "remove_exercise_from_day", "update_exercise_sets"].includes(fc.name)
+            );
+            
+            if (isReadOnly) {
+                window.confirmFunctionCall(true);
+            } else {
+                showFunctionConfirmation(pendingFunctionCalls);
+            }
+        } else if (modelText) {
             appendMessage('model', modelText);
             chatHistory.push({ role: "model", parts: [{ text: modelText }] });
         } else {
