@@ -1188,7 +1188,7 @@ async function sendFunctionResponses(responsesPartArray) {
     const card = document.getElementById("pending-func-card");
     if (card) card.removeAttribute("id");
 
-    chatHistory.push({ role: "function", parts: responsesPartArray });
+    chatHistory.push({ role: "user", parts: responsesPartArray });
     
     pendingFunctionCalls = [];
     appendLoading();
