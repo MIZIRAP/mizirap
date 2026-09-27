@@ -19,9 +19,7 @@ setupAuthUI();
 
 // ---------- Oturum durumu ----------
 onAuthStateChanged(auth, async (user) => {
-    const globalLoader = document.getElementById("global-loader");
     const appContainer = document.getElementById("app-container");
-    if (globalLoader) globalLoader.classList.add("hidden");
     if (appContainer) appContainer.classList.remove("hidden");
 
     if (user) {
@@ -71,12 +69,22 @@ onAuthStateChanged(auth, async (user) => {
             if(dsDate) dsDate.textContent = today.toLocaleDateString('tr-TR', options);
 
             // Modülleri başlat
-            initDashboard(user.uid);
-            initWater(user.uid);
-            initProfile(user.uid);
-            initHistory(user.uid);
-            initWorkout(user.uid);
-            initAiChat(user.uid);
+            // Ana thread'i bloklamamak için fonksiyon çağrılarını sıraya koyuyoruz (Staggering)
+            setTimeout(() => initDashboard(user.uid), 0);
+            setTimeout(() => initWater(user.uid), 10);
+            setTimeout(() => initProfile(user.uid), 20);
+            setTimeout(() => initHistory(user.uid), 30);
+            setTimeout(() => {
+                initWorkout(user.uid);
+                initAiChat(user.uid);
+            }, 50);
+
+            // Bütün modüller sıraya konduktan sonra loading ekranını kaldır
+            setTimeout(() => {
+                const globalLoader = document.getElementById("global-loader");
+                if (globalLoader) globalLoader.classList.add("hidden");
+            }, 60);
+
         } catch (err) {
             console.error("Login transition error:", err);
             alert("Giriş yapılırken bir hata oluştu: " + err.message);
@@ -99,6 +107,9 @@ onAuthStateChanged(auth, async (user) => {
         const bottomNav = document.getElementById("main-bottom-navbar");
         if (bottomNav) bottomNav.classList.add("hidden");
         
+        const globalLoader = document.getElementById("global-loader");
+        if (globalLoader) globalLoader.classList.add("hidden");
+
         window.scrollTo(0, 0);
         const appContainer = document.getElementById('app-container');
         if (appContainer) appContainer.style.overflow = ''; // Modal vs. açık kaldıysa temizle
