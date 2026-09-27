@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "My Life app",
   "scripts": {
-    "build-css": "npx tailwindcss -i ./input.css -o ./tailwind-build.css --minify"
+    "build-css": "npx -y tailwindcss -i ./input.css -o ./tailwind-build.css --minify"
   },
   "dependencies": {}
 }

@@ -19,6 +19,11 @@ setupAuthUI();
 
 // ---------- Oturum durumu ----------
 onAuthStateChanged(auth, async (user) => {
+    const globalLoader = document.getElementById("global-loader");
+    const appContainer = document.getElementById("app-container");
+    if (globalLoader) globalLoader.classList.add("hidden");
+    if (appContainer) appContainer.classList.remove("hidden");
+
     if (user) {
         try {
             if (!user.isAnonymous && !user.emailVerified) {
