@@ -236,6 +236,10 @@ export function renderSplitView() {
         
         if (editTabsContainer) {
             editTabsContainer.innerHTML = '';
+            
+            const sortableDiv = document.createElement('div');
+            sortableDiv.className = "flex items-center gap-3 shrink-0";
+            
             activeSplit.days.forEach((day, idx) => {
                 const isActive = day.id === activeDayId;
                 const btn = document.createElement('button');
@@ -251,8 +255,9 @@ export function renderSplitView() {
                 }
                 
                 btn.onclick = () => selectActiveDay(day.id);
-                editTabsContainer.appendChild(btn);
+                sortableDiv.appendChild(btn);
             });
+            editTabsContainer.appendChild(sortableDiv);
             
             // Add '+' button
             const addBtn = document.createElement('button');
@@ -262,19 +267,49 @@ export function renderSplitView() {
             addBtn.onclick = () => {
                 if (window.openNewDayModal) window.openNewDayModal(activeSplit.id);
             };
-            addBtn.classList.add('add-btn-ignore');
             editTabsContainer.appendChild(addBtn);
             
             if (window.activeSplitSortable) {
                 window.activeSplitSortable.destroy();
             }
-            window.activeSplitSortable = Sortable.create(editTabsContainer, {
+            window.activeSplitSortable = Sortable.create(sortableDiv, {
                 animation: 150,
                 delay: 200,
                 delayOnTouchOnly: true,
-                filter: '.add-btn-ignore',
+                onStart: function(evt) {
+                    const trash = document.getElementById('drag-trash-can');
+                    if(trash) {
+                        trash.classList.remove('opacity-0', 'pointer-events-none', 'translate-y-10', 'scale-90');
+                        trash.classList.add('opacity-100', 'pointer-events-auto', 'translate-y-0', 'scale-100');
+                    }
+                },
                 onEnd: async function (evt) {
-                    const newOrderIds = Array.from(editTabsContainer.children)
+                    const trash = document.getElementById('drag-trash-can');
+                    if(trash) {
+                        trash.classList.add('opacity-0', 'pointer-events-none', 'translate-y-10', 'scale-90');
+                        trash.classList.remove('opacity-100', 'pointer-events-auto', 'translate-y-0', 'scale-100');
+                    }
+                    
+                    const touch = evt.originalEvent.changedTouches ? evt.originalEvent.changedTouches[0] : evt.originalEvent;
+                    const x = touch.clientX;
+                    const y = touch.clientY;
+                    const trashRect = trash ? trash.getBoundingClientRect() : {left:0, right:0, top:0, bottom:0};
+                    
+                    if (trash && x >= trashRect.left && x <= trashRect.right && y >= trashRect.top && y <= trashRect.bottom) {
+                        evt.item.remove();
+                        const dayId = evt.item.dataset.dayId;
+                        activeSplit.days = activeSplit.days.filter(d => d.id !== dayId);
+                        try {
+                            await setDoc(doc(db, "users", currentUid, "splits", activeSplit.id), activeSplit, { merge: true });
+                            if (window.renderSplitView) window.renderSplitView();
+                            if (window.renderMySplitsView) window.renderMySplitsView();
+                        } catch (e) {
+                            console.error('Delete error', e);
+                        }
+                        return;
+                    }
+
+                    const newOrderIds = Array.from(sortableDiv.children)
                         .filter(child => child.dataset.dayId)
                         .map(child => child.dataset.dayId);
                         
@@ -288,6 +323,7 @@ export function renderSplitView() {
                         activeSplit.days = newDaysArray;
                         try {
                             await setDoc(doc(db, "users", currentUid, "splits", activeSplit.id), activeSplit, { merge: true });
+                            if (window.renderSplitView) window.renderSplitView();
                         } catch (e) {
                             console.error('Drag drop save error', e);
                         }
@@ -504,17 +540,19 @@ export function renderSplitView() {
                             </div>
                             
                             <!-- Days Tabs -->
-                            <div class="flex items-center gap-3 overflow-x-auto hide-scrollbar pt-3 pb-1 sortable-other-days-container" data-split-id="${split.id}">
-                                ${
-                                    (split.days && split.days.length > 0)
-                                        ? split.days.map(day => `
-                                            <button data-day-id="${day.id}" class="px-5 py-2.5 rounded-full bg-[#F0F2F8] text-[#64748B] font-bold text-[13px] whitespace-nowrap active:scale-95 transition-transform" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255,255,255,0.7)">
-                                                ${day.name}
-                                            </button>
-                                        `).join('')
-                                        : ''
-                                }
-                                <button onclick="if(window.openNewDayModal) window.openNewDayModal('${split.id}')" class="add-btn-ignore w-10 h-10 rounded-full bg-[#F0F2F8] text-[#64748B] flex items-center justify-center shrink-0 active:scale-95 transition-transform ml-1" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255,255,255,0.7)">
+                            <div class="flex items-center gap-3 overflow-x-auto hide-scrollbar pt-3 pb-1">
+                                <div class="flex items-center gap-3 shrink-0 sortable-other-days-container" data-split-id="${split.id}">
+                                    ${
+                                        (split.days && split.days.length > 0)
+                                            ? split.days.map(day => `
+                                                <button data-day-id="${day.id}" class="px-5 py-2.5 rounded-full bg-[#F0F2F8] text-[#64748B] font-bold text-[13px] whitespace-nowrap active:scale-95 transition-transform" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255,255,255,0.7)">
+                                                    ${day.name}
+                                                </button>
+                                            `).join('')
+                                            : ''
+                                    }
+                                </div>
+                                <button onclick="if(window.openNewDayModal) window.openNewDayModal('${split.id}')" class="w-10 h-10 rounded-full bg-[#F0F2F8] text-[#64748B] flex items-center justify-center shrink-0 active:scale-95 transition-transform ml-1" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255,255,255,0.7)">
                                     <span class="material-symbols-rounded text-[18px]">add</span>
                                 </button>
                             </div>
@@ -529,11 +567,42 @@ export function renderSplitView() {
                         animation: 150,
                         delay: 200,
                         delayOnTouchOnly: true,
-                        filter: '.add-btn-ignore',
+                        onStart: function(evt) {
+                            const trash = document.getElementById('drag-trash-can');
+                            if(trash) {
+                                trash.classList.remove('opacity-0', 'pointer-events-none', 'translate-y-10', 'scale-90');
+                                trash.classList.add('opacity-100', 'pointer-events-auto', 'translate-y-0', 'scale-100');
+                            }
+                        },
                         onEnd: async function (evt) {
+                            const trash = document.getElementById('drag-trash-can');
+                            if(trash) {
+                                trash.classList.add('opacity-0', 'pointer-events-none', 'translate-y-10', 'scale-90');
+                                trash.classList.remove('opacity-100', 'pointer-events-auto', 'translate-y-0', 'scale-100');
+                            }
+                            
                             const splitId = container.dataset.splitId;
                             const split = splits.find(s => s.id === splitId);
                             if (!split) return;
+                            
+                            const touch = evt.originalEvent.changedTouches ? evt.originalEvent.changedTouches[0] : evt.originalEvent;
+                            const x = touch.clientX;
+                            const y = touch.clientY;
+                            const trashRect = trash ? trash.getBoundingClientRect() : {left:0, right:0, top:0, bottom:0};
+                            
+                            if (trash && x >= trashRect.left && x <= trashRect.right && y >= trashRect.top && y <= trashRect.bottom) {
+                                evt.item.remove();
+                                const dayId = evt.item.dataset.dayId;
+                                split.days = split.days.filter(d => d.id !== dayId);
+                                try {
+                                    await setDoc(doc(db, "users", currentUid, "splits", split.id), split, { merge: true });
+                                    if (window.renderMySplitsView) window.renderMySplitsView();
+                                    if (split.id === activeSplitId && window.renderSplitView) window.renderSplitView();
+                                } catch (e) {
+                                    console.error('Delete error', e);
+                                }
+                                return;
+                            }
                             
                             const newOrderIds = Array.from(container.children)
                                 .filter(child => child.dataset.dayId)
@@ -549,6 +618,7 @@ export function renderSplitView() {
                                 split.days = newDaysArray;
                                 try {
                                     await setDoc(doc(db, "users", currentUid, "splits", split.id), split, { merge: true });
+                                    if (split.id === activeSplitId && window.renderSplitView) window.renderSplitView();
                                 } catch (e) {
                                     console.error('Drag drop save error', e);
                                 }
