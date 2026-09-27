@@ -40,10 +40,12 @@ export async function initDashboard(uid) {
     
     // Check if daily document exists (Migration / Fallback logic)
     try {
-        const snap = await getDoc(dailyRef);
+        // Fallback: 3 saniye içinde yanıt gelmezse sayfa kitlenmesin
+        const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error("Timeout")), 3000));
+        const snap = await Promise.race([getDoc(dailyRef), timeoutPromise]);
+        
         if (!snap.exists()) {
             // Show empty widgets instantly while migration happens in background
-            renderDashboard();
             renderDashboard();
             const loader = document.getElementById("dashboard-initial-loader");
             if (loader) loader.classList.add('hidden');
@@ -51,7 +53,11 @@ export async function initDashboard(uid) {
             await runDashboardMigration(uid, dailyRef);
         }
     } catch(e) {
-        console.error("Migration error:", e);
+        console.warn("getDoc timeout or error (400 Listen channel issue). Proceeding with cache/empty render:", e);
+        // Fallback: Timeout olursa en azından ekranı çiz
+        renderDashboard();
+        const loader = document.getElementById("dashboard-initial-loader");
+        if (loader) loader.classList.add('hidden');
     }
 
     // Sort widgets and initialize SortableJS before initial render
