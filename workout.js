@@ -2434,6 +2434,7 @@ window.openEditSplitView = function(splitId) {
     if (window.openNewSplitModal) window.openNewSplitModal(true);
 };
 
+window.deleteSplit = deleteSplit;
 async function deleteSplit(splitId) {
     if(!confirm("Bu split'i silmek istediğinize emin misiniz?")) return;
 
