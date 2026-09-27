@@ -4,7 +4,9 @@ import { setupAuthUI } from "./auth.js";
 import { initDashboard, clearDashboard } from "./dashboard.js";
 import { initWater, clearWater } from "./water.js";
 import { initProfile, clearProfile } from "./profile.js";
-import { initHistory, clearHistory } from "./history.js";
+import { initCalories } from "./calories.js";
+import { initFinance } from "./finance.js";
+import { initTools } from "./tools.js";
 import { clearAllListeners, clearAllFirestoreListeners } from "./listenerManager.js";
 import { clearSharedState } from "./sharedState.js";
 import { initWorkout, renderSplitView } from "./workout.js";
@@ -73,10 +75,12 @@ onAuthStateChanged(auth, async (user) => {
             setTimeout(() => initDashboard(user.uid), 0);
             setTimeout(() => initWater(user.uid), 10);
             setTimeout(() => initProfile(user.uid), 20);
-            setTimeout(() => initHistory(user.uid), 30);
             setTimeout(() => {
                 initWorkout(user.uid);
                 initAiChat(user.uid);
+                initCalories(user.uid);
+                initFinance(user.uid);
+                initTools(user.uid);
             }, 50);
 
 
@@ -129,7 +133,9 @@ onAuthStateChanged(auth, async (user) => {
         clearDashboard();
         clearWater();
         clearProfile();
-        clearHistory();
+        if (loadedModules['view-history']) {
+            import('./history.js').then(m => m.clearHistory && m.clearHistory());
+        }
     }
 });
 
@@ -165,16 +171,6 @@ window.showView = async function(viewId) {
 
         try {
             switch (viewId) {
-                case 'view-calories': {
-                    const { initCalories } = await import('./calories.js');
-                    initCalories(uid);
-                    break;
-                }
-                case 'view-finance': {
-                    const { initFinance } = await import('./finance.js');
-                    initFinance(uid);
-                    break;
-                }
                 case 'view-books': {
                     const { initBooks } = await import('./books.js');
                     initBooks(uid);
@@ -190,9 +186,9 @@ window.showView = async function(viewId) {
                     initShopping(uid);
                     break;
                 }
-                case 'view-tools': {
-                    const { initTools } = await import('./tools.js');
-                    initTools(uid);
+                case 'view-history': {
+                    const { initHistory } = await import('./history.js');
+                    initHistory(uid);
                     break;
                 }
             }
