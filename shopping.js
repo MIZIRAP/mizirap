@@ -1,17 +1,16 @@
 import { auth, db } from "./firebase-config.js";
 import { collection, onSnapshot, serverTimestamp, addDoc, updateDoc, deleteDoc, doc, query, orderBy, limit, writeBatch } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
 import { escapeHtml, handleFormSubmit } from "./utils.js";
-import { registerListener } from "./listenerManager.js";
+import { registerFirestoreListener, unregisterFirestoreListener } from "./listenerManager.js";
 
 let allShopping = [];
-let unsubscribe = null;
+let currentUid = null;
 
 export function initShopping(uid) {
-    const shoppingRef = query(collection(db, "users", uid, "shoppingList"), orderBy("createdAt", "desc"), limit(100));
-    unsubscribe = registerListener(onSnapshot(shoppingRef, snap => {
-        allShopping = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-        renderShoppingList();
-    }));
+    if(!uid) return;
+    currentUid = uid;
+    
+    startShoppingListener(uid);
 
     const form = document.getElementById("shopping-form");
     if(form) {
@@ -47,9 +46,27 @@ export function initShopping(uid) {
     }
 }
 
+function startShoppingListener(uid) {
+    if (!uid) return;
+    const shoppingRef = query(collection(db, "users", uid, "shoppingList"), orderBy("createdAt", "desc"), limit(100));
+    registerFirestoreListener('shopping', onSnapshot(shoppingRef, snap => {
+        allShopping = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+        renderShoppingList();
+    }));
+}
+
+document.addEventListener('viewChanged', (e) => {
+    if (e.detail.viewId === 'view-shopping') {
+        startShoppingListener(currentUid);
+    } else {
+        unregisterFirestoreListener('shopping');
+    }
+});
+
 export function clearShopping() {
-    if(unsubscribe) unsubscribe();
+    unregisterFirestoreListener('shopping');
     allShopping = [];
+    currentUid = null;
 }
 
 function renderShoppingList() {

@@ -1,13 +1,12 @@
 import { formatDate, formatCurrency } from "./utils.js";
 import { db } from "./firebase-config.js";
 import { collection, query, orderBy, limit, onSnapshot } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
-import { registerListener } from "./listenerManager.js";
+import { registerFirestoreListener, unregisterFirestoreListener } from "./listenerManager.js";
 import { getSharedState, subscribeSharedState } from "./sharedState.js";
 
 let unsubCalories = null;
 let unsubWater = null;
 let unsubFinance = null;
-let unsubBooks = null;
 
 let rawCalories = [];
 let rawWater = [];
@@ -18,48 +17,67 @@ let currentUid = null;
 
 export function initHistory(uid) {
     currentUid = uid;
+    startHistoryListeners(uid);
+    // Initial render in case data was already there
+    renderHistory();
+}
+
+function startHistoryListeners(uid) {
+    if (!uid) return;
 
     // Clear previous unsubs
     if(unsubCalories) unsubCalories();
     if(unsubWater) unsubWater();
     if(unsubFinance) unsubFinance();
-    if(unsubBooks) unsubBooks();
 
     // Subscribe to shared state for calories, water, finance
     rawCalories = getSharedState('calories') || [];
-    unsubCalories = registerListener(subscribeSharedState('calories', data => {
+    unsubCalories = subscribeSharedState('calories', data => {
         rawCalories = data;
         renderHistory();
-    }));
+    });
 
     rawWater = getSharedState('water') || [];
-    unsubWater = registerListener(subscribeSharedState('water', data => {
+    unsubWater = subscribeSharedState('water', data => {
         rawWater = data;
         renderHistory();
-    }));
+    });
 
     rawFinance = getSharedState('finance') || [];
-    unsubFinance = registerListener(subscribeSharedState('finance', data => {
+    unsubFinance = subscribeSharedState('finance', data => {
         rawFinance = data;
         renderHistory();
-    }));
+    });
 
     // Keep independent Firestore listener for books
     const bookRef = query(collection(db, "users", uid, "book_logs"), orderBy("createdAt", "desc"), limit(100));
-    unsubBooks = registerListener(onSnapshot(bookRef, snap => {
+    registerFirestoreListener('history_books', onSnapshot(bookRef, snap => {
         rawBooks = snap.docs.map(d => d.data());
         renderHistory();
     }));
-
-    // Initial render in case data was already there
-    renderHistory();
 }
 
-export function clearHistory() {
+function stopHistoryListeners() {
     if(unsubCalories) unsubCalories();
     if(unsubWater) unsubWater();
     if(unsubFinance) unsubFinance();
-    if(unsubBooks) unsubBooks();
+    unregisterFirestoreListener('history_books');
+    
+    unsubCalories = null;
+    unsubWater = null;
+    unsubFinance = null;
+}
+
+document.addEventListener('viewChanged', (e) => {
+    if (e.detail.viewId === 'view-history') {
+        startHistoryListeners(currentUid);
+    } else {
+        stopHistoryListeners();
+    }
+});
+
+export function clearHistory() {
+    stopHistoryListeners();
 }
 
 function renderHistory() {

@@ -126,10 +126,7 @@ window.openProgressDetail = async function(exerciseId, exerciseName, category) {
 
 // ---------- Sekme (view) geçişleri (Uygulama İçi, History API Destekli) ----------
 window.showView = async function(viewId) {
-    // Sekme değiştiğinde tüm açık Firestore onSnapshot aboneliklerini kapat (sızıntı hijyeni)
-    if (typeof clearAllFirestoreListeners === 'function') {
-        clearAllFirestoreListeners();
-    }
+    // Dinleyiciler artık her modülün kendi viewChanged eventi içinde yönetiliyor (Zombie Listener Hijyeni).
 
     const uid = localStorage.getItem('uid');
     

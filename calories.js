@@ -1,7 +1,7 @@
 import { db } from "./firebase-config.js";
 import { collection, doc, addDoc, setDoc, updateDoc, deleteDoc, onSnapshot, query, orderBy, limit, where, serverTimestamp, writeBatch, getDocsFromCache, getDocsFromServer, increment } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
 import { escapeHtml, validatePositiveNumber } from "./utils.js";
-import { registerListener } from "./listenerManager.js";
+import { registerFirestoreListener, unregisterFirestoreListener } from "./listenerManager.js";
 import { setSharedState } from "./sharedState.js";
 import { getDailySummaryRef } from "./dashboard.js";
 
@@ -125,7 +125,7 @@ let currentFoodName = "";
 let currentFoodMacros = { karb: 0, protein: 0, yag: 0 };
 function loadFoodLibrary(uid) {
     const libRef = collection(db, "users", uid, "foodLibrary");
-    registerListener(onSnapshot(libRef, (snap) => {
+    registerFirestoreListener('cal_library', onSnapshot(libRef, (snap) => {
         let foods = snap.docs.map(d => ({ id: d.id, ...d.data() }));
         foods.sort((a, b) => {
             const timeA = (a.createdAt && a.createdAt.toMillis) ? a.createdAt.toMillis() : 0;
@@ -157,8 +157,16 @@ export function initCalories(uid) {
     });
 
     // Listen to Settings
+    startCaloriesListeners(uid);
+
+    bindEvents();
+}
+
+function startCaloriesListeners(uid) {
+    if (!uid) return;
+
     const settingsRef = doc(db, "users", uid, "settings", "calories");
-    unsubscribeSettings = registerListener(onSnapshot(settingsRef, (docSnap) => {
+    registerFirestoreListener('cal_settings', onSnapshot(settingsRef, (docSnap) => {
         if (docSnap.exists()) {
             const data = docSnap.data();
             if (data.dailyCalorieGoal) dailyCalorieGoal = data.dailyCalorieGoal;
@@ -176,7 +184,7 @@ export function initCalories(uid) {
 
     // Listen to Logs (Only needed for daily tracking)
     const logsRef = query(collection(db, "users", uid, "calorieLogs"), orderBy("createdAt", "desc"), limit(100));
-    unsubscribeLogs = registerListener(onSnapshot(logsRef, (snap) => {
+    registerFirestoreListener('cal_logs', onSnapshot(logsRef, (snap) => {
         const today = new Date();
         today.setHours(0,0,0,0);
 
@@ -207,13 +215,26 @@ export function initCalories(uid) {
         where("createdAt", ">=", oneWeekAgo),
         orderBy("createdAt", "desc")
     );
-    unsubWeeklyLogs = registerListener(onSnapshot(weeklyRef, (snap) => {
+    registerFirestoreListener('cal_weekly', onSnapshot(weeklyRef, (snap) => {
         weeklyLogs = snap.docs.map(d => ({ id: d.id, ...d.data() }));
         renderWeeklyChart();
     }));
-
-    bindEvents();
 }
+
+function stopCaloriesListeners() {
+    unregisterFirestoreListener('cal_settings');
+    unregisterFirestoreListener('cal_logs');
+    unregisterFirestoreListener('cal_weekly');
+    unregisterFirestoreListener('cal_library');
+}
+
+document.addEventListener('viewChanged', (e) => {
+    if (e.detail.viewId === 'view-calories') {
+        startCaloriesListeners(currentUid);
+    } else {
+        stopCaloriesListeners();
+    }
+});
 
 function bindEvents() {
     // Add Food to Library Modal
@@ -1260,11 +1281,10 @@ function updateUIState() {
 }
 
 export function clearCalories() {
-    if(unsubscribeLogs) unsubscribeLogs();
-    if(unsubscribeSettings) unsubscribeSettings();
-    if(unsubWeeklyLogs) unsubWeeklyLogs();
+    stopCaloriesListeners();
     dailyLogs = [];
     libraryFoods = [];
+    weeklyLogs = [];
 }
 
 

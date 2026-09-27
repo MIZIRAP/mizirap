@@ -1,22 +1,26 @@
 import { auth, db } from "./firebase-config.js";
 import { collection, doc, addDoc, setDoc, deleteDoc, updateDoc, onSnapshot, query, orderBy, limit, serverTimestamp, writeBatch, increment } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
 import { escapeHtml, handleFormSubmit } from "./utils.js";
-import { registerListener } from "./listenerManager.js";
+import { registerFirestoreListener, unregisterFirestoreListener } from "./listenerManager.js";
 import { setSharedState } from "./sharedState.js";
 import { getDailySummaryRef } from "./dashboard.js";
 
 let dailyGoal = 2000;
 let waterLogs = [];
-let unsubscribeLogs = null;
-let unsubscribeSettings = null;
 let currentUid = null;
 
 export function initWater(uid) {
     currentUid = uid;
+    startWaterListeners(uid);
+    setupWaterUI(uid);
+}
+
+function startWaterListeners(uid) {
+    if (!uid) return;
 
     // Settings listener for daily goal
     const settingsRef = doc(db, "users", uid, "settings", "water");
-    unsubscribeSettings = registerListener(onSnapshot(settingsRef, (docSnap) => {
+    registerFirestoreListener('water_settings', onSnapshot(settingsRef, (docSnap) => {
         if (docSnap.exists() && docSnap.data().dailyGoal) {
             dailyGoal = docSnap.data().dailyGoal;
         } else {
@@ -28,14 +32,28 @@ export function initWater(uid) {
 
     // Logs listener (last 7 days)
     const logsRef = query(collection(db, "users", uid, "waterLogs"), orderBy("createdAt", "desc"), limit(100));
-    unsubscribeLogs = registerListener(onSnapshot(logsRef, (snap) => {
-        // Fetch all logs to filter locally (since we need last 7 days and today)
-        // For a huge app we might want to query where createdAt > 7 days ago, but this is fine for now
+    registerFirestoreListener('water_logs', onSnapshot(logsRef, (snap) => {
         waterLogs = snap.docs.map(d => ({ id: d.id, ...d.data() }));
         setSharedState('water', waterLogs);
         updateWaterUI();
     }));
+}
 
+function stopWaterListeners() {
+    unregisterFirestoreListener('water_settings');
+    unregisterFirestoreListener('water_logs');
+}
+
+document.addEventListener('viewChanged', (e) => {
+    if (e.detail.viewId === 'view-dashboard') {
+        startWaterListeners(currentUid);
+    } else {
+        stopWaterListeners();
+    }
+});
+
+
+function setupWaterUI(uid) {
     // New bindings for Silk Neon Water UI
     const btn250 = document.getElementById("btn-water-250");
     const btn500 = document.getElementById("btn-water-500");
@@ -345,8 +363,7 @@ export function initWater(uid) {
 }
 
 export function clearWater() {
-    if(unsubscribeLogs) unsubscribeLogs();
-    if(unsubscribeSettings) unsubscribeSettings();
+    stopWaterListeners();
     waterLogs = [];
 }
 

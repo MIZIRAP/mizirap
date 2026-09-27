@@ -1,7 +1,7 @@
 import { auth, db } from "./firebase-config.js";
 import { formatDate, formatCurrency, escapeHtml, validatePositiveNumber } from "./utils.js";
 import { collection, doc, addDoc, setDoc, updateDoc, deleteDoc, getDocs, getDoc, query, orderBy, limit, serverTimestamp, onSnapshot, where, writeBatch } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
-import { registerListener } from "./listenerManager.js";
+import { registerFirestoreListener, unregisterFirestoreListener } from "./listenerManager.js";
 import { setSharedState } from "./sharedState.js";
 import { getDailySummaryRef } from "./dashboard.js";
 import { COLLECTAPI_KEY } from "./api-config.js";
@@ -19,9 +19,7 @@ let isNewFinanceTx = false;
 let currentEditCategoryId = null;
 let currentEditPaymentId = null;
 
-let unsubCategories = null;
-let unsubPaymentMethods = null;
-let unsubTransactions = null;
+
 
 document.addEventListener('click', (e) => {
     const actionBtn = e.target.closest('[data-action]');
@@ -58,9 +56,18 @@ document.addEventListener('click', (e) => {
 export function initFinance(uid) {
     currentUid = uid;
 
+    startFinanceListeners(uid);
+
+    setupFinanceModals();
+    fetchMetalPrices();
+}
+
+function startFinanceListeners(uid) {
+    if (!uid) return;
+
     // 1. Load Categories
     const categoriesRef = collection(db, "users", uid, "finance_categories");
-    unsubCategories = registerListener(onSnapshot(categoriesRef, (snap) => {
+    registerFirestoreListener('fin_cat', onSnapshot(categoriesRef, (snap) => {
         financeCategories = snap.docs.map(d => ({ id: d.id, ...d.data() }));
         renderTransactions();
         renderTxModalOptions();
@@ -70,7 +77,7 @@ export function initFinance(uid) {
 
     // 2. Load Payment Methods
     const paymentMethodsRef = collection(db, "users", uid, "finance_payment_methods");
-    unsubPaymentMethods = registerListener(onSnapshot(paymentMethodsRef, (snap) => {
+    registerFirestoreListener('fin_pm', onSnapshot(paymentMethodsRef, (snap) => {
         financePaymentMethods = snap.docs.map(d => ({ id: d.id, ...d.data() }));
         renderTransactions();
         renderTxModalOptions();
@@ -82,7 +89,7 @@ export function initFinance(uid) {
     const txRef = collection(db, "users", uid, "finance_transactions");
     const q = query(txRef, orderBy("dateStr", "desc"), limit(100));
 
-    unsubTransactions = registerListener(onSnapshot(q, (snap) => {
+    registerFirestoreListener('fin_tx', onSnapshot(q, (snap) => {
         financeTransactions = snap.docs.map(d => ({ id: d.id, ...d.data() }));
         setSharedState('finance', financeTransactions);
         renderTransactions();
@@ -90,15 +97,24 @@ export function initFinance(uid) {
         if (typeof renderFinanceSettings !== "undefined") renderFinanceSettings();
         if (typeof renderFinanceDetail !== "undefined") renderFinanceDetail();
     }));
-
-    setupFinanceModals();
-    fetchMetalPrices();
 }
 
+function stopFinanceListeners() {
+    unregisterFirestoreListener('fin_cat');
+    unregisterFirestoreListener('fin_pm');
+    unregisterFirestoreListener('fin_tx');
+}
+
+document.addEventListener('viewChanged', (e) => {
+    if (e.detail.viewId === 'view-finance') {
+        startFinanceListeners(currentUid);
+    } else {
+        stopFinanceListeners();
+    }
+});
+
 export function clearFinance() {
-    if(unsubCategories) unsubCategories();
-    if(unsubPaymentMethods) unsubPaymentMethods();
-    if(unsubTransactions) unsubTransactions();
+    stopFinanceListeners();
     currentUid = null;
     financeCategories = [];
     financePaymentMethods = [];

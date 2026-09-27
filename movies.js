@@ -1,7 +1,7 @@
 import { db } from "./firebase-config.js";
 import { collection, onSnapshot, serverTimestamp, doc, updateDoc, writeBatch, addDoc, deleteDoc, query, orderBy, limit } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
 import { escapeHtml } from "./utils.js";
-import { registerListener, registerFirestoreListener } from "./listenerManager.js";
+import { registerFirestoreListener, unregisterFirestoreListener } from "./listenerManager.js";
 import { getDailySummaryRef } from "./dashboard.js";
 
 let moviesUnsubscribe = null;
@@ -129,6 +129,8 @@ function startMoviesListener() {
 document.addEventListener('viewChanged', (e) => {
     if (e.detail.viewId === 'view-movies' || e.detail.viewId === 'view-dashboard') {
         startMoviesListener();
+    } else {
+        unregisterFirestoreListener('movies');
     }
 });
 
