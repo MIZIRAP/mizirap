@@ -3943,7 +3943,7 @@ window.createNewSplitFromPopup = async function() {
 
 // AI Chat Assistant Helpers
 export async function aiCreateNewProgram(name, template, note) {
-    if(!auth.currentUser) throw new Error("Giriþ yapmadýnýz.");
+    if(!auth.currentUser) throw new Error("Giriï¿½ yapmadï¿½nï¿½z.");
     const newSplitId = "split_" + Date.now();
     const newSplit = {
         id: newSplitId,
@@ -3958,14 +3958,14 @@ export async function aiCreateNewProgram(name, template, note) {
 }
 
 export async function aiAddDayToProgram(splitId, dayName) {
-    if(!auth.currentUser) throw new Error("Giriþ yapmadýnýz.");
+    if(!auth.currentUser) throw new Error("Giriï¿½ yapmadï¿½nï¿½z.");
     const splitIndex = splits.findIndex(s => s.id === splitId);
-    if(splitIndex === -1) throw new Error("Program bulunamadý.");
+    if(splitIndex === -1) throw new Error("Program bulunamadï¿½.");
     const split = splits[splitIndex];
     
     const newDay = {
         id: "day_" + Date.now(),
-        name: dayName || `Gün ${split.days.length + 1}`,
+        name: dayName || `Gï¿½n ${split.days.length + 1}`,
         exercises: []
     };
     split.days.push(newDay);
@@ -3978,12 +3978,12 @@ export async function aiAddDayToProgram(splitId, dayName) {
 }
 
 export async function aiAddExerciseToDay(splitId, dayIdx, exerciseName, sets) {
-    if(!auth.currentUser) throw new Error("Giriþ yapmadýnýz.");
+    if(!auth.currentUser) throw new Error("Giriï¿½ yapmadï¿½nï¿½z.");
     const splitIndex = splits.findIndex(s => s.id === splitId);
-    if(splitIndex === -1) throw new Error("Program bulunamadý.");
+    if(splitIndex === -1) throw new Error("Program bulunamadï¿½.");
     const split = splits[splitIndex];
     
-    if(!split.days[dayIdx]) throw new Error("Gün bulunamadý.");
+    if(!split.days[dayIdx]) throw new Error("Gï¿½n bulunamadï¿½.");
     
     split.days[dayIdx].exercises.push({
         id: `e${Date.now()}_${Math.floor(Math.random()*1000)}`,
@@ -3998,18 +3998,18 @@ export async function aiAddExerciseToDay(splitId, dayIdx, exerciseName, sets) {
 }
 
 export async function aiDeleteDay(splitId, dayIdx) {
-    if(!auth.currentUser) throw new Error("Giriþ yapmadýnýz.");
+    if(!auth.currentUser) throw new Error("Giriï¿½ yapmadï¿½nï¿½z.");
     const splitIndex = splits.findIndex(s => s.id === splitId);
-    if(splitIndex === -1) throw new Error("Program bulunamadý.");
+    if(splitIndex === -1) throw new Error("Program bulunamadï¿½.");
     const split = splits[splitIndex];
     
     const day = split.days[dayIdx];
-    if(!day) throw new Error("Gün bulunamadý.");
+    if(!day) throw new Error("Gï¿½n bulunamadï¿½.");
     
     const inProgressLog = (window._miz_last_workout_logs || []).find(l => l.status === "in_progress");
     const currentActiveDayId = inProgressLog ? inProgressLog.dayId : getActiveSessionDayId();
     if (day.id === currentActiveDayId) {
-        throw new Error("Bu gün þu anda aktif antrenmanda kullanýlýyor, silemezsiniz.");
+        throw new Error("Bu gï¿½n ï¿½u anda aktif antrenmanda kullanï¿½lï¿½yor, silemezsiniz.");
     }
     
     split.days.splice(dayIdx, 1);
