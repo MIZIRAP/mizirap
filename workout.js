@@ -3,7 +3,7 @@ import { formatDate, formatCurrency } from "./utils.js";
 import { collection, doc, addDoc, setDoc, getDocs, getDoc, query, orderBy, limit, serverTimestamp, where, onSnapshot, updateDoc, deleteDoc, deleteField, writeBatch } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
 import { escapeHtml, handleFormSubmit } from "./utils.js";
 import { registerListener } from "./listenerManager.js";
-import { openActiveSession, closeActiveSession } from "./activeSession.js";
+import { openActiveSession, closeActiveSession, getActiveSessionDayId } from "./activeSession.js";
 
 let currentUid = null;
 let splits = [];
@@ -20,6 +20,55 @@ let unsubLogs = null;
 let sessionDraftMovements = []; // [{id, name, duration, imageBase64}]
 let editingSessionId = null;
 
+window.showUndoToast = function(message, onUndo, onCommit, durationMs = 5000) {
+    const existing = document.getElementById('undo-toast');
+    if (existing) {
+        if (existing._commitTimer) {
+            clearTimeout(existing._commitTimer);
+            if (existing._onCommit) existing._onCommit();
+        }
+        existing.remove();
+    }
+    
+    const toast = document.createElement('div');
+    toast.id = 'undo-toast';
+    toast.className = 'fixed bottom-24 left-1/2 transform -translate-x-1/2 z-[1000] bg-surface-container-high text-on-surface neo-surface px-5 py-3 rounded-xl flex items-center gap-4 transition-all duration-300 translate-y-10 opacity-0 shadow-lg';
+    toast.innerHTML = `
+        <span class="font-bold text-[13px] whitespace-nowrap">${message}</span>
+        <button class="font-bold text-[13px] text-primary active:scale-95 transition-transform tracking-wide uppercase">Geri Al</button>
+    `;
+    document.body.appendChild(toast);
+    
+    requestAnimationFrame(() => {
+        toast.classList.remove('translate-y-10', 'opacity-0');
+    });
+    
+    let isUndone = false;
+    
+    const btn = toast.querySelector('button');
+    btn.onclick = () => {
+        isUndone = true;
+        clearTimeout(timer);
+        if (onUndo) onUndo();
+        closeToast();
+    };
+    
+    const timer = setTimeout(() => {
+        if (!isUndone && onCommit) {
+            toast._onCommit = null;
+            onCommit();
+        }
+        closeToast();
+    }, durationMs);
+    
+    toast._commitTimer = timer;
+    toast._onCommit = onCommit;
+    
+    function closeToast() {
+        toast.classList.add('translate-y-10', 'opacity-0');
+        setTimeout(() => toast.remove(), 300);
+    }
+};
 
 document.addEventListener('click', (e) => {
     const actionBtn = e.target.closest('[data-action]');
@@ -343,16 +392,31 @@ export function renderSplitView() {
                     );
                     
                     if (isOutside) {
-                        evt.item.remove();
                         const dayId = evt.item.dataset.dayId;
+                        if (dayId === getActiveSessionDayId()) {
+                            alert("Bu gün şu anda aktif antrenmanda kullanılıyor, önce antrenmanı sonlandırmalısınız.");
+                            if (window.renderSplitView) window.renderSplitView();
+                            return;
+                        }
+                        
+                        evt.item.remove();
+                        const backupDays = [...activeSplit.days];
                         activeSplit.days = activeSplit.days.filter(d => d.id !== dayId);
-                        try {
-                            await setDoc(doc(db, "users", currentUid, "splits", activeSplit.id), activeSplit, { merge: true });
+                        
+                        if (window.renderSplitView) window.renderSplitView();
+                        if (window.renderMySplitsView) window.renderMySplitsView();
+                        
+                        window.showUndoToast("Gün silindi", () => {
+                            activeSplit.days = backupDays;
                             if (window.renderSplitView) window.renderSplitView();
                             if (window.renderMySplitsView) window.renderMySplitsView();
-                        } catch (e) {
-                            console.error('Delete error', e);
-                        }
+                        }, async () => {
+                            try {
+                                await setDoc(doc(db, "users", currentUid, "splits", activeSplit.id), activeSplit, { merge: true });
+                            } catch (e) {
+                                console.error('Delete error', e);
+                            }
+                        });
                         return;
                     }
 
@@ -683,16 +747,31 @@ export function renderSplitView() {
                             );
                             
                             if (isOutside) {
-                                evt.item.remove();
                                 const dayId = evt.item.dataset.dayId;
+                                if (dayId === getActiveSessionDayId()) {
+                                    alert("Bu gün şu anda aktif antrenmanda kullanılıyor, önce antrenmanı sonlandırmalısınız.");
+                                    if (window.renderMySplitsView) window.renderMySplitsView();
+                                    return;
+                                }
+                                
+                                evt.item.remove();
+                                const backupDays = [...split.days];
                                 split.days = split.days.filter(d => d.id !== dayId);
-                                try {
-                                    await setDoc(doc(db, "users", currentUid, "splits", split.id), split, { merge: true });
+                                
+                                if (window.renderMySplitsView) window.renderMySplitsView();
+                                if (split.id === activeSplitId && window.renderSplitView) window.renderSplitView();
+                                
+                                window.showUndoToast("Gün silindi", () => {
+                                    split.days = backupDays;
                                     if (window.renderMySplitsView) window.renderMySplitsView();
                                     if (split.id === activeSplitId && window.renderSplitView) window.renderSplitView();
-                                } catch (e) {
-                                    console.error('Delete error', e);
-                                }
+                                }, async () => {
+                                    try {
+                                        await setDoc(doc(db, "users", currentUid, "splits", split.id), split, { merge: true });
+                                    } catch (e) {
+                                        console.error('Delete error', e);
+                                    }
+                                });
                                 return;
                             }
                             

@@ -1048,3 +1048,5 @@ function completeSet(exId, setIdx) {
         }
     }
 }
+
+export function getActiveSessionDayId() { return _dayId; }
