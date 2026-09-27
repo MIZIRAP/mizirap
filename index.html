@@ -110,8 +110,7 @@
          * Fallback: overflow-x: hidden for very old browsers (Safari < 16).
          */
         #app-container {
-            overflow-x: hidden; /* fallback */
-            overflow-x: clip;   /* Safari 16+: doesn't break sticky */
+            /* Handled by body overflow-x: hidden */
         }
 
         /*
@@ -5854,6 +5853,9 @@
                 </button>
             </div>
         </div>
+
+    </div> <!-- END OF APP SCREEN -->
+</div> <!-- END OF APP CONTAINER -->
 
     <!-- Global Scroll Lock Fix for Modals -->
     <style>
