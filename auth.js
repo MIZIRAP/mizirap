@@ -110,17 +110,26 @@ export function setupAuthUI() {
             const content = document.getElementById("forgot-password-modal-content");
             if(content) {
                 content.classList.remove("opacity-0", "scale-95");
-                content.classList.add("opacity-100", "scale-100");
+                content.style.opacity = "1";
+                content.style.transform = "scale(1)";
             }
         });
 
         const closeForgotModal = () => {
             const content = document.getElementById("forgot-password-modal-content");
             if(content) {
-                content.classList.remove("opacity-100", "scale-100");
-                content.classList.add("opacity-0", "scale-95");
+                content.style.opacity = "0";
+                content.style.transform = "scale(0.95)";
             }
-            setTimeout(() => forgotModal.classList.add("hidden"), 200);
+            setTimeout(() => {
+                forgotModal.classList.add("hidden");
+                // Reset styles so it can be opened again cleanly
+                if(content) {
+                    content.style.opacity = "";
+                    content.style.transform = "";
+                    content.classList.add("opacity-0", "scale-95");
+                }
+            }, 200);
         };
 
         if (forgotCancel) forgotCancel.addEventListener("click", closeForgotModal);
