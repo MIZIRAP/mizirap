@@ -36,6 +36,8 @@ onAuthStateChanged(auth, async (user) => {
             authScreen.classList.add("hidden");
             authScreen.classList.remove("flex");
             appScreen.classList.remove("hidden");
+            const bottomNav = document.getElementById("main-bottom-navbar");
+            if (bottomNav) bottomNav.classList.remove("hidden");
             // iOS Safari: scroll to top and force header repaint after auth
             requestAnimationFrame(() => {
                 window.scrollTo(0, 0);
@@ -88,6 +90,9 @@ onAuthStateChanged(auth, async (user) => {
         appScreen.classList.add("hidden");
         document.getElementById("verification-screen").classList.add("hidden");
         document.getElementById("verification-screen").classList.remove("flex");
+        
+        const bottomNav = document.getElementById("main-bottom-navbar");
+        if (bottomNav) bottomNav.classList.add("hidden");
         
         window.scrollTo(0, 0);
         const appContainer = document.getElementById('app-container');
