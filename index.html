@@ -341,7 +341,7 @@
 <body class="bg-[#F0F2F8] text-on-background font-body-lg antialiased min-h-[100dvh] flex justify-center">
 
 <!-- Tırnak içi mobil görünüm (Masaüstünde ortalanmış) -->
-<div id="app-container" class="w-full max-w-[420px] bg-[#F0F2F8] h-[100dvh] relative shadow-2xl overflow-x-hidden overflow-y-auto">
+<div id="app-container" class="w-full max-w-[420px] bg-[#F0F2F8] h-[100dvh] relative shadow-2xl overflow-x-hidden overflow-y-auto pb-[88px]">
 
 <!-- GİRİŞ / KAYIT EKRANI -->
 <div id="auth-screen" class="hidden min-h-[100dvh] items-center justify-center bg-surface-container-low p-6 z-50 relative">
@@ -5882,7 +5882,7 @@
 
     <!-- AI Chat Button -->
     <!-- Main Floating Bottom Navbar -->
-    <div id="main-bottom-navbar" class="fixed flex items-center bg-[#F0F2F8] px-2" style="bottom: max(env(safe-area-inset-bottom), 16px); left: 50%; transform: translateX(-50%); width: 90%; max-width: 380px; height: 72px; border-radius: 36px; z-index: 70; box-shadow: 6px 6px 12px #D1D9E6, -6px -6px 12px #FFFFFF;">
+    <div id="main-bottom-navbar" class="fixed flex items-center bg-[#F0F2F8] px-2" style="bottom: 0; left: 0; right: 0; padding-bottom: env(safe-area-inset-bottom, 0px); height: calc(72px + env(safe-area-inset-bottom, 0px)); z-index: 70; box-shadow: 0 -4px 20px rgba(0,0,0,0.06);">
         
         <!-- Left Side: 4 Nav Items -->
         <div class="flex-1 flex justify-between items-center px-3 h-full">
