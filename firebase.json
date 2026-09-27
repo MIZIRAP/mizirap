@@ -13,6 +13,9 @@
       "input.css",
       ".firebaserc"
     ],
+    "predeploy": [
+      ".\\build-css.bat"
+    ],
     "rewrites": [
       {
         "source": "**",
