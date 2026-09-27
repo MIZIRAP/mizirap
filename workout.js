@@ -219,7 +219,7 @@ export function renderSplitView() {
 
     // --- Edit Split Card Updating ---
     if(editTitleEl) editTitleEl.innerText = activeSplit.name;
-    if(editDescEl) editDescEl.innerText = "Özel Antrenman Şablonu";
+    if(editDescEl) editDescEl.innerText = activeSplit.note || "Özel Antrenman Şablonu";
     
     const activeSplitEditBtn = document.getElementById('active-split-edit-btn');
     if (activeSplitEditBtn) {
@@ -453,7 +453,7 @@ export function renderSplitView() {
                             <!-- Title & Subtitle -->
                             <div>
                                 <h3 class="text-lg font-bold text-[#1E293B] mb-0.5 leading-tight">${split.name}</h3>
-                                <p class="text-[11px] font-medium text-[#64748B]">Özel Antrenman Şablonu</p>
+                                <p class="text-[11px] font-medium text-[#64748B]">${split.note || "Özel Antrenman Şablonu"}</p>
                             </div>
 
                             <!-- Stats (Days & Exercises) -->
