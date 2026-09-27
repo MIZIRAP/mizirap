@@ -7,6 +7,9 @@ import { initProfile, clearProfile } from "./profile.js";
 import { initHistory, clearHistory } from "./history.js";
 import { clearAllListeners, clearAllFirestoreListeners } from "./listenerManager.js";
 import { clearSharedState } from "./sharedState.js";
+import { initWorkout, renderSplitView } from "./workout.js";
+import "./activeSession.js";
+import { initAiChat } from "./ai-chat.js";
 // ---------- DOM referansları ----------
 const authScreen = document.getElementById("auth-screen");
 const appScreen = document.getElementById("app-screen");
@@ -56,9 +59,6 @@ onAuthStateChanged(auth, async (user) => {
                 clearSharedState();
             }
             localStorage.setItem('uid', user.uid);
-
-            // Gecikmeli yükle (sayfa render'ını bloklamasın)
-            import("./activeSession.js").catch(console.error);
 
             // Eğer isimsiz (anonim) girişse test kullanıcısı yaz, yoksa normal adı al
             const name = user.isAnonymous ? "Test Kullanıcısı" : (user.displayName || (user.email ? user.email.split('@')[0] : "Kullanıcı"));
@@ -191,20 +191,6 @@ window.showView = async function(viewId) {
                     initTools(uid);
                     break;
                 }
-                case 'view-workout': {
-                    const { initWorkout, renderSplitView } = await import('./workout.js');
-                    initWorkout();
-                    window._renderSplitView = renderSplitView;
-                    if (document.querySelector('.view:not(.hidden)')?.id === 'view-workout') {
-                        renderSplitView();
-                    }
-                    break;
-                }
-                case 'view-ai-chat': {
-                    const { initAiChat } = await import('./ai-chat.js');
-                    initAiChat();
-                    break;
-                }
             }
             loadedModules[viewId] = true;
         } catch (err) {
@@ -240,7 +226,7 @@ window.showView = async function(viewId) {
         window.scrollTo(0,0);
         
         if (viewId === 'view-workout') {
-            if (window._renderSplitView) window._renderSplitView();
+            renderSplitView();
         }
 
         // iOS Safari: force a repaint on the active view's header to ensure
