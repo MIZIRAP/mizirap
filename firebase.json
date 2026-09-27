@@ -42,7 +42,16 @@
         ]
       },
       {
-        "source": "**/*.@(js|css|html)",
+        "source": "**/*.@(js|css)",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "max-age=2592000"
+          }
+        ]
+      },
+      {
+        "source": "**/*.html",
         "headers": [
           {
             "key": "Cache-Control",
