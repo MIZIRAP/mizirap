@@ -309,7 +309,7 @@ export function renderSplitView() {
                         
                         if (isOutside) {
                             minimalTrash.style.left = x + 'px';
-                            minimalTrash.style.top = (y - 30) + 'px';
+                            minimalTrash.style.top = (y + 50) + 'px';
                             minimalTrash.style.opacity = '1';
                         } else {
                             minimalTrash.style.opacity = '0';
@@ -646,7 +646,7 @@ export function renderSplitView() {
                                 
                                 if (isOutside) {
                                     minimalTrash.style.left = x + 'px';
-                                    minimalTrash.style.top = (y - 30) + 'px';
+                                    minimalTrash.style.top = (y + 50) + 'px';
                                     minimalTrash.style.opacity = '1';
                                 } else {
                                     minimalTrash.style.opacity = '0';
