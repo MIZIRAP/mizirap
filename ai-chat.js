@@ -163,77 +163,66 @@ async function buildAiContext() {
         return _cachedContext;
     }
 
-    let context = systemInstruction + "\n\nEk Bağlam:\n";
+    let ctx = "CTX:\n";
     try {
-
         const todayStart = new Date();
         todayStart.setHours(0,0,0,0);
         const logsQ = query(collection(db, "users", currentUid, "calorieLogs"), where("createdAt", ">=", todayStart));
         const logsSnap = await getDocs(logsQ);
         
-        let totalProtein = 0, totalCarb = 0, totalFat = 0;
-        let foodList = [];
+        let p = 0, c = 0, f = 0;
+        let foods = [];
         
         logsSnap.forEach(docSnap => {
             const data = docSnap.data();
             if (data.type === 'Food' || !data.type) {
-                totalProtein += Number(data.protein || 0);
-                totalCarb += Number(data.karb || data.carbs || 0);
-                totalFat += Number(data.yag || data.fat || 0);
-                if (data.name) foodList.push(data.name);
+                p += Number(data.protein || 0);
+                c += Number(data.karb || data.carbs || 0);
+                f += Number(data.yag || data.fat || 0);
+                if (data.name) foods.push(data.name);
             }
         });
 
         const summarySnap = await getDoc(getDailySummaryRef(currentUid));
         if (summarySnap.exists()) {
             const sum = summarySnap.data();
-            const consumedCal = sum.caloriesConsumed || sum.consumedCalories || 0;
-            const waterMl = sum.waterAmount || 0;
-            context += `- Bugünkü Tüketim: Kalori: ${consumedCal} kcal | Su: ${waterMl} ml | Protein: ${Math.round(totalProtein)}g | Karp: ${Math.round(totalCarb)}g | Yağ: ${Math.round(totalFat)}g\n`;
-            if (foodList.length > 0) {
-                context += `- Bugün Yenilenler: [${foodList.join(', ')}]\n`;
-            }
-            if (sum.burnedCalories) context += `- Yakılan: ${sum.burnedCalories} kcal\n`;
+            const cal = sum.caloriesConsumed || sum.consumedCalories || 0;
+            const w = sum.waterAmount || 0;
+            ctx += `Today: ${cal}kcal, ${w}ml, P:${Math.round(p)}g C:${Math.round(c)}g F:${Math.round(f)}g\n`;
+            if (foods.length > 0) ctx += `Food: [${foods.join(',')}]\n`;
         }
 
         const catSnap = await getDocs(collection(db, "users", currentUid, "finance_categories"));
         if (!catSnap.empty) {
-            const catNames = catSnap.docs.map(d => `'${d.data().name}' (ID: ${d.id})`);
-            context += `- Mevcut Finans Kategorileri: ${catNames.join(', ')}\n`;
-        } else {
-            context += `- Mevcut Finans Kategorileri: Yok\n`;
+            const catNames = catSnap.docs.map(d => `${d.data().name}(${d.id})`);
+            ctx += `FinCat: ${catNames.join(',')}\n`;
         }
 
         const pmSnap = await getDocs(collection(db, "users", currentUid, "finance_payment_methods"));
         if (!pmSnap.empty) {
-            const pmNames = pmSnap.docs.map(d => `'${d.data().name}' (ID: ${d.id})`);
-            context += `- Mevcut Ödeme Yöntemleri: ${pmNames.join(', ')}\n`;
-        } else {
-            context += `- Mevcut Ödeme Yöntemleri: Yok\n`;
+            const pmNames = pmSnap.docs.map(d => `${d.data().name}(${d.id})`);
+            ctx += `FinPM: ${pmNames.join(',')}\n`;
         }
 
-        const booksSnap = await getDocs(collection(db, "users", currentUid, "books"));
+        const booksQ = query(collection(db, "users", currentUid, "books"), where("status", "==", "reading"));
+        const booksSnap = await getDocs(booksQ);
         if (!booksSnap.empty) {
             const activeBooks = [];
             booksSnap.forEach(d => {
                 const b = d.data();
-                if (b.status === 'reading') {
-                    activeBooks.push(`'${b.title}' (${b.readPages || 0}/${b.totalPages || '?'} sayfa)`);
-                }
+                activeBooks.push(`${b.title}(${b.readPages || 0}/${b.totalPages || '?'})`);
             });
             if (activeBooks.length > 0) {
-                context += `- Okunan Kitaplar: ${activeBooks.join(', ')}\n`;
-            } else {
-                context += `- Okunan Kitaplar: Yok\n`;
+                ctx += `Books: ${activeBooks.join(',')}\n`;
             }
         }
     } catch(err) {
         console.error("Context build error:", err);
     }
 
-    _cachedContext = context;
+    _cachedContext = systemInstruction + "\n\n" + ctx;
     _cachedContextAt = now;
-    return context;
+    return _cachedContext;
 }
 
 // Tool Declarations
