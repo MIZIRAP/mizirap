@@ -101,7 +101,28 @@
             /* NO padding-top — sticky headers self-position via 'top' above */
         }
 
+        /*
+         * iOS/WebKit backdrop-blur render fix:
+         * backdrop-filter fails to render on first paint in iOS Safari.
+         * Forcing GPU compositing layer (translateZ) fixes the issue.
+         * -webkit-backdrop-filter prefix is required for Safari < 18.
+         */
+        [class*="backdrop-blur"] {
+            -webkit-backdrop-filter: var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia);
+            transform: translateZ(0);
+            will-change: transform;
+        }
+
+        /* Sticky & fixed headers: GPU layer for smooth blur/scroll compositing */
+        header.sticky, header[class*="sticky"],
+        .glass-nav {
+            -webkit-transform: translateZ(0);
+            transform: translateZ(0);
+            will-change: transform;
+        }
+
         .view.hidden { display: none !important; }
+
 
         /* Number input up/down oklarını gizle */
         input[type="number"]::-webkit-inner-spin-button,

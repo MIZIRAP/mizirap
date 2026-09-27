@@ -37,7 +37,15 @@ onAuthStateChanged(auth, async (user) => {
             authScreen.classList.remove("flex");
             appScreen.classList.remove("hidden");
             // iOS Safari'de 100dvh hesabını auth callback sonrası yeniden tetikle
-            requestAnimationFrame(() => { window.scrollTo(0, 0); });
+            requestAnimationFrame(() => {
+                window.scrollTo(0, 0);
+                // iOS WebKit: force GPU compositing for all backdrop-filter elements on first load
+                const blurEls = document.querySelectorAll('[class*="backdrop-blur"]');
+                blurEls.forEach(el => {
+                    el.style.opacity = '0.9999';
+                    requestAnimationFrame(() => { el.style.opacity = ''; });
+                });
+            });
             
             if (user.uid !== localStorage.getItem('uid')) {
                 clearProfile();
@@ -210,6 +218,22 @@ window.showView = async function(viewId) {
         if (viewId === 'view-workout') {
             renderSplitView();
         }
+
+        // iOS WebKit: backdrop-filter fails to render on first paint.
+        // Force GPU repaint by toggling opacity through two animation frames.
+        requestAnimationFrame(() => {
+            const blurEls = document.querySelectorAll('[class*="backdrop-blur"]');
+            blurEls.forEach(el => {
+                el.style.opacity = '0.9999';
+                requestAnimationFrame(() => { el.style.opacity = ''; });
+            });
+            // Also repaint the active view header to fix blur on sticky headers
+            const activeHeader = target ? target.querySelector('header') : null;
+            if (activeHeader) {
+                activeHeader.style.transform = 'translateZ(0)';
+                requestAnimationFrame(() => { activeHeader.style.transform = ''; });
+            }
+        });
 
         document.dispatchEvent(new CustomEvent('viewChanged', { detail: { viewId: viewId } }));
     } else {
