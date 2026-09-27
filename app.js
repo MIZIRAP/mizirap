@@ -36,15 +36,15 @@ onAuthStateChanged(auth, async (user) => {
             authScreen.classList.add("hidden");
             authScreen.classList.remove("flex");
             appScreen.classList.remove("hidden");
-            // iOS Safari'de 100dvh hesabını auth callback sonrası yeniden tetikle
+            // iOS Safari: scroll to top and force header repaint after auth
             requestAnimationFrame(() => {
                 window.scrollTo(0, 0);
-                // iOS WebKit: force GPU compositing for all backdrop-filter elements on first load
-                const blurEls = document.querySelectorAll('[class*="backdrop-blur"]');
-                blurEls.forEach(el => {
-                    el.style.opacity = '0.9999';
-                    requestAnimationFrame(() => { el.style.opacity = ''; });
-                });
+                // Force sticky header GPU layer activation on first render
+                const firstHeader = document.querySelector('#app-screen .view:not(.hidden) header');
+                if (firstHeader) {
+                    firstHeader.style.transform = 'translate3d(0,0,0.001px)';
+                    requestAnimationFrame(() => { firstHeader.style.transform = ''; });
+                }
             });
             
             if (user.uid !== localStorage.getItem('uid')) {
@@ -219,21 +219,15 @@ window.showView = async function(viewId) {
             renderSplitView();
         }
 
-        // iOS WebKit: backdrop-filter fails to render on first paint.
-        // Force GPU repaint by toggling opacity through two animation frames.
-        requestAnimationFrame(() => {
-            const blurEls = document.querySelectorAll('[class*="backdrop-blur"]');
-            blurEls.forEach(el => {
-                el.style.opacity = '0.9999';
-                requestAnimationFrame(() => { el.style.opacity = ''; });
-            });
-            // Also repaint the active view header to fix blur on sticky headers
-            const activeHeader = target ? target.querySelector('header') : null;
-            if (activeHeader) {
-                activeHeader.style.transform = 'translateZ(0)';
+        // iOS Safari: force a repaint on the active view's header to ensure
+        // sticky positioning + GPU compositing activates on first render.
+        const activeHeader = target ? target.querySelector('header') : null;
+        if (activeHeader) {
+            requestAnimationFrame(() => {
+                activeHeader.style.transform = 'translate3d(0,0,0.001px)';
                 requestAnimationFrame(() => { activeHeader.style.transform = ''; });
-            }
-        });
+            });
+        }
 
         document.dispatchEvent(new CustomEvent('viewChanged', { detail: { viewId: viewId } }));
     } else {

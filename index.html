@@ -102,23 +102,35 @@
         }
 
         /*
-         * iOS/WebKit backdrop-blur render fix:
-         * backdrop-filter fails to render on first paint in iOS Safari.
-         * Forcing GPU compositing layer (translateZ) fixes the issue.
-         * -webkit-backdrop-filter prefix is required for Safari < 18.
+         * Safari sticky fix:
+         * overflow-x: hidden on a scroll container breaks position: sticky in Safari.
+         * overflow-x: clip clips content WITHOUT creating a new scroll container,
+         * so sticky headers continue to work.
+         * Fallback: overflow-x: hidden for very old browsers (Safari < 16).
          */
-        [class*="backdrop-blur"] {
-            -webkit-backdrop-filter: var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia);
-            transform: translateZ(0);
-            will-change: transform;
+        #app-container {
+            overflow-x: hidden; /* fallback */
+            overflow-x: clip;   /* Safari 16+: doesn't break sticky */
         }
 
-        /* Sticky & fixed headers: GPU layer for smooth blur/scroll compositing */
-        header.sticky, header[class*="sticky"],
-        .glass-nav {
-            -webkit-transform: translateZ(0);
-            transform: translateZ(0);
-            will-change: transform;
+        /*
+         * iOS/WebKit backdrop-filter fix:
+         * Only add -webkit- prefix (Tailwind already does this).
+         * Do NOT add transform/will-change here — it overrides Tailwind's
+         * translate-y transforms on modal slide animations.
+         * GPU promotion for backdrop-filter is done separately below.
+         */
+        @supports (-webkit-backdrop-filter: blur(1px)) {
+            [class*="backdrop-blur"] {
+                /* Promote to own compositing layer WITHOUT overriding transform */
+                will-change: backdrop-filter;
+            }
+        }
+
+        /* Sticky headers: promote to GPU layer for smooth compositing */
+        header, .glass-nav {
+            -webkit-transform: translate3d(0,0,0);
+            transform: translate3d(0,0,0);
         }
 
         .view.hidden { display: none !important; }
@@ -362,7 +374,7 @@
 <body class="bg-[#F0F2F8] text-on-background font-body-lg antialiased min-h-[100dvh] flex justify-center">
 
 <!-- Tırnak içi mobil görünüm (Masaüstünde ortalanmış) -->
-<div id="app-container" class="w-full max-w-[420px] bg-[#F0F2F8] h-[100dvh] relative shadow-2xl overflow-x-hidden overflow-y-auto pb-[88px]">
+<div id="app-container" class="w-full max-w-[420px] bg-[#F0F2F8] h-[100dvh] relative shadow-2xl overflow-y-auto pb-[88px]">
 
 <!-- GİRİŞ / KAYIT EKRANI -->
 <div id="auth-screen" class="hidden min-h-[100dvh] items-center justify-center bg-surface-container-low p-6 z-50 relative">
