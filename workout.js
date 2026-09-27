@@ -425,10 +425,9 @@ export function renderSplitView() {
                             
                             <!-- Top Header (Badge & Actions) -->
                             <div class="flex items-center justify-between">
-                                <!-- Badge -->
-                                <div class="flex items-center gap-1.5 bg-[#F1F5F9] text-[#64748B] px-2.5 py-1 rounded-full shadow-sm">
-                                    <div class="w-1.5 h-1.5 rounded-full bg-[#94A3B8] opacity-80"></div>
-                                    <span class="text-[9px] font-bold tracking-wider">pasif</span>
+                                <!-- Status Icon -->
+                                <div class="w-8 h-8 flex items-center justify-center rounded-xl bg-[#F0F2F8] text-[#94A3B8]" style="box-shadow: 3px 3px 6px #D1D9E6, -3px -3px 6px rgba(255, 255, 255, 0.7);" title="Pasif Program">
+                                    <span class="material-symbols-rounded text-[16px]">radio_button_unchecked</span>
                                 </div>
                                 <!-- Actions -->
                                 <div class="flex items-center gap-2">

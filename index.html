@@ -993,14 +993,13 @@
                             
                             <!-- Top Header (Badge & Actions) -->
                             <div class="flex items-center justify-between">
-                                <!-- Badge -->
-                                <div class="flex items-center gap-1.5 bg-[#E1F5E8] text-[#10B981] px-3 py-1.5 rounded-full shadow-sm">
-                                    <div class="w-2 h-2 rounded-full bg-[#10B981] opacity-80"></div>
-                                    <span class="text-[10px] font-bold uppercase tracking-wider">AKTİF PROGRAM</span>
+                                <!-- Status Icon -->
+                                <div class="w-9 h-9 flex items-center justify-center rounded-2xl bg-[#F0F2F8] text-[#10B981]" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);" title="Aktif Program">
+                                    <span class="material-symbols-rounded text-[18px]" style="font-variation-settings: 'FILL' 1;">check_circle</span>
                                 </div>
                                 <!-- Actions -->
                                 <div class="flex items-center gap-3">
-                                    <button class="w-9 h-9 flex items-center justify-center rounded-2xl bg-[#F0F2F8] active:scale-95 transition-transform text-[#64748B] hover:text-[#1E293B]" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);">
+                                    <button onclick="if(window.openEditSplitView && window.activeSplitId) window.openEditSplitView(window.activeSplitId)" class="w-9 h-9 flex items-center justify-center rounded-2xl bg-[#F0F2F8] active:scale-95 transition-transform text-[#64748B] hover:text-[#1E293B]" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);">
                                         <span class="material-symbols-rounded text-[15px]">edit</span>
                                     </button>
                                     <button class="w-9 h-9 flex items-center justify-center rounded-2xl bg-[#F0F2F8] active:scale-95 transition-transform text-[#64748B] hover:text-[#1E293B]" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255, 255, 255, 0.7);">
