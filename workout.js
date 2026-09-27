@@ -279,17 +279,26 @@ export function renderSplitView() {
                 animation: 150,
                 delay: 200,
                 delayOnTouchOnly: true,
-                forceFallback: true,
-                fallbackClass: 'sortable-fallback-drag',
                 onStart: function(evt) {
                     const rect = sortableDiv.getBoundingClientRect();
                     const margin = 50;
-                    const originalHTML = evt.item.innerHTML;
+                    
+                    let minimalTrash = document.getElementById('drag-minimal-trash');
+                    if (!minimalTrash) {
+                        minimalTrash = document.createElement('div');
+                        minimalTrash.id = 'drag-minimal-trash';
+                        minimalTrash.className = 'fixed pointer-events-none z-[9999] opacity-0 transition-opacity duration-150 flex items-center justify-center bg-white rounded-full w-10 h-10 shadow-lg';
+                        minimalTrash.innerHTML = '<span class="material-symbols-rounded text-[#EF4444] text-xl">delete</span>';
+                        minimalTrash.style.transform = 'translate(-50%, -50%)';
+                        document.body.appendChild(minimalTrash);
+                    }
                     
                     activeDragMoveHandler = function(e) {
+                        if (e.type === 'dragover') e.preventDefault();
+                        
                         const touch = e.changedTouches ? e.changedTouches[0] : e;
-                        const x = touch.clientX;
-                        const y = touch.clientY;
+                        const x = touch.clientX || (e.clientX || 0);
+                        const y = touch.clientY || (e.clientY || 0);
                         
                         const isOutside = (
                             x < rect.left - margin || 
@@ -298,34 +307,26 @@ export function renderSplitView() {
                             y > rect.bottom + margin
                         );
                         
-                        const fallback = document.querySelector('.sortable-fallback-drag');
-                        if (fallback) {
-                            if (isOutside) {
-                                if (!fallback.dataset.isTrash) {
-                                    fallback.dataset.isTrash = 'true';
-                                    fallback.innerHTML = '<div class="flex items-center justify-center bg-[#EF4444] rounded-full w-12 h-12 shadow-lg text-white" style="transform: translate(-50%, -50%);"><span class="material-symbols-rounded text-2xl">delete</span></div>';
-                                    fallback.style.background = 'transparent';
-                                    fallback.style.boxShadow = 'none';
-                                }
-                            } else {
-                                if (fallback.dataset.isTrash) {
-                                    delete fallback.dataset.isTrash;
-                                    fallback.innerHTML = originalHTML;
-                                    fallback.style.background = '';
-                                    fallback.style.boxShadow = '';
-                                }
-                            }
+                        if (isOutside) {
+                            minimalTrash.style.left = x + 'px';
+                            minimalTrash.style.top = (y - 30) + 'px';
+                            minimalTrash.style.opacity = '1';
+                        } else {
+                            minimalTrash.style.opacity = '0';
                         }
                     };
-                    document.addEventListener('mousemove', activeDragMoveHandler);
+                    document.addEventListener('dragover', activeDragMoveHandler);
                     document.addEventListener('touchmove', activeDragMoveHandler);
                 },
                 onEnd: async function (evt) {
                     if (activeDragMoveHandler) {
-                        document.removeEventListener('mousemove', activeDragMoveHandler);
+                        document.removeEventListener('dragover', activeDragMoveHandler);
                         document.removeEventListener('touchmove', activeDragMoveHandler);
                         activeDragMoveHandler = null;
                     }
+                    const minimalTrash = document.getElementById('drag-minimal-trash');
+                    if (minimalTrash) minimalTrash.style.opacity = '0';
+                    
                     
                     const touch = evt.originalEvent.changedTouches ? evt.originalEvent.changedTouches[0] : evt.originalEvent;
                     const x = touch.clientX;
@@ -615,17 +616,26 @@ export function renderSplitView() {
                         animation: 150,
                         delay: 200,
                         delayOnTouchOnly: true,
-                        forceFallback: true,
-                        fallbackClass: 'sortable-fallback-drag',
                         onStart: function(evt) {
                             const rect = container.getBoundingClientRect();
                             const margin = 50;
-                            const originalHTML = evt.item.innerHTML;
+                            
+                            let minimalTrash = document.getElementById('drag-minimal-trash');
+                            if (!minimalTrash) {
+                                minimalTrash = document.createElement('div');
+                                minimalTrash.id = 'drag-minimal-trash';
+                                minimalTrash.className = 'fixed pointer-events-none z-[9999] opacity-0 transition-opacity duration-150 flex items-center justify-center bg-white rounded-full w-10 h-10 shadow-lg';
+                                minimalTrash.innerHTML = '<span class="material-symbols-rounded text-[#EF4444] text-xl">delete</span>';
+                                minimalTrash.style.transform = 'translate(-50%, -50%)';
+                                document.body.appendChild(minimalTrash);
+                            }
                             
                             otherDragMoveHandler = function(e) {
+                                if (e.type === 'dragover') e.preventDefault();
+                                
                                 const touch = e.changedTouches ? e.changedTouches[0] : e;
-                                const x = touch.clientX;
-                                const y = touch.clientY;
+                                const x = touch.clientX || (e.clientX || 0);
+                                const y = touch.clientY || (e.clientY || 0);
                                 
                                 const isOutside = (
                                     x < rect.left - margin || 
@@ -634,34 +644,25 @@ export function renderSplitView() {
                                     y > rect.bottom + margin
                                 );
                                 
-                                const fallback = document.querySelector('.sortable-fallback-drag');
-                                if (fallback) {
-                                    if (isOutside) {
-                                        if (!fallback.dataset.isTrash) {
-                                            fallback.dataset.isTrash = 'true';
-                                            fallback.innerHTML = '<div class="flex items-center justify-center bg-[#EF4444] rounded-full w-12 h-12 shadow-lg text-white" style="transform: translate(-50%, -50%);"><span class="material-symbols-rounded text-2xl">delete</span></div>';
-                                            fallback.style.background = 'transparent';
-                                            fallback.style.boxShadow = 'none';
-                                        }
-                                    } else {
-                                        if (fallback.dataset.isTrash) {
-                                            delete fallback.dataset.isTrash;
-                                            fallback.innerHTML = originalHTML;
-                                            fallback.style.background = '';
-                                            fallback.style.boxShadow = '';
-                                        }
-                                    }
+                                if (isOutside) {
+                                    minimalTrash.style.left = x + 'px';
+                                    minimalTrash.style.top = (y - 30) + 'px';
+                                    minimalTrash.style.opacity = '1';
+                                } else {
+                                    minimalTrash.style.opacity = '0';
                                 }
                             };
-                            document.addEventListener('mousemove', otherDragMoveHandler);
+                            document.addEventListener('dragover', otherDragMoveHandler);
                             document.addEventListener('touchmove', otherDragMoveHandler);
                         },
                         onEnd: async function (evt) {
                             if (otherDragMoveHandler) {
-                                document.removeEventListener('mousemove', otherDragMoveHandler);
+                                document.removeEventListener('dragover', otherDragMoveHandler);
                                 document.removeEventListener('touchmove', otherDragMoveHandler);
                                 otherDragMoveHandler = null;
                             }
+                            const minimalTrash = document.getElementById('drag-minimal-trash');
+                            if (minimalTrash) minimalTrash.style.opacity = '0';
                             
                             const splitId = container.dataset.splitId;
                             const split = splits.find(s => s.id === splitId);
