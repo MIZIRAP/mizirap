@@ -4,8 +4,8 @@ import { collection, doc, addDoc, setDoc, updateDoc, deleteDoc, getDocs, getDoc,
 import { registerFirestoreListener, unregisterFirestoreListener } from "./listenerManager.js";
 import { setSharedState } from "./sharedState.js";
 import { getDailySummaryRef } from "./dashboard.js";
-import { COLLECTAPI_KEY } from "./api-config.js";
 
+let cachedCollectApiKey = null;
 let currentUid = null;
 
 let financeCategories = [];
@@ -1297,10 +1297,24 @@ async function fetchMetalPrices() {
         }
 
         // 2. Cache expired or missing — fetch from CollectAPI
+        if (!cachedCollectApiKey) {
+            try {
+                const keySnap = await getDoc(doc(db, 'app_config', 'keys'));
+                if (keySnap.exists() && keySnap.data().collectApiKey) {
+                    cachedCollectApiKey = keySnap.data().collectApiKey;
+                } else {
+                    throw new Error('CollectAPI key not found in app_config');
+                }
+            } catch (e) {
+                console.error("Failed to fetch CollectAPI key:", e);
+                return;
+            }
+        }
+
         const response = await fetch('https://api.collectapi.com/economy/goldPrice', {
             method: 'GET',
             headers: {
-                'authorization': 'apikey ' + COLLECTAPI_KEY,
+                'authorization': 'apikey ' + cachedCollectApiKey,
                 'content-type': 'application/json'
             }
         });
