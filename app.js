@@ -79,11 +79,6 @@ onAuthStateChanged(auth, async (user) => {
                 initAiChat(user.uid);
             }, 50);
 
-            // Bütün modüller sıraya konduktan sonra loading ekranını kaldır
-            setTimeout(() => {
-                const globalLoader = document.getElementById("global-loader");
-                if (globalLoader) globalLoader.classList.add("hidden");
-            }, 60);
 
         } catch (err) {
             console.error("Login transition error:", err);
@@ -107,8 +102,6 @@ onAuthStateChanged(auth, async (user) => {
         const bottomNav = document.getElementById("main-bottom-navbar");
         if (bottomNav) bottomNav.classList.add("hidden");
         
-        const globalLoader = document.getElementById("global-loader");
-        if (globalLoader) globalLoader.classList.add("hidden");
 
         window.scrollTo(0, 0);
         const appContainer = document.getElementById('app-container');
