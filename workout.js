@@ -221,6 +221,13 @@ export function renderSplitView() {
     if(editTitleEl) editTitleEl.innerText = activeSplit.name;
     if(editDescEl) editDescEl.innerText = "Özel Antrenman Şablonu";
     
+    const activeSplitEditBtn = document.getElementById('active-split-edit-btn');
+    if (activeSplitEditBtn) {
+        activeSplitEditBtn.onclick = () => {
+            if (window.openEditSplitView) window.openEditSplitView(activeSplit.id);
+        };
+    }
+    
     if(editDaysCountEl && activeSplit.days) {
         editDaysCountEl.innerText = activeSplit.days.length + " Gün";
         let totalEx = 0;
