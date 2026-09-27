@@ -4027,28 +4027,33 @@ export function aiGetSplits() {
 }
 
 export function aiGetUserWorkoutContext() {
-    const logs = window._miz_last_workout_logs || [];
-    const exerciseCounts = {};
-    logs.forEach(log => {
-        if(log.exercises) {
-            log.exercises.forEach(ex => {
-                if(ex.name) {
-                    const n = ex.name.trim();
-                    exerciseCounts[n] = (exerciseCounts[n] || 0) + 1;
-                }
-            });
-        }
-    });
-    const frequentExercises = Object.entries(exerciseCounts)
-        .sort((a, b) => b[1] - a[1])
-        .slice(0, 20)
-        .map(e => e[0]);
-    
-    return {
-        existing_programs: splits.map(s => ({ name: s.name, days: s.days.map(d => d.name) })),
-        frequent_exercises: frequentExercises,
-        recent_logs_count: logs.length
-    };
+    try {
+        const logs = window._miz_last_workout_logs || [];
+        const exerciseCounts = {};
+        logs.forEach(log => {
+            if(log.exercises && Array.isArray(log.exercises)) {
+                log.exercises.forEach(ex => {
+                    if(ex && ex.name) {
+                        const n = ex.name.trim();
+                        exerciseCounts[n] = (exerciseCounts[n] || 0) + 1;
+                    }
+                });
+            }
+        });
+        const frequentExercises = Object.entries(exerciseCounts)
+            .sort((a, b) => b[1] - a[1])
+            .slice(0, 20)
+            .map(e => e[0]);
+        
+        return {
+            existing_programs: splits.map(s => ({ name: s.name, days: s.days.map(d => d.name) })),
+            frequent_exercises: frequentExercises,
+            recent_logs_count: logs.length
+        };
+    } catch (err) {
+        console.error("aiGetUserWorkoutContext error:", err);
+        return { error: "Could not retrieve context", existing_programs: [], frequent_exercises: [] };
+    }
 }
 
 export async function aiRemoveExerciseFromDay(splitId, dayIdx, exerciseName) {
