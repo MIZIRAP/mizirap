@@ -2076,27 +2076,23 @@ async function applySplitSelection() {
     }
 };
 
-function openEditSplitView(splitId) {
+window.openEditSplitView = function(splitId) {
     const split = splits.find(s => s.id === splitId);
     if(!split) return;
 
-    closeSplitModal();
+    if (window.closeSplitModal) closeSplitModal();
 
-    document.getElementById('view-split-edit').classList.add('hidden');
-    // If view-create-split exists, show it
-    const vcs = document.getElementById('view-create-split');
-    if(vcs) vcs.classList.remove('hidden');
+    window.editingSplitId = splitId;
 
-    const headerTitle = document.querySelector('#view-create-split header h1');
-    if(headerTitle) headerTitle.innerText = "Split Düzenle";
+    const nameInput = document.getElementById('new-split-name-input');
+    const noteInput = document.getElementById('new-split-note-input');
+    if (nameInput) nameInput.value = split.name || '';
+    if (noteInput) noteInput.value = split.note || '';
 
-    newSplitId = split.id;
-    newSplitDays = JSON.parse(JSON.stringify(split.days || []));
+    const modalTitle = document.querySelector('#new-split-content h2');
+    if (modalTitle) modalTitle.innerText = "Programı Düzenle";
 
-    document.getElementById('create-split-name-input').value = split.name;
-    renderCreateSplitDays();
-
-    document.getElementById('create-split-save-btn').onclick = saveNewSplit;
+    if (window.openNewSplitModal) window.openNewSplitModal(true);
 };
 
 async function deleteSplit(splitId) {
@@ -3402,7 +3398,18 @@ if (confirmDeleteYes) {
 }
 
 // --- NEW SPLIT MODAL LOGIC ---
-window.openNewSplitModal = function() {
+window.openNewSplitModal = function(isEdit = false) {
+    if (!isEdit) {
+        window.editingSplitId = null;
+        const nameInput = document.getElementById('new-split-name-input');
+        const noteInput = document.getElementById('new-split-note-input');
+        if(nameInput) nameInput.value = '';
+        if(noteInput) noteInput.value = '';
+        
+        const modalTitle = document.querySelector('#new-split-content h2');
+        if(modalTitle) modalTitle.innerText = "Yeni Program Oluştur";
+    }
+
     const modal = document.getElementById('modal-new-split');
     const backdrop = document.getElementById('new-split-backdrop-empty');
     const content = document.getElementById('new-split-content');
@@ -3469,6 +3476,7 @@ window.createNewSplitFromPopup = async function() {
     const nameInput = document.getElementById('new-split-name-input');
     const noteInput = document.getElementById('new-split-note-input');
     const name = nameInput ? nameInput.value.trim() : '';
+    const note = noteInput ? noteInput.value.trim() : '';
     
     if(!name) {
         alert("Lütfen program adını giriniz.");
@@ -3476,23 +3484,35 @@ window.createNewSplitFromPopup = async function() {
     }
     
     try {
-        const newSplitId = "split_" + Date.now();
-        const newSplit = {
-            id: newSplitId,
-            name: name,
-            days: []
-        };
-        
-        splits.push(newSplit);
-        
-        await setDoc(doc(db, "users", currentUid, "splits", newSplitId), newSplit);
-        
-        if(splits.length === 1 || !activeSplitId) {
-            activeSplitId = newSplitId;
-            await setDoc(doc(db, "users", currentUid), {
-                activeSplitId: newSplitId
-            }, { merge: true });
-            localStorage.setItem(`miz_activeSplit_${currentUid}`, activeSplitId);
+        if (window.editingSplitId) {
+            // Edit existing split
+            const splitIndex = splits.findIndex(s => s.id === window.editingSplitId);
+            if (splitIndex !== -1) {
+                splits[splitIndex].name = name;
+                splits[splitIndex].note = note;
+                await setDoc(doc(db, "users", currentUid, "splits", window.editingSplitId), splits[splitIndex], { merge: true });
+            }
+            window.editingSplitId = null;
+        } else {
+            // Create new split
+            const newSplitId = "split_" + Date.now();
+            const newSplit = {
+                id: newSplitId,
+                name: name,
+                note: note,
+                days: []
+            };
+            
+            splits.push(newSplit);
+            await setDoc(doc(db, "users", currentUid, "splits", newSplitId), newSplit);
+            
+            if(splits.length === 1 || !activeSplitId) {
+                activeSplitId = newSplitId;
+                await setDoc(doc(db, "users", currentUid), {
+                    activeSplitId: newSplitId
+                }, { merge: true });
+                localStorage.setItem(`miz_activeSplit_${currentUid}`, activeSplitId);
+            }
         }
         
         if(window.closeNewSplitModal) window.closeNewSplitModal();
@@ -3501,13 +3521,10 @@ window.createNewSplitFromPopup = async function() {
         if(noteInput) noteInput.value = '';
         
         renderSplitView();
-        
-        setTimeout(() => {
-            if(window.openEditSplitView) window.openEditSplitView(newSplitId);
-        }, 400);
+        if (typeof renderMySplitsView === 'function') renderMySplitsView();
         
     } catch(e) {
-        console.error("Yeni program oluşturulamadı:", e);
-        alert("Yeni program oluşturulamadı.");
+        console.error("Program işlemi başarısız:", e);
+        alert("İşlem sırasında hata oluştu.");
     }
 };
