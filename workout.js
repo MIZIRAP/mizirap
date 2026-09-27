@@ -239,6 +239,7 @@ export function renderSplitView() {
             activeSplit.days.forEach((day, idx) => {
                 const isActive = day.id === activeDayId;
                 const btn = document.createElement('button');
+                btn.dataset.dayId = day.id;
                 
                 if (isActive) {
                     btn.className = "px-5 py-2.5 rounded-full bg-gradient-to-r from-neon-purple to-neon-blue text-white font-bold text-[13px] shadow-md whitespace-nowrap active:scale-95 transition-transform flex items-center gap-1.5";
@@ -261,7 +262,38 @@ export function renderSplitView() {
             addBtn.onclick = () => {
                 if (window.openNewDayModal) window.openNewDayModal(activeSplit.id);
             };
+            addBtn.classList.add('add-btn-ignore');
             editTabsContainer.appendChild(addBtn);
+            
+            if (window.activeSplitSortable) {
+                window.activeSplitSortable.destroy();
+            }
+            window.activeSplitSortable = Sortable.create(editTabsContainer, {
+                animation: 150,
+                delay: 200,
+                delayOnTouchOnly: true,
+                filter: '.add-btn-ignore',
+                onEnd: async function (evt) {
+                    const newOrderIds = Array.from(editTabsContainer.children)
+                        .filter(child => child.dataset.dayId)
+                        .map(child => child.dataset.dayId);
+                        
+                    const newDaysArray = [];
+                    newOrderIds.forEach(id => {
+                        const day = activeSplit.days.find(d => d.id === id);
+                        if (day) newDaysArray.push(day);
+                    });
+                    
+                    if (newDaysArray.length === activeSplit.days.length) {
+                        activeSplit.days = newDaysArray;
+                        try {
+                            await setDoc(doc(db, "users", currentUid, "splits", activeSplit.id), activeSplit, { merge: true });
+                        } catch (e) {
+                            console.error('Drag drop save error', e);
+                        }
+                    }
+                }
+            });
         }
 
         // Render Exercises List for Active Day
@@ -472,17 +504,17 @@ export function renderSplitView() {
                             </div>
                             
                             <!-- Days Tabs -->
-                            <div class="flex items-center gap-3 overflow-x-auto hide-scrollbar pt-3 pb-1">
+                            <div class="flex items-center gap-3 overflow-x-auto hide-scrollbar pt-3 pb-1 sortable-other-days-container" data-split-id="${split.id}">
                                 ${
                                     (split.days && split.days.length > 0)
                                         ? split.days.map(day => `
-                                            <button class="px-5 py-2.5 rounded-full bg-[#F0F2F8] text-[#64748B] font-bold text-[13px] whitespace-nowrap active:scale-95 transition-transform" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255,255,255,0.7)">
+                                            <button data-day-id="${day.id}" class="px-5 py-2.5 rounded-full bg-[#F0F2F8] text-[#64748B] font-bold text-[13px] whitespace-nowrap active:scale-95 transition-transform" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255,255,255,0.7)">
                                                 ${day.name}
                                             </button>
                                         `).join('')
                                         : ''
                                 }
-                                <button onclick="if(window.openNewDayModal) window.openNewDayModal('${split.id}')" class="w-10 h-10 rounded-full bg-[#F0F2F8] text-[#64748B] flex items-center justify-center shrink-0 active:scale-95 transition-transform ml-1" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255,255,255,0.7)">
+                                <button onclick="if(window.openNewDayModal) window.openNewDayModal('${split.id}')" class="add-btn-ignore w-10 h-10 rounded-full bg-[#F0F2F8] text-[#64748B] flex items-center justify-center shrink-0 active:scale-95 transition-transform ml-1" style="box-shadow: 4px 4px 8px #D1D9E6, -4px -4px 8px rgba(255,255,255,0.7)">
                                     <span class="material-symbols-rounded text-[18px]">add</span>
                                 </button>
                             </div>
@@ -490,6 +522,39 @@ export function renderSplitView() {
                     </div>
                     `;
                     otherSplitsList.insertAdjacentHTML('beforeend', cardHtml);
+                });
+                
+                document.querySelectorAll('.sortable-other-days-container').forEach(container => {
+                    Sortable.create(container, {
+                        animation: 150,
+                        delay: 200,
+                        delayOnTouchOnly: true,
+                        filter: '.add-btn-ignore',
+                        onEnd: async function (evt) {
+                            const splitId = container.dataset.splitId;
+                            const split = splits.find(s => s.id === splitId);
+                            if (!split) return;
+                            
+                            const newOrderIds = Array.from(container.children)
+                                .filter(child => child.dataset.dayId)
+                                .map(child => child.dataset.dayId);
+                                
+                            const newDaysArray = [];
+                            newOrderIds.forEach(id => {
+                                const day = split.days.find(d => d.id === id);
+                                if (day) newDaysArray.push(day);
+                            });
+                            
+                            if (newDaysArray.length === split.days.length) {
+                                split.days = newDaysArray;
+                                try {
+                                    await setDoc(doc(db, "users", currentUid, "splits", split.id), split, { merge: true });
+                                } catch (e) {
+                                    console.error('Drag drop save error', e);
+                                }
+                            }
+                        }
+                    });
                 });
             }
         }
@@ -3503,6 +3568,43 @@ window.closeNewDayModal = function() {
         setTimeout(() => {
             modal.classList.add('hidden');
         }, 300);
+    }
+};
+
+window.createNewDayFromPopup = async function() {
+    const splitId = window.addingDayToSplitId;
+    const input = document.getElementById('new-day-name-input');
+    const dayName = input.value.trim();
+    
+    if (!dayName) {
+        alert("Lütfen bir gün adı girin.");
+        return;
+    }
+    
+    const split = splits.find(s => s.id === splitId);
+    if (!split) return;
+    
+    if (!split.days) split.days = [];
+    
+    const newDay = {
+        id: 'day-' + Date.now(),
+        name: dayName,
+        exercises: []
+    };
+    
+    split.days.push(newDay);
+    
+    try {
+        await setDoc(doc(db, "users", currentUid, "splits", split.id), split, { merge: true });
+        
+        input.value = '';
+        if (window.closeNewDayModal) window.closeNewDayModal();
+        if (window.renderSplitView) window.renderSplitView();
+        if (window.renderMySplitsView) window.renderMySplitsView();
+        
+    } catch(e) {
+        console.error('Error saving new day', e);
+        alert('Gün kaydedilirken bir hata oluştu.');
     }
 };
 
