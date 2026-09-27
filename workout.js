@@ -3940,3 +3940,88 @@ window.createNewSplitFromPopup = async function() {
         alert("Ä°ÅŸlem sÄ±rasÄ±nda hata oluÅŸtu.");
     }
 };
+
+// AI Chat Assistant Helpers
+export async function aiCreateNewProgram(name, template, note) {
+    if(!auth.currentUser) throw new Error("Giriþ yapmadýnýz.");
+    const newSplitId = "split_" + Date.now();
+    const newSplit = {
+        id: newSplitId,
+        name: name,
+        note: note || "",
+        template: template || "Custom",
+        days: [],
+        createdAt: new Date().toISOString()
+    };
+    await setDoc(doc(db, "users", currentUid, "splits", newSplitId), newSplit);
+    return newSplitId;
+}
+
+export async function aiAddDayToProgram(splitId, dayName) {
+    if(!auth.currentUser) throw new Error("Giriþ yapmadýnýz.");
+    const splitIndex = splits.findIndex(s => s.id === splitId);
+    if(splitIndex === -1) throw new Error("Program bulunamadý.");
+    const split = splits[splitIndex];
+    
+    const newDay = {
+        id: "day_" + Date.now(),
+        name: dayName || `Gün ${split.days.length + 1}`,
+        exercises: []
+    };
+    split.days.push(newDay);
+    
+    const docRef = doc(db, "users", currentUid, "splits", splitId);
+    await updateDoc(docRef, { days: split.days, updatedAt: serverTimestamp() });
+    if (window.renderSplitEditView) window.renderSplitEditView();
+    if (window.renderSplitView) window.renderSplitView();
+    return newDay.id;
+}
+
+export async function aiAddExerciseToDay(splitId, dayIdx, exerciseName, sets) {
+    if(!auth.currentUser) throw new Error("Giriþ yapmadýnýz.");
+    const splitIndex = splits.findIndex(s => s.id === splitId);
+    if(splitIndex === -1) throw new Error("Program bulunamadý.");
+    const split = splits[splitIndex];
+    
+    if(!split.days[dayIdx]) throw new Error("Gün bulunamadý.");
+    
+    split.days[dayIdx].exercises.push({
+        id: `e${Date.now()}_${Math.floor(Math.random()*1000)}`,
+        name: exerciseName,
+        sets: sets || 3,
+        defaultSets: sets || 3
+    });
+    
+    await setDoc(doc(db, "users", currentUid, "splits", splitId), split, { merge: true });
+    if (window.renderSplitEditView) window.renderSplitEditView();
+    if (window.renderSplitView) window.renderSplitView();
+}
+
+export async function aiDeleteDay(splitId, dayIdx) {
+    if(!auth.currentUser) throw new Error("Giriþ yapmadýnýz.");
+    const splitIndex = splits.findIndex(s => s.id === splitId);
+    if(splitIndex === -1) throw new Error("Program bulunamadý.");
+    const split = splits[splitIndex];
+    
+    const day = split.days[dayIdx];
+    if(!day) throw new Error("Gün bulunamadý.");
+    
+    const inProgressLog = (window._miz_last_workout_logs || []).find(l => l.status === "in_progress");
+    const currentActiveDayId = inProgressLog ? inProgressLog.dayId : getActiveSessionDayId();
+    if (day.id === currentActiveDayId) {
+        throw new Error("Bu gün þu anda aktif antrenmanda kullanýlýyor, silemezsiniz.");
+    }
+    
+    split.days.splice(dayIdx, 1);
+    
+    const docRef = doc(db, "users", currentUid, "splits", splitId);
+    await updateDoc(docRef, { days: split.days, updatedAt: serverTimestamp() });
+    if (window.renderSplitEditView) window.renderSplitEditView();
+    if (window.renderSplitView) window.renderSplitView();
+    if (window.renderMySplitsView) window.renderMySplitsView();
+}
+
+export function aiGetSplits() {
+    return splits;
+}
+

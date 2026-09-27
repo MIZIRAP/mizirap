@@ -3,6 +3,7 @@ import { doc, getDoc, setDoc, collection, addDoc, serverTimestamp, getDocs, writ
 import { fetchSharedProfile, updateSharedProfile } from "./sharedState.js";
 import { getDailySummaryRef } from "./dashboard.js?v=1787428044";
 import { calcBalance } from "./finance.js?v=20260920";
+import { aiCreateNewProgram, aiAddDayToProgram, aiAddExerciseToDay, aiDeleteDay, aiGetSplits } from "./workout.js";
 
 // State
 let geminiApiKey = null;
@@ -382,6 +383,62 @@ const aiTools = [{
                 },
                 required: ["title", "status"]
             }
+        },
+        {
+            name: "create_new_program",
+            description: "Yeni bir antrenman programı (split) oluşturur.",
+            parameters: {
+                type: "OBJECT",
+                properties: {
+                    name: { type: "STRING", description: "Program adı (örn: Push Pull Legs)" },
+                    template: { type: "STRING", description: "Şablon tipi (opsiyonel: PPL / Upper-Lower / Full Body / Custom)" },
+                    note: { type: "STRING", description: "Program için opsiyonel not" }
+                },
+                required: ["name"]
+            }
+        },
+        {
+            name: "add_day_to_program",
+            description: "Mevcut bir antrenman programına yeni bir gün ekler.",
+            parameters: {
+                type: "OBJECT",
+                properties: {
+                    program_name: { type: "STRING", description: "Gün eklenecek programın adı (tam eşleşmesi gerekmez, yakın eşleşme aranır)" },
+                    day_name: { type: "STRING", description: "Eklenecek günün adı (örn: İtiş Günü, Pazartesi)" }
+                },
+                required: ["program_name", "day_name"]
+            }
+        },
+        {
+            name: "add_exercise_to_day",
+            description: "Bir programa ait spesifik bir güne yeni hareket (egzersiz) ekler.",
+            parameters: {
+                type: "OBJECT",
+                properties: {
+                    program_name: { type: "STRING", description: "Programın adı" },
+                    day_name: { type: "STRING", description: "Hareketi ekleyeceğimiz günün adı" },
+                    exercise_name: { type: "STRING", description: "Eklenecek hareketin tam adı (örn: Bench Press)" },
+                    sets: { type: "NUMBER", description: "Kaç set yapılacağı (varsayılan: 3)" }
+                },
+                required: ["program_name", "day_name", "exercise_name"]
+            }
+        },
+        {
+            name: "delete_day",
+            description: "Bir programdan belirli bir günü siler.",
+            parameters: {
+                type: "OBJECT",
+                properties: {
+                    program_name: { type: "STRING", description: "Programın adı" },
+                    day_name: { type: "STRING", description: "Silinecek günün adı" }
+                },
+                required: ["program_name", "day_name"]
+            }
+        },
+        {
+            name: "list_programs",
+            description: "Kullanıcının mevcut tüm programlarını ve içerdiği günleri listeler. Kullanıcı 'programlarımı göster' dediğinde bunu kullan.",
+            parameters: { type: "OBJECT", properties: {}, required: [] }
         }
     ]
 }];
@@ -612,7 +669,11 @@ window.sendAiMessage = async function(isSystemResponse = false) {
             // Modele ait çağrıyı history'ye olduğu gibi ekle (Gemini şartı)
             chatHistory.push({ role: "model", parts: candidate.content.parts });
             
-            const isReadOnly = pendingFunctionCalls.every(fc => fc.name.startsWith("get_"));
+            const isReadOnly = pendingFunctionCalls.every(fc => 
+                fc.name.startsWith("get_") || 
+                ["list_programs", "create_new_program", "add_day_to_program", "add_exercise_to_day", "delete_day"].includes(fc.name)
+            );
+            
             if (isReadOnly) {
                 window.confirmFunctionCall(true);
             } else {
@@ -996,6 +1057,49 @@ window.confirmFunctionCall = async function(isSilent = false) {
                     activeMovieEpisode: updates.episode || media.episode || null
                 }, { merge: true });
                 await batch.commit();
+            } else if (funcCall.name === "list_programs") {
+                const splits = aiGetSplits();
+                if(!splits || splits.length === 0) {
+                    message = "Kayıtlı hiçbir program bulunamadı.";
+                } else {
+                    message = JSON.stringify(splits.map(s => ({
+                        id: s.id,
+                        name: s.name,
+                        days: s.days.map(d => d.name)
+                    })));
+                }
+            } else if (funcCall.name === "create_new_program") {
+                const id = await aiCreateNewProgram(funcCall.args.name, funcCall.args.template, funcCall.args.note);
+                message = `Program '${funcCall.args.name}' başarıyla oluşturuldu. ID: ${id}`;
+            } else if (funcCall.name === "add_day_to_program" || funcCall.name === "add_exercise_to_day" || funcCall.name === "delete_day") {
+                const args = funcCall.args;
+                const splits = aiGetSplits();
+                const pname = (args.program_name || "").toLowerCase();
+                const split = splits.find(s => s.name.toLowerCase().includes(pname));
+                if (!split) {
+                    status = "error";
+                    message = `Böyle bir program bulunamadı. Mevcut programlar: ${splits.map(s => s.name).join(", ")}`;
+                } else {
+                    if (funcCall.name === "add_day_to_program") {
+                        await aiAddDayToProgram(split.id, args.day_name);
+                        message = `Program '${split.name}' içine '${args.day_name}' başarıyla eklendi.`;
+                    } else {
+                        const dname = (args.day_name || "").toLowerCase();
+                        const dayIdx = split.days.findIndex(d => d.name.toLowerCase().includes(dname));
+                        if (dayIdx === -1) {
+                            status = "error";
+                            message = `Programda '${args.day_name}' bulunamadı. Günler: ${split.days.map(d=>d.name).join(", ")}`;
+                        } else {
+                            if (funcCall.name === "add_exercise_to_day") {
+                                await aiAddExerciseToDay(split.id, dayIdx, args.exercise_name, args.sets);
+                                message = `'${args.exercise_name}' başarıyla eklendi.`;
+                            } else if (funcCall.name === "delete_day") {
+                                await aiDeleteDay(split.id, dayIdx);
+                                message = `'${split.days[dayIdx].name}' başarıyla silindi.`;
+                            }
+                        }
+                    }
+                }
             }
         } catch(err) {
             console.error("Function exec error:", err);
