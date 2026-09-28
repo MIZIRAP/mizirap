@@ -90,7 +90,7 @@ function startDashboardListener(uid) {
 
 document.addEventListener('viewChanged', (e) => {
     if (e.detail.viewId === 'view-dashboard') {
-        startDashboardListener(currentUid);
+        renderDashboard();
     }
 });
 

@@ -565,16 +565,17 @@ if (caloriesGoalBackdrop) {
                     yag: y
                 };
                 if (isNewLog) {
+                    const d = new Date();
+                    const todayStr = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
                     logEntry.createdAt = serverTimestamp();
                     logEntry.type = "Food";
+                    logEntry.dateStr = todayStr;
                 }
                 
                 const batch = writeBatch(db);
                 batch.set(doc(db, "users", currentUid, "calorieLogs", currentEditLogId), logEntry, { merge: true });
 
-                const d = new Date();
-                const todayStr = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
-                if (todayStr === todayStr) {
+                if (true) {
                     const oldLog = dailyLogs.find(l => l.id === currentEditLogId);
                     const oldCals = oldLog ? Number(oldLog.kcal || 0) : 0;
                     const newCals = Number(logEntry.kcal || 0);
@@ -775,6 +776,8 @@ if (caloriesGoalBackdrop) {
             const originalText = quickAddSaveBtn.innerHTML;
             quickAddSaveBtn.innerHTML = "Ekleniyor...";
             try {
+                const d = new Date();
+                const todayStr = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
                 const batch = writeBatch(db);
                 const logRef = doc(collection(db, "users", currentUid, "calorieLogs"));
                 batch.set(logRef, {
@@ -785,12 +788,11 @@ if (caloriesGoalBackdrop) {
                     yag: yag,
                     amount: amount,
                     createdAt: serverTimestamp(),
-                    type: "Food"
+                    type: "Food",
+                    dateStr: todayStr
                 });
 
-                const d = new Date();
-                const todayStr = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
-                if (todayStr === todayStr) {
+                if (true) {
                     const currentConsumed = dailyLogs.reduce((sum, log) => sum + Number(log.kcal || 0), 0);
                     batch.set(getDailySummaryRef(currentUid), { caloriesConsumed: currentConsumed + kcal }, { merge: true });
                 }
