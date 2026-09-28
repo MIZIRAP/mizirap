@@ -130,11 +130,12 @@ async function runDashboardMigration(uid, dailyRef) {
     }
     
     // 4. Calories Today's logs
-    const calQ = query(collection(db, "users", uid, "calorieLogs"), where("dateStr", "==", todayStr));
+    const calQ = query(collection(db, "users", uid, "calorieLogs"), where("createdAt", ">=", startOfToday));
     const calSnap = await getDocs(calQ);
     let todayCals = 0;
     calSnap.forEach(docSnap => {
-        todayCals += Number(docSnap.data().calories || 0);
+        const data = docSnap.data();
+        todayCals += Number(data.kcal || 0);
     });
     initialData.caloriesConsumed = todayCals;
     
