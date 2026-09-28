@@ -43,16 +43,7 @@ onAuthStateChanged(auth, async (user) => {
             appScreen.classList.remove("hidden");
             const bottomNav = document.getElementById("main-bottom-navbar");
             if (bottomNav) bottomNav.classList.remove("hidden");
-            // iOS Safari: scroll to top and force header repaint after auth
-            requestAnimationFrame(() => {
-                window.scrollTo(0, 0);
-                // Force sticky header GPU layer activation on first render
-                const firstHeader = document.querySelector('#app-screen .view:not(.hidden) header');
-                if (firstHeader) {
-                    firstHeader.style.transform = 'translate3d(0,0,0.001px)';
-                    requestAnimationFrame(() => { firstHeader.style.transform = ''; });
-                }
-            });
+
             
             if (user.uid !== localStorage.getItem('uid')) {
                 clearProfile();
@@ -229,15 +220,7 @@ window.showView = async function(viewId) {
             renderSplitView();
         }
 
-        // iOS Safari: force a repaint on the active view's header to ensure
-        // sticky positioning + GPU compositing activates on first render.
-        const activeHeader = target ? target.querySelector('header') : null;
-        if (activeHeader) {
-            requestAnimationFrame(() => {
-                activeHeader.style.transform = 'translate3d(0,0,0.001px)';
-                requestAnimationFrame(() => { activeHeader.style.transform = ''; });
-            });
-        }
+
 
         document.dispatchEvent(new CustomEvent('viewChanged', { detail: { viewId: viewId } }));
     } else {
