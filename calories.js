@@ -579,8 +579,7 @@ if (caloriesGoalBackdrop) {
                     const oldLog = dailyLogs.find(l => l.id === currentEditLogId);
                     const oldCals = oldLog ? Number(oldLog.kcal || 0) : 0;
                     const newCals = Number(logEntry.kcal || 0);
-                    const currentConsumed = dailyLogs.reduce((sum, l) => sum + Number(l.kcal || 0), 0);
-                    batch.set(getDailySummaryRef(currentUid), { caloriesConsumed: Math.max(0, currentConsumed - oldCals + newCals) }, { merge: true });
+                    batch.set(getDailySummaryRef(currentUid), { caloriesConsumed: increment(newCals - oldCals) }, { merge: true });
                 }
                 
                 let dbPromise = batch.commit();
@@ -793,8 +792,7 @@ if (caloriesGoalBackdrop) {
                 });
 
                 if (true) {
-                    const currentConsumed = dailyLogs.reduce((sum, log) => sum + Number(log.kcal || 0), 0);
-                    batch.set(getDailySummaryRef(currentUid), { caloriesConsumed: currentConsumed + kcal }, { merge: true });
+                    batch.set(getDailySummaryRef(currentUid), { caloriesConsumed: increment(kcal) }, { merge: true });
                 }
 
                 await batch.commit();
