@@ -51,6 +51,25 @@ export async function initDashboard(uid) {
             if (loader) loader.classList.add('hidden');
 
             await runDashboardMigration(uid, dailyRef);
+        } else {
+            // Auto-heal calories if they fell out of sync due to previous bugs
+            setTimeout(async () => {
+                try {
+                    const d = new Date();
+                    const startOfToday = new Date(d.getFullYear(), d.getMonth(), d.getDate());
+                    const calQ = query(collection(db, "users", uid, "calorieLogs"), where("createdAt", ">=", startOfToday));
+                    const calSnap = await getDocs(calQ);
+                    let todayCals = 0;
+                    calSnap.forEach(docSnap => {
+                        todayCals += Number(docSnap.data().kcal || 0);
+                    });
+                    if ((snap.data().caloriesConsumed || 0) !== todayCals) {
+                        await setDoc(dailyRef, { caloriesConsumed: todayCals }, { merge: true });
+                    }
+                } catch (err) {
+                    console.warn("Calories auto-heal failed:", err);
+                }
+            }, 1000);
         }
     } catch(e) {
         console.warn("getDoc timeout or error (400 Listen channel issue). Proceeding with cache/empty render:", e);
