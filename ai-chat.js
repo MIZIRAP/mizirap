@@ -164,27 +164,45 @@ async function buildAiContext() {
     }
 
     let ctx = "CTX:\n";
+    console.time("[ai-latency] buildAiContext");
     try {
         const todayStart = new Date();
         todayStart.setHours(0,0,0,0);
+        
         const logsQ = query(collection(db, "users", currentUid, "calorieLogs"), where("createdAt", ">=", todayStart));
-        const logsSnap = await getDocs(logsQ);
+        const booksQ = query(collection(db, "users", currentUid, "books"), where("status", "==", "reading"));
+
+        // Parallelize reads to reduce latency
+        const [
+            logsSnap,
+            summarySnap,
+            catSnap,
+            pmSnap,
+            booksSnap
+        ] = await Promise.all([
+            getDocs(logsQ).catch(e => { console.warn("logsQ error", e); return null; }),
+            getDoc(getDailySummaryRef(currentUid)).catch(e => { console.warn("summary error", e); return null; }),
+            getDocs(collection(db, "users", currentUid, "finance_categories")).catch(e => { console.warn("cat error", e); return null; }),
+            getDocs(collection(db, "users", currentUid, "finance_payment_methods")).catch(e => { console.warn("pm error", e); return null; }),
+            getDocs(booksQ).catch(e => { console.warn("books error", e); return null; })
+        ]);
         
         let p = 0, c = 0, f = 0;
         let foods = [];
         
-        logsSnap.forEach(docSnap => {
-            const data = docSnap.data();
-            if (data.type === 'Food' || !data.type) {
-                p += Number(data.protein || 0);
-                c += Number(data.karb || data.carbs || 0);
-                f += Number(data.yag || data.fat || 0);
-                if (data.name) foods.push(data.name);
-            }
-        });
+        if (logsSnap) {
+            logsSnap.forEach(docSnap => {
+                const data = docSnap.data();
+                if (data.type === 'Food' || !data.type) {
+                    p += Number(data.protein || 0);
+                    c += Number(data.karb || data.carbs || 0);
+                    f += Number(data.yag || data.fat || 0);
+                    if (data.name) foods.push(data.name);
+                }
+            });
+        }
 
-        const summarySnap = await getDoc(getDailySummaryRef(currentUid));
-        if (summarySnap.exists()) {
+        if (summarySnap && summarySnap.exists()) {
             const sum = summarySnap.data();
             const cal = sum.caloriesConsumed || sum.consumedCalories || 0;
             const w = sum.waterAmount || 0;
@@ -192,21 +210,17 @@ async function buildAiContext() {
             if (foods.length > 0) ctx += `Food: [${foods.join(',')}]\n`;
         }
 
-        const catSnap = await getDocs(collection(db, "users", currentUid, "finance_categories"));
-        if (!catSnap.empty) {
+        if (catSnap && !catSnap.empty) {
             const catNames = catSnap.docs.map(d => `${d.data().name}(${d.id})`);
             ctx += `FinCat: ${catNames.join(',')}\n`;
         }
 
-        const pmSnap = await getDocs(collection(db, "users", currentUid, "finance_payment_methods"));
-        if (!pmSnap.empty) {
+        if (pmSnap && !pmSnap.empty) {
             const pmNames = pmSnap.docs.map(d => `${d.data().name}(${d.id})`);
             ctx += `FinPM: ${pmNames.join(',')}\n`;
         }
 
-        const booksQ = query(collection(db, "users", currentUid, "books"), where("status", "==", "reading"));
-        const booksSnap = await getDocs(booksQ);
-        if (!booksSnap.empty) {
+        if (booksSnap && !booksSnap.empty) {
             const activeBooks = [];
             booksSnap.forEach(d => {
                 const b = d.data();
@@ -219,6 +233,7 @@ async function buildAiContext() {
     } catch(err) {
         console.error("Context build error:", err);
     }
+    console.timeEnd("[ai-latency] buildAiContext");
 
     _cachedContext = systemInstruction + "\n\n" + ctx;
     _cachedContextAt = now;

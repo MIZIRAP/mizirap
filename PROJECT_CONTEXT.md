@@ -63,7 +63,7 @@ Tüm yollar `users/{uid}/` altındadır. Temel koleksiyonlar:
 
 ## 7. AI Asistan (Gemini) Detayı
 *   **Akış:** Kullanıcı mesajı UI'dan alınır -> `buildAiContext()` ile mevcut state çekilir -> Mesaj ve context Gemini API'ye gönderilir -> Araç (Function Calling) gerekiyorsa Firestore'a yazılır -> Sonuç döndürülür.
-*   **Latency (Gecikme) Zinciri:** `buildAiContext()` şu anda 5 farklı koleksiyonu *sıralı (await)* şekilde okur: `calorieLogs`, `dailySummary`, `finance_categories`, `finance_payment_methods`, `books`. (TODO: Bunlar `Promise.all` ile paralelleştirilmelidir).
+*   **Latency (Gecikme) Zinciri:** `buildAiContext()` içerisindeki 5 farklı koleksiyon okuması (`calorieLogs`, `dailySummary`, `finance_categories`, `finance_payment_methods`, `books`) `Promise.all` ile paralelleştirilmiştir.
 *   **Araçlar (Function Calling):**
     *   `addShoppingItems`, `addFinanceTransaction`, `addWaterLog`, `addCalorieLog`
     *   `get_calorie_goal`, `update_calorie_goal`, `update_water_goal`, `update_profile_data`
@@ -96,12 +96,12 @@ Tüm yollar `users/{uid}/` altındadır. Temel koleksiyonlar:
 *   **PowerShell ile Dosya Düzenleme:** Türkçe karakter ve encoding (mojibake) bozulmaları nedeniyle kesinlikle TERK EDİLDİ. (Sadece yerleşik str_replace veya write_to_file araçları kullanılmalı).
 
 ## 12. Bilinen Sorunlar ve Teknik Borç
-*   **AI Yanıt Gecikmesi (Latency):** `ai-chat.js` içerisindeki `buildAiContext()` fonksiyonunda yapılan 5 adet Firestore okuması asenkron `await` zinciri ile yapılıyor, bu paralelleştirilmeli. (Şu an `debug/assistant-latency` dalında loglama (ölçüm) aşamasındadır).
-*   **Tarayıcı Önbellekleme Sorunu:** Uygulamada `sw.js` (Service Worker) bulunmamakta, `index.html` içinde `app.js` `?v=20260927-2` gibi statik bir cache-buster ile çağrılmaktadır. (Son düzenlemelerde `manifest.json` ve `firebase.json`'da cache yapılandırmaları iyileştirilse de PWA tarafında sw.js eksik).
+*   **(ÇÖZÜLDÜ) AI Yanıt Gecikmesi (Latency):** `ai-chat.js` içerisindeki `buildAiContext()` fonksiyonunda yapılan 5 adet Firestore okumasının asenkron `await` zinciri ile yapılması paralelleştirilerek hızlandırıldı.
+*   **Tarayıcı Önbellekleme Sorunu:** Uygulamada `sw.js` (Service Worker) bulunmamakta, `index.html` içinde `app.js` `?v=20260930-3` gibi statik bir cache-buster ile çağrılmaktadır. (Son düzenlemelerde `manifest.json` ve `firebase.json`'da cache yapılandırmaları iyileştirilse de PWA tarafında sw.js eksik).
 *   **Tüm Logları Çekme (Verimsizlik):** `dashboard.js` içindeki su migration (`waterQ`) ve bazı diğer hesaplamalar (örn. geçmiş aylar için) tüm koleksiyonu çekmektedir, bu büyük veri setlerinde kilitlenmelere yol açabilir.
 
 ## 13. Açık TODO'lar ve Öncelik Sırası
-1. **YÜKSEK:** AI gecikme testlerinin sonuçlarını alıp (ardışık Firestore okumalarını `Promise.all` ile paralelleştirerek) gecikmeyi azaltmak.
+1. **(ÇÖZÜLDÜ)** AI asistan latency darboğazı `Promise.all` ile giderildi.
 2. **ORTA:** `index.html`'deki statik cache-buster parametresini otomatik hale getirmek veya PWA Service Worker ile tam offline dinamik güncellemeleri sağlamak.
 3. **ORTA:** Firestore üzerinde tüm logları çekmek yerine Firebase Cloud Functions veya client-side aggregration yöntemleri ile belge okuma sayısını azaltmak.
 4. **DÜŞÜK:** Aktif antrenman (workout) seans yönetiminin test edilip edge case'lerinin çözülmesi.
