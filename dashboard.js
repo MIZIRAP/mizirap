@@ -66,13 +66,10 @@ export async function initDashboard(uid) {
                     todayStart.setHours(0, 0, 0, 0);
                     const calQ = query(
                         collection(db, "users", uid, "calorieLogs"),
-                        where("createdAt", ">=", todayStart)
+                        orderBy("createdAt", "desc"),
+                        limit(100)
                     );
                     const calSnap = await getDocs(calQ);
-
-                    if (calSnap.metadata.hasPendingWrites) {
-                        return; // Skip auto-heal if there are pending offline writes
-                    }
 
                     let todayCals = 0;
                     calSnap.forEach(docSnap => {
@@ -205,7 +202,8 @@ async function runDashboardMigration(uid, dailyRef) {
     const todayStart = new Date(d.getFullYear(), d.getMonth(), d.getDate());
     const calQ = query(
         collection(db, "users", uid, "calorieLogs"),
-        where("createdAt", ">=", todayStart)
+        orderBy("createdAt", "desc"),
+        limit(100)
     );
     const calSnap = await getDocs(calQ);
     let todayCals = 0;
