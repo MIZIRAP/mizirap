@@ -97,6 +97,7 @@ Tüm yollar `users/{uid}/` altındadır. Temel koleksiyonlar:
 
 ## 12. Bilinen Sorunlar ve Teknik Borç
 *   **(ÇÖZÜLDÜ) AI Yanıt Gecikmesi (Latency):** `ai-chat.js` içerisindeki `buildAiContext()` fonksiyonunda yapılan 5 adet Firestore okumasının asenkron `await` zinciri ile yapılması paralelleştirilerek hızlandırıldı.
+*   **(ÇÖZÜLDÜ) Dashboard Kalori Senkronizasyon Sorunu (Yansımama Hatası):** Öğünlerin kalori sayfasına işlenip Dashboard'a yansımaması sorunu üç koldan çözüldü: (1) `dashboard.js` migration `runDashboardMigration` işleminde `increment` değerlerinin ezilmemesi için önceden var olan değerler korundu. (2) Çevrimdışı durumlardaki `null` `createdAt` sebebiyle oluşan Auto-Heal hataları düzeltildi ve sorgular `dateStr` alanına geçirildi (Bkz: `dashboard.js:58`, `ai-chat.js:926` dateStr düzeltmesi). (3) Uygulamanın gece yarısını geçmesi durumunda UI'ın eski günü göstermemesi için listener yenileme eklendi (`dashboard.js:110` `checkAndRefreshDashboardListener`).
 *   **Tarayıcı Önbellekleme Sorunu:** Uygulamada `sw.js` (Service Worker) bulunmamakta, `index.html` içinde `app.js` `?v=20260930-3` gibi statik bir cache-buster ile çağrılmaktadır. (Son düzenlemelerde `manifest.json` ve `firebase.json`'da cache yapılandırmaları iyileştirilse de PWA tarafında sw.js eksik).
 *   **Tüm Logları Çekme (Verimsizlik):** `dashboard.js` içindeki su migration (`waterQ`) ve bazı diğer hesaplamalar (örn. geçmiş aylar için) tüm koleksiyonu çekmektedir, bu büyük veri setlerinde kilitlenmelere yol açabilir.
 

@@ -31,6 +31,7 @@ let currentDashboardData = {
 };
 
 let currentUid = null;
+let currentListenerDateStr = null;
 
 export async function initDashboard(uid) {
     currentUid = uid;
@@ -56,14 +57,26 @@ export async function initDashboard(uid) {
             setTimeout(async () => {
                 try {
                     const d = new Date();
-                    const startOfToday = new Date(d.getFullYear(), d.getMonth(), d.getDate());
-                    const calQ = query(collection(db, "users", uid, "calorieLogs"), where("createdAt", ">=", startOfToday));
+                    const yyyy = d.getFullYear();
+                    const mm = String(d.getMonth() + 1).padStart(2, '0');
+                    const dd = String(d.getDate()).padStart(2, '0');
+                    const todayStr = `${yyyy}-${mm}-${dd}`;
+                    
+                    const calQ = query(collection(db, "users", uid, "calorieLogs"), where("dateStr", "==", todayStr));
                     const calSnap = await getDocs(calQ);
+                    
+                    if (calSnap.metadata.hasPendingWrites) {
+                        return; // Skip auto-heal if there are pending offline writes
+                    }
+                    
                     let todayCals = 0;
                     calSnap.forEach(docSnap => {
                         todayCals += Number(docSnap.data().kcal || 0);
                     });
-                    if ((snap.data().caloriesConsumed || 0) !== todayCals) {
+                    
+                    // Re-read dailyRef to avoid overwriting recent increments
+                    const freshSnap = await getDoc(dailyRef);
+                    if (freshSnap.exists() && (freshSnap.data().caloriesConsumed || 0) !== todayCals) {
                         await setDoc(dailyRef, { caloriesConsumed: todayCals }, { merge: true });
                     }
                 } catch (err) {
@@ -88,6 +101,8 @@ export async function initDashboard(uid) {
 
 function startDashboardListener(uid) {
     if (!uid) return;
+    const d = new Date();
+    currentListenerDateStr = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
     const dailyRef = getDailySummaryRef(uid);
     registerFirestoreListener('dashboard', onSnapshot(dailyRef, (docSnap) => {
         try {
@@ -109,9 +124,38 @@ function startDashboardListener(uid) {
 
 document.addEventListener('viewChanged', (e) => {
     if (e.detail.viewId === 'view-dashboard') {
+        checkAndRefreshDashboardListener();
         renderDashboard();
     }
 });
+document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible' && document.getElementById('view-dashboard') && !document.getElementById('view-dashboard').classList.contains('hidden')) {
+        checkAndRefreshDashboardListener();
+    }
+});
+
+function checkAndRefreshDashboardListener() {
+    if (!currentUid) return;
+    const d = new Date();
+    const todayStr = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+    if (currentListenerDateStr && currentListenerDateStr !== todayStr) {
+        currentDashboardData = {
+            waterAmount: 0,
+            waterGoal: 2000,
+            caloriesConsumed: 0,
+            caloriesGoal: 2000,
+            activeSplitName: "Yapılmadı",
+            monthlyBalance: 0,
+            activeBookRead: 0,
+            activeBookTotal: 0,
+            activeMovieTitle: 'YOK',
+            activeMovieSeason: null,
+            activeMovieEpisode: null,
+            activeMovieType: null
+        };
+        startDashboardListener(currentUid);
+    }
+}
 
 async function runDashboardMigration(uid, dailyRef) {
     // We fetch the current state from the db to initialize today's document
@@ -149,7 +193,7 @@ async function runDashboardMigration(uid, dailyRef) {
     }
     
     // 4. Calories Today's logs
-    const calQ = query(collection(db, "users", uid, "calorieLogs"), where("createdAt", ">=", startOfToday));
+    const calQ = query(collection(db, "users", uid, "calorieLogs"), where("dateStr", "==", todayStr));
     const calSnap = await getDocs(calQ);
     let todayCals = 0;
     calSnap.forEach(docSnap => {
@@ -214,6 +258,12 @@ async function runDashboardMigration(uid, dailyRef) {
     initialData.monthlyBalance = calcBalance(monthTxs);
     
     // Save to Firestore
+    const freshSnap = await getDoc(dailyRef);
+    if (freshSnap.exists()) {
+        const freshData = freshSnap.data();
+        if (freshData.caloriesConsumed !== undefined) delete initialData.caloriesConsumed;
+        if (freshData.waterAmount !== undefined) delete initialData.waterAmount;
+    }
     await setDoc(dailyRef, initialData, { merge: true });
 }
 

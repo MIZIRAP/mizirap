@@ -920,6 +920,9 @@ window.confirmFunctionCall = async function(isSilent = false) {
                 
                 const batch = writeBatch(db);
                 const logRef = doc(collection(db, "users", currentUid, "calorieLogs"));
+                const d = new Date();
+                const todayStr = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+
                 batch.set(logRef, {
                     name: name,
                     kcal: kcal,
@@ -928,7 +931,8 @@ window.confirmFunctionCall = async function(isSilent = false) {
                     yag: yag,
                     amount: amount,
                     createdAt: serverTimestamp(),
-                    type: "Food"
+                    type: "Food",
+                    dateStr: todayStr
                 });
                 
                 batch.set(getDailySummaryRef(currentUid), {
