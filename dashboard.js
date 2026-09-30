@@ -62,7 +62,34 @@ export async function initDashboard(uid) {
                     const dd = String(d.getDate()).padStart(2, '0');
                     const todayStr = `${yyyy}-${mm}-${dd}`;
                     
-                    const calQ = query(collection(db, "users", uid, "calorieLogs"), where("dateStr", "==", todayStr));
+                    // Compute today's calories including legacy logs without a dateStr field
+                    const todayStart = new Date();
+                    todayStart.setHours(0, 0, 0, 0);
+                    const calQ = query(
+                        collection(db, "users", uid, "calorieLogs"),
+                        where("createdAt", ">=", todayStart)
+                    );
+                    const calSnap = await getDocs(calQ);
+
+                    if (calSnap.metadata.hasPendingWrites) {
+                        return; // Skip auto‑heal if there are pending offline writes
+                    }
+
+                    let todayCals = 0;
+                    calSnap.forEach(docSnap => {
+                        const data = docSnap.data();
+                        // Prefer dateStr if present, otherwise rely on createdAt timestamp
+                        const logDate = data.dateStr ? new Date(data.dateStr) : (data.createdAt?.toDate?.() ?? null);
+                        if (logDate && logDate >= todayStart) {
+                            todayCals += Number(data.kcal || 0);
+                        }
+                    });
+
+                    // Re‑read dailyRef to avoid overwriting recent increments
+                    const freshSnap = await getDoc(dailyRef);
+                    if (freshSnap.exists() && (freshSnap.data().caloriesConsumed || 0) !== todayCals) {
+                        await setDoc(dailyRef, { caloriesConsumed: todayCals }, { merge: true });
+                    }
                     const calSnap = await getDocs(calQ);
                     
                     if (calSnap.metadata.hasPendingWrites) {
