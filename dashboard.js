@@ -62,7 +62,6 @@ export async function initDashboard(uid) {
                     const dd = String(d.getDate()).padStart(2, '0');
                     const todayStr = `${yyyy}-${mm}-${dd}`;
                     
-                    // Compute today's calories including legacy logs without a dateStr field
                     const todayStart = new Date();
                     todayStart.setHours(0, 0, 0, 0);
                     const calQ = query(
@@ -72,35 +71,18 @@ export async function initDashboard(uid) {
                     const calSnap = await getDocs(calQ);
 
                     if (calSnap.metadata.hasPendingWrites) {
-                        return; // Skip auto‑heal if there are pending offline writes
+                        return; // Skip auto-heal if there are pending offline writes
                     }
 
                     let todayCals = 0;
                     calSnap.forEach(docSnap => {
                         const data = docSnap.data();
-                        // Prefer dateStr if present, otherwise rely on createdAt timestamp
-                        const logDate = data.dateStr ? new Date(data.dateStr) : (data.createdAt?.toDate?.() ?? null);
-                        if (logDate && logDate >= todayStart) {
+                        let logDate = data.createdAt && data.createdAt.toDate ? data.createdAt.toDate() : new Date();
+                        if (logDate >= todayStart) {
                             todayCals += Number(data.kcal || 0);
                         }
                     });
 
-                    // Re‑read dailyRef to avoid overwriting recent increments
-                    const freshSnap = await getDoc(dailyRef);
-                    if (freshSnap.exists() && (freshSnap.data().caloriesConsumed || 0) !== todayCals) {
-                        await setDoc(dailyRef, { caloriesConsumed: todayCals }, { merge: true });
-                    }
-                    const calSnap = await getDocs(calQ);
-                    
-                    if (calSnap.metadata.hasPendingWrites) {
-                        return; // Skip auto-heal if there are pending offline writes
-                    }
-                    
-                    let todayCals = 0;
-                    calSnap.forEach(docSnap => {
-                        todayCals += Number(docSnap.data().kcal || 0);
-                    });
-                    
                     // Re-read dailyRef to avoid overwriting recent increments
                     const freshSnap = await getDoc(dailyRef);
                     if (freshSnap.exists() && (freshSnap.data().caloriesConsumed || 0) !== todayCals) {
@@ -220,12 +202,19 @@ async function runDashboardMigration(uid, dailyRef) {
     }
     
     // 4. Calories Today's logs
-    const calQ = query(collection(db, "users", uid, "calorieLogs"), where("dateStr", "==", todayStr));
+    const todayStart = new Date(d.getFullYear(), d.getMonth(), d.getDate());
+    const calQ = query(
+        collection(db, "users", uid, "calorieLogs"),
+        where("createdAt", ">=", todayStart)
+    );
     const calSnap = await getDocs(calQ);
     let todayCals = 0;
     calSnap.forEach(docSnap => {
         const data = docSnap.data();
-        todayCals += Number(data.kcal || 0);
+        let logDate = data.createdAt && data.createdAt.toDate ? data.createdAt.toDate() : new Date();
+        if (logDate >= todayStart) {
+            todayCals += Number(data.kcal || 0);
+        }
     });
     initialData.caloriesConsumed = todayCals;
     

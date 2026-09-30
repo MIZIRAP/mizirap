@@ -193,10 +193,9 @@ function startCaloriesListeners(uid) {
         snap.forEach(d => {
             const data = d.data();
             allLogsForHistory.push({ id: d.id, ...data });
-            if (data.createdAt && data.createdAt.toDate) {
-                if (data.createdAt.toDate() >= today) {
-                    dailyLogs.push({ id: d.id, ...data });
-                }
+            let logDate = data.createdAt && data.createdAt.toDate ? data.createdAt.toDate() : new Date();
+            if (logDate >= today) {
+                dailyLogs.push({ id: d.id, ...data });
             }
         });
         setSharedState('calories', allLogsForHistory);
