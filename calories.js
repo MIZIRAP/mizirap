@@ -207,11 +207,16 @@ function startCaloriesListeners(uid) {
     loadFoodLibrary(uid);
 
     // Listen to Weekly Calorie Logs (for chart)
-    const oneWeekAgo = new Date();
-    oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+    const todayForWeek = new Date();
+    todayForWeek.setHours(0,0,0,0);
+    let currentDayOfWeek = todayForWeek.getDay();
+    let dayNumber = currentDayOfWeek === 0 ? 7 : currentDayOfWeek;
+    const weekStart = new Date(todayForWeek);
+    weekStart.setDate(todayForWeek.getDate() - (dayNumber - 1));
+    
     const weeklyRef = query(
         collection(db, "users", uid, "calorieLogs"),
-        where("createdAt", ">=", oneWeekAgo),
+        where("createdAt", ">=", weekStart),
         orderBy("createdAt", "desc")
     );
     registerFirestoreListener('cal_weekly', onSnapshot(weeklyRef, (snap) => {
@@ -1292,19 +1297,20 @@ function renderWeeklyChart() {
     const avgText = document.getElementById('calories-avg-text');
     if(!wrapper || !avgText) return;
 
-    if(weeklyLogs.length === 0) {
-        wrapper.innerHTML = '<div class="w-full text-center text-[#64748B] text-sm py-8">Veri yok</div>';
-        avgText.textContent = "Avg: 0 kcal";
-        return;
-    }
-
     const today = new Date();
     today.setHours(0,0,0,0);
+    let currentDayOfWeek = today.getDay();
+    let dayNumber = currentDayOfWeek === 0 ? 7 : currentDayOfWeek;
+    
+    let monday = new Date(today);
+    monday.setDate(today.getDate() - (dayNumber - 1));
 
     let chartData = [];
-    for(let i=6; i>=0; i--) {
-        let d = new Date(today);
-        d.setDate(d.getDate() - i);
+    const trLabels = ["Pzt", "Sal", "Çar", "Per", "Cum", "Cmt", "Paz"];
+    
+    for(let i=0; i<7; i++) {
+        let d = new Date(monday);
+        d.setDate(monday.getDate() + i);
         let dayStr = d.toISOString().split('T')[0];
 
         let sum = 0;
@@ -1319,12 +1325,12 @@ function renderWeeklyChart() {
         chartData.push({
             date: d,
             total: sum,
-            label: d.toLocaleDateString('en-US', { weekday: 'short' })
+            label: trLabels[i]
         });
     }
 
-    let total7Days = chartData.reduce((acc, c) => acc + c.total, 0);
-    let avg = Math.round(total7Days / 7);
+    let totalWeek = chartData.reduce((acc, c) => acc + c.total, 0);
+    let avg = Math.round(totalWeek / dayNumber);
     avgText.textContent = `Avg: ${avg} kcal`;
 
     let maxVal = Math.max(...chartData.map(c => c.total), dailyCalorieGoal, 1);
@@ -1332,11 +1338,11 @@ function renderWeeklyChart() {
     wrapper.innerHTML = '';
 
     chartData.forEach((data, index) => {
-        const isToday = index === 6;
+        const isToday = index === (dayNumber - 1);
         let percent = Math.min((data.total / maxVal) * 100, 100);
 
         // Colors from user design
-        let barColor = isToday ? "bg-[#22C55E]" : (index === 3 ? "bg-[#A855F7]" : "bg-[#3B82F6]");
+        let barColor = isToday ? "bg-[#22C55E]" : "bg-[#3B82F6]";
         let textColor = isToday ? "font-bold text-[#1E293B]" : "text-[#64748B]";
 
         const col = document.createElement('div');
